@@ -59,14 +59,14 @@ public class Command {
 	public Command addAlias(String alias) {
 		List<String> newAliases = getAliasesList();
 		newAliases.add(alias);
-		aliases = newAliases.toArray(String[]::new);
+		aliases = newAliases.toArray(new String[newAliases.size()]);
 		return this;
 	}
 
 	public Command addAliases(List<String> aliases) {
 		List<String> newAliases = getAliasesList();
 		newAliases.addAll(aliases);
-		this.aliases = newAliases.toArray(String[]::new);
+		this.aliases = newAliases.toArray(new String[newAliases.size()]);
 		return this;
 	}
 

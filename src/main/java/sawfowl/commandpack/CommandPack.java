@@ -26,6 +26,7 @@ import sawfowl.commandpack.configure.configs.CommandsConfig;
 import sawfowl.commandpack.configure.configs.MainConfig;
 import sawfowl.commandpack.listeners.CommandLogListener;
 import sawfowl.commandpack.listeners.PlayerCommandListener;
+import sawfowl.commandpack.listeners.PlayerMoveListener;
 import sawfowl.commandpack.utils.Economy;
 import sawfowl.commandpack.utils.Logger;
 
@@ -102,6 +103,7 @@ public class CommandPack {
 		economy = new Economy(instance);
 		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerCommandListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
 	}
 
 	@Listener

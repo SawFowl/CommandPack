@@ -43,8 +43,12 @@ public class Economy {
         return BigDecimal.ZERO;
 	}
 
+	public boolean isPresent() {
+		return economyService != null;
+	}
+
 	public boolean checkPlayerBalance(UUID uuid, Currency currency, BigDecimal money) {
-		return economyService != null && getPlayerBalance(uuid, currency).doubleValue() >= money.doubleValue();
+		return isPresent() && getPlayerBalance(uuid, currency).doubleValue() >= money.doubleValue();
 	}
 
 	public boolean addToPlayerBalance(ServerPlayer player, Currency currency, BigDecimal money) {

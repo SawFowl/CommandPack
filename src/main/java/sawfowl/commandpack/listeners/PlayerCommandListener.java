@@ -25,7 +25,7 @@ public class PlayerCommandListener {
 			map.forEach((commandName, config) -> {
 				if(!config.getDelay().getCancelRules().isAllowOtherCommand()) {
 					plugin.getTempPlayerData().removeCommandTracking(commandName, player);
-					player.sendMessage(TextUtils.replace(plugin.getLocales().getText(player.locale(), LocalesPaths.COMMANDS_STOP_TRACKING_COMMAND), Placeholders.COMMAND, commandName));
+					player.sendMessage(TextUtils.replace(plugin.getLocales().getText(player.locale(), LocalesPaths.COMMANDS_STOP_TRACKING_COMMAND), Placeholders.COMMAND, "/" + commandName));
 				}
 			});
 		});

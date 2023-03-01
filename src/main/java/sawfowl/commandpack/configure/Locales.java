@@ -69,10 +69,10 @@ public class Locales {
 		save = check(locale, toText("&aCommand activation via &e" + Placeholders.DELAY + "&a."), null, LocalesPaths.COMMANDS_WAIT) || save;
 		save = check(locale, toText(Placeholders.SOURCE + " ran the command: " + Placeholders.COMMAND + ""), null, LocalesPaths.COMMANDS_LOG) || save;
 		save = check(locale, toText("Command \"" + Placeholders.COMMAND + "\" is not registered for tracking."), null, LocalesPaths.COMMANDS_NOT_TRACKING) || save;
-		save = check(locale, toText("&cExecution of command \"" + Placeholders.COMMAND + "\" has stopped because you entered another command."), null, LocalesPaths.COMMANDS_STOP_TRACKING_COMMAND) || save;
-		save = check(locale, toText("&cExecution of command \"" + Placeholders.COMMAND + "\" is stopped because you have moved."), null, LocalesPaths.COMMANDS_STOP_TRACKING_MOVING) || save;;
-		save = check(locale, toText("&eThe amount of money written off is &2" + Placeholders.MONEY + "&e for command &5\"" + Placeholders.COMMAND + "\"&e."), null, LocalesPaths.COMMANDS_TAKE_MONEY) || save;
-		save = check(locale, toText("&cYou need to have a balance of &2" + Placeholders.MONEY + "&c to execute command &5\"" + Placeholders.COMMAND + "\"&c."), null, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY) || save;
+		save = check(locale, toText("&cExecution of command &e\"&5" + Placeholders.COMMAND + "&e\"&c has stopped because you entered another command."), null, LocalesPaths.COMMANDS_STOP_TRACKING_COMMAND) || save;
+		save = check(locale, toText("&cExecution of command &e\"&5" + Placeholders.COMMAND + "&e\"&c is stopped because you have moved."), null, LocalesPaths.COMMANDS_STOP_TRACKING_MOVING) || save;;
+		save = check(locale, toText("&eThe amount of money written off is &2" + Placeholders.MONEY + "&e for command &e\"&5" + Placeholders.COMMAND + "&e\"&e."), null, LocalesPaths.COMMANDS_TAKE_MONEY) || save;
+		save = check(locale, toText("&cYou need to have a balance of &2" + Placeholders.MONEY + "&c to execute command &e\"&5" + Placeholders.COMMAND + "&e\"&c."), null, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY) || save;
 
 		if(save) save(locale);
 	}
@@ -93,10 +93,10 @@ public class Locales {
 		save = check(locale, toText("&aАктивация команды через &e" + Placeholders.DELAY + "&a."), null, LocalesPaths.COMMANDS_WAIT) || save;
 		save = check(locale, toText(Placeholders.SOURCE + " выполняет команду: " + Placeholders.COMMAND + ""), null, LocalesPaths.COMMANDS_LOG) || save;
 		save = check(locale, toText("Команда \"" + Placeholders.COMMAND + "\" не зарегистрированна на отслеживание."), null, LocalesPaths.COMMANDS_NOT_TRACKING) || save;
-		save = check(locale, toText("&cОстановленно выполнение команды \"" + Placeholders.COMMAND + "\" так как вы ввели другую команду."), null, LocalesPaths.COMMANDS_STOP_TRACKING_COMMAND) || save;
-		save = check(locale, toText("&cОстановленно выполнение команды \"" + Placeholders.COMMAND + "\" так как вы сдвинулись с места."), null, LocalesPaths.COMMANDS_STOP_TRACKING_MOVING) || save;
-		save = check(locale, toText("&eСписано денег &2" + Placeholders.MONEY + "&e за выполнение команды &5\"" + Placeholders.COMMAND + "\"&e."), null, LocalesPaths.COMMANDS_TAKE_MONEY) || save;
-		save = check(locale, toText("&cВам необходимо иметь на балансе &2" + Placeholders.MONEY + "&c для выполнения команды &5\"" + Placeholders.COMMAND + "\"&c."), null, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY) || save;
+		save = check(locale, toText("&cОстановленно выполнение команды &e\"&5" + Placeholders.COMMAND + "&e\"&c так как вы ввели другую команду."), null, LocalesPaths.COMMANDS_STOP_TRACKING_COMMAND) || save;
+		save = check(locale, toText("&cОстановленно выполнение команды &e\"&5" + Placeholders.COMMAND + "&e\"&c так как вы сдвинулись с места."), null, LocalesPaths.COMMANDS_STOP_TRACKING_MOVING) || save;
+		save = check(locale, toText("&eСписано денег &2" + Placeholders.MONEY + "&e за выполнение команды &e\"&5" + Placeholders.COMMAND + "&e\"&e."), null, LocalesPaths.COMMANDS_TAKE_MONEY) || save;
+		save = check(locale, toText("&cВам необходимо иметь на балансе &2" + Placeholders.MONEY + "&c для выполнения команды &e\"&5" + Placeholders.COMMAND + "&e\"&c."), null, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY) || save;
 
 		if(save) save(locale);
 	}

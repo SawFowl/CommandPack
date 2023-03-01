@@ -20,7 +20,7 @@ public class Suicide extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer player, Locale locale) throws CommandException {
-		player.offer(Keys.HEALTH, 0.0);
+		if(continueEconomy(player)) player.offer(Keys.HEALTH, 0.0);
 	}
 
 	@Override

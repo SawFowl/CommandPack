@@ -1,5 +1,7 @@
 package sawfowl.commandpack.commands.abstractcommands.parameterized;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -20,25 +22,26 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.scheduler.ScheduledTask;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.service.economy.Currency;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.configure.Locales;
 import sawfowl.commandpack.configure.LocalesPaths;
 import sawfowl.commandpack.configure.Placeholders;
+import sawfowl.commandpack.configure.configs.CommandPrice;
 import sawfowl.commandpack.utils.Logger;
 import sawfowl.localeapi.api.TextUtils;
 
 public abstract class AbstractCommand implements CommandExecutor {
 
-	final CommandPack plugin;
-	final String command;
+	protected final CommandPack plugin;
+	protected final String command;
 	final String[] aliases;
 	private Map<UUID, Long> cooldowns = new HashMap<>();
 	public AbstractCommand(CommandPack plugin, String command) {
@@ -64,8 +67,17 @@ public abstract class AbstractCommand implements CommandExecutor {
 		if(context.cause().audience() instanceof ServerPlayer) {
 			ServerPlayer player = (ServerPlayer) context.cause().audience();
 			sawfowl.commandpack.configure.configs.Command command = plugin.getCommandsConfig().getCommandConfig(this.command);
+			if(plugin.getEconomy().isPresent() && !player.hasPermission(Permissions.getIgnorePrice(this.command))) {
+				CommandPrice price = command.getPrice();
+				if(price.getMoney() > 0) {
+					Currency currency = plugin.getEconomy().checkCurrency(price.getCurrency());
+					BigDecimal money = createDecimal(price.getMoney());
+					if(!plugin.getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY), new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + this.command)}));
+				}
+			}
 			checkCooldown(player, command);
 			if(command.getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(this.command))) {
+				plugin.getTempPlayerData().addCommandTracking(this.command, player);
 				Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(1, TimeUnit.SECONDS).execute(new CancellingTimerTask(context, player, command.getDelay().getSeconds())).build());
 			} else execute(context, player, player.locale());
 		} else execute(context, context.cause().audience(), plugin.getLocales().getLocaleService().getSystemOrDefaultLocale());
@@ -91,7 +103,7 @@ public abstract class AbstractCommand implements CommandExecutor {
 	}
 
 	public Component text(String string) {
-		return LegacyComponentSerializer.legacyAmpersand().deserialize(string);
+		return TextUtils.deserializeLegacy(string);
 	}
 
 	public void register(RegisterCommandEvent<Parameterized> event) {
@@ -141,6 +153,14 @@ public abstract class AbstractCommand implements CommandExecutor {
 
 	private Optional<ServerPlayer> getPlayer(UUID uuid) {
 		return Sponge.server().player(uuid);
+	}
+
+	public BigDecimal createDecimal(double value) {
+		return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
+	}
+
+	public Component getText(ServerPlayer player, Object... path) {
+		return getLocales().getText(player.locale(), path);
 	}
 
 	class CancellingTimerTask implements Consumer<ScheduledTask> {
