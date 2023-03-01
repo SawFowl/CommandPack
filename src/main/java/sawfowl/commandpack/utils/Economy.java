@@ -29,7 +29,7 @@ public class Economy {
 
 	public Economy(CommandPack plugin) {
 		this.plugin = plugin;
-		economyService  = Sponge.server().serviceProvider().economyService().get();
+		economyService = Sponge.server().serviceProvider().economyService().orElse(null);
 	}
 
 	public BigDecimal getPlayerBalance(UUID uuid, Currency currency) {
@@ -44,10 +44,11 @@ public class Economy {
 	}
 
 	public boolean checkPlayerBalance(UUID uuid, Currency currency, BigDecimal money) {
-		return getPlayerBalance(uuid, currency).doubleValue() >= money.doubleValue();
+		return economyService != null && getPlayerBalance(uuid, currency).doubleValue() >= money.doubleValue();
 	}
 
 	public boolean addToPlayerBalance(ServerPlayer player, Currency currency, BigDecimal money) {
+		if(economyService == null) return false;
         try {
             Optional<UniqueAccount> uOpt = economyService.findOrCreateAccount(player.uniqueId());
             if (uOpt.isPresent()) {
@@ -66,6 +67,7 @@ public class Economy {
 	}
 
 	public boolean removeFromPlayerBalance(ServerPlayer player, Currency currency, BigDecimal money) {
+		if(economyService == null) return false;
         try {
             Optional<UniqueAccount> uOpt = economyService.findOrCreateAccount(player.uniqueId());
             if (uOpt.isPresent()) {
@@ -84,6 +86,7 @@ public class Economy {
 	}
 
 	public Currency checkCurrency(String check) {
+		if(economyService == null) return null;
 		if(check == null) return economyService.defaultCurrency();
 		Optional<Currency> optCurrency = getCurrencies().stream().filter(currency -> (TextUtils.clearDecorations(currency.displayName()).equalsIgnoreCase(check) || TextUtils.clearDecorations(currency.symbol()).equalsIgnoreCase(check))).findFirst();
 		return optCurrency.isPresent() ? optCurrency.get() : economyService.defaultCurrency();
@@ -91,6 +94,7 @@ public class Economy {
 
 	public List<Currency> getCurrencies() {
 		List<Currency> currencies = new ArrayList<Currency>();
+		if(economyService == null) return currencies;
 		Sponge.game().findRegistry(RegistryTypes.CURRENCY).ifPresent(registry -> {
 			if(registry.stream().count() > 0) currencies.addAll(registry.stream().collect(Collectors.toList()));
 		});

@@ -1,14 +1,14 @@
 package sawfowl.commandpack.utils;
 
+import org.apache.logging.log4j.LogManager;
+
 import net.kyori.adventure.text.Component;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Logger {
 
-	private org.apache.logging.log4j.Logger logger;
-	public Logger(org.apache.logging.log4j.Logger logger) {
-		this.logger = logger;
-	}
+	private org.apache.logging.log4j.Logger logger = LogManager.getLogger("CommandPack");
+	public Logger(){}
 
 	public void info(Object object) {
 		logger.info(object);

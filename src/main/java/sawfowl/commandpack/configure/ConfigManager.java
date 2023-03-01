@@ -31,8 +31,8 @@ public class ConfigManager {
 		return mainConfig.get();
 	}
 
-	public CommandsConfig getCommandsConfig() {
-		return commandsConfig.get();
+	public ValueReference<CommandsConfig, CommentedConfigurationNode> getCommandsConfig() {
+		return commandsConfig;
 	}
 
 	public void reloadConfigs() {
@@ -42,6 +42,7 @@ public class ConfigManager {
 			if(!plugin.getConfigDir().resolve("PlayerData").toFile().exists()) plugin.getConfigDir().resolve("PlayerData").toFile().mkdir();
 			commandsConfigReference.load();
 			commandsConfig = commandsConfigReference.referenceTo(CommandsConfig.class);
+			commandsConfig.get().updateCommandMap(commandsConfig);
 		} catch (ConfigurateException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
 		}
@@ -63,6 +64,7 @@ public class ConfigManager {
 			commandsConfigReference = HoconConfigurationLoader.builder().defaultOptions(options).path(plugin.getConfigDir().resolve("Commands.conf")).build().loadToReference();
 			commandsConfig = commandsConfigReference.referenceTo(CommandsConfig.class);
 			if(!plugin.getConfigDir().resolve("Commands.conf").toFile().exists()) commandsConfigReference.save();
+			commandsConfig.get().updateCommandMap(commandsConfig);
 		} catch (ConfigurateException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
 		}
