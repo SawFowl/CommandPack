@@ -8,8 +8,8 @@ import org.spongepowered.configurate.reference.ConfigurationReference;
 import org.spongepowered.configurate.reference.ValueReference;
 
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.configure.configs.CommandsConfig;
 import sawfowl.commandpack.configure.configs.MainConfig;
+import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
 
 public class ConfigManager {
 

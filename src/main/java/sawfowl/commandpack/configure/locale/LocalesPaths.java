@@ -1,4 +1,4 @@
-package sawfowl.commandpack.configure;
+package sawfowl.commandpack.configure.locale;
 
 public class LocalesPaths {
 
@@ -13,6 +13,7 @@ public class LocalesPaths {
 	private static final Object PATH_EXCEPTIONS = "Exceptions";
 	private static final Object PATH_TIME = "Time";
 	private static final Object PATH_TRACKING = "Time";
+	private static final Object COMMAND_HAT = "Hat";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -31,5 +32,9 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_COOLDOWN = {PATH_COMMANDS, "Cooldown"};
 	public static final Object[] COMMANDS_LOG = {PATH_COMMANDS, "Log"};
 	public static final Object[] COMMANDS_TAKE_MONEY = {PATH_COMMANDS, "TakeMoney"};
+	public static final Object[] COMMANDS_HAT_NO_ITEM = {PATH_COMMANDS, COMMAND_HAT, PATH_EXCEPTIONS, "Empty"};
+	public static final Object[] COMMANDS_HAT_BLACKLIST_ITEM = {PATH_COMMANDS, COMMAND_HAT, PATH_EXCEPTIONS, "Blacklist"};
+	public static final Object[] COMMANDS_HAT_FULL_INVENTORY = {PATH_COMMANDS, COMMAND_HAT, PATH_EXCEPTIONS, "FullInventory"};
+	public static final Object[] COMMANDS_HAT_SUCCESS_OTHER = {PATH_COMMANDS, COMMAND_HAT, PATH_EXCEPTIONS, "SuccessOther"};
 
 }

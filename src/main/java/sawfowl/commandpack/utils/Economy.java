@@ -18,8 +18,8 @@ import org.spongepowered.api.service.economy.transaction.ResultType;
 import org.spongepowered.api.service.economy.transaction.TransactionResult;
 
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.configure.LocalesPaths;
 import sawfowl.commandpack.configure.Placeholders;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Economy {

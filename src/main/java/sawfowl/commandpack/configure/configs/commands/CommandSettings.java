@@ -1,4 +1,4 @@
-package sawfowl.commandpack.configure.configs;
+package sawfowl.commandpack.configure.configs.commands;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,13 +9,13 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 @ConfigSerializable
-public class Command {
+public class CommandSettings {
 
-	public static final Command EMPTY = new Command();
+	public static final CommandSettings EMPTY = new CommandSettings();
 
-	public Command() {}
+	public CommandSettings() {}
 
-	public Command(long cooldown, Delay delay, CommandPrice price) {
+	public CommandSettings(long cooldown, Delay delay, CommandPrice price) {
 		this.cooldown = cooldown;
 		this.delay = delay;
 		this.price = price;
@@ -56,14 +56,14 @@ public class Command {
 		return enable;
 	}
 
-	public Command addAlias(String alias) {
+	public CommandSettings addAlias(String alias) {
 		List<String> newAliases = getAliasesList();
 		newAliases.add(alias);
 		aliases = newAliases.toArray(new String[newAliases.size()]);
 		return this;
 	}
 
-	public Command addAliases(List<String> aliases) {
+	public CommandSettings addAliases(List<String> aliases) {
 		List<String> newAliases = getAliasesList();
 		newAliases.addAll(aliases);
 		this.aliases = newAliases.toArray(new String[newAliases.size()]);
@@ -72,7 +72,7 @@ public class Command {
 
 	@Override
 	public String toString() {
-		return "Command [Aliases=" + aliases + ", Cooldown=" + cooldown + ", Delay=" + delay + ", Enable=" + enable + ", Price=" + price + "]";
+		return "CommandSettings [Aliases=" + aliases + ", Cooldown=" + cooldown + ", Delay=" + delay + ", Enable=" + enable + ", Price=" + price + "]";
 	}
 
 }

@@ -1,6 +1,8 @@
 package sawfowl.commandpack.commands.parameterized.player;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
@@ -19,8 +21,8 @@ public class Suicide extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public void execute(CommandContext context, ServerPlayer player, Locale locale) throws CommandException {
-		if(continueEconomy(player)) player.offer(Keys.HEALTH, 0.0);
+	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
+		if(continueEconomy(src)) src.offer(Keys.HEALTH, 0.0);
 	}
 
 	@Override
@@ -31,6 +33,11 @@ public class Suicide extends AbstractPlayerCommand {
 	@Override
 	public String permission() {
 		return Permissions.SUICIDE;
+	}
+
+	@Override
+	public Optional<List<ParameterSettings>> getParameterSettings() {
+		return Optional.empty();
 	}
 
 }

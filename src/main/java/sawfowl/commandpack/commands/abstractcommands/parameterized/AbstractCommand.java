@@ -3,10 +3,14 @@ package sawfowl.commandpack.commands.abstractcommands.parameterized;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -18,6 +22,8 @@ import org.spongepowered.api.command.CommandExecutor;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
+import org.spongepowered.api.command.parameter.Parameter;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.scheduler.ScheduledTask;
@@ -31,10 +37,13 @@ import net.kyori.adventure.text.format.NamedTextColor;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.configure.Locales;
-import sawfowl.commandpack.configure.LocalesPaths;
+import sawfowl.commandpack.commands.CommandParameters;
+import sawfowl.commandpack.commands.parameterized.player.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.CommandPrice;
+import sawfowl.commandpack.configure.configs.commands.CommandPrice;
+import sawfowl.commandpack.configure.configs.commands.CommandSettings;
+import sawfowl.commandpack.configure.locale.Locales;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.Logger;
 import sawfowl.localeapi.api.TextUtils;
 
@@ -43,44 +52,55 @@ public abstract class AbstractCommand implements CommandExecutor {
 	protected final CommandPack plugin;
 	protected final String command;
 	final String[] aliases;
+	protected final Set<ParameterSettings> parameterSettings = new HashSet<>();
 	private Map<UUID, Long> cooldowns = new HashMap<>();
-	public AbstractCommand(CommandPack plugin, String command) {
-		this.plugin = plugin;
-		this.command = command;
-		aliases = null;
-	}
 
 	public AbstractCommand(CommandPack plugin, String command, String[] aliases) {
 		this.plugin = plugin;
 		this.command = command;
 		this.aliases = aliases;
+		Optional<List<ParameterSettings>> parameterSettings = getParameterSettings();
+		if(parameterSettings.isPresent() && !parameterSettings.isEmpty()) this.parameterSettings.addAll(parameterSettings.get());
 	}
 
-	public abstract void execute(CommandContext context, Audience audience, Locale locale) throws CommandException;
+	public abstract void execute(CommandContext context, Audience src, Locale locale) throws CommandException;
 
 	public abstract Command.Parameterized build();
 
 	public abstract String permission();
 
+	public abstract Optional<List<ParameterSettings>> getParameterSettings();
+
 	@Override
 	public CommandResult execute(CommandContext context) throws CommandException {
-		if(context.cause().audience() instanceof ServerPlayer) {
+		boolean isPlayer = context.cause().audience() instanceof ServerPlayer;
+		Locale locale = isPlayer ? ((ServerPlayer) context.cause().audience()).locale() : plugin.getLocales().getLocaleService().getSystemOrDefaultLocale();
+		if(!parameterSettings.isEmpty()) for(ParameterSettings settings : parameterSettings) if(!context.one(settings.getParameter()).isPresent() && (!settings.isOptional() || (isPlayer && !settings.isOptionalForPlayer()))) exception(locale, settings.getPath());
+		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) context.cause().audience();
-			sawfowl.commandpack.configure.configs.Command command = plugin.getCommandsConfig().getCommandConfig(this.command);
+			CommandSettings commandSettings = plugin.getCommandsConfig().getCommandConfig(this.command);
 			if(plugin.getEconomy().isPresent() && !player.hasPermission(Permissions.getIgnorePrice(this.command))) {
-				CommandPrice price = command.getPrice();
+				CommandPrice price = commandSettings.getPrice();
 				if(price.getMoney() > 0) {
 					Currency currency = plugin.getEconomy().checkCurrency(price.getCurrency());
 					BigDecimal money = createDecimal(price.getMoney());
-					if(!plugin.getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY), new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + this.command)}));
+					if(!plugin.getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(locale, new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + this.command)}, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY);
 				}
 			}
-			checkCooldown(player, command);
-			if(command.getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(this.command))) {
+			Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+			if(cooldowns.containsKey(player.uniqueId())) {
+				if(commandSettings.getCooldown() + cooldowns.get(player.uniqueId()) > currentTime) exception(locale, Placeholders.DELAY, getExpireTimeFromNow(currentTime - cooldowns.get(player.uniqueId()), locale), LocalesPaths.COMMANDS_COOLDOWN);
+				cooldowns.remove(player.uniqueId());
+				cooldowns.put(player.uniqueId(), currentTime + commandSettings.getDelay().getSeconds());
+			} else cooldowns.put(player.uniqueId(), currentTime + commandSettings.getDelay().getSeconds());
+			Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).delay(commandSettings.getCooldown() + 1, TimeUnit.SECONDS).execute(() -> {
+				if(cooldowns.containsKey(player.uniqueId())) cooldowns.remove(player.uniqueId());
+			}).build());
+			if(commandSettings.getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(this.command))) {
 				plugin.getTempPlayerData().addCommandTracking(this.command, player);
-				Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(1, TimeUnit.SECONDS).execute(new CancellingTimerTask(context, player, command.getDelay().getSeconds())).build());
-			} else execute(context, player, player.locale());
-		} else execute(context, context.cause().audience(), plugin.getLocales().getLocaleService().getSystemOrDefaultLocale());
+				Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(1, TimeUnit.SECONDS).execute(new CancellingTimerTask(context, player, commandSettings.getDelay().getSeconds())).build());
+			} else execute(context, player, locale);
+		} else execute(context, context.cause().audience(), locale);
 		return success();
 	}
 
@@ -89,9 +109,14 @@ public abstract class AbstractCommand implements CommandExecutor {
 	}
 
 	public Builder builder() {
-		return Command.builder()
-				.permission(permission())
-				.executor(this);
+		return parameterSettings.isEmpty() ?
+				Command.builder()
+					.permission(permission())
+					.executor(this) :
+				Command.builder()
+					.permission(permission())
+					.addParameters((Parameter.Value<?>[]) parameterSettings.stream().map(ParameterSettings::getParameter).toArray())
+					.executor(this);
 	}
 
 	public CommandException exception(Component text) throws CommandException {
@@ -100,6 +125,18 @@ public abstract class AbstractCommand implements CommandExecutor {
 
 	public CommandException exception(String text) throws CommandException {
 		return exception(text(text));
+	}
+
+	public CommandException exception(Locale locale, Object... path) throws CommandException {
+		return exception(getText(locale, path));
+	}
+
+	public CommandException exception(Locale locale, String[] keys, String[] values, Object... path) throws CommandException {
+		return exception(TextUtils.replace(getText(locale, path), keys, values));
+	}
+
+	public CommandException exception(Locale locale, String[] keys, Component[] values, Object... path) throws CommandException {
+		return exception(TextUtils.replaceToComponents(getText(locale, path), keys, values));
 	}
 
 	public Component text(String string) {
@@ -139,18 +176,6 @@ public abstract class AbstractCommand implements CommandExecutor {
 		return TimeUnit.SECONDS.toMinutes(second);
 	}
 
-	void checkCooldown(ServerPlayer player, sawfowl.commandpack.configure.configs.Command command) throws CommandException {
-		Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-		if(cooldowns.containsKey(player.uniqueId())) {
-			if(command.getCooldown() + cooldowns.get(player.uniqueId()) > currentTime) exception(TextUtils.replace(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_COOLDOWN), Placeholders.DELAY, getExpireTimeFromNow(currentTime - cooldowns.get(player.uniqueId()), player.locale())));
-			cooldowns.remove(player.uniqueId());
-			cooldowns.put(player.uniqueId(), currentTime + command.getDelay().getSeconds());
-		} else cooldowns.put(player.uniqueId(), currentTime + command.getDelay().getSeconds());
-		Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).delay(command.getCooldown() + 1, TimeUnit.SECONDS).execute(() -> {
-			if(cooldowns.containsKey(player.uniqueId())) cooldowns.remove(player.uniqueId());
-		}).build());
-	}
-
 	private Optional<ServerPlayer> getPlayer(UUID uuid) {
 		return Sponge.server().player(uuid);
 	}
@@ -159,8 +184,24 @@ public abstract class AbstractCommand implements CommandExecutor {
 		return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
 	}
 
+	public Component getText(Locale locale, Object... path) {
+		return getLocales().getText(locale, path);
+	}
+
 	public Component getText(ServerPlayer player, Object... path) {
-		return getLocales().getText(player.locale(), path);
+		return getText(player.locale(), path);
+	}
+
+	public Optional<ServerPlayer> getPlayer(CommandContext context, String permission) {
+		return context.one(CommandParameters.PLAYER.requiredPermission(permission).build());
+	}
+
+	public Optional<CompletableFuture<Optional<User>>> getUser(CommandContext context) {
+		return context.one(CommandParameters.USER).isPresent() ? Optional.ofNullable(Sponge.server().userManager().load(context.one(CommandParameters.USER).get())) : Optional.empty();
+	}
+
+	public void saveUser(User user) {
+		Sponge.server().userManager().forceSave(user.uniqueId());
 	}
 
 	class CancellingTimerTask implements Consumer<ScheduledTask> {
@@ -212,6 +253,15 @@ public abstract class AbstractCommand implements CommandExecutor {
 				seconds--;
 			}
 		}
+	}
+
+	/**
+	 * Added to speed up the creation of commands.
+	 * Must be deleted after the job is done.
+	 */
+	@Deprecated
+	public static Permissions permissions() {
+		return Permissions.instance;
 	}
 
 }

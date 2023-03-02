@@ -1,6 +1,7 @@
 package sawfowl.commandpack;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
@@ -18,12 +19,14 @@ import com.google.inject.Inject;
 import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.iTempPlayerData;
 import sawfowl.commandpack.apiclasses.TempPlayerData;
+import sawfowl.commandpack.commands.parameterized.player.Hat;
 import sawfowl.commandpack.commands.parameterized.player.Suicide;
 import sawfowl.commandpack.configure.ConfigManager;
-import sawfowl.commandpack.configure.Locales;
-import sawfowl.commandpack.configure.LocalesPaths;
-import sawfowl.commandpack.configure.configs.CommandsConfig;
 import sawfowl.commandpack.configure.configs.MainConfig;
+import sawfowl.commandpack.configure.configs.commands.CommandSettings;
+import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
+import sawfowl.commandpack.configure.locale.Locales;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.listeners.CommandLogListener;
 import sawfowl.commandpack.listeners.PlayerCommandListener;
 import sawfowl.commandpack.listeners.PlayerMoveListener;
@@ -113,7 +116,16 @@ public class CommandPack {
 
 	@Listener
 	public void registerParameterizedCommands(RegisterCommandEvent<Parameterized> event) {
-		if(getCommandsConfig().getCommandConfig("suicide").isEnable()) new Suicide(instance, "suicide", getCommandsConfig().getCommandConfig("suicide").getAliases()).register(event);
+		getCommandSettings("hat").ifPresent(settings -> {
+			new Hat(instance, "hat", settings.getAliases()).register(event);
+		});
+		getCommandSettings("suicide").ifPresent(settings -> {
+			new Suicide(instance, "suicide", settings.getAliases()).register(event);
+		});
+	}
+
+	private Optional<CommandSettings> getCommandSettings(String command) {
+		return getCommandsConfig().getOptCommandSettings(command);
 	}
 
 }

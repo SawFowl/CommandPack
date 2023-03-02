@@ -1,4 +1,4 @@
-package sawfowl.commandpack.configure.configs;
+package sawfowl.commandpack.configure.configs.commands;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;

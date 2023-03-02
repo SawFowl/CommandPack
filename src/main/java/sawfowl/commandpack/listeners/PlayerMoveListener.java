@@ -7,8 +7,8 @@ import org.spongepowered.api.event.filter.cause.First;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.configure.LocalesPaths;
 import sawfowl.commandpack.configure.Placeholders;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class PlayerMoveListener {

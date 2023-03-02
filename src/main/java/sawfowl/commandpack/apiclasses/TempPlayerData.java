@@ -12,9 +12,9 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.iTempPlayerData;
-import sawfowl.commandpack.configure.LocalesPaths;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.Command;
+import sawfowl.commandpack.configure.configs.commands.CommandSettings;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class TempPlayerData implements iTempPlayerData {
@@ -60,11 +60,11 @@ public class TempPlayerData implements iTempPlayerData {
 	}
 
 	@Override
-	public Optional<Map<String, Command>> getTrackingPlayerCommands(ServerPlayer player) {
-		Map<String, Command> commands = new HashMap<>();
+	public Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(ServerPlayer player) {
+		Map<String, CommandSettings> commands = new HashMap<>();
 		trackingCommandDelay.entrySet().stream().filter(entry -> (entry.getValue().contains(player.uniqueId()))).forEach(entry -> {
-			Command command = plugin.getCommandsConfig().getCommandConfig(entry.getKey());
-			commands.put(entry.getKey(), command);
+			CommandSettings commandSettings = plugin.getCommandsConfig().getCommandConfig(entry.getKey());
+			commands.put(entry.getKey(), commandSettings);
 		});
 		return !isTrackingPlayer(player) || commands.isEmpty() ? Optional.empty() : Optional.ofNullable(commands);
 	}
