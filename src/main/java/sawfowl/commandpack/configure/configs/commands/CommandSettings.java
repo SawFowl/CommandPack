@@ -59,14 +59,14 @@ public class CommandSettings {
 	public CommandSettings addAlias(String alias) {
 		List<String> newAliases = getAliasesList();
 		newAliases.add(alias);
-		aliases = newAliases.toArray(new String[newAliases.size()]);
+		aliases = newAliases.stream().toArray(String[]::new);
 		return this;
 	}
 
 	public CommandSettings addAliases(List<String> aliases) {
 		List<String> newAliases = getAliasesList();
 		newAliases.addAll(aliases);
-		this.aliases = newAliases.toArray(new String[newAliases.size()]);
+		this.aliases = newAliases.stream().toArray(String[]::new);
 		return this;
 	}
 

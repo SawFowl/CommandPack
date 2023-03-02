@@ -7,7 +7,7 @@ import org.spongepowered.api.command.Command;
 import org.spongepowered.api.command.Command.Builder;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
-import org.spongepowered.api.command.parameter.Parameter;
+import org.spongepowered.api.command.parameter.Parameter.Value;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.service.economy.Currency;
 
@@ -46,7 +46,7 @@ public abstract class AbstractPlayerCommand extends AbstractCommand {
 					.executionRequirements(cause -> (
 						cause.audience() instanceof ServerPlayer && cause.hasPermission(permission()))
 						)
-					.addParameters((Parameter.Value<?>[]) parameterSettings.stream().map(ParameterSettings::getParameter).toArray())
+					.addParameters(parameterSettings.stream().map(ParameterSettings::getParameter).toArray(Value[]::new))
 					.executor(this);
 	}
 

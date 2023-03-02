@@ -60,7 +60,7 @@ public abstract class AbstractCommand implements CommandExecutor {
 		this.command = command;
 		this.aliases = aliases;
 		Optional<List<ParameterSettings>> parameterSettings = getParameterSettings();
-		if(parameterSettings.isPresent() && !parameterSettings.isEmpty()) this.parameterSettings.addAll(parameterSettings.get());
+		if(parameterSettings.isPresent() && !parameterSettings.get().isEmpty()) this.parameterSettings.addAll(parameterSettings.get());
 	}
 
 	public abstract void execute(CommandContext context, Audience src, Locale locale) throws CommandException;
@@ -88,17 +88,17 @@ public abstract class AbstractCommand implements CommandExecutor {
 				}
 			}
 			Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-			if(cooldowns.containsKey(player.uniqueId())) {
-				if(commandSettings.getCooldown() + cooldowns.get(player.uniqueId()) > currentTime) exception(locale, Placeholders.DELAY, getExpireTimeFromNow(currentTime - cooldowns.get(player.uniqueId()), locale), LocalesPaths.COMMANDS_COOLDOWN);
+			if(!cooldowns.containsKey(player.uniqueId())) {
+				cooldowns.put(player.uniqueId(), currentTime + commandSettings.getDelay().getSeconds());
+				Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(1, TimeUnit.SECONDS).execute(new CooldownTimerTask(player)).build());
+			} else {
+				if((cooldowns.get(player.uniqueId()) + commandSettings.getCooldown()) - currentTime > 0) exception(locale, Placeholders.DELAY, getExpireTimeFromNow((cooldowns.get(player.uniqueId()) + commandSettings.getCooldown()) - currentTime, locale), LocalesPaths.COMMANDS_COOLDOWN);
 				cooldowns.remove(player.uniqueId());
 				cooldowns.put(player.uniqueId(), currentTime + commandSettings.getDelay().getSeconds());
-			} else cooldowns.put(player.uniqueId(), currentTime + commandSettings.getDelay().getSeconds());
-			Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).delay(commandSettings.getCooldown() + 1, TimeUnit.SECONDS).execute(() -> {
-				if(cooldowns.containsKey(player.uniqueId())) cooldowns.remove(player.uniqueId());
-			}).build());
+			}
 			if(commandSettings.getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(this.command))) {
 				plugin.getTempPlayerData().addCommandTracking(this.command, player);
-				Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(1, TimeUnit.SECONDS).execute(new CancellingTimerTask(context, player, commandSettings.getDelay().getSeconds())).build());
+				Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(1, TimeUnit.SECONDS).execute(new DelayTimerTask(context, player, commandSettings.getDelay().getSeconds())).build());
 			} else execute(context, player, locale);
 		} else execute(context, context.cause().audience(), locale);
 		return success();
@@ -129,6 +129,14 @@ public abstract class AbstractCommand implements CommandExecutor {
 
 	public CommandException exception(Locale locale, Object... path) throws CommandException {
 		return exception(getText(locale, path));
+	}
+
+	public CommandException exception(Locale locale, String key, String value, Object... path) throws CommandException {
+		return exception(TextUtils.replace(getText(locale, path), key, value));
+	}
+
+	public CommandException exception(Locale locale, String key, Component value, Object... path) throws CommandException {
+		return exception(TextUtils.replace(getText(locale, path), key, value));
 	}
 
 	public CommandException exception(Locale locale, String[] keys, String[] values, Object... path) throws CommandException {
@@ -192,20 +200,47 @@ public abstract class AbstractCommand implements CommandExecutor {
 		return getText(player.locale(), path);
 	}
 
+	public Optional<ServerPlayer> getPlayer(CommandContext context) {
+		return context.one(CommandParameters.createPlayer());
+	}
+
 	public Optional<ServerPlayer> getPlayer(CommandContext context, String permission) {
-		return context.one(CommandParameters.PLAYER.requiredPermission(permission).build());
+		return context.one(CommandParameters.createPlayer(permission));
 	}
 
 	public Optional<CompletableFuture<Optional<User>>> getUser(CommandContext context) {
-		return context.one(CommandParameters.USER).isPresent() ? Optional.ofNullable(Sponge.server().userManager().load(context.one(CommandParameters.USER).get())) : Optional.empty();
+		return context.one(CommandParameters.createUser()).isPresent() ? Optional.ofNullable(Sponge.server().userManager().load(context.one(CommandParameters.createUser()).get())) : Optional.empty();
+	}
+
+	public Optional<CompletableFuture<Optional<User>>> getUser(CommandContext context, String permission) {
+		return context.one(CommandParameters.createUser(permission)).isPresent() ? Optional.ofNullable(Sponge.server().userManager().load(context.one(CommandParameters.createUser(permission)).get())) : Optional.empty();
 	}
 
 	public void saveUser(User user) {
 		Sponge.server().userManager().forceSave(user.uniqueId());
 	}
 
-	class CancellingTimerTask implements Consumer<ScheduledTask> {
-		CancellingTimerTask(CommandContext context, ServerPlayer player, long seconds) {
+	class CooldownTimerTask implements Consumer<ScheduledTask> {
+		CooldownTimerTask(ServerPlayer player){
+			uuid = player.uniqueId();
+		}
+		private final UUID uuid;
+		private final long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+		long cooldown = plugin.getCommandsConfig().getCommandConfig(command).getCooldown();
+		@Override
+		public void accept(ScheduledTask task) {
+			if(cooldowns.containsKey(uuid)) {
+				if((cooldowns.get(uuid) + cooldown) - currentTime <= 0) cooldowns.remove(uuid);
+			} else {
+				task.cancel();
+			}
+			
+		}
+		
+	}
+
+	class DelayTimerTask implements Consumer<ScheduledTask> {
+		DelayTimerTask(CommandContext context, ServerPlayer player, long seconds) {
 			this.uuid = player.uniqueId();
 			this.seconds = seconds;
 			this.context = context;
