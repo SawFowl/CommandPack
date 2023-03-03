@@ -48,6 +48,14 @@ public class ConfigManager {
 		}
 	}
 
+	public void updateMainConfig() {
+		try {
+			mainConfigReference.save();
+		} catch (ConfigurateException e) {
+			plugin.getLogger().warn(e.getLocalizedMessage());
+		}
+	}
+
 	private void saveMainConfig() {
 		try {
 			mainConfigReference = HoconConfigurationLoader.builder().defaultOptions(options).path(plugin.getConfigDir().resolve("Config.conf")).build().loadToReference();

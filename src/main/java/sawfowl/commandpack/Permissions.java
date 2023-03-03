@@ -20,6 +20,7 @@ public class Permissions {
 	public static final String IGNORE_PRICE = "commandpack.commands.staff.ignore.price";
 
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
+	public static final String SET_SPAWN_STAFF = "commandpack.commands.staff.setspawn";
 
 	public static String getIgnoreDelayTimer(String command) {
 		return IGNORE_DELAY_TIMER + "." + command;

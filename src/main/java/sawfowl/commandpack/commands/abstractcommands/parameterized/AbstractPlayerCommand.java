@@ -15,7 +15,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.commands.parameterized.player.ParameterSettings;
+import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -46,7 +46,7 @@ public abstract class AbstractPlayerCommand extends AbstractCommand {
 					.executionRequirements(cause -> (
 						cause.audience() instanceof ServerPlayer && cause.hasPermission(permission()))
 						)
-					.addParameters(parameterSettings.stream().map(ParameterSettings::getParameter).toArray(Value[]::new))
+					.addParameters(parameterSettings.values().stream().map(ParameterSettings::getParameterUnknownType).toArray(Value[]::new))
 					.executor(this);
 	}
 

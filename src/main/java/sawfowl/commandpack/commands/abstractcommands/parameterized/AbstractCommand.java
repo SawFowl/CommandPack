@@ -3,14 +3,11 @@ package sawfowl.commandpack.commands.abstractcommands.parameterized;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -37,8 +34,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.commands.CommandParameters;
-import sawfowl.commandpack.commands.parameterized.player.ParameterSettings;
+import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
@@ -52,15 +48,20 @@ public abstract class AbstractCommand implements CommandExecutor {
 	protected final CommandPack plugin;
 	protected final String command;
 	final String[] aliases;
-	protected final Set<ParameterSettings> parameterSettings = new HashSet<>();
+	//protected final Set<ParameterSettings> parameterSettings = new HashSet<>();
 	private Map<UUID, Long> cooldowns = new HashMap<>();
-
+	protected final Map<String, ParameterSettings<?>> parameterSettings = new HashMap<>();
 	public AbstractCommand(CommandPack plugin, String command, String[] aliases) {
 		this.plugin = plugin;
 		this.command = command;
 		this.aliases = aliases;
-		Optional<List<ParameterSettings>> parameterSettings = getParameterSettings();
-		if(parameterSettings.isPresent() && !parameterSettings.get().isEmpty()) this.parameterSettings.addAll(parameterSettings.get());
+		Optional<List<ParameterSettings<?>>> parameterSettings = getParameterSettings();
+		if(parameterSettings.isPresent() && !parameterSettings.get().isEmpty()) {
+			parameterSettings.get().forEach(setting -> {
+				setting.getParameterUnknownType().key().key();
+				this.parameterSettings.put(setting.getParameterUnknownType().key().key(), setting);
+			});
+		}
 	}
 
 	public abstract void execute(CommandContext context, Audience src, Locale locale) throws CommandException;
@@ -69,13 +70,13 @@ public abstract class AbstractCommand implements CommandExecutor {
 
 	public abstract String permission();
 
-	public abstract Optional<List<ParameterSettings>> getParameterSettings();
+	public abstract Optional<List<ParameterSettings<?>>> getParameterSettings();
 
 	@Override
 	public CommandResult execute(CommandContext context) throws CommandException {
 		boolean isPlayer = context.cause().audience() instanceof ServerPlayer;
 		Locale locale = isPlayer ? ((ServerPlayer) context.cause().audience()).locale() : plugin.getLocales().getLocaleService().getSystemOrDefaultLocale();
-		if(!parameterSettings.isEmpty()) for(ParameterSettings settings : parameterSettings) if(!context.one(settings.getParameter()).isPresent() && (!settings.isOptional() || (isPlayer && !settings.isOptionalForPlayer()))) exception(locale, settings.getPath());
+		if(!parameterSettings.isEmpty()) for(ParameterSettings<?> settings : parameterSettings.values()) if(!context.one(settings.getParameterUnknownType()).isPresent() && (!settings.isOptional() || (isPlayer && !settings.isOptionalForPlayer()))) exception(locale, settings.getPath());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) context.cause().audience();
 			CommandSettings commandSettings = plugin.getCommandsConfig().getCommandConfig(this.command);
@@ -115,7 +116,7 @@ public abstract class AbstractCommand implements CommandExecutor {
 					.executor(this) :
 				Command.builder()
 					.permission(permission())
-					.addParameters((Parameter.Value<?>[]) parameterSettings.stream().map(ParameterSettings::getParameter).toArray())
+					.addParameters((Parameter.Value<?>[]) parameterSettings.values().stream().map(ParameterSettings::getParameterUnknownType).toArray())
 					.executor(this);
 	}
 
@@ -201,19 +202,11 @@ public abstract class AbstractCommand implements CommandExecutor {
 	}
 
 	public Optional<ServerPlayer> getPlayer(CommandContext context) {
-		return context.one(CommandParameters.createPlayer());
+		return parameterSettings.containsKey("Player") ? context.one(parameterSettings.get("Player").getParameter(ServerPlayer.class)) : Optional.empty();
 	}
 
-	public Optional<ServerPlayer> getPlayer(CommandContext context, String permission) {
-		return context.one(CommandParameters.createPlayer(permission));
-	}
-
-	public Optional<CompletableFuture<Optional<User>>> getUser(CommandContext context) {
-		return context.one(CommandParameters.createUser()).isPresent() ? Optional.ofNullable(Sponge.server().userManager().load(context.one(CommandParameters.createUser()).get())) : Optional.empty();
-	}
-
-	public Optional<CompletableFuture<Optional<User>>> getUser(CommandContext context, String permission) {
-		return context.one(CommandParameters.createUser(permission)).isPresent() ? Optional.ofNullable(Sponge.server().userManager().load(context.one(CommandParameters.createUser(permission)).get())) : Optional.empty();
+	public Optional<String> getUser(CommandContext context) {
+		return parameterSettings.containsKey("User") ? context.one(parameterSettings.get("User").getParameter(String.class)) : Optional.empty();
 	}
 
 	public void saveUser(User user) {

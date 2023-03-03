@@ -8,6 +8,7 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.math.vector.Vector3d;
 
 import sawfowl.commandpack.api.data.miscellaneous.Location;
@@ -16,7 +17,9 @@ import sawfowl.commandpack.api.data.miscellaneous.Position;
 @ConfigSerializable
 public class LocationData implements Location {
 
+	@Setting("World")
 	private String world;
+	@Setting("Position")
 	private PositionData position;
 	public LocationData() {}
 	public LocationData(ServerLocation location) {

@@ -19,6 +19,7 @@ import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.CommandParameters;
+import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -33,7 +34,7 @@ public class Hat extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		if(!continueEconomy(src)) return;
-		ServerPlayer player = getPlayer(context, Permissions.HAT_STAFF).orElse(src);
+		ServerPlayer player = getPlayer(context).orElse(src);
 		ItemStack handItem = src.itemInHand(HandTypes.MAIN_HAND.get()).copy();
 		if(handItem.type().equals(getAir())) exception(src, LocalesPaths.COMMANDS_HAT_NO_ITEM);
 		if(plugin.getMainConfig().isBlackListHat(handItem)) exception(src, LocalesPaths.COMMANDS_HAT_BLACKLIST_ITEM);
@@ -73,8 +74,8 @@ public class Hat extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public Optional<List<ParameterSettings>> getParameterSettings() {
-		return Optional.ofNullable(Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(Permissions.HAT_STAFF), true, true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)));
+	public Optional<List<ParameterSettings<?>>> getParameterSettings() {
+		return Optional.ofNullable(Arrays.asList(new ParameterSettings<ServerPlayer>(CommandParameters.createPlayer(Permissions.HAT_STAFF, true), true, true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)));
 	}
 
 }
