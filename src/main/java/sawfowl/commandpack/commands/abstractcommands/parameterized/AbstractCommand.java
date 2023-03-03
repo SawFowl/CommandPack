@@ -50,12 +50,12 @@ public abstract class AbstractCommand implements CommandExecutor {
 	final String[] aliases;
 	//protected final Set<ParameterSettings> parameterSettings = new HashSet<>();
 	private Map<UUID, Long> cooldowns = new HashMap<>();
-	protected final Map<String, ParameterSettings<?>> parameterSettings = new HashMap<>();
+	protected final Map<String, ParameterSettings> parameterSettings = new HashMap<>();
 	public AbstractCommand(CommandPack plugin, String command, String[] aliases) {
 		this.plugin = plugin;
 		this.command = command;
 		this.aliases = aliases;
-		Optional<List<ParameterSettings<?>>> parameterSettings = getParameterSettings();
+		Optional<List<ParameterSettings>> parameterSettings = getParameterSettings();
 		if(parameterSettings.isPresent() && !parameterSettings.get().isEmpty()) {
 			parameterSettings.get().forEach(setting -> {
 				setting.getParameterUnknownType().key().key();
@@ -70,13 +70,13 @@ public abstract class AbstractCommand implements CommandExecutor {
 
 	public abstract String permission();
 
-	public abstract Optional<List<ParameterSettings<?>>> getParameterSettings();
+	public abstract Optional<List<ParameterSettings>> getParameterSettings();
 
 	@Override
 	public CommandResult execute(CommandContext context) throws CommandException {
 		boolean isPlayer = context.cause().audience() instanceof ServerPlayer;
 		Locale locale = isPlayer ? ((ServerPlayer) context.cause().audience()).locale() : plugin.getLocales().getLocaleService().getSystemOrDefaultLocale();
-		if(!parameterSettings.isEmpty()) for(ParameterSettings<?> settings : parameterSettings.values()) if(!context.one(settings.getParameterUnknownType()).isPresent() && (!settings.isOptional() || (isPlayer && !settings.isOptionalForPlayer()))) exception(locale, settings.getPath());
+		if(!parameterSettings.isEmpty()) for(ParameterSettings settings : parameterSettings.values()) if(!context.one(settings.getParameterUnknownType()).isPresent() && (!settings.isOptional() || (isPlayer && !settings.isOptionalForPlayer()))) exception(locale, settings.getPath());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) context.cause().audience();
 			CommandSettings commandSettings = plugin.getCommandsConfig().getCommandConfig(this.command);
@@ -202,11 +202,19 @@ public abstract class AbstractCommand implements CommandExecutor {
 	}
 
 	public Optional<ServerPlayer> getPlayer(CommandContext context) {
-		return !parameterSettings.containsKey("Player") ? parameterSettings.get("Player").getParameterValue(ServerPlayer.class, context) : Optional.empty();
+		return getArgument(context, ServerPlayer.class, "Player");
 	}
 
 	public Optional<String> getUser(CommandContext context) {
-		return !parameterSettings.containsKey("User") ? parameterSettings.get("User").getParameterValue(String.class, context) : Optional.empty();
+		return getArgument(context, String.class, "User");
+	}
+
+	public Optional<Boolean> getBoolean(CommandContext context, String arg) {
+		return getArgument(context, Boolean.class, arg);
+	}
+
+	public <T> Optional<T> getArgument(CommandContext context, Class<T> object, String arg) {
+		return parameterSettings.containsKey(arg) ? parameterSettings.get(arg).getParameterValue(object, context) : Optional.empty();
 	}
 
 	public void saveUser(User user) {

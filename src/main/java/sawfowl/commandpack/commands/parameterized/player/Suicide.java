@@ -37,7 +37,7 @@ public class Suicide extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public Optional<List<ParameterSettings<?>>> getParameterSettings() {
+	public Optional<List<ParameterSettings>> getParameterSettings() {
 		return Optional.empty();
 	}
 

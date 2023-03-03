@@ -37,9 +37,9 @@ public class SetSpawn extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public Optional<List<ParameterSettings<?>>> getParameterSettings() {
+	public Optional<List<ParameterSettings>> getParameterSettings() {
 		return Optional.ofNullable(Arrays.asList(
-				new ParameterSettings<Boolean>(CommandParameters.createBoolean("ForceSpawn", true), true, true, new Object[]{})
+				new ParameterSettings(CommandParameters.createBoolean("ForceSpawn", true), true, true, new Object[]{})
 				));
 	}
 

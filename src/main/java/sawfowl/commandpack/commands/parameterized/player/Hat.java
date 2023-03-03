@@ -74,8 +74,8 @@ public class Hat extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public Optional<List<ParameterSettings<?>>> getParameterSettings() {
-		return Optional.ofNullable(Arrays.asList(new ParameterSettings<ServerPlayer>(CommandParameters.createPlayer(Permissions.HAT_STAFF, true), true, true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)));
+	public Optional<List<ParameterSettings>> getParameterSettings() {
+		return Optional.ofNullable(Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(Permissions.HAT_STAFF, true), true, true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)));
 	}
 
 }
