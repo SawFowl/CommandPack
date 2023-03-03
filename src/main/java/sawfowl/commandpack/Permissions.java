@@ -12,6 +12,7 @@ public class Permissions {
 	// User
 	public static final String HAT = "commandpack.commands.user.hat";
 	public static final String SUICIDE = "commandpack.commands.user.suicide";
+	public static final String SPAWN = "commandpack.commands.user.spawn";
 
 	// Staff
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.staff.ignore.delay.timer";
@@ -21,6 +22,7 @@ public class Permissions {
 
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
 	public static final String SET_SPAWN_STAFF = "commandpack.commands.staff.setspawn";
+	public static final String SPAWN_STAFF = "commandpack.commands.staff.spawn";
 
 	public static String getIgnoreDelayTimer(String command) {
 		return IGNORE_DELAY_TIMER + "." + command;

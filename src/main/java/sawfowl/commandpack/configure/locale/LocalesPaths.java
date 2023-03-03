@@ -36,5 +36,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_HAT_BLACKLIST_ITEM = {PATH_COMMANDS, COMMAND_HAT, PATH_EXCEPTIONS, "Blacklist"};
 	public static final Object[] COMMANDS_HAT_FULL_INVENTORY = {PATH_COMMANDS, COMMAND_HAT, PATH_EXCEPTIONS, "FullInventory"};
 	public static final Object[] COMMANDS_HAT_SUCCESS_OTHER = {PATH_COMMANDS, COMMAND_HAT, PATH_EXCEPTIONS, "SuccessOther"};
+	public static final Object[] COMMANDS_SETSPAWN_SUCCESS = {PATH_COMMANDS, "SetSpawn", "Success"};
+	public static final Object[] COMMANDS_SPAWN_SUCCESS = {PATH_COMMANDS, "Spawn", "Success"};
 
 }

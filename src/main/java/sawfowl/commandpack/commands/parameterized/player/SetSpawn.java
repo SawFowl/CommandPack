@@ -15,6 +15,8 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.CommandParameters;
 import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
+import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class SetSpawn extends AbstractPlayerCommand {
 
@@ -24,11 +26,14 @@ public class SetSpawn extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
+		plugin.getMainConfig().setSpawnData(new SpawnData(src.serverLocation(), src.rotation(), getBoolean(context, "ForceSpawn", false),getBoolean(context, "ForceRespawn", false)));
+		plugin.getConfigManager().updateMainConfig();
+		src.sendMessage(getText(src.locale(), LocalesPaths.COMMANDS_SETSPAWN_SUCCESS));
 	}
 
 	@Override
 	public Parameterized build() {
-		return builder().build();
+		return fastBuild();
 	}
 
 	@Override
@@ -39,7 +44,8 @@ public class SetSpawn extends AbstractPlayerCommand {
 	@Override
 	public Optional<List<ParameterSettings>> getParameterSettings() {
 		return Optional.ofNullable(Arrays.asList(
-				new ParameterSettings(CommandParameters.createBoolean("ForceSpawn", true), true, true, new Object[]{})
+				new ParameterSettings(CommandParameters.createBoolean("ForceSpawn", true), true, true, new Object[]{}),
+				new ParameterSettings(CommandParameters.createBoolean("ForceRespawn", true), true, true, new Object[]{})
 				));
 	}
 

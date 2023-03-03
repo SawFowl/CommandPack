@@ -61,7 +61,7 @@ public class Hat extends AbstractPlayerCommand {
 
 	@Override
 	public Parameterized build() {
-		return builder().build();
+		return fastBuild();
 	}
 
 	@Override

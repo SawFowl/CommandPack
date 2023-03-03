@@ -18,8 +18,10 @@ public class SpawnData {
 		this.locationData = new LocationData(serverLocation);
 	}
 
-	public SpawnData(ServerLocation serverLocation, Vector3d rotation) {
+	public SpawnData(ServerLocation serverLocation, Vector3d rotation, boolean forceSpawn, boolean forceRespawn) {
 		this.locationData = new LocationData(serverLocation, rotation);
+		this.forceSpawn = forceSpawn;
+		this.forceRespawn = forceRespawn;
 	}
 
 	@Setting("Location")

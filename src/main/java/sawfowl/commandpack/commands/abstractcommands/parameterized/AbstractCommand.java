@@ -120,6 +120,10 @@ public abstract class AbstractCommand implements CommandExecutor {
 					.executor(this);
 	}
 
+	public Command.Parameterized fastBuild() {
+		return builder().build();
+	}
+
 	public CommandException exception(Component text) throws CommandException {
 		throw new CommandException(text);
 	}
@@ -211,6 +215,10 @@ public abstract class AbstractCommand implements CommandExecutor {
 
 	public Optional<Boolean> getBoolean(CommandContext context, String arg) {
 		return getArgument(context, Boolean.class, arg);
+	}
+
+	public boolean getBoolean(CommandContext context, String arg, boolean def) {
+		return getBoolean(context, arg).orElse(def);
 	}
 
 	public <T> Optional<T> getArgument(CommandContext context, Class<T> object, String arg) {

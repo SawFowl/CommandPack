@@ -13,6 +13,8 @@ public class CommandParameters {
 
 	public static final Builder<Boolean> BOOLEAN = Parameter.bool();
 
+	public static final Builder<String> STRING = Parameter.string();
+
 	public static Value<ServerPlayer> createPlayer(boolean optional) {
 		return (optional ? PLAYER.optional() : PLAYER).build();
 	}
@@ -35,6 +37,14 @@ public class CommandParameters {
 
 	public static Value<Boolean> createBoolean(String key, String permission, boolean optional) {
 		return (optional ? BOOLEAN.optional() : BOOLEAN).key(key).requiredPermission(permission).build();
+	}
+
+	public static Value<String> createString(String key, boolean optional) {
+		return (optional ? STRING.optional() : STRING).key(key).build();
+	}
+
+	public static Value<String> createString(String key, String permission, boolean optional) {
+		return (optional ? STRING.optional() : STRING).key(key).requiredPermission(permission).build();
 	}
 
 }

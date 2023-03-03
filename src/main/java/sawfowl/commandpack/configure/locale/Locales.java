@@ -77,6 +77,8 @@ public class Locales {
 		save = check(locale, toText("&cThis item cannot be put on your head."), null, LocalesPaths.COMMANDS_HAT_BLACKLIST_ITEM) || save;
 		save = check(locale, toText("&cThe player's inventory &e" + Placeholders.PLAYER + "&c is full. Click on this message if you want to replace an item on a player's head. The item on the player's head will be lost!"), null, LocalesPaths.COMMANDS_HAT_BLACKLIST_ITEM) || save;
 		save = check(locale, toText("&aYou put an item on the head of player " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_HAT_SUCCESS_OTHER) || save;
+		save = check(locale, toText("&aThe spawn point has been set."), null, LocalesPaths.COMMANDS_SETSPAWN_SUCCESS) || save;
+		save = check(locale, toText("&aYou teleported to the spawn point."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS) || save;
 
 		if(save) save(locale);
 	}
@@ -105,6 +107,8 @@ public class Locales {
 		save = check(locale, toText("&cНельзя надеть на голову данный предмет."), null, LocalesPaths.COMMANDS_HAT_BLACKLIST_ITEM) || save;
 		save = check(locale, toText("&cИнвентарь игрока &e" + Placeholders.PLAYER + "&c заполнен. Кликните на это сообщение, если хотите заменить предмет на голове игрока. Предмет на голове игрока будет потерян!"), null, LocalesPaths.COMMANDS_HAT_BLACKLIST_ITEM) || save;
 		save = check(locale, toText("&aВы надели предмет на голову игроку " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_HAT_SUCCESS_OTHER) || save;
+		save = check(locale, toText("&aТочка спавна установленна."), null, LocalesPaths.COMMANDS_SETSPAWN_SUCCESS) || save;
+		save = check(locale, toText("&aВы переместились на спавн."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS) || save;
 
 		if(save) save(locale);
 	}
