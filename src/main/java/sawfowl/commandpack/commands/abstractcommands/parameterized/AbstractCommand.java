@@ -202,11 +202,11 @@ public abstract class AbstractCommand implements CommandExecutor {
 	}
 
 	public Optional<ServerPlayer> getPlayer(CommandContext context) {
-		return parameterSettings.containsKey("Player") ? context.one(parameterSettings.get("Player").getParameter(ServerPlayer.class)) : Optional.empty();
+		return !parameterSettings.containsKey("Player") ? parameterSettings.get("Player").getParameterValue(ServerPlayer.class, context) : Optional.empty();
 	}
 
 	public Optional<String> getUser(CommandContext context) {
-		return parameterSettings.containsKey("User") ? context.one(parameterSettings.get("User").getParameter(String.class)) : Optional.empty();
+		return !parameterSettings.containsKey("User") ? parameterSettings.get("User").getParameterValue(String.class, context) : Optional.empty();
 	}
 
 	public void saveUser(User user) {

@@ -1,6 +1,9 @@
 package sawfowl.commandpack.commands;
 
+import java.util.Optional;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.command.parameter.Parameter.Value;
 
@@ -21,9 +24,18 @@ public class ParameterSettings<T> {
 		return parameter;
 	}
 
-	@SuppressWarnings({ "hiding", "unchecked" })
+	@SuppressWarnings({ "hiding", "unchecked"})
 	public <T> Parameter.Value<T> getParameter(@NonNull final Class<T> object) {
-		return (Value<T>) parameter;
+		try {
+			return (Value<T>) this.parameter;
+		} catch (ClassCastException e) {
+			return null;
+		}
+	}
+
+	@SuppressWarnings("hiding")
+	public <T> Optional<T> getParameterValue(@NonNull final Class<T> object, CommandContext context) {
+		return getParameter(object) != null ? context.one(getParameter(object)) : Optional.empty();
 	}
 
 	public boolean isOptional() {
