@@ -45,4 +45,10 @@ public class SpawnData {
 		return forceSpawn;
 	}
 
+	@Override
+	public String toString() {
+		return "SpawnData [locationData=" + locationData + ", forceRespawn=" + forceRespawn + ", forceSpawn="
+				+ forceSpawn + "]";
+	}
+
 }

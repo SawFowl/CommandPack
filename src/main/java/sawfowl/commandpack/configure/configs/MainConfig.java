@@ -25,7 +25,7 @@ public class MainConfig {
 	@Setting("BlackListHatItems")
 	private List<String> blackListHatItems = new ArrayList<>(Arrays.asList("minecraft:diamond_chestplate"));
 	@Setting("Spawn")
-	private SpawnData SpawnData;
+	private SpawnData spawnData;
 
 	public boolean isJsonLocales() {
 		return jsonLocales;
@@ -48,11 +48,11 @@ public class MainConfig {
 	}
 
 	public Optional<SpawnData> getSpawnData() {
-		return Optional.ofNullable(SpawnData);
+		return Optional.ofNullable(spawnData);
 	}
 
 	public void setSpawnData(SpawnData spawnData) {
-		SpawnData = spawnData;
+		this.spawnData = spawnData;
 	}
 
 }

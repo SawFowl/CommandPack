@@ -41,6 +41,10 @@ public class Locales {
 		return getAbstractLocaleUtil(locale).getComponent(json, path);
 	}
 
+	public String getString(Locale locale, Object... path) {
+		return TextUtils.serializeLegacy(getText(locale, path));
+	}
+
 	public Component getTextWithReplaced(Locale locale, Map<String, String> map, Object... path) {
 		return replace(getText(locale, path), map);
 	}
@@ -65,9 +69,15 @@ public class Locales {
 		save = check(locale, toText("m"), null, LocalesPaths.TIME_MINUTE) || save;
 		save = check(locale, toText("s"), null, LocalesPaths.TIME_SECOND) || save;
 
+		save = check(locale, toText("Server"), null, LocalesPaths.NAME_SYSTEM) || save;
+		save = check(locale, toText("Command block"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
+		save = check(locale, toText("Minecart with command block"), null, LocalesPaths.NAME_COMMANDBLOCK_MINECART) || save;
+		save = check(locale, toText("Unknown"), null, LocalesPaths.NAME_UNKNOWN) || save;
+
+		save = check(locale, toText("&cYou must specify the player's nickname."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cWait &e" + Placeholders.DELAY + "&c before using this command again."), null, LocalesPaths.COMMANDS_COOLDOWN) || save;
 		save = check(locale, toText("&aCommand activation via &e" + Placeholders.DELAY + "&a."), null, LocalesPaths.COMMANDS_WAIT) || save;
-		save = check(locale, toText(Placeholders.SOURCE + " ran the command: " + Placeholders.COMMAND + ""), null, LocalesPaths.COMMANDS_LOG) || save;
+		save = check(locale, toText(Placeholders.SOURCE + " ran the command: /" + Placeholders.COMMAND + Placeholders.ARGS + ""), null, LocalesPaths.COMMANDS_LOG) || save;
 		save = check(locale, toText("CommandSettings \"" + Placeholders.COMMAND + "\" is not registered for tracking."), null, LocalesPaths.COMMANDS_NOT_TRACKING) || save;
 		save = check(locale, toText("&cExecution of command &e\"&5" + Placeholders.COMMAND + "&e\"&c has stopped because you entered another command."), null, LocalesPaths.COMMANDS_STOP_TRACKING_COMMAND) || save;
 		save = check(locale, toText("&cExecution of command &e\"&5" + Placeholders.COMMAND + "&e\"&c is stopped because you have moved."), null, LocalesPaths.COMMANDS_STOP_TRACKING_MOVING) || save;;
@@ -79,6 +89,7 @@ public class Locales {
 		save = check(locale, toText("&aYou put an item on the head of player " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_HAT_SUCCESS_OTHER) || save;
 		save = check(locale, toText("&aThe spawn point has been set."), null, LocalesPaths.COMMANDS_SETSPAWN_SUCCESS) || save;
 		save = check(locale, toText("&aYou teleported to the spawn point."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a teleported you to the spawnpoint."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS_OTHER) || save;
 
 		if(save) save(locale);
 	}
@@ -95,9 +106,15 @@ public class Locales {
 		save = check(locale, toText("м"), null, LocalesPaths.TIME_MINUTE) || save;
 		save = check(locale, toText("с"), null, LocalesPaths.TIME_SECOND) || save;
 
+		save = check(locale, toText("Сервер"), null, LocalesPaths.NAME_SYSTEM) || save;
+		save = check(locale, toText("Командный блок"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
+		save = check(locale, toText("Вагонетка с командным блоком"), null, LocalesPaths.NAME_COMMANDBLOCK_MINECART) || save;
+		save = check(locale, toText("Неизвестный"), null, LocalesPaths.NAME_UNKNOWN) || save;
+
+		save = check(locale, toText("&cНужно указать ник игрока."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cПодождите &e" + Placeholders.DELAY + "&c прежде чем снова использовать эту команду."), null, LocalesPaths.COMMANDS_COOLDOWN) || save;
 		save = check(locale, toText("&aАктивация команды через &e" + Placeholders.DELAY + "&a."), null, LocalesPaths.COMMANDS_WAIT) || save;
-		save = check(locale, toText(Placeholders.SOURCE + " выполняет команду: " + Placeholders.COMMAND + ""), null, LocalesPaths.COMMANDS_LOG) || save;
+		save = check(locale, toText(Placeholders.SOURCE + " выполняет команду: /" + Placeholders.COMMAND + Placeholders.ARGS + ""), null, LocalesPaths.COMMANDS_LOG) || save;
 		save = check(locale, toText("Команда \"" + Placeholders.COMMAND + "\" не зарегистрированна на отслеживание."), null, LocalesPaths.COMMANDS_NOT_TRACKING) || save;
 		save = check(locale, toText("&cОстановленно выполнение команды &e\"&5" + Placeholders.COMMAND + "&e\"&c так как вы ввели другую команду."), null, LocalesPaths.COMMANDS_STOP_TRACKING_COMMAND) || save;
 		save = check(locale, toText("&cОстановленно выполнение команды &e\"&5" + Placeholders.COMMAND + "&e\"&c так как вы сдвинулись с места."), null, LocalesPaths.COMMANDS_STOP_TRACKING_MOVING) || save;
@@ -109,6 +126,7 @@ public class Locales {
 		save = check(locale, toText("&aВы надели предмет на голову игроку " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_HAT_SUCCESS_OTHER) || save;
 		save = check(locale, toText("&aТочка спавна установленна."), null, LocalesPaths.COMMANDS_SETSPAWN_SUCCESS) || save;
 		save = check(locale, toText("&aВы переместились на спавн."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + " &aпереместил вас на спавн."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS_OTHER) || save;
 
 		if(save) save(locale);
 	}

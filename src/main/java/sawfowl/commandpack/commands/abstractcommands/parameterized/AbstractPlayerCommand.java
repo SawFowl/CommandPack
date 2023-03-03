@@ -30,7 +30,7 @@ public abstract class AbstractPlayerCommand extends AbstractCommand {
 	public abstract void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException;
 
 	@Override
-	public void execute(CommandContext context, Audience src, Locale locale) throws CommandException {
+	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		execute(context, (ServerPlayer) src, locale);
 	}
 

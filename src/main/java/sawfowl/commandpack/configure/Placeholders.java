@@ -7,6 +7,7 @@ public class Placeholders {
 	public static final String ITEM = "%item%";
 	public static final String DELAY = "%delay%";
 	public static final String COMMAND = "%command%";
+	public static final String ARGS = "%args%";
 	public static final String MONEY = "%money%";
 
 }

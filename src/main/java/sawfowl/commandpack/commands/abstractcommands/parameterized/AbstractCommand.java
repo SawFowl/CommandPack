@@ -19,7 +19,7 @@ import org.spongepowered.api.command.CommandExecutor;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
-import org.spongepowered.api.command.parameter.Parameter;
+import org.spongepowered.api.command.parameter.Parameter.Value;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
@@ -55,22 +55,22 @@ public abstract class AbstractCommand implements CommandExecutor {
 		this.plugin = plugin;
 		this.command = command;
 		this.aliases = aliases;
-		Optional<List<ParameterSettings>> parameterSettings = getParameterSettings();
-		if(parameterSettings.isPresent() && !parameterSettings.get().isEmpty()) {
-			parameterSettings.get().forEach(setting -> {
+		List<ParameterSettings> parameterSettings = getParameterSettings();
+		if(parameterSettings != null && !parameterSettings.isEmpty()) {
+			parameterSettings.forEach(setting -> {
 				setting.getParameterUnknownType().key().key();
 				this.parameterSettings.put(setting.getParameterUnknownType().key().key(), setting);
 			});
 		}
 	}
 
-	public abstract void execute(CommandContext context, Audience src, Locale locale) throws CommandException;
+	public abstract void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException;
 
 	public abstract Command.Parameterized build();
 
 	public abstract String permission();
 
-	public abstract Optional<List<ParameterSettings>> getParameterSettings();
+	public abstract List<ParameterSettings> getParameterSettings();
 
 	@Override
 	public CommandResult execute(CommandContext context) throws CommandException {
@@ -100,8 +100,8 @@ public abstract class AbstractCommand implements CommandExecutor {
 			if(commandSettings.getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(this.command))) {
 				plugin.getTempPlayerData().addCommandTracking(this.command, player);
 				Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(1, TimeUnit.SECONDS).execute(new DelayTimerTask(context, player, commandSettings.getDelay().getSeconds())).build());
-			} else execute(context, player, locale);
-		} else execute(context, context.cause().audience(), locale);
+			} else execute(context, player, locale, isPlayer);
+		} else execute(context, context.cause().audience(), locale, isPlayer);
 		return success();
 	}
 
@@ -116,7 +116,7 @@ public abstract class AbstractCommand implements CommandExecutor {
 					.executor(this) :
 				Command.builder()
 					.permission(permission())
-					.addParameters((Parameter.Value<?>[]) parameterSettings.values().stream().map(ParameterSettings::getParameterUnknownType).toArray())
+					.addParameters(parameterSettings.values().stream().map(ParameterSettings::getParameterUnknownType).toArray(Value[]::new))
 					.executor(this);
 	}
 
@@ -209,6 +209,10 @@ public abstract class AbstractCommand implements CommandExecutor {
 		return getArgument(context, ServerPlayer.class, "Player");
 	}
 
+	public Optional<ServerPlayer> getPlayer(CommandContext context, Audience src, boolean isPlayer) {
+		return Optional.ofNullable(getPlayer(context).orElseGet(() -> (isPlayer ? (ServerPlayer) src : null)));
+	}
+
 	public Optional<String> getUser(CommandContext context) {
 		return getArgument(context, String.class, "User");
 	}
@@ -266,7 +270,7 @@ public abstract class AbstractCommand implements CommandExecutor {
 				Sponge.server().scheduler().executor(plugin.getPluginContainer()).execute(() -> {
 					getPlayer(uuid).ifPresent(player -> {
 						try {
-							execute(context, player, player.locale());
+							execute(context, player, player.locale(), true);
 						} catch (CommandException e) {
 							plugin.getLogger().error(e.getLocalizedMessage());
 						}

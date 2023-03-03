@@ -1,13 +1,19 @@
 package sawfowl.commandpack.listeners;
 
+import java.util.Locale;
+import java.util.Optional;
+
 import org.spongepowered.api.SystemSubject;
-import org.spongepowered.api.block.entity.CommandBlock;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.command.CommandCause;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.command.ExecuteCommandEvent;
 import org.spongepowered.api.util.Nameable;
+import org.spongepowered.api.world.LocatableBlock;
 
-import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -16,18 +22,44 @@ import sawfowl.localeapi.api.TextUtils;
 public class CommandLogListener {
 
 	private final CommandPack plugin;
-	private final Component toLog;
+	private final Locale locale;
 	public CommandLogListener(CommandPack plugin) {
 		this.plugin = plugin;
-		toLog = plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_LOG);
+		locale = plugin.getLocales().getLocaleService().getSystemOrDefaultLocale();
 	}
 
 	@Listener(order = Order.PRE)
 	public void onExecute(ExecuteCommandEvent.Pre event) {
-		String name = event.commandCause().audience() instanceof Nameable ? ((Nameable) event.commandCause().audience()).name() :
-			event.commandCause().audience() instanceof SystemSubject ? "Server" :
-				event.commandCause().audience() instanceof CommandBlock ? "CommandBlock " + ((CommandBlock) event.commandCause().audience()).blockPosition().toString() : "UnknownSource";
-		plugin.getLogger().info(TextUtils.replace(toLog, new String[] {Placeholders.SOURCE, Placeholders.COMMAND}, new String[] {name, event.command()}));
+		/*plugin.getLogger().error(isCommandBlock(event.commandCause()));
+		getLocatableBlock(event.commandCause()).ifPresent(block -> {
+			plugin.getLogger().error(block.blockPosition());
+		});*/
+		String name = event.commandCause().audience() instanceof SystemSubject ? getString(LocalesPaths.NAME_SYSTEM) :
+				isCommandBlock(event.commandCause()) ? getString(LocalesPaths.NAME_COMMANDBLOCK) + getLocatableBlock(event.commandCause()).get().blockPosition() :
+					isCommandBlockMinecart(event.commandCause()) ? getString(LocalesPaths.NAME_COMMANDBLOCK_MINECART) + getEntity(event.commandCause()).get().blockPosition().toString() :
+						event.commandCause().audience() instanceof Nameable ? ((Nameable) event.commandCause().audience()).name() :
+							getString(LocalesPaths.NAME_UNKNOWN);
+		plugin.getLogger().info(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, TextUtils.clearDecorations(name)).replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+	}
+
+	private String getString(Object[] path) {
+		return plugin.getLocales().getString(locale, path);
+	}
+
+	private boolean isCommandBlock(CommandCause cause) {
+		return getLocatableBlock(cause).filter(block -> (block.blockState().type().equals(BlockTypes.COMMAND_BLOCK.get()) || block.blockState().type().equals(BlockTypes.CHAIN_COMMAND_BLOCK.get()) || block.blockState().type().equals(BlockTypes.REPEATING_COMMAND_BLOCK.get()))).isPresent();
+	}
+
+	private Optional<LocatableBlock> getLocatableBlock(CommandCause cause) {
+		return cause.first(LocatableBlock.class);
+	}
+
+	private boolean isCommandBlockMinecart(CommandCause cause) {
+		return getEntity(cause).isPresent();
+	}
+
+	private Optional<Entity> getEntity(CommandCause cause) {
+		return cause.first(Entity.class).filter(entity -> (entity.type().equals(EntityTypes.COMMAND_BLOCK_MINECART.get())));
 	}
 
 }

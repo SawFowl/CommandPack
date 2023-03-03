@@ -15,10 +15,34 @@ public class CommandSettings {
 
 	public CommandSettings() {}
 
+	public CommandSettings(String[] aliases) {
+		this.aliases = aliases;
+	}
+
+	public CommandSettings(Delay delay) {
+		this.delay = delay;
+	}
+
+	public CommandSettings(long cooldown) {
+		this.cooldown = cooldown;
+	}
+
+	public CommandSettings(long cooldown, Delay delay) {
+		this.cooldown = cooldown;
+		this.delay = delay;
+	}
+
 	public CommandSettings(long cooldown, Delay delay, CommandPrice price) {
 		this.cooldown = cooldown;
 		this.delay = delay;
 		this.price = price;
+	}
+
+	public CommandSettings(long cooldown, Delay delay, CommandPrice price, String[] aliases) {
+		this.cooldown = cooldown;
+		this.delay = delay;
+		this.price = price;
+		this.aliases = aliases;
 	}
 
 	@Setting("Aliases")

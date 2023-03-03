@@ -13,7 +13,9 @@ public class LocalesPaths {
 	private static final Object PATH_EXCEPTIONS = "Exceptions";
 	private static final Object PATH_TIME = "Time";
 	private static final Object PATH_TRACKING = "Time";
+	private static final Object NAMES = "Names";
 	private static final Object COMMAND_HAT = "Hat";
+	private static final Object COMMAND_SPAWN = "Spawn";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -22,6 +24,11 @@ public class LocalesPaths {
 	public static final Object[] ECONOMY_NOT_FOUND = {PATH_ECONOMY, PATH_EXCEPTIONS, "EconomyNotFound"};
 	public static final Object[] ECONOMY_ERROR_GIVE_MONEY = {PATH_ECONOMY, PATH_EXCEPTIONS, "ErrorGiveMoney"};
 	public static final Object[] ECONOMY_ERROR_TAKE_MONEY = {PATH_ECONOMY, PATH_EXCEPTIONS, "ErrorTakeMoney"};
+
+	public static final Object[] NAME_SYSTEM = {NAMES, "SystemSubject"};
+	public static final Object[] NAME_COMMANDBLOCK = {NAMES, "CommandBlock"};
+	public static final Object[] NAME_COMMANDBLOCK_MINECART = {NAMES, "CommandBlockMineCart"};
+	public static final Object[] NAME_UNKNOWN = {NAMES, "UnknownSource"};
 
 	public static final Object[] COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, "PlayerNotPresent"};
 	public static final Object[] COMMANDS_NOT_TRACKING = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "NotTracking"};
@@ -37,6 +44,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_HAT_FULL_INVENTORY = {PATH_COMMANDS, COMMAND_HAT, PATH_EXCEPTIONS, "FullInventory"};
 	public static final Object[] COMMANDS_HAT_SUCCESS_OTHER = {PATH_COMMANDS, COMMAND_HAT, PATH_EXCEPTIONS, "SuccessOther"};
 	public static final Object[] COMMANDS_SETSPAWN_SUCCESS = {PATH_COMMANDS, "SetSpawn", "Success"};
-	public static final Object[] COMMANDS_SPAWN_SUCCESS = {PATH_COMMANDS, "Spawn", "Success"};
+	public static final Object[] COMMANDS_SPAWN_SUCCESS = {PATH_COMMANDS, COMMAND_SPAWN, "Success"};
+	public static final Object[] COMMANDS_SPAWN_SUCCESS_OTHER = {PATH_COMMANDS, COMMAND_SPAWN, "SuccessOther"};
 
 }

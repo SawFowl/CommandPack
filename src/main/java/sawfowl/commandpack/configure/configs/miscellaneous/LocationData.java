@@ -57,4 +57,9 @@ public class LocationData implements Location {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "LocationData [world=" + world + ", position=" + position + "]";
+	}
+
 }

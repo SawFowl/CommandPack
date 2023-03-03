@@ -50,4 +50,9 @@ public class PositionData implements Position {
 		return Optional.ofNullable(rotation);
 	}
 
+	@Override
+	public String toString() {
+		return "PositionData [x=" + x + ", y=" + y + ", z=" + z + ", rotation=" + rotation + "]";
+	}
+
 }

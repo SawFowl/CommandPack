@@ -28,4 +28,9 @@ public class RotationData implements Rotation {
 		return Vector3d.from(x, y, z);
 	}
 
+	@Override
+	public String toString() {
+		return "RotationData [x=" + x + ", y=" + y + ", z=" + z + "]";
+	}
+
 }

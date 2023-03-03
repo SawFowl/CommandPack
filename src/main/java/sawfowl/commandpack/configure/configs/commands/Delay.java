@@ -7,6 +7,9 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 public class Delay {
 
 	public Delay() {}
+	public Delay(long seconds) {
+		this.seconds = seconds;
+	}
 	public Delay(long seconds, CancelRules cancelRules) {
 		this.seconds = seconds;
 		this.cancelRules = cancelRules;

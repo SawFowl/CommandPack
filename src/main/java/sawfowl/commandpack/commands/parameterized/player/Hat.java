@@ -3,7 +3,6 @@ package sawfowl.commandpack.commands.parameterized.player;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import org.spongepowered.api.adventure.SpongeComponents;
 import org.spongepowered.api.command.Command.Parameterized;
@@ -74,8 +73,8 @@ public class Hat extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public Optional<List<ParameterSettings>> getParameterSettings() {
-		return Optional.ofNullable(Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(Permissions.HAT_STAFF, true), true, true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)));
+	public List<ParameterSettings> getParameterSettings() {
+		return Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(Permissions.HAT_STAFF, true), true, true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 
 }

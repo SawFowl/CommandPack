@@ -2,7 +2,6 @@ package sawfowl.commandpack.commands.parameterized.player;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
@@ -37,8 +36,8 @@ public class Suicide extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public Optional<List<ParameterSettings>> getParameterSettings() {
-		return Optional.empty();
+	public List<ParameterSettings> getParameterSettings() {
+		return null;
 	}
 
 }

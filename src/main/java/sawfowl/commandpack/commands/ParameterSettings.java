@@ -15,7 +15,7 @@ public class ParameterSettings {
 	private final Object[] path;
 	public ParameterSettings(Parameter.Value<?> parameter, boolean optional, boolean optionalForPlayer, Object... path) {
 		this.parameter = parameter;
-		this.optional = optional;
+		this.optional = false;
 		this.optionalForPlayer = optionalForPlayer;
 		this.path = path;
 	}

@@ -3,7 +3,6 @@ package sawfowl.commandpack.commands.parameterized.player;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
@@ -42,11 +41,11 @@ public class SetSpawn extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public Optional<List<ParameterSettings>> getParameterSettings() {
-		return Optional.ofNullable(Arrays.asList(
-				new ParameterSettings(CommandParameters.createBoolean("ForceSpawn", true), true, true, new Object[]{}),
-				new ParameterSettings(CommandParameters.createBoolean("ForceRespawn", true), true, true, new Object[]{})
-				));
+	public List<ParameterSettings> getParameterSettings() {
+		return Arrays.asList(
+					new ParameterSettings(CommandParameters.createBoolean("ForceSpawn", true), true, true, new Object[]{}),
+					new ParameterSettings(CommandParameters.createBoolean("ForceRespawn", true), true, true, new Object[]{})
+				);
 	}
 
 }

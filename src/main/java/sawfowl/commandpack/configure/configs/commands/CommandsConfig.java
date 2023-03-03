@@ -21,6 +21,10 @@ public class CommandsConfig {
 	private CommandSettings suicide = new CommandSettings();
 	@Setting("Hat")
 	private CommandSettings hat = new CommandSettings();
+	@Setting("SetSpawn")
+	private CommandSettings setSpawn = new CommandSettings();
+	@Setting("Spawn")
+	private CommandSettings spawn = new CommandSettings(new Delay(3));
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

@@ -49,11 +49,7 @@ public class ConfigManager {
 	}
 
 	public void updateMainConfig() {
-		try {
-			mainConfigReference.save();
-		} catch (ConfigurateException e) {
-			plugin.getLogger().warn(e.getLocalizedMessage());
-		}
+		mainConfig.setAndSave(getMainConfig());
 	}
 
 	private void saveMainConfig() {

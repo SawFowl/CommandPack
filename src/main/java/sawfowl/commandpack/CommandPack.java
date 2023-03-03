@@ -19,7 +19,9 @@ import com.google.inject.Inject;
 import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.iTempPlayerData;
 import sawfowl.commandpack.apiclasses.TempPlayerData;
+import sawfowl.commandpack.commands.parameterized.Spawn;
 import sawfowl.commandpack.commands.parameterized.player.Hat;
+import sawfowl.commandpack.commands.parameterized.player.SetSpawn;
 import sawfowl.commandpack.commands.parameterized.player.Suicide;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.configs.MainConfig;
@@ -118,6 +120,12 @@ public class CommandPack {
 	public void registerParameterizedCommands(RegisterCommandEvent<Parameterized> event) {
 		getCommandSettings("hat").ifPresent(settings -> {
 			new Hat(instance, "hat", settings.getAliases()).register(event);
+		});
+		getCommandSettings("setspawn").ifPresent(settings -> {
+			new SetSpawn(instance, "setspawn", settings.getAliases()).register(event);
+		});
+		getCommandSettings("spawn").ifPresent(settings -> {
+			new Spawn(instance, "spawn", settings.getAliases()).register(event);
 		});
 		getCommandSettings("suicide").ifPresent(settings -> {
 			new Suicide(instance, "suicide", settings.getAliases()).register(event);
