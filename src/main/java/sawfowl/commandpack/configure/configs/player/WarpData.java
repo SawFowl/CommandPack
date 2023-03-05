@@ -2,31 +2,36 @@ package sawfowl.commandpack.configure.configs.player;
 
 import java.util.Objects;
 
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.api.data.miscellaneous.Location;
-import sawfowl.commandpack.api.data.player.Home;
+import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
-public class HomeData implements Home {
+public class WarpData implements Warp {
 
-	public HomeData(){}
-	public HomeData(String name, Location locationData, boolean def) {
+	public WarpData(){}
+	public WarpData(String name, Location locationData) {
 		this.name = name;
 		this.locationData = (LocationData) locationData;
-		this.def = def;
 	}
 
 	@Setting("Name")
 	private String name;
 	@Setting("Location")
 	private LocationData locationData;
-	@Setting("Default")
-	private boolean def;
+	@Setting("Private")
+	private Boolean privated;
+
+	@Override
+	public Component asComponent() {
+		return TextUtils.deserialize(name);
+	}
 
 	@Override
 	public String getName() {
@@ -36,11 +41,6 @@ public class HomeData implements Home {
 	@Override
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	@Override
-	public Component asComponent() {
-		return TextUtils.deserialize(name);
 	}
 
 	@Override
@@ -54,21 +54,28 @@ public class HomeData implements Home {
 	}
 
 	@Override
-	public boolean isDefault() {
-		return def;
+	public boolean isPrivate() {
+		return privated != null && privated;
 	}
 
-	void setDefault() {
-		def = true;
+	@Override
+	public Warp setPrivate(boolean value) {
+		privated = value;
+		return this;
 	}
 
-	void setBasic() {
-		def = false;
+	@Override
+	public boolean moveToThis(Entity entity) {
+		return locationData.moveToThis(entity);
+	}
+
+	Warp toInterface() {
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "HomeData [Name=" + name + ", Location=" + locationData + ", Default=" + def + "]";
+		return "WarpData [name=" + name + ", locationData=" + locationData + ", privated=" + privated + "]";
 	}
 
 	@Override
@@ -78,13 +85,11 @@ public class HomeData implements Home {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!(obj instanceof HomeData)) return false;
-		return Objects.equals(name, ((HomeData) obj).name);
+		if(this == obj) return true;
+		if (!(obj instanceof WarpData)) return false;
+		return Objects.equals(name, ((WarpData) obj).name);
 	}
 
-	Home toInterface() {
-		return this;
-	}
+	
 
 }

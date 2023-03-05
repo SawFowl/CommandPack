@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -43,9 +44,20 @@ public interface PlayerData {
 	List<Home> getHomes();
 
 	/**
+	 * A collection of player {@link Warp}'s.
+	 */
+	List<Warp> getWarps();
+
+	/**
 	 * The number of existing points at the player's home.
 	 */
 	long getTotalHomes();
+
+
+	/**
+	 * The number of existing points at the player's warps.
+	 */
+	long getTotalWarps();
 
 	/**
 	 * Add {@link Home} point.
@@ -53,9 +65,24 @@ public interface PlayerData {
 	boolean addHome(Home home, int limit);
 
 	/**
-	 * Remove home point
+	 * Remove {@link Home} point
 	 */
 	boolean removeHome(String name);
+
+	/**
+	 * Add {@link Warp} point.
+	 */
+	boolean addWarp(Warp warp, int limit);
+
+	/**
+	 * Remove {@link Warp} point
+	 */
+	boolean removeWarp(String name);
+
+	/**
+	 * Check for {@link Warp} exist by name.
+	 */
+	boolean containsWarp(String name);
 
 	/**
 	 * Gets default {@link Home} point.
@@ -67,13 +94,24 @@ public interface PlayerData {
 	 */
 	public Optional<Home> getHome(String name);
 
+	Optional<Warp> getWarp(String name);
+
 	/**
-	 * Getting a clickable chat menu with a list of houses.
+	 * Getting a clickable chat menu with a list of homes.
 	 * 
 	 * @param locale - Localization of chat buttons.
-	 * @param allowRemove - Allow deleting house points through the chat menu.
+	 * @param allowRemove - Allow deleting home points through the chat menu.
 	 */
 	List<Component> homesListChatMenu(Locale locale, boolean allowRemove);
+
+
+	/**
+	 * Getting a clickable chat menu with a list of warps.
+	 * 
+	 * @param locale - Localization of chat buttons.
+	 * @param allowRemove - Allow deleting warp points through the chat menu.
+	 */
+	List<Component> warpsListChatMenu(Locale locale, Predicate<Warp> allowRemove, Predicate<Warp> allowTeleport);
 
 	/**
 	 * Sending a message to a player if he is online.

@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
@@ -19,6 +20,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.player.Home;
+import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
@@ -38,6 +40,8 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	private UUID uuid;
 	@Setting("Homes")
 	private List<HomeData> homes = new ArrayList<>();
+	@Setting("Warps")
+	private List<WarpData> warps = new ArrayList<>();
 
 	@Override
 	public String getName() {
@@ -65,12 +69,22 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 
 	@Override
 	public List<Home> getHomes() {
-		return homes.stream().map(home -> ((Home) home)).collect(Collectors.toList());
+		return homes.stream().map(HomeData::toInterface).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Warp> getWarps() {
+		return warps.stream().map(WarpData::toInterface).collect(Collectors.toList());
 	}
 
 	@Override 
 	public long getTotalHomes() {
 		return homes.size();
+	}
+
+	@Override 
+	public long getTotalWarps() {
+		return warps.size();
 	}
 
 	@Override
@@ -87,13 +101,35 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	}
 
 	@Override
+	public boolean addWarp(Warp warp, int limit) {
+		if(!removeWarp(warp.getName()) && warps.size() >= limit) return false;
+		warps.add((WarpData) warp);
+		return true;
+	}
+
+	@Override
+	public boolean removeWarp(String name) {
+		return warps.removeIf(warp -> (warp.getName().equals(name)));
+	}
+
+	@Override
+	public boolean containsWarp(String name) {
+		return warps.stream().filter(warp -> (warp.getName().equals(name))).findFirst().isPresent();
+	}
+
+	@Override
 	public Optional<Home> getDefaultHome() {
 		return homes.stream().filter(Home::isDefault).map(home -> ((Home) home)).findFirst();
 	}
 
 	@Override
 	public Optional<Home> getHome(String name) {
-		return homes.stream().filter(home -> (name.equals(TextUtils.clearDecorations(home.asComponent())))).map(home -> ((Home) home)).findFirst();
+		return homes.stream().filter(home -> (name.equals(TextUtils.clearDecorations(home.asComponent())))).map(HomeData::toInterface).findFirst();
+	}
+
+	@Override
+	public Optional<Warp> getWarp(String name) {
+		return warps.stream().filter(warp -> (name.equals(TextUtils.clearDecorations(warp.asComponent())))).map(WarpData::toInterface).findFirst();
 	}
 
 	@Override
@@ -112,6 +148,24 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 				home.getLocation().moveToThis((Entity) cause.root());
 			})) : locales.getText(locale, LocalesPaths.TELEPORT);
 			Component homeName = home.asComponent();
+			list.add(remove.append(teleport).append(homeName));
+		});
+		return list;
+	}
+
+	@Override
+	public List<Component> warpsListChatMenu(Locale locale, Predicate<Warp> allowRemove, Predicate<Warp> allowTeleport) {
+		Locales locales = ((CommandPack) Sponge.pluginManager().plugin("commandpack").get().instance()).getLocales();
+		List<Component> list = new ArrayList<>();
+		warps.forEach(warp -> {
+			Component remove = allowRemove.test(warp) ? locales.getText(locale, LocalesPaths.REMOVE).clickEvent(SpongeComponents.executeCallback(cause -> {
+				removeWarp(warp.getName());
+				save();
+			})) : Component.empty();
+			Component teleport =  warp.getLocation().getServerLocation().isPresent() && allowTeleport.test(warp) ? locales.getText(locale, LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback(cause -> {
+				warp.moveToThis((Entity) cause.root());
+			})) : locales.getText(locale, LocalesPaths.TELEPORT);
+			Component homeName = warp.asComponent();
 			list.add(remove.append(teleport).append(homeName));
 		});
 		return list;

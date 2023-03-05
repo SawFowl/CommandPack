@@ -18,7 +18,7 @@ import com.google.inject.Inject;
 
 import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.PlayersData;
-import sawfowl.commandpack.api.iTempPlayerData;
+import sawfowl.commandpack.api.ITempPlayerData;
 import sawfowl.commandpack.apiclasses.TempPlayerData;
 import sawfowl.commandpack.commands.parameterized.Spawn;
 import sawfowl.commandpack.commands.parameterized.player.Hat;
@@ -50,7 +50,7 @@ public class CommandPack {
 	private Locales locales;
 	private ConfigManager configManager;
 	private Economy economy;
-	private iTempPlayerData tempPlayerData;
+	private ITempPlayerData tempPlayerData;
 	private PlayersData playersData;
 	public CommandPack getInstance() {
 		return instance;
@@ -88,7 +88,7 @@ public class CommandPack {
 		return configManager;
 	}
 
-	public iTempPlayerData getTempPlayerData() {
+	public ITempPlayerData getTempPlayerData() {
 		return tempPlayerData;
 	}
 
@@ -105,7 +105,7 @@ public class CommandPack {
 	}
 
 	@Listener
-	public void onLocaleServisePostEvent(LocaleServiseEvent.Construct event) {
+	public void onLocaleServicePostEvent(LocaleServiseEvent.Construct event) {
 		configManager = new ConfigManager(instance, event.getLocaleService().getConfigurationOptions());
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
 		tempPlayerData = new TempPlayerData(instance);

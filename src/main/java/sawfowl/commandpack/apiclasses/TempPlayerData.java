@@ -11,13 +11,13 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.api.iTempPlayerData;
+import sawfowl.commandpack.api.ITempPlayerData;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
-public class TempPlayerData implements iTempPlayerData {
+public class TempPlayerData implements ITempPlayerData {
 
 	private final CommandPack plugin;
 	private Map<String, List<UUID>> trackingCommandDelay = new HashMap<>();

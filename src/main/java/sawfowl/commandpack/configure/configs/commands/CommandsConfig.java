@@ -29,6 +29,10 @@ public class CommandsConfig {
 	private CommandSettings setSpawn = new CommandSettings();
 	@Setting("Spawn")
 	private CommandSettings spawn = new CommandSettings(new Delay(3));
+	@Setting("SetWarp")
+	private CommandSettings setWarp = new CommandSettings();
+	@Setting("Warp")
+	private CommandSettings warp = new CommandSettings(new Delay(3));
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));
