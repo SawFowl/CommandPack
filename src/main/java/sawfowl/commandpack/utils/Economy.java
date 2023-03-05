@@ -33,14 +33,14 @@ public class Economy {
 	}
 
 	public BigDecimal getPlayerBalance(UUID uuid, Currency currency) {
-        try {
-            Optional<UniqueAccount> uOpt = economyService.findOrCreateAccount(uuid);
-            if (uOpt.isPresent()) {
-                return uOpt.get().balance(currency);
-            }
-        } catch (Exception ignored) {
-        }
-        return BigDecimal.ZERO;
+		try {
+			Optional<UniqueAccount> uOpt = economyService.findOrCreateAccount(uuid);
+			if (uOpt.isPresent()) {
+				return uOpt.get().balance(currency);
+			}
+		} catch (Exception ignored) {
+		}
+		return BigDecimal.ZERO;
 	}
 
 	public boolean isPresent() {
@@ -53,39 +53,39 @@ public class Economy {
 
 	public boolean addToPlayerBalance(ServerPlayer player, Currency currency, BigDecimal money) {
 		if(economyService == null) return false;
-        try {
-            Optional<UniqueAccount> uOpt = economyService.findOrCreateAccount(player.uniqueId());
-            if (uOpt.isPresent()) {
-                TransactionResult result = uOpt.get().deposit(currency, money);
-                if (result.result() == ResultType.SUCCESS) {
-                	return true;
-                } else if ((result.result() == ResultType.FAILED || result.result() == ResultType.ACCOUNT_NO_FUNDS) && plugin.getMainConfig().isDebugEconomy()) {
-                	plugin.getLogger().error(TextUtils.replace(plugin.getLocales().getText(player.locale(), LocalesPaths.ECONOMY_ERROR_GIVE_MONEY), Placeholders.PLAYER, player.name()));
-                } else {
-                }
-            	}
-        	} catch (Exception ignored) {
-        		ignored.printStackTrace();
-        }
+		try {
+			Optional<UniqueAccount> uOpt = economyService.findOrCreateAccount(player.uniqueId());
+			if (uOpt.isPresent()) {
+				TransactionResult result = uOpt.get().deposit(currency, money);
+				if (result.result() == ResultType.SUCCESS) {
+					return true;
+				} else if ((result.result() == ResultType.FAILED || result.result() == ResultType.ACCOUNT_NO_FUNDS) && plugin.getMainConfig().isDebugEconomy()) {
+					plugin.getLogger().error(TextUtils.replace(plugin.getLocales().getText(player.locale(), LocalesPaths.ECONOMY_ERROR_GIVE_MONEY), Placeholders.PLAYER, player.name()));
+				} else {
+				}
+				}
+			} catch (Exception ignored) {
+				ignored.printStackTrace();
+		}
 		return false;
 	}
 
 	public boolean removeFromPlayerBalance(ServerPlayer player, Currency currency, BigDecimal money) {
 		if(economyService == null) return false;
-        try {
-            Optional<UniqueAccount> uOpt = economyService.findOrCreateAccount(player.uniqueId());
-            if (uOpt.isPresent()) {
-                TransactionResult result = uOpt.get().withdraw(currency, money);
-                if (result.result() == ResultType.SUCCESS) {
-                	return true;
-                } else if ((result.result() == ResultType.FAILED || result.result() == ResultType.ACCOUNT_NO_FUNDS) && plugin.getMainConfig().isDebugEconomy()) {
-                	plugin.getLogger().error(TextUtils.replace(plugin.getLocales().getText(player.locale(), LocalesPaths.ECONOMY_ERROR_TAKE_MONEY), Placeholders.PLAYER, player.name()));
-                } else {
-                }
-            	}
-        	} catch (Exception ignored) {
-        		ignored.printStackTrace();
-        }
+		try {
+			Optional<UniqueAccount> uOpt = economyService.findOrCreateAccount(player.uniqueId());
+			if (uOpt.isPresent()) {
+				TransactionResult result = uOpt.get().withdraw(currency, money);
+				if (result.result() == ResultType.SUCCESS) {
+					return true;
+				} else if ((result.result() == ResultType.FAILED || result.result() == ResultType.ACCOUNT_NO_FUNDS) && plugin.getMainConfig().isDebugEconomy()) {
+					plugin.getLogger().error(TextUtils.replace(plugin.getLocales().getText(player.locale(), LocalesPaths.ECONOMY_ERROR_TAKE_MONEY), Placeholders.PLAYER, player.name()));
+				} else {
+				}
+				}
+			} catch (Exception ignored) {
+				ignored.printStackTrace();
+		}
 		return false;
 	}
 
