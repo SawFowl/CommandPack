@@ -39,7 +39,7 @@ public class LocationData implements Location {
 
 	@Override
 	public Optional<ServerLocation> getServerLocation() {
-		return getWorld().filter(ServerWorld::isLoaded).map(world -> (world.location(getPosition().position())));
+		return world == null ? Optional.empty() : getWorld().filter(ServerWorld::isLoaded).map(world -> (world.location(getPosition().position())));
 	}
 
 	@Override

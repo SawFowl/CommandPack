@@ -12,7 +12,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.SystemSubject;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.Command;
+import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.Command.Builder;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.CommandExecutor;
@@ -20,12 +23,16 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter.Value;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.scheduler.ScheduledTask;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.economy.Currency;
+import org.spongepowered.api.util.Nameable;
+import org.spongepowered.api.world.LocatableBlock;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -35,6 +42,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.ParameterSettings;
+import sawfowl.commandpack.commands.ThrowingConsumer;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
@@ -48,13 +56,14 @@ public abstract class AbstractCommand implements CommandExecutor {
 	protected final CommandPack plugin;
 	protected final String command;
 	final String[] aliases;
-	//protected final Set<ParameterSettings> parameterSettings = new HashSet<>();
 	private Map<UUID, Long> cooldowns = new HashMap<>();
 	protected final Map<String, ParameterSettings> parameterSettings = new HashMap<>();
-	public AbstractCommand(CommandPack plugin, String command, String[] aliases) {
+	protected final CommandSettings commandSettings;
+	public AbstractCommand(CommandPack plugin, String command) {
 		this.plugin = plugin;
 		this.command = command;
-		this.aliases = aliases;
+		commandSettings = plugin.getCommandsConfig().getCommandConfig(this.command);
+		this.aliases = commandSettings.getAliases();
 		List<ParameterSettings> parameterSettings = getParameterSettings();
 		if(parameterSettings != null && !parameterSettings.isEmpty()) {
 			parameterSettings.forEach(setting -> {
@@ -76,33 +85,31 @@ public abstract class AbstractCommand implements CommandExecutor {
 	public CommandResult execute(CommandContext context) throws CommandException {
 		boolean isPlayer = context.cause().audience() instanceof ServerPlayer;
 		Locale locale = isPlayer ? ((ServerPlayer) context.cause().audience()).locale() : plugin.getLocales().getLocaleService().getSystemOrDefaultLocale();
-		if(!parameterSettings.isEmpty()) for(ParameterSettings settings : parameterSettings.values()) if(!context.one(settings.getParameterUnknownType()).isPresent() && (!settings.isOptional() || (isPlayer && !settings.isOptionalForPlayer()))) exception(locale, settings.getPath());
+		if(!parameterSettings.isEmpty()) for(ParameterSettings settings : parameterSettings.values()) if(!context.one(settings.getParameterUnknownType()).isPresent() && (!settings.isOptional() || (!isPlayer && !settings.isOptionalForConsole()))) exception(locale, settings.getPath());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) context.cause().audience();
-			CommandSettings commandSettings = plugin.getCommandsConfig().getCommandConfig(this.command);
-			if(plugin.getEconomy().isPresent() && !player.hasPermission(Permissions.getIgnorePrice(this.command))) {
-				CommandPrice price = commandSettings.getPrice();
-				if(price.getMoney() > 0) {
-					Currency currency = plugin.getEconomy().checkCurrency(price.getCurrency());
-					BigDecimal money = createDecimal(price.getMoney());
-					if(!plugin.getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(locale, new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + this.command)}, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY);
-				}
-			}
 			Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
 			if(!cooldowns.containsKey(player.uniqueId())) {
-				cooldowns.put(player.uniqueId(), currentTime + commandSettings.getDelay().getSeconds());
+				cooldowns.put(player.uniqueId(), currentTime + commandSettings.getCooldown());
 				Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(1, TimeUnit.SECONDS).execute(new CooldownTimerTask(player)).build());
 			} else {
-				if((cooldowns.get(player.uniqueId()) + commandSettings.getCooldown()) - currentTime > 0) exception(locale, Placeholders.DELAY, getExpireTimeFromNow((cooldowns.get(player.uniqueId()) + commandSettings.getCooldown()) - currentTime, locale), LocalesPaths.COMMANDS_COOLDOWN);
+				if((cooldowns.get(player.uniqueId())) - currentTime > 0) exception(locale, Placeholders.DELAY, getExpireTimeFromNow((cooldowns.get(player.uniqueId())) - currentTime, locale), LocalesPaths.COMMANDS_COOLDOWN);
 				cooldowns.remove(player.uniqueId());
-				cooldowns.put(player.uniqueId(), currentTime + commandSettings.getDelay().getSeconds());
+				cooldowns.put(player.uniqueId(), currentTime + commandSettings.getCooldown());
 			}
-			if(commandSettings.getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(this.command))) {
-				plugin.getTempPlayerData().addCommandTracking(this.command, player);
-				Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(1, TimeUnit.SECONDS).execute(new DelayTimerTask(context, player, commandSettings.getDelay().getSeconds())).build());
-			} else execute(context, player, locale, isPlayer);
+			execute(context, player, locale, isPlayer);
 		} else execute(context, context.cause().audience(), locale, isPlayer);
 		return success();
+	}
+
+	public void delay(ServerPlayer player, Locale locale, ThrowingConsumer<AbstractCommand, CommandException> consumer) throws CommandException {
+		if(commandSettings.getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(this.command))) {
+			plugin.getTempPlayerData().addCommandTracking(this.command, player);
+			Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(1, TimeUnit.SECONDS).execute(new DelayTimerTask(consumer, player, commandSettings.getDelay().getSeconds())).build());
+		} else {
+			economy(player, locale);
+			consumer.accept(this);
+		}
 	}
 
 	public CommandResult success() {
@@ -205,6 +212,10 @@ public abstract class AbstractCommand implements CommandExecutor {
 		return getText(player.locale(), path);
 	}
 
+	public String getString(ServerPlayer player, Object... path) {
+		return getString(player.locale(), path);
+	}
+
 	public Optional<ServerPlayer> getPlayer(CommandContext context) {
 		return getArgument(context, ServerPlayer.class, "Player");
 	}
@@ -223,6 +234,14 @@ public abstract class AbstractCommand implements CommandExecutor {
 
 	public boolean getBoolean(CommandContext context, String arg, boolean def) {
 		return getBoolean(context, arg).orElse(def);
+	}
+
+	public Optional<String> getString(CommandContext context, String arg) {
+		return getArgument(context, String.class, arg);
+	}
+
+	public String getString(CommandContext context, String arg, String def) {
+		return getString(context, arg).orElse(def);
 	}
 
 	public <T> Optional<T> getArgument(CommandContext context, Class<T> object, String arg) {
@@ -252,15 +271,63 @@ public abstract class AbstractCommand implements CommandExecutor {
 		
 	}
 
+	public String getSourceName(CommandCause cause, Audience audience, Locale locale, ServerPlayer player) {
+		return plugin.getMainConfig().isHideTeleportCommandSource() && !player.hasPermission(Permissions.IGNORE_HIDE_COMMAND_SOURCE) ? player.name() :
+			audience instanceof SystemSubject ? getString(locale, LocalesPaths.NAME_SYSTEM) :
+				isCommandBlock(cause) ? getString(locale, LocalesPaths.NAME_COMMANDBLOCK) + blockCords(cause) :
+					isCommandBlockMinecart(cause) ? getString(locale, LocalesPaths.NAME_COMMANDBLOCK_MINECART) + entityCords(cause) :
+						audience instanceof Nameable ? ((Nameable) audience).name() :
+							getString(locale, LocalesPaths.NAME_UNKNOWN);
+	}
+
+	public boolean isCommandBlock(CommandCause cause) {
+		return getLocatableBlock(cause).filter(block -> (block.blockState().type().equals(BlockTypes.COMMAND_BLOCK.get()) || block.blockState().type().equals(BlockTypes.CHAIN_COMMAND_BLOCK.get()) || block.blockState().type().equals(BlockTypes.REPEATING_COMMAND_BLOCK.get()))).isPresent();
+	}
+
+	public Optional<LocatableBlock> getLocatableBlock(CommandCause cause) {
+		return cause.first(LocatableBlock.class);
+	}
+
+	public String blockCords(CommandCause cause) {
+		return getLocatableBlock(cause).map(LocatableBlock::serverLocation).map(location -> ("<" + location.worldKey().asString() + ">" + location.blockPosition())).orElse("");
+	}
+
+	public boolean isCommandBlockMinecart(CommandCause cause) {
+		return getEntity(cause).isPresent();
+	}
+
+	public Optional<Entity> getEntity(CommandCause cause) {
+		return cause.first(Entity.class).filter(entity -> (entity.type().equals(EntityTypes.COMMAND_BLOCK_MINECART.get())));
+	}
+
+	public String entityCords(CommandCause cause) {
+		return getEntity(cause).map(Entity::serverLocation).map(location -> ("<" + location.worldKey().asString() + ">" + location.blockPosition())).orElse("");
+	}
+
+	private String getString(Locale locale, Object[] path) {
+		return plugin.getLocales().getString(locale, path);
+	}
+
+	private void economy(ServerPlayer player, Locale locale) throws CommandException {
+		if(plugin.getEconomy().isPresent() && !player.hasPermission(Permissions.getIgnorePrice(this.command))) {
+			CommandPrice price = commandSettings.getPrice();
+			if(price.getMoney() > 0) {
+				Currency currency = plugin.getEconomy().checkCurrency(price.getCurrency());
+				BigDecimal money = createDecimal(price.getMoney());
+				if(!plugin.getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(locale, new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + this.command)}, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY);
+			}
+		}
+	}
+
 	class DelayTimerTask implements Consumer<ScheduledTask> {
-		DelayTimerTask(CommandContext context, ServerPlayer player, long seconds) {
+		DelayTimerTask(ThrowingConsumer<AbstractCommand, CommandException> consumer, ServerPlayer player, long seconds) {
 			this.uuid = player.uniqueId();
 			this.seconds = seconds;
-			this.context = context;
+			this.consumer = consumer;
 		}
 		private final UUID uuid;
 		private long seconds;
-		private final CommandContext context;
+		private final ThrowingConsumer<AbstractCommand, CommandException> consumer;
 		private long hour;
 		private long minute;
 		boolean first = true;
@@ -270,12 +337,16 @@ public abstract class AbstractCommand implements CommandExecutor {
 				Sponge.server().scheduler().executor(plugin.getPluginContainer()).execute(() -> {
 					getPlayer(uuid).ifPresent(player -> {
 						try {
-							execute(context, player, player.locale(), true);
+							if(plugin.getTempPlayerData().getTrackingPlayerCommands(player).isPresent() && plugin.getTempPlayerData().getTrackingPlayerCommands(uuid).get().containsKey(command)) {
+								economy(player, player.locale());
+								consumer.accept(AbstractCommand.this);
+							}
 						} catch (CommandException e) {
-							plugin.getLogger().error(e.getLocalizedMessage());
+							player.sendMessage(e.componentMessage());
 						}
 					});
 				});
+				if(plugin.getTempPlayerData().getTrackingPlayerCommands(uuid).isPresent() && plugin.getTempPlayerData().getTrackingPlayerCommands(uuid).get().containsKey(command)) plugin.getTempPlayerData().removeCommandTracking(command, uuid);;
 				task.cancel();
 				return;
 			} else {

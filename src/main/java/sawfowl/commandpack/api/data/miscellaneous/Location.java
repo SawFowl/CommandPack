@@ -6,9 +6,11 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.world.Locatable;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
 
+@ConfigSerializable
 public interface Location {
 
 	static Location create(Locatable locatable) {

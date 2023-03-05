@@ -11,12 +11,12 @@ public class ParameterSettings {
 
 	private final Parameter.Value<?> parameter;
 	private final Boolean optional;
-	private final Boolean optionalForPlayer;
+	private final Boolean optionalForConsole;
 	private final Object[] path;
-	public ParameterSettings(Parameter.Value<?> parameter, boolean optional, boolean optionalForPlayer, Object... path) {
+	public ParameterSettings(Parameter.Value<?> parameter, boolean optionalForConsole, Object... path) {
 		this.parameter = parameter;
-		this.optional = false;
-		this.optionalForPlayer = optionalForPlayer;
+		this.optional = parameter.isOptional();
+		this.optionalForConsole = parameter.isOptional() && optionalForConsole;
 		this.path = path;
 	}
 
@@ -41,8 +41,8 @@ public class ParameterSettings {
 		return optional;
 	}
 
-	public boolean isOptionalForPlayer() {
-		return optionalForPlayer;
+	public boolean isOptionalForConsole() {
+		return optionalForConsole;
 	}
 
 	public Object[] getPath() {

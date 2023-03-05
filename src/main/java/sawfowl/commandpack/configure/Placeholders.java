@@ -9,5 +9,6 @@ public class Placeholders {
 	public static final String COMMAND = "%command%";
 	public static final String ARGS = "%args%";
 	public static final String MONEY = "%money%";
+	public static final String HOME = "%home%";
 
 }

@@ -16,8 +16,8 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlaye
 
 public class Suicide extends AbstractPlayerCommand {
 
-	public Suicide(CommandPack plugin, String command, String[] aliases) {
-		super(plugin, command, aliases);
+	public Suicide(CommandPack plugin, String command) {
+		super(plugin, command);
 	}
 
 	@Override

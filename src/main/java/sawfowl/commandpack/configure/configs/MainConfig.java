@@ -9,6 +9,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
@@ -22,6 +23,9 @@ public class MainConfig {
 	private boolean jsonLocales = false;
 	@Setting("DebugEconomy")
 	private boolean debugEconomy = true;
+	@Setting("HideTeleportCommandSource")
+	@Comment("If true, the player will not see who applied the teleportation command to him with administrative permission.")
+	private boolean hideTeleportCommandSource = true;
 	@Setting("BlackListHatItems")
 	private List<String> blackListHatItems = new ArrayList<>(Arrays.asList("minecraft:diamond_chestplate"));
 	@Setting("Spawn")
@@ -33,6 +37,10 @@ public class MainConfig {
 
 	public boolean isDebugEconomy() {
 		return debugEconomy;
+	}
+
+	public boolean isHideTeleportCommandSource() {
+		return hideTeleportCommandSource;
 	}
 
 	public boolean isBlackListHat(ItemStack itemStack) {

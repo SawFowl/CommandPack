@@ -47,26 +47,41 @@ public class TempPlayerData implements iTempPlayerData {
 
 	@Override
 	public boolean isTrackingPlayer(ServerPlayer player) {
-		return trackingCommandDelay.values().stream().filter(list -> (list.contains(player.uniqueId()))).findFirst().isPresent();
+		return isTrackingPlayer(player.uniqueId());
+	}
+
+	@Override
+	public boolean isTrackingPlayer(UUID uuid) {
+		return trackingCommandDelay.values().stream().filter(list -> (list.contains(uuid))).findFirst().isPresent();
 	}
 
 	@Override
 	public void removeCommandTracking(String command, ServerPlayer player) {
+		removeCommandTracking(command, player.uniqueId());
+	}
+
+
+	@Override
+	public void removeCommandTracking(String command, UUID uuid) {
 		if(!trackingCommandDelay.containsKey(command)) {
 			plugin.getLogger().error(TextUtils.replace(notTracking, Placeholders.COMMAND, command));
 			return;
 		}
-		trackingCommandDelay.get(command).removeIf(uuid -> (uuid.equals(player.uniqueId())));
+		trackingCommandDelay.get(command).removeIf(u -> (u.equals(uuid)));
+	}
+	@Override
+	public Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(ServerPlayer player) {
+		return getTrackingPlayerCommands(player.uniqueId());
 	}
 
 	@Override
-	public Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(ServerPlayer player) {
+	public Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(UUID uuid) {
 		Map<String, CommandSettings> commands = new HashMap<>();
-		trackingCommandDelay.entrySet().stream().filter(entry -> (entry.getValue().contains(player.uniqueId()))).forEach(entry -> {
+		trackingCommandDelay.entrySet().stream().filter(entry -> (entry.getValue().contains(uuid))).forEach(entry -> {
 			CommandSettings commandSettings = plugin.getCommandsConfig().getCommandConfig(entry.getKey());
 			commands.put(entry.getKey(), commandSettings);
 		});
-		return !isTrackingPlayer(player) || commands.isEmpty() ? Optional.empty() : Optional.ofNullable(commands);
+		return !isTrackingPlayer(uuid) || commands.isEmpty() ? Optional.empty() : Optional.ofNullable(commands);
 	}
 
 }

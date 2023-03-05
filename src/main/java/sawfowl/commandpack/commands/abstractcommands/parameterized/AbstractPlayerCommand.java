@@ -23,8 +23,8 @@ import sawfowl.localeapi.api.TextUtils;
 
 public abstract class AbstractPlayerCommand extends AbstractCommand {
 
-	public AbstractPlayerCommand(CommandPack plugin, String command, String[] aliases) {
-		super(plugin, command, aliases);
+	public AbstractPlayerCommand(CommandPack plugin, String command) {
+		super(plugin, command);
 	}
 
 	public abstract void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException;

@@ -26,8 +26,8 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class Hat extends AbstractPlayerCommand {
 
-	public Hat(CommandPack plugin, String command, String[] aliases) {
-		super(plugin, command, aliases);
+	public Hat(CommandPack plugin, String command) {
+		super(plugin, command);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class Hat extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(Permissions.HAT_STAFF, true), true, true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(Permissions.HAT_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 
 }

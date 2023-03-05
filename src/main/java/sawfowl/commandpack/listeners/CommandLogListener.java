@@ -35,8 +35,8 @@ public class CommandLogListener {
 			plugin.getLogger().error(block.blockPosition());
 		});*/
 		String name = event.commandCause().audience() instanceof SystemSubject ? getString(LocalesPaths.NAME_SYSTEM) :
-				isCommandBlock(event.commandCause()) ? getString(LocalesPaths.NAME_COMMANDBLOCK) + getLocatableBlock(event.commandCause()).get().blockPosition() :
-					isCommandBlockMinecart(event.commandCause()) ? getString(LocalesPaths.NAME_COMMANDBLOCK_MINECART) + getEntity(event.commandCause()).get().blockPosition().toString() :
+				isCommandBlock(event.commandCause()) ? getString(LocalesPaths.NAME_COMMANDBLOCK) + blockCords(event.commandCause()) :
+					isCommandBlockMinecart(event.commandCause()) ? getString(LocalesPaths.NAME_COMMANDBLOCK_MINECART) + entityCords(event.commandCause()) :
 						event.commandCause().audience() instanceof Nameable ? ((Nameable) event.commandCause().audience()).name() :
 							getString(LocalesPaths.NAME_UNKNOWN);
 		plugin.getLogger().info(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, TextUtils.clearDecorations(name)).replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
@@ -54,12 +54,20 @@ public class CommandLogListener {
 		return cause.first(LocatableBlock.class);
 	}
 
+	private String blockCords(CommandCause cause) {
+		return getLocatableBlock(cause).map(LocatableBlock::serverLocation).map(location -> ("<" + location.worldKey().asString() + ">" + location.blockPosition())).orElse("");
+	}
+
 	private boolean isCommandBlockMinecart(CommandCause cause) {
 		return getEntity(cause).isPresent();
 	}
 
 	private Optional<Entity> getEntity(CommandCause cause) {
 		return cause.first(Entity.class).filter(entity -> (entity.type().equals(EntityTypes.COMMAND_BLOCK_MINECART.get())));
+	}
+
+	private String entityCords(CommandCause cause) {
+		return getEntity(cause).map(Entity::serverLocation).map(location -> ("<" + location.worldKey().asString() + ">" + location.blockPosition())).orElse("");
 	}
 
 }

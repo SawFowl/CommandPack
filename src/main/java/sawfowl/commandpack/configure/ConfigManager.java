@@ -1,5 +1,8 @@
 package sawfowl.commandpack.configure;
 
+import java.io.File;
+import java.nio.file.Path;
+
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationOptions;
@@ -10,6 +13,7 @@ import org.spongepowered.configurate.reference.ValueReference;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.configure.configs.MainConfig;
 import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
+import sawfowl.commandpack.configure.configs.player.PlayerData;
 
 public class ConfigManager {
 
@@ -19,10 +23,11 @@ public class ConfigManager {
 	private ValueReference<MainConfig, CommentedConfigurationNode> mainConfig;
 	private ConfigurationReference<CommentedConfigurationNode> commandsConfigReference;
 	private ValueReference<CommandsConfig, CommentedConfigurationNode> commandsConfig;
-
+	private final Path playerDataPath;
 	public ConfigManager(CommandPack plugin, ConfigurationOptions options) {
 		this.plugin = plugin;
 		this.options = options;
+		playerDataPath = plugin.getConfigDir().resolve("PlayerData");
 		saveMainConfig();
 		saveMainCommandsConfig();
 	}
@@ -39,7 +44,6 @@ public class ConfigManager {
 		try {
 			mainConfigReference.load();
 			mainConfig = mainConfigReference.referenceTo(MainConfig.class);
-			if(!plugin.getConfigDir().resolve("PlayerData").toFile().exists()) plugin.getConfigDir().resolve("PlayerData").toFile().mkdir();
 			commandsConfigReference.load();
 			commandsConfig = commandsConfigReference.referenceTo(CommandsConfig.class);
 			commandsConfig.get().updateCommandMap(commandsConfig);
@@ -50,6 +54,31 @@ public class ConfigManager {
 
 	public void updateMainConfig() {
 		mainConfig.setAndSave(getMainConfig());
+	}
+
+	public void savePlayerData(PlayerData data) {
+		if(!playerDataPath.toFile().exists()) playerDataPath.toFile().mkdir();
+		try {
+			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(playerDataPath.resolve(data.getUniqueId().toString() + ".conf")).build().loadToReference();
+			ValueReference<PlayerData, CommentedConfigurationNode> config = configReference.referenceTo(PlayerData.class);
+			config.setAndSave(data);
+		} catch (ConfigurateException e) {
+			plugin.getLogger().warn(e.getLocalizedMessage());
+		}
+	}
+
+	public void loadPlayersData() {
+		if(playerDataPath.toFile().exists() && playerDataPath.toFile().listFiles().length > 0) for(File file : playerDataPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) loadPlayerData(file);
+	}
+
+	private void loadPlayerData(File playerConfig) {
+		try {
+			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(playerConfig.toPath()).build().loadToReference();
+			ValueReference<PlayerData, CommentedConfigurationNode> config = configReference.referenceTo(PlayerData.class);
+			plugin.getPlayersData().addPlayerData(config.get());
+		} catch (ConfigurateException e) {
+			plugin.getLogger().warn(e.getLocalizedMessage());
+		}
 	}
 
 	private void saveMainConfig() {
@@ -63,7 +92,6 @@ public class ConfigManager {
 	}
 
 	private void saveMainCommandsConfig() {
-		if(!plugin.getConfigDir().resolve("PlayerData").toFile().exists()) plugin.getConfigDir().resolve("PlayerData").toFile().mkdir();
 		try {
 			commandsConfigReference = HoconConfigurationLoader.builder().defaultOptions(options).path(plugin.getConfigDir().resolve("Commands.conf")).build().loadToReference();
 			commandsConfig = commandsConfigReference.referenceTo(CommandsConfig.class);

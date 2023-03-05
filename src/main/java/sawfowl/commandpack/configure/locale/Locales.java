@@ -59,7 +59,6 @@ public class Locales {
 
 	private void generateDefault() {
 		Locale locale = org.spongepowered.api.util.locale.Locales.DEFAULT;
-		//boolean save = check(locale, toText("&cThis command can only be used by a player."), null, LocalesPaths.COMMANDS_ONLY_PLAYER);
 
 		boolean save = check(locale, toText("&eThere is no economy plugin on the server. Some of the functionality will not be available."), null, LocalesPaths.ECONOMY_NOT_FOUND);
 		save = check(locale, toText("Failed to add game currency to player " + Placeholders.PLAYER + "."), null, LocalesPaths.ECONOMY_ERROR_GIVE_MONEY) || save;
@@ -69,12 +68,18 @@ public class Locales {
 		save = check(locale, toText("m"), null, LocalesPaths.TIME_MINUTE) || save;
 		save = check(locale, toText("s"), null, LocalesPaths.TIME_SECOND) || save;
 
+		save = check(locale, toText("&7[&cRemove&7] "), null, LocalesPaths.REMOVE) || save;
+		save = check(locale, toText("&7[&aTeleport&7] "), null, LocalesPaths.TELEPORT) || save;
+		save = check(locale, toText("&7[&eTeleport&7] "), null, LocalesPaths.TELEPORTCLICKABLE) || save;
+
 		save = check(locale, toText("Server"), null, LocalesPaths.NAME_SYSTEM) || save;
 		save = check(locale, toText("Command block"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
 		save = check(locale, toText("Minecart with command block"), null, LocalesPaths.NAME_COMMANDBLOCK_MINECART) || save;
 		save = check(locale, toText("Unknown"), null, LocalesPaths.NAME_UNKNOWN) || save;
 
 		save = check(locale, toText("&cYou must specify the player's nickname."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
+		save = check(locale, toText("&cYou must specify a name."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
+		save = check(locale, toText("&cIt is necessary to specify the command argument as boolean. More information about the arguments of the entered command can be found in the documentation of the plugin."), null, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT) || save;
 		save = check(locale, toText("&cWait &e" + Placeholders.DELAY + "&c before using this command again."), null, LocalesPaths.COMMANDS_COOLDOWN) || save;
 		save = check(locale, toText("&aCommand activation via &e" + Placeholders.DELAY + "&a."), null, LocalesPaths.COMMANDS_WAIT) || save;
 		save = check(locale, toText(Placeholders.SOURCE + " ran the command: /" + Placeholders.COMMAND + Placeholders.ARGS + ""), null, LocalesPaths.COMMANDS_LOG) || save;
@@ -90,13 +95,19 @@ public class Locales {
 		save = check(locale, toText("&aThe spawn point has been set."), null, LocalesPaths.COMMANDS_SETSPAWN_SUCCESS) || save;
 		save = check(locale, toText("&aYou teleported to the spawn point."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a teleported you to the spawnpoint."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS_OTHER) || save;
+		save = check(locale, toText("&cYour limit does not allow you to set a new home point."), null, LocalesPaths.COMMANDS_SETHOME_LIMIT) || save;
+		save = check(locale, toText("&aYou have set the home point &e" + Placeholders.HOME + "&a."), null, LocalesPaths.COMMANDS_SETHOME_SUCCESS) || save;
+		save = check(locale, toText("&cA home point with a name of &e" + Placeholders.HOME + "&c does not exist."), null, LocalesPaths.COMMANDS_HOME_NOT_FOUND) || save;
+		save = check(locale, toText("&cNo home point is found. Use the &e/sethome&c command to set a home point."), null, LocalesPaths.COMMANDS_HOME_NOT_SET) || save;
+		save = check(locale, toText("&cHome point is not available. Perhaps the world is not loaded."), null, LocalesPaths.COMMANDS_HOME_TELEPORT_ERROR) || save;
+		save = check(locale, toText("&aYou teleported to home &e" + Placeholders.HOME + "&a."), null, LocalesPaths.COMMANDS_HOME_SUCCESS) || save;
+		save = check(locale, toText("&bHomes"), null, LocalesPaths.COMMANDS_HOME_LIST) || save;
 
 		if(save) save(locale);
 	}
 
 	private void generateRu() {
 		Locale locale = org.spongepowered.api.util.locale.Locales.RU_RU;
-		//boolean save = check(locale, toText("&cЭту команду может использовать только игрок."), null, LocalesPaths.COMMANDS_ONLY_PLAYER);
 
 		boolean save = check(locale, toText("Не найден плагин экономики. Часть функций может быть не доступна."), null, LocalesPaths.ECONOMY_NOT_FOUND);
 		save = check(locale, toText("Не удалось начислить игровую валюту игроку " + Placeholders.PLAYER + "."), null, LocalesPaths.ECONOMY_ERROR_GIVE_MONEY) || save;
@@ -106,12 +117,18 @@ public class Locales {
 		save = check(locale, toText("м"), null, LocalesPaths.TIME_MINUTE) || save;
 		save = check(locale, toText("с"), null, LocalesPaths.TIME_SECOND) || save;
 
+		save = check(locale, toText("&7[&cУдалить&7] "), null, LocalesPaths.REMOVE) || save;
+		save = check(locale, toText("&7[&aТелепорт&7] "), null, LocalesPaths.TELEPORT) || save;
+		save = check(locale, toText("&7[&eТелепорт&7] "), null, LocalesPaths.TELEPORTCLICKABLE) || save;
+
 		save = check(locale, toText("Сервер"), null, LocalesPaths.NAME_SYSTEM) || save;
 		save = check(locale, toText("Командный блок"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
 		save = check(locale, toText("Вагонетка с командным блоком"), null, LocalesPaths.NAME_COMMANDBLOCK_MINECART) || save;
 		save = check(locale, toText("Неизвестный"), null, LocalesPaths.NAME_UNKNOWN) || save;
 
 		save = check(locale, toText("&cНужно указать ник игрока."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
+		save = check(locale, toText("&cНужно указать имя."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
+		save = check(locale, toText("&cНужно указать аргумент команды вида boolean. Подробнее об аргументах введенной команды можно узнать в документации плагина."), null, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT) || save;
 		save = check(locale, toText("&cПодождите &e" + Placeholders.DELAY + "&c прежде чем снова использовать эту команду."), null, LocalesPaths.COMMANDS_COOLDOWN) || save;
 		save = check(locale, toText("&aАктивация команды через &e" + Placeholders.DELAY + "&a."), null, LocalesPaths.COMMANDS_WAIT) || save;
 		save = check(locale, toText(Placeholders.SOURCE + " выполняет команду: /" + Placeholders.COMMAND + Placeholders.ARGS + ""), null, LocalesPaths.COMMANDS_LOG) || save;
@@ -127,6 +144,13 @@ public class Locales {
 		save = check(locale, toText("&aТочка спавна установленна."), null, LocalesPaths.COMMANDS_SETSPAWN_SUCCESS) || save;
 		save = check(locale, toText("&aВы переместились на спавн."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + " &aпереместил вас на спавн."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS_OTHER) || save;
+		save = check(locale, toText("&cВаш лимит не позволяет установить новую точку дома."), null, LocalesPaths.COMMANDS_SETHOME_LIMIT) || save;
+		save = check(locale, toText("&aВы установили точку дома &e" + Placeholders.HOME + "&a."), null, LocalesPaths.COMMANDS_SETHOME_SUCCESS) || save;
+		save = check(locale, toText("&cТочка дома с именем &e" + Placeholders.HOME + "&c не существует."), null, LocalesPaths.COMMANDS_HOME_NOT_FOUND) || save;
+		save = check(locale, toText("&cНе найденно ни одной точки дома. Используйте команду &e/sethome&c для установки точки дома."), null, LocalesPaths.COMMANDS_HOME_NOT_SET) || save;
+		save = check(locale, toText("&cТочка дома не доступна. Возможно не загружен мир."), null, LocalesPaths.COMMANDS_HOME_TELEPORT_ERROR) || save;
+		save = check(locale, toText("&aВы переместились точку дома &e" + Placeholders.HOME + "&a."), null, LocalesPaths.COMMANDS_HOME_SUCCESS) || save;
+		save = check(locale, toText("&bДома"), null, LocalesPaths.COMMANDS_HOME_LIST) || save;
 
 		if(save) save(locale);
 	}

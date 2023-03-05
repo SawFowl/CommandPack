@@ -21,6 +21,10 @@ public class CommandsConfig {
 	private CommandSettings suicide = new CommandSettings();
 	@Setting("Hat")
 	private CommandSettings hat = new CommandSettings();
+	@Setting("Home")
+	private CommandSettings home = new CommandSettings(new Delay(3));
+	@Setting("SetHome")
+	private CommandSettings setHome = new CommandSettings();
 	@Setting("SetSpawn")
 	private CommandSettings setSpawn = new CommandSettings();
 	@Setting("Spawn")
