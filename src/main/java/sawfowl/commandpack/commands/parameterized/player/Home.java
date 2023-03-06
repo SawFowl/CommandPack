@@ -17,13 +17,14 @@ import sawfowl.commandpack.commands.CommandParameters;
 import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.configure.Placeholders;
+import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Home extends AbstractPlayerCommand {
 
-	public Home(CommandPack plugin, String command) {
-		super(plugin, command);
+	public Home(CommandPack plugin, String command, CommandSettings commandSettings) {
+		super(plugin, command, commandSettings);
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class Home extends AbstractPlayerCommand {
 
 	@Override
 	public Parameterized build() {
-		return builder().addChild(new HomeList(plugin, command).build(), "list").build();
+		return builder().addChild(new HomeList(plugin, command, commandSettings).build(), "list").build();
 	}
 
 	@Override

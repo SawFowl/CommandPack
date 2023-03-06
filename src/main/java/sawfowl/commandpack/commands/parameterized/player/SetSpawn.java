@@ -14,13 +14,14 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.CommandParameters;
 import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
+import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class SetSpawn extends AbstractPlayerCommand {
 
-	public SetSpawn(CommandPack plugin, String command) {
-		super(plugin, command);
+	public SetSpawn(CommandPack plugin, String command, CommandSettings commandSettings) {
+		super(plugin, command, commandSettings);
 	}
 
 	@Override

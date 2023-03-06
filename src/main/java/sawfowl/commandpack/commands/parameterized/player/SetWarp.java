@@ -18,13 +18,14 @@ import sawfowl.commandpack.commands.CommandParameters;
 import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.configure.Placeholders;
+import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class SetWarp extends AbstractPlayerCommand {
 
-	public SetWarp(CommandPack plugin, String command) {
-		super(plugin, command);
+	public SetWarp(CommandPack plugin, String command, CommandSettings commandSettings) {
+		super(plugin, command, commandSettings);
 	}
 
 	@Override
@@ -33,8 +34,10 @@ public class SetWarp extends AbstractPlayerCommand {
 			PlayerData playerData = plugin.getPlayersData().getOrCreatePlayerData(src);
 			String name = getString(context, "Warp", src.name());
 			if(name.equalsIgnoreCase("list")) name = src.name();
-			Warp warp = Warp.create(name, Location.create(src)).setPrivate(getBoolean(context, "Private", false));
-			if(playerData.addWarp(warp, Permissions.getWarpsLimit(src))) {
+			Warp warp = getBoolean(context, "Admin", false) ? Warp.create(name, Location.create(src)) : Warp.create(name, Location.create(src)).setPrivate(getBoolean(context, "Private", false));
+			if(getBoolean(context, "Admin", false)) {
+				plugin.getPlayersData().addAdminWarp(warp);
+			} else if(playerData.addWarp(warp, Permissions.getWarpsLimit(src))) {
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SETHOME_SUCCESS), Placeholders.HOME, warp.asComponent()));
 				playerData.save();
 			} else exception(locale, LocalesPaths.COMMANDS_SETHOME_LIMIT);

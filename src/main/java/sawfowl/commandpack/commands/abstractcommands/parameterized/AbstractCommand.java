@@ -59,10 +59,10 @@ public abstract class AbstractCommand implements CommandExecutor {
 	private Map<UUID, Long> cooldowns = new HashMap<>();
 	protected final Map<String, ParameterSettings> parameterSettings = new HashMap<>();
 	protected final CommandSettings commandSettings;
-	public AbstractCommand(CommandPack plugin, String command) {
+	public AbstractCommand(CommandPack plugin, String command, CommandSettings commandSettings) {
 		this.plugin = plugin;
 		this.command = command;
-		commandSettings = plugin.getCommandsConfig().getCommandConfig(this.command);
+		this.commandSettings = commandSettings;
 		this.aliases = commandSettings.getAliases();
 		List<ParameterSettings> parameterSettings = getParameterSettings();
 		if(parameterSettings != null && !parameterSettings.isEmpty()) {

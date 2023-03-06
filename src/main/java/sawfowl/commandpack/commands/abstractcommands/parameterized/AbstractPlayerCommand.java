@@ -18,13 +18,14 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;
+import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public abstract class AbstractPlayerCommand extends AbstractCommand {
 
-	public AbstractPlayerCommand(CommandPack plugin, String command) {
-		super(plugin, command);
+	public AbstractPlayerCommand(CommandPack plugin, String command, CommandSettings commandSettings) {
+		super(plugin, command, commandSettings);
 	}
 
 	public abstract void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException;

@@ -14,12 +14,13 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
+import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class HomeList extends AbstractPlayerCommand {
 
-	public HomeList(CommandPack plugin, String command) {
-		super(plugin, command);
+	public HomeList(CommandPack plugin, String command, CommandSettings commandSettings) {
+		super(plugin, command, commandSettings);
 	}
 
 	@Override

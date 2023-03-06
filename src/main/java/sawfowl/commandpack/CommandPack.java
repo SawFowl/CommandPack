@@ -123,7 +123,18 @@ public class CommandPack {
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerConnectionListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerRespawnListener(instance));
 	}
+/*
+	@Listener
+	public void establishNewRegistries(final RegisterRegistryEvent.GameScoped event) {
+		event.register(ResourceKey.of("commandpack", "warp"), true, new Supplier<Map<ResourceKey, Warp>>() {
 
+			@Override
+			public Map<ResourceKey, Warp> get() {
+				return new HashMap<>();
+			}
+		});
+	}
+*/
 	@Listener
 	public void onReload(RefreshGameEvent event) {
 		configManager.reloadConfigs();
@@ -133,22 +144,28 @@ public class CommandPack {
 	@Listener
 	public void registerParameterizedCommands(RegisterCommandEvent<Parameterized> event) {
 		getCommandSettings("hat").ifPresent(settings -> {
-			new Hat(instance, "hat").register(event);
+			new Hat(instance, "hat", settings).register(event);
 		});
 		getCommandSettings("home").ifPresent(settings -> {
-			new Home(instance, "home").register(event);
+			new Home(instance, "home", settings).register(event);
 		});
 		getCommandSettings("sethome").ifPresent(settings -> {
-			new SetHome(instance, "sethome").register(event);
+			new SetHome(instance, "sethome", settings).register(event);
 		});
 		getCommandSettings("setspawn").ifPresent(settings -> {
-			new SetSpawn(instance, "setspawn").register(event);
+			new SetSpawn(instance, "setspawn", settings).register(event);
 		});
 		getCommandSettings("spawn").ifPresent(settings -> {
-			new Spawn(instance, "spawn").register(event);
+			new Spawn(instance, "spawn", settings).register(event);
 		});
 		getCommandSettings("suicide").ifPresent(settings -> {
-			new Suicide(instance, "suicide").register(event);
+			new Suicide(instance, "suicide", settings).register(event);
+		});
+		getCommandSettings("setwarp").ifPresent(settings -> {
+			new SetSpawn(instance, "setwarp", settings).register(event);
+		});
+		getCommandSettings("warp").ifPresent(settings -> {
+			new SetSpawn(instance, "warp", settings).register(event);
 		});
 	}
 

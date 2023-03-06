@@ -13,11 +13,12 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
+import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 
 public class Suicide extends AbstractPlayerCommand {
 
-	public Suicide(CommandPack plugin, String command) {
-		super(plugin, command);
+	public Suicide(CommandPack plugin, String command, CommandSettings commandSettings) {
+		super(plugin, command, commandSettings);
 	}
 
 	@Override
