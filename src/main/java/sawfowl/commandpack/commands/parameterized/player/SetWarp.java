@@ -3,6 +3,7 @@ package sawfowl.commandpack.commands.parameterized.player;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
@@ -32,8 +33,10 @@ public class SetWarp extends AbstractPlayerCommand {
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		delay(src, locale, consumer -> {
 			PlayerData playerData = plugin.getPlayersData().getOrCreatePlayerData(src);
-			String name = getString(context, "Warp", src.name());
-			if(name.equalsIgnoreCase("list")) name = src.name();
+			String name = getString(context, "Warp", src.name()).equalsIgnoreCase("list") ? src.name() : getString(context, "Warp", src.name());
+			Optional<sawfowl.commandpack.api.data.player.Warp> optWarp = plugin.getPlayersData().getAdminWarp(name);
+			Optional<sawfowl.commandpack.api.data.player.Warp> optPlayerWarp = plugin.getPlayersData().getWarp(name, warp -> (!warp.isPrivate() || src.hasPermission(Permissions.WARP_STAFF) || (plugin.getPlayersData().getOrCreatePlayerData(src).containsWarp(warp.getName()))));
+			if((optWarp.isPresent() && !src.hasPermission(Permissions.WARP_STAFF)) || (optPlayerWarp.isPresent() && !playerData.getWarp(name).isPresent())) exception(locale, LocalesPaths.COMMANDS_SETWARP_EXIST);
 			Warp warp = getBoolean(context, "Admin", false) ? Warp.create(name, Location.create(src)) : Warp.create(name, Location.create(src)).setPrivate(getBoolean(context, "Private", false));
 			if(getBoolean(context, "Admin", false)) {
 				plugin.getPlayersData().addAdminWarp(warp);
@@ -58,8 +61,8 @@ public class SetWarp extends AbstractPlayerCommand {
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
 					new ParameterSettings(CommandParameters.createString("Warp", false), false, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT),
-					new ParameterSettings(CommandParameters.createBoolean("Admin", Permissions.WARP_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT),
-					new ParameterSettings(CommandParameters.createBoolean("Private", true), true, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT)
+					new ParameterSettings(CommandParameters.createBoolean("Private", false), false, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT),
+					new ParameterSettings(CommandParameters.createBoolean("Admin", Permissions.WARP_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT)
 				);
 	}
 

@@ -20,6 +20,8 @@ public class LocalesPaths {
 	private static final Object COMMAND_SPAWN = "Spawn";
 	private static final Object COMMAND_SETHOME = "SetHome";
 	private static final Object COMMAND_HOME = "Home";
+	private static final Object COMMAND_WARP = "Warp";
+	private static final Object COMMAND_SETWARP = "SetWarp";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -63,5 +65,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_HOME_TELEPORT_ERROR = {PATH_COMMANDS, COMMAND_HOME, PATH_EXCEPTIONS, "TeleportError"};
 	public static final Object[] COMMANDS_HOME_SUCCESS = {PATH_COMMANDS, COMMAND_HOME, "Success "};
 	public static final Object[] COMMANDS_HOME_LIST = {PATH_COMMANDS, COMMAND_HOME, "ListTitle "};
+	public static final Object[] COMMANDS_WARP_NOT_FOUND = {PATH_COMMANDS, COMMAND_WARP, PATH_EXCEPTIONS, "NotFound"};
+	public static final Object[] COMMANDS_SETWARP_EXIST = {PATH_COMMANDS, COMMAND_SETWARP, PATH_EXCEPTIONS, "AllreadyExist"};
 
 }

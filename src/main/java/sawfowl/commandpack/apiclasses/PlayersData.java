@@ -51,23 +51,23 @@ public class PlayersData implements sawfowl.commandpack.api.PlayersData {
 	}
 
 	@Override
-	public Collection<Warp> getAllWarps() {
+	public Collection<Warp> getPlayersWarps() {
 		return players.values().stream().map(PlayerData::getWarps).flatMap(list -> (list.stream())).collect(Collectors.toList());
 	}
 
 	@Override
-	public Collection<Warp> getAllWarps(Predicate<Warp> filter) {
+	public Collection<Warp> getPlayersWarps(Predicate<Warp> filter) {
 		return players.values().stream().map(PlayerData::getWarps).flatMap(list -> (list.stream())).filter(filter).collect(Collectors.toList());
 	}
 
 	@Override
 	public Optional<Warp> getWarp(String name) {
-		return getAllWarps().stream().filter(warp -> (name.equals(TextUtils.clearDecorations(warp.asComponent())))).findFirst();
+		return getPlayersWarps().stream().filter(warp -> (name.equals(TextUtils.clearDecorations(warp.asComponent())))).findFirst();
 	}
 
 	@Override
 	public Optional<Warp> getWarp(String name, Predicate<Warp> filter) {
-		return getAllWarps().stream().filter(warp -> (name.equals(TextUtils.clearDecorations(warp.asComponent())))).filter(filter).findFirst();
+		return getPlayersWarps().stream().filter(warp -> (name.equals(TextUtils.clearDecorations(warp.asComponent())))).filter(filter).findFirst();
 	}
 
 	@Override
@@ -90,6 +90,11 @@ public class PlayersData implements sawfowl.commandpack.api.PlayersData {
 	@Override
 	public Optional<Warp> getAdminWarp(String name) {
 		return adminWarps.containsKey(name) ? Optional.ofNullable(adminWarps.get(name)) : Optional.empty();
+	}
+
+	@Override
+	public Optional<Warp> getAdminWarp(String name, Predicate<Warp> predicate) {
+		return adminWarps.containsKey(name) && predicate.test(adminWarps.get(name)) ? Optional.ofNullable(adminWarps.get(name)) : Optional.empty();
 	}
 
 }

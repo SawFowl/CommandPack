@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
+import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
@@ -25,7 +26,9 @@ import sawfowl.commandpack.commands.parameterized.player.Hat;
 import sawfowl.commandpack.commands.parameterized.player.Home;
 import sawfowl.commandpack.commands.parameterized.player.SetHome;
 import sawfowl.commandpack.commands.parameterized.player.SetSpawn;
+import sawfowl.commandpack.commands.parameterized.player.SetWarp;
 import sawfowl.commandpack.commands.parameterized.player.Suicide;
+import sawfowl.commandpack.commands.raw.Warp;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.configs.MainConfig;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
@@ -162,10 +165,14 @@ public class CommandPack {
 			new Suicide(instance, "suicide", settings).register(event);
 		});
 		getCommandSettings("setwarp").ifPresent(settings -> {
-			new SetSpawn(instance, "setwarp", settings).register(event);
+			new SetWarp(instance, "setwarp", settings).register(event);
 		});
+	}
+
+	@Listener
+	public void registerRawCommands(RegisterCommandEvent<Raw> event) {
 		getCommandSettings("warp").ifPresent(settings -> {
-			new SetSpawn(instance, "warp", settings).register(event);
+			new Warp(instance, "warp", settings).register(event);
 		});
 	}
 

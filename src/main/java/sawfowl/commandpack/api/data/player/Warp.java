@@ -35,6 +35,11 @@ public interface Warp {
 	String getName();
 
 	/**
+	 * Warp plain name
+	 */
+	String getPlainName();
+
+	/**
 	 * Set new name of warp point.
 	 */
 	void setName(String name);

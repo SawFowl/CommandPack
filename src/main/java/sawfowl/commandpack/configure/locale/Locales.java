@@ -77,7 +77,7 @@ public class Locales {
 		save = check(locale, toText("Minecart with command block"), null, LocalesPaths.NAME_COMMANDBLOCK_MINECART) || save;
 		save = check(locale, toText("Unknown"), null, LocalesPaths.NAME_UNKNOWN) || save;
 
-		save = check(locale, toText("&cYou must specify the player's nickname."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
+		save = check(locale, toText("&cYou need to specify the nickname of the player online."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou must specify a name."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
 		save = check(locale, toText("&cIt is necessary to specify the command argument as boolean. More information about the arguments of the entered command can be found in the documentation of the plugin."), null, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT) || save;
 		save = check(locale, toText("&cWait &e" + Placeholders.DELAY + "&c before using this command again."), null, LocalesPaths.COMMANDS_COOLDOWN) || save;
@@ -102,6 +102,8 @@ public class Locales {
 		save = check(locale, toText("&cHome point is not available. Perhaps the world is not loaded."), null, LocalesPaths.COMMANDS_HOME_TELEPORT_ERROR) || save;
 		save = check(locale, toText("&aYou teleported to home &e" + Placeholders.HOME + "&a."), null, LocalesPaths.COMMANDS_HOME_SUCCESS) || save;
 		save = check(locale, toText("&bHomes"), null, LocalesPaths.COMMANDS_HOME_LIST) || save;
+		save = check(locale, toText("&bWarp with the specified name was not found."), null, LocalesPaths.COMMANDS_WARP_NOT_FOUND) || save;
+		save = check(locale, toText("&bA warp with the specified name already exists."), null, LocalesPaths.COMMANDS_SETWARP_EXIST) || save;
 
 		if(save) save(locale);
 	}
@@ -126,7 +128,7 @@ public class Locales {
 		save = check(locale, toText("Вагонетка с командным блоком"), null, LocalesPaths.NAME_COMMANDBLOCK_MINECART) || save;
 		save = check(locale, toText("Неизвестный"), null, LocalesPaths.NAME_UNKNOWN) || save;
 
-		save = check(locale, toText("&cНужно указать ник игрока."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
+		save = check(locale, toText("&cНужно указать ник игрока онлайн."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать имя."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать аргумент команды вида boolean. Подробнее об аргументах введенной команды можно узнать в документации плагина."), null, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT) || save;
 		save = check(locale, toText("&cПодождите &e" + Placeholders.DELAY + "&c прежде чем снова использовать эту команду."), null, LocalesPaths.COMMANDS_COOLDOWN) || save;
@@ -151,6 +153,8 @@ public class Locales {
 		save = check(locale, toText("&cТочка дома не доступна. Возможно не загружен мир."), null, LocalesPaths.COMMANDS_HOME_TELEPORT_ERROR) || save;
 		save = check(locale, toText("&aВы переместились точку дома &e" + Placeholders.HOME + "&a."), null, LocalesPaths.COMMANDS_HOME_SUCCESS) || save;
 		save = check(locale, toText("&bДома"), null, LocalesPaths.COMMANDS_HOME_LIST) || save;
+		save = check(locale, toText("&bВарп с указанным именем не найден."), null, LocalesPaths.COMMANDS_WARP_NOT_FOUND) || save;
+		save = check(locale, toText("&bВарп с указанным именем уже существует."), null, LocalesPaths.COMMANDS_SETWARP_EXIST) || save;
 
 		if(save) save(locale);
 	}

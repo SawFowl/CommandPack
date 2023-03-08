@@ -19,6 +19,8 @@ public class MainConfig {
 
 	public MainConfig() {}
 
+	@Setting("AutoCompleteRawCommands")
+	private boolean autoCompleteRawCommands = false;
 	@Setting("JsonLocales")
 	private boolean jsonLocales = false;
 	@Setting("DebugEconomy")
@@ -30,6 +32,10 @@ public class MainConfig {
 	private List<String> blackListHatItems = new ArrayList<>(Arrays.asList("minecraft:diamond_chestplate"));
 	@Setting("Spawn")
 	private SpawnData spawnData;
+
+	public boolean isAutoCompleteRawCommands() {
+		return autoCompleteRawCommands;
+	}
 
 	public boolean isJsonLocales() {
 		return jsonLocales;

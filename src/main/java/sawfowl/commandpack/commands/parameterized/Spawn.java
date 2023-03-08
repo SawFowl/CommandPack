@@ -19,14 +19,14 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.CommandParameters;
 import sawfowl.commandpack.commands.ParameterSettings;
-import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractCommand;
+import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
-public class Spawn extends AbstractCommand {
+public class Spawn extends AbstractParameterizedCommand {
 
 	public Spawn(CommandPack plugin, String command, CommandSettings commandSettings) {
 		super(plugin, command, commandSettings);

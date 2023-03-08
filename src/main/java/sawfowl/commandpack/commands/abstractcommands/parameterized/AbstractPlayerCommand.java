@@ -22,7 +22,7 @@ import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
-public abstract class AbstractPlayerCommand extends AbstractCommand {
+public abstract class AbstractPlayerCommand extends AbstractParameterizedCommand {
 
 	public AbstractPlayerCommand(CommandPack plugin, String command, CommandSettings commandSettings) {
 		super(plugin, command, commandSettings);

@@ -36,12 +36,12 @@ public interface PlayersData {
 	/**
 	 * Getting a collection of all players' {@link Warp}s.
 	 */
-	Collection<Warp> getAllWarps();
+	Collection<Warp> getPlayersWarps();
 
 	/**
 	 * Get a collection of all player {@link Warp}s with filtering by condition.
 	 */
-	Collection<Warp> getAllWarps(Predicate<Warp> allowTeleport);
+	Collection<Warp> getPlayersWarps(Predicate<Warp> allowTeleport);
 
 	/**
 	 * Search {@link Warp} by name.
@@ -72,5 +72,11 @@ public interface PlayersData {
 	 * Search admin {@link Warp} by name.
 	 */
 	public Optional<Warp> getAdminWarp(String name);
+
+	/**
+	 * Search admin {@link Warp} by name.<br>
+	 * A search filter is used.
+	 */
+	Optional<Warp> getAdminWarp(String name, Predicate<Warp> predicate);
 
 }

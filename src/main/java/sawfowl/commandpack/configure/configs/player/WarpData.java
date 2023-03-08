@@ -39,6 +39,11 @@ public class WarpData implements Warp {
 	}
 
 	@Override
+	public String getPlainName() {
+		return TextUtils.clearDecorations(TextUtils.deserialize(name));
+	}
+
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -89,7 +94,5 @@ public class WarpData implements Warp {
 		if (!(obj instanceof WarpData)) return false;
 		return Objects.equals(name, ((WarpData) obj).name);
 	}
-
-	
 
 }
