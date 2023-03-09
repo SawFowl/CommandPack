@@ -1,5 +1,6 @@
 package sawfowl.commandpack.commands.raw;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -30,14 +31,17 @@ public class Warp extends AbstractRawCommand {
 	@Override
 	protected void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args) throws CommandException {
 		if(args.length == 0) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);
-		Optional<sawfowl.commandpack.api.data.player.Warp> optWarp = plugin.getPlayersData().getAdminWarp(args[0], predicate -> cause.hasPermission(Permissions.getWarpPermission(args[0])));
-		Optional<sawfowl.commandpack.api.data.player.Warp> optPlayerWarp = plugin.getPlayersData().getWarp(args[0], warp -> (!warp.isPrivate() || cause.hasPermission(Permissions.WARP_STAFF) || (isPlayer && plugin.getPlayersData().getOrCreatePlayerData((ServerPlayer) cause.audience()).containsWarp(warp.getName()))));
+		Optional<ServerPlayer> optTarget = cause.hasPermission(Permissions.WARP_STAFF) && args.length >= 2 ? getPlayer(args[args.length - 1]) : Optional.empty();
+		if(optTarget.isPresent()) args = Arrays.copyOf(args, args.length - 1);
+		String warpName = "";
+		for(String string : args) warpName = warpName.isEmpty() ? string : warpName + " " + string;
+		String find = warpName;
+		Optional<sawfowl.commandpack.api.data.player.Warp> optWarp = plugin.getPlayersData().getAdminWarp(warpName, predicate -> cause.hasPermission(Permissions.getWarpPermission(find)));
+		Optional<sawfowl.commandpack.api.data.player.Warp> optPlayerWarp = plugin.getPlayersData().getWarp(warpName, warp -> (!warp.isPrivate() || cause.hasPermission(Permissions.WARP_STAFF) || (isPlayer && plugin.getPlayersData().getOrCreatePlayerData((ServerPlayer) cause.audience()).containsWarp(warp.getName()))));
 		if(!optWarp.isPresent() && !optPlayerWarp.isPresent()) exception(locale, LocalesPaths.COMMANDS_WARP_NOT_FOUND);
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) audience;
-			if(player.hasPermission(Permissions.WARP_STAFF) && args.length >= 2) {
-				Optional<ServerPlayer> optTarget = getPlayer(args[1]);
-				if(!optTarget.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
+			if(optTarget.isPresent()) {
 				boolean equal = optTarget.get().uniqueId().equals(player.uniqueId());
 				if(optWarp.isPresent()) {
 					if(!equal) {
@@ -75,7 +79,6 @@ public class Warp extends AbstractRawCommand {
 			}
 		} else {
 			if(args.length == 1) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
-			Optional<ServerPlayer> optTarget = getPlayer(args[1]);
 			if(!optTarget.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
 			if(optWarp.isPresent()) {
 				optWarp.get().moveToThis(optTarget.get());

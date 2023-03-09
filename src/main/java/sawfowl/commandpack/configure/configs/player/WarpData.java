@@ -30,7 +30,8 @@ public class WarpData implements Warp {
 
 	@Override
 	public Component asComponent() {
-		return TextUtils.deserialize(name);
+		Component text = TextUtils.deserialize(name);
+		return !text.hasStyling() && text.toString().contains("&") ? TextUtils.deserializeLegacy(name) : text;
 	}
 
 	@Override

@@ -32,7 +32,7 @@ public class TpaHereAll extends AbstractPlayerCommand {
 		delay(src, locale, consumer -> {
 			UUID source = src.uniqueId();
 			Sponge.server().onlinePlayers().forEach(target -> {
-				target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE), Placeholders.PLAYER, src.get(Keys.CUSTOM_NAME).orElse(text(src.name()))).clickEvent(SpongeComponents.executeCallback(cause -> {
+				if(!target.uniqueId().equals(src.uniqueId())) target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE), Placeholders.PLAYER, src.get(Keys.CUSTOM_NAME).orElse(text(src.name()))).clickEvent(SpongeComponents.executeCallback(cause -> {
 					if(Sponge.server().player(source).isPresent()) {
 						target.setLocation(src.serverLocation());
 					} else target.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE));

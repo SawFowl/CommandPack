@@ -21,6 +21,7 @@ import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.TempPlayerData;
 import sawfowl.commandpack.commands.parameterized.Spawn;
+import sawfowl.commandpack.commands.parameterized.Warps;
 import sawfowl.commandpack.commands.parameterized.player.Hat;
 import sawfowl.commandpack.commands.parameterized.player.Home;
 import sawfowl.commandpack.commands.parameterized.player.SetHome;
@@ -111,10 +112,10 @@ public class CommandPack {
 
 	@Listener
 	public void onLocaleServicePostEvent(LocaleServiseEvent.Construct event) {
+		playersData = new sawfowl.commandpack.apiclasses.PlayersData(instance);
 		configManager = new ConfigManager(instance, event.getLocaleService().getConfigurationOptions());
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
 		tempPlayerData = new sawfowl.commandpack.apiclasses.TempPlayerData(instance);
-		playersData = new sawfowl.commandpack.apiclasses.PlayersData(instance);
 		configManager.loadPlayersData();
 	}
 
@@ -168,6 +169,9 @@ public class CommandPack {
 		});
 		getCommandSettings("setwarp").ifPresent(settings -> {
 			new SetWarp(instance, "setwarp", settings).register(event);
+		});
+		getCommandSettings("warps").ifPresent(settings -> {
+			new Warps(instance, "warps", settings).register(event);
 		});
 		getCommandSettings("tpa").ifPresent(settings -> {
 			new Tpa(instance, "tpa", settings).register(event);
