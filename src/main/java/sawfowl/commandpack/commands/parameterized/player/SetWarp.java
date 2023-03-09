@@ -18,10 +18,8 @@ import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.commands.CommandParameters;
 import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class SetWarp extends AbstractPlayerCommand {
 
@@ -33,17 +31,18 @@ public class SetWarp extends AbstractPlayerCommand {
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		delay(src, locale, consumer -> {
 			PlayerData playerData = plugin.getPlayersData().getOrCreatePlayerData(src);
-			String name = getString(context, "Warp", src.name()).equalsIgnoreCase("list") ? src.name() : getString(context, "Warp", src.name());
+			String name = getString(context, "Warp", src.name());
 			Optional<sawfowl.commandpack.api.data.player.Warp> optWarp = plugin.getPlayersData().getAdminWarp(name);
 			Optional<sawfowl.commandpack.api.data.player.Warp> optPlayerWarp = plugin.getPlayersData().getWarp(name, warp -> (!warp.isPrivate() || src.hasPermission(Permissions.WARP_STAFF) || (plugin.getPlayersData().getOrCreatePlayerData(src).containsWarp(warp.getName()))));
 			if((optWarp.isPresent() && !src.hasPermission(Permissions.WARP_STAFF)) || (optPlayerWarp.isPresent() && !playerData.getWarp(name).isPresent())) exception(locale, LocalesPaths.COMMANDS_SETWARP_EXIST);
 			Warp warp = getBoolean(context, "Admin", false) ? Warp.create(name, Location.create(src)) : Warp.create(name, Location.create(src)).setPrivate(getBoolean(context, "Private", false));
 			if(getBoolean(context, "Admin", false)) {
-				plugin.getPlayersData().addAdminWarp(warp);
+				plugin.getPlayersData().addAndSaveAdminWarp(warp);
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_SETWARP_SUCCESS_ADMIN));
 			} else if(playerData.addWarp(warp, Permissions.getWarpsLimit(src))) {
-				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SETHOME_SUCCESS), Placeholders.HOME, warp.asComponent()));
 				playerData.save();
-			} else exception(locale, LocalesPaths.COMMANDS_SETHOME_LIMIT);
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_SETWARP_SUCCESS));
+			} else exception(locale, LocalesPaths.COMMANDS_SETWARP_LIMIT);
 		});
 	}
 
@@ -54,7 +53,7 @@ public class SetWarp extends AbstractPlayerCommand {
 
 	@Override
 	public String permission() {
-		return Permissions.WARP;
+		return Permissions.SET_WARP;
 	}
 
 	@Override

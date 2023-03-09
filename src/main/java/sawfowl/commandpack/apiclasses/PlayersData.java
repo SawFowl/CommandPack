@@ -81,9 +81,16 @@ public class PlayersData implements sawfowl.commandpack.api.PlayersData {
 	}
 
 	@Override
+	public void addAndSaveAdminWarp(Warp warp) {
+		adminWarps.put(TextUtils.clearDecorations(warp.asComponent()), warp);
+		plugin.getConfigManager().saveAdminWarp(warp);
+	}
+
+	@Override
 	public boolean removeAdminWarp(String name) {
 		if(!adminWarps.containsKey(name)) return false;
 		adminWarps.remove(name);
+		plugin.getConfigManager().deleteAdminWarp(name);
 		return true;
 	}
 

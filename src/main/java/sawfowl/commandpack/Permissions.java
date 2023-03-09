@@ -22,6 +22,10 @@ public class Permissions {
 	public static final String SET_WARP = "commandpack.commands.user.setwarp";
 	public static final String WARP = "commandpack.commands.user.warp";
 	public static final String WARPS = "commandpack.commands.user.warps";
+	public static final String TPTOGGLE = "commandpack.commands.user.tptoggle";
+	public static final String TPA = "commandpack.commands.user.tpa";
+	public static final String TPA_HERE = "commandpack.commands.user.tpahere";
+	public static final String TPA_HERE_ALL = "commandpack.commands.user.tpahereall";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";

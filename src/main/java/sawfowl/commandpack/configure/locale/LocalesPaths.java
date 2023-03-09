@@ -22,6 +22,9 @@ public class LocalesPaths {
 	private static final Object COMMAND_HOME = "Home";
 	private static final Object COMMAND_WARP = "Warp";
 	private static final Object COMMAND_SETWARP = "SetWarp";
+	private static final Object COMMAND_WARPS = "Warps";
+	private static final Object COMMAND_TPTOGGLE = "TpToggle";
+	private static final Object COMMAND_TPA = "Tpa";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -41,6 +44,7 @@ public class LocalesPaths {
 	public static final Object[] NAME_UNKNOWN = {NAMES, "UnknownSource"};
 
 	public static final Object[] COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "PlayerNotPresent"};
+	public static final Object[] COMMANDS_EXCEPTION_TARGET_SELF = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "TargetSelf"};
 	public static final Object[] COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "BooleanNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_NAME_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "NameNotPresent"};
 	public static final Object[] COMMANDS_NOT_TRACKING = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "NotTracking"};
@@ -66,6 +70,26 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_HOME_SUCCESS = {PATH_COMMANDS, COMMAND_HOME, "Success "};
 	public static final Object[] COMMANDS_HOME_LIST = {PATH_COMMANDS, COMMAND_HOME, "ListTitle "};
 	public static final Object[] COMMANDS_WARP_NOT_FOUND = {PATH_COMMANDS, COMMAND_WARP, PATH_EXCEPTIONS, "NotFound"};
+	public static final Object[] COMMANDS_WARP_SUCCESS = {PATH_COMMANDS, COMMAND_WARP, "Success"};
+	public static final Object[] COMMANDS_WARP_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_WARP, "SuccessStaff"};
+	public static final Object[] COMMANDS_WARP_SUCCESS_OTHER = {PATH_COMMANDS, COMMAND_WARP, "SuccessOther"};
 	public static final Object[] COMMANDS_SETWARP_EXIST = {PATH_COMMANDS, COMMAND_SETWARP, PATH_EXCEPTIONS, "AllreadyExist"};
+	public static final Object[] COMMANDS_SETWARP_LIMIT = {PATH_COMMANDS, COMMAND_SETWARP, PATH_EXCEPTIONS, "Limit"};
+	public static final Object[] COMMANDS_SETWARP_SUCCESS = {PATH_COMMANDS, COMMAND_SETWARP, "Success"};
+	public static final Object[] COMMANDS_SETWARP_SUCCESS_ADMIN = {PATH_COMMANDS, COMMAND_SETWARP, "SuccessAdmin"};
+	public static final Object[] COMMANDS_WARPS_EMPTY = {PATH_COMMANDS, COMMAND_WARPS, PATH_EXCEPTIONS, "Empty"};
+	public static final Object[] COMMANDS_WARPS_WAIT = {PATH_COMMANDS, COMMAND_WARPS, "Wait"};
+	public static final Object[] COMMANDS_WARPS_LIST = {PATH_COMMANDS, COMMAND_WARPS, "List"};
+	public static final Object[] COMMANDS_WARPS_HEADER = {PATH_COMMANDS, COMMAND_WARPS, "Header"};
+	public static final Object[] COMMANDS_WARPS_SERVER_GROUP = {PATH_COMMANDS, COMMAND_WARPS, "ServerGroup"};
+	public static final Object[] COMMANDS_WARPS_PLAYERS_GROUP = {PATH_COMMANDS, COMMAND_WARPS, "PlayersGroup"};
+	public static final Object[] COMMANDS_TPTOGGLE_ENABLE = {PATH_COMMANDS, COMMAND_TPTOGGLE, "Enable"};
+	public static final Object[] COMMANDS_TPTOGGLE_DISABLE = {PATH_COMMANDS, COMMAND_TPTOGGLE, "Disable"};
+	public static final Object[] COMMANDS_TPA_DISABLE_TP_REQUESTS = {PATH_COMMANDS, COMMAND_TPA, PATH_EXCEPTIONS, "DisableTpRequests"};
+	public static final Object[] COMMANDS_TPA_SOURCE_OFFLINE = {PATH_COMMANDS, COMMAND_TPA, PATH_EXCEPTIONS, "SourceOffline"};
+	public static final Object[] COMMANDS_TPA_SUCCESS = {PATH_COMMANDS, COMMAND_TPA, "Success"};
+	public static final Object[] COMMANDS_TPA_ACCEPTED = {PATH_COMMANDS, COMMAND_TPA, "Accepted"};
+	public static final Object[] COMMANDS_TPA_REQUEST_MESSAGE = {PATH_COMMANDS, COMMAND_TPA, "RequestMessage"};
+	public static final Object[] COMMANDS_TPA_REQUEST_HERE_MESSAGE = {PATH_COMMANDS, COMMAND_TPA, "RequestHereMessage"};
 
 }

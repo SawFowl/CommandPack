@@ -64,6 +64,11 @@ public interface PlayersData {
 	void addAdminWarp(Warp warp);
 
 	/**
+	 * Adding and save admin {@link Warp}.
+	 */
+	void addAndSaveAdminWarp(Warp warp);
+
+	/**
 	 * Remove admin {@link Warp}.
 	 */
 	boolean removeAdminWarp(String name);

@@ -21,11 +21,11 @@ public class Locales {
 	public Locales(LocaleService localeService, boolean json) {
 		this.localeService = localeService;
 		this.json = json;
+		localeService.localesExist(pluginid);
 		localeService.createPluginLocale(pluginid, ConfigTypes.HOCON, org.spongepowered.api.util.locale.Locales.DEFAULT);
 		localeService.createPluginLocale(pluginid, ConfigTypes.HOCON, org.spongepowered.api.util.locale.Locales.RU_RU);
 		generateDefault();
 		generateRu();
-		localeService.localesExist(pluginid);
 	}
 
 	public LocaleService getLocaleService() {
@@ -78,6 +78,7 @@ public class Locales {
 		save = check(locale, toText("Unknown"), null, LocalesPaths.NAME_UNKNOWN) || save;
 
 		save = check(locale, toText("&cYou need to specify the nickname of the player online."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
+		save = check(locale, toText("&cYou can't point to yourself."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
 		save = check(locale, toText("&cYou must specify a name."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
 		save = check(locale, toText("&cIt is necessary to specify the command argument as boolean. More information about the arguments of the entered command can be found in the documentation of the plugin."), null, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT) || save;
 		save = check(locale, toText("&cWait &e" + Placeholders.DELAY + "&c before using this command again."), null, LocalesPaths.COMMANDS_COOLDOWN) || save;
@@ -102,8 +103,28 @@ public class Locales {
 		save = check(locale, toText("&cHome point is not available. Perhaps the world is not loaded."), null, LocalesPaths.COMMANDS_HOME_TELEPORT_ERROR) || save;
 		save = check(locale, toText("&aYou teleported to home &e" + Placeholders.HOME + "&a."), null, LocalesPaths.COMMANDS_HOME_SUCCESS) || save;
 		save = check(locale, toText("&bHomes"), null, LocalesPaths.COMMANDS_HOME_LIST) || save;
-		save = check(locale, toText("&bWarp with the specified name was not found."), null, LocalesPaths.COMMANDS_WARP_NOT_FOUND) || save;
-		save = check(locale, toText("&bA warp with the specified name already exists."), null, LocalesPaths.COMMANDS_SETWARP_EXIST) || save;
+		save = check(locale, toText("&cWarp with the specified name was not found."), null, LocalesPaths.COMMANDS_WARP_NOT_FOUND) || save;
+		save = check(locale, toText("&aYou have moved to warp " + Placeholders.WARP + "&a."), null, LocalesPaths.COMMANDS_WARP_SUCCESS) || save;
+		save = check(locale, toText("&aYou've been transferred to warp " + Placeholders.WARP + "&a."), null, LocalesPaths.COMMANDS_WARP_SUCCESS_OTHER) || save;
+		save = check(locale, toText("&aYou moved &e" + Placeholders.PLAYER + " to warp " + Placeholders.WARP + "&a."), null, LocalesPaths.COMMANDS_WARP_SUCCESS_STAFF) || save;
+		save = check(locale, toText("&cA warp with the specified name already exists."), null, LocalesPaths.COMMANDS_SETWARP_EXIST) || save;
+		save = check(locale, toText("&cYour limit does not allow you to set a new warp point."), null, LocalesPaths.COMMANDS_SETWARP_LIMIT) || save;
+		save = check(locale, toText("&aWarp is set."), null, LocalesPaths.COMMANDS_SETWARP_SUCCESS) || save;
+		save = check(locale, toText("&aAdmin warp is set."), null, LocalesPaths.COMMANDS_SETWARP_SUCCESS_ADMIN) || save;
+		save = check(locale, toText("&сThe list of warps is empty."), null, LocalesPaths.COMMANDS_WARPS_EMPTY) || save;
+		save = check(locale, toText("&eWarps: "), null, LocalesPaths.COMMANDS_WARPS_LIST) || save;
+		save = check(locale, toText("&eThe list of warps is being compiled. Please wait."), null, LocalesPaths.COMMANDS_WARPS_WAIT) || save;
+		save = check(locale, toText("&bWarps: ====== " + Placeholders.SERVER + " | " + Placeholders.PLAYER + " =========="), null, LocalesPaths.COMMANDS_WARPS_HEADER) || save;
+		save = check(locale, toText("&7[&4Server&7]"), null, LocalesPaths.COMMANDS_WARPS_SERVER_GROUP) || save;
+		save = check(locale, toText("&7[&ePlayers&7]"), null, LocalesPaths.COMMANDS_WARPS_PLAYERS_GROUP) || save;
+		save = check(locale, toText("&aYou can now accept teleportation requests."), null, LocalesPaths.COMMANDS_TPTOGGLE_ENABLE) || save;
+		save = check(locale, toText("&aIncoming teleportation requests will now be automatically rejected."), null, LocalesPaths.COMMANDS_TPTOGGLE_DISABLE) || save;
+		save = check(locale, toText("&cThis player does not accept teleportation requests."), null, LocalesPaths.COMMANDS_TPA_DISABLE_TP_REQUESTS) || save;
+		save = check(locale, toText("&cThe request is not valid. The player is offline."), null, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE) || save;
+		save = check(locale, toText("&aYou sent a teleportation request."), null, LocalesPaths.COMMANDS_TPA_SUCCESS) || save;
+		save = check(locale, toText("&aThe teleportation request is accepted."), null, LocalesPaths.COMMANDS_TPA_ACCEPTED) || save;
+		save = check(locale, toText(Placeholders.PLAYER + "&a is requesting permission to teleport to you. Click this message to accept the request."), null, LocalesPaths.COMMANDS_TPA_REQUEST_MESSAGE) || save;
+		save = check(locale, toText(Placeholders.PLAYER + "&a asks you to teleport to him/her. Click this message to accept the request."), null, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE) || save;
 
 		if(save) save(locale);
 	}
@@ -129,6 +150,7 @@ public class Locales {
 		save = check(locale, toText("Неизвестный"), null, LocalesPaths.NAME_UNKNOWN) || save;
 
 		save = check(locale, toText("&cНужно указать ник игрока онлайн."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
+		save = check(locale, toText("&cНельзя указывать на себя."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
 		save = check(locale, toText("&cНужно указать имя."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать аргумент команды вида boolean. Подробнее об аргументах введенной команды можно узнать в документации плагина."), null, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT) || save;
 		save = check(locale, toText("&cПодождите &e" + Placeholders.DELAY + "&c прежде чем снова использовать эту команду."), null, LocalesPaths.COMMANDS_COOLDOWN) || save;
@@ -153,8 +175,28 @@ public class Locales {
 		save = check(locale, toText("&cТочка дома не доступна. Возможно не загружен мир."), null, LocalesPaths.COMMANDS_HOME_TELEPORT_ERROR) || save;
 		save = check(locale, toText("&aВы переместились точку дома &e" + Placeholders.HOME + "&a."), null, LocalesPaths.COMMANDS_HOME_SUCCESS) || save;
 		save = check(locale, toText("&bДома"), null, LocalesPaths.COMMANDS_HOME_LIST) || save;
-		save = check(locale, toText("&bВарп с указанным именем не найден."), null, LocalesPaths.COMMANDS_WARP_NOT_FOUND) || save;
-		save = check(locale, toText("&bВарп с указанным именем уже существует."), null, LocalesPaths.COMMANDS_SETWARP_EXIST) || save;
+		save = check(locale, toText("&cВарп с указанным именем не найден."), null, LocalesPaths.COMMANDS_WARP_NOT_FOUND) || save;
+		save = check(locale, toText("&aВы переместились на варп " + Placeholders.WARP + "&a."), null, LocalesPaths.COMMANDS_WARP_SUCCESS) || save;
+		save = check(locale, toText("&aВас переместили на варп " + Placeholders.WARP + "&a."), null, LocalesPaths.COMMANDS_WARP_SUCCESS_OTHER) || save;
+		save = check(locale, toText("&aВы переместили &e" + Placeholders.PLAYER + " на варп " + Placeholders.WARP + "&a."), null, LocalesPaths.COMMANDS_WARP_SUCCESS_STAFF) || save;
+		save = check(locale, toText("&cВарп с указанным именем уже существует."), null, LocalesPaths.COMMANDS_SETWARP_EXIST) || save;
+		save = check(locale, toText("&cВаш лимит не позволяет установить новую варп точку."), null, LocalesPaths.COMMANDS_SETWARP_LIMIT) || save;
+		save = check(locale, toText("&aВарп установлен."), null, LocalesPaths.COMMANDS_SETWARP_SUCCESS) || save;
+		save = check(locale, toText("&aАдминистративный варп установлен."), null, LocalesPaths.COMMANDS_SETWARP_SUCCESS_ADMIN) || save;
+		save = check(locale, toText("&сСписок варпов пуст."), null, LocalesPaths.COMMANDS_WARPS_EMPTY) || save;
+		save = check(locale, toText("&eВарпы: "), null, LocalesPaths.COMMANDS_WARPS_LIST) || save;
+		save = check(locale, toText("&eСписок варпов составляется. Пожалуйста подождите."), null, LocalesPaths.COMMANDS_WARPS_WAIT) || save;
+		save = check(locale, toText("&bВарпы: ====== " + Placeholders.SERVER + " | " + Placeholders.PLAYER + " =========="), null, LocalesPaths.COMMANDS_WARPS_HEADER) || save;
+		save = check(locale, toText("&7[&4Сервер&7]"), null, LocalesPaths.COMMANDS_WARPS_SERVER_GROUP) || save;
+		save = check(locale, toText("&7[&eИгроки&7]"), null, LocalesPaths.COMMANDS_WARPS_PLAYERS_GROUP) || save;
+		save = check(locale, toText("&aТеперь вы можете принимать запросы на телепортацию."), null, LocalesPaths.COMMANDS_TPTOGGLE_ENABLE) || save;
+		save = check(locale, toText("&aВходящие запросы на телепортацию теперь будут автоматически отклоняться."), null, LocalesPaths.COMMANDS_TPTOGGLE_DISABLE) || save;
+		save = check(locale, toText("&cДанный игрок не принимает запросы на телепортацию."), null, LocalesPaths.COMMANDS_TPA_DISABLE_TP_REQUESTS) || save;
+		save = check(locale, toText("&cЗапрос не действителен. Игрок вышел из сети."), null, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE) || save;
+		save = check(locale, toText("&aВы отправили запрос на телепортацю."), null, LocalesPaths.COMMANDS_TPA_SUCCESS) || save;
+		save = check(locale, toText("&aЗапрос на телепортацию принят."), null, LocalesPaths.COMMANDS_TPA_ACCEPTED) || save;
+		save = check(locale, toText(Placeholders.PLAYER + "&a запрашивает разрешение на телепортацию к вам. Кликните на это сообщение для принятия запроса."), null, LocalesPaths.COMMANDS_TPA_REQUEST_MESSAGE) || save;
+		save = check(locale, toText(Placeholders.PLAYER + "&a просит вас телепортироваться к нему/ней. Кликните на это сообщение для принятия запроса."), null, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE) || save;
 
 		if(save) save(locale);
 	}

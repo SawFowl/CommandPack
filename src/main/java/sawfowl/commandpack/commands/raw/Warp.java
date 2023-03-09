@@ -16,8 +16,10 @@ import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
+import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.TextUtils;
 
 public class Warp extends AbstractRawCommand {
 
@@ -36,14 +38,39 @@ public class Warp extends AbstractRawCommand {
 			if(player.hasPermission(Permissions.WARP_STAFF) && args.length >= 2) {
 				Optional<ServerPlayer> optTarget = getPlayer(args[1]);
 				if(!optTarget.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
+				boolean equal = optTarget.get().uniqueId().equals(player.uniqueId());
 				if(optWarp.isPresent()) {
-					optWarp.get().moveToThis(optTarget.get());
-				} else optPlayerWarp.get().moveToThis(optTarget.get());
+					if(!equal) {
+						optWarp.get().moveToThis(optTarget.get());
+						player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS_STAFF), new String[] {Placeholders.PLAYER, Placeholders.WARP}, new Component[] {text(optTarget.get().name()), optWarp.get().asComponent()}));
+						optTarget.get().sendMessage(TextUtils.replace(getText(optTarget.get().locale(), LocalesPaths.COMMANDS_WARP_SUCCESS_OTHER), Placeholders.WARP, optWarp.get().asComponent()));
+					} else {
+						delay(player, locale, consumer -> {
+							optWarp.get().moveToThis(player);
+							player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS), Placeholders.WARP, optWarp.get().asComponent()));
+						});
+					}
+				} else {
+					if(!equal) {
+						optPlayerWarp.get().moveToThis(optTarget.get());
+						player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS_STAFF), new String[] {Placeholders.PLAYER, Placeholders.WARP}, new Component[] {text(optTarget.get().name()), optPlayerWarp.get().asComponent()}));
+						optTarget.get().sendMessage(TextUtils.replace(getText(optTarget.get().locale(), LocalesPaths.COMMANDS_WARP_SUCCESS_OTHER), Placeholders.WARP, optPlayerWarp.get().asComponent()));
+					} else {
+						delay(player, locale, consumer -> {
+							optPlayerWarp.get().moveToThis(player);
+							player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS), Placeholders.WARP, optPlayerWarp.get().asComponent()));
+						});
+					}
+				}
 			} else {
 				delay(player, locale, consumer -> {
 					if(optWarp.isPresent()) {
 						optWarp.get().moveToThis(player);
-					} else optPlayerWarp.get().moveToThis(player);
+						player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS), Placeholders.WARP, optWarp.get().asComponent()));
+					} else {
+						optPlayerWarp.get().moveToThis(player);
+						player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS), Placeholders.WARP, optPlayerWarp.get().asComponent()));
+					}
 				});
 			}
 		} else {
@@ -52,13 +79,19 @@ public class Warp extends AbstractRawCommand {
 			if(!optTarget.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
 			if(optWarp.isPresent()) {
 				optWarp.get().moveToThis(optTarget.get());
-			} else optPlayerWarp.get().moveToThis(optTarget.get());
+				audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS_STAFF), new String[] {Placeholders.PLAYER, Placeholders.WARP}, new Component[] {text(optTarget.get().name()), optWarp.get().asComponent()}));
+				optTarget.get().sendMessage(TextUtils.replace(getText(optTarget.get().locale(), LocalesPaths.COMMANDS_WARP_SUCCESS_OTHER), Placeholders.WARP, optWarp.get().asComponent()));
+			} else {
+				optPlayerWarp.get().moveToThis(optTarget.get());
+				audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS_STAFF), new String[] {Placeholders.PLAYER, Placeholders.WARP}, new Component[] {text(optTarget.get().name()), optPlayerWarp.get().asComponent()}));
+				optTarget.get().sendMessage(TextUtils.replace(getText(optTarget.get().locale(), LocalesPaths.COMMANDS_WARP_SUCCESS_OTHER), Placeholders.WARP, optPlayerWarp.get().asComponent()));
+			}
 		}
 	}
 
 	@Override
 	protected List<String> complete(CommandCause cause, List<String> args, String plainArg) throws CommandException {
-		if(!plugin.getMainConfig().isAutoCompleteRawCommands() || (plugin.getPlayersData().getAdminWarps().size() == 0 && plugin.getPlayersData().getPlayersWarps().size() == 0)) return null;
+		if(!plugin.getMainConfig().isAutoCompleteRawCommands() || (plugin.getPlayersData().getAdminWarps().isEmpty() && plugin.getPlayersData().getPlayersWarps().isEmpty())) return null;
 		List<String> warps = plugin.getPlayersData().getAdminWarps().keySet().stream().filter(warp -> (cause.hasPermission(Permissions.getWarpPermission(warp)))).collect(Collectors.toList());
 		warps.addAll(plugin.getPlayersData().getPlayersWarps().stream().filter(warp -> (!warp.isPrivate() || cause.hasPermission(Permissions.WARP_STAFF))).map(sawfowl.commandpack.api.data.player.Warp::getPlainName).collect(Collectors.toList()));
 		if(args.size() == 0) return warps;

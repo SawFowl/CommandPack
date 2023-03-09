@@ -33,6 +33,14 @@ public class CommandsConfig {
 	private CommandSettings setWarp = new CommandSettings();
 	@Setting("Warp")
 	private CommandSettings warp = new CommandSettings(new Delay(3));
+	@Setting("Warps")
+	private CommandSettings warps = new CommandSettings(new Delay(3));
+	@Setting("Tpa")
+	private CommandSettings tpa = new CommandSettings(new Delay(3));
+	@Setting("Tpahere")
+	private CommandSettings tpahere = new CommandSettings(new Delay(3));
+	@Setting("Tpahereall")
+	private CommandSettings tpahereall = new CommandSettings(new Delay(3));
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

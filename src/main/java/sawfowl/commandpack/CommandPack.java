@@ -19,8 +19,7 @@ import com.google.inject.Inject;
 
 import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.PlayersData;
-import sawfowl.commandpack.api.ITempPlayerData;
-import sawfowl.commandpack.apiclasses.TempPlayerData;
+import sawfowl.commandpack.api.TempPlayerData;
 import sawfowl.commandpack.commands.parameterized.Spawn;
 import sawfowl.commandpack.commands.parameterized.player.Hat;
 import sawfowl.commandpack.commands.parameterized.player.Home;
@@ -28,6 +27,9 @@ import sawfowl.commandpack.commands.parameterized.player.SetHome;
 import sawfowl.commandpack.commands.parameterized.player.SetSpawn;
 import sawfowl.commandpack.commands.parameterized.player.SetWarp;
 import sawfowl.commandpack.commands.parameterized.player.Suicide;
+import sawfowl.commandpack.commands.parameterized.player.Tpa;
+import sawfowl.commandpack.commands.parameterized.player.TpaHere;
+import sawfowl.commandpack.commands.parameterized.player.TpaHereAll;
 import sawfowl.commandpack.commands.raw.Warp;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.configs.MainConfig;
@@ -53,7 +55,7 @@ public class CommandPack {
 	private Locales locales;
 	private ConfigManager configManager;
 	private Economy economy;
-	private ITempPlayerData tempPlayerData;
+	private TempPlayerData tempPlayerData;
 	private PlayersData playersData;
 	public CommandPack getInstance() {
 		return instance;
@@ -91,7 +93,7 @@ public class CommandPack {
 		return configManager;
 	}
 
-	public ITempPlayerData getTempPlayerData() {
+	public TempPlayerData getTempPlayerData() {
 		return tempPlayerData;
 	}
 
@@ -111,7 +113,7 @@ public class CommandPack {
 	public void onLocaleServicePostEvent(LocaleServiseEvent.Construct event) {
 		configManager = new ConfigManager(instance, event.getLocaleService().getConfigurationOptions());
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
-		tempPlayerData = new TempPlayerData(instance);
+		tempPlayerData = new sawfowl.commandpack.apiclasses.TempPlayerData(instance);
 		playersData = new sawfowl.commandpack.apiclasses.PlayersData(instance);
 		configManager.loadPlayersData();
 	}
@@ -166,6 +168,15 @@ public class CommandPack {
 		});
 		getCommandSettings("setwarp").ifPresent(settings -> {
 			new SetWarp(instance, "setwarp", settings).register(event);
+		});
+		getCommandSettings("tpa").ifPresent(settings -> {
+			new Tpa(instance, "tpa", settings).register(event);
+		});
+		getCommandSettings("tpahere").ifPresent(settings -> {
+			new TpaHere(instance, "tpahere", settings).register(event);
+		});
+		getCommandSettings("tpahereall").ifPresent(settings -> {
+			new TpaHereAll(instance, "tpahereall", settings).register(event);
 		});
 	}
 

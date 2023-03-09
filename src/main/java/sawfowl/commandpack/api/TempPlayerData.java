@@ -11,7 +11,7 @@ import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 /**
  * Used to store temporary data of players who used the functionality of the CommandPack plugin.
  */
-public interface ITempPlayerData {
+public interface TempPlayerData {
 
 	/**
 	 * Adding command usage tracking.<br>
@@ -77,5 +77,15 @@ public interface ITempPlayerData {
 	 * @return - Empty {@link Optional} or tracking {@link Map}
 	 */
 	Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(UUID uuid);
+
+	/**
+	 * Change the status of receiving teleportation requests.
+	 */
+	public void tpToggle(ServerPlayer player);
+
+	/**
+	 * Whether the player accepts teleportation requests.
+	 */
+	public boolean isDisableTpRequests(ServerPlayer player);
 
 }

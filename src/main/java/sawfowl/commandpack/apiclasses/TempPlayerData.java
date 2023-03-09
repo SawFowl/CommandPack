@@ -2,26 +2,28 @@ package sawfowl.commandpack.apiclasses;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.api.ITempPlayerData;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
-public class TempPlayerData implements ITempPlayerData {
+public class TempPlayerData implements sawfowl.commandpack.api.TempPlayerData {
 
 	private final CommandPack plugin;
 	private Map<String, List<UUID>> trackingCommandDelay = new HashMap<>();
 	private Component notTracking;
+	private Set<UUID> tptoggleSet = new HashSet<>();
 	public TempPlayerData(CommandPack plugin) {
 		this.plugin = plugin;
 		notTracking = plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING);
@@ -82,6 +84,18 @@ public class TempPlayerData implements ITempPlayerData {
 			commands.put(entry.getKey(), commandSettings);
 		});
 		return !isTrackingPlayer(uuid) || commands.isEmpty() ? Optional.empty() : Optional.ofNullable(commands);
+	}
+
+	@Override
+	public void tpToggle(ServerPlayer player) {
+		if(isDisableTpRequests(player)) {
+			tptoggleSet.remove(player.uniqueId());
+		} else tptoggleSet.add(player.uniqueId());
+	}
+
+	@Override
+	public boolean isDisableTpRequests(ServerPlayer player) {
+		return tptoggleSet.contains(player.uniqueId());
 	}
 
 }
