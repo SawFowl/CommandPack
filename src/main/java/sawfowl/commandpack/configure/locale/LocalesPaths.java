@@ -25,6 +25,8 @@ public class LocalesPaths {
 	private static final Object COMMAND_WARPS = "Warps";
 	private static final Object COMMAND_TPTOGGLE = "TpToggle";
 	private static final Object COMMAND_TPA = "Tpa";
+	private static final Object COMMAND_CLEAR = "Clear";
+	private static final Object COMMAND_REPAIR = "Repair";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -46,7 +48,9 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "PlayerNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_TARGET_SELF = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "TargetSelf"};
 	public static final Object[] COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "BooleanNotPresent"};
+	public static final Object[] COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "LocationNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_NAME_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "NameNotPresent"};
+	public static final Object[] COMMANDS_EXCEPTION_TYPE_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "TypeNotPresent"};
 	public static final Object[] COMMANDS_NOT_TRACKING = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "NotTracking"};
 	public static final Object[] COMMANDS_STOP_TRACKING_COMMAND = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "StopByCommand"};
 	public static final Object[] COMMANDS_STOP_TRACKING_MOVING = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "StopByMoving"};
@@ -91,5 +95,12 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_TPA_ACCEPTED = {PATH_COMMANDS, COMMAND_TPA, "Accepted"};
 	public static final Object[] COMMANDS_TPA_REQUEST_MESSAGE = {PATH_COMMANDS, COMMAND_TPA, "RequestMessage"};
 	public static final Object[] COMMANDS_TPA_REQUEST_HERE_MESSAGE = {PATH_COMMANDS, COMMAND_TPA, "RequestHereMessage"};
+	public static final Object[] COMMANDS_TPPOS_INVALID_LOCATION = {PATH_COMMANDS, "Tppos", PATH_EXCEPTIONS, "InvalidLocation"};
+	public static final Object[] COMMANDS_CLEAR_SUCCES = {PATH_COMMANDS, COMMAND_CLEAR, PATH_EXCEPTIONS, "Success"};
+	public static final Object[] COMMANDS_CLEAR_SUCCES_OTHER = {PATH_COMMANDS, COMMAND_CLEAR, PATH_EXCEPTIONS, "SuccessOther"};
+	public static final Object[] COMMANDS_CLEAR_SUCCES_STAFF = {PATH_COMMANDS, COMMAND_CLEAR, PATH_EXCEPTIONS, "SuccessStaff"};
+	public static final Object[] COMMANDS_REPAIR_SUCCES = {PATH_COMMANDS, COMMAND_REPAIR, "Success"};
+	public static final Object[] COMMANDS_REPAIR_SUCCES_STAFF = {PATH_COMMANDS, COMMAND_REPAIR, "SuccessStaff"};
+	public static final Object[] COMMANDS_REPAIR_SUCCES_OTHER = {PATH_COMMANDS, COMMAND_REPAIR, "SuccessOther"};
 
 }

@@ -20,16 +20,21 @@ import com.google.inject.Inject;
 import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.TempPlayerData;
+import sawfowl.commandpack.commands.parameterized.ClearInventory;
+import sawfowl.commandpack.commands.parameterized.Repair;
 import sawfowl.commandpack.commands.parameterized.Spawn;
 import sawfowl.commandpack.commands.parameterized.player.Hat;
-import sawfowl.commandpack.commands.parameterized.player.Home;
-import sawfowl.commandpack.commands.parameterized.player.SetHome;
-import sawfowl.commandpack.commands.parameterized.player.SetSpawn;
-import sawfowl.commandpack.commands.parameterized.player.SetWarp;
 import sawfowl.commandpack.commands.parameterized.player.Suicide;
-import sawfowl.commandpack.commands.parameterized.player.Tpa;
-import sawfowl.commandpack.commands.parameterized.player.TpaHere;
-import sawfowl.commandpack.commands.parameterized.player.TpaHereAll;
+import sawfowl.commandpack.commands.parameterized.player.teleports.SetSpawn;
+import sawfowl.commandpack.commands.parameterized.player.teleports.SetWarp;
+import sawfowl.commandpack.commands.parameterized.player.teleports.Teleport;
+import sawfowl.commandpack.commands.parameterized.player.teleports.TeleportHere;
+import sawfowl.commandpack.commands.parameterized.player.teleports.TeleportHereAll;
+import sawfowl.commandpack.commands.parameterized.player.teleports.Tpa;
+import sawfowl.commandpack.commands.parameterized.player.teleports.TpaHere;
+import sawfowl.commandpack.commands.parameterized.player.teleports.TpaHereAll;
+import sawfowl.commandpack.commands.parameterized.player.teleports.home.Home;
+import sawfowl.commandpack.commands.parameterized.player.teleports.home.SetHome;
 import sawfowl.commandpack.commands.raw.Warp;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.configs.MainConfig;
@@ -177,6 +182,21 @@ public class CommandPack {
 		});
 		getCommandSettings("tpahereall").ifPresent(settings -> {
 			new TpaHereAll(instance, "tpahereall", settings).register(event);
+		});
+		getCommandSettings("teleport").ifPresent(settings -> {
+			new Teleport(instance, "teleport", settings).register(event);
+		});
+		getCommandSettings("teleporthere").ifPresent(settings -> {
+			new TeleportHere(instance, "teleporthere", settings).register(event);
+		});
+		getCommandSettings("teleporthereall").ifPresent(settings -> {
+			new TeleportHereAll(instance, "teleporthereall", settings).register(event);
+		});
+		getCommandSettings("clearinventory").ifPresent(settings -> {
+			new ClearInventory(instance, "clearinventory", settings).register(event);
+		});
+		getCommandSettings("repair").ifPresent(settings -> {
+			new Repair(instance, "repair", settings).register(event);
 		});
 	}
 

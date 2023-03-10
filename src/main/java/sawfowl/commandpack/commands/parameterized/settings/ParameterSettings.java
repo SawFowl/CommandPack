@@ -1,4 +1,4 @@
-package sawfowl.commandpack.commands;
+package sawfowl.commandpack.commands.parameterized.settings;
 
 import java.util.Optional;
 

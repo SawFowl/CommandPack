@@ -32,10 +32,31 @@ public class CommandSettings {
 		this.delay = delay;
 	}
 
+	public CommandSettings(Delay delay, String[] aliases) {
+		this.delay = delay;
+		this.aliases = aliases;
+	}
+
+	public CommandSettings(CommandPrice price, String[] aliases) {
+		this.price = price;
+		this.aliases = aliases;
+	}
+
+	public CommandSettings(Delay delay, CommandPrice price) {
+		this.delay = delay;
+		this.price = price;
+	}
+
 	public CommandSettings(long cooldown, Delay delay, CommandPrice price) {
 		this.cooldown = cooldown;
 		this.delay = delay;
 		this.price = price;
+	}
+
+	public CommandSettings(long cooldown, Delay delay, String[] aliases) {
+		this.cooldown = cooldown;
+		this.delay = delay;
+		this.aliases = aliases;
 	}
 
 	public CommandSettings(long cooldown, Delay delay, CommandPrice price, String[] aliases) {

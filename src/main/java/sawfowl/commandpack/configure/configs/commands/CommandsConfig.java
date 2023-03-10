@@ -32,15 +32,27 @@ public class CommandsConfig {
 	@Setting("SetWarp")
 	private CommandSettings setWarp = new CommandSettings();
 	@Setting("Warp")
-	private CommandSettings warp = new CommandSettings(new Delay(3));
+	private CommandSettings warp = new CommandSettings(15, new Delay(3));
 	@Setting("Warps")
 	private CommandSettings warps = new CommandSettings(new Delay(3));
 	@Setting("Tpa")
-	private CommandSettings tpa = new CommandSettings(new Delay(3));
+	private CommandSettings tpa = new CommandSettings(new Delay(3), new CommandPrice("$", 5));
 	@Setting("Tpahere")
-	private CommandSettings tpahere = new CommandSettings(new Delay(3));
+	private CommandSettings tpahere = new CommandSettings(new Delay(3), new CommandPrice("$", 10));
 	@Setting("Tpahereall")
 	private CommandSettings tpahereall = new CommandSettings(new Delay(3));
+	@Setting("Teleport")
+	private CommandSettings teleport = new CommandSettings(new String[] {"tp"});
+	@Setting("TeleportHere")
+	private CommandSettings teleporthere = new CommandSettings(new String[] {"tphere"});
+	@Setting("TeleportHereAll")
+	private CommandSettings teleporthereall = new CommandSettings(new String[] {"tphereall"});
+	@Setting("Tppos")
+	private CommandSettings tppos = new CommandSettings();
+	@Setting("Clearinventory")
+	private CommandSettings clearinventory = new CommandSettings(new String[] {"clear"});
+	@Setting("Repair")
+	private CommandSettings repair = new CommandSettings(new CommandPrice("$", 20), new String[] {"fix"});
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

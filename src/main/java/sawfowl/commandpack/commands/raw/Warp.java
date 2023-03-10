@@ -92,16 +92,20 @@ public class Warp extends AbstractRawCommand {
 	@Override
 	protected List<String> complete(CommandCause cause, List<String> args, String plainArg) throws CommandException {
 		if(!plugin.getMainConfig().isAutoCompleteRawCommands() || (plugin.getPlayersData().getAdminWarps().isEmpty() && plugin.getPlayersData().getPlayersWarps().isEmpty())) return null;
-		List<String> warps = plugin.getPlayersData().getAdminWarps().keySet().stream().filter(warp -> (cause.hasPermission(Permissions.getWarpPermission(warp)))).collect(Collectors.toList());
-		warps.addAll(plugin.getPlayersData().getPlayersWarps().stream().filter(warp -> (!warp.isPrivate() || cause.hasPermission(Permissions.WARP_STAFF))).map(sawfowl.commandpack.api.data.player.Warp::getPlainName).collect(Collectors.toList()));
+		boolean isStaff = cause.hasPermission(Permissions.WARP_STAFF);
+		List<String> warps = plugin.getPlayersData().getAdminWarps().keySet().stream().filter(warp -> ((plainArg.isEmpty() || warp.startsWith(plainArg) || (isStaff && args.size() > 1 && warp.startsWith(plainArg.replace(" " + args.get(args.size() - 1), "")))) && (isStaff || cause.hasPermission(Permissions.getWarpPermission(warp))))).collect(Collectors.toList());
+		warps.addAll(plugin.getPlayersData().getPlayersWarps().stream().filter(warp -> (!warp.isPrivate() || isStaff)).map(sawfowl.commandpack.api.data.player.Warp::getPlainName).filter(warp -> (plainArg.isEmpty() || warp.startsWith(plainArg) || (isStaff && args.size() > 1 && warp.startsWith(plainArg.replace(" " + args.get(args.size() - 1), ""))))).collect(Collectors.toList()));
 		if(args.size() == 0) return warps;
-		if(args.size() == 1 && !plainArg.contains(args.get(0) + " ")) return warps.stream().filter(warp -> (warp.startsWith(args.get(0)))).collect(Collectors.toList());
-		if(args.size() == 1 && !warps.stream().filter(warp -> (warp.equals(args.get(0)))).findFirst().isPresent()) return null;
-		if(args.size() == 1 && plainArg.contains(args.get(0) + " ") && cause.hasPermission(Permissions.WARP_STAFF)) return Sponge.server().onlinePlayers().stream().map(ServerPlayer::name).collect(Collectors.toList());
-		if(args.size() == 2 && plainArg.contains(args.get(1) + " ")) return null;
-		if(args.size() == 2 && cause.hasPermission(Permissions.WARP_STAFF) && !plainArg.contains(args.get(0) + " ")) return Sponge.server().onlinePlayers().stream().map(ServerPlayer::name).filter(player -> (player.startsWith(args.get(1)))).collect(Collectors.toList());
-		if(args.size() == 2 && cause.hasPermission(Permissions.WARP_STAFF) && plainArg.contains(args.get(0) + " ") && Sponge.server().onlinePlayers().stream().map(ServerPlayer::name).filter(player -> (player.startsWith(args.get(1)))).findFirst().isPresent()) return Sponge.server().onlinePlayers().stream().map(ServerPlayer::name).filter(player -> (player.startsWith(args.get(1)))).collect(Collectors.toList());
-		return null;
+		if(isStaff) {
+			List<String> players = Sponge.server().onlinePlayers().stream().map(ServerPlayer::name).filter(name -> (name.startsWith(args.get(args.size() - 1)))).collect(Collectors.toList());
+			if(args.size() > 1 && !players.isEmpty()) {
+				return players;
+			} else {
+				return warps.stream().filter(warp -> (warp.startsWith(plainArg))).collect(Collectors.toList());
+			}
+		} else {
+			return warps.stream().filter(warp -> (warp.startsWith(plainArg))).collect(Collectors.toList());
+		}
 	}
 
 	@Override

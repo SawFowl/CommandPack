@@ -26,12 +26,21 @@ public class Permissions {
 	public static final String TPA = "commandpack.commands.user.tpa";
 	public static final String TPA_HERE = "commandpack.commands.user.tpahere";
 	public static final String TPA_HERE_ALL = "commandpack.commands.user.tpahereall";
+	public static final String CLEAR = "commandpack.commands.user.clear";
+	public static final String REPAIR = "commandpack.commands.user.repair";
+	public static final String REPAIR_SELECT = "commandpack.commands.user.selectrepair";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
 	public static final String SET_SPAWN_STAFF = "commandpack.commands.staff.setspawn";
 	public static final String SPAWN_STAFF = "commandpack.commands.staff.spawn";
 	public static final String WARP_STAFF = "commandpack.commands.staff.warp";
+	public static final String TELEPORT_STAFF = "commandpack.commands.staff.teleport";
+	public static final String TELEPORT_HERE_STAFF = "commandpack.commands.staff.teleport";
+	public static final String TELEPORT_HERE_ALL_STAFF = "commandpack.commands.staff.teleport";
+	public static final String TPPOS_STAFF = "commandpack.commands.staff.tppos";
+	public static final String CLEAR_STAFF = "commandpack.commands.staff.clear";
+	public static final String REPAIR_STAFF = "commandpack.commands.staff.repair";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";

@@ -20,12 +20,13 @@ import org.spongepowered.api.command.parameter.Parameter.Value;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.audience.Audience;
 
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.PluginCommand;
+import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -119,6 +120,10 @@ public abstract class AbstractParameterizedCommand extends PluginCommand impleme
 
 	public String getString(CommandContext context, String arg, String def) {
 		return getString(context, arg).orElse(def);
+	}
+
+	public Optional<ServerLocation> getLocation(CommandContext context) {
+		return getArgument(context, ServerLocation.class, "Location");
 	}
 
 	public <T> Optional<T> getArgument(CommandContext context, Class<T> object, String arg) {

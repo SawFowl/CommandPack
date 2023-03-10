@@ -80,7 +80,9 @@ public class Locales {
 		save = check(locale, toText("&cYou need to specify the nickname of the player online."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou can't point to yourself."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
 		save = check(locale, toText("&cYou must specify a name."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
+		save = check(locale, toText("&cYou must specify a type."), null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT) || save;
 		save = check(locale, toText("&cIt is necessary to specify the command argument as boolean. More information about the arguments of the entered command can be found in the documentation of the plugin."), null, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT) || save;
+		save = check(locale, toText("&cYou need to specify the coordinates."), null, LocalesPaths.COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT) || save;
 		save = check(locale, toText("&cWait &e" + Placeholders.DELAY + "&c before using this command again."), null, LocalesPaths.COMMANDS_COOLDOWN) || save;
 		save = check(locale, toText("&aCommand activation via &e" + Placeholders.DELAY + "&a."), null, LocalesPaths.COMMANDS_WAIT) || save;
 		save = check(locale, toText(Placeholders.SOURCE + " ran the command: /" + Placeholders.COMMAND + Placeholders.ARGS + ""), null, LocalesPaths.COMMANDS_LOG) || save;
@@ -125,6 +127,13 @@ public class Locales {
 		save = check(locale, toText("&aThe teleportation request is accepted."), null, LocalesPaths.COMMANDS_TPA_ACCEPTED) || save;
 		save = check(locale, toText(Placeholders.PLAYER + "&a is requesting permission to teleport to you. Click this message to accept the request."), null, LocalesPaths.COMMANDS_TPA_REQUEST_MESSAGE) || save;
 		save = check(locale, toText(Placeholders.PLAYER + "&a asks you to teleport to him/her. Click this message to accept the request."), null, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE) || save;
+		save = check(locale, toText("&cAn unacceptable location is specified."), null, LocalesPaths.COMMANDS_TPPOS_INVALID_LOCATION) || save;
+		save = check(locale, toText("&aYou have cleared your inventory."), null, LocalesPaths.COMMANDS_CLEAR_SUCCES) || save;
+		save = check(locale, toText("&eYour inventory has been cleared."), null, LocalesPaths.COMMANDS_CLEAR_SUCCES_OTHER) || save;
+		save = check(locale, toText("&aYou cleared &e" + Placeholders.PLAYER + "&a inventory."), null, LocalesPaths.COMMANDS_CLEAR_SUCCES_STAFF) || save;
+		save = check(locale, toText("&aRepairs has been completed."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES) || save;
+		save = check(locale, toText("&aYour item(s) has been repaired."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES_OTHER) || save;
+		save = check(locale, toText("&aYou repaired the item(s) to player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES_STAFF) || save;
 
 		if(save) save(locale);
 	}
@@ -152,7 +161,9 @@ public class Locales {
 		save = check(locale, toText("&cНужно указать ник игрока онлайн."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНельзя указывать на себя."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
 		save = check(locale, toText("&cНужно указать имя."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
+		save = check(locale, toText("&cНужно указать тип."), null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать аргумент команды вида boolean. Подробнее об аргументах введенной команды можно узнать в документации плагина."), null, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT) || save;
+		save = check(locale, toText("&cНужно указать координаты."), null, LocalesPaths.COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT) || save;
 		save = check(locale, toText("&cПодождите &e" + Placeholders.DELAY + "&c прежде чем снова использовать эту команду."), null, LocalesPaths.COMMANDS_COOLDOWN) || save;
 		save = check(locale, toText("&aАктивация команды через &e" + Placeholders.DELAY + "&a."), null, LocalesPaths.COMMANDS_WAIT) || save;
 		save = check(locale, toText(Placeholders.SOURCE + " выполняет команду: /" + Placeholders.COMMAND + Placeholders.ARGS + ""), null, LocalesPaths.COMMANDS_LOG) || save;
@@ -197,6 +208,13 @@ public class Locales {
 		save = check(locale, toText("&aЗапрос на телепортацию принят."), null, LocalesPaths.COMMANDS_TPA_ACCEPTED) || save;
 		save = check(locale, toText(Placeholders.PLAYER + "&a запрашивает разрешение на телепортацию к вам. Кликните на это сообщение для принятия запроса."), null, LocalesPaths.COMMANDS_TPA_REQUEST_MESSAGE) || save;
 		save = check(locale, toText(Placeholders.PLAYER + "&a просит вас телепортироваться к нему/ней. Кликните на это сообщение для принятия запроса."), null, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE) || save;
+		save = check(locale, toText("&cУказана не допустимая локация."), null, LocalesPaths.COMMANDS_TPPOS_INVALID_LOCATION) || save;
+		save = check(locale, toText("&aВы очистили свой инвентарь."), null, LocalesPaths.COMMANDS_CLEAR_SUCCES) || save;
+		save = check(locale, toText("&eВаш инвентарь был очищен."), null, LocalesPaths.COMMANDS_CLEAR_SUCCES_OTHER) || save;
+		save = check(locale, toText("&aВы очистили инвентарь игрока &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_CLEAR_SUCCES_STAFF) || save;
+		save = check(locale, toText("&aРемонт выполнен."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES) || save;
+		save = check(locale, toText("&aВам восстановили прочность предмета(ов)."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES_OTHER) || save;
+		save = check(locale, toText("&aВы восстановили прочность предмета(ов) игроку &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES_STAFF) || save;
 
 		if(save) save(locale);
 	}

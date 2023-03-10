@@ -1,4 +1,4 @@
-package sawfowl.commandpack.commands.parameterized.player;
+package sawfowl.commandpack.commands.parameterized.player.teleports;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,9 +11,9 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.commands.CommandParameters;
-import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
+import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
+import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;

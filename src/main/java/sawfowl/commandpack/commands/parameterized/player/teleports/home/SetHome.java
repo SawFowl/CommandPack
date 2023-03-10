@@ -1,4 +1,4 @@
-package sawfowl.commandpack.commands.parameterized.player;
+package sawfowl.commandpack.commands.parameterized.player.teleports.home;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,9 +13,9 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.player.Home;
 import sawfowl.commandpack.api.data.player.PlayerData;
-import sawfowl.commandpack.commands.CommandParameters;
-import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
+import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
+import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;

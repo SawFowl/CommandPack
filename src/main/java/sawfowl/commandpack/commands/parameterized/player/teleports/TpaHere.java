@@ -1,4 +1,4 @@
-package sawfowl.commandpack.commands.parameterized.player;
+package sawfowl.commandpack.commands.parameterized.player.teleports;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,17 +15,17 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.commands.CommandParameters;
-import sawfowl.commandpack.commands.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
+import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
+import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
-public class Tpa extends AbstractPlayerCommand {
+public class TpaHere extends AbstractPlayerCommand {
 
-	public Tpa(CommandPack plugin, String command, CommandSettings commandSettings) {
+	public TpaHere(CommandPack plugin, String command, CommandSettings commandSettings) {
 		super(plugin, command, commandSettings);
 	}
 
@@ -36,9 +36,9 @@ public class Tpa extends AbstractPlayerCommand {
 		if(plugin.getTempPlayerData().isDisableTpRequests(target)) exception(locale, LocalesPaths.COMMANDS_TPA_DISABLE_TP_REQUESTS);
 		delay(src, locale, consumer -> {
 			UUID source = src.uniqueId();
-			target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_TPA_REQUEST_MESSAGE), Placeholders.PLAYER, src.get(Keys.CUSTOM_NAME).orElse(text(src.name()))).clickEvent(SpongeComponents.executeCallback(cause -> {
+			target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE), Placeholders.PLAYER, src.get(Keys.CUSTOM_NAME).orElse(text(src.name()))).clickEvent(SpongeComponents.executeCallback(cause -> {
 				if(Sponge.server().player(source).isPresent()) {
-					src.setLocation(target.serverLocation());
+					target.setLocation(src.serverLocation());
 					src.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_ACCEPTED));
 				} else target.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE));
 			})));
@@ -58,7 +58,7 @@ public class Tpa extends AbstractPlayerCommand {
 
 	@Override
 	protected String permission() {
-		return Permissions.TPA;
+		return Permissions.TPA_HERE;
 	}
 
 }
