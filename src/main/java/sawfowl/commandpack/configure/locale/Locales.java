@@ -113,10 +113,10 @@ public class Locales {
 		save = check(locale, toText("&cYour limit does not allow you to set a new warp point."), null, LocalesPaths.COMMANDS_SETWARP_LIMIT) || save;
 		save = check(locale, toText("&aWarp is set."), null, LocalesPaths.COMMANDS_SETWARP_SUCCESS) || save;
 		save = check(locale, toText("&aAdmin warp is set."), null, LocalesPaths.COMMANDS_SETWARP_SUCCESS_ADMIN) || save;
-		save = check(locale, toText("&сThe list of warps is empty."), null, LocalesPaths.COMMANDS_WARPS_EMPTY) || save;
+		save = check(locale, toText("&cThe list of warps is empty."), null, LocalesPaths.COMMANDS_WARPS_EMPTY) || save;
 		save = check(locale, toText("&eWarps: "), null, LocalesPaths.COMMANDS_WARPS_LIST) || save;
 		save = check(locale, toText("&eThe list of warps is being compiled. Please wait."), null, LocalesPaths.COMMANDS_WARPS_WAIT) || save;
-		save = check(locale, toText("&bWarps: ====== " + Placeholders.SERVER + " | " + Placeholders.PLAYER + " =========="), null, LocalesPaths.COMMANDS_WARPS_HEADER) || save;
+		save = check(locale, toText("&bWarps: ============ " + Placeholders.SERVER + " | " + Placeholders.PLAYER + " ================"), null, LocalesPaths.COMMANDS_WARPS_HEADER) || save;
 		save = check(locale, toText("&7[&4Server&7]"), null, LocalesPaths.COMMANDS_WARPS_SERVER_GROUP) || save;
 		save = check(locale, toText("&7[&ePlayers&7]"), null, LocalesPaths.COMMANDS_WARPS_PLAYERS_GROUP) || save;
 		save = check(locale, toText("&aYou can now accept teleportation requests."), null, LocalesPaths.COMMANDS_TPTOGGLE_ENABLE) || save;
@@ -194,10 +194,10 @@ public class Locales {
 		save = check(locale, toText("&cВаш лимит не позволяет установить новую варп точку."), null, LocalesPaths.COMMANDS_SETWARP_LIMIT) || save;
 		save = check(locale, toText("&aВарп установлен."), null, LocalesPaths.COMMANDS_SETWARP_SUCCESS) || save;
 		save = check(locale, toText("&aАдминистративный варп установлен."), null, LocalesPaths.COMMANDS_SETWARP_SUCCESS_ADMIN) || save;
-		save = check(locale, toText("&сСписок варпов пуст."), null, LocalesPaths.COMMANDS_WARPS_EMPTY) || save;
+		save = check(locale, toText("&cСписок варпов пуст."), null, LocalesPaths.COMMANDS_WARPS_EMPTY) || save;
 		save = check(locale, toText("&eВарпы: "), null, LocalesPaths.COMMANDS_WARPS_LIST) || save;
 		save = check(locale, toText("&eСписок варпов составляется. Пожалуйста подождите."), null, LocalesPaths.COMMANDS_WARPS_WAIT) || save;
-		save = check(locale, toText("&bВарпы: ====== " + Placeholders.SERVER + " | " + Placeholders.PLAYER + " =========="), null, LocalesPaths.COMMANDS_WARPS_HEADER) || save;
+		save = check(locale, toText("&bВарпы: ============ " + Placeholders.SERVER + " | " + Placeholders.PLAYER + " ================"), null, LocalesPaths.COMMANDS_WARPS_HEADER) || save;
 		save = check(locale, toText("&7[&4Сервер&7]"), null, LocalesPaths.COMMANDS_WARPS_SERVER_GROUP) || save;
 		save = check(locale, toText("&7[&eИгроки&7]"), null, LocalesPaths.COMMANDS_WARPS_PLAYERS_GROUP) || save;
 		save = check(locale, toText("&aТеперь вы можете принимать запросы на телепортацию."), null, LocalesPaths.COMMANDS_TPTOGGLE_ENABLE) || save;
