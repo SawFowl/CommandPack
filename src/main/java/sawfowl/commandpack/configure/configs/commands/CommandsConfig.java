@@ -53,6 +53,12 @@ public class CommandsConfig {
 	private CommandSettings clearinventory = new CommandSettings(new String[] {"clear"});
 	@Setting("Repair")
 	private CommandSettings repair = new CommandSettings(new CommandPrice("$", 20), new String[] {"fix"});
+	@Setting("Enderchest")
+	private CommandSettings enderchest = new CommandSettings();
+	@Setting("Top")
+	private CommandSettings top = new CommandSettings();
+	@Setting("Jump")
+	private CommandSettings jump = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

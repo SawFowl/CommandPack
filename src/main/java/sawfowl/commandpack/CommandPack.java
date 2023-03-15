@@ -155,52 +155,55 @@ public class CommandPack {
 	@Listener
 	public void registerParameterizedCommands(RegisterCommandEvent<Parameterized> event) {
 		getCommandSettings("hat").ifPresent(settings -> {
-			new Hat(instance, "hat", settings).register(event);
+			if(settings.isEnable()) new Hat(instance, "hat", settings).register(event);
 		});
 		getCommandSettings("home").ifPresent(settings -> {
-			new Home(instance, "home", settings).register(event);
+			if(settings.isEnable()) new Home(instance, "home", settings).register(event);
 		});
 		getCommandSettings("sethome").ifPresent(settings -> {
-			new SetHome(instance, "sethome", settings).register(event);
+			if(settings.isEnable()) new SetHome(instance, "sethome", settings).register(event);
 		});
 		getCommandSettings("setspawn").ifPresent(settings -> {
-			new SetSpawn(instance, "setspawn", settings).register(event);
+			if(settings.isEnable()) new SetSpawn(instance, "setspawn", settings).register(event);
 		});
 		getCommandSettings("spawn").ifPresent(settings -> {
-			new Spawn(instance, "spawn", settings).register(event);
+			if(settings.isEnable()) new Spawn(instance, "spawn", settings).register(event);
 		});
 		getCommandSettings("suicide").ifPresent(settings -> {
-			new Suicide(instance, "suicide", settings).register(event);
+			if(settings.isEnable()) new Suicide(instance, "suicide", settings).register(event);
 		});
 		getCommandSettings("setwarp").ifPresent(settings -> {
-			new SetWarp(instance, "setwarp", settings).register(event);
+			if(settings.isEnable()) new SetWarp(instance, "setwarp", settings).register(event);
 		});
 		getCommandSettings("warps").ifPresent(settings -> {
-			new Warps(instance, "warps", settings).register(event);
+			if(settings.isEnable()) new Warps(instance, "warps", settings).register(event);
 		});
 		getCommandSettings("tpa").ifPresent(settings -> {
-			new Tpa(instance, "tpa", settings).register(event);
+			if(settings.isEnable()) new Tpa(instance, "tpa", settings).register(event);
 		});
 		getCommandSettings("tpahere").ifPresent(settings -> {
 			new TpaHere(instance, "tpahere", settings).register(event);
 		});
 		getCommandSettings("tpahereall").ifPresent(settings -> {
-			new TpaHereAll(instance, "tpahereall", settings).register(event);
+			if(settings.isEnable()) new TpaHereAll(instance, "tpahereall", settings).register(event);
 		});
 		getCommandSettings("teleport").ifPresent(settings -> {
-			new Teleport(instance, "teleport", settings).register(event);
+			if(settings.isEnable()) new Teleport(instance, "teleport", settings).register(event);
 		});
 		getCommandSettings("teleporthere").ifPresent(settings -> {
-			new TeleportHere(instance, "teleporthere", settings).register(event);
+			if(settings.isEnable()) new TeleportHere(instance, "teleporthere", settings).register(event);
 		});
 		getCommandSettings("teleporthereall").ifPresent(settings -> {
-			new TeleportHereAll(instance, "teleporthereall", settings).register(event);
+			if(settings.isEnable()) new TeleportHereAll(instance, "teleporthereall", settings).register(event);
 		});
 		getCommandSettings("clearinventory").ifPresent(settings -> {
-			new ClearInventory(instance, "clearinventory", settings).register(event);
+			if(settings.isEnable()) new ClearInventory(instance, "clearinventory", settings).register(event);
 		});
 		getCommandSettings("repair").ifPresent(settings -> {
-			new Repair(instance, "repair", settings).register(event);
+			if(settings.isEnable()) new Repair(instance, "repair", settings).register(event);
+		});
+		getCommandSettings("enderchest").ifPresent(settings -> {
+			if(settings.isEnable()) new Repair(instance, "enderchest", settings).register(event);
 		});
 	}
 

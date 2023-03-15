@@ -29,6 +29,9 @@ public class Permissions {
 	public static final String CLEAR = "commandpack.commands.user.clear";
 	public static final String REPAIR = "commandpack.commands.user.repair";
 	public static final String REPAIR_SELECT = "commandpack.commands.user.selectrepair";
+	public static final String ENDERCHEST = "commandpack.commands.user.enderchest";
+	public static final String TOP = "commandpack.commands.user.top";
+	public static final String JUMP = "commandpack.commands.user.jump";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -41,6 +44,7 @@ public class Permissions {
 	public static final String TPPOS_STAFF = "commandpack.commands.staff.tppos";
 	public static final String CLEAR_STAFF = "commandpack.commands.staff.clear";
 	public static final String REPAIR_STAFF = "commandpack.commands.staff.repair";
+	public static final String ENDERCHEST_STAFF = "commandpack.commands.staff.enderchest";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";

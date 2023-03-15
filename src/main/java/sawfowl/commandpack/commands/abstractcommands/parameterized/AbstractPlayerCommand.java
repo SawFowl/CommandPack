@@ -40,12 +40,12 @@ public abstract class AbstractPlayerCommand extends AbstractParameterizedCommand
 		return parameterSettings.isEmpty() ? 
 				Command.builder()
 					.executionRequirements(cause -> (
-						cause.audience() instanceof ServerPlayer && cause.hasPermission(permission()))
+							cause.audience() instanceof ServerPlayer && cause.hasPermission(permission()))
 						)
 					.executor(this) :
 				Command.builder()
 					.executionRequirements(cause -> (
-						cause.audience() instanceof ServerPlayer && cause.hasPermission(permission()))
+							cause.audience() instanceof ServerPlayer && cause.hasPermission(permission()))
 						)
 					.addParameters(parameterSettings.values().stream().map(ParameterSettings::getParameterUnknownType).toArray(Value[]::new))
 					.executor(this);
