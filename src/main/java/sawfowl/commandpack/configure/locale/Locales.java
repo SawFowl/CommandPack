@@ -134,6 +134,7 @@ public class Locales {
 		save = check(locale, toText("&aRepairs has been completed."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES) || save;
 		save = check(locale, toText("&aYour item(s) has been repaired."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES_OTHER) || save;
 		save = check(locale, toText("&aYou repaired the item(s) to player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES_STAFF) || save;
+		save = check(locale, toText("&cFailed to determine the position for the jump."), null, LocalesPaths.COMMANDS_JUMP_EXCEPTION) || save;
 
 		if(save) save(locale);
 	}
@@ -215,6 +216,7 @@ public class Locales {
 		save = check(locale, toText("&aРемонт выполнен."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES) || save;
 		save = check(locale, toText("&aВам восстановили прочность предмета(ов)."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES_OTHER) || save;
 		save = check(locale, toText("&aВы восстановили прочность предмета(ов) игроку &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES_STAFF) || save;
+		save = check(locale, toText("&cНе удалось определить позицию для прыжка."), null, LocalesPaths.COMMANDS_JUMP_EXCEPTION) || save;
 
 		if(save) save(locale);
 	}

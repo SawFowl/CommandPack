@@ -5,6 +5,7 @@ import org.spongepowered.api.command.parameter.Parameter.Value;
 import org.spongepowered.api.command.parameter.Parameter.Value.Builder;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
+import org.spongepowered.api.world.server.ServerWorld;
 
 import sawfowl.commandpack.Permissions;
 
@@ -19,6 +20,8 @@ public class CommandParameters {
 	public static final Builder<String> STRING = Parameter.string();
 
 	public static final Builder<ServerLocation> LOCATION = Parameter.location().key("Location");
+
+	public static final Builder<ServerWorld> WORLD = Parameter.world().key("World");
 
 	public static final Builder<String> INVENTORY_TYPES = Parameter.choices("all", "equipment", "hotbar", "primary", "enderchest").key("InventoryType");
 
@@ -66,6 +69,14 @@ public class CommandParameters {
 
 	public static Value<String> createInventoryTypes(boolean optional) {
 		return (optional ? INVENTORY_TYPES.optional() : INVENTORY_TYPES).build();
+	}
+
+	public static Value<ServerWorld> createWorld(String permission, boolean optional) {
+		return (optional ? WORLD.optional() : WORLD).requiredPermission(permission).build();
+	}
+
+	public static Value<ServerWorld> createWorld(boolean optional) {
+		return (optional ? WORLD.optional() : WORLD).build();
 	}
 
 }

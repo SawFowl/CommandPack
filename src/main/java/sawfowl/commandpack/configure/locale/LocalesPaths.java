@@ -102,5 +102,6 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_REPAIR_SUCCES = {PATH_COMMANDS, COMMAND_REPAIR, "Success"};
 	public static final Object[] COMMANDS_REPAIR_SUCCES_STAFF = {PATH_COMMANDS, COMMAND_REPAIR, "SuccessStaff"};
 	public static final Object[] COMMANDS_REPAIR_SUCCES_OTHER = {PATH_COMMANDS, COMMAND_REPAIR, "SuccessOther"};
+	public static final Object[] COMMANDS_JUMP_EXCEPTION = {PATH_COMMANDS, "Jump", PATH_EXCEPTIONS, "CantGetPosition"};
 
 }
