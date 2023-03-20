@@ -13,11 +13,11 @@ public class ParameterSettings {
 	private final Boolean optional;
 	private final Boolean optionalForConsole;
 	private final Object[] path;
-	public ParameterSettings(Parameter.Value<?> parameter, boolean optionalForConsole, Object... path) {
+	public ParameterSettings(Parameter.Value<?> parameter, boolean optionalForConsole, Object... pathException) {
 		this.parameter = parameter;
 		this.optional = parameter.isOptional();
 		this.optionalForConsole = parameter.isOptional() && optionalForConsole;
-		this.path = path;
+		this.path = pathException;
 	}
 
 	public Parameter.Value<?> getParameterUnknownType() {

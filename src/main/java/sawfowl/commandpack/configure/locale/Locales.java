@@ -125,8 +125,8 @@ public class Locales {
 		save = check(locale, toText("&cThe request is not valid. The player is offline."), null, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE) || save;
 		save = check(locale, toText("&aYou sent a teleportation request."), null, LocalesPaths.COMMANDS_TPA_SUCCESS) || save;
 		save = check(locale, toText("&aThe teleportation request is accepted."), null, LocalesPaths.COMMANDS_TPA_ACCEPTED) || save;
-		save = check(locale, toText(Placeholders.PLAYER + "&a is requesting permission to teleport to you. Click this message to accept the request."), null, LocalesPaths.COMMANDS_TPA_REQUEST_MESSAGE) || save;
-		save = check(locale, toText(Placeholders.PLAYER + "&a asks you to teleport to him/her. Click this message to accept the request."), null, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is requesting permission to teleport to you. Click this message to accept the request."), null, LocalesPaths.COMMANDS_TPA_REQUEST_MESSAGE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a asks you to teleport to him/her. Click this message to accept the request."), null, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE) || save;
 		save = check(locale, toText("&cAn unacceptable location is specified."), null, LocalesPaths.COMMANDS_TPPOS_INVALID_LOCATION) || save;
 		save = check(locale, toText("&aYou have cleared your inventory."), null, LocalesPaths.COMMANDS_CLEAR_SUCCES) || save;
 		save = check(locale, toText("&eYour inventory has been cleared."), null, LocalesPaths.COMMANDS_CLEAR_SUCCES_OTHER) || save;
@@ -135,6 +135,14 @@ public class Locales {
 		save = check(locale, toText("&aYour item(s) has been repaired."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES_OTHER) || save;
 		save = check(locale, toText("&aYou repaired the item(s) to player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES_STAFF) || save;
 		save = check(locale, toText("&cFailed to determine the position for the jump."), null, LocalesPaths.COMMANDS_JUMP_EXCEPTION) || save;
+		save = check(locale, toText("&aNow you can fly."), null, LocalesPaths.COMMANDS_FLY_ENABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a can now fly."), null, LocalesPaths.COMMANDS_FLY_ENABLE_STAFF) || save;
+		save = check(locale, toText("&aFlight disabled."), null, LocalesPaths.COMMANDS_FLY_DISABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a can't fly anymore."), null, LocalesPaths.COMMANDS_FLY_DISABLE_STAFF) || save;
+		save = check(locale, toText("&aNow you are invulnerable."), null, LocalesPaths.COMMANDS_GODMODE_ENABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a now has invulnerability."), null, LocalesPaths.COMMANDS_GODMODE_ENABLE_STAFF) || save;
+		save = check(locale, toText("&aInvulnerability is disabled."), null, LocalesPaths.COMMANDS_GODMODE_DISABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a no longer has invulnerability."), null, LocalesPaths.COMMANDS_GODMODE_DISABLE_STAFF) || save;
 
 		if(save) save(locale);
 	}
@@ -207,8 +215,8 @@ public class Locales {
 		save = check(locale, toText("&cЗапрос не действителен. Игрок вышел из сети."), null, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE) || save;
 		save = check(locale, toText("&aВы отправили запрос на телепортацю."), null, LocalesPaths.COMMANDS_TPA_SUCCESS) || save;
 		save = check(locale, toText("&aЗапрос на телепортацию принят."), null, LocalesPaths.COMMANDS_TPA_ACCEPTED) || save;
-		save = check(locale, toText(Placeholders.PLAYER + "&a запрашивает разрешение на телепортацию к вам. Кликните на это сообщение для принятия запроса."), null, LocalesPaths.COMMANDS_TPA_REQUEST_MESSAGE) || save;
-		save = check(locale, toText(Placeholders.PLAYER + "&a просит вас телепортироваться к нему/ней. Кликните на это сообщение для принятия запроса."), null, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a запрашивает разрешение на телепортацию к вам. Кликните на это сообщение для принятия запроса."), null, LocalesPaths.COMMANDS_TPA_REQUEST_MESSAGE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a просит вас телепортироваться к нему/ней. Кликните на это сообщение для принятия запроса."), null, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE) || save;
 		save = check(locale, toText("&cУказана не допустимая локация."), null, LocalesPaths.COMMANDS_TPPOS_INVALID_LOCATION) || save;
 		save = check(locale, toText("&aВы очистили свой инвентарь."), null, LocalesPaths.COMMANDS_CLEAR_SUCCES) || save;
 		save = check(locale, toText("&eВаш инвентарь был очищен."), null, LocalesPaths.COMMANDS_CLEAR_SUCCES_OTHER) || save;
@@ -217,6 +225,14 @@ public class Locales {
 		save = check(locale, toText("&aВам восстановили прочность предмета(ов)."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES_OTHER) || save;
 		save = check(locale, toText("&aВы восстановили прочность предмета(ов) игроку &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_REPAIR_SUCCES_STAFF) || save;
 		save = check(locale, toText("&cНе удалось определить позицию для прыжка."), null, LocalesPaths.COMMANDS_JUMP_EXCEPTION) || save;
+		save = check(locale, toText("&aТеперь вы можете летать."), null, LocalesPaths.COMMANDS_FLY_ENABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a теперь может летать."), null, LocalesPaths.COMMANDS_FLY_ENABLE_STAFF) || save;
+		save = check(locale, toText("&aПолет отключен."), null, LocalesPaths.COMMANDS_FLY_DISABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a больше не может летать."), null, LocalesPaths.COMMANDS_FLY_DISABLE_STAFF) || save;
+		save = check(locale, toText("&aТеперь вы неуязвимы."), null, LocalesPaths.COMMANDS_GODMODE_ENABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a теперь имеет неуязвимость."), null, LocalesPaths.COMMANDS_GODMODE_ENABLE_STAFF) || save;
+		save = check(locale, toText("&aНеуязвимость отключена."), null, LocalesPaths.COMMANDS_GODMODE_DISABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a больше не имеет неуязвимости."), null, LocalesPaths.COMMANDS_GODMODE_DISABLE_STAFF) || save;
 
 		if(save) save(locale);
 	}

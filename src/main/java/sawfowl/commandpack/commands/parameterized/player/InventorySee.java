@@ -1,8 +1,11 @@
-package sawfowl.commandpack.commands.parameterized.player.teleports;
+package sawfowl.commandpack.commands.parameterized.player;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
@@ -11,19 +14,27 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
+import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
 import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
 
-public class Top extends AbstractPlayerCommand {
+public class InventorySee extends AbstractPlayerCommand {
 
-	public Top(CommandPack plugin, String command, CommandSettings commandSettings) {
+	public InventorySee(CommandPack plugin, String command, CommandSettings commandSettings) {
 		super(plugin, command, commandSettings);
 	}
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		delay(src, locale, consumer -> {
-			src.setPosition(src.world().highestPositionAt(src.blockPosition()).toDouble());
+		getUser(context).ifPresent(name -> {
+			try {
+				Sponge.server().userManager().load(name).get().ifPresent(user -> {
+					src.openInventory(user.inventory());
+				});
+			} catch (InterruptedException | ExecutionException e) {
+				plugin.getLogger().error(e.getLocalizedMessage());
+			}
 		});
 	}
 
@@ -34,12 +45,12 @@ public class Top extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return null;
+		return Arrays.asList(new ParameterSettings(CommandParameters.createUser(false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 
 	@Override
 	protected String permission() {
-		return Permissions.TOP;
+		return Permissions.INVENTORYSEE_STAFF;
 	}
 
 }

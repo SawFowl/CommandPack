@@ -3,6 +3,7 @@ package sawfowl.commandpack.commands.parameterized.settings;
 import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.command.parameter.Parameter.Value;
 import org.spongepowered.api.command.parameter.Parameter.Value.Builder;
+import org.spongepowered.api.command.parameter.managed.standard.ResourceKeyedValueParameters;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
@@ -13,7 +14,7 @@ public class CommandParameters {
 
 	public static final Builder<ServerPlayer> PLAYER = Parameter.player().key("Player");
 
-	public static final Builder<String> USER = Parameter.string().key("User");
+	public static final Builder<String> USER = Parameter.string().key("User").completer(ResourceKeyedValueParameters.PLAYER.get());
 
 	public static final Builder<Boolean> BOOLEAN = Parameter.bool();
 

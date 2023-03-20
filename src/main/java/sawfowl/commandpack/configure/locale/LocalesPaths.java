@@ -27,6 +27,8 @@ public class LocalesPaths {
 	private static final Object COMMAND_TPA = "Tpa";
 	private static final Object COMMAND_CLEAR = "Clear";
 	private static final Object COMMAND_REPAIR = "Repair";
+	private static final Object COMMAND_FLY = "Fly";
+	private static final Object COMMAND_GODMODE = "GodMode";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -103,5 +105,13 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_REPAIR_SUCCES_STAFF = {PATH_COMMANDS, COMMAND_REPAIR, "SuccessStaff"};
 	public static final Object[] COMMANDS_REPAIR_SUCCES_OTHER = {PATH_COMMANDS, COMMAND_REPAIR, "SuccessOther"};
 	public static final Object[] COMMANDS_JUMP_EXCEPTION = {PATH_COMMANDS, "Jump", PATH_EXCEPTIONS, "CantGetPosition"};
+	public static final Object[] COMMANDS_FLY_ENABLE = {PATH_COMMANDS, COMMAND_FLY, "Enable"};
+	public static final Object[] COMMANDS_FLY_ENABLE_STAFF = {PATH_COMMANDS, COMMAND_FLY, "EnableStaff"};
+	public static final Object[] COMMANDS_FLY_DISABLE = {PATH_COMMANDS, COMMAND_FLY, "Disable"};
+	public static final Object[] COMMANDS_FLY_DISABLE_STAFF = {PATH_COMMANDS, COMMAND_FLY, "DisableStaff"};
+	public static final Object[] COMMANDS_GODMODE_ENABLE = {PATH_COMMANDS, COMMAND_GODMODE, "Enable"};
+	public static final Object[] COMMANDS_GODMODE_ENABLE_STAFF = {PATH_COMMANDS, COMMAND_GODMODE, "EnableStaff"};
+	public static final Object[] COMMANDS_GODMODE_DISABLE = {PATH_COMMANDS, COMMAND_GODMODE, "Disable"};
+	public static final Object[] COMMANDS_GODMODE_DISABLE_STAFF = {PATH_COMMANDS, COMMAND_GODMODE, "DisableStaff"};
 
 }

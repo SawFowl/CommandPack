@@ -39,7 +39,9 @@ public class Jump extends AbstractPlayerCommand {
 			.execute();
 		if(!blockRayTraceResult.isPresent()) {
 			Vector3d direction = src.direction();
-			src.setPosition(src.position().add(Vector3d.from(direction.x() * 50, direction.y() * 50, direction.z() * 50)));
+			delay(src, locale, consumer -> {
+				src.setPosition(src.position().add(Vector3d.from(direction.x() * 50, direction.y() * 50, direction.z() * 50)));
+			});
 		} else {
 			LocatableBlock block = blockRayTraceResult.get().selectedObject();
 			ServerLocation targetLocation;
@@ -51,7 +53,9 @@ public class Jump extends AbstractPlayerCommand {
 				if(!find.isPresent()) exception(locale, LocalesPaths.COMMANDS_JUMP_EXCEPTION);
 				targetLocation = find.get();
 			}
-			src.setLocation(targetLocation);
+			delay(src, locale, consumer -> {
+				src.setLocation(targetLocation);
+			});
 		}
 	}
 
