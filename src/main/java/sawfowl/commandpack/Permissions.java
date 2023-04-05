@@ -1,6 +1,7 @@
 package sawfowl.commandpack;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.localeapi.api.TextUtils;
@@ -34,6 +35,7 @@ public class Permissions {
 	public static final String JUMP = "commandpack.commands.user.jump";
 	public static final String FLY = "commandpack.commands.user.fly";
 	public static final String GODMODE = "commandpack.commands.user.godmode";
+	public static final String RTP = "commandpack.commands.user.randomteleport";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -50,6 +52,7 @@ public class Permissions {
 	public static final String FLY_STAFF = "commandpack.commands.staff.fly";
 	public static final String GODMODE_STAFF = "commandpack.commands.staff.godmode";
 	public static final String INVENTORYSEE_STAFF = "commandpack.commands.staff.inventorysee";
+	public static final String RTP_STAFF = "commandpack.commands.staff.randomteleport";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";
@@ -62,6 +65,7 @@ public class Permissions {
 	private static final String WARP_LIMIT = "commandpack.limits.warp";
 
 	private static final String WARP_ACCESS = "commandpack.warps";
+	private static final String RTP_WORLD_ARG_ACCESS = "commandpack.randomteleport.world";
 
 	public static String getIgnoreDelayTimer(String command) {
 		return IGNORE_DELAY_TIMER + "." + command;
@@ -85,6 +89,10 @@ public class Permissions {
 
 	public static int getWarpsLimit(ServerPlayer player) {
 		return !player.option(WARP_LIMIT).isPresent() ? 0 : toInt(player.option(WARP_LIMIT).get());
+	}
+
+	public static String getRtpWorldAcess(ResourceKey worldKey) {
+		return RTP_WORLD_ARG_ACCESS + "." + worldKey.asString();
 	}
 
 	private static int toInt(String option) {
