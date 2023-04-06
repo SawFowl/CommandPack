@@ -4,6 +4,8 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.world.server.ServerWorld;
 
+import sawfowl.commandpack.api.data.miscellaneous.RandomTeleportOptions;
+
 public interface RandomTeleportEvent extends MoveEntityEvent {
 
 	/**
@@ -22,5 +24,10 @@ public interface RandomTeleportEvent extends MoveEntityEvent {
 	 * Change the {@link ServerWorld} to which the player will be moved.
 	 */
 	void setDestinationWorld(ServerWorld world);
+
+	/**
+	 * Used {@link RandomTeleportOptions}
+	 */
+	RandomTeleportOptions getOptions();
 
 }

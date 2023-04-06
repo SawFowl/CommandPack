@@ -12,6 +12,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import sawfowl.commandpack.configure.configs.commands.RandomTeleportConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 
 @ConfigSerializable
@@ -32,6 +33,8 @@ public class MainConfig {
 	private List<String> blackListHatItems = new ArrayList<>(Arrays.asList("minecraft:diamond_chestplate"));
 	@Setting("Spawn")
 	private SpawnData spawnData;
+	@Setting("RandomTeleport")
+	private RandomTeleportConfig rtpConfig = new RandomTeleportConfig();
 
 	public boolean isAutoCompleteRawCommands() {
 		return autoCompleteRawCommands;
@@ -67,6 +70,10 @@ public class MainConfig {
 
 	public void setSpawnData(SpawnData spawnData) {
 		this.spawnData = spawnData;
+	}
+
+	public RandomTeleportConfig getRtpConfig() {
+		return rtpConfig;
 	}
 
 }

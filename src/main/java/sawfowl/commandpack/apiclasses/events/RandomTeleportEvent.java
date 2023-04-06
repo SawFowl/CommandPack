@@ -7,6 +7,8 @@ import org.spongepowered.api.event.impl.AbstractEvent;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.math.vector.Vector3d;
 
+import sawfowl.commandpack.api.data.miscellaneous.RandomTeleportOptions;
+
 public class RandomTeleportEvent extends AbstractEvent implements sawfowl.commandpack.api.events.RandomTeleportEvent {
 
 	private final ServerPlayer player;
@@ -16,7 +18,8 @@ public class RandomTeleportEvent extends AbstractEvent implements sawfowl.comman
 	private Vector3d destinationPosition;
 	private boolean cancelled = false;
 	private ServerWorld destinationWorld;
-	public RandomTeleportEvent(Cause cause, ServerPlayer player, ServerWorld destinationWorld, Vector3d destinationPosition) {
+	private RandomTeleportOptions options;
+	public RandomTeleportEvent(Cause cause, ServerPlayer player, ServerWorld destinationWorld, Vector3d destinationPosition, RandomTeleportOptions options) {
 		this.player = player;
 		this.cause = cause;
 		originalPosition = player.position();
@@ -78,6 +81,11 @@ public class RandomTeleportEvent extends AbstractEvent implements sawfowl.comman
 	@Override
 	public void setDestinationWorld(ServerWorld world) {
 		destinationWorld = world;
+	}
+
+	@Override
+	public RandomTeleportOptions getOptions() {
+		return options;
 	}
 
 }
