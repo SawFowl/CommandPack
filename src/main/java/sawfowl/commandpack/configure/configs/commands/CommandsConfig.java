@@ -103,14 +103,13 @@ public class CommandsConfig {
 		try {
 			for(Class<AbstractParameterizedCommand> clazz : findAllCommandsClasses(plugin, "sawfowl.commandpack.commands.parameterized", AbstractParameterizedCommand.class)) {
 				Constructor<AbstractParameterizedCommand> constructor = clazz.getConstructor(CommandPack.class);
-				AbstractParameterizedCommand command;
 				try {
-					command = constructor.newInstance(plugin);
+					AbstractParameterizedCommand command = constructor.newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
 						if(settings.isEnable()) command.register(event);
 					});
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					plugin.getLogger().error("Error when registering a command class '" + clazz +"'\n" + e.getLocalizedMessage());
+					plugin.getLogger().error("Error when registering a command class '" + clazz.getName() +"'\n" + e.getLocalizedMessage());
 				}
 			}
 		} catch (IOException | NoSuchMethodException | SecurityException | URISyntaxException e) {
@@ -122,14 +121,13 @@ public class CommandsConfig {
 		try {
 			for(Class<AbstractRawCommand> clazz : findAllCommandsClasses(plugin, "sawfowl.commandpack.commands.raw", AbstractRawCommand.class)) {
 				Constructor<AbstractRawCommand> constructor = clazz.getConstructor(CommandPack.class);
-				AbstractRawCommand command;
 				try {
-					command = constructor.newInstance(plugin);
+					AbstractRawCommand command = constructor.newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
 						if(settings.isEnable()) command.register(event);
 					});
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					plugin.getLogger().error("Error when registering a command class '" + clazz +"'\n" + e.getLocalizedMessage());
+					plugin.getLogger().error("Error when registering a command class '" + clazz.getName() +"'\n" + e.getLocalizedMessage());
 				}
 			}
 		} catch (IOException | NoSuchMethodException | SecurityException | URISyntaxException e) {
@@ -159,7 +157,6 @@ public class CommandsConfig {
 		final String pkgPath = packageName.replace('.', '/');
 		final URI pkg = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource(pkgPath)).toURI();
 		final ArrayList<Class<T>> allClasses = new ArrayList<Class<T>>();
-
 		Path root;
 		if (pkg.toString().startsWith("jar:")) {
 			try {
