@@ -13,15 +13,14 @@ import org.spongepowered.api.world.server.ServerLocation;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
+import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Tppos extends AbstractPlayerCommand {
 
-	public Tppos(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public Tppos(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -46,6 +45,11 @@ public class Tppos extends AbstractPlayerCommand {
 	@Override
 	protected String permission() {
 		return Permissions.TPPOS_STAFF;
+	}
+
+	@Override
+	public String command() {
+		return "tppos";
 	}
 
 }

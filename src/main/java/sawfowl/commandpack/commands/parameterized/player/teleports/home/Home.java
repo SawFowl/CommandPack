@@ -14,17 +14,16 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
+import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Home extends AbstractPlayerCommand {
 
-	public Home(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public Home(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -47,7 +46,7 @@ public class Home extends AbstractPlayerCommand {
 
 	@Override
 	public Parameterized build() {
-		return builder().addChild(new HomeList(plugin, command, commandSettings).build(), "list").build();
+		return builder().addChild(new HomeList(plugin).build(), "list").build();
 	}
 
 	@Override
@@ -58,6 +57,11 @@ public class Home extends AbstractPlayerCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(new ParameterSettings(CommandParameters.createString("Home", true), true, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT));
+	}
+
+	@Override
+	public String command() {
+		return "home";
 	}
 
 	private void teleport(sawfowl.commandpack.api.data.player.Home home, ServerPlayer player) throws CommandException {

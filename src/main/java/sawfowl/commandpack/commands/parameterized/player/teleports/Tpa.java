@@ -16,17 +16,16 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
+import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Tpa extends AbstractPlayerCommand {
 
-	public Tpa(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public Tpa(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -59,6 +58,11 @@ public class Tpa extends AbstractPlayerCommand {
 	@Override
 	protected String permission() {
 		return Permissions.TPA;
+	}
+
+	@Override
+	public String command() {
+		return "tpa";
 	}
 
 }

@@ -18,17 +18,16 @@ import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
+import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Hat extends AbstractPlayerCommand {
 
-	public Hat(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public Hat(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -76,6 +75,11 @@ public class Hat extends AbstractPlayerCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(Permissions.HAT_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+	}
+
+	@Override
+	public String command() {
+		return "hat";
 	}
 
 }

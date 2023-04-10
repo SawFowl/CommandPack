@@ -7,7 +7,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import sawfowl.commandpack.api.data.miscellaneous.RandomTeleportOptions;
+import sawfowl.commandpack.api.RandomTeleportService.RandomTeleportOptions;
 
 @ConfigSerializable
 public class RandomTeleportWorldConfig implements RandomTeleportOptions {

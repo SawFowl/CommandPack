@@ -15,17 +15,16 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public abstract class AbstractPlayerCommand extends AbstractParameterizedCommand {
 
-	public AbstractPlayerCommand(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public AbstractPlayerCommand(CommandPack plugin) {
+		super(plugin);
 	}
 
 	public abstract void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException;
@@ -52,16 +51,16 @@ public abstract class AbstractPlayerCommand extends AbstractParameterizedCommand
 	}
 
 	public boolean continueEconomy(ServerPlayer player) {
-		if(plugin.getEconomy().isPresent() && !player.hasPermission(Permissions.getIgnorePrice(command))) {
-			CommandPrice price = plugin.getCommandsConfig().getCommandConfig(this.command).getPrice();
+		if(plugin.getEconomy().isPresent() && !player.hasPermission(Permissions.getIgnorePrice(command()))) {
+			CommandPrice price = plugin.getCommandsConfig().getCommandConfig(command()).getPrice();
 			if(price.getMoney() > 0) {
 				Currency currency = plugin.getEconomy().checkCurrency(price.getCurrency());
 				BigDecimal money = createDecimal(price.getMoney());
 				if(plugin.getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) {
 					plugin.getEconomy().removeFromPlayerBalance(player, currency, money);
-					player.sendMessage(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_TAKE_MONEY), new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command)}));
+					player.sendMessage(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_TAKE_MONEY), new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command())}));
 				} else {
-					player.sendMessage(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY), new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command)}));
+					player.sendMessage(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY), new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command())}));
 					return false;
 				}
 			}

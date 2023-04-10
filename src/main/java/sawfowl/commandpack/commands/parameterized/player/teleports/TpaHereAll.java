@@ -15,16 +15,15 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class TpaHereAll extends AbstractPlayerCommand {
 
-	public TpaHereAll(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public TpaHereAll(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -55,6 +54,11 @@ public class TpaHereAll extends AbstractPlayerCommand {
 	@Override
 	protected String permission() {
 		return Permissions.TPA_HERE_ALL;
+	}
+
+	@Override
+	public String command() {
+		return "tpahereall";
 	}
 
 }

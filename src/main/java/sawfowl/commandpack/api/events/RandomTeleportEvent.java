@@ -4,7 +4,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.world.server.ServerWorld;
 
-import sawfowl.commandpack.api.data.miscellaneous.RandomTeleportOptions;
+import sawfowl.commandpack.api.RandomTeleportService.RandomTeleportOptions;
 
 public interface RandomTeleportEvent extends MoveEntityEvent {
 

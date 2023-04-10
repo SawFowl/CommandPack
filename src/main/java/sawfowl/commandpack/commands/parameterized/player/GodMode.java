@@ -15,15 +15,14 @@ import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
-import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
+import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class GodMode extends AbstractParameterizedCommand {
 
-	public GodMode(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public GodMode(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -70,6 +69,11 @@ public class GodMode extends AbstractParameterizedCommand {
 	private void sendStaffMessage(Audience src, Locale staffLocale, ServerPlayer target, Object[] pathStaff, Object[] pathPlayer) {
 		src.sendMessage(getText(staffLocale, pathStaff));
 		target.sendMessage(getText(staffLocale, pathPlayer));
+	}
+
+	@Override
+	public String command() {
+		return "godmode";
 	}
 
 }

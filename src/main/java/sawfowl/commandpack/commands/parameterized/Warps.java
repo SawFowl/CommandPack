@@ -18,16 +18,15 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Warps extends AbstractParameterizedCommand {
 
-	public Warps(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public Warps(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -73,6 +72,11 @@ public class Warps extends AbstractParameterizedCommand {
 	@Override
 	protected String permission() {
 		return Permissions.WARPS;
+	}
+
+	@Override
+	public String command() {
+		return "warps";
 	}
 
 	private void sendServerWarps(ServerPlayer player, List<Component> warps) {

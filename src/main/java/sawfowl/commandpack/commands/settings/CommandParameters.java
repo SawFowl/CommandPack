@@ -1,4 +1,4 @@
-package sawfowl.commandpack.commands.parameterized.settings;
+package sawfowl.commandpack.commands.settings;
 
 import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.command.parameter.Parameter.Value;

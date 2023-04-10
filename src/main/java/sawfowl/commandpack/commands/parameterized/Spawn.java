@@ -18,18 +18,17 @@ import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
-import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
+import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Spawn extends AbstractParameterizedCommand {
 
-	public Spawn(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public Spawn(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -53,6 +52,11 @@ public class Spawn extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(Permissions.SPAWN_STAFF, true), true, true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+	}
+
+	@Override
+	public String command() {
+		return "spawn";
 	}
 
 	private void teleport(ServerPlayer player, Optional<SpawnData> location, String name) {

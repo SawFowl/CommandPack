@@ -12,13 +12,12 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 
 public class TeleportHereAll extends AbstractPlayerCommand {
 
-	public TeleportHereAll(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public TeleportHereAll(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -43,6 +42,11 @@ public class TeleportHereAll extends AbstractPlayerCommand {
 	@Override
 	protected String permission() {
 		return Permissions.TELEPORT_HERE_ALL_STAFF;
+	}
+
+	@Override
+	public String command() {
+		return "teleporthereall";
 	}
 
 }

@@ -26,17 +26,16 @@ import net.kyori.adventure.audience.Audience;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.commands.abstractcommands.PluginCommand;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public abstract class AbstractParameterizedCommand extends PluginCommand implements CommandExecutor {
 
 	private Map<UUID, Long> cooldowns = new HashMap<>();
 	protected final Map<String, ParameterSettings> parameterSettings = new HashMap<>();
-	public AbstractParameterizedCommand(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public AbstractParameterizedCommand(CommandPack plugin) {
+		super(plugin);
 		List<ParameterSettings> parameterSettings = getParameterSettings();
 		if(parameterSettings != null && !parameterSettings.isEmpty()) {
 			parameterSettings.forEach(setting -> {
@@ -90,8 +89,8 @@ public abstract class AbstractParameterizedCommand extends PluginCommand impleme
 
 	public void register(RegisterCommandEvent<Parameterized> event) {
 		if(aliases != null && aliases.length > 0) {
-			event.register(plugin.getPluginContainer(), build(), command, aliases);
-		} else event.register(plugin.getPluginContainer(), build(), command);
+			event.register(plugin.getPluginContainer(), build(), command(), aliases);
+		} else event.register(plugin.getPluginContainer(), build(), command());
 	}
 
 	public Optional<ServerPlayer> getPlayer(CommandContext context) {

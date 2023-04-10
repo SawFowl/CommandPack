@@ -18,14 +18,13 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Warp extends AbstractRawCommand {
 
-	public Warp(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public Warp(CommandPack plugin, String command) {
+		super(plugin);
 	}
 
 	@Override
@@ -134,6 +133,11 @@ public class Warp extends AbstractRawCommand {
 	@Override
 	public Component usage(CommandCause cause) {
 		return cause.hasPermission(Permissions.WARP_STAFF) ? text("&c/warp <Warp> [Player]") : text("&c/warp <Warp>");
+	}
+
+	@Override
+	public String command() {
+		return "warp";
 	}
 
 }

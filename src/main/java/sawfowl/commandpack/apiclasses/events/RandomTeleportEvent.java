@@ -7,7 +7,7 @@ import org.spongepowered.api.event.impl.AbstractEvent;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.math.vector.Vector3d;
 
-import sawfowl.commandpack.api.data.miscellaneous.RandomTeleportOptions;
+import sawfowl.commandpack.api.RandomTeleportService.RandomTeleportOptions;
 
 public class RandomTeleportEvent extends AbstractEvent implements sawfowl.commandpack.api.events.RandomTeleportEvent {
 

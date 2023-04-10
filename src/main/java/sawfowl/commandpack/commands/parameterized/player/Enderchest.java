@@ -16,15 +16,14 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
+import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Enderchest extends AbstractPlayerCommand {
 
-	public Enderchest(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public Enderchest(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -53,6 +52,11 @@ public class Enderchest extends AbstractPlayerCommand {
 	@Override
 	protected String permission() {
 		return Permissions.ENDERCHEST;
+	}
+
+	@Override
+	public String command() {
+		return "enderchest";
 	}
 
 }

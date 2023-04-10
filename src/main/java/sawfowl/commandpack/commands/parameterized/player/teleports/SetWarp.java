@@ -16,15 +16,14 @@ import sawfowl.commandpack.api.data.miscellaneous.Location;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
+import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class SetWarp extends AbstractPlayerCommand {
 
-	public SetWarp(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public SetWarp(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -63,6 +62,11 @@ public class SetWarp extends AbstractPlayerCommand {
 					new ParameterSettings(CommandParameters.createBoolean("Private", false), false, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT),
 					new ParameterSettings(CommandParameters.createBoolean("Admin", Permissions.WARP_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT)
 				);
+	}
+
+	@Override
+	public String command() {
+		return "setwarp";
 	}
 
 }

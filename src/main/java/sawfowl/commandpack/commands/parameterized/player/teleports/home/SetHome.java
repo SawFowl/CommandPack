@@ -14,10 +14,9 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.player.Home;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
+import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
 import sawfowl.commandpack.configure.configs.player.HomeData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -25,8 +24,8 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class SetHome extends AbstractPlayerCommand {
 
-	public SetHome(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public SetHome(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -56,6 +55,11 @@ public class SetHome extends AbstractPlayerCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(new ParameterSettings(CommandParameters.createString("Home", true), true, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT));
+	}
+
+	@Override
+	public String command() {
+		return "sethome";
 	}
 
 }

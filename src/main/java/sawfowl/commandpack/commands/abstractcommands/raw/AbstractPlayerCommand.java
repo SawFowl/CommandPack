@@ -10,12 +10,11 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 
 public abstract class AbstractPlayerCommand extends AbstractRawCommand {
 
-	public AbstractPlayerCommand(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public AbstractPlayerCommand(CommandPack plugin) {
+		super(plugin);
 	}
 
 	protected abstract void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args) throws CommandException;

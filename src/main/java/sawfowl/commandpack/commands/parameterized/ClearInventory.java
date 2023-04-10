@@ -14,17 +14,16 @@ import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
-import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
+import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class ClearInventory extends AbstractParameterizedCommand {
 
-	public ClearInventory(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public ClearInventory(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -68,6 +67,11 @@ public class ClearInventory extends AbstractParameterizedCommand {
 	@Override
 	protected String permission() {
 		return Permissions.CLEAR;
+	}
+
+	@Override
+	public String command() {
+		return "clearinventory";
 	}
 
 	private void clear(ServerPlayer player, String invType) {

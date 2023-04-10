@@ -14,10 +14,10 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import sawfowl.commandpack.api.data.miscellaneous.RandomTeleportOptions;
+import sawfowl.commandpack.api.RandomTeleportService.RandomTeleportOptions;
 
 @ConfigSerializable
-public class RandomTeleportConfig {
+public class RandomTeleportConfig implements RandomTeleportOptions {
 
 	@Setting("Attempts")
 	@Comment("The number of attempts to find the position.")
@@ -81,6 +81,46 @@ public class RandomTeleportConfig {
 
 	public Optional<RandomTeleportOptions> getRandomTeleportWorldConfig(ServerWorld world) {
 		return Optional.ofNullable(map.getOrDefault(getWorldId(world), null));
+	}
+
+	@Override
+	public int getAttempts() {
+		return attempts;
+	}
+
+	@Override
+	public boolean isStartFromWorldSpawn() {
+		return startFromWorldSpawn;
+	}
+
+	@Override
+	public int getMinRadius() {
+		return minRadius;
+	}
+
+	@Override
+	public int getRadius() {
+		return radius;
+	}
+
+	@Override
+	public int getMaxY() {
+		return maxY;
+	}
+
+	@Override
+	public int getMinY() {
+		return minY;
+	}
+
+	@Override
+	public Set<String> getProhibitedBiomes() {
+		return prohibitedBiomes;
+	}
+
+	@Override
+	public boolean isOnlySurface() {
+		return onlySurface;
 	}
 
 	private ResourceKey getTargetWorldId(String sourceWorldId) {

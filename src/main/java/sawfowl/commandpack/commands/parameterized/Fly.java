@@ -15,15 +15,14 @@ import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
-import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
+import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Fly extends AbstractParameterizedCommand {
 
-	public Fly(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public Fly(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -56,6 +55,11 @@ public class Fly extends AbstractParameterizedCommand {
 	@Override
 	protected String permission() {
 		return Permissions.FLY;
+	}
+
+	@Override
+	public String command() {
+		return "fly";
 	}
 
 	private boolean setFly(ServerPlayer player) {

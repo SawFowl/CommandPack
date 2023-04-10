@@ -14,15 +14,14 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.parameterized.settings.CommandParameters;
-import sawfowl.commandpack.commands.parameterized.settings.ParameterSettings;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
+import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class InventorySee extends AbstractPlayerCommand {
 
-	public InventorySee(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public InventorySee(CommandPack plugin) {
+		super(plugin);
 	}
 
 	@Override
@@ -51,6 +50,11 @@ public class InventorySee extends AbstractPlayerCommand {
 	@Override
 	protected String permission() {
 		return Permissions.INVENTORYSEE_STAFF;
+	}
+
+	@Override
+	public String command() {
+		return "inventorysee";
 	}
 
 }

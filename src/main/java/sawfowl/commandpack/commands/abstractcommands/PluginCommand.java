@@ -45,15 +45,23 @@ import sawfowl.localeapi.api.TextUtils;
 public abstract class PluginCommand {
 
 	protected final CommandPack plugin;
-	protected final String command;
 	protected final String[] aliases;
 	protected Map<UUID, Long> cooldowns = new HashMap<>();
-	protected final CommandSettings commandSettings;
-	public PluginCommand(CommandPack plugin, String command, CommandSettings commandSettings) {
+	protected CommandSettings commandSettings;
+	public PluginCommand(CommandPack plugin) {
 		this.plugin = plugin;
-		this.command = command;
-		this.commandSettings = commandSettings;
+		this.commandSettings = plugin.getCommandsConfig().getCommandConfig(command());
 		this.aliases = commandSettings.getAliases();
+	}
+
+	public abstract String command();
+
+	public void setCommandSettings(CommandSettings commandSettings) {
+		this.commandSettings = commandSettings;
+	}
+
+	public void updateCommandSettings() {
+		commandSettings = plugin.getCommandsConfig().getCommandConfig(command());
 	}
 
 	protected abstract String permission();
@@ -155,7 +163,7 @@ public abstract class PluginCommand {
 		}
 		private final UUID uuid;
 		private final long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-		long cooldown = plugin.getCommandsConfig().getCommandConfig(command).getCooldown();
+		long cooldown = plugin.getCommandsConfig().getCommandConfig(command()).getCooldown();
 		@Override
 		public void accept(ScheduledTask task) {
 			if(cooldowns.containsKey(uuid)) {
@@ -206,19 +214,19 @@ public abstract class PluginCommand {
 	}
 
 	protected void economy(ServerPlayer player, Locale locale) throws CommandException {
-		if(plugin.getEconomy().isPresent() && !player.hasPermission(Permissions.getIgnorePrice(this.command))) {
+		if(plugin.getEconomy().isPresent() && !player.hasPermission(Permissions.getIgnorePrice(command()))) {
 			CommandPrice price = commandSettings.getPrice();
 			if(price.getMoney() > 0) {
 				Currency currency = plugin.getEconomy().checkCurrency(price.getCurrency());
 				BigDecimal money = createDecimal(price.getMoney());
-				if(!plugin.getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(locale, new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + this.command)}, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY);
+				if(!plugin.getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(locale, new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command())}, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY);
 			}
 		}
 	}
 
 	public void delay(ServerPlayer player, Locale locale, ThrowingConsumer<PluginCommand, CommandException> consumer) throws CommandException {
-		if(commandSettings.getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(this.command))) {
-			plugin.getTempPlayerData().addCommandTracking(this.command, player);
+		if(commandSettings.getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(command()))) {
+			plugin.getTempPlayerData().addCommandTracking(command(), player);
 			Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(1, TimeUnit.SECONDS).execute(new DelayTimerTask(consumer, player, commandSettings.getDelay().getSeconds())).build());
 		} else {
 			economy(player, locale);
@@ -244,7 +252,7 @@ public abstract class PluginCommand {
 				Sponge.server().scheduler().executor(plugin.getPluginContainer()).execute(() -> {
 					getPlayer(uuid).ifPresent(player -> {
 						try {
-							if(plugin.getTempPlayerData().getTrackingPlayerCommands(player).isPresent() && plugin.getTempPlayerData().getTrackingPlayerCommands(uuid).get().containsKey(command)) {
+							if(plugin.getTempPlayerData().getTrackingPlayerCommands(player).isPresent() && plugin.getTempPlayerData().getTrackingPlayerCommands(uuid).get().containsKey(command())) {
 								economy(player, player.locale());
 								consumer.accept(PluginCommand.this);
 							}
@@ -253,28 +261,28 @@ public abstract class PluginCommand {
 						}
 					});
 				});
-				if(plugin.getTempPlayerData().getTrackingPlayerCommands(uuid).isPresent() && plugin.getTempPlayerData().getTrackingPlayerCommands(uuid).get().containsKey(command)) plugin.getTempPlayerData().removeCommandTracking(command, uuid);;
+				if(plugin.getTempPlayerData().getTrackingPlayerCommands(uuid).isPresent() && plugin.getTempPlayerData().getTrackingPlayerCommands(uuid).get().containsKey(command())) plugin.getTempPlayerData().removeCommandTracking(command(), uuid);;
 				task.cancel();
 				return;
 			} else {
 				ServerPlayer player = getPlayer(uuid).get();
-				if(!plugin.getTempPlayerData().getTrackingPlayerCommands(player).isPresent() || !plugin.getTempPlayerData().getTrackingPlayerCommands(player).get().containsKey(command)) {
+				if(!plugin.getTempPlayerData().getTrackingPlayerCommands(player).isPresent() || !plugin.getTempPlayerData().getTrackingPlayerCommands(player).get().containsKey(command())) {
 					task.cancel();
 					return;
 				}
 				if(getExpireHourFromNow(seconds) > 0) {
 					if(hour != getExpireHourFromNow(seconds)) {
 						hour = getExpireHourFromNow(seconds);
-						if(player.isOnline()) player.sendMessage(TextUtils.replace(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+						if(player.isOnline()) player.sendMessage(TextUtils.replace(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command()).color(NamedTextColor.LIGHT_PURPLE))));
 					}
 				} else if(seconds > 60) {
 					if(minute != getExpireMinuteFromNow(seconds)) {
 						minute = getExpireMinuteFromNow(seconds);
-						if(player.isOnline()) player.sendMessage(TextUtils.replace(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+						if(player.isOnline()) player.sendMessage(TextUtils.replace(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command()).color(NamedTextColor.LIGHT_PURPLE))));
 					}
 				} else if(seconds == 60 || seconds == 30 || seconds == 10 || seconds <= 5 || first) {
 					first = false;
-					if(player.isOnline()) player.sendMessage(TextUtils.replace(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+					if(player.isOnline()) player.sendMessage(TextUtils.replace(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command()).color(NamedTextColor.LIGHT_PURPLE))));
 				}
 				seconds--;
 			}

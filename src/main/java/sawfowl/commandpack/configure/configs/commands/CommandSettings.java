@@ -1,12 +1,21 @@
 package sawfowl.commandpack.configure.configs.commands;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.spongepowered.api.command.Command.Parameterized;
+import org.spongepowered.api.command.Command.Raw;
+import org.spongepowered.api.command.manager.CommandFailedRegistrationException;
+import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
+
+import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
+import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 
 @ConfigSerializable
 public class CommandSettings {
@@ -118,6 +127,22 @@ public class CommandSettings {
 	@Override
 	public String toString() {
 		return "CommandSettings [Aliases=" + aliases + ", Cooldown=" + cooldown + ", Delay=" + delay + ", Enable=" + enable + ", Price=" + price + "]";
+	}
+
+	public void registerParameterized(Class<? extends AbstractParameterizedCommand> clazz, RegisterCommandEvent<Parameterized> event, CommandPack plugin) {
+		try {
+			clazz.getDeclaredConstructor().newInstance(plugin).register(event);
+		} catch (CommandFailedRegistrationException | InstantiationException | IllegalAccessException| IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void registerRaw(Class<? extends AbstractRawCommand> clazz, RegisterCommandEvent<Raw> event, CommandPack plugin) {
+		try {
+			clazz.getDeclaredConstructor().newInstance(plugin).register(event);
+		} catch (CommandFailedRegistrationException | InstantiationException | IllegalAccessException| IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

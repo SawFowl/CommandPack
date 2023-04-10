@@ -26,14 +26,13 @@ import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.commands.abstractcommands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public abstract class AbstractRawCommand extends PluginCommand implements Raw {
 
 	private List<CommandCompletion> empty = new ArrayList<>();
-	public AbstractRawCommand(CommandPack plugin, String command, CommandSettings commandSettings) {
-		super(plugin, command, commandSettings);
+	public AbstractRawCommand(CommandPack plugin) {
+		super(plugin);
 	}
 
 	protected abstract void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args) throws CommandException;
@@ -97,8 +96,8 @@ public abstract class AbstractRawCommand extends PluginCommand implements Raw {
 
 	public void register(RegisterCommandEvent<Raw> event) {
 		if(aliases != null && aliases.length > 0) {
-			event.register(plugin.getPluginContainer(), this, command, aliases);
-		} else event.register(plugin.getPluginContainer(), this, command);
+			event.register(plugin.getPluginContainer(), this, command(), aliases);
+		} else event.register(plugin.getPluginContainer(), this, command());
 	}
 
 }

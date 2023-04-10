@@ -1,13 +1,14 @@
 package sawfowl.commandpack;
 
 import java.nio.file.Path;
-import java.util.Optional;
-
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.event.Cause;
+import org.spongepowered.api.event.EventContext;
+import org.spongepowered.api.event.EventContextKeys;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
@@ -19,27 +20,10 @@ import com.google.inject.Inject;
 
 import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.PlayersData;
+import sawfowl.commandpack.api.RandomTeleportService;
 import sawfowl.commandpack.api.TempPlayerData;
-import sawfowl.commandpack.commands.parameterized.ClearInventory;
-import sawfowl.commandpack.commands.parameterized.Repair;
-import sawfowl.commandpack.commands.parameterized.Spawn;
-import sawfowl.commandpack.commands.parameterized.Warps;
-import sawfowl.commandpack.commands.parameterized.player.Hat;
-import sawfowl.commandpack.commands.parameterized.player.Suicide;
-import sawfowl.commandpack.commands.parameterized.player.teleports.SetSpawn;
-import sawfowl.commandpack.commands.parameterized.player.teleports.SetWarp;
-import sawfowl.commandpack.commands.parameterized.player.teleports.Teleport;
-import sawfowl.commandpack.commands.parameterized.player.teleports.TeleportHere;
-import sawfowl.commandpack.commands.parameterized.player.teleports.TeleportHereAll;
-import sawfowl.commandpack.commands.parameterized.player.teleports.Tpa;
-import sawfowl.commandpack.commands.parameterized.player.teleports.TpaHere;
-import sawfowl.commandpack.commands.parameterized.player.teleports.TpaHereAll;
-import sawfowl.commandpack.commands.parameterized.player.teleports.home.Home;
-import sawfowl.commandpack.commands.parameterized.player.teleports.home.SetHome;
-import sawfowl.commandpack.commands.raw.Warp;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.configs.MainConfig;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -63,6 +47,8 @@ public class CommandPack {
 	private Economy economy;
 	private TempPlayerData tempPlayerData;
 	private PlayersData playersData;
+	private RandomTeleportService rtpService;
+
 	public CommandPack getInstance() {
 		return instance;
 	}
@@ -107,12 +93,17 @@ public class CommandPack {
 		return (sawfowl.commandpack.apiclasses.PlayersData) playersData;
 	}
 
+	public RandomTeleportService getRTPService() {
+		return rtpService;
+	}
+
 	@Inject
 	public CommandPack(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
 		instance = this;
 		this.pluginContainer = pluginContainer;
 		configDir = configDirectory;
 		logger = new Logger();
+		rtpService = new sawfowl.commandpack.apiclasses.RandomTeleportService();
 	}
 
 	@Listener
@@ -133,19 +124,18 @@ public class CommandPack {
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerConnectionListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerRespawnListener(instance));
-	}
-/*
-	@Listener
-	public void establishNewRegistries(final RegisterRegistryEvent.GameScoped event) {
-		event.register(ResourceKey.of("commandpack", "warp"), true, new Supplier<Map<ResourceKey, Warp>>() {
-
+		Sponge.eventManager().post(new RandomTeleportService.PostEvent() {
 			@Override
-			public Map<ResourceKey, Warp> get() {
-				return new HashMap<>();
+			public Cause cause() {
+				return Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, pluginContainer).build(), pluginContainer);
+			}
+			@Override
+			public RandomTeleportService getService() {
+				return rtpService;
 			}
 		});
 	}
-*/
+
 	@Listener
 	public void onReload(RefreshGameEvent event) {
 		configManager.reloadConfigs();
@@ -154,68 +144,12 @@ public class CommandPack {
 
 	@Listener
 	public void registerParameterizedCommands(RegisterCommandEvent<Parameterized> event) {
-		getCommandSettings("hat").ifPresent(settings -> {
-			if(settings.isEnable()) new Hat(instance, "hat", settings).register(event);
-		});
-		getCommandSettings("home").ifPresent(settings -> {
-			if(settings.isEnable()) new Home(instance, "home", settings).register(event);
-		});
-		getCommandSettings("sethome").ifPresent(settings -> {
-			if(settings.isEnable()) new SetHome(instance, "sethome", settings).register(event);
-		});
-		getCommandSettings("setspawn").ifPresent(settings -> {
-			if(settings.isEnable()) new SetSpawn(instance, "setspawn", settings).register(event);
-		});
-		getCommandSettings("spawn").ifPresent(settings -> {
-			if(settings.isEnable()) new Spawn(instance, "spawn", settings).register(event);
-		});
-		getCommandSettings("suicide").ifPresent(settings -> {
-			if(settings.isEnable()) new Suicide(instance, "suicide", settings).register(event);
-		});
-		getCommandSettings("setwarp").ifPresent(settings -> {
-			if(settings.isEnable()) new SetWarp(instance, "setwarp", settings).register(event);
-		});
-		getCommandSettings("warps").ifPresent(settings -> {
-			if(settings.isEnable()) new Warps(instance, "warps", settings).register(event);
-		});
-		getCommandSettings("tpa").ifPresent(settings -> {
-			if(settings.isEnable()) new Tpa(instance, "tpa", settings).register(event);
-		});
-		getCommandSettings("tpahere").ifPresent(settings -> {
-			new TpaHere(instance, "tpahere", settings).register(event);
-		});
-		getCommandSettings("tpahereall").ifPresent(settings -> {
-			if(settings.isEnable()) new TpaHereAll(instance, "tpahereall", settings).register(event);
-		});
-		getCommandSettings("teleport").ifPresent(settings -> {
-			if(settings.isEnable()) new Teleport(instance, "teleport", settings).register(event);
-		});
-		getCommandSettings("teleporthere").ifPresent(settings -> {
-			if(settings.isEnable()) new TeleportHere(instance, "teleporthere", settings).register(event);
-		});
-		getCommandSettings("teleporthereall").ifPresent(settings -> {
-			if(settings.isEnable()) new TeleportHereAll(instance, "teleporthereall", settings).register(event);
-		});
-		getCommandSettings("clearinventory").ifPresent(settings -> {
-			if(settings.isEnable()) new ClearInventory(instance, "clearinventory", settings).register(event);
-		});
-		getCommandSettings("repair").ifPresent(settings -> {
-			if(settings.isEnable()) new Repair(instance, "repair", settings).register(event);
-		});
-		getCommandSettings("enderchest").ifPresent(settings -> {
-			if(settings.isEnable()) new Repair(instance, "enderchest", settings).register(event);
-		});
+		getCommandsConfig().registerParameterized(event, instance);
 	}
 
 	@Listener
 	public void registerRawCommands(RegisterCommandEvent<Raw> event) {
-		getCommandSettings("warp").ifPresent(settings -> {
-			new Warp(instance, "warp", settings).register(event);
-		});
-	}
-
-	private Optional<CommandSettings> getCommandSettings(String command) {
-		return getCommandsConfig().getOptCommandSettings(command);
+		getCommandsConfig().registerRaw(event, instance);
 	}
 
 }
