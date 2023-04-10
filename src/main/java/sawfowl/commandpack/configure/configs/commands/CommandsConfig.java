@@ -173,8 +173,8 @@ public class CommandsConfig {
 				try {
 					final String path = file.toString().replace('/', '.');
 					final String name = path.substring(path.indexOf(packageName), path.length() - extension.length());
-					Class<?> fined = Class.forName(name);
-					if(fined.getSuperclass().getName().equals(clazz.getName()) || fined.getSuperclass().getSuperclass().getName().equals(clazz.getName())) allClasses.add((Class<T>) fined);
+					Class<?> found = Class.forName(name);
+					if(found.getSuperclass().getName().equals(clazz.getName()) || found.getSuperclass().getSuperclass().getName().equals(clazz.getName())) allClasses.add((Class<T>) found);
 				} catch (final ClassNotFoundException | StringIndexOutOfBoundsException ignored) {
 				}
 			});
