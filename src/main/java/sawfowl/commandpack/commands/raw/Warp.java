@@ -23,7 +23,7 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class Warp extends AbstractRawCommand {
 
-	public Warp(CommandPack plugin, String command) {
+	public Warp(CommandPack plugin) {
 		super(plugin);
 	}
 

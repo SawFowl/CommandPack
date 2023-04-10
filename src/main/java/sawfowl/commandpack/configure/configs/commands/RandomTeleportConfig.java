@@ -19,6 +19,8 @@ import sawfowl.commandpack.api.RandomTeleportService.RandomTeleportOptions;
 @ConfigSerializable
 public class RandomTeleportConfig implements RandomTeleportOptions {
 
+	public RandomTeleportConfig(){}
+
 	@Setting("Attempts")
 	@Comment("The number of attempts to find the position.")
 	private int attempts = 10;

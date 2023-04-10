@@ -60,7 +60,7 @@ public class Jump extends AbstractPlayerCommand {
 
 	@Override
 	public Parameterized build() {
-		return null;
+		return fastBuild();
 	}
 
 	@Override

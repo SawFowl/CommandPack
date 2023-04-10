@@ -1,8 +1,8 @@
 package sawfowl.commandpack.apiclasses;
 
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 
 import org.spongepowered.api.ResourceKey;
@@ -15,10 +15,7 @@ import org.spongepowered.math.vector.Vector3i;
 
 public class RandomTeleportService implements sawfowl.commandpack.api.RandomTeleportService {
 
-	private final Random random;
-	public RandomTeleportService() {
-		this.random = new Random();
-	}
+	public RandomTeleportService() {}
 
 	@Override
 	public Optional<ServerLocation> getLocation(ServerLocation currentLocation, ServerWorld world, RandomTeleportOptions options) {
@@ -45,7 +42,7 @@ public class RandomTeleportService implements sawfowl.commandpack.api.RandomTele
 
 	@Override
 	public CompletableFuture<Optional<ServerLocation>> getLocationFuture(ServerLocation currentLocation,ServerWorld targetWorld, RandomTeleportOptions options) {
-		return new CompletableFuture<Optional<ServerLocation>>().completeAsync(new Supplier<Optional<ServerLocation>>() {
+		return CompletableFuture.supplyAsync(new Supplier<Optional<ServerLocation>>() {
 			@Override
 			public Optional<ServerLocation> get() {
 				return getLocation(currentLocation, targetWorld, options);
@@ -71,7 +68,7 @@ public class RandomTeleportService implements sawfowl.commandpack.api.RandomTele
 	private Optional<Integer> getRandomX(ServerLocation currentLocation, ServerWorld world, RandomTeleportOptions options, int attempts) {
 		if(attempts >= options.getAttempts()) return Optional.empty();
 		int x = options.isStartFromWorldSpawn() ? getRandomInt(world.properties().spawnPosition().x() + options.getMinRadius(), options.getRadius()) : getRandomInt(currentLocation.blockPosition().x() + options.getMinRadius(), options.getRadius());
-		if(!random.nextBoolean()) x = x * -1;
+		if(!ThreadLocalRandom.current().nextBoolean()) x = x * -1;
 		if(x < world.min().x() || x > world.max().x()) {
 			Optional<Integer> nextFind = getRandomX(currentLocation, world, options, attempts);
 			if(nextFind.isPresent()) return nextFind;
@@ -82,7 +79,7 @@ public class RandomTeleportService implements sawfowl.commandpack.api.RandomTele
 	private Optional<Integer> getRandomZ(ServerLocation currentLocation, ServerWorld world, RandomTeleportOptions options, int attempts) {
 		if(attempts >= options.getAttempts()) return Optional.empty();
 		int z = options.isStartFromWorldSpawn() ? getRandomInt(world.properties().spawnPosition().z() + options.getMinRadius(), options.getRadius()) : getRandomInt(currentLocation.blockPosition().z() + options.getMinRadius(), options.getRadius());
-		if(!random.nextBoolean()) z = z * -1;
+		if(!ThreadLocalRandom.current().nextBoolean()) z = z * -1;
 		if(z < world.min().z() || z > world.max().z()) {
 			Optional<Integer> nextFind = getRandomZ(currentLocation, world, options, attempts);
 			if(nextFind.isPresent()) return nextFind;
@@ -91,7 +88,7 @@ public class RandomTeleportService implements sawfowl.commandpack.api.RandomTele
 	}
 	
 	private int getRandomInt(int first, int second) {
-		return first < second ? random.nextInt(first, second) : random.nextInt(second, first);
+		return first < second ? ThreadLocalRandom.current().nextInt(first, second) : ThreadLocalRandom.current().nextInt(second, first);
 	}
 
 	private boolean isSafe(ServerWorld world, Vector3i pos) {

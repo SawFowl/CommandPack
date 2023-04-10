@@ -12,6 +12,8 @@ import sawfowl.commandpack.api.RandomTeleportService.RandomTeleportOptions;
 @ConfigSerializable
 public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 
+	public RandomTeleportWorldConfig(){}
+
 	@Setting("Attempts")
 	private int attempts = 10;
 	@Setting("World")

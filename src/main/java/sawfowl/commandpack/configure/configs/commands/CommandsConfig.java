@@ -1,15 +1,22 @@
 package sawfowl.commandpack.configure.configs.commands;
 
-import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.Command.Raw;
@@ -94,39 +101,38 @@ public class CommandsConfig {
 
 	public void registerParameterized(RegisterCommandEvent<Parameterized> event, CommandPack plugin) {
 		try {
-			Enumeration<URL> resources = plugin.getClass().getClassLoader().getResources("sawfowl.commandpack.commands.parameterized".replace(".", File.separator));
-			List<File> dirs = new ArrayList<File>();
-			plugin.getLogger().warn("Проверка поиска классов по указанному пути = " + resources.hasMoreElements());
-			while(resources.hasMoreElements()) {
-				dirs.add(new File(resources.nextElement().getFile()));
-			}
-			plugin.getLogger().warn("Найдено файлов и каталогов => " + dirs.size());
-			for(File directory : dirs) {
-				for(Class<? extends AbstractParameterizedCommand> clazz : findParameterizedClasses(directory, "sawfowl.commandpack.commands.parameterized")) {
-					AbstractParameterizedCommand command = clazz.getDeclaredConstructor().newInstance(plugin);
-					if(getOptCommandSettings(command.command()).isPresent()) command.register(event);
+			for(Class<AbstractParameterizedCommand> clazz : findAllClassesUsingClassLoader(plugin, "sawfowl.commandpack.commands.parameterized", AbstractParameterizedCommand.class)) {
+				Constructor<AbstractParameterizedCommand> constructor = clazz.getConstructor(CommandPack.class);
+				AbstractParameterizedCommand command;
+				try {
+					command = constructor.newInstance(plugin);
+					getOptCommandSettings(command.command()).ifPresent(settings -> {
+						if(settings.isEnable()) command.register(event);
+					});
+				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					plugin.getLogger().error("Error when registering a command class '" + clazz +"'\n" + e.getLocalizedMessage());
 				}
 			}
-		} catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+		} catch (IOException | NoSuchMethodException | SecurityException | URISyntaxException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void registerRaw(RegisterCommandEvent<Raw> event, CommandPack plugin) {
 		try {
-			Enumeration<URL> resources = plugin.getClass().getClassLoader().getResources("sawfowl.commandpack.commands.raw".replace(".", File.separator));
-			List<File> dirs = new ArrayList<File>();
-			while (resources.hasMoreElements()) {
-				URL resource = resources.nextElement();
-				dirs.add(new File(resource.getFile()));
-			}
-			for(File directory : dirs) {
-				for(Class<? extends AbstractRawCommand> clazz : findRawClasses(directory, "sawfowl.commandpack.commands.raw")) {
-					AbstractRawCommand command = clazz.getDeclaredConstructor().newInstance(plugin);
-					if(getOptCommandSettings(command.command()).isPresent()) command.register(event);
+			for(Class<AbstractRawCommand> clazz : findAllClassesUsingClassLoader(plugin, "sawfowl.commandpack.commands.raw", AbstractRawCommand.class)) {
+				Constructor<AbstractRawCommand> constructor = clazz.getConstructor(CommandPack.class);
+				AbstractRawCommand command;
+				try {
+					command = constructor.newInstance(plugin);
+					getOptCommandSettings(command.command()).ifPresent(settings -> {
+						if(settings.isEnable()) command.register(event);
+					});
+				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					plugin.getLogger().error("Error when registering a command class '" + clazz +"'\n" + e.getLocalizedMessage());
 				}
 			}
-		} catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+		} catch (IOException | NoSuchMethodException | SecurityException | URISyntaxException e) {
 			e.printStackTrace();
 		}
 	}
@@ -147,44 +153,36 @@ public class CommandsConfig {
 		}
 	}
 
+	
 	@SuppressWarnings("unchecked")
-	private static List<Class<? extends AbstractParameterizedCommand>> findParameterizedClasses(File directory, String packageName) throws ClassNotFoundException {
-		List<Class<? extends AbstractParameterizedCommand>> classes = new ArrayList<Class<? extends AbstractParameterizedCommand>>();
-		if (!directory.exists()) {
-			System.out.println("Найдено классов => 0");
-			return classes;
-		}
-		File[] files = directory.listFiles();
-		for (File file : files) {
-			if (file.isDirectory()) {
-				assert !file.getName().contains(".");
-				classes.addAll(findParameterizedClasses(file, packageName + "." + file.getName()));
-			} else if (file.getName().endsWith(".class")) {
-				Class<?> clazz = Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6));
-				if(clazz.isInstance(AbstractParameterizedCommand.class)) classes.add((Class<? extends AbstractParameterizedCommand>) clazz);
-			}
-		}
-		System.out.println("Найдено классов => " + classes.size());
-		return classes;
-	}
+	private <T> ArrayList<Class<T>> findAllClassesUsingClassLoader(CommandPack plugin, String packageName, Class<T> clazz) throws IOException, URISyntaxException {
+		final String pkgPath = packageName.replace('.', '/');
+		final URI pkg = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource(pkgPath)).toURI();
+		final ArrayList<Class<T>> allClasses = new ArrayList<Class<T>>();
 
-	@SuppressWarnings("unchecked")
-	private static List<Class<? extends AbstractRawCommand>> findRawClasses(File directory, String packageName) throws ClassNotFoundException {
-		List<Class<? extends AbstractRawCommand>> classes = new ArrayList<Class<? extends AbstractRawCommand>>();
-		if (!directory.exists()) {
-			return classes;
-		}
-		File[] files = directory.listFiles();
-		for (File file : files) {
-			if (file.isDirectory()) {
-				assert !file.getName().contains(".");
-				classes.addAll(findRawClasses(file, packageName + "." + file.getName()));
-			} else if (file.getName().endsWith(".class")) {
-				Class<?> clazz = Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6));
-				if(clazz.isInstance(AbstractRawCommand.class)) classes.add((Class<? extends AbstractRawCommand>) clazz);
+		Path root;
+		if (pkg.toString().startsWith("jar:")) {
+			try {
+				root = FileSystems.getFileSystem(pkg).getPath(pkgPath);
+			} catch (final FileSystemNotFoundException e) {
+				root = FileSystems.newFileSystem(pkg, Collections.emptyMap()).getPath(pkgPath);
 			}
+		} else {
+			root = Paths.get(pkg);
 		}
-		return classes;
+		final String extension = ".class";
+		try (final Stream<Path> allPaths = Files.walk(root)) {
+			allPaths.filter(Files::isRegularFile).forEach(file -> {
+				try {
+					final String path = file.toString().replace('/', '.');
+					final String name = path.substring(path.indexOf(packageName), path.length() - extension.length());
+					Class<?> fined = Class.forName(name);
+					if(fined.getSuperclass().getName().equals(clazz.getName()) || fined.getSuperclass().getSuperclass().getName().equals(clazz.getName())) allClasses.add((Class<T>) fined);
+				} catch (final ClassNotFoundException | StringIndexOutOfBoundsException ignored) {
+				}
+			});
+		}
+		return allClasses;
 	}
 
 }

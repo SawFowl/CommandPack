@@ -43,7 +43,7 @@ public class Top extends AbstractPlayerCommand {
 
 	@Override
 	public String command() {
-		return "teleporthereall";
+		return "top";
 	}
 
 }

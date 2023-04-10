@@ -119,7 +119,7 @@ public class ConfigManager {
 		try {
 			mainConfigReference = HoconConfigurationLoader.builder().defaultOptions(options).path(plugin.getConfigDir().resolve("Config.conf")).build().loadToReference();
 			mainConfig = mainConfigReference.referenceTo(MainConfig.class);
-			if(!plugin.getConfigDir().resolve("Config.conf").toFile().exists()) mainConfigReference.save();
+			/*if(!plugin.getConfigDir().resolve("Config.conf").toFile().exists())*/ mainConfigReference.save();
 		} catch (ConfigurateException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
 		}
@@ -129,7 +129,7 @@ public class ConfigManager {
 		try {
 			commandsConfigReference = HoconConfigurationLoader.builder().defaultOptions(options).path(plugin.getConfigDir().resolve("Commands.conf")).build().loadToReference();
 			commandsConfig = commandsConfigReference.referenceTo(CommandsConfig.class);
-			if(!plugin.getConfigDir().resolve("Commands.conf").toFile().exists()) commandsConfigReference.save();
+			/*if(!plugin.getConfigDir().resolve("Commands.conf").toFile().exists())*/ commandsConfigReference.save();
 			commandsConfig.get().updateCommandMap(commandsConfig);
 		} catch (ConfigurateException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
