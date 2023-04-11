@@ -12,5 +12,7 @@ public class Placeholders {
 	public static final String MONEY = "%money%";
 	public static final String HOME = "%home%";
 	public static final String WARP = "%warp%";
+	public static final String WORLD = "%world%";
+	public static final String LIMIT = "%limit%";
 
 }

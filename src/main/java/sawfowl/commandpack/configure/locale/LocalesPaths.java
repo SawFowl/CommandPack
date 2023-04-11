@@ -25,6 +25,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_WARPS = "Warps";
 	private static final Object COMMAND_TPTOGGLE = "TpToggle";
 	private static final Object COMMAND_TPA = "Tpa";
+	private static final Object COMMAND_RANDOM_TELEPORT = "RandomTeleport";
 	private static final Object COMMAND_CLEAR = "Clear";
 	private static final Object COMMAND_REPAIR = "Repair";
 	private static final Object COMMAND_FLY = "Fly";
@@ -51,6 +52,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_EXCEPTION_TARGET_SELF = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "TargetSelf"};
 	public static final Object[] COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "BooleanNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "LocationNotPresent"};
+	public static final Object[] COMMANDS_EXCEPTION_WORLD_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "WorldNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_NAME_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "NameNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_TYPE_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "TypeNotPresent"};
 	public static final Object[] COMMANDS_NOT_TRACKING = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "NotTracking"};
@@ -97,6 +99,10 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_TPA_ACCEPTED = {PATH_COMMANDS, COMMAND_TPA, "Accepted"};
 	public static final Object[] COMMANDS_TPA_REQUEST_MESSAGE = {PATH_COMMANDS, COMMAND_TPA, "RequestMessage"};
 	public static final Object[] COMMANDS_TPA_REQUEST_HERE_MESSAGE = {PATH_COMMANDS, COMMAND_TPA, "RequestHereMessage"};
+	public static final Object[] COMMANDS_COMMAND_RANDOM_TELEPORT_POSITION_SEARCH_ERROR_STAFF = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, PATH_EXCEPTIONS, "PositionSearchErrorStaff"};
+	public static final Object[] COMMANDS_COMMAND_RANDOM_TELEPORT_POSITION_SEARCH_ERROR = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, PATH_EXCEPTIONS, "PositionSearchError"};
+	public static final Object[] COMMANDS_COMMAND_RANDOM_TELEPORT_SUCCES_STAFF = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, "SuccessStaff"};
+	public static final Object[] COMMANDS_COMMAND_RANDOM_TELEPORT_CANCELLED = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, "Cancelled"};
 	public static final Object[] COMMANDS_TPPOS_INVALID_LOCATION = {PATH_COMMANDS, "Tppos", PATH_EXCEPTIONS, "InvalidLocation"};
 	public static final Object[] COMMANDS_CLEAR_SUCCES = {PATH_COMMANDS, COMMAND_CLEAR, PATH_EXCEPTIONS, "Success"};
 	public static final Object[] COMMANDS_CLEAR_SUCCES_OTHER = {PATH_COMMANDS, COMMAND_CLEAR, PATH_EXCEPTIONS, "SuccessOther"};

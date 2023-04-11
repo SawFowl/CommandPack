@@ -48,6 +48,7 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 	@Setting("OnlySurface")
 	@Comment("If true, the player will always move to the surface.")
 	private boolean onlySurface = false;
+	private ResourceKey world = null;
 
 	public ServerWorld getTargetWorld(ServerWorld source) {
 		return Sponge.server().worldManager().world(getTargetWorldId(getWorldId(source))).orElse(source);
@@ -83,6 +84,35 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 
 	public Optional<RandomTeleportOptions> getRandomTeleportWorldConfig(ServerWorld world) {
 		return Optional.ofNullable(map.getOrDefault(getWorldId(world), null));
+	}
+
+	public Optional<RandomTeleportOptions> getRandomTeleportWorldConfig(ResourceKey worldKey) {
+		return Optional.ofNullable(map.getOrDefault(worldKey.asString(), null));
+	}
+
+	@Override
+	public RandomTeleportOptions copy() {
+		RandomTeleportConfig copy = new RandomTeleportConfig();
+		copy.attempts = attempts;
+		copy.map = map;
+		copy.startFromWorldSpawn = startFromWorldSpawn;
+		copy.minRadius = minRadius;
+		copy.radius = radius;
+		copy.maxY = maxY;
+		copy.minY = minY;
+		copy.prohibitedBiomes = prohibitedBiomes;
+		copy.onlySurface = onlySurface;
+		return copy;
+	}
+
+	@Override
+	public ResourceKey getWorldKey() {
+		return world;
+	}
+
+	@Override
+	public void setWorldKey(ResourceKey worldKey) {
+		world = worldKey;
 	}
 
 	@Override

@@ -103,7 +103,7 @@ public class CommandPack {
 		this.pluginContainer = pluginContainer;
 		configDir = configDirectory;
 		logger = new Logger();
-		rtpService = new sawfowl.commandpack.apiclasses.RandomTeleportService();
+		rtpService = new sawfowl.commandpack.apiclasses.RandomTeleportService(instance);
 	}
 
 	@Listener

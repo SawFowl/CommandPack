@@ -54,12 +54,29 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 		this.onlySurface = onlySurface;
 	}
 
+	@Override
+	public RandomTeleportOptions copy() {
+		RandomTeleportWorldConfig copy = new RandomTeleportWorldConfig();
+		copy.attempts = attempts;
+		copy.world = world;
+		copy.startFromWorldSpawn = startFromWorldSpawn;
+		copy.minRadius = minRadius;
+		copy.radius = radius;
+		copy.maxY = maxY;
+		copy.minY = minY;
+		copy.prohibitedBiomes = prohibitedBiomes;
+		copy.onlySurface = onlySurface;
+		return copy;
+	}
+
+	@Override
 	public ResourceKey getWorldKey() {
 		return ResourceKey.resolve(world);
 	}
 
-	public RandomTeleportOptions asOptions() {
-		return this;
+	@Override
+	public void setWorldKey(ResourceKey worldKey) {
+		world = worldKey.asString();
 	}
 
 	@Override

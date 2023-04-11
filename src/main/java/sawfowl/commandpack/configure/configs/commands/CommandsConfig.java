@@ -101,7 +101,7 @@ public class CommandsConfig {
 
 	public void registerParameterized(RegisterCommandEvent<Parameterized> event, CommandPack plugin) {
 		try {
-			for(Class<AbstractParameterizedCommand> clazz : findAllCommandsClasses(plugin, "sawfowl.commandpack.commands.parameterized", AbstractParameterizedCommand.class)) {
+			for(Class<AbstractParameterizedCommand> clazz : findAllCommandsClasses("sawfowl.commandpack.commands.parameterized", AbstractParameterizedCommand.class)) {
 				Constructor<AbstractParameterizedCommand> constructor = clazz.getConstructor(CommandPack.class);
 				try {
 					AbstractParameterizedCommand command = constructor.newInstance(plugin);
@@ -119,7 +119,7 @@ public class CommandsConfig {
 
 	public void registerRaw(RegisterCommandEvent<Raw> event, CommandPack plugin) {
 		try {
-			for(Class<AbstractRawCommand> clazz : findAllCommandsClasses(plugin, "sawfowl.commandpack.commands.raw", AbstractRawCommand.class)) {
+			for(Class<AbstractRawCommand> clazz : findAllCommandsClasses("sawfowl.commandpack.commands.raw", AbstractRawCommand.class)) {
 				Constructor<AbstractRawCommand> constructor = clazz.getConstructor(CommandPack.class);
 				try {
 					AbstractRawCommand command = constructor.newInstance(plugin);
@@ -153,7 +153,7 @@ public class CommandsConfig {
 
 	
 	@SuppressWarnings("unchecked")
-	private <T> ArrayList<Class<T>> findAllCommandsClasses(CommandPack plugin, String packageName, Class<T> clazz) throws IOException, URISyntaxException {
+	private <T> ArrayList<Class<T>> findAllCommandsClasses(String packageName, Class<T> clazz) throws IOException, URISyntaxException {
 		final String pkgPath = packageName.replace('.', '/');
 		final URI pkg = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource(pkgPath)).toURI();
 		final ArrayList<Class<T>> allClasses = new ArrayList<Class<T>>();

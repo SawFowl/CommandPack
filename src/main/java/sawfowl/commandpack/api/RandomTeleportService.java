@@ -16,37 +16,44 @@ public interface RandomTeleportService {
 	 * Search for a teleportation position in the target world.
 	 * 
 	 * @param currentLocation - The current location of the entity.
-	 * @param targetWorld - Target World.
 	 * @param options - Options for finding a random position.
 	 * @return {@link ServerLocation}
 	 */
-	public Optional<ServerLocation> getLocation(ServerLocation currentLocation, ServerWorld targetWorld, RandomTeleportOptions options);
+	public Optional<ServerLocation> getLocation(ServerLocation currentLocation, RandomTeleportOptions options);
 
 	/**
 	 * Search for a teleportation position in the target world.<br>
 	 * Async mode.
 	 * 
 	 * @param currentLocation - The current location of the entity.
-	 * @param targetWorld - Target World.
 	 * @param options - Options for finding a random position.
 	 * @return {@link ServerLocation}
 	 */
-	public CompletableFuture<Optional<ServerLocation>> getLocationFuture(ServerLocation currentLocation, ServerWorld targetWorld, RandomTeleportOptions options);
+	public CompletableFuture<Optional<ServerLocation>> getLocationFuture(ServerLocation currentLocation, RandomTeleportOptions options);
 
 	/**
 	 * Getting options from the plugin configuration for the specified world.<br>
-	 * If no world is found, the default options will be selected.
+	 * If no world is found, the default options will be selected.<br>
+	 * The method always returns a copy from the plugin configuration. Changing the copy will not affect the original values.
+	 * 
+	 * @return {@link RandomTeleportOptions}
 	 */
 	public RandomTeleportOptions getOptions(ServerWorld world);
 
 	/**
 	 * Getting options from the plugin configuration for the specified world.<br>
-	 * If no world is found, the default options will be selected.
+	 * If no world is found, the default options will be selected.<br>
+	 * The method always returns a copy from the plugin configuration. Changing the copy will not affect the original values.
+	 * 
+	 * @return {@link RandomTeleportOptions}
 	 */
 	public RandomTeleportOptions getOptions(ResourceKey worldKey);
 
 	/**
-	 * Default teleportation options.
+	 * Default teleportation options.<br>
+	 * The method always returns a copy from the plugin configuration. Changing the copy will not affect the original values.
+	 * 
+	 * @return {@link RandomTeleportOptions}
 	 */
 	public RandomTeleportOptions getDefault();
 
@@ -60,6 +67,21 @@ public interface RandomTeleportService {
 	 * These teleportation options to a random position must be used to find a position.
 	 */
 	interface RandomTeleportOptions {
+
+		/**
+		 * Copying a class with options.
+		 */
+		RandomTeleportOptions copy();
+
+		/**
+		 * The ID of the target world. If the world is not found or the ID is null, the player's world will be selected for the position search.
+		 */
+		ResourceKey getWorldKey();
+
+		/**
+		 * Specifies a new ID for the target world.
+		 */
+		void setWorldKey(ResourceKey worldKey);
 
 		/**
 		 * The number of attempts to find the position.

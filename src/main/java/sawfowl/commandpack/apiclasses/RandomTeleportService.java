@@ -13,14 +13,20 @@ import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.math.vector.Vector3i;
 
+import sawfowl.commandpack.CommandPack;
+
 public class RandomTeleportService implements sawfowl.commandpack.api.RandomTeleportService {
 
-	public RandomTeleportService() {}
+	private final CommandPack plugin;
+	public RandomTeleportService(CommandPack plugin) {
+		this.plugin = plugin;
+	}
 
 	@Override
-	public Optional<ServerLocation> getLocation(ServerLocation currentLocation, ServerWorld world, RandomTeleportOptions options) {
+	public Optional<ServerLocation> getLocation(ServerLocation currentLocation, RandomTeleportOptions options) {
 		int attempts = 0;
 		Optional<ServerLocation> location = Optional.empty();
+		ServerWorld world = options.getWorldKey() == null ? currentLocation.world() : Sponge.server().worldManager().world(options.getWorldKey()).orElse(currentLocation.world());
 		while(attempts < options.getAttempts()) {
 			attempts++;
 			Optional<Integer> optX = getRandomX(currentLocation, world, options, 0);
@@ -28,7 +34,7 @@ public class RandomTeleportService implements sawfowl.commandpack.api.RandomTele
 			Optional<Integer> optZ = getRandomZ(currentLocation, world, options, 0);
 			if(!optZ.isPresent()) break;
 			Vector3i newPos = Vector3i.from(optX.get(), getRandomInt(options.getMinY(), options.getMaxY()), optZ.get());
-			if(!world.loadChunk(newPos, true).isPresent()) location = getLocation(currentLocation, world, options);
+			if(!world.loadChunk(newPos, true).isPresent()) location = getLocation(currentLocation, options);
 			if(options.isOnlySurface()) newPos = world.highestPositionAt(newPos);
 			if(!options.getProhibitedBiomes().isEmpty()) {
 				Optional<ResourceKey> optKey = Sponge.game().registry(RegistryTypes.BIOME).findValueKey(world.biome(newPos));
@@ -41,28 +47,28 @@ public class RandomTeleportService implements sawfowl.commandpack.api.RandomTele
 	}
 
 	@Override
-	public CompletableFuture<Optional<ServerLocation>> getLocationFuture(ServerLocation currentLocation,ServerWorld targetWorld, RandomTeleportOptions options) {
+	public CompletableFuture<Optional<ServerLocation>> getLocationFuture(ServerLocation currentLocation, RandomTeleportOptions options) {
 		return CompletableFuture.supplyAsync(new Supplier<Optional<ServerLocation>>() {
 			@Override
 			public Optional<ServerLocation> get() {
-				return getLocation(currentLocation, targetWorld, options);
+				return getLocation(currentLocation, options);
 			}
 		});
 	}
 
 	@Override
 	public RandomTeleportOptions getOptions(ServerWorld world) {
-		return null;
+		return getOptions(world.key());
 	}
 
 	@Override
 	public RandomTeleportOptions getOptions(ResourceKey worldKey) {
-		return null;
+		return plugin.getMainConfig().getRtpConfig().getRandomTeleportWorldConfig(worldKey).orElse(plugin.getMainConfig().getRtpConfig()).copy();
 	}
 
 	@Override
 	public RandomTeleportOptions getDefault() {
-		return null;
+		return plugin.getMainConfig().getRtpConfig().copy();
 	}
 
 	private Optional<Integer> getRandomX(ServerLocation currentLocation, ServerWorld world, RandomTeleportOptions options, int attempts) {
