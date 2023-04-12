@@ -45,6 +45,16 @@ public abstract class AbstractParameterizedCommand extends PluginCommand impleme
 		}
 	}
 
+	/*public AbstractParameterizedCommand() {
+		List<ParameterSettings> parameterSettings = getParameterSettings();
+		if(parameterSettings != null && !parameterSettings.isEmpty()) {
+			parameterSettings.forEach(setting -> {
+				setting.getParameterUnknownType().key().key();
+				this.parameterSettings.put(setting.getParameterUnknownType().key().key(), setting);
+			});
+		}
+	}*/
+
 	public abstract void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException;
 
 	public abstract Command.Parameterized build();

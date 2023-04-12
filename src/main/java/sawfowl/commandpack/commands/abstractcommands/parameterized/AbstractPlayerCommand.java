@@ -27,6 +27,8 @@ public abstract class AbstractPlayerCommand extends AbstractParameterizedCommand
 		super(plugin);
 	}
 
+	//public AbstractPlayerCommand(){}
+
 	public abstract void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException;
 
 	@Override

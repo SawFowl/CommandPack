@@ -14,5 +14,6 @@ public class Placeholders {
 	public static final String WARP = "%warp%";
 	public static final String WORLD = "%world%";
 	public static final String LIMIT = "%limit%";
+	public static final String VALUE = "%value%";
 
 }

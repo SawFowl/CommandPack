@@ -30,6 +30,8 @@ public class LocalesPaths {
 	private static final Object COMMAND_REPAIR = "Repair";
 	private static final Object COMMAND_FLY = "Fly";
 	private static final Object COMMAND_GODMODE = "GodMode";
+	private static final Object COMMAND_SPEED = "Speed";
+	private static final Object COMMAND_DISPOSAL = "Disposal";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -55,6 +57,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_EXCEPTION_WORLD_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "WorldNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_NAME_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "NameNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_TYPE_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "TypeNotPresent"};
+	public static final Object[] COMMANDS_EXCEPTION_VALUE_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "ValueNotPresent"};
 	public static final Object[] COMMANDS_NOT_TRACKING = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "NotTracking"};
 	public static final Object[] COMMANDS_STOP_TRACKING_COMMAND = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "StopByCommand"};
 	public static final Object[] COMMANDS_STOP_TRACKING_MOVING = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "StopByMoving"};
@@ -119,5 +122,10 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_GODMODE_ENABLE_STAFF = {PATH_COMMANDS, COMMAND_GODMODE, "EnableStaff"};
 	public static final Object[] COMMANDS_GODMODE_DISABLE = {PATH_COMMANDS, COMMAND_GODMODE, "Disable"};
 	public static final Object[] COMMANDS_GODMODE_DISABLE_STAFF = {PATH_COMMANDS, COMMAND_GODMODE, "DisableStaff"};
+	public static final Object[] COMMANDS_SPEED_SELF = {PATH_COMMANDS, COMMAND_SPEED, "Self"};
+	public static final Object[] COMMANDS_SPEED_STAFF = {PATH_COMMANDS, COMMAND_SPEED, "Staff"};
+	public static final Object[] COMMANDS_SPEED_OTHER = {PATH_COMMANDS, COMMAND_SPEED, "Other"};
+	public static final Object[] COMMANDS_SPEED_FLY = {PATH_COMMANDS, COMMAND_SPEED, "Fly"};
+	public static final Object[] COMMANDS_DISPOSAL_TITLE = {PATH_COMMANDS, COMMAND_DISPOSAL, "Title"};
 
 }

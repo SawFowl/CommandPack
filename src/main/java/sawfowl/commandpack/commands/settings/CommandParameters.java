@@ -20,6 +20,10 @@ public class CommandParameters {
 
 	public static final Builder<String> STRING = Parameter.string();
 
+	public static final Builder<Integer> INTEGER = Parameter.integerNumber();
+
+	public static final Builder<Double> DOUBLE = Parameter.doubleNumber();
+
 	public static final Builder<ServerLocation> LOCATION = Parameter.location().key("Location");
 
 	public static final Builder<ServerWorld> WORLD = Parameter.world().key("World");
@@ -58,6 +62,22 @@ public class CommandParameters {
 
 	public static Value<String> createString(String key, String permission, boolean optional) {
 		return (optional ? STRING.optional() : STRING).key(key).requiredPermission(permission).build();
+	}
+
+	public static Value<Integer> createInteger(String key, boolean optional) {
+		return (optional ? INTEGER.optional() : INTEGER).key(key).build();
+	}
+
+	public static Value<Integer> createInteger(String key, String permission, boolean optional) {
+		return (optional ? INTEGER.optional() : INTEGER).key(key).requiredPermission(permission).build();
+	}
+
+	public static Value<Double> createDouble(String key, boolean optional) {
+		return (optional ? DOUBLE.optional() : DOUBLE).key(key).build();
+	}
+
+	public static Value<Double> createDouble(String key, String permission, boolean optional) {
+		return (optional ? DOUBLE.optional() : DOUBLE).key(key).requiredPermission(permission).build();
 	}
 
 	public static Value<ServerLocation> createLocation(boolean optional) {

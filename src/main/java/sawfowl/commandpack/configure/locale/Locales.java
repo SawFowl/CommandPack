@@ -81,6 +81,7 @@ public class Locales {
 		save = check(locale, toText("&cYou can't point to yourself."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
 		save = check(locale, toText("&cYou must specify a name."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou must specify a type."), null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT) || save;
+		save = check(locale, toText("&cYou must specify a value."), null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT) || save;
 		save = check(locale, toText("&cIt is necessary to specify the command argument as boolean. More information about the arguments of the entered command can be found in the documentation of the plugin."), null, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou need to specify the coordinates."), null, LocalesPaths.COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou have to specify the world."), null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT) || save;
@@ -148,6 +149,11 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a now has invulnerability."), null, LocalesPaths.COMMANDS_GODMODE_ENABLE_STAFF) || save;
 		save = check(locale, toText("&aInvulnerability is disabled."), null, LocalesPaths.COMMANDS_GODMODE_DISABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a no longer has invulnerability."), null, LocalesPaths.COMMANDS_GODMODE_DISABLE_STAFF) || save;
+		save = check(locale, toText("&aYou have set your speed multiplier: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_SELF) || save;
+		save = check(locale, toText("&aYou have set a player speed multiplier &e" + Placeholders.PLAYER + "&a: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_STAFF) || save;
+		save = check(locale, toText("&aYou have been set a multiplier for your speed: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_OTHER) || save;
+		save = check(locale, toText("\n&aThe speed has been changed for flight mode because of being in the air."), null, LocalesPaths.COMMANDS_SPEED_FLY) || save;
+		save = check(locale, toText("&a&lTrash"), null, LocalesPaths.COMMANDS_DISPOSAL_TITLE) || save;
 
 		if(save) save(locale);
 	}
@@ -176,6 +182,7 @@ public class Locales {
 		save = check(locale, toText("&cНельзя указывать на себя."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
 		save = check(locale, toText("&cНужно указать имя."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать тип."), null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT) || save;
+		save = check(locale, toText("&cНужно указать значение."), null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать аргумент команды вида boolean. Подробнее об аргументах введенной команды можно узнать в документации плагина."), null, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать координаты."), null, LocalesPaths.COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать мир."), null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT) || save;
@@ -243,6 +250,11 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a теперь имеет неуязвимость."), null, LocalesPaths.COMMANDS_GODMODE_ENABLE_STAFF) || save;
 		save = check(locale, toText("&aНеуязвимость отключена."), null, LocalesPaths.COMMANDS_GODMODE_DISABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a больше не имеет неуязвимости."), null, LocalesPaths.COMMANDS_GODMODE_DISABLE_STAFF) || save;
+		save = check(locale, toText("&aВы установили множитель вашей скорости: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_SELF) || save;
+		save = check(locale, toText("&aВы установили множитель скорости игрока &e" + Placeholders.PLAYER + "&a: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_STAFF) || save;
+		save = check(locale, toText("&aВам установили множитель вашей скорости: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_OTHER) || save;
+		save = check(locale, toText("\n&aСкорость изменена для режима полета из-за нахождения в воздухе."), null, LocalesPaths.COMMANDS_SPEED_FLY) || save;
+		save = check(locale, toText("&a&lМусорка"), null, LocalesPaths.COMMANDS_DISPOSAL_TITLE) || save;
 
 		if(save) save(locale);
 	}

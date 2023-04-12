@@ -1,5 +1,8 @@
 package sawfowl.commandpack;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import org.apache.commons.lang3.math.NumberUtils;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -27,6 +30,7 @@ public class Permissions {
 	public static final String TPA = "commandpack.commands.user.tpa";
 	public static final String TPA_HERE = "commandpack.commands.user.tpahere";
 	public static final String TPA_HERE_ALL = "commandpack.commands.user.tpahereall";
+	public static final String RTP = "commandpack.commands.user.randomteleport";
 	public static final String CLEAR = "commandpack.commands.user.clear";
 	public static final String REPAIR = "commandpack.commands.user.repair";
 	public static final String REPAIR_SELECT = "commandpack.commands.user.selectrepair";
@@ -35,7 +39,9 @@ public class Permissions {
 	public static final String JUMP = "commandpack.commands.user.jump";
 	public static final String FLY = "commandpack.commands.user.fly";
 	public static final String GODMODE = "commandpack.commands.user.godmode";
-	public static final String RTP = "commandpack.commands.user.randomteleport";
+	public static final String SPEED = "commandpack.commands.user.speed";
+	public static final String SPEED_FLY = "commandpack.commands.user.flyspeed";
+	public static final String DISPOSAL = "commandpack.commands.user.disposal";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -46,13 +52,14 @@ public class Permissions {
 	public static final String TELEPORT_HERE_STAFF = "commandpack.commands.staff.teleport";
 	public static final String TELEPORT_HERE_ALL_STAFF = "commandpack.commands.staff.teleport";
 	public static final String TPPOS_STAFF = "commandpack.commands.staff.tppos";
+	public static final String RTP_STAFF = "commandpack.commands.staff.randomteleport";
 	public static final String CLEAR_STAFF = "commandpack.commands.staff.clear";
 	public static final String REPAIR_STAFF = "commandpack.commands.staff.repair";
 	public static final String ENDERCHEST_STAFF = "commandpack.commands.staff.enderchest";
 	public static final String FLY_STAFF = "commandpack.commands.staff.fly";
 	public static final String GODMODE_STAFF = "commandpack.commands.staff.godmode";
 	public static final String INVENTORYSEE_STAFF = "commandpack.commands.staff.inventorysee";
-	public static final String RTP_STAFF = "commandpack.commands.staff.randomteleport";
+	public static final String SPEED_STAFF = "commandpack.commands.staff.speed";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";
@@ -63,6 +70,8 @@ public class Permissions {
 	// Limits
 	private static final String HOME_LIMIT = "commandpack.limits.home";
 	private static final String WARP_LIMIT = "commandpack.limits.warp";
+	private static final String SPEED_LIMIT = "commandpack.limits.speed";
+	private static final String SPEED_FLY_LIMIT = "commandpack.limits.speed";
 
 	private static final String WARP_ACCESS = "commandpack.warps";
 	private static final String RTP_WORLD_ARG_ACCESS = "commandpack.randomteleport.world";
@@ -84,19 +93,31 @@ public class Permissions {
 	}
 
 	public static int getHomeLimit(ServerPlayer player) {
-		return !player.option(HOME_LIMIT).isPresent() ? 0 : toInt(player.option(HOME_LIMIT).get());
+		return !player.option(HOME_LIMIT).isPresent() ? 0 : toInt(player.option(HOME_LIMIT).get(), 0);
 	}
 
 	public static int getWarpsLimit(ServerPlayer player) {
-		return !player.option(WARP_LIMIT).isPresent() ? 0 : toInt(player.option(WARP_LIMIT).get());
+		return !player.option(WARP_LIMIT).isPresent() ? 0 : toInt(player.option(WARP_LIMIT).get(), 0);
+	}
+
+	public static double getSpeedLimit(ServerPlayer player) {
+		return !player.option(SPEED_LIMIT).isPresent() ? 1 : toDouble(player.option(SPEED_LIMIT).get(), 1);
+	}
+
+	public static double getSpeedFlyLimit(ServerPlayer player) {
+		return !player.option(SPEED_FLY_LIMIT).isPresent() ? 1 : toDouble(player.option(SPEED_FLY_LIMIT).get(), 1);
 	}
 
 	public static String getRtpWorldAcess(ResourceKey worldKey) {
 		return RTP_WORLD_ARG_ACCESS + "." + worldKey.asString();
 	}
 
-	private static int toInt(String option) {
-		return NumberUtils.isParsable(option) ? NumberUtils.toInt(option) : 0;
+	private static int toInt(String option, int def) {
+		return NumberUtils.isParsable(option) ? NumberUtils.toInt(option) : def;
+	}
+
+	private static Double toDouble(String option, double def) {
+		return NumberUtils.isParsable(option) ? BigDecimal.valueOf(NumberUtils.toDouble(option)).setScale(2, RoundingMode.HALF_UP).doubleValue() : def;
 	}
 
 }

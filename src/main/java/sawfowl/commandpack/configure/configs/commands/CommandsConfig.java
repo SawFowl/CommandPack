@@ -1,7 +1,6 @@
 package sawfowl.commandpack.configure.configs.commands;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -90,6 +89,10 @@ public class CommandsConfig {
 	private CommandSettings fly = new CommandSettings(new Delay(5));
 	@Setting("GodMode")
 	private CommandSettings godMode = new CommandSettings(new Delay(5), new String[] {"god"});
+	@Setting("Speed")
+	private CommandSettings speed = new CommandSettings();
+	@Setting("Disposal")
+	private CommandSettings disposal = new CommandSettings(new String[] {"trash"});
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));
@@ -102,9 +105,8 @@ public class CommandsConfig {
 	public void registerParameterized(RegisterCommandEvent<Parameterized> event, CommandPack plugin) {
 		try {
 			for(Class<AbstractParameterizedCommand> clazz : findAllCommandsClasses("sawfowl.commandpack.commands.parameterized", AbstractParameterizedCommand.class)) {
-				Constructor<AbstractParameterizedCommand> constructor = clazz.getConstructor(CommandPack.class);
 				try {
-					AbstractParameterizedCommand command = constructor.newInstance(plugin);
+					AbstractParameterizedCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
 						if(settings.isEnable()) command.register(event);
 					});
@@ -120,9 +122,8 @@ public class CommandsConfig {
 	public void registerRaw(RegisterCommandEvent<Raw> event, CommandPack plugin) {
 		try {
 			for(Class<AbstractRawCommand> clazz : findAllCommandsClasses("sawfowl.commandpack.commands.raw", AbstractRawCommand.class)) {
-				Constructor<AbstractRawCommand> constructor = clazz.getConstructor(CommandPack.class);
 				try {
-					AbstractRawCommand command = constructor.newInstance(plugin);
+					AbstractRawCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
 						if(settings.isEnable()) command.register(event);
 					});

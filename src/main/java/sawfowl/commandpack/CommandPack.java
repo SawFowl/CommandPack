@@ -39,7 +39,7 @@ import sawfowl.commandpack.utils.Logger;
 public class CommandPack {
 	private Logger logger;
 
-	private CommandPack instance;
+	private static CommandPack instance;
 	private PluginContainer pluginContainer;
 	private Path configDir;
 	private Locales locales;
@@ -49,7 +49,7 @@ public class CommandPack {
 	private PlayersData playersData;
 	private RandomTeleportService rtpService;
 
-	public CommandPack getInstance() {
+	public static CommandPack getInstance() {
 		return instance;
 	}
 

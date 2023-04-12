@@ -54,6 +54,12 @@ public abstract class PluginCommand {
 		this.aliases = commandSettings.getAliases();
 	}
 
+	public PluginCommand(CommandSettings commandSettings) {
+		this.plugin = CommandPack.getInstance();
+		this.commandSettings = commandSettings;
+		this.aliases = commandSettings.getAliases();
+	}
+
 	public abstract String command();
 
 	public void setCommandSettings(CommandSettings commandSettings) {

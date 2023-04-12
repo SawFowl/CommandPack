@@ -1,4 +1,4 @@
-package sawfowl.commandpack.commands.parameterized.player;
+package sawfowl.commandpack.commands.parameterized;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,17 +28,22 @@ public class GodMode extends AbstractParameterizedCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		Optional<ServerPlayer> optTarget = getPlayer(context);
-		if(optTarget.isPresent()) {
+		if(isPlayer) {
+			if(optTarget.isPresent() && !optTarget.get().uniqueId().equals(((ServerPlayer) src).uniqueId())) {
+				if(setGodMode(optTarget.get())) {
+					sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_GODMODE_ENABLE_STAFF, LocalesPaths.COMMANDS_GODMODE_ENABLE);
+				} else sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_GODMODE_DISABLE_STAFF, LocalesPaths.COMMANDS_GODMODE_DISABLE);
+			} else {
+				delay((ServerPlayer) src, locale, consumer -> {
+					if(setGodMode((ServerPlayer) src)) {
+						src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GODMODE_ENABLE));
+					} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GODMODE_DISABLE));
+				});
+			}
+		} else {
 			if(setGodMode(optTarget.get())) {
 				sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_GODMODE_ENABLE_STAFF, LocalesPaths.COMMANDS_GODMODE_ENABLE);
 			} else sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_GODMODE_DISABLE_STAFF, LocalesPaths.COMMANDS_GODMODE_DISABLE);
-		} else {
-			if(!isPlayer) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
-			delay((ServerPlayer) src, locale, consumer -> {
-				if(setGodMode((ServerPlayer) src)) {
-					src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GODMODE_ENABLE));
-				} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GODMODE_DISABLE));
-			});
 		}
 	}
 
