@@ -11,8 +11,8 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.settings.ParameterSettings;
 
 public class Suicide extends AbstractPlayerCommand {
 
@@ -22,7 +22,9 @@ public class Suicide extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		if(continueEconomy(src)) src.offer(Keys.HEALTH, 0.0);
+		delay(src, locale, consumer -> {
+			src.offer(Keys.HEALTH, 0.0);
+		});
 	}
 
 	@Override

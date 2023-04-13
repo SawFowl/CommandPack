@@ -1,6 +1,5 @@
 package sawfowl.commandpack.configure.configs.commands;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -11,13 +10,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jetbrains.annotations.NotNull;
-import org.spongepowered.api.command.Command.Parameterized;
-import org.spongepowered.api.command.Command.Raw;
-import org.spongepowered.api.command.manager.CommandFailedRegistrationException;
 import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.Key;
 import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.DataView;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.data.value.CollectionValue;
@@ -25,15 +21,11 @@ import org.spongepowered.api.data.value.MapValue;
 import org.spongepowered.api.data.value.MergeFunction;
 import org.spongepowered.api.data.value.Value;
 import org.spongepowered.api.data.value.ValueContainer;
-import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
-import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
-
 @ConfigSerializable
-public class CommandSettings implements sawfowl.commandpack.api.data.miscellaneous.CommandSettings {
+public class CommandSettings implements sawfowl.commandpack.api.data.commands.CommandSettings {
 
 	public static final CommandSettings EMPTY = new CommandSettings();
 
@@ -88,6 +80,10 @@ public class CommandSettings implements sawfowl.commandpack.api.data.miscellaneo
 		this.delay = delay;
 		this.price = price;
 		this.aliases = aliases;
+	}
+
+	public Builder builder() {
+		return new Builder();
 	}
 
 	@Setting("Aliases")
@@ -151,99 +147,6 @@ public class CommandSettings implements sawfowl.commandpack.api.data.miscellaneo
 	}
 
 	@Override
-	public void registerParameterized(Class<? extends AbstractParameterizedCommand> clazz, RegisterCommandEvent<Parameterized> event) {
-		try {
-			clazz.getConstructor(CommandSettings.class).newInstance(this).register(event);
-		} catch (CommandFailedRegistrationException | InstantiationException | IllegalAccessException| IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void registerRaw(Class<? extends AbstractRawCommand> clazz, RegisterCommandEvent<Raw> event) {
-		try {
-			clazz.getConstructor(CommandSettings.class).newInstance(this).register(event);
-		} catch (CommandFailedRegistrationException | InstantiationException | IllegalAccessException| IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public class Builder implements sawfowl.commandpack.api.data.miscellaneous.CommandSettings.Builder {
-
-		CommandSettings settings;
-		public Builder() {
-			settings = new CommandSettings();
-		}
-
-		@Override
-		public <V> sawfowl.commandpack.api.data.miscellaneous.CommandSettings.Builder add(Key<? extends Value<V>> key, V value) {
-			return this;
-		}
-
-		@Override
-		public sawfowl.commandpack.api.data.miscellaneous.CommandSettings.Builder from(sawfowl.commandpack.api.data.miscellaneous.CommandSettings holder) {
-			settings.aliases = holder.getAliases();
-			settings.cooldown = holder.getCooldown();
-			settings.delay = holder.getDelay();
-			settings.enable = holder.isEnable();
-			settings.price = holder.getPrice();
-			return this;
-		}
-
-		@Override
-		public sawfowl.commandpack.api.data.miscellaneous.CommandSettings.Builder reset() {
-			settings.aliases = new String[] {};
-			settings.cooldown = 0;
-			settings.delay = new Delay();
-			settings.enable = true;
-			settings.price = new CommandPrice();
-			return this;
-		}
-
-		@Override
-		public sawfowl.commandpack.api.data.miscellaneous.@NotNull CommandSettings build() {
-			return settings;
-		}
-
-		@Override
-		public Builder setAliases(List<String> aliases) {
-			settings.aliases = Stream.of(aliases).toArray(String[]::new);
-			return this;
-		}
-
-		@Override
-		public Builder setAliases(String[] aliases) {
-			settings.aliases = aliases;
-			return this;
-		}
-
-		@Override
-		public Builder setCooldown(long cooldown) {
-			settings.cooldown = cooldown;
-			return this;
-		}
-
-		@Override
-		public Builder setDelay(Delay delay) {
-			settings.delay = delay;
-			return this;
-		}
-
-		@Override
-		public Builder setEnable(boolean enable) {
-			settings.enable = enable;
-			return this;
-		}
-
-		@Override
-		public Builder setPrice(CommandPrice price) {
-			settings.price = price;
-			return this;
-		}
-		
-	}
-
-	@Override
 	public void setRawData(DataView container) throws InvalidDataException {
 	}
 
@@ -260,7 +163,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.miscellaneo
 
 	@Override
 	public boolean validateRawData(DataView container) {
-		return false;
+		return toContainer().contains(container.currentPath());
 	}
 
 	@Override
@@ -270,17 +173,24 @@ public class CommandSettings implements sawfowl.commandpack.api.data.miscellaneo
 
 	@Override
 	public DataContainer toContainer() {
-		return DataContainer.createNew();
+		return DataContainer.createNew()
+				.set(DataQuery.of("Aliases"), aliases)
+				.set(DataQuery.of("Cooldown"), cooldown)
+				.set(DataQuery.of("Delay"), delay)
+				.set(DataQuery.of("Enable"), enable)
+				.set(DataQuery.of("Price"), price);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <E> Optional<E> get(Key<? extends Value<E>> key) {
-		return Optional.empty();
+		return toContainer().contains(DataQuery.of(key.key().asString())) ? (Optional<E>) Optional.ofNullable(toContainer().get(DataQuery.of(key.key().asString()))) : Optional.empty();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <E, V extends Value<E>> Optional<V> getValue(Key<V> key) {
-		return Optional.empty();
+		return (Optional<V>) toContainer().get(DataQuery.of(key.key().asString()));
 	}
 
 	@Override
@@ -386,6 +296,77 @@ public class CommandSettings implements sawfowl.commandpack.api.data.miscellaneo
 	@Override
 	public DataTransactionResult copyFrom(ValueContainer that, MergeFunction function) {
 		return DataTransactionResult.failNoData();
+	}
+
+	public class Builder implements sawfowl.commandpack.api.data.commands.CommandSettings.Builder {
+		public Builder() {}
+
+		@Override
+		public <V> sawfowl.commandpack.api.data.commands.CommandSettings.Builder add(Key<? extends Value<V>> key, V value) {
+			return this;
+		}
+
+		@Override
+		public sawfowl.commandpack.api.data.commands.CommandSettings.Builder from(sawfowl.commandpack.api.data.commands.CommandSettings holder) {
+			CommandSettings.this.aliases = holder.getAliases();
+			CommandSettings.this.cooldown = holder.getCooldown();
+			CommandSettings.this.delay = holder.getDelay();
+			CommandSettings.this.enable = holder.isEnable();
+			CommandSettings.this.price = holder.getPrice();
+			return this;
+		}
+
+		@Override
+		public sawfowl.commandpack.api.data.commands.CommandSettings.Builder reset() {
+			CommandSettings.this.aliases = new String[] {};
+			CommandSettings.this.cooldown = 0;
+			CommandSettings.this.delay = new Delay();
+			CommandSettings.this.enable = true;
+			CommandSettings.this.price = new CommandPrice();
+			return this;
+		}
+
+		@Override
+		public sawfowl.commandpack.api.data.commands.CommandSettings build() {
+			return CommandSettings.this;
+		}
+
+		@Override
+		public Builder setAliases(List<String> aliases) {
+			CommandSettings.this.aliases = Stream.of(aliases).toArray(String[]::new);
+			return this;
+		}
+
+		@Override
+		public Builder setAliases(String[] aliases) {
+			CommandSettings.this.aliases = aliases;
+			return this;
+		}
+
+		@Override
+		public Builder setCooldown(long cooldown) {
+			CommandSettings.this.cooldown = cooldown;
+			return this;
+		}
+
+		@Override
+		public Builder setDelay(Delay delay) {
+			CommandSettings.this.delay = delay;
+			return this;
+		}
+
+		@Override
+		public Builder setEnable(boolean enable) {
+			CommandSettings.this.enable = enable;
+			return this;
+		}
+
+		@Override
+		public Builder setPrice(CommandPrice price) {
+			CommandSettings.this.price = price;
+			return this;
+		}
+		
 	}
 
 }

@@ -53,12 +53,12 @@ public class GodMode extends AbstractParameterizedCommand {
 	}
 
 	@Override
-	public List<ParameterSettings> getParameterSettings() {
+	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
 		return Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(Permissions.GODMODE_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 
 	@Override
-	protected String permission() {
+	public String permission() {
 		return Permissions.GODMODE;
 	}
 

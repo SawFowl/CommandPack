@@ -53,7 +53,7 @@ public class SetHome extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public List<ParameterSettings> getParameterSettings() {
+	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
 		return Arrays.asList(new ParameterSettings(CommandParameters.createString("Home", true), true, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT));
 	}
 

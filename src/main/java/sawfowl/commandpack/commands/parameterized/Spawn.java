@@ -50,7 +50,7 @@ public class Spawn extends AbstractParameterizedCommand {
 	}
 
 	@Override
-	public List<ParameterSettings> getParameterSettings() {
+	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
 		return Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(Permissions.SPAWN_STAFF, true), true, true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 

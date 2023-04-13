@@ -56,7 +56,7 @@ public class SetWarp extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public List<ParameterSettings> getParameterSettings() {
+	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
 					new ParameterSettings(CommandParameters.createString("Warp", false), false, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT),
 					new ParameterSettings(CommandParameters.createBoolean("Private", false), false, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT),

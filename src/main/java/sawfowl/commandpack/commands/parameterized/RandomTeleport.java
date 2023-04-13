@@ -110,7 +110,7 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 	}
 
 	@Override
-	public List<ParameterSettings> getParameterSettings() {
+	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
 				new ParameterSettings(CommandParameters.createPlayer(Permissions.RTP_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
 				new ParameterSettings(CommandParameters.createWorld(Permissions.RTP_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT) 
@@ -123,7 +123,7 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 	}
 
 	@Override
-	protected String permission() {
+	public String permission() {
 		return Permissions.RTP;
 	}
 

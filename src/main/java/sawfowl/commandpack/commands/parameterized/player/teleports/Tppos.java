@@ -38,12 +38,12 @@ public class Tppos extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public List<ParameterSettings> getParameterSettings() {
+	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
 		return Arrays.asList(new ParameterSettings(CommandParameters.createLocation(false), false, LocalesPaths.COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT));
 	}
 
 	@Override
-	protected String permission() {
+	public String permission() {
 		return Permissions.TPPOS_STAFF;
 	}
 

@@ -32,16 +32,17 @@ public class Hat extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		if(!continueEconomy(src)) return;
 		ServerPlayer player = getPlayer(context).orElse(src);
 		ItemStack handItem = src.itemInHand(HandTypes.MAIN_HAND.get()).copy();
 		if(handItem.type().equals(getAir())) exception(src, LocalesPaths.COMMANDS_HAT_NO_ITEM);
 		if(plugin.getMainConfig().isBlackListHat(handItem)) exception(src, LocalesPaths.COMMANDS_HAT_BLACKLIST_ITEM);
 		if(player.uniqueId().equals(src.uniqueId())) {
-			player.equipment().peek(EquipmentTypes.HEAD.get()).ifPresent(headItem -> {
-				player.setItemInHand(HandTypes.MAIN_HAND.get(), headItem);
+			delay(player, locale, consumer -> {
+				player.equipment().peek(EquipmentTypes.HEAD.get()).ifPresent(headItem -> {
+					player.setItemInHand(HandTypes.MAIN_HAND.get(), headItem);
+				});
+				player.equipment().set(EquipmentTypes.HEAD.get(), handItem);
 			});
-			player.equipment().set(EquipmentTypes.HEAD.get(), handItem);
 		} else {
 			if(player.inventory().primary().freeCapacity() > 0) {
 				player.equipment().peek(EquipmentTypes.HEAD.get()).ifPresent(headItem -> {
@@ -73,7 +74,7 @@ public class Hat extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public List<ParameterSettings> getParameterSettings() {
+	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
 		return Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(Permissions.HAT_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 

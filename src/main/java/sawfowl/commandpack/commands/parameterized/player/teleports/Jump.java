@@ -17,8 +17,8 @@ import org.spongepowered.math.vector.Vector3d;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Jump extends AbstractPlayerCommand {
@@ -69,7 +69,7 @@ public class Jump extends AbstractPlayerCommand {
 	}
 
 	@Override
-	protected String permission() {
+	public String permission() {
 		return Permissions.JUMP;
 	}
 

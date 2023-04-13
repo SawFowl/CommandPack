@@ -41,7 +41,7 @@ public class SetSpawn extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public List<ParameterSettings> getParameterSettings() {
+	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
 					new ParameterSettings(CommandParameters.createBoolean("ForceSpawn", true), true, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT),
 					new ParameterSettings(CommandParameters.createBoolean("ForceRespawn", true), true, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT)

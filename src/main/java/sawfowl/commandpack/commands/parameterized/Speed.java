@@ -16,9 +16,9 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
@@ -88,18 +88,26 @@ public class Speed extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
+			ParameterSettings.builder().optionalforConsole(false).localeTextPath(LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT).value(CommandParameters.createDouble("Speed", false)).build(),
+			ParameterSettings.builder().optionalforConsole(false).localeTextPath(LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT).value(CommandParameters.createPlayer(Permissions.SPEED_STAFF, true)).build()
+		);
+	}
+/*
+	@Override
+	public List<ParameterSettings> getParameterSettings() {
+		return Arrays.asList(
 			new ParameterSettings(CommandParameters.createDouble("Speed", false), false, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
 			new ParameterSettings(CommandParameters.createPlayer(Permissions.SPEED_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
 		);
 	}
-
+*/
 	@Override
 	public String command() {
 		return "speed";
 	}
 
 	@Override
-	protected String permission() {
+	public String permission() {
 		return Permissions.SPEED;
 	}
 

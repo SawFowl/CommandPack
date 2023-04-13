@@ -1,6 +1,8 @@
 package sawfowl.commandpack;
 
 import java.nio.file.Path;
+import java.util.function.Supplier;
+
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
@@ -11,6 +13,7 @@ import org.spongepowered.api.event.EventContext;
 import org.spongepowered.api.event.EventContextKeys;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
+import org.spongepowered.api.event.lifecycle.RegisterBuilderEvent;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.plugin.PluginContainer;
@@ -22,6 +25,8 @@ import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.RandomTeleportService;
 import sawfowl.commandpack.api.TempPlayerData;
+import sawfowl.commandpack.api.data.commands.CommandSettings;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.configs.MainConfig;
 import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
@@ -150,6 +155,22 @@ public class CommandPack {
 	@Listener
 	public void registerRawCommands(RegisterCommandEvent<Raw> event) {
 		getCommandsConfig().registerRaw(event, instance);
+	}
+
+	@Listener
+	public void registerBuilders(RegisterBuilderEvent event) {
+		event.register(ParameterSettings.Builder.class, new Supplier<ParameterSettings.Builder>() {
+			@Override
+			public ParameterSettings.Builder get() {
+				return new sawfowl.commandpack.commands.settings.ParameterSettings().builder();
+			}
+		});
+		event.register(CommandSettings.Builder.class, new Supplier<CommandSettings.Builder>() {
+			@Override
+			public CommandSettings.Builder get() {
+				return new sawfowl.commandpack.configure.configs.commands.CommandSettings().builder();
+			}
+		});
 	}
 
 }

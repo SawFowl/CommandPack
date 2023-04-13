@@ -1,22 +1,17 @@
-package sawfowl.commandpack.api.data.miscellaneous;
+package sawfowl.commandpack.api.data.commands;
 
 import java.util.List;
 
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.Command.Parameterized;
-import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.data.DataHolderBuilder;
 import org.spongepowered.api.data.SerializableDataHolder;
-import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 
-import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
-import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;
 import sawfowl.commandpack.configure.configs.commands.Delay;
 
 public interface CommandSettings extends SerializableDataHolder.Mutable {
 
-	default Builder builder() {
+	static Builder builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
@@ -31,10 +26,6 @@ public interface CommandSettings extends SerializableDataHolder.Mutable {
 	CommandPrice getPrice();
 
 	boolean isEnable();
-
-	void registerParameterized(Class<? extends AbstractParameterizedCommand> clazz, RegisterCommandEvent<Parameterized> event);
-
-	void registerRaw(Class<? extends AbstractRawCommand> clazz, RegisterCommandEvent<Raw> event);
 
 	interface Builder extends DataHolderBuilder.Mutable<CommandSettings, Builder> {
 

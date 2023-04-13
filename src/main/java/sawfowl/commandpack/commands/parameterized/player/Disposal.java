@@ -16,8 +16,8 @@ import org.spongepowered.api.item.inventory.type.ViewableInventory;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Disposal extends AbstractPlayerCommand {
@@ -55,7 +55,7 @@ public class Disposal extends AbstractPlayerCommand {
 	}
 
 	@Override
-	protected String permission() {
+	public String permission() {
 		return Permissions.DISPOSAL;
 	}
 

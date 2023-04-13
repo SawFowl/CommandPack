@@ -44,7 +44,7 @@ public interface TempPlayerData {
 	 * Only CommandPack plugin commands are accepted.<br>
 	 * If you remove the tracking of a command to be executed by the player when the timer expires, it will not be executed.
 	 * 
-	 * @param command - Command or alias.
+	 * @param command - PluginCommand or alias.
 	 * @param player - The player.
 	 */
 	void removeCommandTracking(String command, ServerPlayer player);
@@ -55,7 +55,7 @@ public interface TempPlayerData {
 	 * Only CommandPack plugin commands are accepted.<br>
 	 * If you remove the tracking of a command to be executed by the player when the timer expires, it will not be executed.
 	 * 
-	 * @param command - Command or alias.
+	 * @param command - PluginCommand or alias.
 	 * @param player - The player.
 	 */
 	void removeCommandTracking(String command, UUID uuid);

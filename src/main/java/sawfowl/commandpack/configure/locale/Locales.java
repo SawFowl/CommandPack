@@ -73,7 +73,7 @@ public class Locales {
 		save = check(locale, toText("&7[&eTeleport&7] "), null, LocalesPaths.TELEPORTCLICKABLE) || save;
 
 		save = check(locale, toText("Server"), null, LocalesPaths.NAME_SYSTEM) || save;
-		save = check(locale, toText("Command block"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
+		save = check(locale, toText("PluginCommand block"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
 		save = check(locale, toText("Minecart with command block"), null, LocalesPaths.NAME_COMMANDBLOCK_MINECART) || save;
 		save = check(locale, toText("Unknown"), null, LocalesPaths.NAME_UNKNOWN) || save;
 

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
@@ -14,6 +13,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
@@ -28,7 +28,7 @@ public class Warp extends AbstractRawCommand {
 	}
 
 	@Override
-	protected void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args) throws CommandException {
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args) throws CommandException {
 		if(args.length == 0) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);
 		Optional<ServerPlayer> optTarget = cause.hasPermission(Permissions.WARP_STAFF) && args.length >= 2 ? getPlayer(args[args.length - 1]) : Optional.empty();
 		if(optTarget.isPresent()) args = Arrays.copyOf(args, args.length - 1);
@@ -92,7 +92,7 @@ public class Warp extends AbstractRawCommand {
 	}
 
 	@Override
-	protected List<String> complete(CommandCause cause, List<String> args, String plainArg) throws CommandException {
+	public List<String> complete(CommandCause cause, List<String> args, String plainArg) throws CommandException {
 		if(!plugin.getMainConfig().isAutoCompleteRawCommands() || (plugin.getPlayersData().getAdminWarps().isEmpty() && plugin.getPlayersData().getPlayersWarps().isEmpty())) return null;
 		boolean isStaff = cause.hasPermission(Permissions.WARP_STAFF);
 		List<String> warps = plugin.getPlayersData().getAdminWarps().keySet().stream().filter(warp -> ((plainArg.isEmpty() || warp.startsWith(plainArg) || (isStaff && args.size() > 1 && warp.startsWith(plainArg.replace(" " + args.get(args.size() - 1), "")))) && (isStaff || cause.hasPermission(Permissions.getWarpPermission(warp))))).collect(Collectors.toList());
@@ -111,22 +111,17 @@ public class Warp extends AbstractRawCommand {
 	}
 
 	@Override
-	protected Predicate<AbstractRawCommand> canExecuteRaw(CommandCause cause) {
-		return predicate -> true;
-	}
-
-	@Override
-	protected Component shortDescription(Locale locale) {
+	public Component shortDescription(Locale locale) {
 		return text("Warp command.");
 	}
 
 	@Override
-	protected Component extendedDescription(Locale locale) {
+	public Component extendedDescription(Locale locale) {
 		return text("Teleport to a warp point.");
 	}
 
 	@Override
-	protected String permission() {
+	public String permission() {
 		return Permissions.WARP;
 	}
 

@@ -14,33 +14,21 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.SystemSubject;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.scheduler.ScheduledTask;
-import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.util.Nameable;
-import org.spongepowered.api.util.locale.LocaleSource;
 import org.spongepowered.api.world.LocatableBlock;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.commands.ThrowingConsumer;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandPrice;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.Logger;
-import sawfowl.localeapi.api.TextUtils;
 
 public abstract class PluginCommand {
 
@@ -70,58 +58,8 @@ public abstract class PluginCommand {
 		commandSettings = plugin.getCommandsConfig().getCommandConfig(command());
 	}
 
-	protected abstract String permission();
-
-	protected CommandResult success() {
-		return CommandResult.success();
-	}
-
-	protected Locale getLocale(CommandCause cause) {
-		return cause.audience() instanceof SystemSubject ? getLocales().getLocaleService().getSystemOrDefaultLocale() : (cause.audience() instanceof LocaleSource ? ((LocaleSource) cause.audience()).locale() : org.spongepowered.api.util.locale.Locales.DEFAULT);
-	}
-
-	protected CommandException exception(Component text) throws CommandException {
-		throw new CommandException(text);
-	}
-
-	protected CommandException exception(String text) throws CommandException {
-		return exception(text(text));
-	}
-
-	protected CommandException exception(Locale locale, Object... path) throws CommandException {
-		return exception(getText(locale, path));
-	}
-
-	protected CommandException exception(Locale locale, String key, String value, Object... path) throws CommandException {
-		return exception(TextUtils.replace(getText(locale, path), key, value));
-	}
-
-	protected CommandException exception(Locale locale, String key, Component value, Object... path) throws CommandException {
-		return exception(TextUtils.replace(getText(locale, path), key, value));
-	}
-
-	protected CommandException exception(Locale locale, String[] keys, String[] values, Object... path) throws CommandException {
-		return exception(TextUtils.replace(getText(locale, path), keys, values));
-	}
-
-	protected CommandException exception(Locale locale, String[] keys, Component[] values, Object... path) throws CommandException {
-		return exception(TextUtils.replaceToComponents(getText(locale, path), keys, values));
-	}
-
-	protected Component text(String string) {
-		return TextUtils.deserializeLegacy(string);
-	}
-
 	protected BigDecimal createDecimal(double value) {
 		return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
-	}
-
-	protected Component getText(Locale locale, Object... path) {
-		return getLocales().getText(locale, path);
-	}
-
-	protected Component getText(ServerPlayer player, Object... path) {
-		return getText(player.locale(), path);
 	}
 
 	protected Locales getLocales() {
@@ -130,17 +68,6 @@ public abstract class PluginCommand {
 
 	protected Logger getLogger() {
 		return plugin.getLogger();
-	}
-
-	protected Component getExpireTimeFromNow(long second, Locale locale) {
-		long minute = TimeUnit.SECONDS.toMinutes(second);
-		long hour = TimeUnit.SECONDS.toHours(second);
-		if(hour == 0) {
-			if(minute == 0) {
-				return TextUtils.replace(Component.text(String.format((second > 9 ? "%02d" : "%01d"), second) + "%second%"), "%second%", getLocales().getText(locale, LocalesPaths.TIME_SECOND));
-			} else return TextUtils.replaceToComponents(Component.text(String.format((minute > 9 ? "%02d" : "%01d"), minute) + "%minute%" + (second - (minute * 60) > 0 ? " " + String.format((second - (minute * 60) > 9 ? "%02d" : "%01d"), second - (minute * 60)) + "%second%" : "")), new String[] {"%minute%", "%second%"}, new Component[] {getLocales().getText(locale, LocalesPaths.TIME_MINUTE), getLocales().getText(locale, LocalesPaths.TIME_SECOND)});
-		}
-		return TextUtils.replaceToComponents(Component.text(String.format((hour > 9 ? "%02d" : "%01d"), hour) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")), new String[] {"%hour%", "%minute%"}, new Component[] {getLocales().getText(locale, LocalesPaths.TIME_HOUR), getLocales().getText(locale, LocalesPaths.TIME_MINUTE)});
 	}
 
 	protected long getExpireHourFromNow(long second) {
@@ -217,82 +144,6 @@ public abstract class PluginCommand {
 
 	protected String getString(Locale locale, Object[] path) {
 		return plugin.getLocales().getString(locale, path);
-	}
-
-	protected void economy(ServerPlayer player, Locale locale) throws CommandException {
-		if(plugin.getEconomy().isPresent() && !player.hasPermission(Permissions.getIgnorePrice(command()))) {
-			CommandPrice price = commandSettings.getPrice();
-			if(price.getMoney() > 0) {
-				Currency currency = plugin.getEconomy().checkCurrency(price.getCurrency());
-				BigDecimal money = createDecimal(price.getMoney());
-				if(!plugin.getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(locale, new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command())}, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY);
-			}
-		}
-	}
-
-	public void delay(ServerPlayer player, Locale locale, ThrowingConsumer<PluginCommand, CommandException> consumer) throws CommandException {
-		if(commandSettings.getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(command()))) {
-			plugin.getTempPlayerData().addCommandTracking(command(), player);
-			Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(1, TimeUnit.SECONDS).execute(new DelayTimerTask(consumer, player, commandSettings.getDelay().getSeconds())).build());
-		} else {
-			economy(player, locale);
-			consumer.accept(this);
-		}
-	}
-
-	protected class DelayTimerTask implements Consumer<ScheduledTask> {
-		public DelayTimerTask(ThrowingConsumer<PluginCommand, CommandException> consumer, ServerPlayer player, long seconds) {
-			this.uuid = player.uniqueId();
-			this.seconds = seconds;
-			this.consumer = consumer;
-		}
-		private final UUID uuid;
-		private long seconds;
-		private final ThrowingConsumer<PluginCommand, CommandException> consumer;
-		private long hour;
-		private long minute;
-		boolean first = true;
-		@Override
-		public void accept(ScheduledTask task) {
-			if(seconds <= 0 || !getPlayer(uuid).isPresent() || !getPlayer(uuid).get().isOnline()) {
-				Sponge.server().scheduler().executor(plugin.getPluginContainer()).execute(() -> {
-					getPlayer(uuid).ifPresent(player -> {
-						try {
-							if(plugin.getTempPlayerData().getTrackingPlayerCommands(player).isPresent() && plugin.getTempPlayerData().getTrackingPlayerCommands(uuid).get().containsKey(command())) {
-								economy(player, player.locale());
-								consumer.accept(PluginCommand.this);
-							}
-						} catch (CommandException e) {
-							player.sendMessage(e.componentMessage());
-						}
-					});
-				});
-				if(plugin.getTempPlayerData().getTrackingPlayerCommands(uuid).isPresent() && plugin.getTempPlayerData().getTrackingPlayerCommands(uuid).get().containsKey(command())) plugin.getTempPlayerData().removeCommandTracking(command(), uuid);;
-				task.cancel();
-				return;
-			} else {
-				ServerPlayer player = getPlayer(uuid).get();
-				if(!plugin.getTempPlayerData().getTrackingPlayerCommands(player).isPresent() || !plugin.getTempPlayerData().getTrackingPlayerCommands(player).get().containsKey(command())) {
-					task.cancel();
-					return;
-				}
-				if(getExpireHourFromNow(seconds) > 0) {
-					if(hour != getExpireHourFromNow(seconds)) {
-						hour = getExpireHourFromNow(seconds);
-						if(player.isOnline()) player.sendMessage(TextUtils.replace(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command()).color(NamedTextColor.LIGHT_PURPLE))));
-					}
-				} else if(seconds > 60) {
-					if(minute != getExpireMinuteFromNow(seconds)) {
-						minute = getExpireMinuteFromNow(seconds);
-						if(player.isOnline()) player.sendMessage(TextUtils.replace(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command()).color(NamedTextColor.LIGHT_PURPLE))));
-					}
-				} else if(seconds == 60 || seconds == 30 || seconds == 10 || seconds <= 5 || first) {
-					first = false;
-					if(player.isOnline()) player.sendMessage(TextUtils.replace(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command()).color(NamedTextColor.LIGHT_PURPLE))));
-				}
-				seconds--;
-			}
-		}
 	}
 
 	/**

@@ -62,7 +62,7 @@ public class Repair extends AbstractParameterizedCommand {
 	}
 
 	@Override
-	public List<ParameterSettings> getParameterSettings() {
+	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
 					new ParameterSettings(CommandParameters.createPlayer(Permissions.REPAIR_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
 					new ParameterSettings(CommandParameters.REPAIR, true, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT)
@@ -70,7 +70,7 @@ public class Repair extends AbstractParameterizedCommand {
 	}
 
 	@Override
-	protected String permission() {
+	public String permission() {
 		return Permissions.REPAIR;
 	}
 
