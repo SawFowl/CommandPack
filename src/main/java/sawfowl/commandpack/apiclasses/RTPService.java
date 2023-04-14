@@ -15,10 +15,10 @@ import org.spongepowered.math.vector.Vector3i;
 
 import sawfowl.commandpack.CommandPack;
 
-public class RandomTeleportService implements sawfowl.commandpack.api.RandomTeleportService {
+public class RTPService implements sawfowl.commandpack.api.RandomTeleportService {
 
 	private final CommandPack plugin;
-	public RandomTeleportService(CommandPack plugin) {
+	public RTPService(CommandPack plugin) {
 		this.plugin = plugin;
 	}
 

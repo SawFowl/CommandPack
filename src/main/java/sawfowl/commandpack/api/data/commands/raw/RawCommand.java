@@ -20,11 +20,10 @@ import org.spongepowered.api.scheduler.Task;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-
-import sawfowl.commandpack.api.data.commands.CooldownTimerTask;
 import sawfowl.commandpack.api.data.commands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
 
 public interface RawCommand extends PluginCommand, Raw {
 

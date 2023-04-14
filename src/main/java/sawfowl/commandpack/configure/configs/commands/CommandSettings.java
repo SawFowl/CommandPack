@@ -1,31 +1,21 @@
 package sawfowl.commandpack.configure.configs.commands;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.spongepowered.api.data.DataTransactionResult;
-import org.spongepowered.api.data.Key;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
-import org.spongepowered.api.data.persistence.DataView;
-import org.spongepowered.api.data.persistence.InvalidDataException;
-import org.spongepowered.api.data.value.CollectionValue;
-import org.spongepowered.api.data.value.MapValue;
-import org.spongepowered.api.data.value.MergeFunction;
-import org.spongepowered.api.data.value.Value;
-import org.spongepowered.api.data.value.ValueContainer;
+import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import sawfowl.commandpack.api.data.commands.settings.DelaySettings;
+import sawfowl.commandpack.api.data.commands.settings.PriceSettings;
+
 @ConfigSerializable
-public class CommandSettings implements sawfowl.commandpack.api.data.commands.CommandSettings {
+public class CommandSettings implements sawfowl.commandpack.api.data.commands.settings.CommandSettings {
 
 	public static final CommandSettings EMPTY = new CommandSettings();
 
@@ -147,28 +137,8 @@ public class CommandSettings implements sawfowl.commandpack.api.data.commands.Co
 	}
 
 	@Override
-	public void setRawData(DataView container) throws InvalidDataException {
-	}
-
-	@Override
-	public org.spongepowered.api.data.SerializableDataHolder.Mutable copy() {
-		CommandSettings copy = new CommandSettings();
-		copy.aliases = this.aliases;
-		copy.cooldown = this.cooldown;
-		copy.delay = this.delay;
-		copy.enable = this.enable;
-		copy.price = this.price;
-		return copy;
-	}
-
-	@Override
-	public boolean validateRawData(DataView container) {
-		return toContainer().contains(container.currentPath());
-	}
-
-	@Override
 	public int contentVersion() {
-		return 0;
+		return 1;
 	}
 
 	@Override
@@ -178,146 +148,14 @@ public class CommandSettings implements sawfowl.commandpack.api.data.commands.Co
 				.set(DataQuery.of("Cooldown"), cooldown)
 				.set(DataQuery.of("Delay"), delay)
 				.set(DataQuery.of("Enable"), enable)
-				.set(DataQuery.of("Price"), price);
+				.set(DataQuery.of("Price"), price)
+				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <E> Optional<E> get(Key<? extends Value<E>> key) {
-		return toContainer().contains(DataQuery.of(key.key().asString())) ? (Optional<E>) Optional.ofNullable(toContainer().get(DataQuery.of(key.key().asString()))) : Optional.empty();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <E, V extends Value<E>> Optional<V> getValue(Key<V> key) {
-		return (Optional<V>) toContainer().get(DataQuery.of(key.key().asString()));
-	}
-
-	@Override
-	public boolean supports(Key<?> key) {
-		return false;
-	}
-
-	@Override
-	public Set<Key<?>> getKeys() {
-		return new HashSet<>();
-	}
-
-	@Override
-	public Set<org.spongepowered.api.data.value.Value.Immutable<?>> getValues() {
-		return new HashSet<>();
-	}
-
-	@Override
-	public <E> DataTransactionResult offer(Key<? extends Value<E>> key, E value) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public DataTransactionResult offer(Value<?> value) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public <E> DataTransactionResult offerSingle(Key<? extends CollectionValue<E, ?>> key, E element) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public <K, V> DataTransactionResult offerSingle(Key<? extends MapValue<K, V>> key, K valueKey, V value) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public <K, V> DataTransactionResult offerAll(Key<? extends MapValue<K, V>> key, Map<? extends K, ? extends V> map) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public DataTransactionResult offerAll(MapValue<?, ?> value) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public DataTransactionResult offerAll(CollectionValue<?, ?> value) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public <E> DataTransactionResult offerAll(Key<? extends CollectionValue<E, ?>> key, Collection<? extends E> elements) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public <E> DataTransactionResult removeSingle(Key<? extends CollectionValue<E, ?>> key, E element) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public <K> DataTransactionResult removeKey(Key<? extends MapValue<K, ?>> key, K mapKey) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public DataTransactionResult removeAll(CollectionValue<?, ?> value) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public <E> DataTransactionResult removeAll(Key<? extends CollectionValue<E, ?>> key, Collection<? extends E> elements) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public DataTransactionResult removeAll(MapValue<?, ?> value) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public <K, V> DataTransactionResult removeAll(Key<? extends MapValue<K, V>> key, Map<? extends K, ? extends V> map) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public <E> DataTransactionResult tryOffer(Key<? extends Value<E>> key, E value) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public DataTransactionResult remove(Key<?> key) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public DataTransactionResult undo(DataTransactionResult result) {
-		return DataTransactionResult.failNoData();
-	}
-
-	@Override
-	public DataTransactionResult copyFrom(ValueContainer that, MergeFunction function) {
-		return DataTransactionResult.failNoData();
-	}
-
-	public class Builder implements sawfowl.commandpack.api.data.commands.CommandSettings.Builder {
-		public Builder() {}
+	public class Builder implements sawfowl.commandpack.api.data.commands.settings.CommandSettings.Builder {
 
 		@Override
-		public <V> sawfowl.commandpack.api.data.commands.CommandSettings.Builder add(Key<? extends Value<V>> key, V value) {
-			return this;
-		}
-
-		@Override
-		public sawfowl.commandpack.api.data.commands.CommandSettings.Builder from(sawfowl.commandpack.api.data.commands.CommandSettings holder) {
-			CommandSettings.this.aliases = holder.getAliases();
-			CommandSettings.this.cooldown = holder.getCooldown();
-			CommandSettings.this.delay = holder.getDelay();
-			CommandSettings.this.enable = holder.isEnable();
-			CommandSettings.this.price = holder.getPrice();
-			return this;
-		}
-
-		@Override
-		public sawfowl.commandpack.api.data.commands.CommandSettings.Builder reset() {
+		public sawfowl.commandpack.api.data.commands.settings.CommandSettings.Builder reset() {
 			CommandSettings.this.aliases = new String[] {};
 			CommandSettings.this.cooldown = 0;
 			CommandSettings.this.delay = new Delay();
@@ -327,7 +165,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.commands.Co
 		}
 
 		@Override
-		public sawfowl.commandpack.api.data.commands.CommandSettings build() {
+		public sawfowl.commandpack.api.data.commands.settings.CommandSettings build() {
 			return CommandSettings.this;
 		}
 
@@ -350,8 +188,8 @@ public class CommandSettings implements sawfowl.commandpack.api.data.commands.Co
 		}
 
 		@Override
-		public Builder setDelay(Delay delay) {
-			CommandSettings.this.delay = delay;
+		public Builder setDelay(DelaySettings delay) {
+			CommandSettings.this.delay = new Delay(delay.getSeconds(), new CancelRules(delay.getCancelRules().isAllowMoving(), delay.getCancelRules().isAllowOtherCommand()));
 			return this;
 		}
 
@@ -362,8 +200,8 @@ public class CommandSettings implements sawfowl.commandpack.api.data.commands.Co
 		}
 
 		@Override
-		public Builder setPrice(CommandPrice price) {
-			CommandSettings.this.price = price;
+		public Builder setPrice(PriceSettings price) {
+			CommandSettings.this.price = new CommandPrice(price.getCurrency(), price.getMoney());
 			return this;
 		}
 		

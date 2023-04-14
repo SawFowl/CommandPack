@@ -15,10 +15,10 @@ import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.localeapi.api.TextUtils;
 
-public class PlayersData implements sawfowl.commandpack.api.PlayersData {
+public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 
 	final CommandPack plugin;
-	public PlayersData(CommandPack plugin) {
+	public PlayersDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
 	}
 

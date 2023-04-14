@@ -1,4 +1,4 @@
-package sawfowl.commandpack.api.data.commands;
+package sawfowl.commandpack.utils.tasks;
 
 import java.util.Map;
 import java.util.UUID;
@@ -7,6 +7,8 @@ import java.util.function.Consumer;
 
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.scheduler.ScheduledTask;
+
+import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
 
 public class CooldownTimerTask implements Consumer<ScheduledTask> {
 

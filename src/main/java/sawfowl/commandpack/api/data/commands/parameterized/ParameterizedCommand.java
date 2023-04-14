@@ -23,11 +23,10 @@ import org.spongepowered.api.util.locale.LocaleSource;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.audience.Audience;
-
-import sawfowl.commandpack.api.data.commands.CooldownTimerTask;
 import sawfowl.commandpack.api.data.commands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
 
 public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 

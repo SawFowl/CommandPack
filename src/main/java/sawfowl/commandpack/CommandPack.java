@@ -25,11 +25,17 @@ import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.RandomTeleportService;
 import sawfowl.commandpack.api.TempPlayerData;
-import sawfowl.commandpack.api.data.commands.CommandSettings;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.api.data.commands.settings.CancelRules;
+import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
+import sawfowl.commandpack.api.data.commands.settings.DelaySettings;
+import sawfowl.commandpack.api.data.commands.settings.PriceSettings;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.configs.MainConfig;
+import sawfowl.commandpack.configure.configs.commands.CommandPrice;
 import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
+import sawfowl.commandpack.configure.configs.commands.Delay;
+import sawfowl.commandpack.configure.configs.commands.RandomTeleportWorldConfig;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.listeners.CommandLogListener;
@@ -94,8 +100,8 @@ public class CommandPack {
 		return tempPlayerData;
 	}
 
-	public sawfowl.commandpack.apiclasses.PlayersData getPlayersData() {
-		return (sawfowl.commandpack.apiclasses.PlayersData) playersData;
+	public sawfowl.commandpack.apiclasses.PlayersDataImpl getPlayersData() {
+		return (sawfowl.commandpack.apiclasses.PlayersDataImpl) playersData;
 	}
 
 	public RandomTeleportService getRTPService() {
@@ -108,15 +114,15 @@ public class CommandPack {
 		this.pluginContainer = pluginContainer;
 		configDir = configDirectory;
 		logger = new Logger();
-		rtpService = new sawfowl.commandpack.apiclasses.RandomTeleportService(instance);
+		rtpService = new sawfowl.commandpack.apiclasses.RTPService(instance);
 	}
 
 	@Listener
 	public void onLocaleServicePostEvent(LocaleServiseEvent.Construct event) {
-		playersData = new sawfowl.commandpack.apiclasses.PlayersData(instance);
+		playersData = new sawfowl.commandpack.apiclasses.PlayersDataImpl(instance);
 		configManager = new ConfigManager(instance, event.getLocaleService().getConfigurationOptions());
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
-		tempPlayerData = new sawfowl.commandpack.apiclasses.TempPlayerData(instance);
+		tempPlayerData = new sawfowl.commandpack.apiclasses.TempPlayerDataImpl(instance);
 		configManager.loadPlayersData();
 	}
 
@@ -129,15 +135,36 @@ public class CommandPack {
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerConnectionListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerRespawnListener(instance));
-		Sponge.eventManager().post(new RandomTeleportService.PostEvent() {
+		Sponge.eventManager().post(new sawfowl.commandpack.api.CommandPack.PostAPI() {
+
 			@Override
 			public Cause cause() {
 				return Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, pluginContainer).build(), pluginContainer);
 			}
+
 			@Override
-			public RandomTeleportService getService() {
-				return rtpService;
+			public sawfowl.commandpack.api.CommandPack getAPI() {
+				return new sawfowl.commandpack.api.CommandPack() {
+
+					@Override
+					public PlayersData playersData() {
+						return playersData;
+					}
+
+					@Override
+					public TempPlayerData tempPlayerData() {
+						return tempPlayerData;
+					}
+
+					@Override
+					public RandomTeleportService randomTeleportService() {
+						return rtpService;
+					}
+
+				};
+
 			}
+
 		});
 	}
 
@@ -159,10 +186,34 @@ public class CommandPack {
 
 	@Listener
 	public void registerBuilders(RegisterBuilderEvent event) {
+		event.register(RandomTeleportService.RandomTeleportOptions.Builder.class, new Supplier<RandomTeleportService.RandomTeleportOptions.Builder>() {
+			@Override
+			public RandomTeleportService.RandomTeleportOptions.Builder get() {
+				return new RandomTeleportWorldConfig().builder();
+			}
+		});
 		event.register(ParameterSettings.Builder.class, new Supplier<ParameterSettings.Builder>() {
 			@Override
 			public ParameterSettings.Builder get() {
 				return new sawfowl.commandpack.commands.settings.ParameterSettings().builder();
+			}
+		});
+		event.register(PriceSettings.Builder.class, new Supplier<PriceSettings.Builder>() {
+			@Override
+			public PriceSettings.Builder get() {
+				return new CommandPrice().builder();
+			}
+		});
+		event.register(CancelRules.Builder.class, new Supplier<CancelRules.Builder>() {
+			@Override
+			public CancelRules.Builder get() {
+				return new sawfowl.commandpack.configure.configs.commands.CancelRules().builder();
+			}
+		});
+		event.register(DelaySettings.Builder.class, new Supplier<DelaySettings.Builder>() {
+			@Override
+			public DelaySettings.Builder get() {
+				return new Delay().builder();
 			}
 		});
 		event.register(CommandSettings.Builder.class, new Supplier<CommandSettings.Builder>() {

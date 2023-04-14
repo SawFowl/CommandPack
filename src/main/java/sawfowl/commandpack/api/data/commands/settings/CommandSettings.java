@@ -1,15 +1,17 @@
-package sawfowl.commandpack.api.data.commands;
+package sawfowl.commandpack.api.data.commands.settings;
 
 import java.util.List;
 
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.DataHolderBuilder;
-import org.spongepowered.api.data.SerializableDataHolder;
+import org.spongepowered.api.data.persistence.DataSerializable;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import net.kyori.adventure.builder.AbstractBuilder;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;
 import sawfowl.commandpack.configure.configs.commands.Delay;
 
-public interface CommandSettings extends SerializableDataHolder.Mutable {
+@ConfigSerializable
+public interface CommandSettings extends DataSerializable {
 
 	static Builder builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
@@ -27,7 +29,7 @@ public interface CommandSettings extends SerializableDataHolder.Mutable {
 
 	boolean isEnable();
 
-	interface Builder extends DataHolderBuilder.Mutable<CommandSettings, Builder> {
+	interface Builder extends AbstractBuilder<CommandSettings>, org.spongepowered.api.util.Builder<CommandSettings, Builder> {
 
 		Builder setAliases(List<String> aliases);
 
@@ -35,11 +37,11 @@ public interface CommandSettings extends SerializableDataHolder.Mutable {
 
 		Builder setCooldown(long cooldown);
 
-		Builder setDelay(Delay delay);
+		Builder setDelay(DelaySettings delay);
 
 		Builder setEnable(boolean enable);
 
-		Builder setPrice(CommandPrice price);
+		Builder setPrice(PriceSettings price);
 		
 	}
 

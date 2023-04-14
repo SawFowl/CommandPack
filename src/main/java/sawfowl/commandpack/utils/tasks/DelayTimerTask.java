@@ -1,4 +1,4 @@
-package sawfowl.commandpack.api.data.commands;
+package sawfowl.commandpack.utils.tasks;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -20,6 +20,8 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.commands.PluginCommand;
+import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
 import sawfowl.commandpack.commands.ThrowingConsumer;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;

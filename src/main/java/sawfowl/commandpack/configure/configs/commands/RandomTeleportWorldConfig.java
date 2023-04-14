@@ -2,7 +2,11 @@ package sawfowl.commandpack.configure.configs.commands;
 
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.ResourceKey;
+import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.persistence.DataQuery;
+import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
@@ -18,13 +22,13 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 	private int attempts = 10;
 	@Setting("World")
 	@Comment("The identifier of the target world.")
-	private String world;
+	private String world = null;
 	@Setting("StartFromWorldSpawn")
 	private boolean startFromWorldSpawn = false;
 	@Setting("MinRadius")
 	private int minRadius = 1000;
 	@Setting("Radius")
-	private int radius= 3000;
+	private int radius = 3000;
 	@Setting("MaxY")
 	private int maxY = 255;
 	@Setting("MinY")
@@ -54,6 +58,10 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 		this.onlySurface = onlySurface;
 	}
 
+	public Builder builder() {
+		return new Builder();
+	}
+
 	@Override
 	public RandomTeleportOptions copy() {
 		RandomTeleportWorldConfig copy = new RandomTeleportWorldConfig();
@@ -72,11 +80,6 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 	@Override
 	public ResourceKey getWorldKey() {
 		return ResourceKey.resolve(world);
-	}
-
-	@Override
-	public void setWorldKey(ResourceKey worldKey) {
-		world = worldKey.asString();
 	}
 
 	@Override
@@ -117,6 +120,96 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 	@Override
 	public boolean isOnlySurface() {
 		return onlySurface;
+	}
+
+	@Override
+	public int contentVersion() {
+		return 1;
+	}
+
+	@Override
+	public DataContainer toContainer() {
+		return DataContainer.createNew()
+				.set(DataQuery.of("Attempts"), attempts)
+				.set(DataQuery.of("World"), world)
+				.set(DataQuery.of("StartFromWorldSpawn"), startFromWorldSpawn)
+				.set(DataQuery.of("MinRadius"), minRadius)
+				.set(DataQuery.of("Radius"), radius)
+				.set(DataQuery.of("MaxY"), maxY)
+				.set(DataQuery.of("MinY"), minY)
+				.set(DataQuery.of("ProhibitedBiomes"), prohibitedBiomes)
+				.set(DataQuery.of("OnlySurface"), onlySurface)
+				.set(Queries.CONTENT_VERSION, contentVersion());
+	}
+
+	class Builder implements RandomTeleportOptions.Builder {
+
+		@Override
+		public Builder setAttempts(int attempts) {
+			RandomTeleportWorldConfig.this.attempts = attempts;
+			return this;
+		}
+
+		@Override
+		public @NotNull RandomTeleportOptions build() {
+			return RandomTeleportWorldConfig.this;
+		}
+
+		@Override
+		public Builder setWorldKey(ResourceKey worldKey) {
+			world = worldKey.asString();
+			return this;
+		}
+
+		@Override
+		public Builder setWorldID(String world) throws Exception {
+			if(!world.contains(":")) throw new Exception("The string is not an identifier of any world.");
+			RandomTeleportWorldConfig.this.world = world;
+			return this;
+		}
+
+		@Override
+		public Builder setStartFromWorldSpawn(boolean value) {
+			startFromWorldSpawn = value;
+			return this;
+		}
+
+		@Override
+		public Builder setMinRadius(int value) {
+			minRadius = value;
+			return this;
+		}
+
+		@Override
+		public Builder setRadius(int value) {
+			radius = value;
+			return this;
+		}
+
+		@Override
+		public Builder setMaxY(int value) {
+			maxY = value;
+			return this;
+		}
+
+		@Override
+		public Builder setMinY(int value) {
+			minY = value;
+			return this;
+		}
+
+		@Override
+		public Builder setProhibitedBiomes(Set<String> value) {
+			prohibitedBiomes = value;
+			return this;
+		}
+
+		@Override
+		public Builder setOnlySurface(boolean value) {
+			onlySurface = value;
+			return this;
+		}
+		
 	}
 
 }

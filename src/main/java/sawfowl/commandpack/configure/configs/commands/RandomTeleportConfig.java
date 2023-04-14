@@ -9,6 +9,9 @@ import java.util.Set;
 
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.persistence.DataQuery;
+import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
@@ -48,7 +51,6 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 	@Setting("OnlySurface")
 	@Comment("If true, the player will always move to the surface.")
 	private boolean onlySurface = false;
-	private ResourceKey world = null;
 
 	public ServerWorld getTargetWorld(ServerWorld source) {
 		return Sponge.server().worldManager().world(getTargetWorldId(getWorldId(source))).orElse(source);
@@ -107,12 +109,7 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 
 	@Override
 	public ResourceKey getWorldKey() {
-		return world;
-	}
-
-	@Override
-	public void setWorldKey(ResourceKey worldKey) {
-		world = worldKey;
+		return null;
 	}
 
 	@Override
@@ -169,6 +166,26 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 		map.put("minecraft:the_nether", new RandomTeleportWorldConfig("minecraft:the_nether", false));
 		map.put("minecraft:the_end", new RandomTeleportWorldConfig("minecraft:the_end"));
 		return map;
+	}
+
+	@Override
+	public int contentVersion() {
+		return 0;
+	}
+
+	@Override
+	public DataContainer toContainer() {
+		return DataContainer.createNew()
+				.set(DataQuery.of("Attempts"), attempts)
+				.set(DataQuery.of("World"), "null")
+				.set(DataQuery.of("StartFromWorldSpawn"), startFromWorldSpawn)
+				.set(DataQuery.of("MinRadius"), minRadius)
+				.set(DataQuery.of("Radius"), radius)
+				.set(DataQuery.of("MaxY"), maxY)
+				.set(DataQuery.of("MinY"), minY)
+				.set(DataQuery.of("ProhibitedBiomes"), prohibitedBiomes)
+				.set(DataQuery.of("OnlySurface"), onlySurface)
+				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
 }

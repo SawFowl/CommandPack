@@ -18,13 +18,13 @@ import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
-public class TempPlayerData implements sawfowl.commandpack.api.TempPlayerData {
+public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerData {
 
 	private final CommandPack plugin;
 	private Map<String, List<UUID>> trackingCommandDelay = new HashMap<>();
 	private Component notTracking;
 	private Set<UUID> tptoggleSet = new HashSet<>();
-	public TempPlayerData(CommandPack plugin) {
+	public TempPlayerDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		notTracking = plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING);
 		plugin.getConfigManager().getCommandsConfig().node().childrenMap().keySet().forEach(key -> {

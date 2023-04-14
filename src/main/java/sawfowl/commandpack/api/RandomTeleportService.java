@@ -5,9 +5,12 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import org.spongepowered.api.ResourceKey;
-import org.spongepowered.api.event.Event;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.persistence.DataSerializable;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
+
+import net.kyori.adventure.builder.AbstractBuilder;
 
 
 public interface RandomTeleportService {
@@ -57,16 +60,25 @@ public interface RandomTeleportService {
 	 */
 	public RandomTeleportOptions getDefault();
 
-	interface PostEvent extends Event {
-
-		RandomTeleportService getService();
-
+	/**
+	 * Create new random teleport options.
+	 */
+	static RandomTeleportOptions.Builder createOptions() {
+		return RandomTeleportOptions.builder();
 	}
 
 	/**
 	 * These teleportation options to a random position must be used to find a position.
 	 */
-	interface RandomTeleportOptions {
+	interface RandomTeleportOptions extends DataSerializable {
+
+		static Builder builder() {
+			return Sponge.game().builderProvider().provide(Builder.class);
+		}
+
+		static Builder of(String world) throws Exception {
+			return builder().setWorldID(world);
+		}
 
 		/**
 		 * Copying a class with options.
@@ -77,11 +89,6 @@ public interface RandomTeleportService {
 		 * The ID of the target world. If the world is not found or the ID is null, the player's world will be selected for the position search.
 		 */
 		ResourceKey getWorldKey();
-
-		/**
-		 * Specifies a new ID for the target world.
-		 */
-		void setWorldKey(ResourceKey worldKey);
 
 		/**
 		 * The number of attempts to find the position.
@@ -123,6 +130,36 @@ public interface RandomTeleportService {
 		 * If true, the player will always move to the surface.
 		 */
 		boolean isOnlySurface();
+
+		interface Builder extends AbstractBuilder<RandomTeleportOptions>, org.spongepowered.api.util.Builder<RandomTeleportOptions, Builder> {
+
+			Builder setAttempts(int value);
+
+			/**
+			 * Specifies a new ID for the target world.
+			 */
+			Builder setWorldKey(ResourceKey value);
+
+			/**
+			 * Specifies a new ID for the target world.
+			 */
+			Builder setWorldID(String value) throws Exception;
+
+			Builder setStartFromWorldSpawn(boolean value);
+
+			Builder setMinRadius(int value);
+
+			Builder setRadius(int value);
+
+			Builder setMaxY(int value);
+
+			Builder setMinY(int value);
+
+			Builder setProhibitedBiomes(Set<String> value);
+
+			Builder setOnlySurface(boolean value);
+
+		}
 
 	}
 

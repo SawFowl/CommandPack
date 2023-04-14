@@ -10,6 +10,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.world.server.ServerLocation;
@@ -40,7 +41,6 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 			ServerPlayer player = getPlayer(context).orElse((ServerPlayer) src);
 			ServerWorld targetWorld = getArgument(context, ServerWorld.class, "World").orElse(plugin.getMainConfig().getRtpConfig().getTargetWorld(player.world()));
 			RandomTeleportOptions options = plugin.getRTPService().getOptions(player.world());
-			options.setWorldKey(targetWorld.key());
 			CompletableFuture<Optional<ServerLocation>> futurePos = plugin.getRTPService().getLocationFuture(player.serverLocation(), options);
 			futurePos.thenAccept(optional -> {
 				if(!optional.isPresent()) {
@@ -50,7 +50,7 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 						src.sendMessage(getText(locale, LocalesPaths.COMMANDS_COMMAND_RANDOM_TELEPORT_POSITION_SEARCH_ERROR));
 					}
 				} else {
-					RandomTeleportEvent event = createEvent(context.contextCause(), player, targetWorld, optional.get().position(), plugin.getRTPService().getOptions(player.world()));
+					RandomTeleportEvent event = createEvent(context.contextCause().with(player), player, targetWorld, optional.get().position(), plugin.getRTPService().getOptions(player.world()));
 					Sponge.eventManager().post(event);
 					if(event.isCancelled()) {
 						src.sendMessage(getText(locale, LocalesPaths.COMMANDS_COMMAND_RANDOM_TELEPORT_CANCELLED));
@@ -74,7 +74,6 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 			ServerPlayer player = getPlayer(context).get();
 			ServerWorld targetWorld = getArgument(context, ServerWorld.class, "World").orElse(plugin.getMainConfig().getRtpConfig().getTargetWorld(player.world()));
 			RandomTeleportOptions options = plugin.getRTPService().getOptions(player.world());
-			options.setWorldKey(targetWorld.key());
 			CompletableFuture<Optional<ServerLocation>> futurePos = plugin.getRTPService().getLocationFuture(player.serverLocation(), options);
 			futurePos.thenAccept(optional -> {
 				if(!optional.isPresent()) {
@@ -127,8 +126,82 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 		return Permissions.RTP;
 	}
 
-	private RandomTeleportEvent createEvent(Cause cause, ServerPlayer player, ServerWorld destinationWorld, Vector3d destinationPosition, RandomTeleportOptions options) {
-		return new sawfowl.commandpack.apiclasses.events.RandomTeleportEvent(cause, player, destinationWorld, destinationPosition, options);
+	private RandomTeleportEvent createEvent(Cause cause, ServerPlayer player, ServerWorld destinationWorld, Vector3d destinationPos, RandomTeleportOptions options) {
+		return new RandomTeleportEvent() {
+
+			private Vector3d originalDestinationPosition = destinationPos;
+			private Vector3d destinationPosition;
+			private boolean cancelled = false;
+			private ServerWorld destinationWorld;
+			private ServerWorld originalDestinationWorld;
+			private RandomTeleportOptions options;
+
+			@Override
+			public ServerPlayer player() {
+				return player;
+			}
+
+			@Override
+			public Entity entity() {
+				return player;
+			}
+
+			@Override
+			public Vector3d originalPosition() {
+				return destinationPos;
+			}
+
+			@Override
+			public Vector3d originalDestinationPosition() {
+				return originalDestinationPosition;
+			}
+
+			@Override
+			public Vector3d destinationPosition() {
+				return destinationPosition;
+			}
+
+			@Override
+			public void setDestinationPosition(Vector3d position) {
+				destinationPosition = position;
+			}
+
+			@Override
+			public Cause cause() {
+				return cause;
+			}
+
+			@Override
+			public boolean isCancelled() {
+				return cancelled;
+			}
+
+			@Override
+			public void setCancelled(boolean cancel) {
+				cancelled = cancel;
+			}
+
+			@Override
+			public RandomTeleportOptions getOptions() {
+				return options;
+			}
+
+			@Override
+			public ServerWorld originalWorld() {
+				return player.world();
+			}
+
+			@Override
+			public ServerWorld originalDestinationWorld() {
+				return originalDestinationWorld;
+			}
+
+			@Override
+			public ServerWorld destinationWorld() {
+				return destinationWorld;
+			}
+
+		};
 	}
 
 }
