@@ -20,14 +20,14 @@ import org.spongepowered.math.vector.Vector3d;
 import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.api.events.RandomTeleportEvent;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 import sawfowl.commandpack.api.RandomTeleportService.RandomTeleportOptions;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.api.events.RandomTeleportEvent;
 
 public class RandomTeleport extends AbstractParameterizedCommand {
 
@@ -109,10 +109,10 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 	}
 
 	@Override
-	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
+	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-				new ParameterSettings(CommandParameters.createPlayer(Permissions.RTP_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-				new ParameterSettings(CommandParameters.createWorld(Permissions.RTP_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT) 
+				ParameterSettings.of(CommandParameters.createPlayer(Permissions.RTP_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
+				ParameterSettings.of(CommandParameters.createWorld(Permissions.RTP_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT)
 			);
 	}
 

@@ -82,6 +82,7 @@ public class Speed extends AbstractParameterizedCommand {
 				.reset()
 				.addParameters(parameterSettings.values().stream().map(ParameterSettings::getParameterUnknownType).toArray(Value[]::new))
 				.executionRequirements(cause -> (cause.hasPermission(Permissions.SPEED) || cause.hasPermission(Permissions.SPEED_FLY)))
+				.executor(this)
 				.build();
 	}
 

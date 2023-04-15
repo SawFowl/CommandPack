@@ -7,13 +7,18 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter.Value;
-import org.spongepowered.api.data.DataHolderBuilder;
-import org.spongepowered.api.data.SerializableDataHolder;
+import org.spongepowered.api.data.persistence.DataSerializable;
 
-public interface ParameterSettings extends SerializableDataHolder.Mutable {
+import net.kyori.adventure.builder.AbstractBuilder;
+
+public interface ParameterSettings extends DataSerializable {
 
 	static Builder builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
+	}
+
+	static ParameterSettings of(Value<?> value, boolean optionalforConsole, Object[] localeTextPath) {
+		return builder().value(value).optionalforConsole(optionalforConsole).localeTextPath(localeTextPath).build();
 	}
 
 	String getKey();
@@ -28,13 +33,13 @@ public interface ParameterSettings extends SerializableDataHolder.Mutable {
 
 	Object[] getPath();
 
-	interface Builder extends DataHolderBuilder.Mutable<ParameterSettings, Builder> {
+	interface Builder extends AbstractBuilder<ParameterSettings>, org.spongepowered.api.util.Builder<ParameterSettings, Builder> {
 
 		Builder value(Value<?> value);
 
 		Builder optionalforConsole(boolean optional);
 
-		Builder localeTextPath(Object path[]);
+		Builder localeTextPath(Object[] path);
 
 		@NotNull ParameterSettings build();
 

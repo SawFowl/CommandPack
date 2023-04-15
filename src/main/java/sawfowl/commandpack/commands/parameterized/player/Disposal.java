@@ -33,7 +33,7 @@ public class Disposal extends AbstractPlayerCommand {
 		trash.registerClose(new CloseHandler() {
 			@Override
 			public void handle(Cause cause, Container container) {
-				container.clear();
+				trash.inventory().clear();
 			}
 		});
 		trash.open(src);

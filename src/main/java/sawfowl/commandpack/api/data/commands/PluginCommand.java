@@ -54,10 +54,11 @@ public interface PluginCommand {
 	default Component getText(Locale locale, Object[] path) {
 		Component text = getText(path);
 		if(text != null) return text;
-		try {
-			return CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getComponent(true, path);
-		} catch (Exception e) {
-			return CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getComponent(false, path);
+		String str = CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getString(path);
+		if(isLegacyDecor(str)) {
+			return TextUtils.deserializeLegacy(str);
+		} else {
+			return TextUtils.deserializeJson(str);
 		}
 	}
 
@@ -130,6 +131,14 @@ public interface PluginCommand {
 
 	static BigDecimal createDecimal(double value) {
 		return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
+	}
+
+	default boolean isLegacyDecor(String string) {
+		return string.indexOf('&') != -1 && !string.endsWith("&") && isStyleChar(string.charAt(string.indexOf("&") + 1));
+	}
+
+	default boolean isStyleChar(char ch) {
+		return "0123456789abcdefklmnor".indexOf(ch) != -1;
 	}
 
 }
