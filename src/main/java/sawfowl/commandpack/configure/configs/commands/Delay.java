@@ -28,7 +28,7 @@ public class Delay implements DelaySettings {
 
 	@Setting("Seconds")
 	private long seconds = 0;
-	@Setting("CancelRules")
+	@Setting("CancelRulesSettings")
 	private CancelRules cancelRules = new CancelRules();
 
 	public long getSeconds() {
@@ -41,7 +41,7 @@ public class Delay implements DelaySettings {
 
 	@Override
 	public String toString() {
-		return "Delay [Seconds=" + seconds + ", CancelRules=" + cancelRules + "]";
+		return "Delay [Seconds=" + seconds + ", CancelRulesSettings=" + cancelRules + "]";
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class Delay implements DelaySettings {
 	public DataContainer toContainer() {
 		return DataContainer.createNew()
 				.set(DataQuery.of("Seconds"), seconds)
-				.set(DataQuery.of("CancelRules"), cancelRules)
+				.set(DataQuery.of("CancelRulesSettings"), cancelRules)
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
@@ -66,7 +66,7 @@ public class Delay implements DelaySettings {
 		}
 
 		@Override
-		public Builder setCancelRules(sawfowl.commandpack.api.data.commands.settings.CancelRules rules) {
+		public Builder setCancelRules(sawfowl.commandpack.api.data.commands.settings.CancelRulesSettings rules) {
 			Delay.this.cancelRules = new CancelRules(rules.isAllowMoving(), rules.isAllowOtherCommand());;
 			return this;
 		}

@@ -7,8 +7,6 @@ import org.spongepowered.api.data.persistence.DataSerializable;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
-import sawfowl.commandpack.configure.configs.commands.CommandPrice;
-import sawfowl.commandpack.configure.configs.commands.Delay;
 
 @ConfigSerializable
 public interface CommandSettings extends DataSerializable {
@@ -23,9 +21,9 @@ public interface CommandSettings extends DataSerializable {
 
 	long getCooldown();
 
-	Delay getDelay();
+	DelaySettings getDelay();
 
-	CommandPrice getPrice();
+	PriceSettings getPrice();
 
 	boolean isEnable();
 

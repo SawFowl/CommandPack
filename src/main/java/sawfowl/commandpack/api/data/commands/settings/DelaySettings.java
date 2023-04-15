@@ -11,19 +11,19 @@ public interface DelaySettings extends DataSerializable {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
-	static DelaySettings of(long seconds, CancelRules rules) {
+	static DelaySettings of(long seconds, CancelRulesSettings rules) {
 		return builder().setSeconds(seconds).setCancelRules(rules).build();
 	}
 
 	long getSeconds();
 
-	CancelRules getCancelRules();
+	CancelRulesSettings getCancelRules();
 
 	interface Builder extends AbstractBuilder<DelaySettings>, org.spongepowered.api.util.Builder<DelaySettings, Builder> {
 
 		Builder setSeconds(long seconds);
 
-		Builder setCancelRules(CancelRules rules);
+		Builder setCancelRules(CancelRulesSettings rules);
 
 	}
 

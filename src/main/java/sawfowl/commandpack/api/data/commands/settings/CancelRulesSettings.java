@@ -5,13 +5,13 @@ import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
-public interface CancelRules extends DataSerializable {
+public interface CancelRulesSettings extends DataSerializable {
 
 	static Builder builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
-	static CancelRules of(boolean allowMoving, boolean allowOtherCommand) {
+	static CancelRulesSettings of(boolean allowMoving, boolean allowOtherCommand) {
 		return builder().values(allowMoving, allowOtherCommand).build();
 	}
 
@@ -19,7 +19,7 @@ public interface CancelRules extends DataSerializable {
 
 	boolean isAllowOtherCommand();
 
-	interface Builder extends AbstractBuilder<CancelRules>, org.spongepowered.api.util.Builder<CancelRules, Builder> {
+	interface Builder extends AbstractBuilder<CancelRulesSettings>, org.spongepowered.api.util.Builder<CancelRulesSettings, Builder> {
 
 		Builder allowMoving(boolean value);
 

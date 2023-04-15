@@ -26,7 +26,7 @@ import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.RandomTeleportService;
 import sawfowl.commandpack.api.TempPlayerData;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
-import sawfowl.commandpack.api.data.commands.settings.CancelRules;
+import sawfowl.commandpack.api.data.commands.settings.CancelRulesSettings;
 import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
 import sawfowl.commandpack.api.data.commands.settings.DelaySettings;
 import sawfowl.commandpack.api.data.commands.settings.PriceSettings;
@@ -204,9 +204,9 @@ public class CommandPack {
 				return new CommandPrice().builder();
 			}
 		});
-		event.register(CancelRules.Builder.class, new Supplier<CancelRules.Builder>() {
+		event.register(CancelRulesSettings.Builder.class, new Supplier<CancelRulesSettings.Builder>() {
 			@Override
-			public CancelRules.Builder get() {
+			public CancelRulesSettings.Builder get() {
 				return new sawfowl.commandpack.configure.configs.commands.CancelRules().builder();
 			}
 		});

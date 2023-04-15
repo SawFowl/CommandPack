@@ -22,9 +22,9 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.PluginCommand;
 import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
+import sawfowl.commandpack.api.data.commands.settings.PriceSettings;
 import sawfowl.commandpack.commands.ThrowingConsumer;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandPrice;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
@@ -94,7 +94,7 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 
 	void economy(ServerPlayer player, Locale locale) throws CommandException {
 		if(settings == null || CommandPack.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command))) return;
-		CommandPrice price = settings.getPrice();
+		PriceSettings price = settings.getPrice();
 		if(price.getMoney() > 0) {
 			Currency currency = CommandPack.getInstance().getEconomy().checkCurrency(price.getCurrency());
 			BigDecimal money = createDecimal(price.getMoney());

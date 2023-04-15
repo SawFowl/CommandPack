@@ -11,6 +11,10 @@ public interface PriceSettings extends DataSerializable {
 	static Builder builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
+
+	String getCurrency();
+
+	double getMoney();
 	
 	interface Builder extends AbstractBuilder<PriceSettings>, org.spongepowered.api.util.Builder<PriceSettings, Builder> {
 
@@ -21,9 +25,5 @@ public interface PriceSettings extends DataSerializable {
 		Builder money(double money);
 
 	}
-
-	String getCurrency();
-
-	double getMoney();
 
 }
