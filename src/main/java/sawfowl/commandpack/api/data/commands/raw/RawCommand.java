@@ -79,9 +79,14 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	default void register(RegisterCommandEvent<Raw> event) {
-		if(getCommandSettings() != null && getCommandSettings().getAliases() != null && getCommandSettings().getAliases().length > 0) {
-			event.register(getContainer(), this, command(), getCommandSettings().getAliases());
-		} else event.register(getContainer(), this, command());
+		if(getCommandSettings() == null) {
+			event.register(getContainer(), this, command());
+		} else {
+			if(!getCommandSettings().isEnable()) return;
+			if(getCommandSettings().getAliases() != null && getCommandSettings().getAliases().length > 0) {
+				event.register(getContainer(), this, command(), getCommandSettings().getAliases());
+			} else event.register(getContainer(), this, command());
+		}
 	}
 
 }

@@ -25,8 +25,8 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 	public RandomTeleportConfig(){}
 
 	@Setting("Attempts")
-	@Comment("The number of attempts to find the position.")
-	private int attempts = 10;
+	@Comment("The number of attempts to find the position. Increasing the value can lead to server crashes.")
+	private int attempts = 5;
 	@Setting("WorldSelector")
 	@Comment("Specifies the target world for teleportation by the player's current world.\nIf the player's current world is not listed in this worlds map as a source world, the player will be teleported to the same world he is in.")
 	private Map<String, RandomTeleportWorldConfig> map = createDefault();

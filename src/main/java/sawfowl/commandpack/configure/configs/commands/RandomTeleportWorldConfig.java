@@ -19,7 +19,7 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 	public RandomTeleportWorldConfig(){}
 
 	@Setting("Attempts")
-	private int attempts = 10;
+	private int attempts = 5;
 	@Setting("World")
 	@Comment("The identifier of the target world.")
 	private String world = null;

@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.registry.RegistryTypes;
+import org.spongepowered.api.world.biome.Biomes;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.math.vector.Vector3i;
@@ -25,25 +25,24 @@ public class RTPService implements sawfowl.commandpack.api.RandomTeleportService
 	@Override
 	public Optional<ServerLocation> getLocation(ServerLocation currentLocation, RandomTeleportOptions options) {
 		int attempts = 0;
-		Optional<ServerLocation> location = Optional.empty();
 		ServerWorld world = options.getWorldKey() == null ? currentLocation.world() : Sponge.server().worldManager().world(options.getWorldKey()).orElse(currentLocation.world());
 		while(attempts < options.getAttempts()) {
 			attempts++;
-			Optional<Integer> optX = getRandomX(currentLocation, world, options, 0);
+			Optional<Integer> optX = getRandomX(currentLocation, world, options, attempts);
 			if(!optX.isPresent()) break;
-			Optional<Integer> optZ = getRandomZ(currentLocation, world, options, 0);
+			Optional<Integer> optZ = getRandomZ(currentLocation, world, options, attempts);
 			if(!optZ.isPresent()) break;
 			Vector3i newPos = Vector3i.from(optX.get(), getRandomInt(options.getMinY(), options.getMaxY()), optZ.get());
-			if(!world.loadChunk(newPos, true).isPresent()) location = getLocation(currentLocation, options);
-			if(options.isOnlySurface()) newPos = world.highestPositionAt(newPos);
-			if(!options.getProhibitedBiomes().isEmpty()) {
-				Optional<ResourceKey> optKey = Sponge.game().registry(RegistryTypes.BIOME).findValueKey(world.biome(newPos));
-				if(optKey.isPresent() && !options.getProhibitedBiomes().contains(optKey.get().asString()) && isSafe(world, newPos)) location = Optional.ofNullable(world.location(newPos));
-			} else {
-				if(isSafe(world, newPos)) location = Optional.ofNullable(world.location(newPos));
+			if(options.getProhibitedBiomes().isEmpty() || !options.getProhibitedBiomes().contains(Biomes.registry(world).valueKey(world.biome(newPos)).asString())) {
+				Optional<ServerLocation> optLocation = Sponge.server().teleportHelper().findSafeLocation(world.location(newPos), 10, 10, 10);
+				if(optLocation.isPresent()) {
+					if(options.isOnlySurface() || !isSafe(optLocation.get())) optLocation = Optional.ofNullable(ServerLocation.of(world, world.highestPositionAt(optLocation.get().blockPosition())));
+					attempts = options.getAttempts() + 1;
+					return optLocation;
+				}
 			}
 		}
-		return location;
+		return Optional.empty();
 	}
 
 	@Override
@@ -73,7 +72,12 @@ public class RTPService implements sawfowl.commandpack.api.RandomTeleportService
 
 	private Optional<Integer> getRandomX(ServerLocation currentLocation, ServerWorld world, RandomTeleportOptions options, int attempts) {
 		if(attempts >= options.getAttempts()) return Optional.empty();
-		int x = options.isStartFromWorldSpawn() ? getRandomInt(world.properties().spawnPosition().x() + options.getMinRadius(), options.getRadius()) : getRandomInt(currentLocation.blockPosition().x() + options.getMinRadius(), options.getRadius());
+		attempts++;
+		boolean rand = ThreadLocalRandom.current().nextBoolean();
+		int minRadius = rand ? options.getMinRadius() : options.getMinRadius() * -1;
+		int radius = rand ? options.getRadius() : options.getRadius() * -1;
+		int x = (options.isStartFromWorldSpawn() ? world.properties().spawnPosition() : currentLocation.blockPosition()).x();
+		x = getRandomInt(x + minRadius, x + radius);
 		if(!ThreadLocalRandom.current().nextBoolean()) x = x * -1;
 		if(x < world.min().x() || x > world.max().x()) {
 			Optional<Integer> nextFind = getRandomX(currentLocation, world, options, attempts);
@@ -84,7 +88,12 @@ public class RTPService implements sawfowl.commandpack.api.RandomTeleportService
 
 	private Optional<Integer> getRandomZ(ServerLocation currentLocation, ServerWorld world, RandomTeleportOptions options, int attempts) {
 		if(attempts >= options.getAttempts()) return Optional.empty();
-		int z = options.isStartFromWorldSpawn() ? getRandomInt(world.properties().spawnPosition().z() + options.getMinRadius(), options.getRadius()) : getRandomInt(currentLocation.blockPosition().z() + options.getMinRadius(), options.getRadius());
+		attempts++;
+		boolean rand = ThreadLocalRandom.current().nextBoolean();
+		int minRadius = rand ? options.getMinRadius() : options.getMinRadius() * -1;
+		int radius = rand ? options.getRadius() : options.getRadius() * -1;
+		int z = (options.isStartFromWorldSpawn() ? world.properties().spawnPosition() : currentLocation.blockPosition()).z();
+		z = getRandomInt(z + minRadius, z + radius);
 		if(!ThreadLocalRandom.current().nextBoolean()) z = z * -1;
 		if(z < world.min().z() || z > world.max().z()) {
 			Optional<Integer> nextFind = getRandomZ(currentLocation, world, options, attempts);
@@ -97,8 +106,8 @@ public class RTPService implements sawfowl.commandpack.api.RandomTeleportService
 		return first < second ? ThreadLocalRandom.current().nextInt(first, second) : ThreadLocalRandom.current().nextInt(second, first);
 	}
 
-	private boolean isSafe(ServerWorld world, Vector3i pos) {
-		return world.block(Vector3i.from(pos.x(), pos.y() + 1, pos.z())).type().equals(BlockTypes.AIR.get()) && world.block(Vector3i.from(pos.x(), pos.y() + 2, pos.z())).type().equals(BlockTypes.AIR.get()) && !world.block(pos).type().equals(BlockTypes.AIR.get());
+	private boolean isSafe(ServerLocation location) {
+		return location.world().block(location.blockPosition()).type().equals(BlockTypes.AIR.get()) && location.world().block(location.blockPosition()).type().equals(BlockTypes.AIR.get()) && !location.world().block(location.blockPosition()).type().equals(BlockTypes.AIR.get());
 	}
 
 }

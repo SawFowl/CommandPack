@@ -40,7 +40,7 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 		if(isPlayer) {
 			ServerPlayer player = getPlayer(context).orElse((ServerPlayer) src);
 			ServerWorld targetWorld = getArgument(context, ServerWorld.class, "World").orElse(plugin.getMainConfig().getRtpConfig().getTargetWorld(player.world()));
-			RandomTeleportOptions options = plugin.getRTPService().getOptions(player.world());
+			RandomTeleportOptions options = plugin.getRTPService().getOptions(targetWorld);
 			CompletableFuture<Optional<ServerLocation>> futurePos = plugin.getRTPService().getLocationFuture(player.serverLocation(), options);
 			futurePos.thenAccept(optional -> {
 				if(!optional.isPresent()) {
@@ -57,12 +57,16 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 						return;
 					}
 					if(context.cause().hasPermission(Permissions.RTP_STAFF)) {
-						player.setLocation(optional.get());
+						Sponge.server().scheduler().executor(getContainer()).execute(() -> {
+							player.setLocation(optional.get());
+						});
 						if(!player.uniqueId().equals(((ServerPlayer) src).uniqueId())) src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_COMMAND_RANDOM_TELEPORT_POSITION_SEARCH_ERROR_STAFF), new String[] {Placeholders.PLAYER}, new Object[] {player.name()}));
 					} else {
 						try {
 							delay(player, locale, consumer -> {
-								player.setLocation(optional.get());
+								Sponge.server().scheduler().executor(getContainer()).execute(() -> {
+									player.setLocation(optional.get());
+								});
 							});
 						} catch (CommandException e) {
 							player.sendMessage(e.componentMessage());
@@ -73,7 +77,7 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 		} else {
 			ServerPlayer player = getPlayer(context).get();
 			ServerWorld targetWorld = getArgument(context, ServerWorld.class, "World").orElse(plugin.getMainConfig().getRtpConfig().getTargetWorld(player.world()));
-			RandomTeleportOptions options = plugin.getRTPService().getOptions(player.world());
+			RandomTeleportOptions options = plugin.getRTPService().getOptions(targetWorld);
 			CompletableFuture<Optional<ServerLocation>> futurePos = plugin.getRTPService().getLocationFuture(player.serverLocation(), options);
 			futurePos.thenAccept(optional -> {
 				if(!optional.isPresent()) {
@@ -89,14 +93,18 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 					if(isCommandBlock(context.cause()) || isCommandBlockMinecart(context.cause())) {
 						try {
 							delay(player, locale, consumer -> {
-								player.setLocation(optional.get());
+								Sponge.server().scheduler().executor(getContainer()).execute(() -> {
+									player.setLocation(optional.get());
+								});
 							});
 						} catch (CommandException e) {
 							player.sendMessage(e.componentMessage());
 						}
 					} else {
-						player.setLocation(optional.get());
-						src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_COMMAND_RANDOM_TELEPORT_POSITION_SEARCH_ERROR_STAFF), new String[] {Placeholders.PLAYER}, new Object[] {player.name()}));
+						Sponge.server().scheduler().executor(getContainer()).execute(() -> {
+							player.setLocation(optional.get());
+							src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_COMMAND_RANDOM_TELEPORT_SUCCES_STAFF), new String[] {Placeholders.PLAYER}, new Object[] {player.name()}));
+						});
 					}
 				}
 			});
@@ -126,15 +134,14 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 		return Permissions.RTP;
 	}
 
-	private RandomTeleportEvent createEvent(Cause cause, ServerPlayer player, ServerWorld destinationWorld, Vector3d destinationPos, RandomTeleportOptions options) {
+	private RandomTeleportEvent createEvent(Cause cause, ServerPlayer player, ServerWorld dWorld, Vector3d destinationPos, RandomTeleportOptions options) {
 		return new RandomTeleportEvent() {
 
 			private Vector3d originalDestinationPosition = destinationPos;
-			private Vector3d destinationPosition;
+			private Vector3d destinationPosition = destinationPos;
 			private boolean cancelled = false;
-			private ServerWorld destinationWorld;
-			private ServerWorld originalDestinationWorld;
-			private RandomTeleportOptions options;
+			private ServerWorld destinationWorld = dWorld;
+			private ServerWorld originalDestinationWorld = dWorld;
 
 			@Override
 			public ServerPlayer player() {
