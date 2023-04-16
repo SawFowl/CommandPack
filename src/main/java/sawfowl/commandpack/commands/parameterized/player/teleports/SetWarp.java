@@ -12,12 +12,12 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.miscellaneous.Location;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class SetWarp extends AbstractPlayerCommand {
@@ -56,12 +56,12 @@ public class SetWarp extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
+	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-					new ParameterSettings(CommandParameters.createString("Warp", false), false, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT),
-					new ParameterSettings(CommandParameters.createBoolean("Private", false), false, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT),
-					new ParameterSettings(CommandParameters.createBoolean("Admin", Permissions.WARP_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT)
-				);
+			ParameterSettings.of(CommandParameters.createString("Warp", false), false, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT),
+			ParameterSettings.of(CommandParameters.createBoolean("Private", false), false, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT),
+			ParameterSettings.of(CommandParameters.createBoolean("Admin", Permissions.WARP_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT)
+		);
 	}
 
 	@Override

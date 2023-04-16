@@ -11,9 +11,9 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
@@ -41,11 +41,11 @@ public class SetSpawn extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
+	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-					new ParameterSettings(CommandParameters.createBoolean("ForceSpawn", true), true, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT),
-					new ParameterSettings(CommandParameters.createBoolean("ForceRespawn", true), true, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT)
-				);
+			ParameterSettings.of(CommandParameters.createBoolean("ForceSpawn", true), false, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT),
+			ParameterSettings.of(CommandParameters.createBoolean("ForceRespawn", true), false, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT)
+		);
 	}
 
 	@Override

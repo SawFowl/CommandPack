@@ -15,9 +15,9 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
@@ -37,6 +37,7 @@ public class TpaHere extends AbstractPlayerCommand {
 			UUID source = src.uniqueId();
 			target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE), Placeholders.PLAYER, src.get(Keys.CUSTOM_NAME).orElse(text(src.name()))).clickEvent(SpongeComponents.executeCallback(cause -> {
 				if(Sponge.server().player(source).isPresent()) {
+					plugin.getTempPlayerData().setPreviousLocation(target);
 					target.setLocation(src.serverLocation());
 					src.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_ACCEPTED));
 				} else target.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE));
@@ -51,8 +52,8 @@ public class TpaHere extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
-		return Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+	public List<ParameterSettings> getParameterSettings() {
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 
 	@Override

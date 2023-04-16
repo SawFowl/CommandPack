@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
@@ -24,6 +25,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	private Map<String, List<UUID>> trackingCommandDelay = new HashMap<>();
 	private Component notTracking;
 	private Set<UUID> tptoggleSet = new HashSet<>();
+	private Map<UUID, ServerLocation> locations = new HashMap<>();
 	public TempPlayerDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		notTracking = plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING);
@@ -96,6 +98,17 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	@Override
 	public boolean isDisableTpRequests(ServerPlayer player) {
 		return tptoggleSet.contains(player.uniqueId());
+	}
+
+	@Override
+	public Optional<ServerLocation> getPreviousLocation(ServerPlayer player) {
+		return Optional.ofNullable(locations.getOrDefault(player.uniqueId(), null));
+	}
+
+	@Override
+	public void setPreviousLocation(ServerPlayer player) {
+		if(locations.containsKey(player.uniqueId())) locations.remove(player.uniqueId());
+		locations.put(player.uniqueId(), player.serverLocation());
 	}
 
 }

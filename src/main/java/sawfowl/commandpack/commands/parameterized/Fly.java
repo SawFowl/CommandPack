@@ -15,9 +15,9 @@ import net.kyori.adventure.audience.Audience;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Fly extends AbstractParameterizedCommand {
@@ -49,8 +49,8 @@ public class Fly extends AbstractParameterizedCommand {
 	}
 
 	@Override
-	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
-		return Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(Permissions.FLY_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+	public List<ParameterSettings> getParameterSettings() {
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.FLY_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 
 	@Override

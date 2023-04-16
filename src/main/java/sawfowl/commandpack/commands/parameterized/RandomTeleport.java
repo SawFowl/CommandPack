@@ -57,16 +57,12 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 						return;
 					}
 					if(context.cause().hasPermission(Permissions.RTP_STAFF)) {
-						Sponge.server().scheduler().executor(getContainer()).execute(() -> {
-							player.setLocation(optional.get());
-						});
+						teleport(player, optional.get());
 						if(!player.uniqueId().equals(((ServerPlayer) src).uniqueId())) src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_COMMAND_RANDOM_TELEPORT_POSITION_SEARCH_ERROR_STAFF), new String[] {Placeholders.PLAYER}, new Object[] {player.name()}));
 					} else {
 						try {
 							delay(player, locale, consumer -> {
-								Sponge.server().scheduler().executor(getContainer()).execute(() -> {
-									player.setLocation(optional.get());
-								});
+								teleport(player, optional.get());
 							});
 						} catch (CommandException e) {
 							player.sendMessage(e.componentMessage());
@@ -93,16 +89,14 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 					if(isCommandBlock(context.cause()) || isCommandBlockMinecart(context.cause())) {
 						try {
 							delay(player, locale, consumer -> {
-								Sponge.server().scheduler().executor(getContainer()).execute(() -> {
-									player.setLocation(optional.get());
-								});
+								teleport(player, optional.get());
 							});
 						} catch (CommandException e) {
 							player.sendMessage(e.componentMessage());
 						}
 					} else {
 						Sponge.server().scheduler().executor(getContainer()).execute(() -> {
-							player.setLocation(optional.get());
+							teleport(player, optional.get());
 							src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_COMMAND_RANDOM_TELEPORT_SUCCES_STAFF), new String[] {Placeholders.PLAYER}, new Object[] {player.name()}));
 						});
 					}
@@ -119,9 +113,9 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-				ParameterSettings.of(CommandParameters.createPlayer(Permissions.RTP_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-				ParameterSettings.of(CommandParameters.createWorld(Permissions.RTP_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT)
-			);
+			ParameterSettings.of(CommandParameters.createPlayer(Permissions.RTP_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
+			ParameterSettings.of(CommandParameters.createWorld(Permissions.RTP_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT)
+		);
 	}
 
 	@Override
@@ -209,6 +203,13 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 			}
 
 		};
+	}
+
+	private void teleport(ServerPlayer player, ServerLocation location) {
+		plugin.getTempPlayerData().setPreviousLocation(player);
+		Sponge.server().scheduler().executor(getContainer()).execute(() -> {
+			player.setLocation(location);
+		});
 	}
 
 }

@@ -89,19 +89,11 @@ public class Speed extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.builder().optionalforConsole(false).localeTextPath(LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT).value(CommandParameters.createDouble("Speed", false)).build(),
-			ParameterSettings.builder().optionalforConsole(false).localeTextPath(LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT).value(CommandParameters.createPlayer(Permissions.SPEED_STAFF, true)).build()
+			ParameterSettings.of(CommandParameters.createDouble("Speed", false), false, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
+			ParameterSettings.of(CommandParameters.createPlayer(Permissions.SPEED_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
 		);
 	}
-/*
-	@Override
-	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(
-			new ParameterSettings(CommandParameters.createDouble("Speed", false), false, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
-			new ParameterSettings(CommandParameters.createPlayer(Permissions.SPEED_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
-		);
-	}
-*/
+
 	@Override
 	public String command() {
 		return "speed";

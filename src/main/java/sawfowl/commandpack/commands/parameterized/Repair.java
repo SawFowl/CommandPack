@@ -16,9 +16,9 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
@@ -62,11 +62,11 @@ public class Repair extends AbstractParameterizedCommand {
 	}
 
 	@Override
-	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
+	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-					new ParameterSettings(CommandParameters.createPlayer(Permissions.REPAIR_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-					new ParameterSettings(CommandParameters.REPAIR, true, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT)
-				);
+			ParameterSettings.of(CommandParameters.createPlayer(Permissions.REPAIR_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
+			ParameterSettings.of(CommandParameters.REPAIR, true, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT)
+		);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.service.pagination.PaginationList;
 
 import sawfowl.commandpack.CommandPack;
@@ -35,6 +36,9 @@ public class HomeList extends AbstractPlayerCommand {
 				.sendTo(src);
 		});
 	}
+
+	@Override
+	public void register(RegisterCommandEvent<Parameterized> event) {}
 
 	@Override
 	public Parameterized build() {

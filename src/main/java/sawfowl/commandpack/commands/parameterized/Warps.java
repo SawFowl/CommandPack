@@ -121,6 +121,7 @@ public class Warps extends AbstractParameterizedCommand {
 				plugin.getPlayersData().removeAdminWarp(name);
 			}));
 			Component teleport = player.hasPermission(Permissions.getWarpPermission(name)) || player.hasPermission(Permissions.WARP_STAFF) ? getText(player.locale(), LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback( cause -> {
+				plugin.getTempPlayerData().setPreviousLocation(player);
 				warp.moveToThis(player);
 				player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_WARP_SUCCESS), Placeholders.WARP, warp.asComponent()));
 			})) : getText(player.locale(), LocalesPaths.TELEPORT);
@@ -136,6 +137,7 @@ public class Warps extends AbstractParameterizedCommand {
 				plugin.getPlayersData().getOrCreatePlayerData(player).removeWarp(warp.getPlainName());
 			}));
 			Component teleport = getText(player.locale(), LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback( cause -> {
+				plugin.getTempPlayerData().setPreviousLocation(player);
 				warp.moveToThis(player);
 				player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_WARP_SUCCESS), Placeholders.WARP, warp.asComponent()));
 			}));

@@ -12,9 +12,9 @@ import org.spongepowered.api.world.server.ServerLocation;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Tppos extends AbstractPlayerCommand {
@@ -28,6 +28,7 @@ public class Tppos extends AbstractPlayerCommand {
 		ServerLocation location = getLocation(context).get();
 		delay(src, locale, consumer -> {
 			if(!location.isValid()) exception(locale, LocalesPaths.COMMANDS_TPPOS_INVALID_LOCATION);
+			plugin.getTempPlayerData().setPreviousLocation(src);
 			src.setLocation(location);
 		});
 	}
@@ -38,8 +39,8 @@ public class Tppos extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
-		return Arrays.asList(new ParameterSettings(CommandParameters.createLocation(false), false, LocalesPaths.COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT));
+	public List<ParameterSettings> getParameterSettings() {
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createLocation(false), false, LocalesPaths.COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT));
 	}
 
 	@Override

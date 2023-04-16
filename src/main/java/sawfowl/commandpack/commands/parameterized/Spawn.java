@@ -17,9 +17,9 @@ import net.kyori.adventure.audience.Audience;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -50,8 +50,8 @@ public class Spawn extends AbstractParameterizedCommand {
 	}
 
 	@Override
-	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
-		return Arrays.asList(new ParameterSettings(CommandParameters.createPlayer(Permissions.SPAWN_STAFF, true), true, true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+	public List<ParameterSettings> getParameterSettings() {
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.SPAWN_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 
 	@Override
@@ -60,6 +60,7 @@ public class Spawn extends AbstractParameterizedCommand {
 	}
 
 	private void teleport(ServerPlayer player, Optional<SpawnData> location, String name) {
+		plugin.getTempPlayerData().setPreviousLocation(player);
 		if(location.isPresent() && location.get().getLocationData().getServerLocation().isPresent()) {
 			player.setLocation(location.get().getLocationData().getServerLocation().get());
 			location.get().getLocationData().getPosition().getRotation().ifPresent(rotation -> {

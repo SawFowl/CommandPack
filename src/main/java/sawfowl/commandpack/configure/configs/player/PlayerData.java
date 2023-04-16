@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.adventure.SpongeComponents;
-import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -145,7 +144,8 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 				save();
 			})) : Component.empty();
 			Component teleport = home.getLocation().getServerLocation().isPresent() ? locales.getText(locale, LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback(cause -> {
-				home.getLocation().moveToThis((Entity) cause.root());
+				CommandPack.getInstance().getTempPlayerData().setPreviousLocation((ServerPlayer) cause.root());
+				home.getLocation().moveToThis((ServerPlayer) cause.root());
 			})) : locales.getText(locale, LocalesPaths.TELEPORT);
 			Component homeName = home.asComponent();
 			list.add(remove.append(teleport).append(homeName));
@@ -163,7 +163,8 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 				save();
 			})) : Component.empty();
 			Component teleport =  warp.getLocation().getServerLocation().isPresent() && allowTeleport.test(warp) ? locales.getText(locale, LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback(cause -> {
-				warp.moveToThis((Entity) cause.root());
+				CommandPack.getInstance().getTempPlayerData().setPreviousLocation((ServerPlayer) cause.root());
+				warp.moveToThis((ServerPlayer) cause.root());
 			})) : locales.getText(locale, LocalesPaths.TELEPORT);
 			Component homeName = warp.asComponent();
 			list.add(remove.append(teleport).append(homeName));

@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.world.server.ServerLocation;
 
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 
@@ -87,5 +88,15 @@ public interface TempPlayerData {
 	 * Whether the player accepts teleportation requests.
 	 */
 	public boolean isDisableTpRequests(ServerPlayer player);
+
+	/**
+	 * Getting the player's location before teleportation.
+	 */
+	public Optional<ServerLocation> getPreviousLocation(ServerPlayer player);
+
+	/**
+	 * Set the location of the player's previous location.
+	 */
+	public void setPreviousLocation(ServerPlayer player);
 
 }

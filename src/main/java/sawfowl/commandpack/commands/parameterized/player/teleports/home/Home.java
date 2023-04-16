@@ -12,10 +12,10 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.commands.settings.ParameterSettings;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
@@ -55,8 +55,8 @@ public class Home extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public List<sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings> getParameterSettings() {
-		return Arrays.asList(new ParameterSettings(CommandParameters.createString("Home", true), true, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT));
+	public List<ParameterSettings> getParameterSettings() {
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createString("Home", true), true, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT));
 	}
 
 	@Override
@@ -67,6 +67,7 @@ public class Home extends AbstractPlayerCommand {
 	private void teleport(sawfowl.commandpack.api.data.player.Home home, ServerPlayer player) throws CommandException {
 		if(home.getLocation().getServerLocation().isPresent()) {
 			delay(player, player.locale(), consumer -> {
+				plugin.getTempPlayerData().setPreviousLocation(player);
 				home.getLocation().moveToThis(player);
 			});
 		} else exception(player, LocalesPaths.COMMANDS_HOME_TELEPORT_ERROR);
