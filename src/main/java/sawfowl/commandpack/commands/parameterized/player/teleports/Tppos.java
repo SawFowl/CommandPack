@@ -28,7 +28,7 @@ public class Tppos extends AbstractPlayerCommand {
 		ServerLocation location = getLocation(context).get();
 		delay(src, locale, consumer -> {
 			if(!location.isValid()) exception(locale, LocalesPaths.COMMANDS_TPPOS_INVALID_LOCATION);
-			plugin.getTempPlayerData().setPreviousLocation(src);
+			plugin.getPlayersData().getTempData().setPreviousLocation(src);
 			src.setLocation(location);
 		});
 	}

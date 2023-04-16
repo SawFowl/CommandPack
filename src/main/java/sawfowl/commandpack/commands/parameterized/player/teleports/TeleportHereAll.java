@@ -24,7 +24,7 @@ public class TeleportHereAll extends AbstractPlayerCommand {
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		for(ServerPlayer target : Sponge.server().onlinePlayers()) {
 			if(!target.uniqueId().equals(src.uniqueId())) delay(target, locale, consumer -> {
-				plugin.getTempPlayerData().setPreviousLocation(target);
+				plugin.getPlayersData().getTempData().setPreviousLocation(target);
 				target.setLocation(src.serverLocation());
 			});
 		}

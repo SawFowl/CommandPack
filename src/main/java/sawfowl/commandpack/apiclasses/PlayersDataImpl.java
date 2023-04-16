@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.TempPlayerData;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.localeapi.api.TextUtils;
@@ -18,8 +19,10 @@ import sawfowl.localeapi.api.TextUtils;
 public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 
 	final CommandPack plugin;
+	final TempPlayerData tempData;
 	public PlayersDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
+		tempData = new TempPlayerDataImpl(plugin);
 	}
 
 	private Map<UUID, PlayerData> players = new HashMap<>();
@@ -102,6 +105,11 @@ public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 	@Override
 	public Optional<Warp> getAdminWarp(String name, Predicate<Warp> predicate) {
 		return adminWarps.containsKey(name) && predicate.test(adminWarps.get(name)) ? Optional.ofNullable(adminWarps.get(name)) : Optional.empty();
+	}
+
+	@Override
+	public TempPlayerData getTempData() {
+		return tempData;
 	}
 
 }

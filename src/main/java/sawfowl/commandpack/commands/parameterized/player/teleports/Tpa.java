@@ -32,12 +32,12 @@ public class Tpa extends AbstractPlayerCommand {
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		ServerPlayer target = getPlayer(context).get();
 		if(target.uniqueId().equals(src.uniqueId())) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF);
-		if(plugin.getTempPlayerData().isDisableTpRequests(target)) exception(locale, LocalesPaths.COMMANDS_TPA_DISABLE_TP_REQUESTS);
+		if(plugin.getPlayersData().getTempData().isDisableTpRequests(target)) exception(locale, LocalesPaths.COMMANDS_TPA_DISABLE_TP_REQUESTS);
 		delay(src, locale, consumer -> {
 			UUID source = src.uniqueId();
 			target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_TPA_REQUEST_MESSAGE), Placeholders.PLAYER, src.get(Keys.CUSTOM_NAME).orElse(text(src.name()))).clickEvent(SpongeComponents.executeCallback(cause -> {
 				if(Sponge.server().player(source).isPresent()) {
-					plugin.getTempPlayerData().setPreviousLocation(src);
+					plugin.getPlayersData().getTempData().setPreviousLocation(src);
 					src.setLocation(target.serverLocation());
 					src.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_ACCEPTED));
 				} else target.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE));

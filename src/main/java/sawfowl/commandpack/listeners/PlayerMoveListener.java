@@ -24,13 +24,13 @@ public class PlayerMoveListener {
 	public void onMove(MoveEntityEvent event, @First ServerPlayer player) {
 		if(event.originalPosition().distanceSquared(event.destinationPosition()) == 0d) return;
 		event.context().get(EventContextKeys.MOVEMENT_TYPE).ifPresent(type -> {
-			if(type == MovementTypes.ENTITY_TELEPORT || type == MovementTypes.COMMAND) plugin.getTempPlayerData().setPreviousLocation(player);
+			if(type == MovementTypes.ENTITY_TELEPORT || type == MovementTypes.COMMAND) plugin.getPlayersData().getTempData().setPreviousLocation(player);
 		});
-		if(!plugin.getTempPlayerData().isTrackingPlayer(player)) return;
-		plugin.getTempPlayerData().getTrackingPlayerCommands(player).ifPresent(map -> {
+		if(!plugin.getPlayersData().getTempData().isTrackingPlayer(player)) return;
+		plugin.getPlayersData().getTempData().getTrackingPlayerCommands(player).ifPresent(map -> {
 			map.forEach((commandName, config) -> {
 				if(!config.getDelay().getCancelRules().isAllowMoving() && !player.hasPermission(Permissions.getIgnoreDelayMoving(commandName))) {
-					plugin.getTempPlayerData().removeCommandTracking(commandName, player);
+					plugin.getPlayersData().getTempData().removeCommandTracking(commandName, player);
 					player.sendMessage(TextUtils.replace(plugin.getLocales().getText(player.locale(), LocalesPaths.COMMANDS_STOP_TRACKING_MOVING), Placeholders.COMMAND, "/" + commandName));
 				}
 			});

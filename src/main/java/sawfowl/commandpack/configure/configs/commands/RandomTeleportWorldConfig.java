@@ -1,12 +1,18 @@
 package sawfowl.commandpack.configure.configs.commands;
 
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.ResourceKey;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
+import org.spongepowered.api.registry.RegistryReference;
+import org.spongepowered.api.registry.RegistryTypes;
+import org.spongepowered.api.world.biome.Biome;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
@@ -202,6 +208,16 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 		public Builder setProhibitedBiomes(Set<String> value) {
 			prohibitedBiomes = value;
 			return this;
+		}
+
+		@Override
+		public Builder setProhibitedBiomesRegistry(Set<Biome> value) {
+			return setProhibitedBiomes(value.stream().map(b -> (Sponge.server().findRegistry(RegistryTypes.BIOME).flatMap(x -> (x.findValueKey(b).filter((v -> (v != null))).map(k -> (Optional.of(k.asString())).orElse(null)))))).filter((v -> (v.isPresent()))).map(v -> (v.get())).collect(Collectors.toSet()));
+		}
+
+		@Override
+		public Builder setProhibitedBiomesRegistryReference(Set<RegistryReference<Biome>> value) {
+			return setProhibitedBiomes(value.stream().map(b -> (b.location().asString())).collect(Collectors.toSet()));
 		}
 
 		@Override

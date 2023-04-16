@@ -4,10 +4,14 @@ import org.spongepowered.api.event.Event;
 
 public interface CommandPack {
 
+	/**
+	 * Viewing and changing player data.
+	 */
 	PlayersData playersData();
 
-	TempPlayerData tempPlayerData();
-
+	/**
+	 * Interface for working with teleportation to random coordinates.
+	 */
 	RandomTeleportService randomTeleportService();
 
 	interface PostAPI extends Event {

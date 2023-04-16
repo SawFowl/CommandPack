@@ -56,7 +56,7 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 			Sponge.server().scheduler().executor(container).execute(() -> {
 				getPlayer(uuid).ifPresent(player -> {
 					try {
-						if(CommandPack.getInstance().getTempPlayerData().getTrackingPlayerCommands(player).isPresent() && CommandPack.getInstance().getTempPlayerData().getTrackingPlayerCommands(uuid).get().containsKey(command)) {
+						if(CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(player).isPresent() && CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(uuid).get().containsKey(command)) {
 							economy(player, player.locale());
 							consumer.accept(commandClass);
 						}
@@ -65,12 +65,12 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 					}
 				});
 			});
-			if(CommandPack.getInstance().getTempPlayerData().getTrackingPlayerCommands(uuid).isPresent() && CommandPack.getInstance().getTempPlayerData().getTrackingPlayerCommands(uuid).get().containsKey(command)) CommandPack.getInstance().getTempPlayerData().removeCommandTracking(command, uuid);;
+			if(CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(uuid).isPresent() && CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(uuid).get().containsKey(command)) CommandPack.getInstance().getPlayersData().getTempData().removeCommandTracking(command, uuid);;
 			task.cancel();
 			return;
 		} else {
 			ServerPlayer player = getPlayer(uuid).get();
-			if(!CommandPack.getInstance().getTempPlayerData().getTrackingPlayerCommands(player).isPresent() || !CommandPack.getInstance().getTempPlayerData().getTrackingPlayerCommands(player).get().containsKey(command)) {
+			if(!CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(player).isPresent() || !CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(player).get().containsKey(command)) {
 				task.cancel();
 				return;
 			}

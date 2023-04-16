@@ -24,7 +24,6 @@ import com.google.inject.Inject;
 import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.RandomTeleportService;
-import sawfowl.commandpack.api.TempPlayerData;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.commands.settings.CancelRulesSettings;
 import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
@@ -56,7 +55,6 @@ public class CommandPack {
 	private Locales locales;
 	private ConfigManager configManager;
 	private Economy economy;
-	private TempPlayerData tempPlayerData;
 	private PlayersData playersData;
 	private RandomTeleportService rtpService;
 
@@ -96,10 +94,6 @@ public class CommandPack {
 		return configManager;
 	}
 
-	public TempPlayerData getTempPlayerData() {
-		return tempPlayerData;
-	}
-
 	public sawfowl.commandpack.apiclasses.PlayersDataImpl getPlayersData() {
 		return (sawfowl.commandpack.apiclasses.PlayersDataImpl) playersData;
 	}
@@ -122,7 +116,6 @@ public class CommandPack {
 		playersData = new sawfowl.commandpack.apiclasses.PlayersDataImpl(instance);
 		configManager = new ConfigManager(instance, event.getLocaleService().getConfigurationOptions());
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
-		tempPlayerData = new sawfowl.commandpack.apiclasses.TempPlayerDataImpl(instance);
 		configManager.loadPlayersData();
 	}
 
@@ -149,11 +142,6 @@ public class CommandPack {
 					@Override
 					public PlayersData playersData() {
 						return playersData;
-					}
-
-					@Override
-					public TempPlayerData tempPlayerData() {
-						return tempPlayerData;
 					}
 
 					@Override

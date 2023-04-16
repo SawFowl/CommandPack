@@ -84,4 +84,10 @@ public interface PlayersData {
 	 */
 	Optional<Warp> getAdminWarp(String name, Predicate<Warp> predicate);
 
+	/**
+	 * Temporary player data.<br>
+	 * CommandPack does not save this data to disk.
+	 */
+	TempPlayerData getTempData();
+
 }

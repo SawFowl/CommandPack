@@ -7,6 +7,8 @@ import java.util.concurrent.CompletableFuture;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
+import org.spongepowered.api.registry.RegistryReference;
+import org.spongepowered.api.world.biome.Biome;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 
@@ -136,27 +138,58 @@ public interface RandomTeleportService {
 			Builder setAttempts(int value);
 
 			/**
-			 * Specifies a new ID for the target world.
+			 * Specifies the ID of the target world.
 			 */
 			Builder setWorldKey(ResourceKey value);
 
 			/**
-			 * Specifies a new ID for the target world.
+			 * Specifies the ID of the target world.
 			 */
 			Builder setWorldID(String value) throws Exception;
 
+			/**
+			 * Search for a random point around the world spawn.
+			 */
 			Builder setStartFromWorldSpawn(boolean value);
 
+			/**
+			 * Minimum search radius for a random position.
+			 */
 			Builder setMinRadius(int value);
 
+			/**
+			 * Radius of search for a random position.
+			 */
 			Builder setRadius(int value);
 
+			/**
+			 * Maximum height when searching for a position.
+			 */
 			Builder setMaxY(int value);
 
+			/**
+			 * Minimum height when searching for a position.
+			 */
 			Builder setMinY(int value);
 
+			/**
+			 * Biomes that should be excluded from the position search.
+			 */
 			Builder setProhibitedBiomes(Set<String> value);
 
+			/**
+			 * Biomes that should be excluded from the position search.
+			 */
+			Builder setProhibitedBiomesRegistry(Set<Biome> value);
+
+			/**
+			 * Biomes that should be excluded from the position search.
+			 */
+			Builder setProhibitedBiomesRegistryReference(Set<RegistryReference<Biome>> value);
+
+			/**
+			 * If true, teleportation will always take place on the surface.
+			 */
 			Builder setOnlySurface(boolean value);
 
 		}

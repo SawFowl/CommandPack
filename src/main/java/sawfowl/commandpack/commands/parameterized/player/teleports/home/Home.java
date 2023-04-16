@@ -67,7 +67,7 @@ public class Home extends AbstractPlayerCommand {
 	private void teleport(sawfowl.commandpack.api.data.player.Home home, ServerPlayer player) throws CommandException {
 		if(home.getLocation().getServerLocation().isPresent()) {
 			delay(player, player.locale(), consumer -> {
-				plugin.getTempPlayerData().setPreviousLocation(player);
+				plugin.getPlayersData().getTempData().setPreviousLocation(player);
 				home.getLocation().moveToThis(player);
 			});
 		} else exception(player, LocalesPaths.COMMANDS_HOME_TELEPORT_ERROR);

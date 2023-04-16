@@ -206,7 +206,7 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 	}
 
 	private void teleport(ServerPlayer player, ServerLocation location) {
-		plugin.getTempPlayerData().setPreviousLocation(player);
+		plugin.getPlayersData().getTempData().setPreviousLocation(player);
 		Sponge.server().scheduler().executor(getContainer()).execute(() -> {
 			player.setLocation(location);
 		});

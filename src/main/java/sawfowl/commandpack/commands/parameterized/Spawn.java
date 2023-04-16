@@ -60,7 +60,7 @@ public class Spawn extends AbstractParameterizedCommand {
 	}
 
 	private void teleport(ServerPlayer player, Optional<SpawnData> location, String name) {
-		plugin.getTempPlayerData().setPreviousLocation(player);
+		plugin.getPlayersData().getTempData().setPreviousLocation(player);
 		if(location.isPresent() && location.get().getLocationData().getServerLocation().isPresent()) {
 			player.setLocation(location.get().getLocationData().getServerLocation().get());
 			location.get().getLocationData().getPosition().getRotation().ifPresent(rotation -> {

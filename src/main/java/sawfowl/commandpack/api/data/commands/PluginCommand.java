@@ -111,7 +111,7 @@ public interface PluginCommand {
 	
 	default void delay(ServerPlayer player, Locale locale, ThrowingConsumer<PluginCommand, CommandException> consumer) throws CommandException {
 		if(getCommandSettings().getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(command()))) {
-			CommandPack.getInstance().getTempPlayerData().addCommandTracking(command(), player);
+			CommandPack.getInstance().getPlayersData().getTempData().addCommandTracking(command(), player);
 			Sponge.asyncScheduler().submit(Task.builder().plugin(getContainer()).interval(1, TimeUnit.SECONDS).execute(new DelayTimerTask(consumer, player, 0, getContainer(), command(), getCommandSettings(), this)).build());
 		} else {
 			economy(player, locale);

@@ -27,7 +27,7 @@ public class Teleport extends AbstractPlayerCommand {
 		ServerPlayer target = getPlayer(context).get();
 		if(target.uniqueId().equals(src.uniqueId())) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF);
 		delay(target, locale, consumer -> {
-			plugin.getTempPlayerData().setPreviousLocation(src);
+			plugin.getPlayersData().getTempData().setPreviousLocation(src);
 			src.setLocation(target.serverLocation());
 		});
 	}

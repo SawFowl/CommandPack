@@ -20,11 +20,11 @@ public class PlayerCommandListener {
 
 	@Listener(order = Order.LAST)
 	public void onExecute(ExecuteCommandEvent.Pre event, @First ServerPlayer player) {
-		if(!plugin.getTempPlayerData().isTrackingPlayer(player)) return;
-		plugin.getTempPlayerData().getTrackingPlayerCommands(player).ifPresent(map -> {
+		if(!plugin.getPlayersData().getTempData().isTrackingPlayer(player)) return;
+		plugin.getPlayersData().getTempData().getTrackingPlayerCommands(player).ifPresent(map -> {
 			map.forEach((commandName, config) -> {
 				if(!config.getDelay().getCancelRules().isAllowOtherCommand()) {
-					plugin.getTempPlayerData().removeCommandTracking(commandName, player);
+					plugin.getPlayersData().getTempData().removeCommandTracking(commandName, player);
 					player.sendMessage(TextUtils.replace(plugin.getLocales().getText(player.locale(), LocalesPaths.COMMANDS_STOP_TRACKING_COMMAND), Placeholders.COMMAND, "/" + commandName));
 				}
 			});

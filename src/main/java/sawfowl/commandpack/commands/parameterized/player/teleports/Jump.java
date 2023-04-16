@@ -39,7 +39,7 @@ public class Jump extends AbstractPlayerCommand {
 		if(!blockRayTraceResult.isPresent()) {
 			Vector3d direction = src.direction();
 			delay(src, locale, consumer -> {
-				plugin.getTempPlayerData().setPreviousLocation(src);
+				plugin.getPlayersData().getTempData().setPreviousLocation(src);
 				src.setPosition(src.position().add(Vector3d.from(direction.x() * 50, direction.y() * 50, direction.z() * 50)));
 			});
 		} else {
@@ -54,7 +54,7 @@ public class Jump extends AbstractPlayerCommand {
 				targetLocation = find.get();
 			}
 			delay(src, locale, consumer -> {
-				plugin.getTempPlayerData().setPreviousLocation(src);
+				plugin.getPlayersData().getTempData().setPreviousLocation(src);
 				src.setLocation(targetLocation);
 			});
 		}
