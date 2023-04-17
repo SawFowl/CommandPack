@@ -2,6 +2,10 @@ package sawfowl.commandpack.configure.configs.player;
 
 import java.util.Objects;
 
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.persistence.DataQuery;
+import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
@@ -9,6 +13,7 @@ import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.api.data.miscellaneous.Location;
 import sawfowl.commandpack.api.data.player.Home;
 import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
+import sawfowl.commandpack.configure.configs.miscellaneous.PositionData;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
@@ -19,6 +24,10 @@ public class HomeData implements Home {
 		this.name = name;
 		this.locationData = (LocationData) locationData;
 		this.def = def;
+	}
+
+	public Builder builder() {
+		return new Builder();
 	}
 
 	@Setting("Name")
@@ -34,11 +43,6 @@ public class HomeData implements Home {
 	}
 
 	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
 	public Component asComponent() {
 		return TextUtils.deserialize(name);
 	}
@@ -46,11 +50,6 @@ public class HomeData implements Home {
 	@Override
 	public Location getLocation() {
 		return locationData;
-	}
-
-	@Override
-	public void setLocation(Location location) {
-		this.locationData = (LocationData) location;
 	}
 
 	@Override
@@ -85,6 +84,45 @@ public class HomeData implements Home {
 
 	Home toInterface() {
 		return this;
+	}
+	@Override
+	public int contentVersion() {
+		return 1;
+	}
+	@Override
+	public DataContainer toContainer() {
+		return DataContainer.createNew()
+				.set(DataQuery.of("Name"), name)
+				.set(DataQuery.of("Location"), locationData)
+				.set(DataQuery.of("Default"), def)
+				.set(Queries.CONTENT_VERSION, contentVersion());
+	}
+
+	public class Builder implements Home.Builder {
+
+		@Override
+		public Builder setName(String name) {
+			HomeData.this.name = name;
+			return this;
+		}
+
+		@Override
+		public Builder setLocation(Location location) {
+			HomeData.this.locationData = new LocationData(location.worldKey(), new PositionData(location.getPosition().asVector3d(), location.getPosition().getRotation().map(r -> (r.asVector3d())).orElse(null)));
+			return this;
+		}
+
+		@Override
+		public Builder setDefault(boolean def) {
+			HomeData.this.def = def;
+			return this;
+		}
+
+		@Override
+		public @NotNull Home build() {
+			return HomeData.this;
+		}
+		
 	}
 
 }

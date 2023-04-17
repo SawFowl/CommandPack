@@ -21,7 +21,7 @@ public class PlayerRespawnListener {
 			if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterRespawn() && plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().isPresent()) {
 				event.entity().setLocation(plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().get());
 				plugin.getMainConfig().getSpawnData().get().getLocationData().getPosition().getRotation().ifPresent(rotation -> {
-					event.entity().setRotation(rotation.rotation());
+					event.entity().setRotation(rotation.asVector3d());
 				});
 			}
 		}).build());

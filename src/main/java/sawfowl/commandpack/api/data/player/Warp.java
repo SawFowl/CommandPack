@@ -1,27 +1,33 @@
 package sawfowl.commandpack.api.data.player;
 
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.persistence.DataSerializable;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.api.data.miscellaneous.Location;
-import sawfowl.commandpack.configure.configs.player.WarpData;
 
 @ConfigSerializable
-public interface Warp {
+public interface Warp extends DataSerializable {
 
-	/**
-	 * Creating a new warp point.
-	 */
-	static Warp create(String name, Location location) {
-		return new WarpData(name, location);
+	static Builder builder() {
+		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
 	/**
 	 * Creating a new warp point.
 	 */
-	static Warp create(String name, Location location, boolean privated) {
-		return new WarpData(name, location).setPrivate(privated);
+	static Warp of(String name, Location location) {
+		return builder().setName(name).setLocation(location).build();
+	}
+
+	/**
+	 * Creating a new warp point.
+	 */
+	static Warp of(String name, Location location, boolean privated) {
+		return builder().setName(name).setLocation(location).setPrivate(privated).build();
 	}
 
 	/**
@@ -40,20 +46,9 @@ public interface Warp {
 	String getPlainName();
 
 	/**
-	 * Set new name of warp point.
-	 */
-	void setName(String name);
-
-
-	/**
 	 * Warp {@link Location}.
 	 */
 	Location getLocation();
-
-	/**
-	 * Set new location of warp point.
-	 */
-	void setLocation(Location location);
 
 	/**
 	 * Whether the warp is personal for the player.
@@ -61,13 +56,27 @@ public interface Warp {
 	boolean isPrivate();
 
 	/**
-	 * Changing Warp Status. If true, the warp will be private. If false, the warp will be public.
-	 */
-	Warp setPrivate(boolean value);
-
-	/**
 	 * Teleport an entity to warp.
 	 */
-	boolean moveToThis(Entity entity);
+	boolean moveHere(Entity entity);
+
+	interface Builder extends AbstractBuilder<Warp>, org.spongepowered.api.util.Builder<Warp, Builder> {
+
+		/**
+		 * Set new name of warp point.
+		 */
+		Builder setName(String name);
+
+		/**
+		 * Set new location of warp point.
+		 */
+		Builder setLocation(Location location);
+
+		/**
+		 * Changing Warp Status. If true, the warp will be private. If false, the warp will be public.
+		 */
+		Builder setPrivate(boolean value);
+		
+	}
 
 }

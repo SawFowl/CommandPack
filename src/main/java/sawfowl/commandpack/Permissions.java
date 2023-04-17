@@ -31,6 +31,7 @@ public class Permissions {
 	public static final String TPA_HERE = "commandpack.commands.user.tpahere";
 	public static final String TPA_HERE_ALL = "commandpack.commands.user.tpahereall";
 	public static final String RTP = "commandpack.commands.user.randomteleport";
+	public static final String BACK = "commandpack.commands.user.back";
 	public static final String CLEAR = "commandpack.commands.user.clear";
 	public static final String REPAIR = "commandpack.commands.user.repair";
 	public static final String REPAIR_SELECT = "commandpack.commands.user.selectrepair";

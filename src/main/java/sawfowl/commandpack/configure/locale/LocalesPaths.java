@@ -26,6 +26,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_TPTOGGLE = "TpToggle";
 	private static final Object COMMAND_TPA = "Tpa";
 	private static final Object COMMAND_RANDOM_TELEPORT = "RandomTeleport";
+	private static final Object COMMAND_BACK = "Back";
 	private static final Object COMMAND_CLEAR = "Clear";
 	private static final Object COMMAND_REPAIR = "Repair";
 	private static final Object COMMAND_FLY = "Fly";
@@ -102,10 +103,14 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_TPA_ACCEPTED = {PATH_COMMANDS, COMMAND_TPA, "Accepted"};
 	public static final Object[] COMMANDS_TPA_REQUEST_MESSAGE = {PATH_COMMANDS, COMMAND_TPA, "RequestMessage"};
 	public static final Object[] COMMANDS_TPA_REQUEST_HERE_MESSAGE = {PATH_COMMANDS, COMMAND_TPA, "RequestHereMessage"};
-	public static final Object[] COMMANDS_COMMAND_RANDOM_TELEPORT_POSITION_SEARCH_ERROR_STAFF = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, PATH_EXCEPTIONS, "PositionSearchErrorStaff"};
-	public static final Object[] COMMANDS_COMMAND_RANDOM_TELEPORT_POSITION_SEARCH_ERROR = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, PATH_EXCEPTIONS, "PositionSearchError"};
-	public static final Object[] COMMANDS_COMMAND_RANDOM_TELEPORT_SUCCES_STAFF = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, "SuccessStaff"};
-	public static final Object[] COMMANDS_COMMAND_RANDOM_TELEPORT_CANCELLED = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, "Cancelled"};
+	public static final Object[] COMMANDS_RANDOM_TELEPORT_POSITION_SEARCH_ERROR_STAFF = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, PATH_EXCEPTIONS, "PositionSearchErrorStaff"};
+	public static final Object[] COMMANDS_RANDOM_TELEPORT_POSITION_SEARCH_ERROR = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, PATH_EXCEPTIONS, "PositionSearchError"};
+	public static final Object[] COMMANDS_RANDOM_TELEPORT_SUCCES_STAFF = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, "SuccessStaff"};
+	public static final Object[] COMMANDS_RANDOM_TELEPORT_SUCCES = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, "Success"};
+	public static final Object[] COMMANDS_RANDOM_TELEPORT_WAIT = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, "PleaseWait"};
+	public static final Object[] COMMANDS_RANDOM_TELEPORT_CANCELLED = {PATH_COMMANDS, COMMAND_RANDOM_TELEPORT, "Cancelled"};
+	public static final Object[] COMMANDS_BACK_EMPTY = {PATH_COMMANDS, COMMAND_BACK, PATH_EXCEPTIONS, "Empty"};
+	public static final Object[] COMMANDS_BACK_NOT_LOADED_WORLD = {PATH_COMMANDS, COMMAND_BACK, PATH_EXCEPTIONS, "NotLoadedWorld"};
 	public static final Object[] COMMANDS_TPPOS_INVALID_LOCATION = {PATH_COMMANDS, "Tppos", PATH_EXCEPTIONS, "InvalidLocation"};
 	public static final Object[] COMMANDS_CLEAR_SUCCES = {PATH_COMMANDS, COMMAND_CLEAR, PATH_EXCEPTIONS, "Success"};
 	public static final Object[] COMMANDS_CLEAR_SUCCES_OTHER = {PATH_COMMANDS, COMMAND_CLEAR, PATH_EXCEPTIONS, "SuccessOther"};

@@ -2,27 +2,35 @@ package sawfowl.commandpack.api.data.miscellaneous;
 
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.persistence.DataSerializable;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.math.vector.Vector3d;
-import org.spongepowered.math.vector.Vector3i;
-
-import sawfowl.commandpack.configure.configs.miscellaneous.PositionData;
+import net.kyori.adventure.builder.AbstractBuilder;
 
 @ConfigSerializable
-public interface Position {
+public interface Position extends Point, DataSerializable {
 
-	static Position create(Vector3d location) {
-		return new PositionData(location);
+	static Builder builder() {
+		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
-	static Position create(Vector3d location, Vector3d rotation) {
-		return new PositionData(location, rotation);
+	static Position of(Vector3d location) {
+		return builder().setPosition(location).build();
 	}
 
-	Vector3d position();
+	static Position of(Vector3d location, Vector3d rotation) {
+		return builder().setPosition(rotation).setRotation(rotation).build();
+	}
 
-	Vector3i toInt();
+	Optional<Point> getRotation();
 
-	Optional<Rotation> getRotation();
+	interface Builder extends AbstractBuilder<Position>, org.spongepowered.api.util.Builder<Position, Builder> {
+
+		Builder setPosition(Vector3d position);
+
+		Builder setRotation(Vector3d rotation);
+
+	}
 
 }

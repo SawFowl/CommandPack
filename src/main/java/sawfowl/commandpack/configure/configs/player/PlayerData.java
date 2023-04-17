@@ -145,7 +145,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 			})) : Component.empty();
 			Component teleport = home.getLocation().getServerLocation().isPresent() ? locales.getText(locale, LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback(cause -> {
 				CommandPack.getInstance().getPlayersData().getTempData().setPreviousLocation((ServerPlayer) cause.root());
-				home.getLocation().moveToThis((ServerPlayer) cause.root());
+				home.getLocation().moveHere((ServerPlayer) cause.root());
 			})) : locales.getText(locale, LocalesPaths.TELEPORT);
 			Component homeName = home.asComponent();
 			list.add(remove.append(teleport).append(homeName));
@@ -164,7 +164,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 			})) : Component.empty();
 			Component teleport =  warp.getLocation().getServerLocation().isPresent() && allowTeleport.test(warp) ? locales.getText(locale, LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback(cause -> {
 				CommandPack.getInstance().getPlayersData().getTempData().setPreviousLocation((ServerPlayer) cause.root());
-				warp.moveToThis((ServerPlayer) cause.root());
+				warp.moveHere((ServerPlayer) cause.root());
 			})) : locales.getText(locale, LocalesPaths.TELEPORT);
 			Component homeName = warp.asComponent();
 			list.add(remove.append(teleport).append(homeName));

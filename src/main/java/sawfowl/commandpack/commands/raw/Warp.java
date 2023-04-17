@@ -44,23 +44,23 @@ public class Warp extends AbstractRawCommand {
 				boolean equal = optTarget.get().uniqueId().equals(player.uniqueId());
 				if(optWarp.isPresent()) {
 					if(!equal) {
-						optWarp.get().moveToThis(optTarget.get());
+						optWarp.get().moveHere(optTarget.get());
 						player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS_STAFF), new String[] {Placeholders.PLAYER, Placeholders.WARP}, new Component[] {text(optTarget.get().name()), optWarp.get().asComponent()}));
 						optTarget.get().sendMessage(TextUtils.replace(getText(optTarget.get().locale(), LocalesPaths.COMMANDS_WARP_SUCCESS_OTHER), Placeholders.WARP, optWarp.get().asComponent()));
 					} else {
 						delay(player, locale, consumer -> {
-							optWarp.get().moveToThis(player);
+							optWarp.get().moveHere(player);
 							player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS), Placeholders.WARP, optWarp.get().asComponent()));
 						});
 					}
 				} else {
 					if(!equal) {
-						optPlayerWarp.get().moveToThis(optTarget.get());
+						optPlayerWarp.get().moveHere(optTarget.get());
 						player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS_STAFF), new String[] {Placeholders.PLAYER, Placeholders.WARP}, new Component[] {text(optTarget.get().name()), optPlayerWarp.get().asComponent()}));
 						optTarget.get().sendMessage(TextUtils.replace(getText(optTarget.get().locale(), LocalesPaths.COMMANDS_WARP_SUCCESS_OTHER), Placeholders.WARP, optPlayerWarp.get().asComponent()));
 					} else {
 						delay(player, locale, consumer -> {
-							optPlayerWarp.get().moveToThis(player);
+							optPlayerWarp.get().moveHere(player);
 							player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS), Placeholders.WARP, optPlayerWarp.get().asComponent()));
 						});
 					}
@@ -68,10 +68,10 @@ public class Warp extends AbstractRawCommand {
 			} else {
 				delay(player, locale, consumer -> {
 					if(optWarp.isPresent()) {
-						optWarp.get().moveToThis(player);
+						optWarp.get().moveHere(player);
 						player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS), Placeholders.WARP, optWarp.get().asComponent()));
 					} else {
-						optPlayerWarp.get().moveToThis(player);
+						optPlayerWarp.get().moveHere(player);
 						player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS), Placeholders.WARP, optPlayerWarp.get().asComponent()));
 					}
 				});
@@ -80,11 +80,11 @@ public class Warp extends AbstractRawCommand {
 			if(args.length == 1) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
 			if(!optTarget.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
 			if(optWarp.isPresent()) {
-				optWarp.get().moveToThis(optTarget.get());
+				optWarp.get().moveHere(optTarget.get());
 				audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS_STAFF), new String[] {Placeholders.PLAYER, Placeholders.WARP}, new Component[] {text(optTarget.get().name()), optWarp.get().asComponent()}));
 				optTarget.get().sendMessage(TextUtils.replace(getText(optTarget.get().locale(), LocalesPaths.COMMANDS_WARP_SUCCESS_OTHER), Placeholders.WARP, optWarp.get().asComponent()));
 			} else {
-				optPlayerWarp.get().moveToThis(optTarget.get());
+				optPlayerWarp.get().moveHere(optTarget.get());
 				audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_WARP_SUCCESS_STAFF), new String[] {Placeholders.PLAYER, Placeholders.WARP}, new Component[] {text(optTarget.get().name()), optPlayerWarp.get().asComponent()}));
 				optTarget.get().sendMessage(TextUtils.replace(getText(optTarget.get().locale(), LocalesPaths.COMMANDS_WARP_SUCCESS_OTHER), Placeholders.WARP, optPlayerWarp.get().asComponent()));
 			}

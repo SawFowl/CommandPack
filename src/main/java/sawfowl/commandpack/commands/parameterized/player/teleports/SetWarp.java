@@ -34,7 +34,7 @@ public class SetWarp extends AbstractPlayerCommand {
 			Optional<sawfowl.commandpack.api.data.player.Warp> optWarp = plugin.getPlayersData().getAdminWarp(name);
 			Optional<sawfowl.commandpack.api.data.player.Warp> optPlayerWarp = plugin.getPlayersData().getWarp(name, warp -> (!warp.isPrivate() || src.hasPermission(Permissions.WARP_STAFF) || (plugin.getPlayersData().getOrCreatePlayerData(src).containsWarp(warp.getName()))));
 			if((optWarp.isPresent() && !src.hasPermission(Permissions.WARP_STAFF)) || (optPlayerWarp.isPresent() && !playerData.getWarp(name).isPresent())) exception(locale, LocalesPaths.COMMANDS_SETWARP_EXIST);
-			Warp warp = getBoolean(context, "Admin", false) ? Warp.create(name, Location.create(src)) : Warp.create(name, Location.create(src)).setPrivate(getBoolean(context, "Private", false));
+			Warp warp = Warp.of(name, Location.of(src), getBoolean(context, "Private", false));
 			if(getBoolean(context, "Admin", false)) {
 				plugin.getPlayersData().addAndSaveAdminWarp(warp);
 				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_SETWARP_SUCCESS_ADMIN));

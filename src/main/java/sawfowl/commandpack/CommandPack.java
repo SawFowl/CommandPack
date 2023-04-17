@@ -29,12 +29,22 @@ import sawfowl.commandpack.api.data.commands.settings.CancelRulesSettings;
 import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
 import sawfowl.commandpack.api.data.commands.settings.DelaySettings;
 import sawfowl.commandpack.api.data.commands.settings.PriceSettings;
+import sawfowl.commandpack.api.data.miscellaneous.Location;
+import sawfowl.commandpack.api.data.miscellaneous.Point;
+import sawfowl.commandpack.api.data.miscellaneous.Position;
+import sawfowl.commandpack.api.data.player.Home;
+import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.configs.MainConfig;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;
 import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
 import sawfowl.commandpack.configure.configs.commands.Delay;
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportWorldConfig;
+import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
+import sawfowl.commandpack.configure.configs.miscellaneous.PositionData;
+import sawfowl.commandpack.configure.configs.miscellaneous.PointData;
+import sawfowl.commandpack.configure.configs.player.HomeData;
+import sawfowl.commandpack.configure.configs.player.WarpData;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.listeners.CommandLogListener;
@@ -208,6 +218,36 @@ public class CommandPack {
 			@Override
 			public CommandSettings.Builder get() {
 				return new sawfowl.commandpack.configure.configs.commands.CommandSettings().builder();
+			}
+		});
+		event.register(Point.Builder.class, new Supplier<Point.Builder>() {
+			@Override
+			public Point.Builder get() {
+				return new PointData().builder();
+			}
+		});
+		event.register(Position.Builder.class, new Supplier<Position.Builder>() {
+			@Override
+			public Position.Builder get() {
+				return new PositionData().builder();
+			}
+		});
+		event.register(Location.Builder.class, new Supplier<Location.Builder>() {
+			@Override
+			public Location.Builder get() {
+				return new LocationData().builder();
+			}
+		});
+		event.register(Home.Builder.class, new Supplier<Home.Builder>() {
+			@Override
+			public Home.Builder get() {
+				return new HomeData().builder();
+			}
+		});
+		event.register(Warp.Builder.class, new Supplier<Warp.Builder>() {
+			@Override
+			public Warp.Builder get() {
+				return new WarpData().builder();
 			}
 		});
 	}

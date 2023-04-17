@@ -68,7 +68,7 @@ public class Home extends AbstractPlayerCommand {
 		if(home.getLocation().getServerLocation().isPresent()) {
 			delay(player, player.locale(), consumer -> {
 				plugin.getPlayersData().getTempData().setPreviousLocation(player);
-				home.getLocation().moveToThis(player);
+				home.getLocation().moveHere(player);
 			});
 		} else exception(player, LocalesPaths.COMMANDS_HOME_TELEPORT_ERROR);
 	}

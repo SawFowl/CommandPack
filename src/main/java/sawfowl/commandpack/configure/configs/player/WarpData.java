@@ -2,6 +2,10 @@ package sawfowl.commandpack.configure.configs.player;
 
 import java.util.Objects;
 
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.persistence.DataQuery;
+import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
@@ -34,6 +38,10 @@ public class WarpData implements Warp {
 		return !text.hasStyling() && text.toString().contains("&") ? TextUtils.deserializeLegacy(name) : text;
 	}
 
+	public Builder builder() {
+		return new Builder();
+	}
+
 	@Override
 	public String getName() {
 		return name;
@@ -45,18 +53,8 @@ public class WarpData implements Warp {
 	}
 
 	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
 	public Location getLocation() {
 		return locationData;
-	}
-
-	@Override
-	public void setLocation(Location location) {
-		this.locationData = (LocationData) location;
 	}
 
 	@Override
@@ -65,14 +63,8 @@ public class WarpData implements Warp {
 	}
 
 	@Override
-	public Warp setPrivate(boolean value) {
-		privated = value;
-		return this;
-	}
-
-	@Override
-	public boolean moveToThis(Entity entity) {
-		return locationData.moveToThis(entity);
+	public boolean moveHere(Entity entity) {
+		return locationData.moveHere(entity);
 	}
 
 	Warp toInterface() {
@@ -94,6 +86,46 @@ public class WarpData implements Warp {
 		if(this == obj) return true;
 		if (!(obj instanceof WarpData)) return false;
 		return Objects.equals(name, ((WarpData) obj).name);
+	}
+
+	@Override
+	public int contentVersion() {
+		return 1;
+	}
+	@Override
+	public DataContainer toContainer() {
+		return DataContainer.createNew()
+				.set(DataQuery.of("Name"), name)
+				.set(DataQuery.of("Location"), locationData)
+				.set(DataQuery.of("Private"), privated)
+				.set(Queries.CONTENT_VERSION, contentVersion());
+	}
+
+	public class Builder implements Warp.Builder {
+
+		@Override
+		public Builder setName(String name) {
+			WarpData.this.name = name;
+			return this;
+		}
+
+		@Override
+		public Builder setLocation(Location location) {
+			WarpData.this.locationData = location instanceof LocationData ? (LocationData) location : (LocationData) Location.builder().setPosition(location.getPosition()).build();
+			return this;
+		}
+
+		@Override
+		public Builder setPrivate(boolean value) {
+			privated = value;
+			return this;
+		}
+
+		@Override
+		public @NotNull Warp build() {
+			return WarpData.this;
+		}
+		
 	}
 
 }

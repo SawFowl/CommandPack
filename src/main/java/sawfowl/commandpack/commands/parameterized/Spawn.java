@@ -64,7 +64,7 @@ public class Spawn extends AbstractParameterizedCommand {
 		if(location.isPresent() && location.get().getLocationData().getServerLocation().isPresent()) {
 			player.setLocation(location.get().getLocationData().getServerLocation().get());
 			location.get().getLocationData().getPosition().getRotation().ifPresent(rotation -> {
-				player.setRotation(rotation.rotation());
+				player.setRotation(rotation.asVector3d());
 			});
 		} else tpDefault(player);
 		if(player.name().equals(name)) {
