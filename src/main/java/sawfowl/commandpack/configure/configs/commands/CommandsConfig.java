@@ -68,7 +68,7 @@ public class CommandsConfig {
 	@Setting("TeleportHereAll")
 	private CommandSettings teleporthereall = new CommandSettings(new String[] {"tphereall"});
 	@Setting("RandomTeleport")
-	private CommandSettings rtp = new CommandSettings(new String[] {"randomtp", "rtp"});
+	private CommandSettings rtp = new CommandSettings(300, new String[] {"randomtp", "rtp"});
 	@Setting("Tppos")
 	private CommandSettings tppos = new CommandSettings();
 	@Setting("TpToggle")
@@ -93,6 +93,16 @@ public class CommandsConfig {
 	private CommandSettings speed = new CommandSettings();
 	@Setting("Disposal")
 	private CommandSettings disposal = new CommandSettings(new String[] {"trash"});
+	@Setting("GameMode")
+	private CommandSettings gamemode = new CommandSettings(new String[] {"gm"});
+	@Setting("Creative")
+	private CommandSettings creative = new CommandSettings(new String[] {"gmc", "gm1"});
+	@Setting("Spectator")
+	private CommandSettings spectator = new CommandSettings(new String[] {"gmsp", "gm3"});
+	@Setting("Survival")
+	private CommandSettings survival = new CommandSettings(new String[] {"gms", "gm0"});
+	@Setting("Adventure")
+	private CommandSettings adventure = new CommandSettings(new String[] {"gma", "gm2"});
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

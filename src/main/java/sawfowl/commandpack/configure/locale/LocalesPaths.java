@@ -33,6 +33,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_GODMODE = "GodMode";
 	private static final Object COMMAND_SPEED = "Speed";
 	private static final Object COMMAND_DISPOSAL = "Disposal";
+	private static final Object COMMAND_GAMEMODE = "GameMode";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -132,5 +133,11 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_SPEED_OTHER = {PATH_COMMANDS, COMMAND_SPEED, "Other"};
 	public static final Object[] COMMANDS_SPEED_FLY = {PATH_COMMANDS, COMMAND_SPEED, "Fly"};
 	public static final Object[] COMMANDS_DISPOSAL_TITLE = {PATH_COMMANDS, COMMAND_DISPOSAL, "Title"};
+	public static final Object[] COMMANDS_GAMEMODE_SUCCESS = {PATH_COMMANDS, COMMAND_GAMEMODE, "Success"};
+	public static final Object[] COMMANDS_GAMEMODE_OTHER = {PATH_COMMANDS, COMMAND_GAMEMODE, "Other"};
+	public static final Object[] COMMANDS_GAMEMODE_CREATIVE = {PATH_COMMANDS, COMMAND_GAMEMODE, "Creative"};
+	public static final Object[] COMMANDS_GAMEMODE_SPECTATOR = {PATH_COMMANDS, COMMAND_GAMEMODE, "Spectator"};
+	public static final Object[] COMMANDS_GAMEMODE_SURVIVAL = {PATH_COMMANDS, COMMAND_GAMEMODE, "Survival"};
+	public static final Object[] COMMANDS_GAMEMODE_ADVENTURE = {PATH_COMMANDS, COMMAND_GAMEMODE, "Adventure"};
 
 }

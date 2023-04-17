@@ -3,7 +3,6 @@ package sawfowl.commandpack.api.data.commands.parameterized;
 import java.util.Optional;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter.Value;
@@ -17,7 +16,7 @@ public interface ParameterSettings extends DataSerializable {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
-	static ParameterSettings of(Value<?> value, boolean optionalforConsole, Object[] localeTextPath) {
+	static ParameterSettings of(Value<?> value, boolean optionalforConsole, Object... localeTextPath) {
 		return builder().value(value).optionalforConsole(optionalforConsole).localeTextPath(localeTextPath).build();
 	}
 
@@ -40,8 +39,6 @@ public interface ParameterSettings extends DataSerializable {
 		Builder optionalforConsole(boolean optional);
 
 		Builder localeTextPath(Object[] path);
-
-		@NotNull ParameterSettings build();
 
 	}
 

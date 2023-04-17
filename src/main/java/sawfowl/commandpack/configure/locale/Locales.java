@@ -158,6 +158,12 @@ public class Locales {
 		save = check(locale, toText("&aYou have been set a multiplier for your speed: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_OTHER) || save;
 		save = check(locale, toText("\n&aThe speed has been changed for flight mode because of being in the air."), null, LocalesPaths.COMMANDS_SPEED_FLY) || save;
 		save = check(locale, toText("&a&lTrash"), null, LocalesPaths.COMMANDS_DISPOSAL_TITLE) || save;
+		save = check(locale, toText("&aYour game mode has been changed to" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS) || save;
+		save = check(locale, toText("&aPlayer &e" + Placeholders.PLAYER + " &ais set to play mode " + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_GAMEMODE_OTHER) || save;
+		save = check(locale, toText("&dcreative"), null, LocalesPaths.COMMANDS_GAMEMODE_CREATIVE) || save;
+		save = check(locale, toText("&7spectator"), null, LocalesPaths.COMMANDS_GAMEMODE_SPECTATOR) || save;
+		save = check(locale, toText("&2survival"), null, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL) || save;
+		save = check(locale, toText("&aadventure"), null, LocalesPaths.COMMANDS_GAMEMODE_ADVENTURE) || save;
 
 		if(save) save(locale);
 	}
@@ -263,6 +269,12 @@ public class Locales {
 		save = check(locale, toText("&aВам установили множитель вашей скорости: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_OTHER) || save;
 		save = check(locale, toText("\n&aСкорость изменена для режима полета из-за нахождения в воздухе."), null, LocalesPaths.COMMANDS_SPEED_FLY) || save;
 		save = check(locale, toText("&a&lМусорка"), null, LocalesPaths.COMMANDS_DISPOSAL_TITLE) || save;
+		save = check(locale, toText("&aВаш игровой режим изменен на " + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS) || save;
+		save = check(locale, toText("&aИгроку &e" + Placeholders.PLAYER + " &aустановлен режим игры " + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_GAMEMODE_OTHER) || save;
+		save = check(locale, toText("&dкреатив"), null, LocalesPaths.COMMANDS_GAMEMODE_CREATIVE) || save;
+		save = check(locale, toText("&7наблюдатель"), null, LocalesPaths.COMMANDS_GAMEMODE_SPECTATOR) || save;
+		save = check(locale, toText("&2выживание"), null, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL) || save;
+		save = check(locale, toText("&aприключение"), null, LocalesPaths.COMMANDS_GAMEMODE_ADVENTURE) || save;
 
 		if(save) save(locale);
 	}

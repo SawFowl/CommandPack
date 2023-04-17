@@ -61,6 +61,8 @@ public class Permissions {
 	public static final String GODMODE_STAFF = "commandpack.commands.staff.godmode";
 	public static final String INVENTORYSEE_STAFF = "commandpack.commands.staff.inventorysee";
 	public static final String SPEED_STAFF = "commandpack.commands.staff.speed";
+	public static final String GAMEMODE_STAFF = "commandpack.commands.staff.gamemode";
+	public static final String GAMEMODE_OTHER_STAFF = "commandpack.commands.staff.othergamemode";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";
@@ -76,6 +78,7 @@ public class Permissions {
 
 	private static final String WARP_ACCESS = "commandpack.warps";
 	private static final String RTP_WORLD_ARG_ACCESS = "commandpack.randomteleport.world";
+	private static final String GAMEMODE_ACCESS = "commandpack.gamemode";
 
 	public static String getIgnoreDelayTimer(String command) {
 		return IGNORE_DELAY_TIMER + "." + command;
@@ -91,6 +94,10 @@ public class Permissions {
 
 	public static String getWarpPermission(String warpName) {
 		return WARP_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(warpName));
+	}
+
+	public static String getGameModePermission(String gamemode) {
+		return GAMEMODE_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(gamemode));
 	}
 
 	public static int getHomeLimit(ServerPlayer player) {

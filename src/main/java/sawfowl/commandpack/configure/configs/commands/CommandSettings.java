@@ -38,6 +38,11 @@ public class CommandSettings implements sawfowl.commandpack.api.data.commands.se
 		this.delay = delay;
 	}
 
+	public CommandSettings(long cooldown, String[] aliases) {
+		this.cooldown = cooldown;
+		this.aliases = aliases;
+	}
+
 	public CommandSettings(Delay delay, String[] aliases) {
 		this.delay = delay;
 		this.aliases = aliases;
