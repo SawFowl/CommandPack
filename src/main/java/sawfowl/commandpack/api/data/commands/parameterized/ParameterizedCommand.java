@@ -6,9 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.SystemSubject;
 import org.spongepowered.api.command.Command;
-import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandExecutor;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.Command.Builder;
@@ -19,7 +17,6 @@ import org.spongepowered.api.command.parameter.Parameter.Value;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.api.util.locale.LocaleSource;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.audience.Audience;
@@ -71,22 +68,20 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 	}
 
 	default Builder builder() {
+		return builderNoPerm().permission(permission());
+	}
+
+	default Builder builderNoPerm() {
 		return getSettingsMap() != null && !getSettingsMap().isEmpty() ?
 				Command.builder()
-					.permission(permission())
 					.addParameters(getSettingsMap().values().stream().map(ParameterSettings::getParameterUnknownType).toArray(Value[]::new))
 					.executor(this) :
 				Command.builder()
-					.permission(permission())
 					.executor(this);
 	}
 
 	default Command.Parameterized fastBuild() {
 		return builder().build();
-	}
-
-	default Locale getLocale(CommandCause cause) {
-		return cause.audience() instanceof SystemSubject ? Locale.getDefault() : (cause.audience() instanceof LocaleSource ? ((LocaleSource) cause.audience()).locale() : org.spongepowered.api.util.locale.Locales.DEFAULT);
 	}
 
 	default Optional<ServerPlayer> getPlayer(CommandContext context) {

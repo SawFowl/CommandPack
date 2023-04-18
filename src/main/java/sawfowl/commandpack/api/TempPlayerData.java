@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
 
+import sawfowl.commandpack.api.data.commands.PluginCommand;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 
 /**
@@ -98,5 +99,25 @@ public interface TempPlayerData {
 	 * Set the location of the player's previous location.
 	 */
 	public void setPreviousLocation(ServerPlayer player);
+
+	/**
+	 * Register the tracking of delays between command executions.
+	 */
+	void addTrackingCooldownCommand(PluginCommand command);
+
+	/**
+	 * Register the tracking of delays between command executions.
+	 */
+	void addTrackingCooldownCommand(String command);
+
+	/**
+	 * A map of players who cannot currently reuse a command.
+	 */
+	Map<UUID, Long> getTrackingMap(PluginCommand command);
+
+	/**
+	 * A map of players who cannot currently reuse a command.
+	 */
+	Map<UUID, Long> getTrackingMap(String command);
 
 }

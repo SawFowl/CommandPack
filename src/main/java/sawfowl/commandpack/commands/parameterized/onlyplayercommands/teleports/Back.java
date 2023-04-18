@@ -1,29 +1,35 @@
-package sawfowl.commandpack.commands.parameterized.player;
+package sawfowl.commandpack.commands.parameterized.onlyplayercommands.teleports;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
-import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.world.server.ServerLocation;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
 
-public class Suicide extends AbstractPlayerCommand {
+public class Back extends AbstractPlayerCommand {
 
-	public Suicide(CommandPack plugin) {
+	public Back(CommandPack plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
+		Optional<ServerLocation> location = plugin.getPlayersData().getTempData().getPreviousLocation(src);
+		if(!location.isPresent()) exception(locale, LocalesPaths.COMMANDS_BACK_EMPTY);
+		if(location.get().world() == null || !location.get().world().isLoaded()) exception(locale, LocalesPaths.COMMANDS_BACK_NOT_LOADED_WORLD);
 		delay(src, locale, consumer -> {
-			src.offer(Keys.HEALTH, 0.0);
+			plugin.getPlayersData().getTempData().setPreviousLocation(src);
+			src.setLocation(location.get());
 		});
 	}
 
@@ -34,17 +40,17 @@ public class Suicide extends AbstractPlayerCommand {
 
 	@Override
 	public String permission() {
-		return Permissions.SUICIDE;
+		return Permissions.BACK;
+	}
+
+	@Override
+	public String command() {
+		return "back";
 	}
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return null;
-	}
-
-	@Override
-	public String command() {
-		return "suicide";
 	}
 
 }

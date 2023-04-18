@@ -164,6 +164,13 @@ public class Locales {
 		save = check(locale, toText("&7spectator"), null, LocalesPaths.COMMANDS_GAMEMODE_SPECTATOR) || save;
 		save = check(locale, toText("&2survival"), null, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL) || save;
 		save = check(locale, toText("&aadventure"), null, LocalesPaths.COMMANDS_GAMEMODE_ADVENTURE) || save;
+		save = check(locale, toText("&aYou have set a clear weather in the world  &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_WEATHER_SUN) || save;
+		save = check(locale, toText("&aYou have set the rainy weather in the world  &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_WEATHER_RAIN) || save;
+		save = check(locale, toText("&aYou have set a thunder weather in the world &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_WEATHER_THUNDER) || save;
+		save = check(locale, toText("&aYou have set the morning in the world &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_MORNING) || save;
+		save = check(locale, toText("&aYou have set the day in the world &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_DAY) || save;
+		save = check(locale, toText("&aYou have set an evening in the world &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_EVENING) || save;
+		save = check(locale, toText("&aYou have set the night in the world &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_NIGHT) || save;
 
 		if(save) save(locale);
 	}
@@ -275,6 +282,13 @@ public class Locales {
 		save = check(locale, toText("&7наблюдатель"), null, LocalesPaths.COMMANDS_GAMEMODE_SPECTATOR) || save;
 		save = check(locale, toText("&2выживание"), null, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL) || save;
 		save = check(locale, toText("&aприключение"), null, LocalesPaths.COMMANDS_GAMEMODE_ADVENTURE) || save;
+		save = check(locale, toText("&aВы установили ясную погоду в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_WEATHER_SUN) || save;
+		save = check(locale, toText("&aВы установили дождливую погоду в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_WEATHER_RAIN) || save;
+		save = check(locale, toText("&aВы установили штормовую погоду в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_WEATHER_THUNDER) || save;
+		save = check(locale, toText("&aВы установили утро в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_MORNING) || save;
+		save = check(locale, toText("&aВы установили день в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_DAY) || save;
+		save = check(locale, toText("&aВы установили вечер в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_EVENING) || save;
+		save = check(locale, toText("&aВы установили ночь в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_NIGHT) || save;
 
 		if(save) save(locale);
 	}

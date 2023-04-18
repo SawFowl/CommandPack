@@ -1,4 +1,4 @@
-package sawfowl.commandpack.commands.parameterized.player;
+package sawfowl.commandpack.commands.parameterized.onlyplayercommands;
 
 import java.util.Arrays;
 import java.util.List;

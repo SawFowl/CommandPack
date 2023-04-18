@@ -2,14 +2,10 @@ package sawfowl.commandpack.commands.abstractcommands;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.SystemSubject;
 import org.spongepowered.api.block.BlockTypes;
@@ -18,7 +14,6 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
-import org.spongepowered.api.scheduler.ScheduledTask;
 import org.spongepowered.api.util.Nameable;
 import org.spongepowered.api.world.LocatableBlock;
 
@@ -30,11 +25,10 @@ import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.Logger;
 
-public abstract class PluginCommand {
+public abstract class PluginCommand implements sawfowl.commandpack.api.data.commands.PluginCommand {
 
 	protected final CommandPack plugin;
 	protected final String[] aliases;
-	protected Map<UUID, Long> cooldowns = new HashMap<>();
 	protected CommandSettings commandSettings;
 	public PluginCommand(CommandPack plugin) {
 		this.plugin = plugin;
@@ -88,25 +82,6 @@ public abstract class PluginCommand {
 
 	protected void saveUser(User user) {
 		Sponge.server().userManager().forceSave(user.uniqueId());
-	}
-
-	protected class CooldownTimerTask implements Consumer<ScheduledTask> {
-		public CooldownTimerTask(ServerPlayer player){
-			uuid = player.uniqueId();
-		}
-		private final UUID uuid;
-		private final long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-		long cooldown = plugin.getCommandsConfig().getCommandConfig(command()).getCooldown();
-		@Override
-		public void accept(ScheduledTask task) {
-			if(cooldowns.containsKey(uuid)) {
-				if((cooldowns.get(uuid) + cooldown) - currentTime <= 0) cooldowns.remove(uuid);
-			} else {
-				task.cancel();
-			}
-			
-		}
-		
 	}
 
 	protected String getSourceName(CommandCause cause, Audience audience, Locale locale, ServerPlayer player) {

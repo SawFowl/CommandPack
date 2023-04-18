@@ -1,9 +1,7 @@
-package sawfowl.commandpack.commands.parameterized.player;
+package sawfowl.commandpack.commands.parameterized.onlyplayercommands.teleports;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
@@ -15,26 +13,21 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
-public class InventorySee extends AbstractPlayerCommand {
+public class TeleportHereAll extends AbstractPlayerCommand {
 
-	public InventorySee(CommandPack plugin) {
+	public TeleportHereAll(CommandPack plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		getUser(context).ifPresent(name -> {
-			try {
-				Sponge.server().userManager().load(name).get().ifPresent(user -> {
-					src.openInventory(user.inventory());
-				});
-			} catch (InterruptedException | ExecutionException e) {
-				plugin.getLogger().error(e.getLocalizedMessage());
-			}
-		});
+		for(ServerPlayer target : Sponge.server().onlinePlayers()) {
+			if(!target.uniqueId().equals(src.uniqueId())) delay(target, locale, consumer -> {
+				plugin.getPlayersData().getTempData().setPreviousLocation(target);
+				target.setLocation(src.serverLocation());
+			});
+		}
 	}
 
 	@Override
@@ -44,17 +37,17 @@ public class InventorySee extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createUser(false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return null;
 	}
 
 	@Override
 	public String permission() {
-		return Permissions.INVENTORYSEE_STAFF;
+		return Permissions.TELEPORT_HERE_ALL_STAFF;
 	}
 
 	@Override
 	public String command() {
-		return "inventorysee";
+		return "teleporthereall";
 	}
 
 }

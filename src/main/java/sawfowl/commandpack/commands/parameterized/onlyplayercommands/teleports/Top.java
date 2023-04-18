@@ -1,6 +1,5 @@
-package sawfowl.commandpack.commands.parameterized.player.teleports;
+package sawfowl.commandpack.commands.parameterized.onlyplayercommands.teleports;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -13,22 +12,18 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
-public class TeleportHere extends AbstractPlayerCommand {
+public class Top extends AbstractPlayerCommand {
 
-	public TeleportHere(CommandPack plugin) {
+	public Top(CommandPack plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		ServerPlayer target = getPlayer(context).get();
-		if(target.uniqueId().equals(src.uniqueId())) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF);
-		delay(target, locale, consumer -> {
-			plugin.getPlayersData().getTempData().setPreviousLocation(target);
-			target.setLocation(src.serverLocation());
+		delay(src, locale, consumer -> {
+			plugin.getPlayersData().getTempData().setPreviousLocation(src);
+			src.setPosition(src.world().highestPositionAt(src.blockPosition()).toDouble());
 		});
 	}
 
@@ -39,17 +34,17 @@ public class TeleportHere extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return null;
 	}
 
 	@Override
 	public String permission() {
-		return Permissions.TELEPORT_HERE_STAFF;
+		return Permissions.TOP;
 	}
 
 	@Override
 	public String command() {
-		return "teleporthere";
+		return "top";
 	}
 
 }

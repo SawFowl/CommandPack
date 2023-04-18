@@ -1,8 +1,8 @@
-package sawfowl.commandpack.commands.parameterized.player.teleports;
+package sawfowl.commandpack.commands.parameterized.onlyplayercommands.teleports;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
@@ -14,22 +14,22 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
+import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
-public class Back extends AbstractPlayerCommand {
+public class Tppos extends AbstractPlayerCommand {
 
-	public Back(CommandPack plugin) {
+	public Tppos(CommandPack plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		Optional<ServerLocation> location = plugin.getPlayersData().getTempData().getPreviousLocation(src);
-		if(!location.isPresent()) exception(locale, LocalesPaths.COMMANDS_BACK_EMPTY);
-		if(location.get().world() == null || !location.get().world().isLoaded()) exception(locale, LocalesPaths.COMMANDS_BACK_NOT_LOADED_WORLD);
+		ServerLocation location = getLocation(context).get();
 		delay(src, locale, consumer -> {
+			if(!location.isValid()) exception(locale, LocalesPaths.COMMANDS_TPPOS_INVALID_LOCATION);
 			plugin.getPlayersData().getTempData().setPreviousLocation(src);
-			src.setLocation(location.get());
+			src.setLocation(location);
 		});
 	}
 
@@ -39,18 +39,18 @@ public class Back extends AbstractPlayerCommand {
 	}
 
 	@Override
+	public List<ParameterSettings> getParameterSettings() {
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createLocation(false), false, LocalesPaths.COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT));
+	}
+
+	@Override
 	public String permission() {
-		return Permissions.BACK;
+		return Permissions.TPPOS_STAFF;
 	}
 
 	@Override
 	public String command() {
-		return "back";
-	}
-
-	@Override
-	public List<ParameterSettings> getParameterSettings() {
-		return null;
+		return "tppos";
 	}
 
 }

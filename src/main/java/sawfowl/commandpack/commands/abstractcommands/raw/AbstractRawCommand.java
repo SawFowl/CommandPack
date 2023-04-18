@@ -1,7 +1,6 @@
 package sawfowl.commandpack.commands.abstractcommands.raw;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -18,7 +17,6 @@ import sawfowl.commandpack.commands.abstractcommands.PluginCommand;
 
 public abstract class AbstractRawCommand extends PluginCommand implements RawCommand {
 
-	private Map<UUID, Long> cooldowns = new HashMap<>();
 	private List<CommandCompletion> empty = new ArrayList<>();
 	public AbstractRawCommand(CommandPack plugin) {
 		super(plugin);
@@ -46,7 +44,7 @@ public abstract class AbstractRawCommand extends PluginCommand implements RawCom
 
 	@Override
 	public Map<UUID, Long> getCooldowns() {
-		return cooldowns;
+		return plugin.getPlayersData().getTempData().getTrackingMap(trackingName());
 	}
 
 }

@@ -33,8 +33,6 @@ public interface PluginCommand {
 
 	CommandSettings getCommandSettings();
 
-	Map<UUID, Long> getCooldowns();
-
 	Component getText(Object[] path);
 
 	PluginContainer getContainer();
@@ -42,6 +40,14 @@ public interface PluginCommand {
 	String permission();
 
 	String command();
+
+	default String trackingName() {
+		return command();
+	}
+
+	default Map<UUID, Long> getCooldowns() {
+		return CommandPack.getInstance().getPlayersData().getTempData().getTrackingMap(trackingName());
+	}
 
 	default Component getText(ServerPlayer player, Object[] path) {
 		return getText(player.locale(), path);
@@ -120,12 +126,13 @@ public interface PluginCommand {
 	}
 
 	default void economy(ServerPlayer player, Locale locale) throws CommandException {
-		if(getCommandSettings() == null || CommandPack.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command()))) return;
+		if(getCommandSettings() == null || !CommandPack.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command()))) return;
 		PriceSettings price = getCommandSettings().getPrice();
 		if(price.getMoney() > 0) {
 			Currency currency = CommandPack.getInstance().getEconomy().checkCurrency(price.getCurrency());
 			BigDecimal money = createDecimal(price.getMoney());
 			if(!CommandPack.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(locale, new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command())}, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY);
+			CommandPack.getInstance().getEconomy().removeFromPlayerBalance(player, currency, money);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package sawfowl.commandpack.commands.parameterized.gamemode;
+package sawfowl.commandpack.commands.parameterized;
 
 import java.util.List;
 import java.util.Locale;
@@ -13,6 +13,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
+import sawfowl.commandpack.commands.parameterized.gamemode.GameModeType;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class GameMode extends AbstractParameterizedCommand {

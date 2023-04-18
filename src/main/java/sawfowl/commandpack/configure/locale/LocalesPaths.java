@@ -34,6 +34,8 @@ public class LocalesPaths {
 	private static final Object COMMAND_SPEED = "Speed";
 	private static final Object COMMAND_DISPOSAL = "Disposal";
 	private static final Object COMMAND_GAMEMODE = "GameMode";
+	private static final Object COMMAND_WEATHER = "Weather";
+	private static final Object COMMAND_TIME = "Time";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -139,5 +141,12 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_GAMEMODE_SPECTATOR = {PATH_COMMANDS, COMMAND_GAMEMODE, "Spectator"};
 	public static final Object[] COMMANDS_GAMEMODE_SURVIVAL = {PATH_COMMANDS, COMMAND_GAMEMODE, "Survival"};
 	public static final Object[] COMMANDS_GAMEMODE_ADVENTURE = {PATH_COMMANDS, COMMAND_GAMEMODE, "Adventure"};
+	public static final Object[] COMMANDS_WEATHER_SUN = {PATH_COMMANDS, COMMAND_WEATHER, "Sun"};
+	public static final Object[] COMMANDS_WEATHER_RAIN = {PATH_COMMANDS, COMMAND_WEATHER, "Rain"};
+	public static final Object[] COMMANDS_WEATHER_THUNDER = {PATH_COMMANDS, COMMAND_WEATHER, "Thunder"};
+	public static final Object[] COMMANDS_TIME_DAY = {PATH_COMMANDS, COMMAND_TIME, "Day"};
+	public static final Object[] COMMANDS_TIME_MORNING = {PATH_COMMANDS, COMMAND_TIME, "Morning"};
+	public static final Object[] COMMANDS_TIME_EVENING = {PATH_COMMANDS, COMMAND_TIME, "Evening"};
+	public static final Object[] COMMANDS_TIME_NIGHT = {PATH_COMMANDS, COMMAND_TIME, "Night"};
 
 }

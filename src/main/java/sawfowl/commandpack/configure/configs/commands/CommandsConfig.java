@@ -103,6 +103,24 @@ public class CommandsConfig {
 	private CommandSettings survival = new CommandSettings(new String[] {"gms", "gm0"});
 	@Setting("Adventure")
 	private CommandSettings adventure = new CommandSettings(new String[] {"gma", "gm2"});
+	@Setting("Weather")
+	private CommandSettings weather = new CommandSettings(120);
+	@Setting("Sun")
+	private CommandSettings sun = new CommandSettings(120, new String[] {"clear"});
+	@Setting("Rain")
+	private CommandSettings rain = new CommandSettings(120);
+	@Setting("Thunder")
+	private CommandSettings thunder = new CommandSettings(120, new String[] {"storm"});
+	@Setting("Time")
+	private CommandSettings time = new CommandSettings(120);
+	@Setting("Morning")
+	private CommandSettings morning = new CommandSettings(120);
+	@Setting("Day")
+	private CommandSettings day = new CommandSettings(120);
+	@Setting("Evening")
+	private CommandSettings evening = new CommandSettings(120);
+	@Setting("Night")
+	private CommandSettings night = new CommandSettings(120);
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));
@@ -118,7 +136,10 @@ public class CommandsConfig {
 				try {
 					AbstractParameterizedCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
-						if(settings.isEnable()) command.register(event);
+						if(settings.isEnable()) {
+							command.register(event);
+							plugin.getPlayersData().getTempData().addTrackingCooldownCommand(command);
+						}
 					});
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					plugin.getLogger().error("Error when registering a command class '" + clazz.getName() +"'\n" + e.getLocalizedMessage());
@@ -149,8 +170,7 @@ public class CommandsConfig {
 	public void updateCommandMap(ValueReference<CommandsConfig, CommentedConfigurationNode> reference) {
 		map.clear();
 		reference.node().childrenMap().entrySet().forEach(entry -> {
-			CommandSettings settings = getCommandFromNode(entry.getValue());
-			if(settings.isEnable()) map.put(entry.getKey().toString().toLowerCase(), getCommandFromNode(entry.getValue()));
+			map.put(entry.getKey().toString().toLowerCase(), getCommandFromNode(entry.getValue()));
 		});
 	}
 

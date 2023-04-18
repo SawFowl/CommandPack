@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.world.server.ServerWorld;
 
 import sawfowl.localeapi.api.TextUtils;
 
@@ -43,6 +44,8 @@ public class Permissions {
 	public static final String SPEED = "commandpack.commands.user.speed";
 	public static final String SPEED_FLY = "commandpack.commands.user.flyspeed";
 	public static final String DISPOSAL = "commandpack.commands.user.disposal";
+	public static final String WEATHER = "commandpack.commands.user.weather";
+	public static final String TIME = "commandpack.commands.user.time";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -63,6 +66,8 @@ public class Permissions {
 	public static final String SPEED_STAFF = "commandpack.commands.staff.speed";
 	public static final String GAMEMODE_STAFF = "commandpack.commands.staff.gamemode";
 	public static final String GAMEMODE_OTHER_STAFF = "commandpack.commands.staff.othergamemode";
+	public static final String WEATHER_STAFF = "commandpack.commands.staff.weather";
+	public static final String TIME_STAFF = "commandpack.commands.staff.time";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";
@@ -76,9 +81,13 @@ public class Permissions {
 	private static final String SPEED_LIMIT = "commandpack.limits.speed";
 	private static final String SPEED_FLY_LIMIT = "commandpack.limits.speed";
 
-	private static final String WARP_ACCESS = "commandpack.warps";
-	private static final String RTP_WORLD_ARG_ACCESS = "commandpack.randomteleport.world";
-	private static final String GAMEMODE_ACCESS = "commandpack.gamemode";
+	private static final String WARP_ACCESS = "commandpack.access.warps";
+	private static final String RTP_WORLD_ARG_ACCESS = "commandpack.access.worlds.randomteleport";
+	private static final String GAMEMODE_ACCESS = "commandpack.access.gamemode";
+	private static final String WEATHER_ACCESS = "commandpack.access.weather";
+	private static final String WEATHER_WORLD_ACCESS = "commandpack.access.worlds.weather";
+	private static final String TIME_ACCESS = "commandpack.access.time";
+	private static final String TIME_WORLD_ACCESS = "commandpack.access.worlds.time";
 
 	public static String getIgnoreDelayTimer(String command) {
 		return IGNORE_DELAY_TIMER + "." + command;
@@ -96,8 +105,28 @@ public class Permissions {
 		return WARP_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(warpName));
 	}
 
+	public static String getRtpWorldAcess(ResourceKey worldKey) {
+		return RTP_WORLD_ARG_ACCESS + "." + worldKey.asString();
+	}
+
 	public static String getGameModePermission(String gamemode) {
 		return GAMEMODE_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(gamemode));
+	}
+
+	public static String getWeatherPermission(String weather) {
+		return WEATHER_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(weather));
+	}
+
+	public static String getWeatherWorldPermission(String weather, ServerWorld world) {
+		return WEATHER_WORLD_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(weather)) + "." + TextUtils.clearDecorations(TextUtils.deserialize(world.key().asString().replace(":", "_")));
+	}
+
+	public static String getTimePermission(String time) {
+		return TIME_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(time));
+	}
+
+	public static String getTimeWorldPermission(String weather, ServerWorld world) {
+		return TIME_WORLD_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(weather)) + "." + TextUtils.clearDecorations(TextUtils.deserialize(world.key().asString().replace(":", "_")));
 	}
 
 	public static int getHomeLimit(ServerPlayer player) {
@@ -114,10 +143,6 @@ public class Permissions {
 
 	public static double getSpeedFlyLimit(ServerPlayer player) {
 		return !player.option(SPEED_FLY_LIMIT).isPresent() ? 1 : toDouble(player.option(SPEED_FLY_LIMIT).get(), 1);
-	}
-
-	public static String getRtpWorldAcess(ResourceKey worldKey) {
-		return RTP_WORLD_ARG_ACCESS + "." + worldKey.asString();
 	}
 
 	private static int toInt(String option, int def) {

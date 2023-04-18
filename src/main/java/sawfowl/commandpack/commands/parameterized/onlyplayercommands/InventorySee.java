@@ -1,8 +1,11 @@
-package sawfowl.commandpack.commands.parameterized.player.teleports;
+package sawfowl.commandpack.commands.parameterized.onlyplayercommands;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
@@ -12,21 +15,25 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
+import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
-public class TpToggle extends AbstractPlayerCommand {
+public class InventorySee extends AbstractPlayerCommand {
 
-	public TpToggle(CommandPack plugin) {
+	public InventorySee(CommandPack plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		delay(src, locale, consumer -> {
-			plugin.getPlayersData().getTempData().tpToggle(src);
-			if(plugin.getPlayersData().getTempData().isDisableTpRequests(src)) {
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TPTOGGLE_DISABLE));
-			} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TPTOGGLE_ENABLE));
+		getUser(context).ifPresent(name -> {
+			try {
+				Sponge.server().userManager().load(name).get().ifPresent(user -> {
+					src.openInventory(user.inventory());
+				});
+			} catch (InterruptedException | ExecutionException e) {
+				plugin.getLogger().error(e.getLocalizedMessage());
+			}
 		});
 	}
 
@@ -37,17 +44,17 @@ public class TpToggle extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return null;
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createUser(false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 
 	@Override
 	public String permission() {
-		return Permissions.TPTOGGLE;
+		return Permissions.INVENTORYSEE_STAFF;
 	}
 
 	@Override
 	public String command() {
-		return "tptoggle";
+		return "inventorysee";
 	}
 
 }

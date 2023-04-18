@@ -1,4 +1,4 @@
-package sawfowl.commandpack.commands.parameterized.player.teleports;
+package sawfowl.commandpack.commands.parameterized.onlyplayercommands.teleports;
 
 import java.util.Arrays;
 import java.util.List;

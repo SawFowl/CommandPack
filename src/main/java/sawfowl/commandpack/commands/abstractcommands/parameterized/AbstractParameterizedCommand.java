@@ -17,7 +17,6 @@ import sawfowl.commandpack.commands.abstractcommands.PluginCommand;
 
 public abstract class AbstractParameterizedCommand extends PluginCommand implements ParameterizedCommand {
 
-	Map<UUID, Long> cooldowns = new HashMap<>();
 	protected final Map<String, ParameterSettings> parameterSettings = new HashMap<>();
 	public AbstractParameterizedCommand(CommandPack plugin) {
 		super(plugin);
@@ -34,7 +33,7 @@ public abstract class AbstractParameterizedCommand extends PluginCommand impleme
 
 	@Override
 	public Map<UUID, Long> getCooldowns() {
-		return cooldowns;
+		return plugin.getPlayersData().getTempData().getTrackingMap(trackingName());
 	}
 
 	@Override

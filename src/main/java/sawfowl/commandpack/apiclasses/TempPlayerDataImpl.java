@@ -9,11 +9,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.data.commands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -26,6 +28,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	private Component notTracking;
 	private Set<UUID> tptoggleSet = new HashSet<>();
 	private Map<UUID, ServerLocation> locations = new HashMap<>();
+	private Map<String, Map<UUID, Long>> cooldowns = new HashMap<>();
 	public TempPlayerDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		notTracking = plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING);
@@ -109,6 +112,27 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	public void setPreviousLocation(ServerPlayer player) {
 		if(locations.containsKey(player.uniqueId())) locations.remove(player.uniqueId());
 		locations.put(player.uniqueId(), player.serverLocation());
+	}
+
+	@Override
+	public void addTrackingCooldownCommand(PluginCommand command) {
+		addTrackingCooldownCommand(command);
+	}
+
+	@Override
+	public void addTrackingCooldownCommand(String command) {
+		cooldowns.put(command, new HashMap<>());
+	}
+
+	@Override
+	public Map<UUID, Long> getTrackingMap(PluginCommand command) {
+		return getTrackingMap(command.trackingName());
+	}
+
+	@Override
+	public Map<UUID, Long> getTrackingMap(String command) {
+		if(Sponge.server().commandManager().knownAliases().contains(command)) return new HashMap<>();
+		return !cooldowns.containsKey(command) ? cooldowns.put(command, new HashMap<>()) : cooldowns.get(command);
 	}
 
 }

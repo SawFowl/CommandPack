@@ -1,12 +1,12 @@
-package sawfowl.commandpack.commands.parameterized.player.teleports;
+package sawfowl.commandpack.commands.parameterized.onlyplayercommands;
 
 import java.util.List;
 import java.util.Locale;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
+import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPack;
@@ -14,20 +14,17 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 
-public class TeleportHereAll extends AbstractPlayerCommand {
+public class Suicide extends AbstractPlayerCommand {
 
-	public TeleportHereAll(CommandPack plugin) {
+	public Suicide(CommandPack plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		for(ServerPlayer target : Sponge.server().onlinePlayers()) {
-			if(!target.uniqueId().equals(src.uniqueId())) delay(target, locale, consumer -> {
-				plugin.getPlayersData().getTempData().setPreviousLocation(target);
-				target.setLocation(src.serverLocation());
-			});
-		}
+		delay(src, locale, consumer -> {
+			src.offer(Keys.HEALTH, 0.0);
+		});
 	}
 
 	@Override
@@ -36,18 +33,18 @@ public class TeleportHereAll extends AbstractPlayerCommand {
 	}
 
 	@Override
+	public String permission() {
+		return Permissions.SUICIDE;
+	}
+
+	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return null;
 	}
 
 	@Override
-	public String permission() {
-		return Permissions.TELEPORT_HERE_ALL_STAFF;
-	}
-
-	@Override
 	public String command() {
-		return "teleporthereall";
+		return "suicide";
 	}
 
 }

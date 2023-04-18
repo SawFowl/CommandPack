@@ -69,6 +69,10 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 			task.cancel();
 			return;
 		} else {
+			if(!getPlayer(uuid).isPresent() || !getPlayer(uuid).get().isOnline()) {
+				task.cancel();
+				return;
+			}
 			ServerPlayer player = getPlayer(uuid).get();
 			if(!CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(player).isPresent() || !CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(player).get().containsKey(command)) {
 				task.cancel();
@@ -77,16 +81,16 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 			if(getExpireHourFromNow(seconds) > 0) {
 				if(hour != getExpireHourFromNow(seconds)) {
 					hour = getExpireHourFromNow(seconds);
-					if(player.isOnline()) player.sendMessage(TextUtils.replace(CommandPack.getInstance().getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+					player.sendMessage(TextUtils.replace(CommandPack.getInstance().getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
 				}
 			} else if(seconds > 60) {
 				if(minute != getExpireMinuteFromNow(seconds)) {
 					minute = getExpireMinuteFromNow(seconds);
-					if(player.isOnline()) player.sendMessage(TextUtils.replace(CommandPack.getInstance().getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+					player.sendMessage(TextUtils.replace(CommandPack.getInstance().getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
 				}
 			} else if(seconds == 60 || seconds == 30 || seconds == 10 || seconds <= 5 || first) {
 				first = false;
-				if(player.isOnline()) player.sendMessage(TextUtils.replace(CommandPack.getInstance().getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+				player.sendMessage(TextUtils.replace(CommandPack.getInstance().getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
 			}
 			seconds--;
 		}
