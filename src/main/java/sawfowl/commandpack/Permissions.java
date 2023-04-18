@@ -46,6 +46,8 @@ public class Permissions {
 	public static final String DISPOSAL = "commandpack.commands.user.disposal";
 	public static final String WEATHER = "commandpack.commands.user.weather";
 	public static final String TIME = "commandpack.commands.user.time";
+	public static final String CRAFTING_TABLE = "commandpack.commands.user.craftingtable";
+	public static final String ANVIL = "commandpack.commands.user.anvil";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -68,6 +70,8 @@ public class Permissions {
 	public static final String GAMEMODE_OTHER_STAFF = "commandpack.commands.staff.othergamemode";
 	public static final String WEATHER_STAFF = "commandpack.commands.staff.weather";
 	public static final String TIME_STAFF = "commandpack.commands.staff.time";
+	public static final String CRAFTING_TABLE_STAFF = "commandpack.commands.staff.craftingtable";
+	public static final String ANVIL_STAFF = "commandpack.commands.staff.anvil";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";

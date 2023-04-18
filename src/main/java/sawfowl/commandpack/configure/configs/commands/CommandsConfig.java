@@ -121,6 +121,10 @@ public class CommandsConfig {
 	private CommandSettings evening = new CommandSettings(120);
 	@Setting("Night")
 	private CommandSettings night = new CommandSettings(120);
+	@Setting("CraftingTable")
+	private CommandSettings craftingTable = new CommandSettings(new String[] {"craft", "ct"});
+	@Setting("Anvil")
+	private CommandSettings anvil = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));
