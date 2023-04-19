@@ -12,7 +12,7 @@ import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -23,7 +23,7 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class Heal extends AbstractParameterizedCommand {
 
-	public Heal(CommandPackPlugin plugin) {
+	public Heal(CommandPack plugin) {
 		super(plugin);
 	}
 
@@ -36,7 +36,7 @@ public class Heal extends AbstractParameterizedCommand {
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_HEAL_OTHER), Placeholders.PLAYER, target.get().name()));
 				target.get().sendMessage(getText(target.get(), LocalesPaths.COMMANDS_HEAL_SELF));
 			} else {
-				((ServerPlayer) src).offer(Keys.FOOD_LEVEL, ((ServerPlayer) src).getOrElse(Keys.MAX_FOOD_LEVEL, 20));
+				((ServerPlayer) src).offer(Keys.HEALTH, ((ServerPlayer) src).getOrElse(Keys.MAX_HEALTH, 20d));
 				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_HEAL_SELF));
 			}
 		} else {

@@ -9,7 +9,7 @@ import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 
 import net.kyori.adventure.audience.Audience;
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -18,7 +18,7 @@ import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class GameMode extends AbstractParameterizedCommand {
 
-	public GameMode(CommandPackPlugin plugin) {
+	public GameMode(CommandPack plugin) {
 		super(plugin);
 	}
 

@@ -26,6 +26,7 @@ import org.spongepowered.api.item.inventory.menu.handler.CloseHandler;
 import org.spongepowered.api.item.inventory.menu.handler.SlotChangeHandler;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.api.registry.DefaultedRegistryReference;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.plugin.PluginContainer;
 
@@ -33,6 +34,7 @@ import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.api.data.player.PlayerBackpack;
 import sawfowl.localeapi.api.TextUtils;
 
+@ConfigSerializable
 public class BackpackData implements PlayerBackpack {
 
 	public BackpackData(){}

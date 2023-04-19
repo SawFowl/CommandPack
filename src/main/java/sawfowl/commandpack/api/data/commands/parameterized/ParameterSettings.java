@@ -20,6 +20,10 @@ public interface ParameterSettings extends DataSerializable {
 		return builder().value(value).optionalforConsole(optionalforConsole).localeTextPath(localeTextPath).build();
 	}
 
+	static ParameterSettings of(Value<?> value, boolean optionalforConsole, int position, Object... localeTextPath) {
+		return builder().value(value).optionalforConsole(optionalforConsole).position(position).localeTextPath(localeTextPath).build();
+	}
+
 	String getKey();
 
 	Value<?> getParameterUnknownType();
@@ -32,6 +36,8 @@ public interface ParameterSettings extends DataSerializable {
 
 	Object[] getPath();
 
+	int getPosition();
+
 	interface Builder extends AbstractBuilder<ParameterSettings>, org.spongepowered.api.util.Builder<ParameterSettings, Builder> {
 
 		Builder value(Value<?> value);
@@ -39,6 +45,8 @@ public interface ParameterSettings extends DataSerializable {
 		Builder optionalforConsole(boolean optional);
 
 		Builder localeTextPath(Object[] path);
+
+		Builder position(int position);
 
 	}
 

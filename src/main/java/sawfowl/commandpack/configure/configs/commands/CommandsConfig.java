@@ -26,7 +26,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.configurate.reference.ValueReference;
 import org.spongepowered.configurate.serialize.SerializationException;
 
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 
@@ -144,11 +144,11 @@ public class CommandsConfig {
 		return Optional.ofNullable(map.getOrDefault(command, null));
 	}
 
-	public void registerParameterized(RegisterCommandEvent<Parameterized> event, CommandPackPlugin plugin) {
+	public void registerParameterized(RegisterCommandEvent<Parameterized> event, CommandPack plugin) {
 		try {
 			for(Class<AbstractParameterizedCommand> clazz : findAllCommandsClasses("sawfowl.commandpack.commands.parameterized", AbstractParameterizedCommand.class)) {
 				try {
-					AbstractParameterizedCommand command = clazz.getConstructor(CommandPackPlugin.class).newInstance(plugin);
+					AbstractParameterizedCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
 						if(settings.isEnable()) {
 							command.register(event);
@@ -164,11 +164,11 @@ public class CommandsConfig {
 		}
 	}
 
-	public void registerRaw(RegisterCommandEvent<Raw> event, CommandPackPlugin plugin) {
+	public void registerRaw(RegisterCommandEvent<Raw> event, CommandPack plugin) {
 		try {
 			for(Class<AbstractRawCommand> clazz : findAllCommandsClasses("sawfowl.commandpack.commands.raw", AbstractRawCommand.class)) {
 				try {
-					AbstractRawCommand command = clazz.getConstructor(CommandPackPlugin.class).newInstance(plugin);
+					AbstractRawCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
 						if(settings.isEnable()) command.register(event);
 					});

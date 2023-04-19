@@ -15,7 +15,7 @@ import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -24,7 +24,7 @@ import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Day extends AbstractParameterizedCommand {
 
-	public Day(CommandPackPlugin plugin) {
+	public Day(CommandPack plugin) {
 		super(plugin);
 	}
 

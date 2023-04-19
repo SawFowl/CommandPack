@@ -20,6 +20,7 @@ public class ParameterSettings implements sawfowl.commandpack.api.data.commands.
 	private Boolean optionalForConsole = false;
 	private Object[] path = {"NaN"};
 	private String key;
+	private int position = 0;
 	public ParameterSettings() {}
 	public ParameterSettings(Parameter.Value<?> parameter, boolean optionalForConsole, Object... pathException) {
 		this.key = parameter.key().key();
@@ -74,8 +75,13 @@ public class ParameterSettings implements sawfowl.commandpack.api.data.commands.
 	}
 
 	@Override
+	public int getPosition() {
+		return position;
+	}
+
+	@Override
 	public int contentVersion() {
-		return 0;
+		return 1;
 	}
 
 	@Override
@@ -113,6 +119,12 @@ public class ParameterSettings implements sawfowl.commandpack.api.data.commands.
 		@Override
 		public ParameterSettings.Builder localeTextPath(Object[] path) {
 			ParameterSettings.this.path = path;
+			return this;
+		}
+
+		@Override
+		public Builder position(int position) {
+			ParameterSettings.this.position = position;
 			return this;
 		}
 

@@ -16,22 +16,25 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.EnchantItemEvent;
+import org.spongepowered.api.event.item.inventory.EnchantItemEvent.CalculateEnchantment;
 import org.spongepowered.api.item.inventory.ContainerTypes;
 import org.spongepowered.api.item.inventory.menu.InventoryMenu;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 
 import net.kyori.adventure.audience.Audience;
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.TextUtils;
 
 public class EnchantmentTable extends AbstractParameterizedCommand {
 
 	private Map<UUID, Integer> levels = new HashMap<>();
-	public EnchantmentTable(CommandPackPlugin plugin) {
+	public EnchantmentTable(CommandPack plugin) {
 		super(plugin);
 		Sponge.eventManager().registerListeners(getContainer(), this);
 	}
@@ -45,9 +48,9 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 			if(target.isPresent()) {
 				levels.put(target.get().uniqueId(), level);
 				menu.open(target.get());
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ENCHANTMENT_TABLE));
+				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_ENCHANTMENT_TABLE), Placeholders.PLAYER, target.get().name()));
 			} else {
-				delay(null, locale, consumer -> {
+				delay((ServerPlayer) src, locale, consumer -> {
 					levels.put(((ServerPlayer) src).uniqueId(), level);
 					menu.open((ServerPlayer) src);
 				});
@@ -88,7 +91,11 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 	public void onEnchant(EnchantItemEvent event, @First ServerPlayer player) {
 		if(!levels.containsKey(player.uniqueId())) return;
 		int level = levels.get(player.uniqueId());
+		player.sendMessage(text(level));
 		if(event instanceof EnchantItemEvent.CalculateLevelRequirement) ((EnchantItemEvent.CalculateLevelRequirement) event).setLevelRequirement(level);
+		if(event instanceof EnchantItemEvent.CalculateEnchantment) {
+			EnchantItemEvent.CalculateEnchantment calculateEnchantment = (CalculateEnchantment) event;
+		}
 		levels.remove(player.uniqueId());
 	}
 

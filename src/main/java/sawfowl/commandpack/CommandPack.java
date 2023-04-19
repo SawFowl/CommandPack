@@ -58,10 +58,10 @@ import sawfowl.commandpack.utils.Economy;
 import sawfowl.commandpack.utils.Logger;
 
 @Plugin("commandpack")
-public class CommandPackPlugin {
+public class CommandPack {
 	private Logger logger;
 
-	private static CommandPackPlugin instance;
+	private static CommandPack instance;
 	private PluginContainer pluginContainer;
 	private Path configDir;
 	private Locales locales;
@@ -70,7 +70,7 @@ public class CommandPackPlugin {
 	private PlayersData playersData;
 	private RandomTeleportService rtpService;
 
-	public static CommandPackPlugin getInstance() {
+	public static CommandPack getInstance() {
 		return instance;
 	}
 
@@ -115,7 +115,7 @@ public class CommandPackPlugin {
 	}
 
 	@Inject
-	public CommandPackPlugin(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
+	public CommandPack(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
 		instance = this;
 		this.pluginContainer = pluginContainer;
 		configDir = configDirectory;

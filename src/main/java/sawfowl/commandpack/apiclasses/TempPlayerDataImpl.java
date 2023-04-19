@@ -1,6 +1,5 @@
 package sawfowl.commandpack.apiclasses;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,8 +12,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
 
-import net.kyori.adventure.text.Component;
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.commands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
@@ -23,25 +21,20 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerData {
 
-	private final CommandPackPlugin plugin;
+	private final CommandPack plugin;
 	private Map<String, List<UUID>> trackingCommandDelay = new HashMap<>();
-	private Component notTracking;
 	private Set<UUID> tptoggleSet = new HashSet<>();
 	private Map<UUID, ServerLocation> locations = new HashMap<>();
 	private Map<String, Map<UUID, Long>> cooldowns = new HashMap<>();
-	public TempPlayerDataImpl(CommandPackPlugin plugin) {
+	public TempPlayerDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
-		notTracking = plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING);
-		plugin.getConfigManager().getCommandsConfig().node().childrenMap().keySet().forEach(key -> {
-			trackingCommandDelay.put(key.toString().toLowerCase(), new ArrayList<>());
-		});
 	}
 
 	@Override
 	public void addCommandTracking(String command, ServerPlayer player) {
 		if(!trackingCommandDelay.containsKey(command)) {
 			if(plugin.getCommandsConfig().getCommandConfig(command).getAliases().length == 0) {
-				plugin.getLogger().error(TextUtils.replace(notTracking, Placeholders.COMMAND, command));
+				plugin.getLogger().error(TextUtils.replace(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING), Placeholders.COMMAND, command));
 				return;
 			} else {
 				trackingCommandDelay.keySet().stream().filter(c -> (!plugin.getCommandsConfig().getCommandConfig(c).getAliasesList().contains(command))).findFirst().ifPresent(c -> {
@@ -71,7 +64,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	@Override
 	public void removeCommandTracking(String command, UUID uuid) {
 		if(!trackingCommandDelay.containsKey(command)) {
-			plugin.getLogger().error(TextUtils.replace(notTracking, Placeholders.COMMAND, command));
+			plugin.getLogger().error(TextUtils.replace(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING), Placeholders.COMMAND, command));
 			return;
 		}
 		trackingCommandDelay.get(command).removeIf(u -> (u.equals(uuid)));
@@ -116,7 +109,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 
 	@Override
 	public void addTrackingCooldownCommand(PluginCommand command) {
-		addTrackingCooldownCommand(command);
+		addTrackingCooldownCommand(command.trackingName());
 	}
 
 	@Override

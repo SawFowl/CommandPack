@@ -10,7 +10,7 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.player.PlayerData;
@@ -22,7 +22,7 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class Home extends AbstractPlayerCommand {
 
-	public Home(CommandPackPlugin plugin) {
+	public Home(CommandPack plugin) {
 		super(plugin);
 	}
 

@@ -10,7 +10,7 @@ import org.spongepowered.plugin.PluginContainer;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.commands.raw.RawCommand;
 import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
 import sawfowl.commandpack.commands.abstractcommands.PluginCommand;
@@ -18,7 +18,7 @@ import sawfowl.commandpack.commands.abstractcommands.PluginCommand;
 public abstract class AbstractRawCommand extends PluginCommand implements RawCommand {
 
 	private List<CommandCompletion> empty = new ArrayList<>();
-	public AbstractRawCommand(CommandPackPlugin plugin) {
+	public AbstractRawCommand(CommandPack plugin) {
 		super(plugin);
 	}
 

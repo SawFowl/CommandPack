@@ -18,7 +18,7 @@ import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.math.vector.Vector3d;
 
 import net.kyori.adventure.audience.Audience;
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
@@ -31,7 +31,7 @@ import sawfowl.commandpack.api.events.RandomTeleportEvent;
 
 public class RandomTeleport extends AbstractParameterizedCommand {
 
-	public RandomTeleport(CommandPackPlugin plugin) {
+	public RandomTeleport(CommandPack plugin) {
 		super(plugin);
 	}
 

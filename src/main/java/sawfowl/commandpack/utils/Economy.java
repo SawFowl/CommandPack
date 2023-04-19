@@ -17,17 +17,17 @@ import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.service.economy.transaction.ResultType;
 import org.spongepowered.api.service.economy.transaction.TransactionResult;
 
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Economy {
 
-	private final CommandPackPlugin plugin;
+	private final CommandPack plugin;
 	private final EconomyService economyService;
 
-	public Economy(CommandPackPlugin plugin) {
+	public Economy(CommandPack plugin) {
 		this.plugin = plugin;
 		economyService = Sponge.server().serviceProvider().economyService().orElse(null);
 	}

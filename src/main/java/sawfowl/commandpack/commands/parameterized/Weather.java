@@ -8,7 +8,7 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 
 import net.kyori.adventure.audience.Audience;
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -18,7 +18,7 @@ import sawfowl.commandpack.commands.parameterized.weather.Thunder;
 
 public class Weather extends AbstractParameterizedCommand {
 
-	public Weather(CommandPackPlugin plugin) {
+	public Weather(CommandPack plugin) {
 		super(plugin);
 	}
 

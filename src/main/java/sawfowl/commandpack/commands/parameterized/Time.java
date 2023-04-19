@@ -9,7 +9,7 @@ import org.spongepowered.api.command.parameter.CommandContext;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -21,7 +21,7 @@ import sawfowl.commandpack.commands.parameterized.time.Night;
 
 public class Time extends AbstractParameterizedCommand {
 
-	public Time(CommandPackPlugin plugin) {
+	public Time(CommandPack plugin) {
 		super(plugin);
 	}
 

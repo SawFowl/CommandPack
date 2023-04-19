@@ -1,24 +1,19 @@
 package sawfowl.commandpack.commands.abstractcommands;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.SystemSubject;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.util.Nameable;
 import org.spongepowered.api.world.LocatableBlock;
 
 import net.kyori.adventure.audience.Audience;
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.Locales;
@@ -27,22 +22,20 @@ import sawfowl.commandpack.utils.Logger;
 
 public abstract class PluginCommand implements sawfowl.commandpack.api.data.commands.PluginCommand {
 
-	protected final CommandPackPlugin plugin;
+	protected final CommandPack plugin;
 	protected final String[] aliases;
 	protected CommandSettings commandSettings;
-	public PluginCommand(CommandPackPlugin plugin) {
+	public PluginCommand(CommandPack plugin) {
 		this.plugin = plugin;
-		this.commandSettings = plugin.getCommandsConfig().getCommandConfig(command());
-		this.aliases = commandSettings.getAliases();
+		if(command() != null) this.commandSettings = plugin.getCommandsConfig().getCommandConfig(command());
+		this.aliases = commandSettings != null ? commandSettings.getAliases() : null;
 	}
 
 	public PluginCommand(CommandSettings commandSettings) {
-		this.plugin = CommandPackPlugin.getInstance();
+		this.plugin = CommandPack.getInstance();
 		this.commandSettings = commandSettings;
 		this.aliases = commandSettings.getAliases();
 	}
-
-	public abstract String command();
 
 	public void setCommandSettings(CommandSettings commandSettings) {
 		this.commandSettings = commandSettings;
@@ -50,10 +43,6 @@ public abstract class PluginCommand implements sawfowl.commandpack.api.data.comm
 
 	public void updateCommandSettings() {
 		commandSettings = plugin.getCommandsConfig().getCommandConfig(command());
-	}
-
-	protected BigDecimal createDecimal(double value) {
-		return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
 	}
 
 	protected Locales getLocales() {
@@ -64,24 +53,8 @@ public abstract class PluginCommand implements sawfowl.commandpack.api.data.comm
 		return plugin.getLogger();
 	}
 
-	protected long getExpireHourFromNow(long second) {
-		return TimeUnit.SECONDS.toHours(second);
-	}
-
-	protected long getExpireMinuteFromNow(long second) {
-		return TimeUnit.SECONDS.toMinutes(second);
-	}
-
-	protected Optional<ServerPlayer> getPlayer(UUID uuid) {
-		return Sponge.server().player(uuid);
-	}
-
 	public Optional<ServerPlayer> getPlayer(String name) {
 		return Sponge.server().player(name);
-	}
-
-	protected void saveUser(User user) {
-		Sponge.server().userManager().forceSave(user.uniqueId());
 	}
 
 	protected String getSourceName(CommandCause cause, Audience audience, Locale locale, ServerPlayer player) {
@@ -119,15 +92,6 @@ public abstract class PluginCommand implements sawfowl.commandpack.api.data.comm
 
 	protected String getString(Locale locale, Object[] path) {
 		return plugin.getLocales().getString(locale, path);
-	}
-
-	/**
-	 * Added to speed up the creation of commands.
-	 * Must be deleted after the job is done.
-	 */
-	@Deprecated
-	public static Permissions perm() {
-		return Permissions.instance;
 	}
 
 }

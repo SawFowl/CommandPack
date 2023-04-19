@@ -9,7 +9,7 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
-import sawfowl.commandpack.CommandPackPlugin;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
@@ -18,7 +18,7 @@ import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Backpack extends AbstractPlayerCommand {
 
-	public Backpack(CommandPackPlugin plugin) {
+	public Backpack(CommandPack plugin) {
 		super(plugin);
 	}
 
