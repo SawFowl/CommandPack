@@ -33,6 +33,7 @@ import sawfowl.commandpack.api.data.miscellaneous.Location;
 import sawfowl.commandpack.api.data.miscellaneous.Point;
 import sawfowl.commandpack.api.data.miscellaneous.Position;
 import sawfowl.commandpack.api.data.player.Home;
+import sawfowl.commandpack.api.data.player.PlayerBackpack;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.configs.MainConfig;
@@ -43,6 +44,7 @@ import sawfowl.commandpack.configure.configs.commands.RandomTeleportWorldConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
 import sawfowl.commandpack.configure.configs.miscellaneous.PositionData;
 import sawfowl.commandpack.configure.configs.miscellaneous.PointData;
+import sawfowl.commandpack.configure.configs.player.BackpackData;
 import sawfowl.commandpack.configure.configs.player.HomeData;
 import sawfowl.commandpack.configure.configs.player.WarpData;
 import sawfowl.commandpack.configure.locale.Locales;
@@ -56,10 +58,10 @@ import sawfowl.commandpack.utils.Economy;
 import sawfowl.commandpack.utils.Logger;
 
 @Plugin("commandpack")
-public class CommandPack {
+public class CommandPackPlugin {
 	private Logger logger;
 
-	private static CommandPack instance;
+	private static CommandPackPlugin instance;
 	private PluginContainer pluginContainer;
 	private Path configDir;
 	private Locales locales;
@@ -68,7 +70,7 @@ public class CommandPack {
 	private PlayersData playersData;
 	private RandomTeleportService rtpService;
 
-	public static CommandPack getInstance() {
+	public static CommandPackPlugin getInstance() {
 		return instance;
 	}
 
@@ -113,7 +115,7 @@ public class CommandPack {
 	}
 
 	@Inject
-	public CommandPack(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
+	public CommandPackPlugin(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
 		instance = this;
 		this.pluginContainer = pluginContainer;
 		configDir = configDirectory;
@@ -248,6 +250,12 @@ public class CommandPack {
 			@Override
 			public Warp.Builder get() {
 				return new WarpData().builder();
+			}
+		});
+		event.register(PlayerBackpack.Builder.class, new Supplier<PlayerBackpack.Builder>() {
+			@Override
+			public PlayerBackpack.Builder get() {
+				return new BackpackData().builder();
 			}
 		});
 	}

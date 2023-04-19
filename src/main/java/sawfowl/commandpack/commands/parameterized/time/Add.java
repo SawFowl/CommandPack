@@ -14,7 +14,7 @@ import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.audience.Audience;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
@@ -24,7 +24,7 @@ import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Add extends AbstractParameterizedCommand {
 
-	public Add(CommandPack plugin) {
+	public Add(CommandPackPlugin plugin) {
 		super(plugin);
 	}
 

@@ -17,8 +17,9 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.api.data.player.Home;
+import sawfowl.commandpack.api.data.player.PlayerBackpack;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -27,10 +28,17 @@ import sawfowl.localeapi.api.TextUtils;
 @ConfigSerializable
 public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerData {
 
-	public PlayerData() {}
+	public PlayerData() {
+		backpackData.setSaveConsumer(consumer -> {
+			save();
+		});
+	}
 	public PlayerData(ServerPlayer player) {
 		this.name = player.name();
 		this.uuid = player.uniqueId();
+		backpackData.setSaveConsumer(consumer -> {
+			save();
+		});
 	}
 
 	@Setting("Name")
@@ -41,6 +49,8 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	private List<HomeData> homes = new ArrayList<>();
 	@Setting("Warps")
 	private List<WarpData> warps = new ArrayList<>();
+	@Setting("Backpack")
+	private BackpackData backpackData = new BackpackData();
 
 	@Override
 	public String getName() {
@@ -130,10 +140,17 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	public Optional<Warp> getWarp(String name) {
 		return warps.stream().filter(warp -> (name.equals(TextUtils.clearDecorations(warp.asComponent())))).map(WarpData::toInterface).findFirst();
 	}
+	@Override
+	public PlayerBackpack getBackpack() {
+		if(!backpackData.canSave()) backpackData.setSaveConsumer(consumer -> {
+			save();
+		});
+		return backpackData;
+	}
 
 	@Override
 	public List<Component> homesListChatMenu(Locale locale, boolean allowRemove) {
-		Locales locales = ((CommandPack) Sponge.pluginManager().plugin("commandpack").get().instance()).getLocales();
+		Locales locales = ((CommandPackPlugin) Sponge.pluginManager().plugin("commandpack").get().instance()).getLocales();
 		List<Component> list = new ArrayList<>();
 		homes.forEach(home -> {
 			Component remove = allowRemove ? locales.getText(locale, LocalesPaths.REMOVE).clickEvent(SpongeComponents.executeCallback(cause -> {
@@ -144,7 +161,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 				save();
 			})) : Component.empty();
 			Component teleport = home.getLocation().getServerLocation().isPresent() ? locales.getText(locale, LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback(cause -> {
-				CommandPack.getInstance().getPlayersData().getTempData().setPreviousLocation((ServerPlayer) cause.root());
+				CommandPackPlugin.getInstance().getPlayersData().getTempData().setPreviousLocation((ServerPlayer) cause.root());
 				home.getLocation().moveHere((ServerPlayer) cause.root());
 			})) : locales.getText(locale, LocalesPaths.TELEPORT);
 			Component homeName = home.asComponent();
@@ -155,7 +172,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 
 	@Override
 	public List<Component> warpsListChatMenu(Locale locale, Predicate<Warp> allowRemove, Predicate<Warp> allowTeleport) {
-		Locales locales = ((CommandPack) Sponge.pluginManager().plugin("commandpack").get().instance()).getLocales();
+		Locales locales = ((CommandPackPlugin) Sponge.pluginManager().plugin("commandpack").get().instance()).getLocales();
 		List<Component> list = new ArrayList<>();
 		warps.forEach(warp -> {
 			Component remove = allowRemove.test(warp) ? locales.getText(locale, LocalesPaths.REMOVE).clickEvent(SpongeComponents.executeCallback(cause -> {
@@ -163,7 +180,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 				save();
 			})) : Component.empty();
 			Component teleport =  warp.getLocation().getServerLocation().isPresent() && allowTeleport.test(warp) ? locales.getText(locale, LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback(cause -> {
-				CommandPack.getInstance().getPlayersData().getTempData().setPreviousLocation((ServerPlayer) cause.root());
+				CommandPackPlugin.getInstance().getPlayersData().getTempData().setPreviousLocation((ServerPlayer) cause.root());
 				warp.moveHere((ServerPlayer) cause.root());
 			})) : locales.getText(locale, LocalesPaths.TELEPORT);
 			Component homeName = warp.asComponent();
@@ -187,7 +204,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	@Override
 	public sawfowl.commandpack.api.data.player.PlayerData save() {
 		if(getPlayer().isPresent() && !getPlayer().get().name().equals(name)) name = getPlayer().get().name();
-		((CommandPack) Sponge.pluginManager().plugin("commandpack").get().instance()).getConfigManager().savePlayerData(this);
+		((CommandPackPlugin) Sponge.pluginManager().plugin("commandpack").get().instance()).getConfigManager().savePlayerData(this);
 		return this;
 	}
 

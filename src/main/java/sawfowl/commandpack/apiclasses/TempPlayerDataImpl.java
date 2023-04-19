@@ -14,7 +14,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.text.Component;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.api.data.commands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
@@ -23,13 +23,13 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerData {
 
-	private final CommandPack plugin;
+	private final CommandPackPlugin plugin;
 	private Map<String, List<UUID>> trackingCommandDelay = new HashMap<>();
 	private Component notTracking;
 	private Set<UUID> tptoggleSet = new HashSet<>();
 	private Map<UUID, ServerLocation> locations = new HashMap<>();
 	private Map<String, Map<UUID, Long>> cooldowns = new HashMap<>();
-	public TempPlayerDataImpl(CommandPack plugin) {
+	public TempPlayerDataImpl(CommandPackPlugin plugin) {
 		this.plugin = plugin;
 		notTracking = plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING);
 		plugin.getConfigManager().getCommandsConfig().node().childrenMap().keySet().forEach(key -> {

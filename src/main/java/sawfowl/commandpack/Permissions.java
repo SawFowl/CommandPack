@@ -48,6 +48,10 @@ public class Permissions {
 	public static final String TIME = "commandpack.commands.user.time";
 	public static final String CRAFTING_TABLE = "commandpack.commands.user.craftingtable";
 	public static final String ANVIL = "commandpack.commands.user.anvil";
+	public static final String ENCHANTING_TABLE = "commandpack.commands.user.enchantmenttable";
+	public static final String BACKPACK = "commandpack.commands.user.backpack";
+	public static final String FEED = "commandpack.commands.user.feed";
+	public static final String HEAL = "commandpack.commands.user.heal";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -72,6 +76,11 @@ public class Permissions {
 	public static final String TIME_STAFF = "commandpack.commands.staff.time";
 	public static final String CRAFTING_TABLE_STAFF = "commandpack.commands.staff.craftingtable";
 	public static final String ANVIL_STAFF = "commandpack.commands.staff.anvil";
+	public static final String ENCHANTMENT_TABLE_STAFF = "commandpack.commands.staff.enchantmenttable";
+	public static final String ENCHANT_STAFF = "commandpack.commands.staff.enchant";
+	public static final String BACKPACK_STAFF = "commandpack.commands.staff.backpack";
+	public static final String FEED_STAFF = "commandpack.commands.staff.feed";
+	public static final String HEAL_STAFF = "commandpack.commands.staff.heal";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";
@@ -84,6 +93,8 @@ public class Permissions {
 	private static final String WARP_LIMIT = "commandpack.limits.warp";
 	private static final String SPEED_LIMIT = "commandpack.limits.speed";
 	private static final String SPEED_FLY_LIMIT = "commandpack.limits.speed";
+	private static final String ENCHANTMENT_TABLE_LIMIT = "commandpack.limits.enchantmenttable";
+	private static final String BACKPACK_LIMIT = "commandpack.limits.backpack";
 
 	private static final String WARP_ACCESS = "commandpack.access.warps";
 	private static final String RTP_WORLD_ARG_ACCESS = "commandpack.access.worlds.randomteleport";
@@ -147,6 +158,14 @@ public class Permissions {
 
 	public static double getSpeedFlyLimit(ServerPlayer player) {
 		return !player.option(SPEED_FLY_LIMIT).isPresent() ? 1 : toDouble(player.option(SPEED_FLY_LIMIT).get(), 1);
+	}
+
+	public static int getEnchantmentTableLimit(ServerPlayer player) {
+		return !player.option(ENCHANTMENT_TABLE_LIMIT).isPresent() ? 1 : toInt(player.option(ENCHANTMENT_TABLE_LIMIT).get(), 1);
+	}
+
+	public static int getBackpackLimit(ServerPlayer player) {
+		return !player.option(BACKPACK_LIMIT).isPresent() ? 1 : toInt(player.option(BACKPACK_LIMIT).get(), 1);
 	}
 
 	private static int toInt(String option, int def) {

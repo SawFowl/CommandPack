@@ -76,6 +76,7 @@ public class Locales {
 		save = check(locale, toText("PluginCommand block"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
 		save = check(locale, toText("Minecart with command block"), null, LocalesPaths.NAME_COMMANDBLOCK_MINECART) || save;
 		save = check(locale, toText("Unknown"), null, LocalesPaths.NAME_UNKNOWN) || save;
+		save = check(locale, toText("&6&lBackpack"), null, LocalesPaths.NAME_BACKPACK) || save;
 
 		save = check(locale, toText("&cYou need to specify the nickname of the player online."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou can't point to yourself."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
@@ -171,6 +172,15 @@ public class Locales {
 		save = check(locale, toText("&aYou have set the day in the world &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_DAY) || save;
 		save = check(locale, toText("&aYou have set an evening in the world &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_EVENING) || save;
 		save = check(locale, toText("&aYou have set the night in the world &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_NIGHT) || save;
+		save = check(locale, toText("&cYou have to hold the item you want to enchant in your hand."), null, LocalesPaths.COMMANDS_ENCHANT_ITEM_IS_NOT_PRESENT) || save;
+		save = check(locale, toText("&aYou have added an enchantment to the item in your hand."), null, LocalesPaths.COMMANDS_ENCHANT_SUCCES) || save;
+		save = check(locale, toText("&aYou opened the anvil inventory to player " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_ANVIL) || save;
+		save = check(locale, toText("&aYou have opened the workbench inventory to the player" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_CRAFTING_TABLE) || save;
+		save = check(locale, toText("&aYou have opened the enchantment table inventory to a player" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_ENCHANTMENT_TABLE) || save;
+		save = check(locale, toText("&aYour food level is now maximum."), null, LocalesPaths.COMMANDS_FEED_SELF) || save;
+		save = check(locale, toText("&aYou saturated the player " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_FEED_OTHER) || save;
+		save = check(locale, toText("&aYour heals level is now maximum."), null, LocalesPaths.COMMANDS_HEAL_SELF) || save;
+		save = check(locale, toText("&aYou healed player " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_HEAL_OTHER) || save;
 
 		if(save) save(locale);
 	}
@@ -194,6 +204,7 @@ public class Locales {
 		save = check(locale, toText("Командный блок"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
 		save = check(locale, toText("Вагонетка с командным блоком"), null, LocalesPaths.NAME_COMMANDBLOCK_MINECART) || save;
 		save = check(locale, toText("Неизвестный"), null, LocalesPaths.NAME_UNKNOWN) || save;
+		save = check(locale, toText("&6&lРюкзак"), null, LocalesPaths.NAME_BACKPACK) || save;
 
 		save = check(locale, toText("&cНужно указать ник игрока онлайн."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНельзя указывать на себя."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
@@ -289,6 +300,15 @@ public class Locales {
 		save = check(locale, toText("&aВы установили день в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_DAY) || save;
 		save = check(locale, toText("&aВы установили вечер в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_EVENING) || save;
 		save = check(locale, toText("&aВы установили ночь в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_NIGHT) || save;
+		save = check(locale, toText("&cВы должны держать в руке предмет который хотите зачаровать."), null, LocalesPaths.COMMANDS_ENCHANT_ITEM_IS_NOT_PRESENT) || save;
+		save = check(locale, toText("&aВы добавили зачарование к предмету в вашей руке."), null, LocalesPaths.COMMANDS_ENCHANT_SUCCES) || save;
+		save = check(locale, toText("&aВы открыли инвентарь наковальни игроку " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_ANVIL) || save;
+		save = check(locale, toText("&aВы открыли инвентарь верстака игроку " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_CRAFTING_TABLE) || save;
+		save = check(locale, toText("&aВы открыли инвентарь стола зачарования игроку " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_ENCHANTMENT_TABLE) || save;
+		save = check(locale, toText("&aВаш уровень сытости стал максимальным."), null, LocalesPaths.COMMANDS_FEED_SELF) || save;
+		save = check(locale, toText("&aВы насытили игрока " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_FEED_OTHER) || save;
+		save = check(locale, toText("&aВаш уровень здоровья стал максимальным."), null, LocalesPaths.COMMANDS_HEAL_SELF) || save;
+		save = check(locale, toText("&aВы вылечили игрока " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_HEAL_OTHER) || save;
 
 		if(save) save(locale);
 	}

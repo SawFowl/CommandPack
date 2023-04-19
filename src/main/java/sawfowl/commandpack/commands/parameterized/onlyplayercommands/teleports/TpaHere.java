@@ -13,7 +13,7 @@ import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
@@ -24,7 +24,7 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class TpaHere extends AbstractPlayerCommand {
 
-	public TpaHere(CommandPack plugin) {
+	public TpaHere(CommandPackPlugin plugin) {
 		super(plugin);
 	}
 

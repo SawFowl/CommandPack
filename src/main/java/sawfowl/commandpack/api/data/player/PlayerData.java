@@ -53,7 +53,6 @@ public interface PlayerData {
 	 */
 	long getTotalHomes();
 
-
 	/**
 	 * The number of existing points at the player's warps.
 	 */
@@ -94,7 +93,15 @@ public interface PlayerData {
 	 */
 	public Optional<Home> getHome(String name);
 
+	/**
+	 * Get {@link Warp} whith name
+	 */
 	Optional<Warp> getWarp(String name);
+
+	/**
+	 * Viewing and changing a player's backpack.
+	 */
+	PlayerBackpack getBackpack();
 
 	/**
 	 * Getting a clickable chat menu with a list of homes.
@@ -103,7 +110,6 @@ public interface PlayerData {
 	 * @param allowRemove - Allow deleting home points through the chat menu.
 	 */
 	List<Component> homesListChatMenu(Locale locale, boolean allowRemove);
-
 
 	/**
 	 * Getting a clickable chat menu with a list of warps.
@@ -116,12 +122,12 @@ public interface PlayerData {
 	/**
 	 * Sending a message to a player if he is online.
 	 */
-	public void sendMessage(Component component);
+	void sendMessage(Component component);
 
 	/**
 	 * Sending a message to a player if he is online.
 	 */
-	public void sendMessage(String string);
+	void sendMessage(String string);
 
 	PlayerData save();
 

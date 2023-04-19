@@ -19,7 +19,7 @@ import org.spongepowered.api.util.locale.LocaleSource;
 import org.spongepowered.plugin.PluginContainer;
 
 import net.kyori.adventure.text.Component;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
 import sawfowl.commandpack.api.data.commands.settings.PriceSettings;
@@ -46,7 +46,7 @@ public interface PluginCommand {
 	}
 
 	default Map<UUID, Long> getCooldowns() {
-		return CommandPack.getInstance().getPlayersData().getTempData().getTrackingMap(trackingName());
+		return CommandPackPlugin.getInstance().getPlayersData().getTempData().getTrackingMap(trackingName());
 	}
 
 	default Component getText(ServerPlayer player, Object[] path) {
@@ -54,13 +54,13 @@ public interface PluginCommand {
 	}
 
 	default Locale getLocale(CommandCause cause) {
-		return cause.audience() instanceof SystemSubject ? CommandPack.getInstance().getLocales().getLocaleService().getSystemOrDefaultLocale() : (cause.audience() instanceof LocaleSource ? ((LocaleSource) cause.audience()).locale() : org.spongepowered.api.util.locale.Locales.DEFAULT);
+		return cause.audience() instanceof SystemSubject ? CommandPackPlugin.getInstance().getLocales().getLocaleService().getSystemOrDefaultLocale() : (cause.audience() instanceof LocaleSource ? ((LocaleSource) cause.audience()).locale() : org.spongepowered.api.util.locale.Locales.DEFAULT);
 	}
 
-	default Component getText(Locale locale, Object[] path) {
+	default Component getText(Locale locale, Object... path) {
 		Component text = getText(path);
 		if(text != null) return text;
-		String str = CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getString(path);
+		String str = CommandPackPlugin.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getString(path);
 		if(isLegacyDecor(str)) {
 			return TextUtils.deserializeLegacy(str);
 		} else {
@@ -84,7 +84,7 @@ public interface PluginCommand {
 		return exception(text(text));
 	}
 
-	default CommandException exception(Locale locale, Object[] path) throws CommandException {
+	default CommandException exception(Locale locale, Object... path) throws CommandException {
 		return exception(getText(locale, path));
 	}
 
@@ -109,15 +109,15 @@ public interface PluginCommand {
 		long hour = TimeUnit.SECONDS.toHours(second);
 		if(hour == 0) {
 			if(minute == 0) {
-				return TextUtils.replace(Component.text(String.format((second > 9 ? "%02d" : "%01d"), second) + "%second%"), "%second%", CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_SECOND));
-			} else return TextUtils.replaceToComponents(Component.text(String.format((minute > 9 ? "%02d" : "%01d"), minute) + "%minute%" + (second - (minute * 60) > 0 ? " " + String.format((second - (minute * 60) > 9 ? "%02d" : "%01d"), second - (minute * 60)) + "%second%" : "")), new String[] {"%minute%", "%second%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_SECOND)});
+				return TextUtils.replace(Component.text(String.format((second > 9 ? "%02d" : "%01d"), second) + "%second%"), "%second%", CommandPackPlugin.getInstance().getLocales().getText(locale, LocalesPaths.TIME_SECOND));
+			} else return TextUtils.replaceToComponents(Component.text(String.format((minute > 9 ? "%02d" : "%01d"), minute) + "%minute%" + (second - (minute * 60) > 0 ? " " + String.format((second - (minute * 60) > 9 ? "%02d" : "%01d"), second - (minute * 60)) + "%second%" : "")), new String[] {"%minute%", "%second%"}, new Component[] {CommandPackPlugin.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE), CommandPackPlugin.getInstance().getLocales().getText(locale, LocalesPaths.TIME_SECOND)});
 		}
-		return TextUtils.replaceToComponents(Component.text(String.format((hour > 9 ? "%02d" : "%01d"), hour) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")), new String[] {"%hour%", "%minute%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_HOUR), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE)});
+		return TextUtils.replaceToComponents(Component.text(String.format((hour > 9 ? "%02d" : "%01d"), hour) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")), new String[] {"%hour%", "%minute%"}, new Component[] {CommandPackPlugin.getInstance().getLocales().getText(locale, LocalesPaths.TIME_HOUR), CommandPackPlugin.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE)});
 	}
 	
 	default void delay(ServerPlayer player, Locale locale, ThrowingConsumer<PluginCommand, CommandException> consumer) throws CommandException {
 		if(getCommandSettings().getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(command()))) {
-			CommandPack.getInstance().getPlayersData().getTempData().addCommandTracking(command(), player);
+			CommandPackPlugin.getInstance().getPlayersData().getTempData().addCommandTracking(command(), player);
 			Sponge.asyncScheduler().submit(Task.builder().plugin(getContainer()).interval(1, TimeUnit.SECONDS).execute(new DelayTimerTask(consumer, player, 0, getContainer(), command(), getCommandSettings(), this)).build());
 		} else {
 			economy(player, locale);
@@ -126,13 +126,13 @@ public interface PluginCommand {
 	}
 
 	default void economy(ServerPlayer player, Locale locale) throws CommandException {
-		if(getCommandSettings() == null || !CommandPack.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command()))) return;
+		if(getCommandSettings() == null || !CommandPackPlugin.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command()))) return;
 		PriceSettings price = getCommandSettings().getPrice();
 		if(price.getMoney() > 0) {
-			Currency currency = CommandPack.getInstance().getEconomy().checkCurrency(price.getCurrency());
+			Currency currency = CommandPackPlugin.getInstance().getEconomy().checkCurrency(price.getCurrency());
 			BigDecimal money = createDecimal(price.getMoney());
-			if(!CommandPack.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(locale, new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command())}, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY);
-			CommandPack.getInstance().getEconomy().removeFromPlayerBalance(player, currency, money);
+			if(!CommandPackPlugin.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(locale, new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command())}, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY);
+			CommandPackPlugin.getInstance().getEconomy().removeFromPlayerBalance(player, currency, money);
 		}
 	}
 

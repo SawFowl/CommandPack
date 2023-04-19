@@ -7,7 +7,7 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class Logger {
 
-	private org.apache.logging.log4j.Logger logger = LogManager.getLogger("CommandPack");
+	private org.apache.logging.log4j.Logger logger = LogManager.getLogger("CommandPackPlugin");
 	public Logger(){}
 
 	public void info(Object object) {

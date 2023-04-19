@@ -14,16 +14,16 @@ import org.spongepowered.api.event.command.ExecuteCommandEvent;
 import org.spongepowered.api.util.Nameable;
 import org.spongepowered.api.world.LocatableBlock;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class CommandLogListener {
 
-	private final CommandPack plugin;
+	private final CommandPackPlugin plugin;
 	private final Locale locale;
-	public CommandLogListener(CommandPack plugin) {
+	public CommandLogListener(CommandPackPlugin plugin) {
 		this.plugin = plugin;
 		locale = plugin.getLocales().getLocaleService().getSystemOrDefaultLocale();
 	}

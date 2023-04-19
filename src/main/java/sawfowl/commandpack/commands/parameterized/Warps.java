@@ -14,7 +14,7 @@ import org.spongepowered.api.service.pagination.PaginationList;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.player.Warp;
@@ -25,7 +25,7 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class Warps extends AbstractParameterizedCommand {
 
-	public Warps(CommandPack plugin) {
+	public Warps(CommandPackPlugin plugin) {
 		super(plugin);
 	}
 

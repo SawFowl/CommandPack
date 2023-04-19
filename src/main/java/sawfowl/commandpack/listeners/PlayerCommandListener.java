@@ -6,15 +6,15 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.command.ExecuteCommandEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class PlayerCommandListener {
 
-	private final CommandPack plugin;
-	public PlayerCommandListener(CommandPack plugin) {
+	private final CommandPackPlugin plugin;
+	public PlayerCommandListener(CommandPackPlugin plugin) {
 		this.plugin = plugin;
 	}
 

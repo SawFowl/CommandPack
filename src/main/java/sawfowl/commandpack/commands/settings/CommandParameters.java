@@ -1,10 +1,23 @@
 package sawfowl.commandpack.commands.settings;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.spongepowered.api.ResourceKey;
+import org.spongepowered.api.command.CommandCompletion;
+import org.spongepowered.api.command.exception.ArgumentParseException;
+import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
+import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter;
+import org.spongepowered.api.command.parameter.Parameter.Key;
 import org.spongepowered.api.command.parameter.Parameter.Value;
 import org.spongepowered.api.command.parameter.Parameter.Value.Builder;
+import org.spongepowered.api.command.parameter.managed.ValueParameter;
 import org.spongepowered.api.command.parameter.managed.standard.ResourceKeyedValueParameters;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.item.enchantment.EnchantmentType;
+import org.spongepowered.api.item.enchantment.EnchantmentTypes;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 
@@ -31,6 +44,17 @@ public class CommandParameters {
 	public static final Builder<String> INVENTORY_TYPES = Parameter.choices("all", "equipment", "hotbar", "primary", "enderchest").key("InventoryType");
 
 	public static final Value<String> REPAIR = Parameter.choices("all", "armor", "hands").optional().key("Repair").requiredPermission(Permissions.REPAIR_SELECT).build();
+
+	public static final Value<EnchantmentType> ENCHANT = Parameter.builder(EnchantmentType.class, new ValueParameter<EnchantmentType>() {
+		@Override
+		public List<CommandCompletion> complete(CommandContext context, String currentInput) {
+			return EnchantmentTypes.registry().streamEntries().map(e -> (e.key().asString())).filter(k -> (k.startsWith(currentInput))).map(CommandCompletion::of).collect(Collectors.toList());
+		}
+		@Override
+		public Optional<EnchantmentType> parseValue(Key<? super EnchantmentType> parameterKey, Mutable reader,org.spongepowered.api.command.parameter.CommandContext.Builder context) throws ArgumentParseException {
+			return EnchantmentTypes.registry().findValue(ResourceKey.resolve(parameterKey.key()));
+		}
+	}).key("Enchant").build();
 
 	public static Value<ServerPlayer> createPlayer(boolean optional) {
 		return (optional ? PLAYER.optional() : PLAYER).build();

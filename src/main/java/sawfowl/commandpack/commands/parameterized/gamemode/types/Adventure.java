@@ -13,7 +13,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -24,7 +24,7 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class Adventure extends AbstractParameterizedCommand {
 
-	public Adventure(CommandPack plugin) {
+	public Adventure(CommandPackPlugin plugin) {
 		super(plugin);
 	}
 

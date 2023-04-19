@@ -18,7 +18,7 @@ import org.spongepowered.api.util.Nameable;
 import org.spongepowered.api.world.LocatableBlock;
 
 import net.kyori.adventure.audience.Audience;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.Locales;
@@ -27,17 +27,17 @@ import sawfowl.commandpack.utils.Logger;
 
 public abstract class PluginCommand implements sawfowl.commandpack.api.data.commands.PluginCommand {
 
-	protected final CommandPack plugin;
+	protected final CommandPackPlugin plugin;
 	protected final String[] aliases;
 	protected CommandSettings commandSettings;
-	public PluginCommand(CommandPack plugin) {
+	public PluginCommand(CommandPackPlugin plugin) {
 		this.plugin = plugin;
 		this.commandSettings = plugin.getCommandsConfig().getCommandConfig(command());
 		this.aliases = commandSettings.getAliases();
 	}
 
 	public PluginCommand(CommandSettings commandSettings) {
-		this.plugin = CommandPack.getInstance();
+		this.plugin = CommandPackPlugin.getInstance();
 		this.commandSettings = commandSettings;
 		this.aliases = commandSettings.getAliases();
 	}

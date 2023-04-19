@@ -3,13 +3,13 @@ package sawfowl.commandpack.listeners;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ServerSideConnectionEvent;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.configure.configs.player.PlayerData;
 
 public class PlayerConnectionListener {
 
-	private final CommandPack plugin;
-	public PlayerConnectionListener(CommandPack plugin) {
+	private final CommandPackPlugin plugin;
+	public PlayerConnectionListener(CommandPackPlugin plugin) {
 		this.plugin = plugin;
 	}
 

@@ -16,7 +16,7 @@ import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.api.world.weather.WeatherTypes;
 
 import net.kyori.adventure.audience.Audience;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -25,7 +25,7 @@ import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Sun extends AbstractParameterizedCommand {
 
-	public Sun(CommandPack plugin) {
+	public Sun(CommandPackPlugin plugin) {
 		super(plugin);
 	}
 

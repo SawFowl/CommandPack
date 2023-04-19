@@ -86,7 +86,7 @@ public interface PlayersData {
 
 	/**
 	 * Temporary player data.<br>
-	 * CommandPack does not save this data to disk.
+	 * CommandPackPlugin does not save this data to disk.
 	 */
 	TempPlayerData getTempData();
 

@@ -9,7 +9,7 @@ import org.spongepowered.plugin.PluginContainer;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterizedCommand;
 import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
@@ -18,7 +18,7 @@ import sawfowl.commandpack.commands.abstractcommands.PluginCommand;
 public abstract class AbstractParameterizedCommand extends PluginCommand implements ParameterizedCommand {
 
 	protected final Map<String, ParameterSettings> parameterSettings = new HashMap<>();
-	public AbstractParameterizedCommand(CommandPack plugin) {
+	public AbstractParameterizedCommand(CommandPackPlugin plugin) {
 		super(plugin);
 		List<ParameterSettings> parameterSettings = getParameterSettings();
 		if(parameterSettings != null && !parameterSettings.isEmpty()) {

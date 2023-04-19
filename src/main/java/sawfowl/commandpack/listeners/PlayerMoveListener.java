@@ -7,7 +7,7 @@ import org.spongepowered.api.event.cause.entity.MovementTypes;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -15,8 +15,8 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class PlayerMoveListener {
 
-	private final CommandPack plugin;
-	public PlayerMoveListener(CommandPack plugin) {
+	private final CommandPackPlugin plugin;
+	public PlayerMoveListener(CommandPackPlugin plugin) {
 		this.plugin = plugin;
 	}
 

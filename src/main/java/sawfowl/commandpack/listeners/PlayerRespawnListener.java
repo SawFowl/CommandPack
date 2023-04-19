@@ -6,12 +6,12 @@ import org.spongepowered.api.event.entity.living.player.RespawnPlayerEvent;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Ticks;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 
 public class PlayerRespawnListener {
 
-	private final CommandPack plugin;
-	public PlayerRespawnListener(CommandPack plugin) {
+	private final CommandPackPlugin plugin;
+	public PlayerRespawnListener(CommandPackPlugin plugin) {
 		this.plugin = plugin;
 	}
 

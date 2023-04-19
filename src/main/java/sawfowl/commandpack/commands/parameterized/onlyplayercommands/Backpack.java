@@ -1,4 +1,4 @@
-package sawfowl.commandpack.commands.parameterized.onlyplayercommands.teleports;
+package sawfowl.commandpack.commands.parameterized.onlyplayercommands;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,20 +14,17 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
-public class SetSpawn extends AbstractPlayerCommand {
+public class Backpack extends AbstractPlayerCommand {
 
-	public SetSpawn(CommandPackPlugin plugin) {
+	public Backpack(CommandPackPlugin plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		plugin.getMainConfig().setSpawnData(new SpawnData(src.serverLocation(), src.rotation(), getBoolean(context, "ForceSpawn", false),getBoolean(context, "ForceRespawn", false)));
-		plugin.getConfigManager().updateMainConfig();
-		src.sendMessage(getText(src.locale(), LocalesPaths.COMMANDS_SETSPAWN_SUCCESS));
+		plugin.getPlayersData().getOrCreatePlayerData(getPlayer(context).orElse(src)).getBackpack().asMenu(getContainer(), src, Permissions.getBackpackLimit(src), getText(locale, LocalesPaths.NAME_BACKPACK)).open(src);
 	}
 
 	@Override
@@ -37,20 +34,17 @@ public class SetSpawn extends AbstractPlayerCommand {
 
 	@Override
 	public String permission() {
-		return Permissions.SET_SPAWN_STAFF;
+		return Permissions.BACKPACK;
 	}
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createBoolean("ForceSpawn", true), false, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createBoolean("ForceRespawn", true), false, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT)
-		);
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.BACKPACK_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 
 	@Override
 	public String command() {
-		return "setspawn";
+		return "backpack";
 	}
 
 }

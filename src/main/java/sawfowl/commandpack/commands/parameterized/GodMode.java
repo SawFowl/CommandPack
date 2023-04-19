@@ -12,7 +12,7 @@ import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -21,7 +21,7 @@ import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class GodMode extends AbstractParameterizedCommand {
 
-	public GodMode(CommandPack plugin) {
+	public GodMode(CommandPackPlugin plugin) {
 		super(plugin);
 	}
 

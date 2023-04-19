@@ -3,16 +3,18 @@ package sawfowl.commandpack.commands.parameterized;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.item.inventory.ContainerTypes;
+import org.spongepowered.api.item.inventory.menu.InventoryMenu;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 
 import net.kyori.adventure.audience.Audience;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -21,16 +23,26 @@ import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class CraftingTable extends AbstractParameterizedCommand {
 
-	public CraftingTable(CommandPack plugin) {
+	public CraftingTable(CommandPackPlugin plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
-			ServerPlayer player = getPlayer(context).orElse((ServerPlayer) src);
-			player.openInventory(ViewableInventory.builder().type(ContainerTypes.CRAFTING).completeStructure().carrier(player).plugin(plugin.getPluginContainer()).build().asMenu().inventory());
-		} else getPlayer(context).get().openInventory(ViewableInventory.builder().type(ContainerTypes.CRAFTING).completeStructure().carrier(getPlayer(context).get()).plugin(plugin.getPluginContainer()).build().asMenu().inventory());
+			Optional<ServerPlayer> target = getPlayer(context);
+			InventoryMenu menu = ViewableInventory.builder().type(ContainerTypes.CRAFTING).completeStructure().carrier(target.isPresent() ? target.get() : (ServerPlayer) src).plugin(plugin.getPluginContainer()).build().asMenu();
+			if(target.isPresent()) {
+				menu.open(target.get());
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_CRAFTING_TABLE));
+			} else delay((ServerPlayer) src, locale, consumer -> {
+				menu.open((ServerPlayer) src);
+			});
+		} else {
+			ServerPlayer target = getPlayer(context).get();
+			ViewableInventory.builder().type(ContainerTypes.CRAFTING).completeStructure().carrier(target).plugin(plugin.getPluginContainer()).build().asMenu().open(target);
+			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_CRAFTING_TABLE));
+		}
 	}
 
 	@Override

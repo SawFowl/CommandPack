@@ -13,12 +13,12 @@ import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.math.vector.Vector3i;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 
 public class RTPService implements sawfowl.commandpack.api.RandomTeleportService {
 
-	private final CommandPack plugin;
-	public RTPService(CommandPack plugin) {
+	private final CommandPackPlugin plugin;
+	public RTPService(CommandPackPlugin plugin) {
 		this.plugin = plugin;
 	}
 

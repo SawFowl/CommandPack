@@ -26,7 +26,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.configurate.reference.ValueReference;
 import org.spongepowered.configurate.serialize.SerializationException;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackPlugin;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 
@@ -121,10 +121,20 @@ public class CommandsConfig {
 	private CommandSettings evening = new CommandSettings(120);
 	@Setting("Night")
 	private CommandSettings night = new CommandSettings(120);
-	@Setting("CraftingTable")
-	private CommandSettings craftingTable = new CommandSettings(new String[] {"craft", "ct"});
+	@Setting("Enchant")
+	private CommandSettings enchant = new CommandSettings();
 	@Setting("Anvil")
 	private CommandSettings anvil = new CommandSettings();
+	@Setting("CraftingTable")
+	private CommandSettings craftingTable = new CommandSettings(new String[] {"craft", "ct", "workbench"});
+	@Setting("EnchantmentTable")
+	private CommandSettings enchantmenttable = new CommandSettings();
+	@Setting("Backpack")
+	private CommandSettings backpack = new CommandSettings();
+	@Setting("Feed")
+	private CommandSettings feed = new CommandSettings(new String[] {"food", "eat"});
+	@Setting("Heal")
+	private CommandSettings heal = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));
@@ -134,11 +144,11 @@ public class CommandsConfig {
 		return Optional.ofNullable(map.getOrDefault(command, null));
 	}
 
-	public void registerParameterized(RegisterCommandEvent<Parameterized> event, CommandPack plugin) {
+	public void registerParameterized(RegisterCommandEvent<Parameterized> event, CommandPackPlugin plugin) {
 		try {
 			for(Class<AbstractParameterizedCommand> clazz : findAllCommandsClasses("sawfowl.commandpack.commands.parameterized", AbstractParameterizedCommand.class)) {
 				try {
-					AbstractParameterizedCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
+					AbstractParameterizedCommand command = clazz.getConstructor(CommandPackPlugin.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
 						if(settings.isEnable()) {
 							command.register(event);
@@ -154,11 +164,11 @@ public class CommandsConfig {
 		}
 	}
 
-	public void registerRaw(RegisterCommandEvent<Raw> event, CommandPack plugin) {
+	public void registerRaw(RegisterCommandEvent<Raw> event, CommandPackPlugin plugin) {
 		try {
 			for(Class<AbstractRawCommand> clazz : findAllCommandsClasses("sawfowl.commandpack.commands.raw", AbstractRawCommand.class)) {
 				try {
-					AbstractRawCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
+					AbstractRawCommand command = clazz.getConstructor(CommandPackPlugin.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
 						if(settings.isEnable()) command.register(event);
 					});

@@ -11,13 +11,13 @@ import sawfowl.commandpack.api.data.commands.PluginCommand;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 
 /**
- * Used to store temporary data of players who used the functionality of the CommandPack plugin.
+ * Used to store temporary data of players who used the functionality of the CommandPackPlugin plugin.
  */
 public interface TempPlayerData {
 
 	/**
 	 * Adding command usage tracking.<br>
-	 * Only CommandPack plugin commands are accepted.
+	 * Only CommandPackPlugin plugin commands are accepted.
 	 * 
 	 * @param command - CommandSettings or alias.
 	 * @param player - The player.
@@ -43,7 +43,7 @@ public interface TempPlayerData {
 	/**
 	 * 
 	 * Removing command usage tracking.<br>
-	 * Only CommandPack plugin commands are accepted.<br>
+	 * Only CommandPackPlugin plugin commands are accepted.<br>
 	 * If you remove the tracking of a command to be executed by the player when the timer expires, it will not be executed.
 	 * 
 	 * @param command - PluginCommand or alias.
@@ -54,7 +54,7 @@ public interface TempPlayerData {
 	/**
 	 * 
 	 * Removing command usage tracking.<br>
-	 * Only CommandPack plugin commands are accepted.<br>
+	 * Only CommandPackPlugin plugin commands are accepted.<br>
 	 * If you remove the tracking of a command to be executed by the player when the timer expires, it will not be executed.
 	 * 
 	 * @param command - PluginCommand or alias.

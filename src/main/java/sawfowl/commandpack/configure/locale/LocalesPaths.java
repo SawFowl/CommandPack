@@ -36,6 +36,12 @@ public class LocalesPaths {
 	private static final Object COMMAND_GAMEMODE = "GameMode";
 	private static final Object COMMAND_WEATHER = "Weather";
 	private static final Object COMMAND_TIME = "Time";
+	private static final Object COMMAND_ENCHANT = "Enchant";
+	private static final Object COMMAND_ANVIL = "Anvil";
+	private static final Object COMMAND_CRAFTING_TABLE = "CraftingTable";
+	private static final Object COMMAND_ENCHANTMENT_TABLE = "EnchantmentTable";
+	private static final Object COMMAND_FEED = "Feed";
+	private static final Object COMMAND_HEAL = "Heal";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -53,6 +59,7 @@ public class LocalesPaths {
 	public static final Object[] NAME_COMMANDBLOCK = {NAMES, "CommandBlock"};
 	public static final Object[] NAME_COMMANDBLOCK_MINECART = {NAMES, "CommandBlockMineCart"};
 	public static final Object[] NAME_UNKNOWN = {NAMES, "UnknownSource"};
+	public static final Object[] NAME_BACKPACK = {NAMES, "Backpack"};
 
 	public static final Object[] COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "PlayerNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_TARGET_SELF = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "TargetSelf"};
@@ -148,5 +155,14 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_TIME_MORNING = {PATH_COMMANDS, COMMAND_TIME, "Morning"};
 	public static final Object[] COMMANDS_TIME_EVENING = {PATH_COMMANDS, COMMAND_TIME, "Evening"};
 	public static final Object[] COMMANDS_TIME_NIGHT = {PATH_COMMANDS, COMMAND_TIME, "Night"};
+	public static final Object[] COMMANDS_ENCHANT_ITEM_IS_NOT_PRESENT = {PATH_COMMANDS, COMMAND_ENCHANT, PATH_EXCEPTIONS, "ItemIsNotPresent"};
+	public static final Object[] COMMANDS_ENCHANT_SUCCES = {PATH_COMMANDS, COMMAND_ENCHANT, "Success"};
+	public static final Object[] COMMANDS_ANVIL = {PATH_COMMANDS, COMMAND_ANVIL, "Other"};
+	public static final Object[] COMMANDS_CRAFTING_TABLE = {PATH_COMMANDS, COMMAND_CRAFTING_TABLE, "Other"};
+	public static final Object[] COMMANDS_ENCHANTMENT_TABLE = {PATH_COMMANDS, COMMAND_ENCHANTMENT_TABLE, "Other"};
+	public static final Object[] COMMANDS_FEED_SELF = {PATH_COMMANDS, COMMAND_FEED, "Self"};
+	public static final Object[] COMMANDS_FEED_OTHER = {PATH_COMMANDS, COMMAND_FEED, "Other"};
+	public static final Object[] COMMANDS_HEAL_SELF = {PATH_COMMANDS, COMMAND_HEAL, "Self"};
+	public static final Object[] COMMANDS_HEAL_OTHER = {PATH_COMMANDS, COMMAND_HEAL, "Other"};
 
 }
