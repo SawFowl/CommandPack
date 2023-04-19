@@ -149,6 +149,15 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	}
 
 	@Override
+	public void setBackpack(PlayerBackpack backpack) {
+		this.backpackData = backpack instanceof BackpackData ? (BackpackData) backpack : (BackpackData) PlayerBackpack.builder().copyFrom(backpack).build();
+		save();
+		backpackData.setSaveConsumer(consumer -> {
+			save();
+		});
+	}
+
+	@Override
 	public List<Component> homesListChatMenu(Locale locale, boolean allowRemove) {
 		Locales locales = ((CommandPackPlugin) Sponge.pluginManager().plugin("commandpack").get().instance()).getLocales();
 		List<Component> list = new ArrayList<>();

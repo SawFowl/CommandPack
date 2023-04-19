@@ -36,7 +36,7 @@ public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 
 	@Override
 	public PlayerData getOrCreatePlayerData(ServerPlayer player) {
-		return getPlayerData(player.uniqueId()).orElse(new sawfowl.commandpack.configure.configs.player.PlayerData(player));
+		return getPlayerData(player.uniqueId()).orElse(new sawfowl.commandpack.configure.configs.player.PlayerData(player)).save();
 	}
 
 	@Override

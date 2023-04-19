@@ -87,8 +87,8 @@ public class BackpackData implements PlayerBackpack {
 	}
 
 	@Override
-	public Collection<ItemStackSnapshot> getSlots() {
-		return items.values();
+	public Collection<Integer> getSlots() {
+		return items.keySet();
 	}
 
 	@Override
@@ -171,6 +171,19 @@ public class BackpackData implements PlayerBackpack {
 		public Builder fromMap(Map<Integer, ItemStack> map) {
 			map.forEach((k,v) -> {
 				if(v.quantity() > 0 && k > 0 && k <= 53) addItem(k, v);
+			});
+			return this;
+		}
+
+		@Override
+		public Builder copyFrom(PlayerBackpack backpack) {
+			if(backpack.getSlots() == null || backpack.getSlots().isEmpty()) return this;
+			backpack.getSlots().forEach(slot -> {
+				if(slot > 0 && slot <= 53) {
+					backpack.getItem(slot).ifPresent(item -> {
+						addItem(slot, item);
+					});
+				}
 			});
 			return this;
 		}

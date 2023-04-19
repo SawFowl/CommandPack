@@ -30,7 +30,7 @@ public interface PlayerBackpack extends DataSerializable {
 
 	int size();
 
-	Collection<ItemStackSnapshot> getSlots();
+	Collection<Integer> getSlots();
 
 	Collection<ItemStackSnapshot> getItems();
 
@@ -54,6 +54,8 @@ public interface PlayerBackpack extends DataSerializable {
 		Builder fromInventory(Inventory inventory);
 
 		Builder fromMap(Map<Integer, ItemStack> map);
+
+		Builder copyFrom(PlayerBackpack backpack);
 
 	}
 

@@ -104,6 +104,11 @@ public interface PlayerData {
 	PlayerBackpack getBackpack();
 
 	/**
+	 * Set a new backpack for the player.
+	 */
+	void setBackpack(PlayerBackpack backpack);
+
+	/**
 	 * Getting a clickable chat menu with a list of homes.
 	 * 
 	 * @param locale - Localization of chat buttons.
