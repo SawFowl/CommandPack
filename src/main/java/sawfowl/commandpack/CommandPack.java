@@ -22,7 +22,6 @@ import org.spongepowered.plugin.builtin.jvm.Plugin;
 import com.google.inject.Inject;
 
 import sawfowl.localeapi.event.LocaleServiseEvent;
-import sawfowl.commandpack.api.EnchantmentHelper;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.RandomTeleportService;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
@@ -36,8 +35,6 @@ import sawfowl.commandpack.api.data.miscellaneous.Position;
 import sawfowl.commandpack.api.data.player.Home;
 import sawfowl.commandpack.api.data.player.PlayerBackpack;
 import sawfowl.commandpack.api.data.player.Warp;
-import sawfowl.commandpack.apiclasses.EnchantmentForgeHelper;
-import sawfowl.commandpack.apiclasses.EnchantmentVanillaHelper;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.configs.MainConfig;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;
@@ -72,7 +69,6 @@ public class CommandPack {
 	private Economy economy;
 	private PlayersData playersData;
 	private RandomTeleportService rtpService;
-	private EnchantmentHelper enchantmentHelper;
 
 	public static CommandPack getInstance() {
 		return instance;
@@ -118,10 +114,6 @@ public class CommandPack {
 		return rtpService;
 	}
 
-	public EnchantmentHelper getEnchantmentHelper() {
-		return enchantmentHelper;
-	}
-
 	@Inject
 	public CommandPack(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
 		instance = this;
@@ -137,12 +129,6 @@ public class CommandPack {
 		configManager = new ConfigManager(instance, event.getLocaleService().getConfigurationOptions());
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
 		configManager.loadPlayersData();
-		try {
-			Class.forName("net.minecraft.enchantment.EnchantmentHelper");
-			enchantmentHelper = new EnchantmentForgeHelper();
-		} catch (Exception e) {
-			enchantmentHelper = new EnchantmentVanillaHelper();
-		}
 	}
 
 	@Listener
@@ -173,11 +159,6 @@ public class CommandPack {
 					@Override
 					public RandomTeleportService randomTeleportService() {
 						return rtpService;
-					}
-
-					@Override
-					public EnchantmentHelper getEnchantmentHelper() {
-						return enchantmentHelper;
 					}
 
 				};

@@ -14,8 +14,6 @@ public interface CommandPack {
 	 */
 	RandomTeleportService randomTeleportService();
 
-	EnchantmentHelper getEnchantmentHelper();
-
 	interface PostAPI extends Event {
 
 		public CommandPack getAPI();

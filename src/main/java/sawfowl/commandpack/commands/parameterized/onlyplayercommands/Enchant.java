@@ -37,9 +37,9 @@ public class Enchant extends AbstractPlayerCommand {
 		delay(src, locale, consumer -> {
 			if(src.itemInHand(HandTypes.MAIN_HAND).quantity() == 0) exception(locale, LocalesPaths.COMMANDS_ENCHANT_ITEM_IS_NOT_PRESENT);
 			String type = getString(context, "Enchant", null);
-			if(type == null) exception("Not found");
+			if(type == null) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT);
 			Optional<EnchantmentType> optEnchant = EnchantmentTypes.registry().findValue(ResourceKey.resolve(type));
-			if(!optEnchant.isPresent()) exception("Not found");
+			if(!optEnchant.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT);
 			int level = getArgument(context, Integer.class, "Level").orElse(1);
 			ItemStack stack = src.itemInHand(HandTypes.MAIN_HAND);
 			List<Enchantment> enchantments = stack.get(Keys.APPLIED_ENCHANTMENTS).orElse(new ArrayList<>());

@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
@@ -17,11 +18,8 @@ import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.EnchantItemEvent;
-import org.spongepowered.api.event.item.inventory.EnchantItemEvent.CalculateEnchantment;
-import org.spongepowered.api.item.enchantment.Enchantment;
 import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.ContainerTypes;
-import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.menu.InventoryMenu;
 import org.spongepowered.api.item.inventory.menu.handler.CloseHandler;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
@@ -60,8 +58,8 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 				}
 			});
 			int level = getArgument(context, Integer.class, "Level").orElse(Permissions.getEnchantmentTableLimit((ServerPlayer) src));
-			if(level < 1) level = 1;
-			if(level > 15) level = 15;
+			if(level < 2) level = 2;
+			if(level > 40) level = 40;
 			final int finalLevel = level;
 			if(target.isPresent()) {
 				levels.put(target.get().uniqueId(), level);
@@ -96,7 +94,7 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
 			ParameterSettings.of(CommandParameters.createPlayer(Permissions.ENCHANTMENT_TABLE_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createRangedInteger("Level", Permissions.ENCHANTMENT_TABLE_STAFF, 1, 15, true), true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
+			ParameterSettings.of(CommandParameters.createRangedInteger("Level", Permissions.ENCHANTMENT_TABLE_STAFF, 2, 40, true), true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
 		);
 	}
 
@@ -106,16 +104,29 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 	}
 
 	@Listener
-	public void onEnchant(EnchantItemEvent event, @First ServerPlayer player) {
+	public void onEnchant(EnchantItemEvent.CalculateLevelRequirement event, @First ServerPlayer player) {
 		if(!levels.containsKey(player.uniqueId())) return;
 		int level = levels.get(player.uniqueId());
-		player.sendMessage(text(level)); // Для дебага
-		if(event instanceof EnchantItemEvent.CalculateLevelRequirement) ((EnchantItemEvent.CalculateLevelRequirement) event).setLevelRequirement(level);
-		if(event instanceof EnchantItemEvent.CalculateEnchantment) {
-			EnchantItemEvent.CalculateEnchantment calculateEnchantment = (CalculateEnchantment) event;
-			ItemStack item = calculateEnchantment.item().createStack();
-			calculateEnchantment.setEnchantments(plugin.getEnchantmentHelper().buildEnchantmentList(item, calculateEnchantment.option(), false));
+		switch (event.option()) {
+		case 0:
+			event.setLevelRequirement(random((level / 3) - 2, (level / 3) - 3));
+			break;
+		case 1:
+			event.setLevelRequirement(random((level / 2) - 1, (level / 2) - 5));
+			break;
+		case 2:
+			event.setLevelRequirement(level);
+			break;
+		default:
+			break;
 		}
+	}
+
+	private int random(int first, int second) {
+		if(first < 2) first = 2;
+		if(second < 2) second = 2;
+		if(first == second) return first;
+		return ThreadLocalRandom.current().nextInt(first > second ? second : first, first > second ? first : second);
 	}
 
 }
