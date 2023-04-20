@@ -9,6 +9,7 @@ import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ContainerTypes;
 import org.spongepowered.api.item.inventory.menu.InventoryMenu;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
@@ -32,6 +33,7 @@ public class Anvil extends AbstractParameterizedCommand {
 		if(isPlayer) {
 			Optional<ServerPlayer> target = getPlayer(context);
 			InventoryMenu menu = ViewableInventory.builder().type(ContainerTypes.ANVIL).completeStructure().carrier(target.isPresent() ? target.get() : (ServerPlayer) src).plugin(plugin.getPluginContainer()).build().asMenu();
+			menu.setTitle(ItemTypes.ANVIL.get().asComponent());
 			if(target.isPresent()) {
 				menu.open(target.get());
 				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ANVIL));
@@ -40,7 +42,9 @@ public class Anvil extends AbstractParameterizedCommand {
 			});
 		} else {
 			ServerPlayer target = getPlayer(context).get();
-			ViewableInventory.builder().type(ContainerTypes.ANVIL).completeStructure().carrier(target).plugin(plugin.getPluginContainer()).build().asMenu().open(target);
+			InventoryMenu menu = ViewableInventory.builder().type(ContainerTypes.ANVIL).completeStructure().carrier(target).plugin(plugin.getPluginContainer()).build().asMenu();
+			menu.setTitle(ItemTypes.CRAFTING_TABLE.get().asComponent());
+			menu.open(target);
 			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ANVIL));
 		}
 	}

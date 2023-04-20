@@ -85,6 +85,8 @@ public class CommandsConfig {
 	private CommandSettings top = new CommandSettings();
 	@Setting("Jump")
 	private CommandSettings jump = new CommandSettings();
+	@Setting("Back")
+	private CommandSettings back = new CommandSettings(new Delay(15));
 	@Setting("Fly")
 	private CommandSettings fly = new CommandSettings(new Delay(5));
 	@Setting("GodMode")
@@ -106,7 +108,7 @@ public class CommandsConfig {
 	@Setting("Weather")
 	private CommandSettings weather = new CommandSettings(120);
 	@Setting("Sun")
-	private CommandSettings sun = new CommandSettings(120, new String[] {"clear"});
+	private CommandSettings sun = new CommandSettings(120);
 	@Setting("Rain")
 	private CommandSettings rain = new CommandSettings(120);
 	@Setting("Thunder")

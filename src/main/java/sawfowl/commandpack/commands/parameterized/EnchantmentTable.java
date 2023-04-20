@@ -18,6 +18,7 @@ import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.EnchantItemEvent;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.ContainerTypes;
 import org.spongepowered.api.item.inventory.menu.InventoryMenu;
@@ -48,6 +49,7 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 		if(isPlayer) {
 			Optional<ServerPlayer> target = getPlayer(context);
 			InventoryMenu menu = ViewableInventory.builder().type(ContainerTypes.ENCHANTMENT).completeStructure().carrier(target.isPresent() ? target.get() : (ServerPlayer) src).plugin(plugin.getPluginContainer()).build().asMenu();
+			menu.setTitle(ItemTypes.ENCHANTING_TABLE.get().asComponent());
 			menu.registerClose(new CloseHandler() {
 				@Override
 				public void handle(Cause cause, Container container) {
@@ -75,7 +77,9 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 			ServerPlayer target = getPlayer(context).get();
 			int level = getArgument(context, Integer.class, "Level").orElse(1);
 			levels.put(target.uniqueId(), level);
-			ViewableInventory.builder().type(ContainerTypes.ENCHANTMENT).completeStructure().carrier(target).plugin(plugin.getPluginContainer()).build().asMenu().open(target);
+			InventoryMenu menu = ViewableInventory.builder().type(ContainerTypes.ENCHANTMENT).completeStructure().carrier(target).plugin(plugin.getPluginContainer()).build().asMenu();
+			menu.setTitle(ItemTypes.CRAFTING_TABLE.get().asComponent());
+			menu.open(target);
 			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ENCHANTMENT_TABLE));
 		}
 	}
@@ -109,10 +113,11 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 		int level = levels.get(player.uniqueId());
 		switch (event.option()) {
 		case 0:
-			event.setLevelRequirement(random((level / 3) - 2, (level / 3) - 3));
+			event.setLevelRequirement(random((level / 3), (level / 3) - random(3, 5)));
 			break;
 		case 1:
-			event.setLevelRequirement(random((level / 2) - 1, (level / 2) - 5));
+			int set = random((level / 2) - 2, (level / 2) - random(1, 5));
+			event.setLevelRequirement(set < 3 ? 3 : set);
 			break;
 		case 2:
 			event.setLevelRequirement(level);
