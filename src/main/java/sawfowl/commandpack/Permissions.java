@@ -161,7 +161,7 @@ public class Permissions {
 	}
 
 	public static int getEnchantmentTableLimit(ServerPlayer player) {
-		return !player.option(ENCHANTMENT_TABLE_LIMIT).isPresent() ? 1 : toInt(player.option(ENCHANTMENT_TABLE_LIMIT).get(), 1);
+		return !player.option(ENCHANTMENT_TABLE_LIMIT).isPresent() ? 2 : toInt(player.option(ENCHANTMENT_TABLE_LIMIT).get(), 2);
 	}
 
 	public static int getBackpackLimit(ServerPlayer player) {
