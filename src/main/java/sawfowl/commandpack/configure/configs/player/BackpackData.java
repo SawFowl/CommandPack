@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
@@ -21,24 +20,16 @@ import org.spongepowered.api.item.inventory.ContainerTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
-import org.spongepowered.api.item.inventory.Slot;
-import org.spongepowered.api.item.inventory.menu.ClickType;
 import org.spongepowered.api.item.inventory.menu.InventoryMenu;
-import org.spongepowered.api.item.inventory.menu.handler.ClickHandler;
 import org.spongepowered.api.item.inventory.menu.handler.CloseHandler;
-import org.spongepowered.api.item.inventory.menu.handler.SlotChangeHandler;
-import org.spongepowered.api.item.inventory.menu.handler.SlotClickHandler;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.api.registry.DefaultedRegistryReference;
-import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.api.util.Ticks;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.plugin.PluginContainer;
 
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import sawfowl.commandpack.CommandPack;
+
 import sawfowl.commandpack.api.data.player.PlayerBackpack;
 import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.serializetools.SerializedItemStack;
