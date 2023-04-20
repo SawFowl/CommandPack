@@ -81,6 +81,12 @@ public class CommandParameters {
 		return (optional ? INTEGER.optional() : INTEGER).key(key).requiredPermission(permission).build();
 	}
 
+	public static Value<Integer>  createRangedInteger(String key, String permission, int min, int max, boolean optional) {
+		Builder<Integer> builder = Parameter.rangedInteger(min, max).requiredPermission(permission).key(key);
+		if(optional) builder.optional();
+		return builder.build();
+	}
+
 	public static Value<Double> createDouble(String key, boolean optional) {
 		return (optional ? DOUBLE.optional() : DOUBLE).key(key).build();
 	}
@@ -112,7 +118,7 @@ public class CommandParameters {
 	private static class EnchantmentCompleter implements ValueCompleter {
 		@Override
 		public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-			return EnchantmentTypes.registry().streamEntries().map(e -> (e.key().asString())).filter(k -> (k.startsWith(currentInput))).map(CommandCompletion::of).collect(Collectors.toList());
+			return EnchantmentTypes.registry().streamEntries().map(e -> (e.key().asString())).filter(k -> (k.startsWith(currentInput) || (currentInput.contains(k) && !currentInput.contains(k + " ")))).map(k -> ("\"" + k + "\"")).map(CommandCompletion::of).collect(Collectors.toList());
 		}
 	}
 
