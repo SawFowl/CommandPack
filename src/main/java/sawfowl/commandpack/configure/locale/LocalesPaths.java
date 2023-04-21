@@ -42,6 +42,8 @@ public class LocalesPaths {
 	private static final Object COMMAND_ENCHANTMENT_TABLE = "EnchantmentTable";
 	private static final Object COMMAND_FEED = "Feed";
 	private static final Object COMMAND_HEAL = "Heal";
+	private static final Object COMMAND_BROADCAST = "Broadcast";
+	private static final Object COMMAND_SUDO = "Sudo";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -164,5 +166,9 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_FEED_OTHER = {PATH_COMMANDS, COMMAND_FEED, "Other"};
 	public static final Object[] COMMANDS_HEAL_SELF = {PATH_COMMANDS, COMMAND_HEAL, "Self"};
 	public static final Object[] COMMANDS_HEAL_OTHER = {PATH_COMMANDS, COMMAND_HEAL, "Other"};
+	public static final Object[] COMMANDS_BROADCAST = {PATH_COMMANDS, COMMAND_BROADCAST, "Prefix"};
+	public static final Object[] COMMANDS_SUDO_COMMAND_NOT_FOUND = {PATH_COMMANDS, COMMAND_SUDO, PATH_EXCEPTIONS, "CommandNotFound"};
+	public static final Object[] COMMANDS_SUDO_EXECUTE_NOT_ALLOWED = {PATH_COMMANDS, COMMAND_SUDO, PATH_EXCEPTIONS, "ExecuteNotAllowed"};
+	public static final Object[] COMMANDS_SUDO_SUCCESS = {PATH_COMMANDS, COMMAND_SUDO, "Success"};
 
 }

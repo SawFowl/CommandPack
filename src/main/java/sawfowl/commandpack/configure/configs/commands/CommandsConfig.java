@@ -137,6 +137,10 @@ public class CommandsConfig {
 	private CommandSettings feed = new CommandSettings(new String[] {"food", "eat"});
 	@Setting("Heal")
 	private CommandSettings heal = new CommandSettings();
+	@Setting("Broadcast")
+	private CommandSettings broadcast = new CommandSettings();
+	@Setting("Sudo")
+	private CommandSettings sudo = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

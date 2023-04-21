@@ -81,6 +81,8 @@ public class Permissions {
 	public static final String BACKPACK_STAFF = "commandpack.commands.staff.backpack";
 	public static final String FEED_STAFF = "commandpack.commands.staff.feed";
 	public static final String HEAL_STAFF = "commandpack.commands.staff.heal";
+	public static final String BROADCAST_STAFF = "commandpack.commands.staff.broadcast";
+	public static final String SUDO_STAFF = "commandpack.commands.staff.broadcast";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";

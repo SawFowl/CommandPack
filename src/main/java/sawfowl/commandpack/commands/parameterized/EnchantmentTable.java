@@ -131,7 +131,7 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 		if(first < 2) first = 2;
 		if(second < 2) second = 2;
 		if(first == second) return first;
-		return ThreadLocalRandom.current().nextInt(first > second ? second : first, first > second ? first : second);
+		return first > second ? ThreadLocalRandom.current().nextInt(second, first) : ThreadLocalRandom.current().nextInt(first, second);
 	}
 
 }
