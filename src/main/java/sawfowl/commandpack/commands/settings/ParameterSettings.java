@@ -22,12 +22,16 @@ public class ParameterSettings implements sawfowl.commandpack.api.data.commands.
 	private String key;
 	private int position = 0;
 	public ParameterSettings() {}
-	public ParameterSettings(Parameter.Value<?> parameter, boolean optionalForConsole, Object... pathException) {
+	public ParameterSettings(Parameter.Value<?> parameter, boolean optional, boolean optionalForConsole, Object... pathException) {
 		this.key = parameter.key().key();
 		this.parameter = parameter;
-		this.optional = parameter.isOptional();
 		this.optionalForConsole = optional && optionalForConsole;
 		this.path = pathException;
+	}
+
+	@Override
+	public boolean containsIn(CommandContext context) {
+		return context.one(parameter).isPresent();
 	}
 
 	public Builder builder() {
@@ -106,13 +110,19 @@ public class ParameterSettings implements sawfowl.commandpack.api.data.commands.
 		public Builder value(Value<?> value) {
 			parameter = value;
 			key = value.key().key();
-			optional = value.isOptional();
+			optional = parameter.isOptional();
 			return this;
 		}
 
 		@Override
 		public Builder optionalforConsole(boolean optional) {
 			optionalForConsole = optional;
+			return this;
+		}
+
+		@Override
+		public Builder setOptional(boolean optional) {
+			ParameterSettings.this.optional = optional;
 			return this;
 		}
 

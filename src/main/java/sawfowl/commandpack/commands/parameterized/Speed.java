@@ -31,7 +31,7 @@ public class Speed extends AbstractParameterizedCommand {
 
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
-		double multiplier = getArgument(context, Double.class, "Speed").get();
+		double multiplier = getArgument(context, Integer.class, "Speed").get();
 		Optional<ServerPlayer> optTarget = getPlayer(context);
 		if(isPlayer) {
 			ServerPlayer source = (ServerPlayer) src;
@@ -39,8 +39,8 @@ public class Speed extends AbstractParameterizedCommand {
 				ServerPlayer target = optTarget.get();
 				boolean fly = isFlying(target);
 				setSpeed(target, multiplier, fly);
-				Component staff = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SPEED_STAFF), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Object[] {target.name(), multiplier});
-				Component other = TextUtils.replace(getText(target, LocalesPaths.COMMANDS_SPEED_OTHER), Placeholders.VALUE, String.valueOf(multiplier));
+				Component staff = TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SPEED_STAFF), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text(target.name()), multiplier == 1 ? getText(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier)});
+				Component other = TextUtils.replace(getText(target, LocalesPaths.COMMANDS_SPEED_OTHER), Placeholders.VALUE, multiplier == 1 ? getText(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier));
 				if(fly) {
 					staff = staff.append(getText(locale, LocalesPaths.COMMANDS_SPEED_FLY));
 					other = other.append(getText(target, LocalesPaths.COMMANDS_SPEED_FLY));
@@ -56,7 +56,7 @@ public class Speed extends AbstractParameterizedCommand {
 				final double mult = multiplier;
 				delay(source, locale, consumer -> {
 					setSpeed(source, mult, fly);
-					Component text = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SPEED_SELF), Placeholders.VALUE, String.valueOf(mult));
+					Component text = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SPEED_SELF), Placeholders.VALUE, mult == 1 ? getText(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) mult));
 					if(fly) text = text.append(getText(locale, LocalesPaths.COMMANDS_SPEED_FLY));
 					source.sendMessage(text);
 				});
@@ -65,8 +65,8 @@ public class Speed extends AbstractParameterizedCommand {
 			ServerPlayer target = optTarget.get();
 			boolean fly = isFlying(target);
 			setSpeed(target, multiplier, fly);
-			Component staff = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SPEED_STAFF), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Object[] {target.name(), multiplier});
-			Component other = TextUtils.replace(getText(target, LocalesPaths.COMMANDS_SPEED_OTHER), Placeholders.VALUE, String.valueOf(multiplier));
+			Component staff = TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SPEED_STAFF), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text(target.name()), multiplier == 1 ? getText(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier)});
+			Component other = TextUtils.replace(getText(target, LocalesPaths.COMMANDS_SPEED_OTHER), Placeholders.VALUE, multiplier == 1 ? getText(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier));
 			if(fly) {
 				staff = staff.append(getText(locale, LocalesPaths.COMMANDS_SPEED_FLY));
 				other = other.append(getText(target, LocalesPaths.COMMANDS_SPEED_FLY));
@@ -80,7 +80,7 @@ public class Speed extends AbstractParameterizedCommand {
 	public Parameterized build() {
 		return builder()
 				.reset()
-				.addParameters(parameterSettings.values().stream().map(ParameterSettings::getParameterUnknownType).toArray(Value[]::new))
+				.addParameters(getParameterSettings().stream().map(ParameterSettings::getParameterUnknownType).toArray(Value[]::new))
 				.executionRequirements(cause -> (cause.hasPermission(Permissions.SPEED) || cause.hasPermission(Permissions.SPEED_FLY)))
 				.executor(this)
 				.build();
@@ -89,7 +89,7 @@ public class Speed extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createDouble("Speed", false), false, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
+			ParameterSettings.of(CommandParameters.createRangedInteger("Speed", 0, 5, false), false, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
 			ParameterSettings.of(CommandParameters.createPlayer(Permissions.SPEED_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
 		);
 	}
@@ -106,8 +106,10 @@ public class Speed extends AbstractParameterizedCommand {
 
 	private void setSpeed(ServerPlayer player, double multiplier, boolean fly) {
 		if(fly) {
-			player.offer(Keys.FLYING_SPEED, multiplier);
-		} else player.offer(Keys.WALKING_SPEED, multiplier);
+			player.offer(Keys.FLYING_SPEED, multiplier * 0.05000000074505806);
+		} else {
+			player.offer(Keys.WALKING_SPEED, multiplier * 0.10000000149011612);
+		}
 	}
 
 	private boolean isFlying(ServerPlayer player) {

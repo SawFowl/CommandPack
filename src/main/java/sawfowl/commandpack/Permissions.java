@@ -52,6 +52,7 @@ public class Permissions {
 	public static final String BACKPACK = "commandpack.commands.user.backpack";
 	public static final String FEED = "commandpack.commands.user.feed";
 	public static final String HEAL = "commandpack.commands.user.heal";
+	public static final String VANISH = "commandpack.commands.user.vanish";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -82,7 +83,8 @@ public class Permissions {
 	public static final String FEED_STAFF = "commandpack.commands.staff.feed";
 	public static final String HEAL_STAFF = "commandpack.commands.staff.heal";
 	public static final String BROADCAST_STAFF = "commandpack.commands.staff.broadcast";
-	public static final String SUDO_STAFF = "commandpack.commands.staff.broadcast";
+	public static final String SUDO_STAFF = "commandpack.commands.staff.sudo";
+	public static final String VANISH_STAFF = "commandpack.commands.staff.vanish";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";

@@ -52,7 +52,7 @@ public class Add extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 	return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createInteger("Value", false), false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			ParameterSettings.of(CommandParameters.createInteger("Value", false), false, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
 			ParameterSettings.of(CommandParameters.createWorld(Permissions.TIME_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT)
 		);
 	}

@@ -158,6 +158,7 @@ public class Locales {
 		save = check(locale, toText("&aYou have set a player speed multiplier &e" + Placeholders.PLAYER + "&a: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_STAFF) || save;
 		save = check(locale, toText("&aYou have been set a multiplier for your speed: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_OTHER) || save;
 		save = check(locale, toText("\n&aThe speed has been changed for flight mode because of being in the air."), null, LocalesPaths.COMMANDS_SPEED_FLY) || save;
+		save = check(locale, toText("default"), null, LocalesPaths.COMMANDS_SPEED_DEFAULT) || save;
 		save = check(locale, toText("&a&lTrash"), null, LocalesPaths.COMMANDS_DISPOSAL_TITLE) || save;
 		save = check(locale, toText("&aYour game mode has been changed to" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS) || save;
 		save = check(locale, toText("&aPlayer &e" + Placeholders.PLAYER + " &ais set to play mode " + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_GAMEMODE_OTHER) || save;
@@ -185,6 +186,10 @@ public class Locales {
 		save = check(locale, toText("&cCommand not found."), null, LocalesPaths.COMMANDS_SUDO_COMMAND_NOT_FOUND) || save;
 		save = check(locale, toText("&cYou cannot use this command, or the target player has no rights to execute it. Forcing execution is not available."), null, LocalesPaths.COMMANDS_SUDO_EXECUTE_NOT_ALLOWED) || save;
 		save = check(locale, toText("&eAn attempt is made to forcibly execute a command by the player &6" + Placeholders.PLAYER + "&e."), null, LocalesPaths.COMMANDS_SUDO_SUCCESS) || save;
+		save = check(locale, toText("&aYou are now invisible."), null, LocalesPaths.COMMANDS_VANISH_VASHISHED) || save;
+		save = check(locale, toText("&aYou are visible again."), null, LocalesPaths.COMMANDS_VANISH_UNVASHISHED) || save;
+		save = check(locale, toText("&aThe player &e" + Placeholders.PLAYER + "&a is now invisible.."), null, LocalesPaths.COMMANDS_VANISH_VASHISHED_STAFF) || save;
+		save = check(locale, toText("&aThe player &e" + Placeholders.PLAYER + "&a is visible again."), null, LocalesPaths.COMMANDS_VANISH_UNVASHISHED_STAFF) || save;
 
 		if(save) save(locale);
 	}
@@ -290,6 +295,7 @@ public class Locales {
 		save = check(locale, toText("&aВы установили множитель скорости игрока &e" + Placeholders.PLAYER + "&a: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_STAFF) || save;
 		save = check(locale, toText("&aВам установили множитель вашей скорости: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_OTHER) || save;
 		save = check(locale, toText("\n&aСкорость изменена для режима полета из-за нахождения в воздухе."), null, LocalesPaths.COMMANDS_SPEED_FLY) || save;
+		save = check(locale, toText("по умолчанию"), null, LocalesPaths.COMMANDS_SPEED_DEFAULT) || save;
 		save = check(locale, toText("&a&lМусорка"), null, LocalesPaths.COMMANDS_DISPOSAL_TITLE) || save;
 		save = check(locale, toText("&aВаш игровой режим изменен на " + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS) || save;
 		save = check(locale, toText("&aИгроку &e" + Placeholders.PLAYER + " &aустановлен режим игры " + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_GAMEMODE_OTHER) || save;
@@ -317,6 +323,10 @@ public class Locales {
 		save = check(locale, toText("&cКоманда не найдена."), null, LocalesPaths.COMMANDS_SUDO_COMMAND_NOT_FOUND) || save;
 		save = check(locale, toText("&cВы не можете использовать эту команду, либо у целевого игрока нет прав на ее выполнение. Принуждение к выполнению не доступно."), null, LocalesPaths.COMMANDS_SUDO_EXECUTE_NOT_ALLOWED) || save;
 		save = check(locale, toText("&eВыполняется попытка принуждения к выполнению команды игроком &6" + Placeholders.PLAYER + "&e."), null, LocalesPaths.COMMANDS_SUDO_SUCCESS) || save;
+		save = check(locale, toText("&aТеперь вы не видимы."), null, LocalesPaths.COMMANDS_VANISH_VASHISHED) || save;
+		save = check(locale, toText("&aВы снова видимы."), null, LocalesPaths.COMMANDS_VANISH_UNVASHISHED) || save;
+		save = check(locale, toText("&aИгрок &e" + Placeholders.PLAYER + "&a теперь не видим."), null, LocalesPaths.COMMANDS_VANISH_VASHISHED_STAFF) || save;
+		save = check(locale, toText("&aИгрок &e" + Placeholders.PLAYER + "&a снова видим."), null, LocalesPaths.COMMANDS_VANISH_UNVASHISHED_STAFF) || save;
 
 		if(save) save(locale);
 	}

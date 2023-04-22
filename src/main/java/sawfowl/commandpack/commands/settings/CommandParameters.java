@@ -27,6 +27,8 @@ public class CommandParameters {
 
 	public static final Builder<String> STRING = Parameter.string();
 
+	public static final Builder<String> STRINGS = Parameter.remainingJoinedStrings();
+
 	public static final Builder<Integer> INTEGER = Parameter.integerNumber();
 
 	public static final Builder<Double> DOUBLE = Parameter.doubleNumber();
@@ -69,6 +71,10 @@ public class CommandParameters {
 		return (optional ? STRING.optional() : STRING).key(key).build();
 	}
 
+	public static Value<String> createStrings(String key, boolean optional) {
+		return (optional ? STRINGS.optional() : STRINGS).key(key).build();
+	}
+
 	public static Value<String> createString(String key, String permission, boolean optional) {
 		return (optional ? STRING.optional() : STRING).key(key).requiredPermission(permission).build();
 	}
@@ -81,6 +87,12 @@ public class CommandParameters {
 		return (optional ? INTEGER.optional() : INTEGER).key(key).requiredPermission(permission).build();
 	}
 
+	public static Value<Integer>  createRangedInteger(String key, int min, int max, boolean optional) {
+		Builder<Integer> builder = Parameter.rangedInteger(min, max).key(key);
+		if(optional) builder.optional();
+		return builder.build();
+	}
+
 	public static Value<Integer>  createRangedInteger(String key, String permission, int min, int max, boolean optional) {
 		Builder<Integer> builder = Parameter.rangedInteger(min, max).requiredPermission(permission).key(key);
 		if(optional) builder.optional();
@@ -89,6 +101,12 @@ public class CommandParameters {
 
 	public static Value<Double> createDouble(String key, boolean optional) {
 		return (optional ? DOUBLE.optional() : DOUBLE).key(key).build();
+	}
+
+	public static Value<Double> createRangedDouble(String key, boolean optional, double min, double max) {
+		Builder<Double> builder = Parameter.rangedDouble(min, max).key(key);
+		if(optional) builder.optional();
+		return builder.build();
 	}
 
 	public static Value<Double> createDouble(String key, String permission, boolean optional) {

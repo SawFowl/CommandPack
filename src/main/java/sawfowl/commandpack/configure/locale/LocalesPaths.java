@@ -44,6 +44,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_HEAL = "Heal";
 	private static final Object COMMAND_BROADCAST = "Broadcast";
 	private static final Object COMMAND_SUDO = "Sudo";
+	private static final Object COMMAND_VANISH = "Vanish";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -143,6 +144,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_SPEED_STAFF = {PATH_COMMANDS, COMMAND_SPEED, "Staff"};
 	public static final Object[] COMMANDS_SPEED_OTHER = {PATH_COMMANDS, COMMAND_SPEED, "Other"};
 	public static final Object[] COMMANDS_SPEED_FLY = {PATH_COMMANDS, COMMAND_SPEED, "Fly"};
+	public static final Object[] COMMANDS_SPEED_DEFAULT = {PATH_COMMANDS, COMMAND_SPEED, "Default"};
 	public static final Object[] COMMANDS_DISPOSAL_TITLE = {PATH_COMMANDS, COMMAND_DISPOSAL, "Title"};
 	public static final Object[] COMMANDS_GAMEMODE_SUCCESS = {PATH_COMMANDS, COMMAND_GAMEMODE, "Success"};
 	public static final Object[] COMMANDS_GAMEMODE_OTHER = {PATH_COMMANDS, COMMAND_GAMEMODE, "Other"};
@@ -170,5 +172,9 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_SUDO_COMMAND_NOT_FOUND = {PATH_COMMANDS, COMMAND_SUDO, PATH_EXCEPTIONS, "CommandNotFound"};
 	public static final Object[] COMMANDS_SUDO_EXECUTE_NOT_ALLOWED = {PATH_COMMANDS, COMMAND_SUDO, PATH_EXCEPTIONS, "ExecuteNotAllowed"};
 	public static final Object[] COMMANDS_SUDO_SUCCESS = {PATH_COMMANDS, COMMAND_SUDO, "Success"};
+	public static final Object[] COMMANDS_VANISH_VASHISHED = {PATH_COMMANDS, COMMAND_VANISH, "Vanished"};
+	public static final Object[] COMMANDS_VANISH_UNVASHISHED = {PATH_COMMANDS, COMMAND_VANISH, "Unvanished"};
+	public static final Object[] COMMANDS_VANISH_VASHISHED_STAFF = {PATH_COMMANDS, COMMAND_VANISH, "VanishedStaff"};
+	public static final Object[] COMMANDS_VANISH_UNVASHISHED_STAFF = {PATH_COMMANDS, COMMAND_VANISH, "UnvanishedStaff"};
 
 }

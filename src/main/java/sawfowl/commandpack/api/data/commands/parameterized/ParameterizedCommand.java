@@ -20,6 +20,7 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.audience.Audience;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.commands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -37,7 +38,10 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 	default CommandResult execute(CommandContext context) throws CommandException {
 		boolean isPlayer = context.cause().audience() instanceof ServerPlayer;
 		Locale locale = getLocale(context.cause());
-		if(getSettingsMap() != null && !getSettingsMap().isEmpty()) for(ParameterSettings settings : getSettingsMap().values()) if(!context.one(settings.getParameterUnknownType()).isPresent() && (!settings.isOptional() || (!isPlayer && !settings.isOptionalForConsole()))) exception(locale, settings.getPath());
+		if(getSettingsMap() != null && !getSettingsMap().isEmpty()) for(ParameterSettings settings : getSettingsMap().values()) {
+			CommandPack.getInstance().getLogger().warn(settings.containsIn(context));
+			if(!settings.containsIn(context)) if(!settings.isOptional() || (!isPlayer && !settings.isOptionalForConsole())) exception(locale, settings.getPath());
+		}
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) context.cause().audience();
 			if(getCommandSettings() != null && getCooldowns() != null) {

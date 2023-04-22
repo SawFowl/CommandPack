@@ -31,16 +31,37 @@ import sawfowl.localeapi.api.TextUtils;
 
 public interface PluginCommand {
 
+	/**
+	 * Command settings.<br>
+	 * This is where you specify the aliases, kooldowns, delays, and price.
+	 */
 	CommandSettings getCommandSettings();
 
+	/**
+	 * Retrieving text from a specified location. You can return null, but in which case you need to create localized messages in LocaleAPI.
+	 */
 	Component getText(Object[] path);
 
+	/**
+	 * {@link PluginContainer} to which the command will be registered.
+	 */
 	PluginContainer getContainer();
 
+	/**
+	 * The permission needed to execute the command.
+	 */
 	String permission();
 
+	/**
+	 * The main alias of the command.
+	 */
 	String command();
 
+	/**
+	 * The name of the command for which the last execution time will be checked.<br>
+	 * For example, commands such as `/day`, `/night` are checked as `/time`.<br>
+	 * By default, it is unique for each command. Overriding it may be useful in some situations.
+	 */
 	default String trackingName() {
 		return command();
 	}
@@ -64,7 +85,7 @@ public interface PluginCommand {
 		if(isLegacyDecor(str)) {
 			return TextUtils.deserializeLegacy(str);
 		} else {
-			return TextUtils.deserializeJson(str);
+			return TextUtils.deserialize(str);
 		}
 	}
 

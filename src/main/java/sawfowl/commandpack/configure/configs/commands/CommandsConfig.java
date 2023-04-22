@@ -9,12 +9,13 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.spongepowered.api.command.Command.Parameterized;
@@ -144,6 +145,8 @@ public class CommandsConfig {
 	private CommandSettings broadcast = new CommandSettings();
 	@Setting("Sudo")
 	private CommandSettings sudo = new CommandSettings();
+	@Setting("Vanish")
+	private CommandSettings vanish = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));
@@ -207,7 +210,7 @@ public class CommandsConfig {
 
 	
 	@SuppressWarnings("unchecked")
-	private <T> ArrayList<Class<T>> findAllCommandsClasses(CommandPack plugin, String packageName, Class<T> clazz) throws IOException, URISyntaxException {
+	private <T> Set<Class<T>> findAllCommandsClasses(CommandPack plugin, String packageName, Class<T> clazz) throws IOException, URISyntaxException {
 		final String pkgPath = packageName.replace('.', '/');
 		URI pkg = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource(pkgPath)).toURI();
 		try {
@@ -220,7 +223,7 @@ public class CommandsConfig {
 		} catch (Exception e) {
 			// ignore
 		}
-		final ArrayList<Class<T>> allClasses = new ArrayList<Class<T>>();
+		final Set<Class<T>> allClasses = new HashSet<Class<T>>();
 		Path root;
 		if (pkg.toString().startsWith("jar:")) {
 			try {

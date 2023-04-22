@@ -17,6 +17,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
@@ -32,13 +33,13 @@ public class Broadcast extends AbstractParameterizedCommand {
 			delay((ServerPlayer) src, locale, consumer -> {
 				Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BROADCAST).append(toComponent(getString(context, "Message").get())));
 				Sponge.server().onlinePlayers().forEach(player -> {
-					player.sendMessage(getText(player, LocalesPaths.COMMANDS_BROADCAST).append(toComponent(getString(context, "Message").get())));
+					player.sendMessage(getText(player, LocalesPaths.COMMANDS_BROADCAST).append(toComponent(getString(context, "Message").get().replace(Placeholders.PLAYER, player.name()))));
 				});
 			});
 		} else {
 			Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BROADCAST).append(toComponent(getString(context, "Message").get())));
 			Sponge.server().onlinePlayers().forEach(player -> {
-				player.sendMessage(getText(player, LocalesPaths.COMMANDS_BROADCAST).append(toComponent(getString(context, "Message").get())));
+				player.sendMessage(getText(player, LocalesPaths.COMMANDS_BROADCAST).append(toComponent(getString(context, "Message").get().replace(Placeholders.PLAYER, player.name()))));
 			});
 		}
 	}
@@ -60,13 +61,15 @@ public class Broadcast extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createString("Message", false), false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createStrings("Message", false), false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
 	}
 
 	private Component toComponent(String string) {
 		if(isLegacyDecor(string)) {
 			return TextUtils.deserializeLegacy(string);
-		} else return TextUtils.deserializeJson(string);
+		} else {
+			return TextUtils.deserialize(string);
+		}
 	}
 
 }

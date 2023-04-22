@@ -20,9 +20,11 @@ public interface ParameterSettings extends DataSerializable {
 		return builder().value(value).optionalforConsole(optionalforConsole).localeTextPath(localeTextPath).build();
 	}
 
-	static ParameterSettings of(Value<?> value, boolean optionalforConsole, int position, Object... localeTextPath) {
-		return builder().value(value).optionalforConsole(optionalforConsole).position(position).localeTextPath(localeTextPath).build();
+	static ParameterSettings of(Value<?> value, boolean optional, boolean optionalforConsole, Object... localeTextPath) {
+		return builder().value(value).setOptional(optional).optionalforConsole(optionalforConsole).localeTextPath(localeTextPath).build();
 	}
+
+	boolean containsIn(CommandContext context);
 
 	String getKey();
 
@@ -43,6 +45,8 @@ public interface ParameterSettings extends DataSerializable {
 		Builder value(Value<?> value);
 
 		Builder optionalforConsole(boolean optional);
+
+		Builder setOptional(boolean optional);
 
 		Builder localeTextPath(Object[] path);
 
