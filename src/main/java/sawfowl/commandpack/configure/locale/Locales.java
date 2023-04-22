@@ -183,7 +183,7 @@ public class Locales {
 		save = check(locale, toText("&aYou healed player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_HEAL_OTHER) || save;
 		save = check(locale, toText("&9[&2Broadcast&9]&r "), null, LocalesPaths.COMMANDS_BROADCAST) || save;
 		save = check(locale, toText("&cCommand not found."), null, LocalesPaths.COMMANDS_SUDO_COMMAND_NOT_FOUND) || save;
-		save = check(locale, toText("&cYou cannot use this command. Forced execution is not available."), null, LocalesPaths.COMMANDS_SUDO_EXECUTE_NOT_ALLOWED) || save;
+		save = check(locale, toText("&cYou cannot use this command, or the target player has no rights to execute it. Forcing execution is not available."), null, LocalesPaths.COMMANDS_SUDO_EXECUTE_NOT_ALLOWED) || save;
 		save = check(locale, toText("&eAn attempt is made to forcibly execute a command by the player &6" + Placeholders.PLAYER + "&e."), null, LocalesPaths.COMMANDS_SUDO_SUCCESS) || save;
 
 		if(save) save(locale);
@@ -315,7 +315,7 @@ public class Locales {
 		save = check(locale, toText("&aВы вылечили игрока &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_HEAL_OTHER) || save;
 		save = check(locale, toText("&9[&2Объявление&9]&r "), null, LocalesPaths.COMMANDS_BROADCAST) || save;
 		save = check(locale, toText("&cКоманда не найдена."), null, LocalesPaths.COMMANDS_SUDO_COMMAND_NOT_FOUND) || save;
-		save = check(locale, toText("&cВы не можете использовать эту команду. Принуждение к выполнению не доступно."), null, LocalesPaths.COMMANDS_SUDO_EXECUTE_NOT_ALLOWED) || save;
+		save = check(locale, toText("&cВы не можете использовать эту команду, либо у целевого игрока нет прав на ее выполнение. Принуждение к выполнению не доступно."), null, LocalesPaths.COMMANDS_SUDO_EXECUTE_NOT_ALLOWED) || save;
 		save = check(locale, toText("&eВыполняется попытка принуждения к выполнению команды игроком &6" + Placeholders.PLAYER + "&e."), null, LocalesPaths.COMMANDS_SUDO_SUCCESS) || save;
 
 		if(save) save(locale);

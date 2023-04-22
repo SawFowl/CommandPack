@@ -26,6 +26,9 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.configurate.reference.ValueReference;
 import org.spongepowered.configurate.serialize.SerializationException;
 
+import net.minecraftforge.fml.javafmlmod.FMLModContainer;
+import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
@@ -152,7 +155,7 @@ public class CommandsConfig {
 
 	public void registerParameterized(RegisterCommandEvent<Parameterized> event, CommandPack plugin) {
 		try {
-			for(Class<AbstractParameterizedCommand> clazz : findAllCommandsClasses("sawfowl.commandpack.commands.parameterized", AbstractParameterizedCommand.class)) {
+			for(Class<AbstractParameterizedCommand> clazz : findAllCommandsClasses(plugin, "sawfowl.commandpack.commands.parameterized", AbstractParameterizedCommand.class)) {
 				try {
 					AbstractParameterizedCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
@@ -172,7 +175,7 @@ public class CommandsConfig {
 
 	public void registerRaw(RegisterCommandEvent<Raw> event, CommandPack plugin) {
 		try {
-			for(Class<AbstractRawCommand> clazz : findAllCommandsClasses("sawfowl.commandpack.commands.raw", AbstractRawCommand.class)) {
+			for(Class<AbstractRawCommand> clazz : findAllCommandsClasses(plugin, "sawfowl.commandpack.commands.raw", AbstractRawCommand.class)) {
 				try {
 					AbstractRawCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
@@ -204,9 +207,19 @@ public class CommandsConfig {
 
 	
 	@SuppressWarnings("unchecked")
-	private <T> ArrayList<Class<T>> findAllCommandsClasses(String packageName, Class<T> clazz) throws IOException, URISyntaxException {
+	private <T> ArrayList<Class<T>> findAllCommandsClasses(CommandPack plugin, String packageName, Class<T> clazz) throws IOException, URISyntaxException {
 		final String pkgPath = packageName.replace('.', '/');
-		final URI pkg = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource(pkgPath)).toURI();
+		URI pkg = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource(pkgPath)).toURI();
+		try {
+			Class.forName("net.minecraftforge.fml.javafmlmod.FMLModContainer");
+			if(plugin.getPluginContainer() instanceof FMLModContainer) {
+				FMLModContainer container = (FMLModContainer) plugin.getPluginContainer();
+				ModFileInfo modFileInfo = (ModFileInfo) container.getModInfo().getOwningFile();
+				pkg = URI.create("jar:" + modFileInfo.getFile().getFilePath().toUri().toString()  + "!/" + pkgPath);
+			}
+		} catch (Exception e) {
+			// ignore
+		}
 		final ArrayList<Class<T>> allClasses = new ArrayList<Class<T>>();
 		Path root;
 		if (pkg.toString().startsWith("jar:")) {
