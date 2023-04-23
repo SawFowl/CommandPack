@@ -94,7 +94,11 @@ public interface PluginCommand {
 	}
 
 	default Component text(String string) {
-		return TextUtils.deserializeLegacy(string);
+		if(isLegacyDecor(string)) {
+			return TextUtils.deserializeLegacy(string);
+		} else {
+			return TextUtils.deserialize(string);
+		}
 	}
 
 	default Component text(Object objectToString) {

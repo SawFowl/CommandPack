@@ -11,7 +11,7 @@ import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
@@ -19,7 +19,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Broadcast extends AbstractParameterizedCommand {
 
@@ -31,15 +30,15 @@ public class Broadcast extends AbstractParameterizedCommand {
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
 			delay((ServerPlayer) src, locale, consumer -> {
-				Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BROADCAST).append(toComponent(getString(context, "Message").get())));
+				Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get())));
 				Sponge.server().onlinePlayers().forEach(player -> {
-					player.sendMessage(getText(player, LocalesPaths.COMMANDS_BROADCAST).append(toComponent(getString(context, "Message").get().replace(Placeholders.PLAYER, player.name()))));
+					player.sendMessage(getText(player, LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get().replace(Placeholders.PLAYER, player.name()))));
 				});
 			});
 		} else {
-			Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BROADCAST).append(toComponent(getString(context, "Message").get())));
+			Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get())));
 			Sponge.server().onlinePlayers().forEach(player -> {
-				player.sendMessage(getText(player, LocalesPaths.COMMANDS_BROADCAST).append(toComponent(getString(context, "Message").get().replace(Placeholders.PLAYER, player.name()))));
+				player.sendMessage(getText(player, LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get().replace(Placeholders.PLAYER, player.name()))));
 			});
 		}
 	}
@@ -62,14 +61,6 @@ public class Broadcast extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(ParameterSettings.of(CommandParameters.createStrings("Message", false), false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
-	}
-
-	private Component toComponent(String string) {
-		if(isLegacyDecor(string)) {
-			return TextUtils.deserializeLegacy(string);
-		} else {
-			return TextUtils.deserialize(string);
-		}
 	}
 
 }

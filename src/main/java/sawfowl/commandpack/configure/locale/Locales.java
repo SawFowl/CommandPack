@@ -190,6 +190,10 @@ public class Locales {
 		save = check(locale, toText("&aYou are visible again."), null, LocalesPaths.COMMANDS_VANISH_UNVASHISHED) || save;
 		save = check(locale, toText("&aThe player &e" + Placeholders.PLAYER + "&a is now invisible.."), null, LocalesPaths.COMMANDS_VANISH_VASHISHED_STAFF) || save;
 		save = check(locale, toText("&aThe player &e" + Placeholders.PLAYER + "&a is visible again."), null, LocalesPaths.COMMANDS_VANISH_UNVASHISHED_STAFF) || save;
+		save = check(locale, toText("&aYou nickname was changed to &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_NICK_SET_SELF) || save;
+		save = check(locale, toText("&aYour nickname has been changed to the original."), null, LocalesPaths.COMMANDS_NICK_CLEAR_SELF) || save;
+		save = check(locale, toText("&aYou have changed the nickname of the player &e" + Placeholders.PLAYER + "&a to &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_NICK_SET_STAFF) || save;
+		save = check(locale, toText("&aYou restored the original nickname of player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_NICK_CLEAR_STAFF) || save;
 
 		if(save) save(locale);
 	}
@@ -327,6 +331,10 @@ public class Locales {
 		save = check(locale, toText("&aВы снова видимы."), null, LocalesPaths.COMMANDS_VANISH_UNVASHISHED) || save;
 		save = check(locale, toText("&aИгрок &e" + Placeholders.PLAYER + "&a теперь не видим."), null, LocalesPaths.COMMANDS_VANISH_VASHISHED_STAFF) || save;
 		save = check(locale, toText("&aИгрок &e" + Placeholders.PLAYER + "&a снова видим."), null, LocalesPaths.COMMANDS_VANISH_UNVASHISHED_STAFF) || save;
+		save = check(locale, toText("&aВы ник изменен на &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_NICK_SET_SELF) || save;
+		save = check(locale, toText("&aВаш ник изменен на изначальный."), null, LocalesPaths.COMMANDS_NICK_CLEAR_SELF) || save;
+		save = check(locale, toText("&aВы узменили ник игроку &e" + Placeholders.PLAYER + "&a на &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_NICK_SET_STAFF) || save;
+		save = check(locale, toText("&aВы восстановили изначальный ник игрока &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_NICK_CLEAR_STAFF) || save;
 
 		if(save) save(locale);
 	}
