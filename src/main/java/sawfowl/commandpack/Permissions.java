@@ -87,6 +87,8 @@ public class Permissions {
 	public static final String SUDO_STAFF = "commandpack.commands.staff.sudo";
 	public static final String VANISH_STAFF = "commandpack.commands.staff.vanish";
 	public static final String NICK_STAFF = "commandpack.commands.staff.nick";
+	public static final String ITEMNAME_STAFF = "commandpack.commands.staff.itemname";
+	public static final String ITEMLORE_STAFF = "commandpack.commands.staff.itemlore";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";

@@ -194,6 +194,11 @@ public class Locales {
 		save = check(locale, toText("&aYour nickname has been changed to the original."), null, LocalesPaths.COMMANDS_NICK_CLEAR_SELF) || save;
 		save = check(locale, toText("&aYou have changed the nickname of the player &e" + Placeholders.PLAYER + "&a to &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_NICK_SET_STAFF) || save;
 		save = check(locale, toText("&aYou restored the original nickname of player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_NICK_CLEAR_STAFF) || save;
+		save = check(locale, toText("&aYou have established a new name for the item: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_ITEM_SET_NAME) || save;
+		save = check(locale, toText("&aYou have restored the original name of the item."), null, LocalesPaths.COMMANDS_ITEM_CLEAR_NAME) || save;
+		save = check(locale, toText("&cYou have to hold the item in your hand."), null, LocalesPaths.COMMANDS_ITEM_EMPTY_HAND) || save;
+		save = check(locale, toText("&aYou changed the lore of the item."), null, LocalesPaths.COMMANDS_ITEM_SET_LORE) || save;
+		save = check(locale, toText("&aYou have cleared the item lore."), null, LocalesPaths.COMMANDS_ITEM_CLEAR_LORE) || save;
 
 		if(save) save(locale);
 	}
@@ -335,6 +340,11 @@ public class Locales {
 		save = check(locale, toText("&aВаш ник изменен на изначальный."), null, LocalesPaths.COMMANDS_NICK_CLEAR_SELF) || save;
 		save = check(locale, toText("&aВы узменили ник игроку &e" + Placeholders.PLAYER + "&a на &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_NICK_SET_STAFF) || save;
 		save = check(locale, toText("&aВы восстановили изначальный ник игрока &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_NICK_CLEAR_STAFF) || save;
+		save = check(locale, toText("&aВы установили предмету новое имя: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_ITEM_SET_NAME) || save;
+		save = check(locale, toText("&aВы восстановили изначальное имя предмета."), null, LocalesPaths.COMMANDS_ITEM_CLEAR_NAME) || save;
+		save = check(locale, toText("&cВы должны держать предмет в руке."), null, LocalesPaths.COMMANDS_ITEM_EMPTY_HAND) || save;
+		save = check(locale, toText("&aВы изменили описание предмета."), null, LocalesPaths.COMMANDS_ITEM_SET_LORE) || save;
+		save = check(locale, toText("&aВы очистили описание предмета."), null, LocalesPaths.COMMANDS_ITEM_CLEAR_LORE) || save;
 
 		if(save) save(locale);
 	}

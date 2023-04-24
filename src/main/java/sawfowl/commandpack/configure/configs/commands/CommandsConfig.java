@@ -149,6 +149,8 @@ public class CommandsConfig {
 	private CommandSettings vanish = new CommandSettings();
 	@Setting("Nick")
 	private CommandSettings nick = new CommandSettings(new String[] {"name"});
+	@Setting("Item")
+	private CommandSettings item = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

@@ -46,6 +46,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_SUDO = "Sudo";
 	private static final Object COMMAND_VANISH = "Vanish";
 	private static final Object COMMAND_NICK = "Nick";
+	private static final Object COMMAND_ITEM = "Item";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -181,5 +182,10 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_NICK_CLEAR_SELF = {PATH_COMMANDS, COMMAND_NICK, "ClearSelf"};
 	public static final Object[] COMMANDS_NICK_SET_STAFF = {PATH_COMMANDS, COMMAND_NICK, "SetStaff"};
 	public static final Object[] COMMANDS_NICK_CLEAR_STAFF = {PATH_COMMANDS, COMMAND_NICK, "ClearStaff"};
+	public static final Object[] COMMANDS_ITEM_EMPTY_HAND = {PATH_COMMANDS, COMMAND_ITEM, PATH_EXCEPTIONS, "EmptyHand"};
+	public static final Object[] COMMANDS_ITEM_SET_NAME = {PATH_COMMANDS, COMMAND_ITEM, "SetName"};
+	public static final Object[] COMMANDS_ITEM_CLEAR_NAME = {PATH_COMMANDS, COMMAND_ITEM, "ClearName"};
+	public static final Object[] COMMANDS_ITEM_SET_LORE = {PATH_COMMANDS, COMMAND_ITEM, "SetLore"};
+	public static final Object[] COMMANDS_ITEM_CLEAR_LORE = {PATH_COMMANDS, COMMAND_ITEM, "ClearLore"};
 
 }
