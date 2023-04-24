@@ -22,9 +22,9 @@ public interface PlayerBackpack extends DataSerializable {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
-	void addItem(int slot, ItemStack item);
+	boolean addItem(int slot, ItemStack item);
 
-	void addItem(int slot, ItemStackSnapshot item);
+	boolean addItem(int slot, ItemStackSnapshot item);
 
 	void removeItem(int slot);
 

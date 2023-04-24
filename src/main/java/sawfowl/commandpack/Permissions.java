@@ -54,6 +54,7 @@ public class Permissions {
 	public static final String HEAL = "commandpack.commands.user.heal";
 	public static final String VANISH = "commandpack.commands.user.vanish";
 	public static final String NICK = "commandpack.commands.user.nick";
+	public static final String SERVER_STAT = "commandpack.commands.user.serverstat";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";

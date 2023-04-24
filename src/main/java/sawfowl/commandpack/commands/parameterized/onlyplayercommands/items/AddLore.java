@@ -33,13 +33,11 @@ public class AddLore extends AbstractPlayerCommand {
 		ItemStack item = src.itemInHand(HandTypes.MAIN_HAND.get());
 		String input = getString(context, "Value").get();
 		List<Component> newLore = item.get(Keys.LORE).orElse(new ArrayList<>());
-		if(input.contains("\n")) {
-			while(input.contains("\n")) {
-				String[] split = input.split("\n");
-				newLore.add(text(split[0]));
-				input = split.length > 0 ? split[1] : null;
+		if(input.contains("\\n")) {
+			input = input.replace("\\n", "%NEWLINE%");
+			for(String split : input.split("%NEWLINE%")) {
+				newLore.add(text(split));
 			}
-			if(input != null && input.length() > 0) newLore.add(text(input));
 		} else newLore.add(text(input));
 		item.offer(Keys.LORE, newLore);
 		src.setItemInHand(HandTypes.MAIN_HAND, item);

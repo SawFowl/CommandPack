@@ -70,8 +70,8 @@ public class Nick extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createPlayer(Permissions.NICK_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createString("Nick", false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
+			ParameterSettings.of(CommandParameters.createString("Nick", false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
+			ParameterSettings.of(CommandParameters.createPlayer(Permissions.NICK_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
 		);
 	}
 

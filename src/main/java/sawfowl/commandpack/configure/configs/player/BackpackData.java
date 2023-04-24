@@ -68,14 +68,16 @@ public class BackpackData implements PlayerBackpack {
 	}
 
 	@Override
-	public void addItem(int slot, ItemStack item) {
+	public boolean addItem(int slot, ItemStack item) {
+		if(slot < 0 || slot > 53) return false;
 		if(items.containsKey(slot)) items.remove(slot);
 		items.put(slot, new SerializedItemStack(item));
+		return true;
 	}
 
 	@Override
-	public void addItem(int slot, ItemStackSnapshot item) {
-		addItem(slot, item.createStack());
+	public boolean addItem(int slot, ItemStackSnapshot item) {
+		return addItem(slot, item.createStack());
 	}
 
 	@Override
@@ -161,7 +163,7 @@ public class BackpackData implements PlayerBackpack {
 		@Override
 		public Builder fromInventory(Inventory inventory) {
 			inventory.slots().forEach(slot -> {
-				if(slot.totalQuantity() > 0 && slot.get(Keys.SLOT_INDEX).isPresent() && slot.get(Keys.SLOT_INDEX).get() > 0 && slot.get(Keys.SLOT_INDEX).get() <= 53) addItem(slot.get(Keys.SLOT_INDEX).get(), slot.peek());
+				if(slot.totalQuantity() > 0 && slot.get(Keys.SLOT_INDEX).isPresent()) addItem(slot.get(Keys.SLOT_INDEX).get(), slot.peek());
 			});
 			return this;
 		}
@@ -169,20 +171,17 @@ public class BackpackData implements PlayerBackpack {
 		@Override
 		public Builder fromMap(Map<Integer, ItemStack> map) {
 			map.forEach((k,v) -> {
-				if(v.quantity() > 0 && k > 0 && k <= 53) addItem(k, v);
+				if(v.quantity() > 0) addItem(k, v);
 			});
 			return this;
 		}
 
 		@Override
 		public Builder copyFrom(PlayerBackpack backpack) {
-			if(backpack.getSlots() == null || backpack.getSlots().isEmpty()) return this;
-			backpack.getSlots().forEach(slot -> {
-				if(slot > 0 && slot <= 53) {
-					backpack.getItem(slot).ifPresent(item -> {
-						addItem(slot, item);
-					});
-				}
+			if(backpack.getSlots() != null && !backpack.getSlots().isEmpty()) backpack.getSlots().forEach(slot -> {
+				backpack.getItem(slot).ifPresent(item -> {
+					addItem(slot, item);
+				});
 			});
 			return this;
 		}
