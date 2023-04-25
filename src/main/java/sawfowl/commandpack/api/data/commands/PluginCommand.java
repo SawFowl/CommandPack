@@ -2,6 +2,7 @@ package sawfowl.commandpack.api.data.commands;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -15,9 +16,11 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.economy.Currency;
+import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.util.locale.LocaleSource;
 import org.spongepowered.plugin.PluginContainer;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
@@ -175,6 +178,16 @@ public interface PluginCommand {
 
 	default boolean isStyleChar(char ch) {
 		return "0123456789abcdefklmnor".indexOf(ch) != -1;
+	}
+
+	default void sendPaginationList(Audience target, Component header, Component padding, int linesPerPage, List<Component> components) {
+		PaginationList.builder()
+			.linesPerPage(linesPerPage)
+			.header(header)
+			.contents(components)
+			.padding(padding)
+			.contents(components)
+			.sendTo(target);
 	}
 
 }

@@ -28,7 +28,7 @@ public interface RandomTeleportService {
 
 	/**
 	 * Search for a teleportation position in the target world.<br>
-	 * Async mode.
+	 * Async mode. Teleportation is only possible in the main thread.
 	 * 
 	 * @param currentLocation - The current location of the entity.
 	 * @param options - Options for finding a random position.

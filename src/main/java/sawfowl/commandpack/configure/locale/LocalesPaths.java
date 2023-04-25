@@ -47,6 +47,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_VANISH = "Vanish";
 	private static final Object COMMAND_NICK = "Nick";
 	private static final Object COMMAND_ITEM = "Item";
+	private static final Object COMMAND_SERVERSTAT = "ServerStat";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -187,5 +188,34 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_ITEM_CLEAR_NAME = {PATH_COMMANDS, COMMAND_ITEM, "ClearName"};
 	public static final Object[] COMMANDS_ITEM_SET_LORE = {PATH_COMMANDS, COMMAND_ITEM, "SetLore"};
 	public static final Object[] COMMANDS_ITEM_CLEAR_LORE = {PATH_COMMANDS, COMMAND_ITEM, "ClearLore"};
+	public static final Object[] COMMANDS_SERVERSTAT_HEADER = {PATH_COMMANDS, COMMAND_SERVERSTAT, "Header"};
+	public static final Object[] COMMANDS_SERVERSTAT_BUTTON_SYSTEM = {PATH_COMMANDS, COMMAND_SERVERSTAT, "SystemButton"};
+	public static final Object[] COMMANDS_SERVERSTAT_BUTTON_WORLDS = {PATH_COMMANDS, COMMAND_SERVERSTAT, "WorldsButton"};
+	public static final Object[] COMMANDS_SERVERSTAT_BUTTON_PLUGINS = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginsButton"};
+	public static final Object[] COMMANDS_SERVERSTAT_BUTTON_MODS = {PATH_COMMANDS, COMMAND_SERVERSTAT, "ModsButton"};
+	public static final Object[] COMMANDS_SERVERSTAT_TPS = {PATH_COMMANDS, COMMAND_SERVERSTAT, "TPS"};
+	public static final Object[] COMMANDS_SERVERSTAT_UPTIME = {PATH_COMMANDS, COMMAND_SERVERSTAT, "Uptime"};
+	public static final Object[] COMMANDS_SERVERSTAT_MEMORY_MAX = {PATH_COMMANDS, COMMAND_SERVERSTAT, "MemoryMax"};
+	public static final Object[] COMMANDS_SERVERSTAT_MEMORY_TOTAL = {PATH_COMMANDS, COMMAND_SERVERSTAT, "MemoryTotal"};
+	public static final Object[] COMMANDS_SERVERSTAT_MEMORY_FREE = {PATH_COMMANDS, COMMAND_SERVERSTAT, "MemoryFree"};
+	public static final Object[] COMMANDS_SERVERSTAT_TIME = {PATH_COMMANDS, COMMAND_SERVERSTAT, "Time"};
+	public static final Object[] COMMANDS_SERVERSTAT_OS_HEADER = {PATH_COMMANDS, COMMAND_SERVERSTAT, "HeaderOS"};
+	public static final Object[] COMMANDS_SERVERSTAT_OS = {PATH_COMMANDS, COMMAND_SERVERSTAT, "OS"};
+	public static final Object[] COMMANDS_SERVERSTAT_JAVA = {PATH_COMMANDS, COMMAND_SERVERSTAT, "Java"};
+	public static final Object[] COMMANDS_SERVERSTAT_JAVAHOME = {PATH_COMMANDS, COMMAND_SERVERSTAT, "JavaHome"};
+	public static final Object[] COMMANDS_SERVERSTAT_WORLDS_INFO_HEADER = {PATH_COMMANDS, COMMAND_SERVERSTAT, "HeaderWorlds"};
+	public static final Object[] COMMANDS_SERVERSTAT_WORLDINFO = {PATH_COMMANDS, COMMAND_SERVERSTAT, "WorldInfo"};
+	public static final Object[] COMMANDS_SERVERSTAT_HEADER_PLUGINS = {PATH_COMMANDS, COMMAND_SERVERSTAT, "HeaderPlugins"};
+	public static final Object[] COMMANDS_SERVERSTAT_PLUGIN_INFO_BUTTON = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginInfoButton"};
+	public static final Object[] COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginRefreshButton"};
+	public static final Object[] COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginRefreshMessage"};
+	public static final Object[] COMMANDS_SERVERSTAT_PLUGIN_NAME = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginName"};
+	public static final Object[] COMMANDS_SERVERSTAT_PLUGIN_ID = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginID"};
+	public static final Object[] COMMANDS_SERVERSTAT_PLUGIN_AUTHOR = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginAuthor"};
+	public static final Object[] COMMANDS_SERVERSTAT_PLUGIN_DESCRIPTION = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginDescription"};
+	public static final Object[] COMMANDS_SERVERSTAT_PLUGIN_ENTRYPOINT = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginEntryPoint"};
+	public static final Object[] COMMANDS_SERVERSTAT_PLUGIN_LINKS = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginLinks"};
+	public static final Object[] COMMANDS_SERVERSTAT_PLUGIN_CONTRIBUTORS = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginContributors"};
+	public static final Object[] COMMANDS_SERVERSTAT_PLUGIN_DEPENDECIES = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginDependencies"};
 
 }

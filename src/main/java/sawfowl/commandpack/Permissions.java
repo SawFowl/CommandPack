@@ -7,6 +7,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerWorld;
+import org.spongepowered.plugin.PluginContainer;
 
 import sawfowl.localeapi.api.TextUtils;
 
@@ -90,6 +91,12 @@ public class Permissions {
 	public static final String NICK_STAFF = "commandpack.commands.staff.nick";
 	public static final String ITEMNAME_STAFF = "commandpack.commands.staff.itemname";
 	public static final String ITEMLORE_STAFF = "commandpack.commands.staff.itemlore";
+	public static final String SERVER_STAT_STAFF_INFO_SYSTEM = "commandpack.commands.staff.serverstat.systeminfo";
+	public static final String SERVER_STAT_STAFF_INFO_WORLDS = "commandpack.commands.staff.serverstat.worldsinfo";
+	public static final String SERVER_STAT_STAFF_INFO_PLUGINS = "commandpack.commands.staff.serverstat.pluginsinfo";
+	public static final String SERVER_STAT_STAFF_INFO_PLUGINS_MORE = "commandpack.commands.staff.serverstat.pluginsmoreinfo";
+	public static final String SERVER_STAT_STAFF_INFO_PLUGINS_REFRESH = "commandpack.commands.staff.serverstat.pluginsrefresh";
+	public static final String SERVER_STAT_STAFF_INFO_MODS = "commandpack.commands.staff.serverstat.modsinfo";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";
@@ -112,6 +119,14 @@ public class Permissions {
 	private static final String WEATHER_WORLD_ACCESS = "commandpack.access.worlds.weather";
 	private static final String TIME_ACCESS = "commandpack.access.time";
 	private static final String TIME_WORLD_ACCESS = "commandpack.access.worlds.time";
+
+	public static boolean isAllowMoreInfoPlugin(ServerPlayer player, PluginContainer container) {
+		return player.hasPermission(SERVER_STAT_STAFF_INFO_PLUGINS_MORE + container.metadata().id());
+	}
+
+	public static boolean isAllowRefreshPlugin(ServerPlayer player, PluginContainer container) {
+		return player.hasPermission(SERVER_STAT_STAFF_INFO_PLUGINS_REFRESH + container.metadata().id());
+	}
 
 	public static String getIgnoreDelayTimer(String command) {
 		return IGNORE_DELAY_TIMER + "." + command;

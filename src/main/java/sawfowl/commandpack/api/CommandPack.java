@@ -14,6 +14,11 @@ public interface CommandPack {
 	 */
 	RandomTeleportService randomTeleportService();
 
+	/**
+	 * Whether the plugin is running on the server with Forge.
+	 */
+	boolean isForgeServer();
+
 	interface PostAPI extends Event {
 
 		public CommandPack getAPI();

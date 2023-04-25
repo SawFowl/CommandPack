@@ -219,15 +219,10 @@ public class CommandsConfig {
 	private <T> Set<Class<T>> findAllCommandsClasses(CommandPack plugin, String packageName, Class<T> clazz) throws IOException, URISyntaxException {
 		final String pkgPath = packageName.replace('.', '/');
 		URI pkg = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource(pkgPath)).toURI();
-		try {
-			Class.forName("net.minecraftforge.fml.javafmlmod.FMLModContainer");
-			if(plugin.getPluginContainer() instanceof FMLModContainer) {
-				FMLModContainer container = (FMLModContainer) plugin.getPluginContainer();
-				ModFileInfo modFileInfo = (ModFileInfo) container.getModInfo().getOwningFile();
-				pkg = URI.create("jar:" + modFileInfo.getFile().getFilePath().toUri().toString()  + "!/" + pkgPath);
-			}
-		} catch (Exception e) {
-			// ignore
+		if(plugin.isForgeServer() && plugin.getPluginContainer() instanceof FMLModContainer) {
+			FMLModContainer container = (FMLModContainer) plugin.getPluginContainer();
+			ModFileInfo modFileInfo = (ModFileInfo) container.getModInfo().getOwningFile();
+			pkg = URI.create("jar:" + modFileInfo.getFile().getFilePath().toUri().toString()  + "!/" + pkgPath);
 		}
 		final Set<Class<T>> allClasses = new HashSet<Class<T>>();
 		Path root;

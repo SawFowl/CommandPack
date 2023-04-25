@@ -69,6 +69,7 @@ public class CommandPack {
 	private Economy economy;
 	private PlayersData playersData;
 	private RandomTeleportService rtpService;
+	private boolean isForge;
 
 	public static CommandPack getInstance() {
 		return instance;
@@ -114,6 +115,10 @@ public class CommandPack {
 		return rtpService;
 	}
 
+	public boolean isForgeServer() {
+		return isForge;
+	}
+
 	@Inject
 	public CommandPack(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
 		instance = this;
@@ -129,6 +134,7 @@ public class CommandPack {
 		configManager = new ConfigManager(instance, event.getLocaleService().getConfigurationOptions());
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
 		configManager.loadPlayersData();
+		isForge = checkForge();
 	}
 
 	@Listener
@@ -159,6 +165,11 @@ public class CommandPack {
 					@Override
 					public RandomTeleportService randomTeleportService() {
 						return rtpService;
+					}
+
+					@Override
+					public boolean isForgeServer() {
+						return isForge;
 					}
 
 				};
@@ -258,6 +269,15 @@ public class CommandPack {
 				return new BackpackData().builder();
 			}
 		});
+	}
+
+	private boolean checkForge() {
+		try {
+			Class.forName("net.minecraftforge.fml.javafmlmod.FMLModContainer");
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }
