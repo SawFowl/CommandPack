@@ -1,5 +1,7 @@
 package sawfowl.commandpack;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,7 @@ import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
 import org.spongepowered.api.event.lifecycle.RegisterBuilderEvent;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
+import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
@@ -77,6 +80,7 @@ public class CommandPack {
 	private Map<Long, Double> tps1m = new HashMap<>();
 	private Map<Long, Double> tps5m = new HashMap<>();
 	private Map<Long, Double> tps10m = new HashMap<>();
+	private long serverStartedTime;
 
 	public static CommandPack getInstance() {
 		return instance;
@@ -127,15 +131,19 @@ public class CommandPack {
 	}
 
 	public double getAverageTPS1m() {
-		return tps1m.values().stream().mapToDouble(d -> d).average().orElse(Sponge.server().ticksPerSecond());
+		return BigDecimal.valueOf(tps1m.values().stream().mapToDouble(d -> d).average().orElse(Sponge.server().ticksPerSecond())).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	public double getAverageTPS5m() {
-		return tps5m.values().stream().mapToDouble(d -> d).average().orElse(Sponge.server().ticksPerSecond());
+		return BigDecimal.valueOf(tps5m.values().stream().mapToDouble(d -> d).average().orElse(Sponge.server().ticksPerSecond())).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	public double getAverageTPS10m() {
-		return tps10m.values().stream().mapToDouble(d -> d).average().orElse(Sponge.server().ticksPerSecond());
+		return BigDecimal.valueOf(tps10m.values().stream().mapToDouble(d -> d).average().orElse(Sponge.server().ticksPerSecond())).setScale(2, RoundingMode.HALF_UP).doubleValue();
+	}
+
+	public long getServerUptime() {
+		return (System.currentTimeMillis() - serverStartedTime) / 1000;
 	}
 
 	@Inject
@@ -220,6 +228,7 @@ public class CommandPack {
 			tps5m.put(currentTime, Sponge.server().ticksPerSecond());
 			tps10m.put(currentTime, Sponge.server().ticksPerSecond());
 		}).build());
+		serverStartedTime = System.currentTimeMillis();
 	}
 
 	@Listener
@@ -311,6 +320,13 @@ public class CommandPack {
 			public PlayerBackpack.Builder get() {
 				return new BackpackData().builder();
 			}
+		});
+	}
+
+	@Listener
+	public void onStop(StoppingEngineEvent<Server> event) {
+		Sponge.asyncScheduler().tasks(pluginContainer).forEach(task -> {
+			task.cancel();
 		});
 	}
 

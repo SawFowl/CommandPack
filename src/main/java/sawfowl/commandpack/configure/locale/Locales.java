@@ -199,48 +199,28 @@ public class Locales {
 		save = check(locale, toText("&cYou have to hold the item in your hand."), null, LocalesPaths.COMMANDS_ITEM_EMPTY_HAND) || save;
 		save = check(locale, toText("&aYou changed the lore of the item."), null, LocalesPaths.COMMANDS_ITEM_SET_LORE) || save;
 		save = check(locale, toText("&aYou have cleared the item lore."), null, LocalesPaths.COMMANDS_ITEM_CLEAR_LORE) || save;
-		save = check(locale, toText("&aServerstat"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER) || save;
+		save = check(locale, toText("&3&lServer info"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER) || save;
 		save = check(locale, toText("&7[&4System&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_SYSTEM) || save;
 		save = check(locale, toText("&7[&eWorlds&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_WORLDS) || save;
 		save = check(locale, toText("&7[&aPlugins&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_PLUGINS) || save;
 		save = check(locale, toText("&7[&2Mods&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_MODS) || save;
-		save = check(locale, toText("&aTPS(Current, 1m, 5m, 10m / max)&f: " + Placeholders.VALUE + " &a/ &b20"), null, LocalesPaths.COMMANDS_SERVERSTAT_TPS) || save;
+		save = check(locale, toText("&aTPS(Current, 1m, 5m, 10m)&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_TPS) || save;
 		save = check(locale, toText("&aUptime / JVM&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_UPTIME) || save;
-		save = check(locale, toText("&aAllocated memory&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_MAX) || save;
-		save = check(locale, toText("&aMax. used memory&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_TOTAL) || save;
-		save = check(locale, toText("&aFree memory&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_FREE) || save;
+		save = check(locale, toText("&aMax(JVM) RAM&f: &e" + Placeholders.VALUE + "Mb"), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_MAX) || save;
+		save = check(locale, toText("&aAllocated RAM&f: &e" + Placeholders.VALUE + "Mb"), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_ALLOCATED) || save;
+		save = check(locale, toText("&aUtilised RAM&f: &e" + Placeholders.VALUE + "Mb(&6"+ Placeholders.FROM_ALLOCATED + "%&e of used, &6" + Placeholders.FROM_MAX + "%&e of max)"), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_UTILISED) || save;
+		save = check(locale, toText("&aFree (but allocated) memory&f: &e" + Placeholders.VALUE + "Mb"), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_FREE) || save;
 		save = check(locale, toText("&aServer time&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_TIME) || save;
-		save = check(locale, toText("&aSystem information"), null, LocalesPaths.COMMANDS_SERVERSTAT_OS_HEADER) || save;
+		save = check(locale, toText("&3&lSystem information"), null, LocalesPaths.COMMANDS_SERVERSTAT_OS_HEADER) || save;
 		save = check(locale, toText("&aSystem&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_OS) || save;
 		save = check(locale, toText("&aJava&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_JAVA) || save;
 		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_JAVAHOME) || save;
-		save = check(locale, toText("&aWorlds information"), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDS_INFO_HEADER) || save;
-		save = check(locale, toText("&aWorld&f: &e" + Placeholders.WORLD + "&a. Chunks loaded&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Entities&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: &e" + Placeholders.VALUE + "&a/&b" + Placeholders.LIMIT + "&a."), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO) || save;
-		save = check(locale, toText("&3Plugins"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS) || save;
-		save = check(locale, toText("&7[&eInfo&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_BUTTON) || save;
-		save = check(locale, toText("&7[&eRefresh&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON) || save;
+		save = check(locale, toText("&3&lWorlds information"), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDS_INFO_HEADER) || save;
+		save = check(locale, toText("&aWorld&f: &e" + Placeholders.WORLD + "&a. Chunks loaded&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Entities&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO) || save;
+		save = check(locale, toText("&ePlugins"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS) || save;
+		save = check(locale, toText("&7[&6Refresh&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON) || save;
 		save = check(locale, toText("&eAn attempt is made to reboot the plugin. If the plugin does not implement listening to the reboot event, there will be no effect."), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE) || save;
-		save = check(locale, toText("&aName&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_NAME) || save;
-		save = check(locale, toText("&aID&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_ID) || save;
-		save = check(locale, toText("&aVersion&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_VERSION) || save;
-		save = check(locale, toText("&aDescription&f: &e"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_DESCRIPTION) || save;
-		save = check(locale, toText("&aEntrypoint&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_ENTRYPOINT) || save;
-		save = check(locale, toText("&aContributors&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_CONTRIBUTORS) || save;
-		save = check(locale, toText("&aDependecies&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_DEPENDECIES) || save;
-		save = check(locale, toText("&aLinks&f: \n"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_LINKS) || save;
-		save = check(locale, toText("    &b➥ &aHome page\n"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_LINKS_HOME) || save;
-		save = check(locale, toText("    &b➥ &aSource\n"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_LINKS_SOURCE) || save;
-		save = check(locale, toText("    &b➥ &aIssues"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_LINKS_ISSUES) || save;
-		save = check(locale, toText("&3Mods"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS) || save;
-		save = check(locale, toText("&7[&eInfo&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_BUTTON) || save;
-		save = check(locale, toText("&aID&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_ID) || save;
-		save = check(locale, toText("&aName&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_NAME) || save;
-		save = check(locale, toText("&aVersion&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_VERSION) || save;
-		save = check(locale, toText("&aDescription&f: &e"), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_DESCRIPTION) || save;
-		save = check(locale, toText("&aDependecies" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_DEPENDECIES) || save;
-		save = check(locale, toText("&aLinks&f:"), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_LINKS) || save;
-		save = check(locale, toText("    &b➥ &aUpdates"), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_URL_UPDATE) || save;
-		save = check(locale, toText("    &b➥ &aIssues&f: &e"), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_URL_ISSUES) || save;
+		save = check(locale, "MM.dd.yyyy HH:mm:s", null, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT) || save;
 
 		if(save) save(locale);
 	}
@@ -387,48 +367,28 @@ public class Locales {
 		save = check(locale, toText("&cВы должны держать предмет в руке."), null, LocalesPaths.COMMANDS_ITEM_EMPTY_HAND) || save;
 		save = check(locale, toText("&aВы изменили описание предмета."), null, LocalesPaths.COMMANDS_ITEM_SET_LORE) || save;
 		save = check(locale, toText("&aВы очистили описание предмета."), null, LocalesPaths.COMMANDS_ITEM_CLEAR_LORE) || save;
-		save = check(locale, toText("&aСтатистика сервера"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER) || save;
+		save = check(locale, toText("&3&lО сервере"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER) || save;
 		save = check(locale, toText("&7[&4Система&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_SYSTEM) || save;
 		save = check(locale, toText("&7[&eМиры&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_WORLDS) || save;
 		save = check(locale, toText("&7[&aПлагины&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_PLUGINS) || save;
 		save = check(locale, toText("&7[&2Моды&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_MODS) || save;
-		save = check(locale, toText("&aТПС(Текущий, 1м, 5м, 10м / максимум)&f: " + Placeholders.VALUE + " &a/ &b20"), null, LocalesPaths.COMMANDS_SERVERSTAT_TPS) || save;
+		save = check(locale, toText("&aТПС(Текущий, 1м, 5м, 10м)&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_TPS) || save;
 		save = check(locale, toText("&aАптайм сервер / JVM&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_UPTIME) || save;
-		save = check(locale, toText("&aВыделено памяти&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_MAX) || save;
-		save = check(locale, toText("&aЗаразервировано памяти&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_TOTAL) || save;
-		save = check(locale, toText("&aСвободно памяти&f:&e " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_FREE) || save;
+		save = check(locale, toText("&aВыделено(JVM) RAM&f: &e" + Placeholders.VALUE + "Мб"), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_MAX) || save;
+		save = check(locale, toText("&aЗаразервировано RAM&f: &e" + Placeholders.VALUE + "Мб"), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_ALLOCATED) || save;
+		save = check(locale, toText("&aИспользованно RAM&f:&e " + Placeholders.VALUE + "Мб(&6"+ Placeholders.FROM_ALLOCATED + "%&e от резерва, &6" + Placeholders.FROM_MAX + "%&e от максимума)"), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_UTILISED) || save;
+		save = check(locale, toText("&aСвободно(в резерве) RAM&f:&e " + Placeholders.VALUE + "Мб"), null, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_FREE) || save;
 		save = check(locale, toText("&aВремя сервера&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_TIME) || save;
-		save = check(locale, toText("&aСведения о системе"), null, LocalesPaths.COMMANDS_SERVERSTAT_OS_HEADER) || save;
+		save = check(locale, toText("&3&lСведения о системе"), null, LocalesPaths.COMMANDS_SERVERSTAT_OS_HEADER) || save;
 		save = check(locale, toText("&aСистема&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_OS) || save;
 		save = check(locale, toText("&aJava&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_JAVA) || save;
 		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_JAVAHOME) || save;
-		save = check(locale, toText("&aДанные по мирам"), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDS_INFO_HEADER) || save;
-		save = check(locale, toText("&aМир&f: &e" + Placeholders.WORLD + "&a. Загружено чанков&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Сущностей&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: &e" + Placeholders.VALUE + "&a/&b" + Placeholders.LIMIT + "&a."), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO) || save;
-		save = check(locale, toText("&3Плагины"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS) || save;
-		save = check(locale, toText("&7[&eИнфо&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_BUTTON) || save;
-		save = check(locale, toText("&7[&eПерезагрузить&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON) || save;
+		save = check(locale, toText("&3&lДанные по мирам"), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDS_INFO_HEADER) || save;
+		save = check(locale, toText("&aМир&f: &e" + Placeholders.WORLD + "&a. Загружено чанков&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Сущностей&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO) || save;
+		save = check(locale, toText("&eПлагины"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS) || save;
+		save = check(locale, toText("&7[&6Перезагрузить&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON) || save;
 		save = check(locale, toText("&eВыполняется попытка перезагрузки плагина. Если в плагине не реализована прослушка события перезагрузки, то эффекта не будет."), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE) || save;
-		save = check(locale, toText("&aНазвание&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_NAME) || save;
-		save = check(locale, toText("&aID&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_ID) || save;
-		save = check(locale, toText("&aВерсия&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_VERSION) || save;
-		save = check(locale, toText("&aОписание&f: &e"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_DESCRIPTION) || save;
-		save = check(locale, toText("&aГлавный класс&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_ENTRYPOINT) || save;
-		save = check(locale, toText("&aАвторы" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_CONTRIBUTORS) || save;
-		save = check(locale, toText("&aЗависимости" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_DEPENDECIES) || save;
-		save = check(locale, toText("&aСсылки&f: \n"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_LINKS) || save;
-		save = check(locale, toText("    &b➥ &aСтраница плагина\n"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_LINKS_HOME) || save;
-		save = check(locale, toText("    &b➥ &aИсходный код\n"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_LINKS_SOURCE) || save;
-		save = check(locale, toText("    &b➥ &aТрекер проблем"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_LINKS_ISSUES) || save;
-		save = check(locale, toText("&3Моды"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS) || save;
-		save = check(locale, toText("&7[&eИнфо&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_BUTTON) || save;
-		save = check(locale, toText("&aID&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_ID) || save;
-		save = check(locale, toText("&aНазвание&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_NAME) || save;
-		save = check(locale, toText("&aВерсия&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_VERSION) || save;
-		save = check(locale, toText("&aОписание&f: &e"), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_DESCRIPTION) || save;
-		save = check(locale, toText("&aЗависимости" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_DEPENDECIES) || save;
-		save = check(locale, toText("&aСсылки&f:"), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_LINKS) || save;
-		save = check(locale, toText("    &b➥ &aОбновления"), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_URL_UPDATE) || save;
-		save = check(locale, toText("    &b➥ &aТрекер проблем"), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_URL_ISSUES) || save;
+		save = check(locale, "d.MM.yyyy HH:mm:s", null, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT) || save;
 
 		if(save) save(locale);
 	}
@@ -451,6 +411,10 @@ public class Locales {
 
 	private boolean check(Locale locale, Component value, String comment, Object... path) {
 		return getAbstractLocaleUtil(locale).checkComponent(json, value, comment, path);
+	}
+
+	private boolean check(Locale locale, String value, String comment, Object... path) {
+		return getAbstractLocaleUtil(locale).checkString(value, comment, path);
 	}
 
 	private void save(Locale locale) {

@@ -1,8 +1,11 @@
 package sawfowl.commandpack.commands.parameterized;
 
 import java.lang.management.ManagementFactory;
-import java.time.Duration;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -17,8 +20,8 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.api.data.commands.parameterized.AbstractInfoCommand;
 import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
@@ -64,7 +67,10 @@ public class ServerStat extends AbstractInfoCommand {
 		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER);
 		List<Component> statList = new ArrayList<>();
 		Component buttons = getButtons(src, locale, isPlayer);
-		if(TextUtils.serializeLegacy(buttons).length() > 0) statList.add(buttons);
+		if(TextUtils.serializeLegacy(buttons).length() > 0) statList.add(buttons.append(Component.newline()));
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(System.currentTimeMillis());
 		statList.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_TPS), Placeholders.VALUE, tPStoText(currentTPS())
 				.append(text("&f, "))
 				.append(tPStoText(plugin.getAverageTPS1m()))
@@ -74,54 +80,53 @@ public class ServerStat extends AbstractInfoCommand {
 				.append(tPStoText(plugin.getAverageTPS10m()))
 				));
 		statList.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_UPTIME), Placeholders.VALUE, getUptime(locale)));
-		sendPaginationList(src, buttons, Component.text("=").color(header.color()), linesPerPage, statList);
+		statList.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIME), Placeholders.VALUE, text(format.format(calendar.getTime()))));
+		statList.add(Component.empty());
+		long max = Runtime.getRuntime().maxMemory() / 1024 / 1024;
+		long total = Runtime.getRuntime().totalMemory() / 1024 / 1024;
+		statList.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_MAX), Placeholders.VALUE, text(max)));
+		statList.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_ALLOCATED), Placeholders.VALUE, text(total)));
+		long free = Runtime.getRuntime().freeMemory() / 1024 / 1024;
+		long utilised = total - free;
+		statList.add(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_UTILISED), 
+				new  String[] {Placeholders.VALUE, Placeholders.FROM_ALLOCATED, Placeholders.FROM_MAX}, 
+				new Component[] {text(utilised), text((utilised * 100)/total), text((utilised * 100)/max)}
+			));
+		statList.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_FREE), Placeholders.VALUE, text(Runtime.getRuntime().freeMemory() / 1024 / 1024)));
+		sendPaginationList(src, header, Component.text("=").color(header.color()), linesPerPage, statList);
 	}
 
 	private Component getButtons(Audience src, Locale locale, boolean isPlayer) {
 		Component buttons = Component.empty();
-		if(!isPlayer || ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_INFO_SYSTEM)) {
+		if(isPlayer && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_INFO_SYSTEM)) {
 			Component system = TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_SYSTEM), () -> {
 				sendSystemInfo(src, locale, isPlayer);
 			});
-			buttons.append(system);
+			buttons = buttons.append(system).append(text("&r "));
 		}
-		if(!isPlayer || ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_INFO_WORLDS)) {
+		if(isPlayer && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_INFO_WORLDS)) {
 			Component worlds = TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_WORLDS), () -> {
 				sendWorldsInfo(src, locale);
 			});
-			buttons.append(worlds);
+			buttons = buttons.append(worlds).append(text("&r "));
 		}
-		if(!isPlayer || ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_INFO_PLUGINS)) {
+		if(isPlayer && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_INFO_PLUGINS)) {
 			Component plugins = TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_PLUGINS), () -> {
 				sendPluginsInfo(src, locale, isPlayer);
 			});
-			buttons.append(plugins);
-		}
-		if(plugin.isForgeServer() && (!isPlayer || ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_INFO_MODS))) {
-			Component mods = TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_MODS), () -> {
-				sendModsInfo(src, locale, isPlayer);
-			});
-			buttons.append(mods);
+			buttons = buttons.append(plugins);
 		}
 		return buttons;
 	}
 
 	private double currentTPS() {
-		return Sponge.server().ticksPerSecond();
-	}
-
-	private Component tPStoText(double tps) {
-		if(tps < 10) return text("&4" + tps);
-		if(tps < 15) return text("&c" + tps);
-		if(tps < 17) return text("&e" + tps);
-		if(tps < 20) return text("&a" + tps);
-		return text("&2" + tps);
+		return BigDecimal.valueOf(Sponge.server().ticksPerSecond()).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	private Component getUptime(Locale locale) {
-		final Duration uptime = Duration.ofMillis(ManagementFactory.getRuntimeMXBean().getUptime());
-		
-		return Component.empty();
+		//Component uptime = timeFormat(plugin.getServerUptime(), locale).append(Component.text(" ")).append(timeFormat(ManagementFactory.getRuntimeMXBean().getUptime(), locale));
+		//Duration uptimeJVM = Duration.ofMillis(ManagementFactory.getRuntimeMXBean().getUptime());
+		return timeFormat(plugin.getServerUptime(), locale).append(Component.text(" / ")).append(timeFormat(ManagementFactory.getRuntimeMXBean().getUptime() / 1000, locale));
 	}
 
 }

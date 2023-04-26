@@ -136,7 +136,7 @@ public interface PluginCommand {
 		return exception(TextUtils.replaceToComponents(getText(locale, path), keys, values));
 	}
 
-	default Component getExpireTimeFromNow(long second, Locale locale) {
+	default Component timeFormat(long second, Locale locale) {
 		long minute = TimeUnit.SECONDS.toMinutes(second);
 		long hour = TimeUnit.SECONDS.toHours(second);
 		if(hour == 0) {
@@ -180,10 +180,10 @@ public interface PluginCommand {
 		return "0123456789abcdefklmnor".indexOf(ch) != -1;
 	}
 
-	default void sendPaginationList(Audience target, Component header, Component padding, int linesPerPage, List<Component> components) {
+	default void sendPaginationList(Audience target, Component title, Component padding, int linesPerPage, List<Component> components) {
 		PaginationList.builder()
 			.linesPerPage(linesPerPage)
-			.header(header)
+			.title(title)
 			.contents(components)
 			.padding(padding)
 			.contents(components)

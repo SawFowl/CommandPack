@@ -18,5 +18,7 @@ public class Placeholders {
 	public static final String LOCATION = "%location%";
 	public static final String CHUNKS_SIZE = "%chunks-size%";
 	public static final String ENTITIES_SIZE = "%entities-size%";
+	public static final String FROM_ALLOCATED = "%from-allocated%";
+	public static final String FROM_MAX= "%from-max%";
 
 }

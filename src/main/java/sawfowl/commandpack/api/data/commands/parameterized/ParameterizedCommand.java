@@ -48,7 +48,7 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 					getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
 					Sponge.asyncScheduler().submit(Task.builder().plugin(getContainer()).interval(1, TimeUnit.SECONDS).execute(new CooldownTimerTask(player, getCommandSettings(), getCooldowns())).build());
 				} else {
-					if((getCooldowns().get(player.uniqueId())) - currentTime > 0) exception(locale, Placeholders.DELAY, getExpireTimeFromNow((getCooldowns().get(player.uniqueId())) - currentTime, locale), LocalesPaths.COMMANDS_COOLDOWN);
+					if((getCooldowns().get(player.uniqueId())) - currentTime > 0) exception(locale, Placeholders.DELAY, timeFormat((getCooldowns().get(player.uniqueId())) - currentTime, locale), LocalesPaths.COMMANDS_COOLDOWN);
 					getCooldowns().remove(player.uniqueId());
 					getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
 				}
