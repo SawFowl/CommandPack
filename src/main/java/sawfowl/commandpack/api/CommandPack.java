@@ -19,6 +19,12 @@ public interface CommandPack {
 	 */
 	boolean isForgeServer();
 
+	public double getAverageTPS1m();
+
+	public double getAverageTPS5m();
+
+	public double getAverageTPS10m();
+
 	interface PostAPI extends Event {
 
 		public CommandPack getAPI();

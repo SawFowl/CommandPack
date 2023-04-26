@@ -152,7 +152,11 @@ public class CommandsConfig {
 	@Setting("Item")
 	private CommandSettings item = new CommandSettings();
 	@Setting("ServerStat")
-	private CommandSettings serverStat = new CommandSettings();
+	private CommandSettings serverStat = new CommandSettings(new String[] {"serverinfo", "gc"});
+	@Setting("Plugins")
+	private CommandSettings plugins = new CommandSettings();
+	@Setting("Mods")
+	private CommandSettings mods = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

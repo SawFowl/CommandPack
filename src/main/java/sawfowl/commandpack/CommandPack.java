@@ -1,6 +1,9 @@
 package sawfowl.commandpack;
 
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import org.spongepowered.api.Server;
@@ -16,6 +19,7 @@ import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
 import org.spongepowered.api.event.lifecycle.RegisterBuilderEvent;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
 
@@ -70,6 +74,9 @@ public class CommandPack {
 	private PlayersData playersData;
 	private RandomTeleportService rtpService;
 	private boolean isForge;
+	private Map<Long, Double> tps1m = new HashMap<>();
+	private Map<Long, Double> tps5m = new HashMap<>();
+	private Map<Long, Double> tps10m = new HashMap<>();
 
 	public static CommandPack getInstance() {
 		return instance;
@@ -117,6 +124,18 @@ public class CommandPack {
 
 	public boolean isForgeServer() {
 		return isForge;
+	}
+
+	public double getAverageTPS1m() {
+		return tps1m.values().stream().mapToDouble(d -> d).average().orElse(Sponge.server().ticksPerSecond());
+	}
+
+	public double getAverageTPS5m() {
+		return tps5m.values().stream().mapToDouble(d -> d).average().orElse(Sponge.server().ticksPerSecond());
+	}
+
+	public double getAverageTPS10m() {
+		return tps10m.values().stream().mapToDouble(d -> d).average().orElse(Sponge.server().ticksPerSecond());
 	}
 
 	@Inject
@@ -172,11 +191,35 @@ public class CommandPack {
 						return isForge;
 					}
 
+					@Override
+					public double getAverageTPS1m() {
+						return instance.getAverageTPS1m();
+					}
+
+					@Override
+					public double getAverageTPS5m() {
+						return instance.getAverageTPS5m();
+					}
+
+					@Override
+					public double getAverageTPS10m() {
+						return instance.getAverageTPS10m();
+					}
+
 				};
 
 			}
 
 		});
+		Sponge.asyncScheduler().submit(Task.builder().delay(15, TimeUnit.SECONDS).interval(5, TimeUnit.SECONDS).plugin(pluginContainer).execute(() -> {
+			long currentTime = System.currentTimeMillis() / 1000;
+			tps1m.keySet().removeIf(time -> (currentTime - 60 > time));
+			tps5m.keySet().removeIf(time -> (currentTime - 300 > time));
+			tps10m.keySet().removeIf(time -> (currentTime - 600 > time));
+			tps1m.put(currentTime, Sponge.server().ticksPerSecond());
+			tps5m.put(currentTime, Sponge.server().ticksPerSecond());
+			tps10m.put(currentTime, Sponge.server().ticksPerSecond());
+		}).build());
 	}
 
 	@Listener
