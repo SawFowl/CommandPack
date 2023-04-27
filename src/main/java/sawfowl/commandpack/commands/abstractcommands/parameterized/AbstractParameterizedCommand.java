@@ -10,9 +10,9 @@ import org.spongepowered.plugin.PluginContainer;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
-import sawfowl.commandpack.api.data.commands.parameterized.ParameterizedCommand;
-import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
+import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.api.commands.parameterized.ParameterizedCommand;
+import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.abstractcommands.PluginCommand;
 
 public abstract class AbstractParameterizedCommand extends PluginCommand implements ParameterizedCommand {
@@ -42,7 +42,7 @@ public abstract class AbstractParameterizedCommand extends PluginCommand impleme
 	}
 
 	@Override
-	public CommandSettings getCommandSettings() {
+	public Settings getCommandSettings() {
 		return commandSettings;
 	}
 

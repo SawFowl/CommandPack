@@ -1,4 +1,4 @@
-package sawfowl.commandpack.api.data.commands.parameterized;
+package sawfowl.commandpack.api.commands.parameterized;
 
 import java.util.Locale;
 

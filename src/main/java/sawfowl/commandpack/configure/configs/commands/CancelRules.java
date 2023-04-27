@@ -10,7 +10,7 @@ import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 @ConfigSerializable
-public class CancelRules implements sawfowl.commandpack.api.data.commands.settings.CancelRulesSettings {
+public class CancelRules implements sawfowl.commandpack.api.data.command.CancelRules {
 
 	public CancelRules() {}
 	public CancelRules(boolean allowMoving, boolean allowOtherCommand) {
@@ -41,7 +41,7 @@ public class CancelRules implements sawfowl.commandpack.api.data.commands.settin
 
 	@Override
 	public String toString() {
-		return "CancelRulesSettings [AllowMoving=" + allowMoving + ", AllowOtherCommand=" + allowOtherCommand + "]";
+		return "CancelRules [AllowMoving=" + allowMoving + ", AllowOtherCommand=" + allowOtherCommand + "]";
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class CancelRules implements sawfowl.commandpack.api.data.commands.settin
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
-	public class Builder implements sawfowl.commandpack.api.data.commands.settings.CancelRulesSettings.Builder {
+	public class Builder implements sawfowl.commandpack.api.data.command.CancelRules.Builder {
 
 		@Override
 		public Builder allowMoving(boolean value) {

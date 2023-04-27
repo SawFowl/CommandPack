@@ -9,11 +9,10 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import sawfowl.commandpack.api.data.commands.settings.PriceSettings;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
-public class CommandPrice implements PriceSettings {
+public class CommandPrice implements sawfowl.commandpack.api.data.command.Price {
 
 	public CommandPrice() {}
 
@@ -56,10 +55,10 @@ public class CommandPrice implements PriceSettings {
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
-	public class Builder implements PriceSettings.Builder {
+	public class Builder implements sawfowl.commandpack.api.data.command.Price.Builder {
 
 		@Override
-		public @NotNull PriceSettings build() {
+		public @NotNull CommandPrice build() {
 			return CommandPrice.this;
 		}
 

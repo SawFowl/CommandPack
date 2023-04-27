@@ -1,11 +1,6 @@
 package sawfowl.commandpack.commands.parameterized;
 
-import java.lang.management.ManagementFactory;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,22 +9,39 @@ import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
+import sawfowl.commandpack.commands.parameterized.serverstat.Plugins;
+import sawfowl.commandpack.commands.parameterized.serverstat.ServerTime;
+import sawfowl.commandpack.commands.parameterized.serverstat.Tps;
+import sawfowl.commandpack.commands.parameterized.serverstat.Worlds;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class ServerStat extends AbstractInfoCommand {
 
+	final Plugins plugins;
+	final Parameterized pluginsCommand;
+	final Tps tps;
+	final Parameterized tpsCommand;
+	final ServerTime time;
+	final Parameterized timeCommand;
 	public ServerStat(CommandPack plugin) {
 		super(plugin);
+		plugins = new Plugins(plugin);
+		pluginsCommand = plugins.build();
+		this.tps = new Tps(plugin);
+		this.tpsCommand = tps.build();
+		this.time = new ServerTime(plugin);
+		this.timeCommand = time.build();
 	}
 
 	@Override
@@ -45,12 +57,41 @@ public class ServerStat extends AbstractInfoCommand {
 
 	@Override
 	public Parameterized build() {
-		return fastBuild();
+		return builder()
+				.addChild(new Worlds(plugin).build(), "worlds")
+				.addChild(pluginsCommand, "plugins")
+				.addChild(tpsCommand, "tps")
+				.addChild(timeCommand, "servertime", "time")
+				.build();
+	}
+
+	@Override
+	public void register(RegisterCommandEvent<Parameterized> event) {
+		if(getCommandSettings() == null) {
+			event.register(getContainer(), build(), command());
+		} else {
+			if(!getCommandSettings().isEnable()) return;
+			if(getCommandSettings().getAliases() != null && getCommandSettings().getAliases().length > 0) {
+				event.register(getContainer(), build(), command(), getCommandSettings().getAliases());
+			} else event.register(getContainer(), build(), command());
+		}
+		if(!Sponge.server().commandManager().commandMapping("plugins").isPresent()) {
+			plugins.enableRegister();
+			plugins.register(event);
+		}
+		if(!Sponge.server().commandManager().commandMapping("tps").isPresent()) {
+			tps.enableRegister();
+			tps.register(event);
+		}
+		if(!Sponge.server().commandManager().commandMapping("servertime").isPresent()) {
+			time.enableRegister();
+			time.register(event);
+		}
 	}
 
 	@Override
 	public String permission() {
-		return Permissions.SERVER_STAT;
+		return Permissions.SERVER_STAT_BASIC;
 	}
 
 	@Override
@@ -68,19 +109,9 @@ public class ServerStat extends AbstractInfoCommand {
 		List<Component> statList = new ArrayList<>();
 		Component buttons = getButtons(src, locale, isPlayer);
 		if(TextUtils.serializeLegacy(buttons).length() > 0) statList.add(buttons.append(Component.newline()));
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
-		Calendar calendar = Calendar.getInstance(locale);
-		calendar.setTimeInMillis(System.currentTimeMillis());
-		statList.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_TPS), Placeholders.VALUE, tPStoText(currentTPS())
-				.append(text("&f, "))
-				.append(tPStoText(plugin.getAverageTPS1m()))
-				.append(text("&f, "))
-				.append(tPStoText(plugin.getAverageTPS5m()))
-				.append(text("&f, "))
-				.append(tPStoText(plugin.getAverageTPS10m()))
-				));
-		statList.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_UPTIME), Placeholders.VALUE, getUptime(locale)));
-		statList.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIME), Placeholders.VALUE, text(format.format(calendar.getTime()))));
+		statList.add(getTPS(locale));
+		statList.add(getUptime(locale));
+		statList.add(getServerTime(locale));
 		statList.add(Component.empty());
 		long max = Runtime.getRuntime().maxMemory() / 1024 / 1024;
 		long total = Runtime.getRuntime().totalMemory() / 1024 / 1024;
@@ -117,16 +148,6 @@ public class ServerStat extends AbstractInfoCommand {
 			buttons = buttons.append(plugins);
 		}
 		return buttons;
-	}
-
-	private double currentTPS() {
-		return BigDecimal.valueOf(Sponge.server().ticksPerSecond()).setScale(2, RoundingMode.HALF_UP).doubleValue();
-	}
-
-	private Component getUptime(Locale locale) {
-		//Component uptime = timeFormat(plugin.getServerUptime(), locale).append(Component.text(" ")).append(timeFormat(ManagementFactory.getRuntimeMXBean().getUptime(), locale));
-		//Duration uptimeJVM = Duration.ofMillis(ManagementFactory.getRuntimeMXBean().getUptime());
-		return timeFormat(plugin.getServerUptime(), locale).append(Component.text(" / ")).append(timeFormat(ManagementFactory.getRuntimeMXBean().getUptime() / 1000, locale));
 	}
 
 }

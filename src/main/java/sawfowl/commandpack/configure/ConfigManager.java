@@ -12,11 +12,14 @@ import org.spongepowered.configurate.reference.ConfigurationReference;
 import org.spongepowered.configurate.reference.ValueReference;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.configure.configs.MainConfig;
 import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
+import sawfowl.commandpack.configure.configs.kits.KitData;
 import sawfowl.commandpack.configure.configs.player.PlayerData;
 import sawfowl.commandpack.configure.configs.player.WarpData;
+import sawfowl.localeapi.api.TextUtils;
 
 public class ConfigManager {
 
@@ -29,10 +32,12 @@ public class ConfigManager {
 	private final Path playerDataPath;
 	private ConfigurationLoader<CommentedConfigurationNode> warpsConfigLoader;
 	private CommentedConfigurationNode warpsNode;
+	private final Path kitsPath;
 	public ConfigManager(CommandPack plugin, ConfigurationOptions options) {
 		this.plugin = plugin;
 		this.options = options;
 		playerDataPath = plugin.getConfigDir().resolve("PlayerData");
+		kitsPath = plugin.getConfigDir().resolve("Kits");
 		saveMainConfig();
 		saveMainCommandsConfig();
 		createWarpsConfig();
@@ -77,6 +82,10 @@ public class ConfigManager {
 		if(playerDataPath.toFile().exists() && playerDataPath.toFile().listFiles().length > 0) for(File file : playerDataPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) loadPlayerData(file);
 	}
 
+	public void loadKits() {
+		if(kitsPath.toFile().exists() && kitsPath.toFile().listFiles().length > 0) for(File file : kitsPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) loadKit(file);
+	}
+
 	public void saveAdminWarp(Warp warp) {
 		try {
 			warpsNode.node(warp.getPlainName()).set(WarpData.class, (WarpData) warp);
@@ -95,11 +104,33 @@ public class ConfigManager {
 		}
 	}
 
+	public void saveKit(Kit kit) {
+		KitData data = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
+		if(!kitsPath.toFile().exists()) kitsPath.toFile().mkdir();
+		try {
+			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(kitsPath.resolve(TextUtils.clearDecorations(data.id()) + ".conf")).build().loadToReference();
+			ValueReference<KitData, CommentedConfigurationNode> config = configReference.referenceTo(KitData.class);
+			config.setAndSave(data);
+		} catch (ConfigurateException e) {
+			plugin.getLogger().warn(e.getLocalizedMessage());
+		}
+	}
+
 	private void loadPlayerData(File playerConfig) {
 		try {
 			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(playerConfig.toPath()).build().loadToReference();
 			ValueReference<PlayerData, CommentedConfigurationNode> config = configReference.referenceTo(PlayerData.class);
 			plugin.getPlayersData().addPlayerData(config.get());
+		} catch (ConfigurateException e) {
+			plugin.getLogger().warn(e.getLocalizedMessage());
+		}
+	}
+
+	private void loadKit(File kitConfig) {
+		try {
+			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(kitConfig.toPath()).build().loadToReference();
+			ValueReference<KitData, CommentedConfigurationNode> config = configReference.referenceTo(KitData.class);
+			plugin.getKitService().addKit(config.get());
 		} catch (ConfigurateException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
 		}

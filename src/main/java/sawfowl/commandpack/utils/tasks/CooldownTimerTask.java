@@ -8,13 +8,13 @@ import java.util.function.Consumer;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.scheduler.ScheduledTask;
 
-import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
+import sawfowl.commandpack.api.data.command.Settings;
 
 public class CooldownTimerTask implements Consumer<ScheduledTask> {
 
-	public CooldownTimerTask(ServerPlayer player, CommandSettings commandSettings, Map<UUID, Long> cooldowns){
+	public CooldownTimerTask(ServerPlayer player, Settings settings, Map<UUID, Long> cooldowns){
 		uuid = player.uniqueId();
-		cooldown = commandSettings.getCooldown();
+		cooldown = settings.getCooldown();
 		this.cooldowns = cooldowns;
 	}
 

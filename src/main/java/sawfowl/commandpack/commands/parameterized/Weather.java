@@ -10,7 +10,7 @@ import org.spongepowered.api.command.parameter.CommandContext;
 import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.parameterized.weather.Rain;
 import sawfowl.commandpack.commands.parameterized.weather.Sun;

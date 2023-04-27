@@ -89,7 +89,7 @@ public class Locales {
 		save = check(locale, toText("&cWait &e" + Placeholders.DELAY + "&c before using this command again."), null, LocalesPaths.COMMANDS_COOLDOWN) || save;
 		save = check(locale, toText("&aCommand activation via &e" + Placeholders.DELAY + "&a."), null, LocalesPaths.COMMANDS_WAIT) || save;
 		save = check(locale, toText(Placeholders.SOURCE + " ran the command: /" + Placeholders.COMMAND + Placeholders.ARGS + ""), null, LocalesPaths.COMMANDS_LOG) || save;
-		save = check(locale, toText("CommandSettings \"" + Placeholders.COMMAND + "\" is not registered for tracking."), null, LocalesPaths.COMMANDS_NOT_TRACKING) || save;
+		save = check(locale, toText("Settings \"" + Placeholders.COMMAND + "\" is not registered for tracking."), null, LocalesPaths.COMMANDS_NOT_TRACKING) || save;
 		save = check(locale, toText("&cExecution of command &e\"&5" + Placeholders.COMMAND + "&e\"&c has stopped because you entered another command."), null, LocalesPaths.COMMANDS_STOP_TRACKING_COMMAND) || save;
 		save = check(locale, toText("&cExecution of command &e\"&5" + Placeholders.COMMAND + "&e\"&c is stopped because you have moved."), null, LocalesPaths.COMMANDS_STOP_TRACKING_MOVING) || save;;
 		save = check(locale, toText("&eThe amount of money written off is &2" + Placeholders.MONEY + "&e for command &e\"&5" + Placeholders.COMMAND + "&e\"&e."), null, LocalesPaths.COMMANDS_TAKE_MONEY) || save;
@@ -221,6 +221,8 @@ public class Locales {
 		save = check(locale, toText("&7[&6Refresh&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON) || save;
 		save = check(locale, toText("&eAn attempt is made to reboot the plugin. If the plugin does not implement listening to the reboot event, there will be no effect."), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE) || save;
 		save = check(locale, "MM.dd.yyyy HH:mm:s", null, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT) || save;
+		save = check(locale, toText("&cA kit with this id already exists."), null, LocalesPaths.COMMANDS_KITS_CREATE_EXIST) || save;
+		save = check(locale, toText("&aA kit &e" + Placeholders.VALUE + "&a has been saved."), null, LocalesPaths.COMMANDS_KITS_SAVED) || save;
 
 		if(save) save(locale);
 	}
@@ -389,6 +391,8 @@ public class Locales {
 		save = check(locale, toText("&7[&6Перезагрузить&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON) || save;
 		save = check(locale, toText("&eВыполняется попытка перезагрузки плагина. Если в плагине не реализована прослушка события перезагрузки, то эффекта не будет."), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE) || save;
 		save = check(locale, "d.MM.yyyy HH:mm:s", null, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT) || save;
+		save = check(locale, toText("&cНабор с этим id уже существует."), null, LocalesPaths.COMMANDS_KITS_CREATE_EXIST) || save;
+		save = check(locale, toText("&aНабор &e" + Placeholders.VALUE + "&a сохранен."), null, LocalesPaths.COMMANDS_KITS_SAVED) || save;
 
 		if(save) save(locale);
 	}

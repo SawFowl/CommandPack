@@ -17,8 +17,8 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
-import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
+import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
@@ -80,8 +80,8 @@ public class GameModeType extends AbstractParameterizedCommand {
 	}
 
 	@Override
-	public CommandSettings getCommandSettings() {
-		return CommandSettings.builder().setEnable(false).build();
+	public Settings getCommandSettings() {
+		return Settings.builder().setEnable(false).build();
 	}
 
 }

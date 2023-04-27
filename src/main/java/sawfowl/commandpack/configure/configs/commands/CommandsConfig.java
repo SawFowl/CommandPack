@@ -117,7 +117,7 @@ public class CommandsConfig {
 	private CommandSettings rain = new CommandSettings(120);
 	@Setting("Thunder")
 	private CommandSettings thunder = new CommandSettings(120, new String[] {"storm"});
-	@Setting("Time")
+	@Setting("ServerTime")
 	private CommandSettings time = new CommandSettings(120);
 	@Setting("Morning")
 	private CommandSettings morning = new CommandSettings(120);
@@ -155,8 +155,14 @@ public class CommandsConfig {
 	private CommandSettings serverStat = new CommandSettings(new String[] {"serverinfo", "gc"});
 	@Setting("Plugins")
 	private CommandSettings plugins = new CommandSettings();
-	@Setting("Mods")
-	private CommandSettings mods = new CommandSettings();
+	@Setting("ServerTime")
+	private CommandSettings serverTime = new CommandSettings();
+	@Setting("Tps")
+	private CommandSettings tps = new CommandSettings();
+	@Setting("Kits")
+	private CommandSettings kits = new CommandSettings();
+	@Setting("Kit")
+	private CommandSettings kit = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

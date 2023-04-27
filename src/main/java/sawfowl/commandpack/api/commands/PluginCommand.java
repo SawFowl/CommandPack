@@ -1,4 +1,4 @@
-package sawfowl.commandpack.api.data.commands;
+package sawfowl.commandpack.api.commands;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -24,8 +24,8 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
-import sawfowl.commandpack.api.data.commands.settings.PriceSettings;
+import sawfowl.commandpack.api.data.command.Price;
+import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.ThrowingConsumer;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -38,7 +38,7 @@ public interface PluginCommand {
 	 * Command settings.<br>
 	 * This is where you specify the aliases, kooldowns, delays, and price.
 	 */
-	CommandSettings getCommandSettings();
+	Settings getCommandSettings();
 
 	/**
 	 * Retrieving text from a specified location. You can return null, but in which case you need to create localized messages in LocaleAPI.
@@ -159,7 +159,7 @@ public interface PluginCommand {
 
 	default void economy(ServerPlayer player, Locale locale) throws CommandException {
 		if(getCommandSettings() == null || !CommandPack.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command()))) return;
-		PriceSettings price = getCommandSettings().getPrice();
+		Price price = getCommandSettings().getPrice();
 		if(price.getMoney() > 0) {
 			Currency currency = CommandPack.getInstance().getEconomy().checkCurrency(price.getCurrency());
 			BigDecimal money = createDecimal(price.getMoney());

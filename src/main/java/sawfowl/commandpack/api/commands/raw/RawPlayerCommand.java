@@ -1,4 +1,4 @@
-package sawfowl.commandpack.api.data.commands.raw;
+package sawfowl.commandpack.api.commands.raw;
 
 import java.util.List;
 import java.util.Locale;

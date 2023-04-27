@@ -20,7 +20,7 @@ import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.Logger;
 
-public abstract class PluginCommand implements sawfowl.commandpack.api.data.commands.PluginCommand {
+public abstract class PluginCommand implements sawfowl.commandpack.api.commands.PluginCommand {
 
 	protected final CommandPack plugin;
 	protected final String[] aliases;

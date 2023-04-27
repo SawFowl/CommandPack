@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
 
-import sawfowl.commandpack.api.data.commands.PluginCommand;
+import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 
 /**
@@ -19,7 +19,7 @@ public interface TempPlayerData {
 	 * Adding command usage tracking.<br>
 	 * Only CommandPack plugin commands are accepted.
 	 * 
-	 * @param command - CommandSettings or alias.
+	 * @param command - Settings or alias.
 	 * @param player - The player.
 	 */
 	void addCommandTracking(String command, ServerPlayer player);
@@ -66,7 +66,7 @@ public interface TempPlayerData {
 	 * Getting a tracking map of waiting execute player commands.<br>
 	 * Changing this map has no effect on the tracking.
 	 * 
-	 * @param player - CommandSettings or alias.
+	 * @param player - Settings or alias.
 	 * @return - Empty {@link Optional} or tracking {@link Map}
 	 */
 	Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(ServerPlayer player);
@@ -75,7 +75,7 @@ public interface TempPlayerData {
 	 * Getting a tracking map of waiting execute player commands.<br>
 	 * Changing this map has no effect on the tracking.
 	 * 
-	 * @param player - CommandSettings or alias.
+	 * @param player - Settings or alias.
 	 * @return - Empty {@link Optional} or tracking {@link Map}
 	 */
 	Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(UUID uuid);

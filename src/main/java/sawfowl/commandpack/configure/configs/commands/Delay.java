@@ -8,10 +8,8 @@ import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import sawfowl.commandpack.api.data.commands.settings.DelaySettings;
-
 @ConfigSerializable
-public class Delay implements DelaySettings {
+public class Delay implements sawfowl.commandpack.api.data.command.Delay {
 
 	public Delay() {}
 	public Delay(long seconds) {
@@ -28,7 +26,7 @@ public class Delay implements DelaySettings {
 
 	@Setting("Seconds")
 	private long seconds = 0;
-	@Setting("CancelRulesSettings")
+	@Setting("CancelRules")
 	private CancelRules cancelRules = new CancelRules();
 
 	public long getSeconds() {
@@ -41,7 +39,7 @@ public class Delay implements DelaySettings {
 
 	@Override
 	public String toString() {
-		return "Delay [Seconds=" + seconds + ", CancelRulesSettings=" + cancelRules + "]";
+		return "Delay [Seconds=" + seconds + ", CancelRules=" + cancelRules + "]";
 	}
 
 	@Override
@@ -53,11 +51,11 @@ public class Delay implements DelaySettings {
 	public DataContainer toContainer() {
 		return DataContainer.createNew()
 				.set(DataQuery.of("Seconds"), seconds)
-				.set(DataQuery.of("CancelRulesSettings"), cancelRules)
+				.set(DataQuery.of("CancelRules"), cancelRules)
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
-	public class Builder implements sawfowl.commandpack.api.data.commands.settings.DelaySettings.Builder {
+	public class Builder implements sawfowl.commandpack.api.data.command.Delay.Builder {
 
 		@Override
 		public Builder setSeconds(long seconds) {
@@ -66,7 +64,7 @@ public class Delay implements DelaySettings {
 		}
 
 		@Override
-		public Builder setCancelRules(sawfowl.commandpack.api.data.commands.settings.CancelRulesSettings rules) {
+		public Builder setCancelRules(sawfowl.commandpack.api.data.command.CancelRules rules) {
 			Delay.this.cancelRules = new CancelRules(rules.isAllowMoving(), rules.isAllowOtherCommand());;
 			return this;
 		}
@@ -79,7 +77,7 @@ public class Delay implements DelaySettings {
 		}
 
 		@Override
-		public @NotNull DelaySettings build() {
+		public @NotNull Delay build() {
 			return Delay.this;
 		}
 		

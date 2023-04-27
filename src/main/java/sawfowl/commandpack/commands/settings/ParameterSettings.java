@@ -13,7 +13,7 @@ import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 
-public class ParameterSettings implements sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings {
+public class ParameterSettings implements sawfowl.commandpack.api.commands.parameterized.ParameterSettings {
 
 	private Parameter.Value<?> parameter;
 	private Boolean optional;
@@ -99,7 +99,7 @@ public class ParameterSettings implements sawfowl.commandpack.api.data.commands.
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
-	public class Builder implements sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings.Builder {
+	public class Builder implements sawfowl.commandpack.api.commands.parameterized.ParameterSettings.Builder {
 
 		@Override
 		public Builder reset() {

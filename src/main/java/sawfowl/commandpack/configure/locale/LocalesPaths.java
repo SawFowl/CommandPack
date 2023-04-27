@@ -12,7 +12,7 @@ public class LocalesPaths {
 
 	private static final Object PATH_EXCEPTIONS = "Exceptions";
 	private static final Object PATH_INCOMPLETE = "Incomplete";
-	private static final Object PATH_TIME = "Time";
+	private static final Object PATH_TIME = "ServerTime";
 	private static final Object PATH_TRACKING = "Tracking";
 	private static final Object NAMES = "Names";
 	private static final Object OTHER = "Other";
@@ -35,7 +35,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_DISPOSAL = "Disposal";
 	private static final Object COMMAND_GAMEMODE = "GameMode";
 	private static final Object COMMAND_WEATHER = "Weather";
-	private static final Object COMMAND_TIME = "Time";
+	private static final Object COMMAND_TIME = "ServerTime";
 	private static final Object COMMAND_ENCHANT = "Enchant";
 	private static final Object COMMAND_ANVIL = "Anvil";
 	private static final Object COMMAND_CRAFTING_TABLE = "CraftingTable";
@@ -48,6 +48,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_NICK = "Nick";
 	private static final Object COMMAND_ITEM = "Item";
 	private static final Object COMMAND_SERVERSTAT = "ServerStat";
+	private static final Object COMMAND_KITS = "Kits";
 
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
@@ -199,7 +200,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_SERVERSTAT_MEMORY_ALLOCATED = {PATH_COMMANDS, COMMAND_SERVERSTAT, "MemoryAllocated"};
 	public static final Object[] COMMANDS_SERVERSTAT_MEMORY_UTILISED = {PATH_COMMANDS, COMMAND_SERVERSTAT, "MemoryUtilised"};
 	public static final Object[] COMMANDS_SERVERSTAT_MEMORY_FREE = {PATH_COMMANDS, COMMAND_SERVERSTAT, "MemoryFree"};
-	public static final Object[] COMMANDS_SERVERSTAT_TIME = {PATH_COMMANDS, COMMAND_SERVERSTAT, "Time"};
+	public static final Object[] COMMANDS_SERVERSTAT_TIME = {PATH_COMMANDS, COMMAND_SERVERSTAT, "ServerTime"};
 	public static final Object[] COMMANDS_SERVERSTAT_OS_HEADER = {PATH_COMMANDS, COMMAND_SERVERSTAT, "HeaderOS"};
 	public static final Object[] COMMANDS_SERVERSTAT_OS = {PATH_COMMANDS, COMMAND_SERVERSTAT, "OS"};
 	public static final Object[] COMMANDS_SERVERSTAT_JAVA = {PATH_COMMANDS, COMMAND_SERVERSTAT, "Java"};
@@ -210,5 +211,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginRefreshButton"};
 	public static final Object[] COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE = {PATH_COMMANDS, COMMAND_SERVERSTAT, "PluginRefreshMessage"};
 	public static final Object[] COMMANDS_SERVERSTAT_TIMEFORMAT = {PATH_COMMANDS, COMMAND_SERVERSTAT, "TimeFormat"};
+	public static final Object[] COMMANDS_KITS_CREATE_EXIST = {PATH_COMMANDS, COMMAND_KITS, "Create", PATH_EXCEPTIONS, "Exist"};
+	public static final Object[] COMMANDS_KITS_SAVED = {PATH_COMMANDS, COMMAND_KITS, "Saved"};
 
 }

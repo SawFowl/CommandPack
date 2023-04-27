@@ -1,8 +1,10 @@
 package sawfowl.commandpack.configure.configs.player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -19,7 +21,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.player.Home;
-import sawfowl.commandpack.api.data.player.PlayerBackpack;
+import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -51,6 +53,8 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	private List<WarpData> warps = new ArrayList<>();
 	@Setting("Backpack")
 	private BackpackData backpackData = new BackpackData();
+	@Setting("GivedKits")
+	private Map<String, Long> givedKits = new HashMap<>();
 
 	@Override
 	public String getName() {
@@ -141,7 +145,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 		return warps.stream().filter(warp -> (name.equals(TextUtils.clearDecorations(warp.asComponent())))).map(WarpData::toInterface).findFirst();
 	}
 	@Override
-	public PlayerBackpack getBackpack() {
+	public Backpack getBackpack() {
 		if(!backpackData.canSave()) backpackData.setSaveConsumer(consumer -> {
 			save();
 		});
@@ -149,8 +153,8 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	}
 
 	@Override
-	public void setBackpack(PlayerBackpack backpack) {
-		this.backpackData = backpack instanceof BackpackData ? (BackpackData) backpack : (BackpackData) PlayerBackpack.builder().copyFrom(backpack).build();
+	public void setBackpack(Backpack backpack) {
+		this.backpackData = backpack instanceof BackpackData ? (BackpackData) backpack : (BackpackData) Backpack.builder().copyFrom(backpack).build();
 		save();
 		backpackData.setSaveConsumer(consumer -> {
 			save();
@@ -196,6 +200,10 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 			list.add(remove.append(teleport).append(homeName));
 		});
 		return list;
+	}
+
+	public Map<String, Long> givedKits() {
+		return givedKits;
 	}
 
 	@Override

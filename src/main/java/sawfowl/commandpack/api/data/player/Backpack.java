@@ -16,7 +16,7 @@ import org.spongepowered.plugin.PluginContainer;
 import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
 
-public interface PlayerBackpack extends DataSerializable {
+public interface Backpack extends DataSerializable {
 
 	static Builder builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
@@ -42,20 +42,20 @@ public interface PlayerBackpack extends DataSerializable {
 	 * The menu is cleared after closing.<br>
 	 * Clearing when closed does not affect the backpack data.
 	 */
-	InventoryMenu asMenu(PluginContainer container, ServerPlayer player, int rows, Component title);
+	InventoryMenu asMenu(PluginContainer container, ServerPlayer openForTarget, int rows, Component title);
 
 	/**
 	 *  Save Backpack data.
 	 */
 	void save();
 
-	interface Builder extends AbstractBuilder<PlayerBackpack>, org.spongepowered.api.util.Builder<PlayerBackpack, Builder> {
+	interface Builder extends AbstractBuilder<Backpack>, org.spongepowered.api.util.Builder<Backpack, Builder> {
 
 		Builder fromInventory(Inventory inventory);
 
 		Builder fromMap(Map<Integer, ItemStack> map);
 
-		Builder copyFrom(PlayerBackpack backpack);
+		Builder copyFrom(Backpack backpack);
 
 	}
 

@@ -1,9 +1,12 @@
 package sawfowl.commandpack.commands.abstractcommands.parameterized;
 
+import java.lang.management.ManagementFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -94,12 +97,38 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 		return text("&2" + tps);
 	}
 
-	private void sendRefreshEvent(PluginContainer container) {
+	protected Component getTPS(Locale locale) {
+		return TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_TPS), Placeholders.VALUE, tPStoText(currentTPS())
+				.append(text("&f, "))
+				.append(tPStoText(plugin.getAverageTPS1m()))
+				.append(text("&f, "))
+				.append(tPStoText(plugin.getAverageTPS5m()))
+				.append(text("&f, "))
+				.append(tPStoText(plugin.getAverageTPS10m()))
+				);
+	}
+
+	protected Component getServerTime(Locale locale) {
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(System.currentTimeMillis());
+		return TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIME), Placeholders.VALUE, text(format.format(calendar.getTime())));
+	}
+
+	protected void sendRefreshEvent(PluginContainer container) {
 		RefreshGameEvent event = SpongeEventFactory.createRefreshGameEvent(
 			PhaseTracker.getCauseStackManager().currentCause(),
 			SpongeCommon.game()
 		);
 		((SpongeEventManager) SpongeCommon.game().eventManager()).postToPlugin(event, container);
+	}
+
+	protected Component getUptime(Locale locale) {
+		return TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_UPTIME), Placeholders.VALUE, timeFormat(plugin.getServerUptime(), locale).append(Component.text(" / ")).append(timeFormat(ManagementFactory.getRuntimeMXBean().getUptime() / 1000, locale)));
+	}
+
+	private double currentTPS() {
+		return BigDecimal.valueOf(Sponge.server().ticksPerSecond()).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 }

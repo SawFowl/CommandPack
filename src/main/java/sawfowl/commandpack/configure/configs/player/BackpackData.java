@@ -30,12 +30,12 @@ import org.spongepowered.plugin.PluginContainer;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.api.data.player.PlayerBackpack;
+import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.serializetools.SerializedItemStack;
 
 @ConfigSerializable
-public class BackpackData implements PlayerBackpack {
+public class BackpackData implements Backpack {
 
 	public BackpackData(){}
 
@@ -153,10 +153,10 @@ public class BackpackData implements PlayerBackpack {
 		}
 	}
 
-	public class Builder implements PlayerBackpack.Builder {
+	public class Builder implements Backpack.Builder {
 
 		@Override
-		public @NotNull PlayerBackpack build() {
+		public @NotNull Backpack build() {
 			return BackpackData.this;
 		}
 
@@ -177,7 +177,7 @@ public class BackpackData implements PlayerBackpack {
 		}
 
 		@Override
-		public Builder copyFrom(PlayerBackpack backpack) {
+		public Builder copyFrom(Backpack backpack) {
 			if(backpack.getSlots() != null && !backpack.getSlots().isEmpty()) backpack.getSlots().forEach(slot -> {
 				backpack.getItem(slot).ifPresent(item -> {
 					addItem(slot, item);

@@ -3,6 +3,7 @@ package sawfowl.commandpack.commands.settings;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter;
@@ -42,6 +43,8 @@ public class CommandParameters {
 	public static final Value<String> REPAIR = Parameter.choices("all", "armor", "hands").optional().key("Repair").requiredPermission(Permissions.REPAIR_SELECT).build();
 
 	public static final Value<String> ENCHANT = Parameter.string().completer(new EnchantmentCompleter()).key("Enchant").build();
+
+	public static final Value<String> PLUGINS = Parameter.choices(Sponge.pluginManager().plugins().stream().map(p -> p.metadata().id()).toArray(String[]::new)).key("Plugin").build();
 
 	public static Value<ServerPlayer> createPlayer(boolean optional) {
 		return (optional ? PLAYER.optional() : PLAYER).build();

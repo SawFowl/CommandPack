@@ -29,25 +29,31 @@ import org.spongepowered.plugin.builtin.jvm.Plugin;
 import com.google.inject.Inject;
 
 import sawfowl.localeapi.event.LocaleServiseEvent;
+import sawfowl.commandpack.api.KitService;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.RandomTeleportService;
-import sawfowl.commandpack.api.data.commands.parameterized.ParameterSettings;
-import sawfowl.commandpack.api.data.commands.settings.CancelRulesSettings;
-import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
-import sawfowl.commandpack.api.data.commands.settings.DelaySettings;
-import sawfowl.commandpack.api.data.commands.settings.PriceSettings;
+import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.api.data.command.CancelRules;
+import sawfowl.commandpack.api.data.command.Delay;
+import sawfowl.commandpack.api.data.command.Price;
+import sawfowl.commandpack.api.data.command.Settings;
+import sawfowl.commandpack.api.data.kits.Kit;
+import sawfowl.commandpack.api.data.kits.KitPrice;
 import sawfowl.commandpack.api.data.miscellaneous.Location;
 import sawfowl.commandpack.api.data.miscellaneous.Point;
 import sawfowl.commandpack.api.data.miscellaneous.Position;
 import sawfowl.commandpack.api.data.player.Home;
-import sawfowl.commandpack.api.data.player.PlayerBackpack;
+import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.commandpack.api.data.player.Warp;
+import sawfowl.commandpack.apiclasses.KitServiceImpl;
+import sawfowl.commandpack.apiclasses.PlayersDataImpl;
+import sawfowl.commandpack.apiclasses.RTPService;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.configs.MainConfig;
-import sawfowl.commandpack.configure.configs.commands.CommandPrice;
 import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
-import sawfowl.commandpack.configure.configs.commands.Delay;
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportWorldConfig;
+import sawfowl.commandpack.configure.configs.kits.KitData;
+import sawfowl.commandpack.configure.configs.kits.KitPriceData;
 import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
 import sawfowl.commandpack.configure.configs.miscellaneous.PositionData;
 import sawfowl.commandpack.configure.configs.miscellaneous.PointData;
@@ -76,6 +82,7 @@ public class CommandPack {
 	private Economy economy;
 	private PlayersData playersData;
 	private RandomTeleportService rtpService;
+	private KitService kitService;
 	private boolean isForge;
 	private Map<Long, Double> tps1m = new HashMap<>();
 	private Map<Long, Double> tps5m = new HashMap<>();
@@ -126,6 +133,10 @@ public class CommandPack {
 		return rtpService;
 	}
 
+	public KitService getKitService() {
+		return kitService;
+	}
+
 	public boolean isForgeServer() {
 		return isForge;
 	}
@@ -156,8 +167,9 @@ public class CommandPack {
 
 	@Listener
 	public void onLocaleServicePostEvent(LocaleServiseEvent.Construct event) {
-		rtpService = new sawfowl.commandpack.apiclasses.RTPService(instance);
-		playersData = new sawfowl.commandpack.apiclasses.PlayersDataImpl(instance);
+		rtpService = new RTPService(instance);
+		kitService = new KitServiceImpl();
+		playersData = new PlayersDataImpl(instance);
 		configManager = new ConfigManager(instance, event.getLocaleService().getConfigurationOptions());
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
 		configManager.loadPlayersData();
@@ -173,6 +185,46 @@ public class CommandPack {
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerConnectionListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerRespawnListener(instance));
+		configManager.loadKits();
+		sawfowl.commandpack.api.CommandPack api = new sawfowl.commandpack.api.CommandPack() {
+
+			@Override
+			public PlayersData playersData() {
+				return playersData;
+			}
+
+			@Override
+			public RandomTeleportService randomTeleportService() {
+				return rtpService;
+			}
+
+			@Override
+			public boolean isForgeServer() {
+				return isForge;
+			}
+
+			@Override
+			public double getAverageTPS1m() {
+				return instance.getAverageTPS1m();
+			}
+
+			@Override
+			public double getAverageTPS5m() {
+				return instance.getAverageTPS5m();
+			}
+
+			@Override
+			public double getAverageTPS10m() {
+				return instance.getAverageTPS10m();
+			}
+
+			@Override
+			public KitService kitService() {
+				return kitService;
+			}
+
+		};
+
 		Sponge.eventManager().post(new sawfowl.commandpack.api.CommandPack.PostAPI() {
 
 			@Override
@@ -182,40 +234,7 @@ public class CommandPack {
 
 			@Override
 			public sawfowl.commandpack.api.CommandPack getAPI() {
-				return new sawfowl.commandpack.api.CommandPack() {
-
-					@Override
-					public PlayersData playersData() {
-						return playersData;
-					}
-
-					@Override
-					public RandomTeleportService randomTeleportService() {
-						return rtpService;
-					}
-
-					@Override
-					public boolean isForgeServer() {
-						return isForge;
-					}
-
-					@Override
-					public double getAverageTPS1m() {
-						return instance.getAverageTPS1m();
-					}
-
-					@Override
-					public double getAverageTPS5m() {
-						return instance.getAverageTPS5m();
-					}
-
-					@Override
-					public double getAverageTPS10m() {
-						return instance.getAverageTPS10m();
-					}
-
-				};
-
+				return api;
 			}
 
 		});
@@ -261,27 +280,27 @@ public class CommandPack {
 				return new sawfowl.commandpack.commands.settings.ParameterSettings().builder();
 			}
 		});
-		event.register(PriceSettings.Builder.class, new Supplier<PriceSettings.Builder>() {
+		event.register(Price.Builder.class, new Supplier<Price.Builder>() {
 			@Override
-			public PriceSettings.Builder get() {
-				return new CommandPrice().builder();
+			public Price.Builder get() {
+				return new sawfowl.commandpack.configure.configs.commands.CommandPrice().builder();
 			}
 		});
-		event.register(CancelRulesSettings.Builder.class, new Supplier<CancelRulesSettings.Builder>() {
+		event.register(CancelRules.Builder.class, new Supplier<CancelRules.Builder>() {
 			@Override
-			public CancelRulesSettings.Builder get() {
+			public CancelRules.Builder get() {
 				return new sawfowl.commandpack.configure.configs.commands.CancelRules().builder();
 			}
 		});
-		event.register(DelaySettings.Builder.class, new Supplier<DelaySettings.Builder>() {
+		event.register(Delay.Builder.class, new Supplier<Delay.Builder>() {
 			@Override
-			public DelaySettings.Builder get() {
-				return new Delay().builder();
+			public Delay.Builder get() {
+				return new sawfowl.commandpack.configure.configs.commands.Delay().builder();
 			}
 		});
-		event.register(CommandSettings.Builder.class, new Supplier<CommandSettings.Builder>() {
+		event.register(Settings.Builder.class, new Supplier<Settings.Builder>() {
 			@Override
-			public CommandSettings.Builder get() {
+			public Settings.Builder get() {
 				return new sawfowl.commandpack.configure.configs.commands.CommandSettings().builder();
 			}
 		});
@@ -315,10 +334,22 @@ public class CommandPack {
 				return new WarpData().builder();
 			}
 		});
-		event.register(PlayerBackpack.Builder.class, new Supplier<PlayerBackpack.Builder>() {
+		event.register(Backpack.Builder.class, new Supplier<Backpack.Builder>() {
 			@Override
-			public PlayerBackpack.Builder get() {
+			public Backpack.Builder get() {
 				return new BackpackData().builder();
+			}
+		});
+		event.register(KitPrice.Builder.class, new Supplier<KitPrice.Builder>() {
+			@Override
+			public KitPrice.Builder get() {
+				return new KitPriceData().builder();
+			}
+		});
+		event.register(Kit.Builder.class, new Supplier<Kit.Builder>() {
+			@Override
+			public Kit.Builder get() {
+				return new KitData().builder();
 			}
 		});
 	}

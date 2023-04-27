@@ -19,6 +19,8 @@ public interface CommandPack {
 	 */
 	boolean isForgeServer();
 
+	KitService kitService();
+
 	public double getAverageTPS1m();
 
 	public double getAverageTPS5m();

@@ -8,6 +8,7 @@ import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerWorld;
 
+import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Permissions {
@@ -54,7 +55,8 @@ public class Permissions {
 	public static final String HEAL = "commandpack.commands.user.heal";
 	public static final String VANISH = "commandpack.commands.user.vanish";
 	public static final String NICK = "commandpack.commands.user.nick";
-	public static final String SERVER_STAT = "commandpack.commands.user.serverstat";
+	public static final String SERVER_STAT_INFO_TIME = "commandpack.commands.user.serverstat.time";
+	public static final String KIT = "commandpack.commands.user.kit";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -90,10 +92,13 @@ public class Permissions {
 	public static final String NICK_STAFF = "commandpack.commands.staff.nick";
 	public static final String ITEMNAME_STAFF = "commandpack.commands.staff.itemname";
 	public static final String ITEMLORE_STAFF = "commandpack.commands.staff.itemlore";
+	public static final String SERVER_STAT_BASIC = "commandpack.commands.staff.serverstat.basic";
 	public static final String SERVER_STAT_STAFF_INFO_SYSTEM = "commandpack.commands.staff.serverstat.systeminfo";
 	public static final String SERVER_STAT_STAFF_INFO_WORLDS = "commandpack.commands.staff.serverstat.worldsinfo";
 	public static final String SERVER_STAT_STAFF_INFO_PLUGINS = "commandpack.commands.staff.serverstat.pluginsinfo";
 	public static final String SERVER_STAT_STAFF_INFO_PLUGINS_REFRESH = "commandpack.commands.staff.serverstat.pluginsrefresh";
+	public static final String SERVER_STAT_STAFF_INFO_TPS = "commandpack.commands.staff.serverstat.tps";
+	public static final String KIT_STAFF = "commandpack.commands.staff.kit";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";
@@ -116,6 +121,7 @@ public class Permissions {
 	private static final String WEATHER_WORLD_ACCESS = "commandpack.access.worlds.weather";
 	private static final String TIME_ACCESS = "commandpack.access.time";
 	private static final String TIME_WORLD_ACCESS = "commandpack.access.worlds.time";
+	private static final String KIT_ACCESS = "commandpack.access.kit";
 
 	public static String getIgnoreDelayTimer(String command) {
 		return IGNORE_DELAY_TIMER + "." + command;
@@ -130,7 +136,7 @@ public class Permissions {
 	}
 
 	public static String getWarpPermission(String warpName) {
-		return WARP_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(warpName));
+		return WARP_ACCESS + "." + TextUtils.clearDecorations(warpName);
 	}
 
 	public static String getRtpWorldAcess(ResourceKey worldKey) {
@@ -138,23 +144,27 @@ public class Permissions {
 	}
 
 	public static String getGameModePermission(String gamemode) {
-		return GAMEMODE_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(gamemode));
+		return GAMEMODE_ACCESS + "." + TextUtils.clearDecorations(gamemode);
 	}
 
 	public static String getWeatherPermission(String weather) {
-		return WEATHER_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(weather));
+		return WEATHER_ACCESS + "." + TextUtils.clearDecorations(weather);
 	}
 
 	public static String getWeatherWorldPermission(String weather, ServerWorld world) {
-		return WEATHER_WORLD_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(weather)) + "." + TextUtils.clearDecorations(TextUtils.deserialize(world.key().asString().replace(":", "_")));
+		return WEATHER_WORLD_ACCESS + "." + TextUtils.clearDecorations(weather) + "." + TextUtils.clearDecorations(world.key().asString().replace(":", "_"));
 	}
 
 	public static String getTimePermission(String time) {
 		return TIME_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(time));
 	}
 
-	public static String getTimeWorldPermission(String weather, ServerWorld world) {
-		return TIME_WORLD_ACCESS + "." + TextUtils.clearDecorations(TextUtils.deserialize(weather)) + "." + TextUtils.clearDecorations(TextUtils.deserialize(world.key().asString().replace(":", "_")));
+	public static String getTimeWorldPermission(String time, ServerWorld world) {
+		return TIME_WORLD_ACCESS + "." + TextUtils.clearDecorations(world.key().asString().replace(":", "_")) + "." + TextUtils.clearDecorations(time);
+	}
+
+	public static String getKitPermission(Kit kit) {
+		return KIT_ACCESS + "." + TextUtils.clearDecorations(kit.id());
 	}
 
 	public static int getHomeLimit(ServerPlayer player) {

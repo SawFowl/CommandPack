@@ -1,4 +1,4 @@
-package sawfowl.commandpack.api.data.commands.parameterized;
+package sawfowl.commandpack.api.commands.parameterized;
 
 import java.util.Locale;
 import java.util.Map;
@@ -20,7 +20,7 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.audience.Audience;
-import sawfowl.commandpack.api.data.commands.PluginCommand;
+import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
@@ -59,6 +59,7 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 	}
 
 	default void register(RegisterCommandEvent<Parameterized> event) {
+		if(build() == null) return;
 		if(getCommandSettings() == null) {
 			event.register(getContainer(), build(), command());
 		} else {

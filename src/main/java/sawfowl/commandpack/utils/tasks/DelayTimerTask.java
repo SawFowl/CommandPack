@@ -20,9 +20,9 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.api.data.commands.PluginCommand;
-import sawfowl.commandpack.api.data.commands.settings.CommandSettings;
-import sawfowl.commandpack.api.data.commands.settings.PriceSettings;
+import sawfowl.commandpack.api.commands.PluginCommand;
+import sawfowl.commandpack.api.data.command.Price;
+import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.ThrowingConsumer;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -30,7 +30,7 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class DelayTimerTask implements Consumer<ScheduledTask> {
 
-	public DelayTimerTask(ThrowingConsumer<PluginCommand, CommandException> consumer, ServerPlayer player, long seconds, PluginContainer container, String command, CommandSettings settings, PluginCommand commandClass) {
+	public DelayTimerTask(ThrowingConsumer<PluginCommand, CommandException> consumer, ServerPlayer player, long seconds, PluginContainer container, String command, Settings settings, PluginCommand commandClass) {
 		this.uuid = player.uniqueId();
 		this.seconds = seconds;
 		this.consumer = consumer;
@@ -48,7 +48,7 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 	boolean first = true;
 	private final PluginContainer container;
 	final String command;
-	final CommandSettings settings;
+	final Settings settings;
 	private PluginCommand commandClass;
 	@Override
 	public void accept(ScheduledTask task) {
@@ -98,7 +98,7 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 
 	void economy(ServerPlayer player, Locale locale) throws CommandException {
 		if(settings == null || CommandPack.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command))) return;
-		PriceSettings price = settings.getPrice();
+		Price price = settings.getPrice();
 		if(price.getMoney() > 0) {
 			Currency currency = CommandPack.getInstance().getEconomy().checkCurrency(price.getCurrency());
 			BigDecimal money = createDecimal(price.getMoney());

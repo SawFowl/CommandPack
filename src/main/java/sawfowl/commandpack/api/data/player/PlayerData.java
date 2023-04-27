@@ -101,12 +101,12 @@ public interface PlayerData {
 	/**
 	 * Viewing and changing a player's backpack.
 	 */
-	PlayerBackpack getBackpack();
+	Backpack getBackpack();
 
 	/**
 	 * Set a new backpack for the player.
 	 */
-	void setBackpack(PlayerBackpack backpack);
+	void setBackpack(Backpack backpack);
 
 	/**
 	 * Getting a clickable chat menu with a list of homes.

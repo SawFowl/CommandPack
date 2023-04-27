@@ -1,4 +1,4 @@
-package sawfowl.commandpack.api.data.commands.raw;
+package sawfowl.commandpack.api.commands.raw;
 
 import java.util.List;
 import java.util.Locale;
@@ -20,7 +20,7 @@ import org.spongepowered.api.scheduler.Task;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import sawfowl.commandpack.api.data.commands.PluginCommand;
+import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.tasks.CooldownTimerTask;

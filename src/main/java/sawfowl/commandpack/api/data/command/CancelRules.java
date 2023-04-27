@@ -1,17 +1,17 @@
-package sawfowl.commandpack.api.data.commands.settings;
+package sawfowl.commandpack.api.data.command;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
-public interface CancelRulesSettings extends DataSerializable {
+public interface CancelRules extends DataSerializable {
 
 	static Builder builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
-	static CancelRulesSettings of(boolean allowMoving, boolean allowOtherCommand) {
+	static CancelRules of(boolean allowMoving, boolean allowOtherCommand) {
 		return builder().values(allowMoving, allowOtherCommand).build();
 	}
 
@@ -19,7 +19,7 @@ public interface CancelRulesSettings extends DataSerializable {
 
 	boolean isAllowOtherCommand();
 
-	interface Builder extends AbstractBuilder<CancelRulesSettings>, org.spongepowered.api.util.Builder<CancelRulesSettings, Builder> {
+	interface Builder extends AbstractBuilder<CancelRules>, org.spongepowered.api.util.Builder<CancelRules, Builder> {
 
 		Builder allowMoving(boolean value);
 
