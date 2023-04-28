@@ -223,6 +223,10 @@ public class Locales {
 		save = check(locale, "MM.dd.yyyy HH:mm:s", null, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT) || save;
 		save = check(locale, toText("&cA kit with this id already exists."), null, LocalesPaths.COMMANDS_KITS_CREATE_EXIST) || save;
 		save = check(locale, toText("&aA kit &e" + Placeholders.VALUE + "&a has been saved."), null, LocalesPaths.COMMANDS_KITS_SAVED) || save;
+		save = check(locale, toText("&3Kits"), null, LocalesPaths.COMMANDS_KITS_LIST_HEADER) || save;
+		save = check(locale, toText("&cThere are no kits created."), null, LocalesPaths.COMMANDS_KITS_NO_KITS) || save;
+		save = check(locale, toText("&cThe time is not correct. Specify the duration in ISO time format."), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_INCORRECT_TIME) || save;
+		save = check(locale, toText("&aThe time to restore access to the kit &e" + Placeholders.VALUE + "&a is set."), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS) || save;
 
 		if(save) save(locale);
 	}
@@ -393,6 +397,10 @@ public class Locales {
 		save = check(locale, "d.MM.yyyy HH:mm:s", null, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT) || save;
 		save = check(locale, toText("&cНабор с этим id уже существует."), null, LocalesPaths.COMMANDS_KITS_CREATE_EXIST) || save;
 		save = check(locale, toText("&aНабор &e" + Placeholders.VALUE + "&a сохранен."), null, LocalesPaths.COMMANDS_KITS_SAVED) || save;
+		save = check(locale, toText("&3Наборы"), null, LocalesPaths.COMMANDS_KITS_LIST_HEADER) || save;
+		save = check(locale, toText("&cНет ни одного созданного набора."), null, LocalesPaths.COMMANDS_KITS_NO_KITS) || save;
+		save = check(locale, toText("&cВремя указанно не корректно. Нужно указать время в формате ISO."), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_INCORRECT_TIME) || save;
+		save = check(locale, toText("&aУстановленно время восстановления доступа к набору &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS) || save;
 
 		if(save) save(locale);
 	}

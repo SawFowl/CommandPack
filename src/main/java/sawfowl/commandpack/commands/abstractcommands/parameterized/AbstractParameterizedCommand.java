@@ -3,16 +3,10 @@ package sawfowl.commandpack.commands.abstractcommands.parameterized;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-
-import org.spongepowered.plugin.PluginContainer;
-
-import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.commands.parameterized.ParameterizedCommand;
-import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.abstractcommands.PluginCommand;
 
 public abstract class AbstractParameterizedCommand extends PluginCommand implements ParameterizedCommand {
@@ -32,28 +26,8 @@ public abstract class AbstractParameterizedCommand extends PluginCommand impleme
 	public abstract List<ParameterSettings> getParameterSettings();
 
 	@Override
-	public Map<UUID, Long> getCooldowns() {
-		return plugin.getPlayersData().getTempData().getTrackingMap(trackingName());
-	}
-
-	@Override
 	public Map<String, ParameterSettings> getSettingsMap() {
 		return parameterSettings;
-	}
-
-	@Override
-	public Settings getCommandSettings() {
-		return commandSettings;
-	}
-
-	@Override
-	public PluginContainer getContainer() {
-		return plugin.getPluginContainer();
-	}
-
-	@Override
-	public Component getText(Object[] path) {
-		return null;
 	}
 
 }

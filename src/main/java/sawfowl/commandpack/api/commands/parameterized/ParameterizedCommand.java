@@ -123,4 +123,8 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 		return getSettingsMap() != null && getSettingsMap().containsKey(arg) ? getSettingsMap().get(arg).getParameterValue(object, context) : Optional.empty();
 	}
 
+	default <T> Optional<T> getArgument(CommandContext context, Value<T> value) {
+		return context.one(value);
+	}
+
 }

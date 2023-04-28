@@ -27,6 +27,8 @@ public class Kits extends AbstractPlayerCommand {
 	public Parameterized build() {
 		return builder()
 				.addChild(new Create(plugin).build(), "create")
+				.addChild(new Edit(plugin).build(), "edit")
+				.addChild(new Cooldown(plugin).build(), "cooldown")
 				.build();
 	}
 

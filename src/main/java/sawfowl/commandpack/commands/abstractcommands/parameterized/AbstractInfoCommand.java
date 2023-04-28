@@ -67,6 +67,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 			ServerPlayer player = (ServerPlayer) target;
 			List<Component> content = new ArrayList<>();
 			boolean allowRefresh = player.hasPermission(Permissions.SERVER_STAT_STAFF_INFO_PLUGINS_REFRESH);
+			//FMLLoader.getLoadingModList().getMods() Протестить
 			for(PluginContainer container : Sponge.pluginManager().plugins()) {
 				if(allowRefresh) {
 					content.add(TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON), () -> {

@@ -11,10 +11,13 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.util.Nameable;
 import org.spongepowered.api.world.LocatableBlock;
+import org.spongepowered.plugin.PluginContainer;
 
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -35,6 +38,21 @@ public abstract class PluginCommand implements sawfowl.commandpack.api.commands.
 		this.plugin = CommandPack.getInstance();
 		this.commandSettings = commandSettings;
 		this.aliases = commandSettings.getAliases();
+	}
+
+	@Override
+	public PluginContainer getContainer() {
+		return plugin.getPluginContainer();
+	}
+
+	@Override
+	public Settings getCommandSettings() {
+		return commandSettings;
+	}
+
+	@Override
+	public Component getText(Object[] path) {
+		return null;
 	}
 
 	public void setCommandSettings(CommandSettings commandSettings) {

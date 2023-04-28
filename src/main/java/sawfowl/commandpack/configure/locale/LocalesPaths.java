@@ -213,5 +213,9 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_SERVERSTAT_TIMEFORMAT = {PATH_COMMANDS, COMMAND_SERVERSTAT, "TimeFormat"};
 	public static final Object[] COMMANDS_KITS_CREATE_EXIST = {PATH_COMMANDS, COMMAND_KITS, "Create", PATH_EXCEPTIONS, "Exist"};
 	public static final Object[] COMMANDS_KITS_SAVED = {PATH_COMMANDS, COMMAND_KITS, "Saved"};
+	public static final Object[] COMMANDS_KITS_LIST_HEADER = {PATH_COMMANDS, COMMAND_KITS, "ListHeader"};
+	public static final Object[] COMMANDS_KITS_NO_KITS = {PATH_COMMANDS, COMMAND_KITS, "NoKits"};
+	public static final Object[] COMMANDS_KITS_COOLDOWN_INCORRECT_TIME = {PATH_COMMANDS, COMMAND_KITS, "Cooldown", PATH_EXCEPTIONS, "IncorrectTime"};
+	public static final Object[] COMMANDS_KITS_COOLDOWN_SUCCESS = {PATH_COMMANDS, COMMAND_KITS, "Cooldown", "Success"};
 
 }

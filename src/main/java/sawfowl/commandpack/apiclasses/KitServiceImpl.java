@@ -1,5 +1,7 @@
 package sawfowl.commandpack.apiclasses;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -21,15 +23,25 @@ public class KitServiceImpl implements KitService {
 	}
 
 	@Override
-	public boolean remove(String id) {
+	public boolean removeKit(String id) {
 		if(!kits.containsKey(TextUtils.clearDecorations(id))) return false;
 		kits.remove(TextUtils.clearDecorations(id));
 		return true;
 	}
 
 	@Override
+	public boolean removeKit(Kit kit) {
+		return removeKit(kit.id());
+	}
+
+	@Override
 	public Optional<Kit> getKit(String id) {
 		return Optional.ofNullable(kits.getOrDefault(TextUtils.clearDecorations(id), null));
+	}
+
+	@Override
+	public Collection<Kit> getKits() {
+		return new ArrayList<>(kits.values());
 	}
 
 }
