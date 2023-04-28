@@ -161,9 +161,13 @@ public class KitData implements Kit {
 		InventoryMenu menu = ViewableInventory.builder().type(ContainerTypes.GENERIC_9X4).completeStructure().carrier(carrier).plugin(container).build().asMenu();
 		menu.setTitle(getLocalizedName(carrier.locale()));
 		menu.setReadOnly(readOnly);
+		getContent().forEach(item -> {
+			menu.inventory().offer(item);
+		});
 		if(!readOnly) menu.registerClose(new CloseHandler() {
 			@Override
 			public void handle(Cause cause, Container container) {
+				items.clear();
 				menu.inventory().slots().stream().forEach(slot -> {
 					if(slot.totalQuantity() > 0) items.add(new SerializedItemStack(slot.peek()));
 				});
@@ -173,7 +177,6 @@ public class KitData implements Kit {
 				menu.unregisterAll();
 			}
 		});
-		menu.inventory().offer(getContent().toArray(ItemStack[]::new));
 		return menu;
 	}
 

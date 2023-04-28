@@ -29,6 +29,7 @@ public class Kits extends AbstractPlayerCommand {
 				.addChild(new Create(plugin).build(), "create")
 				.addChild(new Edit(plugin).build(), "edit")
 				.addChild(new Cooldown(plugin).build(), "cooldown")
+				.addChild(new SetName(plugin).build(), "name")
 				.build();
 	}
 

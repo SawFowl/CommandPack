@@ -18,9 +18,7 @@ import org.spongepowered.api.item.enchantment.EnchantmentTypes;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 
-import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.localeapi.api.EnumLocales;
 
 public class CommandParameters {
@@ -52,8 +50,6 @@ public class CommandParameters {
 	public static final Value<String> LOCALES = Parameter.choices(Stream.of(EnumLocales.values()).map(EnumLocales::getTag).toArray(String[]::new)).key("Locale").requiredPermission(Permissions.REPAIR_SELECT).build();
 
 	public static final Value<String> ENCHANT = Parameter.string().completer(new EnchantmentCompleter()).key("Enchant").build();
-
-	public static final Value<String> KITS = Parameter.string().completer(new KitCompleter()).key("Kit").build();
 
 	public static final Value<String> PLUGINS = Parameter.choices(Sponge.pluginManager().plugins().stream().map(p -> p.metadata().id()).toArray(String[]::new)).key("Plugin").build();
 
@@ -151,13 +147,6 @@ public class CommandParameters {
 		@Override
 		public List<CommandCompletion> complete(CommandContext context, String currentInput) {
 			return EnchantmentTypes.registry().streamEntries().map(e -> (e.key().asString())).filter(k -> (currentInput.length() == 0 || k.startsWith(currentInput) || (currentInput.contains(k) && !currentInput.contains(k + " ")))).map(k -> ("\"" + k + "\"")).map(CommandCompletion::of).collect(Collectors.toList());
-		}
-	}
-
-	private static class KitCompleter implements ValueCompleter {
-		@Override
-		public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-			return CommandPack.getInstance().getKitService().getKits().stream().filter(k -> (context.hasPermission(k.permission()) || context.hasPermission(Permissions.KIT_STAFF))).map(Kit::id).filter(k -> (currentInput.length() == 0 || k.startsWith(currentInput))).map(CommandCompletion::of).collect(Collectors.toList());
 		}
 	}
 

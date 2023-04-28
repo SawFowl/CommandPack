@@ -40,6 +40,7 @@ public class CommandsConfig {
 	public CommandsConfig() {}
 
 	private Map<String, CommandSettings> map = new HashMap<>();
+	private boolean serverStatRegister;
 
 	@Setting("Suicide")
 	private CommandSettings suicide = new CommandSettings();
@@ -155,10 +156,10 @@ public class CommandsConfig {
 	private CommandSettings serverStat = new CommandSettings(new String[] {"serverinfo", "gc"});
 	@Setting("Plugins")
 	private CommandSettings plugins = new CommandSettings();
-	@Setting("ServerTime")
-	private CommandSettings serverTime = new CommandSettings();
 	@Setting("Tps")
 	private CommandSettings tps = new CommandSettings();
+	@Setting("ServerTime")
+	private CommandSettings serverTime = new CommandSettings();
 	@Setting("Kits")
 	private CommandSettings kits = new CommandSettings();
 	@Setting("Kit")
@@ -178,10 +179,7 @@ public class CommandsConfig {
 				try {
 					AbstractParameterizedCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
-						if(settings.isEnable()) {
-							command.register(event);
-							plugin.getPlayersData().getTempData().addTrackingCooldownCommand(command);
-						}
+						registerParameterizedCommand(event, plugin, settings, command);
 					});
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					plugin.getLogger().error("Error when registering a command class '" + clazz.getName() +"'\n" + e.getLocalizedMessage());
@@ -214,6 +212,7 @@ public class CommandsConfig {
 		reference.node().childrenMap().entrySet().forEach(entry -> {
 			map.put(entry.getKey().toString().toLowerCase(), getCommandFromNode(entry.getValue()));
 		});
+		serverStatRegister = serverStat.isEnable();
 	}
 
 	private CommandSettings getCommandFromNode(CommentedConfigurationNode node) {
@@ -258,6 +257,11 @@ public class CommandsConfig {
 			});
 		}
 		return allClasses;
+	}
+
+	private void registerParameterizedCommand(RegisterCommandEvent<Parameterized> event, CommandPack plugin, CommandSettings settings, AbstractParameterizedCommand command) {
+		if((serverStatRegister && (command.command().equalsIgnoreCase("plugins") || command.command().equalsIgnoreCase("tps") || command.command().equalsIgnoreCase("servertime"))) || !settings.isEnable()) return;
+		command.register(event);
 	}
 
 }

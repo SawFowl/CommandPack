@@ -18,6 +18,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractKitsEditCommand;
+import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Edit extends AbstractKitsEditCommand {
@@ -31,11 +32,11 @@ public class Edit extends AbstractKitsEditCommand {
 		if(plugin.getKitService().getKits().isEmpty()) exception(locale, LocalesPaths.COMMANDS_KITS_NO_KITS);
 		Optional<Kit> kit = getKit(context);
 		if(kit.isPresent()) {
-			kit.get().asMenu(getContainer(), src, false);
+			kit.get().asMenu(getContainer(), src, false).open(src);
 		} else {
 			Component title = getText(locale, LocalesPaths.COMMANDS_KITS_LIST_HEADER);
 			sendPaginationList(src, title, Component.text("=").color(title.color()), 15, plugin.getKitService().getKits().stream().map(k -> k.getLocalizedName(locale).clickEvent(SpongeComponents.executeCallback(consumer -> {
-				k.asMenu(getContainer(), src, false);
+				k.asMenu(getContainer(), src, false).open(src);
 			}))).collect(Collectors.toList()));
 		}
 	}
@@ -52,7 +53,7 @@ public class Edit extends AbstractKitsEditCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(kitsParameter);
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createString("Kit", true), false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
 	}
 
 }

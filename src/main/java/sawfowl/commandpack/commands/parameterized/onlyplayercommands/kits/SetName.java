@@ -32,14 +32,16 @@ public class SetName extends AbstractKitsEditCommand  {
 		if(!optKit.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		KitData kit = (KitData) (optKit.get() instanceof KitData ? optKit.get() : Kit.builder().copyFrom(optKit.get()));
 		String name = getString(context, "Name").get();
-		kit.setName(EnumLocales.find(getString(context, "Locale").get()), name);
+		kit.setName(EnumLocales.find(getString(context, "Locale").get().replace("-", "_")), name);
+		kit.save();
 	}
 
 	@Override
 	public Parameterized build() {
 		return Command.builder()
 				.permission(permission())
-				.addParameter(kitsParameter.getParameterUnknownType())
+				.executor(this)
+				.addParameter(CommandParameters.createString("Kit", false))
 				.addParameter(CommandParameters.LOCALES)
 				.addParameter(CommandParameters.createString("Name", false))
 				.build();
@@ -52,7 +54,7 @@ public class SetName extends AbstractKitsEditCommand  {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(kitsParameter,
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createString("Kit", false), false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
 			ParameterSettings.of(CommandParameters.LOCALES, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
 			ParameterSettings.of(CommandParameters.createString("Name", false), false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);

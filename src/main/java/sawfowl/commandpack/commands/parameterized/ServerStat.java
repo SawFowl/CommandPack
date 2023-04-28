@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
@@ -24,6 +23,7 @@ import sawfowl.commandpack.commands.parameterized.serverstat.Tps;
 import sawfowl.commandpack.commands.parameterized.serverstat.Worlds;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+
 import sawfowl.localeapi.api.TextUtils;
 
 public class ServerStat extends AbstractInfoCommand {
@@ -75,18 +75,11 @@ public class ServerStat extends AbstractInfoCommand {
 				event.register(getContainer(), build(), command(), getCommandSettings().getAliases());
 			} else event.register(getContainer(), build(), command());
 		}
-		if(!Sponge.server().commandManager().commandMapping("plugins").isPresent()) {
-			plugins.enableRegister();
-			plugins.register(event);
-		}
-		if(!Sponge.server().commandManager().commandMapping("tps").isPresent()) {
-			tps.enableRegister();
-			tps.register(event);
-		}
-		if(!Sponge.server().commandManager().commandMapping("servertime").isPresent()) {
-			time.enableRegister();
-			time.register(event);
-		}
+		plugins.register(event);
+		tps.enableRegister();
+		tps.register(event);
+		time.enableRegister();
+		time.register(event);
 	}
 
 	@Override

@@ -3,12 +3,10 @@ package sawfowl.commandpack.commands.parameterized.serverstat;
 import java.util.List;
 import java.util.Locale;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
-import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -43,19 +41,6 @@ public class ServerTime extends AbstractInfoCommand {
 				null ?
 				command = fastBuild() :
 				command;
-	}
-
-	@Override
-	public void register(RegisterCommandEvent<Parameterized> event) {
-		if(!register || Sponge.server().commandManager().commandMapping(command()).isPresent()) return;
-		if(getCommandSettings() == null) {
-			event.register(getContainer(), command, command());
-		} else {
-			if(!getCommandSettings().isEnable()) return;
-			if(getCommandSettings().getAliases() != null && getCommandSettings().getAliases().length > 0) {
-				event.register(getContainer(), command, command(), getCommandSettings().getAliases());
-			} else event.register(getContainer(), command, command());
-		}
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.audience.Audience;
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -68,6 +69,7 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 				event.register(getContainer(), build(), command(), getCommandSettings().getAliases());
 			} else event.register(getContainer(), build(), command());
 		}
+		CommandPack.getInstance().getPlayersData().getTempData().addTrackingCooldownCommand(this);
 	}
 
 	default Builder builder() {

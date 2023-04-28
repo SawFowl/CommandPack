@@ -28,6 +28,7 @@ public class Create extends AbstractKitsEditCommand {
 		if(plugin.getKitService().getKit(id).isPresent()) exception(locale, LocalesPaths.COMMANDS_KITS_CREATE_EXIST);
 		Kit kit = Kit.builder().id(id).build();
 		kit.asMenu(getContainer(), src, false).open(src);
+		plugin.getKitService().addKit(kit);
 	}
 
 	@Override

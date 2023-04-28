@@ -36,7 +36,8 @@ public class Cooldown extends AbstractKitsEditCommand {
 		KitData kit = (KitData) (optKit.get() instanceof KitData ? optKit.get() : Kit.builder().copyFrom(optKit.get()));
 		try {
 			Duration duration = getArgument(context, CommandParameters.DURATION).get();
-			kit.setCooldown(duration.toMillis());
+			kit.setCooldown(duration.getSeconds());
+			kit.save();
 			src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(locale)));
 		} catch (DateTimeParseException e) {
 			exception(locale, LocalesPaths.COMMANDS_KITS_COOLDOWN_INCORRECT_TIME);
@@ -47,8 +48,9 @@ public class Cooldown extends AbstractKitsEditCommand {
 	public Parameterized build() {
 		return Command.builder()
 				.permission(permission())
-				.addParameter(kitsParameter.getParameterUnknownType())
-				.addParameter(CommandParameters.createString("Time", false))
+				.executor(this)
+				.addParameter(CommandParameters.createString("Kit", false))
+				.addParameter(CommandParameters.DURATION)
 				.build();
 	}
 
@@ -59,8 +61,8 @@ public class Cooldown extends AbstractKitsEditCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(kitsParameter, 
-			ParameterSettings.of(CommandParameters.DURATION, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createString("Kit", false), false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT), 
+			ParameterSettings.of(CommandParameters.DURATION, false, LocalesPaths.COMMANDS_KITS_COOLDOWN_INCORRECT_TIME)
 		);
 	}
 

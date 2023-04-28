@@ -11,8 +11,6 @@ import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import sawfowl.commandpack.api.data.command.Delay;
-
 @ConfigSerializable
 public class CommandSettings implements sawfowl.commandpack.api.data.command.Settings {
 
@@ -85,7 +83,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 	@Setting("Cooldown")
 	private long cooldown = 0;
 	@Setting("Delay")
-	private Delay delay = new sawfowl.commandpack.configure.configs.commands.Delay();
+	private Delay delay = new Delay();
 	@Setting("Enable")
 	private boolean enable = true;
 	@Setting("Price")
@@ -192,7 +190,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 		}
 
 		@Override
-		public Builder setDelay(Delay delay) {
+		public Builder setDelay(sawfowl.commandpack.api.data.command.Delay delay) {
 			CommandSettings.this.delay = delay instanceof sawfowl.commandpack.configure.configs.commands.Delay ? (sawfowl.commandpack.configure.configs.commands.Delay) delay : new sawfowl.commandpack.configure.configs.commands.Delay(delay.getSeconds(), new CancelRules(delay.getCancelRules().isAllowMoving(), delay.getCancelRules().isAllowOtherCommand()));
 			return this;
 		}

@@ -114,9 +114,9 @@ public class BackpackData implements Backpack {
 		menu.registerClose(new CloseHandler() {
 			@Override
 			public void handle(Cause cause, Container container) {
+				items.clear();
 				menu.inventory().slots().stream().forEach(slot -> {
 					slot.get(Keys.SLOT_INDEX).ifPresent(slotIndex -> {
-						removeItem(slotIndex);
 						if(slot.peek().quantity() > 0) addItem(slotIndex, slot.peek());
 					});
 				});
