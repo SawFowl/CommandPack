@@ -67,7 +67,7 @@ public class KitData implements Kit {
 	@Setting("GiveOnJoin")
 	private boolean giveOnJoin = false;
 	@Setting("NeedPerm")
-	private boolean needPerm = false;
+	private boolean needPerm = true;
 	@Setting("ExecuteCommands")
 	private List<String> executeCommands;
 	@Setting("Price")
@@ -234,8 +234,17 @@ public class KitData implements Kit {
 		this.giveOnJoin = giveOnJoin;
 	}
 
+	public void setNeedPerm(boolean needPerm) {
+		this.needPerm = needPerm;
+	}
+
 	public void setCommands(List<String> commands) {
 		executeCommands = commands;
+	}
+
+	public void addCommands(String command) {
+		if(executeCommands == null) executeCommands = new ArrayList<>();
+		executeCommands.add(command);
 	}
 
 	public void setPrice(KitPrice price) {

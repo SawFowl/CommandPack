@@ -1,6 +1,7 @@
 package sawfowl.commandpack.commands.raw.onlyplayercommands.kits;
 
-import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -13,18 +14,15 @@ import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.text.Component;
-
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
-import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.kits.KitData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
-public class Cooldown extends AbstractKitsEditCommand {
+public class AddCommand extends AbstractKitsEditCommand {
 
-	public Cooldown(CommandPack plugin) {
+	public AddCommand(CommandPack plugin) {
 		super(plugin);
 	}
 
@@ -34,10 +32,19 @@ public class Cooldown extends AbstractKitsEditCommand {
 		if(!optKit.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		KitData kit = (KitData) (optKit.get() instanceof KitData ? optKit.get() : Kit.builder().copyFrom(optKit.get()));
 		if(args.length < 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		Duration duration = getDuration(args[1], locale);
-		kit.setCooldown(duration.getSeconds());
+		List<String> list = new ArrayList<>(Arrays.asList(args));
+		list.remove(0);
+		list.remove(0);
+		String command = "";
+		for (int i = 0; i < list.size(); i++) {
+			command = command + list.get(i);
+			if(i < list.size() - 1) {
+				command = command + " ";
+			}
+		}
+		kit.addCommands(command);
 		kit.save();
-		src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(locale)));
+		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_ADD_COMMAND));
 	}
 
 	@Override
@@ -49,22 +56,22 @@ public class Cooldown extends AbstractKitsEditCommand {
 
 	@Override
 	public Component shortDescription(Locale locale) {
-		return null;
+		return text("&3Adding a command to a kit.");
 	}
 
 	@Override
 	public Component extendedDescription(Locale locale) {
-		return null;
-	}
-
-	@Override
-	public Component usage(CommandCause cause) {
-		return null;
+		return text("&3Adding a command to a kit.");
 	}
 
 	@Override
 	public String command() {
-		return "cooldown";
+		return "addcommand";
+	}
+
+	@Override
+	public Component usage(CommandCause cause) {
+		return text("&c/kits addcommand <Kit> <Command>");
 	}
 
 }

@@ -1,5 +1,7 @@
 package sawfowl.commandpack.configure.configs.kits;
 
+import java.math.BigDecimal;
+
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
@@ -7,8 +9,6 @@ import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
-
-import com.ibm.icu.math.BigDecimal;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.kits.KitPrice;

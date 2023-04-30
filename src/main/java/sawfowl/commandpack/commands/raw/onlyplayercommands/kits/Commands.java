@@ -1,6 +1,6 @@
 package sawfowl.commandpack.commands.raw.onlyplayercommands.kits;
 
-import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -13,18 +13,16 @@ import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.text.Component;
-
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
-import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.kits.KitData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
-public class Cooldown extends AbstractKitsEditCommand {
+public class Commands extends AbstractKitsEditCommand {
 
-	public Cooldown(CommandPack plugin) {
+	public Commands(CommandPack plugin) {
 		super(plugin);
 	}
 
@@ -34,10 +32,20 @@ public class Cooldown extends AbstractKitsEditCommand {
 		if(!optKit.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		KitData kit = (KitData) (optKit.get() instanceof KitData ? optKit.get() : Kit.builder().copyFrom(optKit.get()));
 		if(args.length < 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		Duration duration = getDuration(args[1], locale);
-		kit.setCooldown(duration.getSeconds());
-		kit.save();
-		src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(locale)));
+		if(kit.getExecuteCommands().isPresent() && kit.getExecuteCommands().get().size() > 0) {
+			Component header = getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_HEADER);
+			List<Component> commands = new ArrayList<>();
+			kit.getExecuteCommands().get().forEach(command -> {
+				commands.add(TextUtils.createCallBack(getText(locale, LocalesPaths.REMOVE), () -> {
+					if(kit.getExecuteCommands().get().contains(command)) {
+						kit.getExecuteCommands().get().remove(command);
+						kit.save();
+						src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_SUCCESS));
+					} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_FAIL));
+				}).append(Component.text(" " + command)));
+			});
+			sendPaginationList(src, header, Component.text("=").color(header.color()), 15, commands);
+		} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_EMPTY));
 	}
 
 	@Override
@@ -49,22 +57,22 @@ public class Cooldown extends AbstractKitsEditCommand {
 
 	@Override
 	public Component shortDescription(Locale locale) {
-		return null;
+		return text("&3View and delete commands in a kit.");
 	}
 
 	@Override
 	public Component extendedDescription(Locale locale) {
-		return null;
-	}
-
-	@Override
-	public Component usage(CommandCause cause) {
-		return null;
+		return text("&3View and delete commands in a kit.");
 	}
 
 	@Override
 	public String command() {
-		return "cooldown";
+		return "commands";
+	}
+
+	@Override
+	public Component usage(CommandCause cause) {
+		return text("&c/kits commands <Kit>");
 	}
 
 }

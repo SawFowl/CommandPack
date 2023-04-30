@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
@@ -136,6 +137,14 @@ public interface RawCommand extends PluginCommand, Raw {
 		} catch (final DateTimeParseException ex) {
 			throw exception(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_KITS_COOLDOWN_INCORRECT_TIME));
 		}
+	}
+
+	default Optional<Integer> parseInt(String arg) {
+		return NumberUtils.isParsable(arg) ? Optional.ofNullable(NumberUtils.createInteger(arg)) : Optional.empty();
+	}
+
+	default Optional<Double> parseDouble(String arg) {
+		return NumberUtils.isParsable(arg) ? Optional.ofNullable(NumberUtils.createDouble(arg)) : Optional.empty();
 	}
 
 }

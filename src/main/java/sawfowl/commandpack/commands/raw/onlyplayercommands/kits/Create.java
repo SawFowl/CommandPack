@@ -25,7 +25,7 @@ public class Create extends AbstractKitsEditCommand {
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
 		if(args.length == 0) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);
-		if(getKit(args[0]).isPresent()) exception(locale, LocalesPaths.COMMANDS_KITS_CREATE_EXIST);
+		if(getKit(args).isPresent()) exception(locale, LocalesPaths.COMMANDS_KITS_CREATE_EXIST);
 		Kit kit = Kit.builder().id(args[0]).build();
 		kit.asMenu(getContainer(), src, false).open(src);
 		plugin.getKitService().addKit(kit);

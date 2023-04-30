@@ -30,7 +30,7 @@ public class SetName extends AbstractKitsEditCommand  {
 
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		Optional<Kit> optKit = args.length > 0 ? getKit(args[0]) : Optional.empty();
+		Optional<Kit> optKit = getKit(args);
 		if(!optKit.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		KitData kit = (KitData) (optKit.get() instanceof KitData ? optKit.get() : Kit.builder().copyFrom(optKit.get()));
 		if(args.length < 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
@@ -62,12 +62,12 @@ public class SetName extends AbstractKitsEditCommand  {
 
 	@Override
 	public Component shortDescription(Locale locale) {
-		return null;
+		return text("&3Changing the localized kit name.");
 	}
 
 	@Override
 	public Component extendedDescription(Locale locale) {
-		return null;
+		return text("&3Changing the localized kit name.");
 	}
 
 	@Override

@@ -228,6 +228,21 @@ public class Locales {
 		save = check(locale, toText("&cThe time is not correct. Specify the duration in ISO time format."), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_INCORRECT_TIME) || save;
 		save = check(locale, toText("&aThe time to restore access to the kit &e" + Placeholders.VALUE + "&a is set."), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS) || save;
 		save = check(locale, toText("&aThe localized kit name is set."), null, LocalesPaths.COMMANDS_KITS_SET_NAME) || save;
+		save = check(locale, toText("&aA rule for the issuance of a kit has been set."), null, LocalesPaths.COMMANDS_KITS_GIVE_RULE) || save;
+		save = check(locale, toText("&aA description has been added to the kit for the default localization. To change it, edit the kit configuration file."), null, LocalesPaths.COMMANDS_KITS_CREATE_LORE) || save;
+		save = check(locale, toText("&aThe limit for a player to get a kit has been set."), null, LocalesPaths.COMMANDS_KITS_GIVE_LIMIT) || save;
+		save = check(locale, toText("&aNow the kit will be automatically issued to the player at one time."), null, LocalesPaths.COMMANDS_KITS_FIRST_TIME_ENABLE) || save;
+		save = check(locale, toText("&aThe kit will no longer be automatically given to the player."), null, LocalesPaths.COMMANDS_KITS_FIRST_TIME_DISABLE) || save;
+		save = check(locale, toText("&aThe server will now try to automatically give the player a kit when he login."), null, LocalesPaths.COMMANDS_KITS_GIVE_ON_JOIN_ENABLE) || save;
+		save = check(locale, toText("&aThe kit will no longer be automatically given to the player."), null, LocalesPaths.COMMANDS_KITS_GIVE_ON_JOIN_DISABLE) || save;
+		save = check(locale, toText("&aPermission is now required to obtain a kit."), null, LocalesPaths.COMMANDS_KITS_NEEDPERM_ENABLE) || save;
+		save = check(locale, toText("&aPermission is no longer required to obtain a kit."), null, LocalesPaths.COMMANDS_KITS_NEEDPERM_DISABLE) || save;
+		save = check(locale, toText("&aA command was added to the kit."), null, LocalesPaths.COMMANDS_KITS_ADD_COMMAND) || save;
+		save = check(locale, toText("&cThe kit does not contain this command."), null, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_FAIL) || save;
+		save = check(locale, toText("&aCommand deleted."), null, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_SUCCESS) || save;
+		save = check(locale, toText("&aThe kit does not contain any commands."), null, LocalesPaths.COMMANDS_KITS_COMMANDS_EMPTY) || save;
+		save = check(locale, toText("&3&lCommands"), null, LocalesPaths.COMMANDS_KITS_COMMANDS_HEADER) || save;
+		save = check(locale, toText("&aA new price has been set to get a kit."), null, LocalesPaths.COMMANDS_KITS_SET_PRICE) || save;
 
 		if(save) save(locale);
 	}
@@ -401,8 +416,23 @@ public class Locales {
 		save = check(locale, toText("&3Наборы"), null, LocalesPaths.COMMANDS_KITS_LIST_HEADER) || save;
 		save = check(locale, toText("&cНет ни одного созданного набора."), null, LocalesPaths.COMMANDS_KITS_NO_KITS) || save;
 		save = check(locale, toText("&cВремя указанно не корректно. Нужно указать время в формате ISO."), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_INCORRECT_TIME) || save;
-		save = check(locale, toText("&aУстановленно время восстановления доступа к набору &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS) || save;
-		save = check(locale, toText("&aЛокализованное имя набора установленно."), null, LocalesPaths.COMMANDS_KITS_SET_NAME) || save;
+		save = check(locale, toText("&aУстановлено время восстановления доступа к набору &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS) || save;
+		save = check(locale, toText("&aЛокализованное имя набора установлено."), null, LocalesPaths.COMMANDS_KITS_SET_NAME) || save;
+		save = check(locale, toText("&aУстановлено правило выдачи набора."), null, LocalesPaths.COMMANDS_KITS_GIVE_RULE) || save;
+		save = check(locale, toText("&aНабору добавлено описание для локализации по умолчанию. Для изменения отредактируйте файл конфигурации набора."), null, LocalesPaths.COMMANDS_KITS_CREATE_LORE) || save;
+		save = check(locale, toText("&aУстановлен лимит получения набора игроком."), null, LocalesPaths.COMMANDS_KITS_GIVE_LIMIT) || save;
+		save = check(locale, toText("&aТеперь набор будет автоматически выдаваться игроку единоразово."), null, LocalesPaths.COMMANDS_KITS_FIRST_TIME_ENABLE) || save;
+		save = check(locale, toText("&aНабор больше не будет автоматически выдаваться игроку."), null, LocalesPaths.COMMANDS_KITS_FIRST_TIME_DISABLE) || save;
+		save = check(locale, toText("&aТеперь будет производиться попытка автоматически выдать игроку набор при входе."), null, LocalesPaths.COMMANDS_KITS_GIVE_ON_JOIN_ENABLE) || save;
+		save = check(locale, toText("&aНабор больше не будет автоматически выдаваться игроку."), null, LocalesPaths.COMMANDS_KITS_GIVE_ON_JOIN_DISABLE) || save;
+		save = check(locale, toText("&aТеперь для получения набора требуется разрешение."), null, LocalesPaths.COMMANDS_KITS_NEEDPERM_ENABLE) || save;
+		save = check(locale, toText("&aДля получения набора больше не требуется разрешение."), null, LocalesPaths.COMMANDS_KITS_NEEDPERM_DISABLE) || save;
+		save = check(locale, toText("&aНабору добавлена команда."), null, LocalesPaths.COMMANDS_KITS_ADD_COMMAND) || save;
+		save = check(locale, toText("&cНабор не содержит этой команды."), null, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_FAIL) || save;
+		save = check(locale, toText("&aКоманда удалена."), null, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_SUCCESS) || save;
+		save = check(locale, toText("&aНабор не содержит команд."), null, LocalesPaths.COMMANDS_KITS_COMMANDS_EMPTY) || save;
+		save = check(locale, toText("&3&lКоманды"), null, LocalesPaths.COMMANDS_KITS_COMMANDS_HEADER) || save;
+		save = check(locale, toText("&aУстановлена новая цена для получения набора."), null, LocalesPaths.COMMANDS_KITS_SET_PRICE) || save;
 
 		if(save) save(locale);
 	}

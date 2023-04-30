@@ -17,8 +17,8 @@ public abstract class AbstractKitsEditCommand extends AbstractPlayerCommand {
 		return Permissions.KIT_STAFF;
 	}
 
-	protected Optional<Kit> getKit(String arg) {
-		return plugin.getKitService().getKit(arg);
+	protected Optional<Kit> getKit(String[] args) {
+		return args.length == 0 ? Optional.empty() : plugin.getKitService().getKit(args[0]);
 	}
 
 }

@@ -1,6 +1,6 @@
 package sawfowl.commandpack.commands.raw.onlyplayercommands.kits;
 
-import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -17,14 +17,13 @@ import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
-import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.kits.KitData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
-public class Cooldown extends AbstractKitsEditCommand {
+public class FirstTime extends AbstractKitsEditCommand {
 
-	public Cooldown(CommandPack plugin) {
+	List<String> values = Arrays.asList("true", "false");
+	public FirstTime(CommandPack plugin) {
 		super(plugin);
 	}
 
@@ -34,37 +33,39 @@ public class Cooldown extends AbstractKitsEditCommand {
 		if(!optKit.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		KitData kit = (KitData) (optKit.get() instanceof KitData ? optKit.get() : Kit.builder().copyFrom(optKit.get()));
 		if(args.length < 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		Duration duration = getDuration(args[1], locale);
-		kit.setCooldown(duration.getSeconds());
+		boolean value = args[1].equalsIgnoreCase("true");
+		kit.setFirstTime(value);
 		kit.save();
-		src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(locale)));
+		src.sendMessage(getText(locale, value ? LocalesPaths.COMMANDS_KITS_FIRST_TIME_ENABLE : LocalesPaths.COMMANDS_KITS_FIRST_TIME_DISABLE));
 	}
 
 	@Override
 	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
 		if(args.size() == 0) return plugin.getKitService().getKits().stream().map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
 		if(args.size() == 1 && !currentInput.endsWith(" ")) return plugin.getKitService().getKits().stream().filter(kit -> (kit.id().startsWith(args.get(0)))).map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
+		if(args.size() == 1 && currentInput.endsWith(" ")) return values.stream().map(value -> CommandCompletion.of(value)).collect(Collectors.toList());
+		if(args.size() == 2 && !currentInput.endsWith(" ")) return values.stream().filter(value -> (value.startsWith(args.get(1)))).map(value -> CommandCompletion.of(value)).collect(Collectors.toList());
 		return getEmptyCompletion();
 	}
 
 	@Override
 	public Component shortDescription(Locale locale) {
-		return null;
+		return text("&3Automatic issuance of a kit upon join.");
 	}
 
 	@Override
 	public Component extendedDescription(Locale locale) {
-		return null;
-	}
-
-	@Override
-	public Component usage(CommandCause cause) {
-		return null;
+		return text("&3Determine whether a kit should be given at entry if the player has not received one before.");
 	}
 
 	@Override
 	public String command() {
-		return "cooldown";
+		return "firsttime";
+	}
+
+	@Override
+	public Component usage(CommandCause cause) {
+		return text("&c/kits firsttime <Kit> <Value>");
 	}
 
 }

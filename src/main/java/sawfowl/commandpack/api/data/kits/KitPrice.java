@@ -1,10 +1,10 @@
 package sawfowl.commandpack.api.data.kits;
 
+import java.math.BigDecimal;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 import org.spongepowered.api.service.economy.Currency;
-
-import com.ibm.icu.math.BigDecimal;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 

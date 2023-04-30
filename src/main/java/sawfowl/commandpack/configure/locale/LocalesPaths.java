@@ -218,5 +218,20 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_KITS_COOLDOWN_INCORRECT_TIME = {PATH_COMMANDS, COMMAND_KITS, "Cooldown", PATH_EXCEPTIONS, "IncorrectTime"};
 	public static final Object[] COMMANDS_KITS_COOLDOWN_SUCCESS = {PATH_COMMANDS, COMMAND_KITS, "Cooldown", "Success"};
 	public static final Object[] COMMANDS_KITS_SET_NAME = {PATH_COMMANDS, COMMAND_KITS, "SetName"};
+	public static final Object[] COMMANDS_KITS_GIVE_RULE = {PATH_COMMANDS, COMMAND_KITS, "GiveRule"};
+	public static final Object[] COMMANDS_KITS_CREATE_LORE = {PATH_COMMANDS, COMMAND_KITS, "CreateLore"};
+	public static final Object[] COMMANDS_KITS_GIVE_LIMIT = {PATH_COMMANDS, COMMAND_KITS, "GiveLimit"};
+	public static final Object[] COMMANDS_KITS_FIRST_TIME_ENABLE = {PATH_COMMANDS, COMMAND_KITS, "EnableFirstTime"};
+	public static final Object[] COMMANDS_KITS_FIRST_TIME_DISABLE = {PATH_COMMANDS, COMMAND_KITS, "DisableFirstTime"};
+	public static final Object[] COMMANDS_KITS_GIVE_ON_JOIN_ENABLE = {PATH_COMMANDS, COMMAND_KITS, "EnableGiveOnJoin"};
+	public static final Object[] COMMANDS_KITS_GIVE_ON_JOIN_DISABLE = {PATH_COMMANDS, COMMAND_KITS, "DisableGiveOnJoin"};
+	public static final Object[] COMMANDS_KITS_NEEDPERM_ENABLE = {PATH_COMMANDS, COMMAND_KITS, "EnableNeedPerm"};
+	public static final Object[] COMMANDS_KITS_NEEDPERM_DISABLE = {PATH_COMMANDS, COMMAND_KITS, "DisableNeedPerm"};
+	public static final Object[] COMMANDS_KITS_ADD_COMMAND = {PATH_COMMANDS, COMMAND_KITS, "AddCommand"};
+	public static final Object[] COMMANDS_KITS_COMMANDS_REMOVE_FAIL = {PATH_COMMANDS, COMMAND_KITS, "CommandsRemoveFail"};
+	public static final Object[] COMMANDS_KITS_COMMANDS_REMOVE_SUCCESS = {PATH_COMMANDS, COMMAND_KITS, "CommandsRemoveSuccess"};
+	public static final Object[] COMMANDS_KITS_COMMANDS_EMPTY = {PATH_COMMANDS, COMMAND_KITS, "CommandsEmpty"};
+	public static final Object[] COMMANDS_KITS_COMMANDS_HEADER = {PATH_COMMANDS, COMMAND_KITS, "CommandsHeader"};
+	public static final Object[] COMMANDS_KITS_SET_PRICE = {PATH_COMMANDS, COMMAND_KITS, "SetPrice"};
 
 }

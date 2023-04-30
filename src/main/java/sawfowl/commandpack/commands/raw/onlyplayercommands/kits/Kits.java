@@ -13,16 +13,25 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
+import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 
-public class Kits extends AbstractPlayerCommand {
+public class Kits extends AbstractKitsEditCommand {
 
 	public Kits(CommandPack plugin) {
 		super(plugin);
-		getChildExecutors().put("create", new Create(plugin));
-		getChildExecutors().put("edit", new Edit(plugin));
+		getChildExecutors().put("addcommand", new AddCommand(plugin));
+		getChildExecutors().put("commands", new Commands(plugin));
 		getChildExecutors().put("cooldown", new Cooldown(plugin));
+		getChildExecutors().put("create", new Create(plugin));
+		getChildExecutors().put("createlore", new CreateLore(plugin));
+		getChildExecutors().put("edit", new Edit(plugin));
+		getChildExecutors().put("firsttime", new FirstTime(plugin));
+		getChildExecutors().put("givelimit", new GiveLimit(plugin));
+		getChildExecutors().put("giveonjoin", new GiveOnJoin(plugin));
+		getChildExecutors().put("giverule", new GiveRule(plugin));
+		getChildExecutors().put("needperm", new NeedPerm(plugin));
 		getChildExecutors().put("setname", new SetName(plugin));
+		if(plugin.getEconomy().isPresent()) getChildExecutors().put("setprice", new SetPrice(plugin));
 	}
 
 	@Override
