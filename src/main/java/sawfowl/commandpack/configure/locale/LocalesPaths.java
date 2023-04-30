@@ -50,6 +50,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_SERVERSTAT = "ServerStat";
 	private static final Object COMMAND_KITS = "Kits";
 
+	public static final Object[] TIME_DAYS = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
 	public static final Object[] TIME_SECOND = {PATH_TIME, "Second"};

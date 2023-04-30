@@ -64,6 +64,7 @@ public class Locales {
 		save = check(locale, toText("Failed to add game currency to player " + Placeholders.PLAYER + "."), null, LocalesPaths.ECONOMY_ERROR_GIVE_MONEY) || save;
 		save = check(locale, toText("Failed to take game currency from player " + Placeholders.PLAYER + "."), null, LocalesPaths.ECONOMY_ERROR_TAKE_MONEY) || save;
 
+		save = check(locale, toText("d"), null, LocalesPaths.TIME_DAYS) || save;
 		save = check(locale, toText("h"), null, LocalesPaths.TIME_HOUR) || save;
 		save = check(locale, toText("m"), null, LocalesPaths.TIME_MINUTE) || save;
 		save = check(locale, toText("s"), null, LocalesPaths.TIME_SECOND) || save;
@@ -254,6 +255,7 @@ public class Locales {
 		save = check(locale, toText("Не удалось начислить игровую валюту игроку " + Placeholders.PLAYER + "."), null, LocalesPaths.ECONOMY_ERROR_GIVE_MONEY) || save;
 		save = check(locale, toText("Не удалось списать игровую валюту у игрока " + Placeholders.PLAYER + "."), null, LocalesPaths.ECONOMY_ERROR_TAKE_MONEY) || save;
 
+		save = check(locale, toText("д"), null, LocalesPaths.TIME_DAYS) || save;
 		save = check(locale, toText("ч"), null, LocalesPaths.TIME_HOUR) || save;
 		save = check(locale, toText("м"), null, LocalesPaths.TIME_MINUTE) || save;
 		save = check(locale, toText("с"), null, LocalesPaths.TIME_SECOND) || save;
