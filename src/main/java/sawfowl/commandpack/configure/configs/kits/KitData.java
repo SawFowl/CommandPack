@@ -22,6 +22,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.menu.InventoryMenu;
 import org.spongepowered.api.item.inventory.menu.handler.CloseHandler;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
+import org.spongepowered.api.util.locale.Locales;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.plugin.PluginContainer;
@@ -98,12 +99,12 @@ public class KitData implements Kit {
 
 	@Override
 	public Component getLocalizedName(Locale locale) {
-		return localizedNames == null ? text(id) : text(localizedNames.getOrDefault(locale.toLanguageTag(), id));
+		return localizedNames == null ? text(id) : text(localizedNames.getOrDefault(locale.toLanguageTag(), localizedNames.getOrDefault(Locales.DEFAULT.toLanguageTag(), id)));
 	}
 
 	@Override
 	public List<Component> getLocalizedLore(Locale locale) {
-		return localizedLores == null || !localizedLores.containsKey(locale.toLanguageTag()) ? new ArrayList<>() : localizedLores.get(locale.toLanguageTag()).stream().map(s -> text(s)).collect(Collectors.toList());
+		return localizedLores == null || (!localizedLores.containsKey(locale.toLanguageTag()) && !localizedLores.containsKey(Locales.DEFAULT.toLanguageTag()))? new ArrayList<>() : localizedLores.getOrDefault(locale.toLanguageTag(), localizedLores.get(Locales.DEFAULT.toLanguageTag())).stream().map(s -> text(s)).collect(Collectors.toList());
 	}
 
 	@Override

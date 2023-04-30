@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.spongepowered.api.command.Command;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
@@ -47,7 +48,15 @@ public class SetWarp extends AbstractPlayerCommand {
 
 	@Override
 	public Parameterized build() {
-		return fastBuild();
+		return Command.builder()
+				.executionRequirements(cause -> (
+					cause.audience() instanceof ServerPlayer && cause.hasPermission(permission()))
+				)
+				.executor(this)
+				.addParameter(CommandParameters.createString("Warp", false))
+				.addParameter(CommandParameters.createBoolean("Private", false))
+				.addParameter(CommandParameters.createBoolean("Admin", Permissions.WARP_STAFF, true))
+				.build();
 	}
 
 	@Override

@@ -26,14 +26,14 @@ public interface ParameterizedPlayerCommand extends ParameterizedCommand {
 		return getSettingsMap() != null && !getSettingsMap().values().isEmpty() ? 
 				Command.builder()
 					.executionRequirements(cause -> (
-							cause.audience() instanceof ServerPlayer && cause.hasPermission(permission()))
-						)
+						cause.audience() instanceof ServerPlayer && cause.hasPermission(permission()))
+					)
 					.addParameters(getSettingsMap().values().stream().map(ParameterSettings::getParameterUnknownType).toArray(Value[]::new))
 					.executor(this) :
 				Command.builder()
 					.executionRequirements(cause -> (
-							cause.audience() instanceof ServerPlayer && cause.hasPermission(permission()))
-						)
+						cause.audience() instanceof ServerPlayer && cause.hasPermission(permission()))
+					)
 					.executor(this);
 	}
 

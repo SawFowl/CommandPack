@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
+import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.exception.CommandException;
+import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
@@ -28,14 +30,14 @@ public class Warp extends AbstractRawCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args) throws CommandException {
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		if(args.length == 0) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);
 		Optional<ServerPlayer> optTarget = cause.hasPermission(Permissions.WARP_STAFF) && args.length >= 2 ? getPlayer(args[args.length - 1]) : Optional.empty();
 		if(optTarget.isPresent()) args = Arrays.copyOf(args, args.length - 1);
-		String warpName = "";
-		for(String string : args) warpName = warpName.isEmpty() ? string : warpName + " " + string;
-		String find = warpName;
-		Optional<sawfowl.commandpack.api.data.player.Warp> optWarp = plugin.getPlayersData().getAdminWarp(warpName, predicate -> cause.hasPermission(Permissions.getWarpPermission(find)));
+		String find = "";
+		for(String string : args) find = find.isEmpty() ? string : find + " " + string;
+		String warpName = find;
+		Optional<sawfowl.commandpack.api.data.player.Warp> optWarp = plugin.getPlayersData().getAdminWarp(warpName, predicate -> cause.hasPermission(Permissions.getWarpPermission(warpName)));
 		Optional<sawfowl.commandpack.api.data.player.Warp> optPlayerWarp = plugin.getPlayersData().getWarp(warpName, warp -> (!warp.isPrivate() || cause.hasPermission(Permissions.WARP_STAFF) || (isPlayer && plugin.getPlayersData().getOrCreatePlayerData((ServerPlayer) cause.audience()).containsWarp(warp.getName()))));
 		if(!optWarp.isPresent() && !optPlayerWarp.isPresent()) exception(locale, LocalesPaths.COMMANDS_WARP_NOT_FOUND);
 		if(isPlayer) {
@@ -92,21 +94,21 @@ public class Warp extends AbstractRawCommand {
 	}
 
 	@Override
-	public List<String> complete(CommandCause cause, List<String> args, String plainArg) throws CommandException {
-		if(!plugin.getMainConfig().isAutoCompleteRawCommands() || (plugin.getPlayersData().getAdminWarps().isEmpty() && plugin.getPlayersData().getPlayersWarps().isEmpty())) return null;
+	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
+		if(!plugin.getMainConfig().isAutoCompleteRawCommands() || (plugin.getPlayersData().getAdminWarps().isEmpty() && plugin.getPlayersData().getPlayersWarps().isEmpty())) return getEmptyCompletion();
 		boolean isStaff = cause.hasPermission(Permissions.WARP_STAFF);
-		List<String> warps = plugin.getPlayersData().getAdminWarps().keySet().stream().filter(warp -> ((plainArg.isEmpty() || warp.startsWith(plainArg) || (isStaff && args.size() > 1 && warp.startsWith(plainArg.replace(" " + args.get(args.size() - 1), "")))) && (isStaff || cause.hasPermission(Permissions.getWarpPermission(warp))))).collect(Collectors.toList());
-		warps.addAll(plugin.getPlayersData().getPlayersWarps().stream().filter(warp -> (!warp.isPrivate() || isStaff)).map(sawfowl.commandpack.api.data.player.Warp::getPlainName).filter(warp -> (plainArg.isEmpty() || warp.startsWith(plainArg) || (isStaff && args.size() > 1 && warp.startsWith(plainArg.replace(" " + args.get(args.size() - 1), ""))))).collect(Collectors.toList()));
-		if(args.size() == 0) return warps;
+		List<String> warps = plugin.getPlayersData().getAdminWarps().keySet().stream().filter(warp -> ((currentInput.isEmpty() || warp.startsWith(currentInput) || (isStaff && args.size() > 1 && warp.startsWith(currentInput.replace(" " + args.get(args.size() - 1), "")))) && (isStaff || cause.hasPermission(Permissions.getWarpPermission(warp))))).collect(Collectors.toList());
+		warps.addAll(plugin.getPlayersData().getPlayersWarps().stream().filter(warp -> (!warp.isPrivate() || isStaff)).map(sawfowl.commandpack.api.data.player.Warp::getPlainName).filter(warp -> (currentInput.isEmpty() || warp.startsWith(currentInput) || (isStaff && args.size() > 1 && warp.startsWith(currentInput.replace(" " + args.get(args.size() - 1), ""))))).collect(Collectors.toList()));
+		if(args.size() == 0) return warps.stream().map(warp -> (CommandCompletion.of(warp, text("&3Warp")))).collect(Collectors.toList());
 		if(isStaff) {
 			List<String> players = Sponge.server().onlinePlayers().stream().map(ServerPlayer::name).filter(name -> (name.startsWith(args.get(args.size() - 1)))).collect(Collectors.toList());
 			if(args.size() > 1 && !players.isEmpty()) {
-				return players;
+				return players.stream().map(player -> (CommandCompletion.of(player, text("&ePlayer")))).collect(Collectors.toList());
 			} else {
-				return warps.stream().filter(warp -> (warp.startsWith(plainArg))).collect(Collectors.toList());
+				return warps.stream().filter(warp -> (warp.startsWith(currentInput))).map(warp -> (CommandCompletion.of(warp, text("&3Warp")))).collect(Collectors.toList());
 			}
 		} else {
-			return warps.stream().filter(warp -> (warp.startsWith(plainArg))).collect(Collectors.toList());
+			return warps.stream().filter(warp -> (warp.startsWith(currentInput))).map(warp -> (CommandCompletion.of(warp, text("&3Warp")))).collect(Collectors.toList());
 		}
 	}
 

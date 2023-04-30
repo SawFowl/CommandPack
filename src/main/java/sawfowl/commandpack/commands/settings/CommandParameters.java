@@ -1,20 +1,14 @@
 package sawfowl.commandpack.commands.settings;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.CommandCompletion;
-import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.command.parameter.Parameter.Value;
 import org.spongepowered.api.command.parameter.Parameter.Value.Builder;
-import org.spongepowered.api.command.parameter.managed.ValueCompleter;
 import org.spongepowered.api.command.parameter.managed.standard.ResourceKeyedValueParameters;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
-import org.spongepowered.api.item.enchantment.EnchantmentTypes;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 
@@ -48,8 +42,6 @@ public class CommandParameters {
 	public static final Value<String> REPAIR = Parameter.choices("all", "armor", "hands").optional().key("Repair").requiredPermission(Permissions.REPAIR_SELECT).build();
 
 	public static final Value<String> LOCALES = Parameter.choices(Stream.of(EnumLocales.values()).map(EnumLocales::getTag).toArray(String[]::new)).key("Locale").requiredPermission(Permissions.REPAIR_SELECT).build();
-
-	public static final Value<String> ENCHANT = Parameter.string().completer(new EnchantmentCompleter()).key("Enchant").build();
 
 	public static final Value<String> PLUGINS = Parameter.choices(Sponge.pluginManager().plugins().stream().map(p -> p.metadata().id()).toArray(String[]::new)).key("Plugin").build();
 
@@ -141,13 +133,6 @@ public class CommandParameters {
 
 	public static Value<ServerWorld> createWorld(boolean optional) {
 		return (optional ? WORLD.optional() : WORLD).build();
-	}
-
-	private static class EnchantmentCompleter implements ValueCompleter {
-		@Override
-		public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-			return EnchantmentTypes.registry().streamEntries().map(e -> (e.key().asString())).filter(k -> (currentInput.length() == 0 || k.startsWith(currentInput) || (currentInput.contains(k) && !currentInput.contains(k + " ")))).map(k -> ("\"" + k + "\"")).map(CommandCompletion::of).collect(Collectors.toList());
-		}
 	}
 
 }

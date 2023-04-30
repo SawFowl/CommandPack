@@ -227,6 +227,7 @@ public class Locales {
 		save = check(locale, toText("&cThere are no kits created."), null, LocalesPaths.COMMANDS_KITS_NO_KITS) || save;
 		save = check(locale, toText("&cThe time is not correct. Specify the duration in ISO time format."), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_INCORRECT_TIME) || save;
 		save = check(locale, toText("&aThe time to restore access to the kit &e" + Placeholders.VALUE + "&a is set."), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS) || save;
+		save = check(locale, toText("&aThe localized kit name is set."), null, LocalesPaths.COMMANDS_KITS_SET_NAME) || save;
 
 		if(save) save(locale);
 	}
@@ -401,6 +402,7 @@ public class Locales {
 		save = check(locale, toText("&cНет ни одного созданного набора."), null, LocalesPaths.COMMANDS_KITS_NO_KITS) || save;
 		save = check(locale, toText("&cВремя указанно не корректно. Нужно указать время в формате ISO."), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_INCORRECT_TIME) || save;
 		save = check(locale, toText("&aУстановленно время восстановления доступа к набору &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS) || save;
+		save = check(locale, toText("&aЛокализованное имя набора установленно."), null, LocalesPaths.COMMANDS_KITS_SET_NAME) || save;
 
 		if(save) save(locale);
 	}

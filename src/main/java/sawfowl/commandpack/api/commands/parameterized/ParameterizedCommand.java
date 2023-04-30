@@ -38,9 +38,9 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 	default CommandResult execute(CommandContext context) throws CommandException {
 		boolean isPlayer = context.cause().audience() instanceof ServerPlayer;
 		Locale locale = getLocale(context.cause());
-		if(getSettingsMap() != null && !getSettingsMap().isEmpty()) for(ParameterSettings settings : getSettingsMap().values()) {
-			if(!settings.containsIn(context)) if(!settings.isOptional() || (!isPlayer && !settings.isOptionalForConsole())) exception(locale, settings.getPath());
-		}
+		if(getSettingsMap() != null && !getSettingsMap().isEmpty()) 
+			for(ParameterSettings settings : getSettingsMap().values())
+				if(!settings.containsIn(context) && (!settings.isOptional() || (!isPlayer && !settings.isOptionalForConsole()))) exception(locale, settings.getPath());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) context.cause().audience();
 			if(getCommandSettings() != null && getCooldowns() != null) {

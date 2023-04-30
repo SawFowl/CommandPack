@@ -217,5 +217,6 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_KITS_NO_KITS = {PATH_COMMANDS, COMMAND_KITS, "NoKits"};
 	public static final Object[] COMMANDS_KITS_COOLDOWN_INCORRECT_TIME = {PATH_COMMANDS, COMMAND_KITS, "Cooldown", PATH_EXCEPTIONS, "IncorrectTime"};
 	public static final Object[] COMMANDS_KITS_COOLDOWN_SUCCESS = {PATH_COMMANDS, COMMAND_KITS, "Cooldown", "Success"};
+	public static final Object[] COMMANDS_KITS_SET_NAME = {PATH_COMMANDS, COMMAND_KITS, "SetName"};
 
 }
