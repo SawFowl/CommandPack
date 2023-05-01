@@ -10,6 +10,7 @@ import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.kits.KitPrice;
 import sawfowl.localeapi.api.TextUtils;
@@ -49,6 +50,11 @@ public class KitPriceData implements KitPrice {
 	@Override
 	public BigDecimal getMoney() {
 		return BigDecimal.valueOf(money);
+	}
+
+	@Override
+	public Component asComponent() {
+		return getCurrency().symbol().append(Component.text(money));
 	}
 
 	class Builder implements KitPrice.Builder {

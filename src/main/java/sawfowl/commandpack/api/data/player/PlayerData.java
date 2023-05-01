@@ -11,6 +11,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import net.kyori.adventure.text.Component;
+import sawfowl.commandpack.api.data.kits.Kit;
 
 /**
  * This interface allows you to view and change plugin data for a particular player.
@@ -133,6 +134,12 @@ public interface PlayerData {
 	 * Sending a message to a player if he is online.
 	 */
 	void sendMessage(String string);
+
+	GivedKit getKitGivedData(Kit kit);
+
+	boolean isGivedKit(Kit kit);
+
+	long getKitGivedTime(Kit kit);
 
 	PlayerData save();
 

@@ -14,13 +14,13 @@ public interface KitGiveEvent extends Event {
 
 	Kit kit();
 
+	long getNextAllowedAccess();
+
 	interface Pre extends KitGiveEvent, Cancellable {
 
 		long getCurrentTime();
 
 		long getPreviousGiveTime();
-
-		long getNextAllowedAccess();
 
 		GiveRule getGiveRule();
 

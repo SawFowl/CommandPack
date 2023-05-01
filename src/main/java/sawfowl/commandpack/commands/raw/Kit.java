@@ -1,0 +1,471 @@
+package sawfowl.commandpack.commands.raw;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandCause;
+import org.spongepowered.api.command.CommandCompletion;
+import org.spongepowered.api.command.exception.CommandException;
+import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
+import org.spongepowered.api.data.Keys;
+import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.Item;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.event.Cause;
+import org.spongepowered.api.event.CauseStackManager.StackFrame;
+import org.spongepowered.api.event.EventContext;
+import org.spongepowered.api.event.EventContextKeys;
+import org.spongepowered.api.event.cause.entity.SpawnTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
+import org.spongepowered.api.service.permission.Subject;
+
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+
+import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.kits.GiveRule;
+import sawfowl.commandpack.api.data.player.Backpack;
+import sawfowl.commandpack.api.events.KitGiveEvent;
+import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
+import sawfowl.commandpack.configure.Placeholders;
+import sawfowl.commandpack.configure.configs.player.GivedKitData;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
+
+import sawfowl.localeapi.api.TextUtils;
+
+public class Kit extends AbstractRawCommand {
+
+	public Kit(CommandPack plugin) {
+		super(plugin);
+	}
+
+	@Override
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
+		if(plugin.getKitService().getKits().isEmpty()) exception(locale, LocalesPaths.COMMANDS_KIT_NO_KITS);
+		Optional<sawfowl.commandpack.api.data.kits.Kit> optKit = getKit(args);
+		if(!optKit.isPresent()) {
+			sendKitsList(cause, audience, locale, isPlayer);
+			return;
+		}
+		sawfowl.commandpack.api.data.kits.Kit kit = optKit.get();
+		if(isPlayer) {
+			ServerPlayer src = (ServerPlayer) audience;
+			if(kit.isNeedPerm() && !src.hasPermission(kit.permission()) && !src.hasPermission(Permissions.KIT_STAFF)) {
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_NO_PERM));
+				return;
+			}
+			ServerPlayer target = getPlayer(cause, args).orElse(src);
+			sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(target);
+			long currentTime = Duration.ofMillis(System.currentTimeMillis()).getSeconds();
+			long nextTime = data.getKitGivedTime(kit) + kit.getCooldown() < currentTime ? currentTime + kit.getCooldown() : data.getKitGivedTime(kit) + kit.getCooldown();
+			boolean allowLimit = kit.isUnlimited() || !data.isGivedKit(kit) || data.getKitGivedData(kit).getGivedCount() < kit.getGiveLimit();
+			boolean economyCancelGive = !src.hasPermission(Permissions.KIT_STAFF) && kit.getKitPrice().isPresent() && !plugin.getEconomy().checkPlayerBalance(target.uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
+			KitGiveEvent.Pre eventPre = createPreEvent(cause, audience, kit, target, nextTime, data.getKitGivedTime(kit), (kit.isNeedPerm() && !src.hasPermission(kit.permission())) || !allowLimit || economyCancelGive || data.getKitGivedTime(kit) + kit.getCooldown() > currentTime);
+			Sponge.eventManager().post(eventPre);
+			if(eventPre.isCancelled()) {
+				if(data.getKitGivedTime(kit) + kit.getCooldown() > currentTime) {
+					src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_WAIT), Placeholders.VALUE, timeFormat((data.getKitGivedTime(kit) + kit.getCooldown()) - currentTime, locale)));
+					return;
+				}
+				if(!allowLimit) {
+					src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT));
+					return;
+				}
+				if(economyCancelGive) {
+					src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_NO_MONEY), Placeholders.VALUE, kit.getKitPrice().get().asComponent()));
+					return;
+				}
+				return;
+			}
+			if(!src.hasPermission(Permissions.KIT_STAFF) && kit.getKitPrice().isPresent() && plugin.getEconomy().checkPlayerBalance(src.uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney())) {
+				plugin.getEconomy().removeFromPlayerBalance(src, kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
+			}
+			giveKit(cause, audience, locale, target, data, kit, true, currentTime, !src.uniqueId().equals(target.uniqueId()));
+		} else {
+			Optional<ServerPlayer> optTarget = getPlayer(cause, args);
+			if(!optTarget.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
+			ServerPlayer target = optTarget.get();
+			sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(target);
+			long currentTime = Duration.ofMillis(System.currentTimeMillis()).getSeconds();
+			long nextTime = data.getKitGivedTime(kit) + kit.getCooldown() < currentTime ? currentTime + kit.getCooldown() : data.getKitGivedTime(kit) + kit.getCooldown();
+			KitGiveEvent.Pre eventPre = createPreEvent(cause, audience, kit, target, nextTime, data.getKitGivedTime(kit), false);
+			Sponge.eventManager().post(eventPre);
+			if(eventPre.isCancelled()) return;
+			giveKit(cause, audience, locale, target, data, kit, true, currentTime, true);
+		}
+	}
+
+	@Override
+	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
+		if(args.size() == 0) return plugin.getKitService().getKits().stream().filter(kit -> (!kit.isNeedPerm() || cause.hasPermission(Permissions.KIT_STAFF) || cause.hasPermission(kit.permission()))).map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
+		if(args.size() == 1 && !currentInput.endsWith(" ")) return plugin.getKitService().getKits().stream().filter(kit -> (kit.id().startsWith(args.get(0)) && (!kit.isNeedPerm() || cause.hasPermission(Permissions.KIT_STAFF) || cause.hasPermission(kit.permission())))).map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
+		if(!cause.hasPermission(Permissions.KIT_STAFF)) return getEmptyCompletion();
+		if(args.size() == 1 && currentInput.endsWith(" ")) return Sponge.server().onlinePlayers().stream().map(player -> CommandCompletion.of(player.name())).collect(Collectors.toList());
+		if(args.size() == 2 && !currentInput.endsWith(" ")) return Sponge.server().onlinePlayers().stream().filter(player -> (player.name().startsWith(args.get(1)))).map(player -> CommandCompletion.of(player.name())).collect(Collectors.toList());
+		return getEmptyCompletion();
+	}
+
+	@Override
+	public Component shortDescription(Locale locale) {
+		return text("&3The command for giving the kit.");
+	}
+
+	@Override
+	public Component extendedDescription(Locale locale) {
+		return text("&3The command for giving the kit.");
+	}
+
+	@Override
+	public String permission() {
+		return Permissions.KIT;
+	}
+
+	@Override
+	public String command() {
+		return "kit";
+	}
+
+	@Override
+	public Component usage(CommandCause cause) {
+		return text("&c/kit <Kit> [Player]");
+	}
+
+	protected Optional<sawfowl.commandpack.api.data.kits.Kit> getKit(String[] args) {
+		return args.length == 0 ? Optional.empty() : plugin.getKitService().getKit(args[0]);
+	}
+
+	protected Optional<ServerPlayer> getPlayer(CommandCause cause, String[] args) {
+		return args.length < 2 || !cause.hasPermission(Permissions.KIT_STAFF) ? Optional.empty() : Sponge.server().player(args[1]);
+	}
+
+	private void sendKitsList(CommandCause cause, Audience audience, Locale locale, boolean isPlayer) {
+		if(isPlayer) {
+			ServerPlayer player = (ServerPlayer) audience;
+			List<Component> kits = new ArrayList<>();
+			Component header = getText(locale, LocalesPaths.COMMANDS_KIT_LIST_HEADER);
+			plugin.getKitService().getKits().forEach(kit -> {
+				Component access = !kit.isNeedPerm() || (player.hasPermission(kit.permission()) || player.hasPermission(Permissions.KIT_STAFF)) ? text(" &7[&a+&7] ") : text(" &7[&c-&7] ");
+				kits.add(TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_KIT_VIEW), () -> {
+							kit.asMenu(getContainer(), player, true).open(player);
+						}
+					)
+					.append(TextUtils.createCallBack(access, () -> {
+								if(kit.isNeedPerm() && !player.hasPermission(kit.permission()) && !player.hasPermission(Permissions.KIT_STAFF)) {
+									player.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_NO_PERM));
+									return;
+								}
+								sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(player);
+								long currentTime = Duration.ofMillis(System.currentTimeMillis()).getSeconds();
+								long nextTime = data.getKitGivedTime(kit) + kit.getCooldown() < currentTime ? currentTime + kit.getCooldown() : data.getKitGivedTime(kit) + kit.getCooldown();
+								boolean allowLimit = kit.isUnlimited() || !data.isGivedKit(kit) || data.getKitGivedData(kit).getGivedCount() < kit.getGiveLimit();
+								boolean economyCancelGive = kit.getKitPrice().isPresent() && ! plugin.getEconomy().checkPlayerBalance(player.uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
+								KitGiveEvent.Pre eventPre = createPreEvent(cause, audience, kit, player, nextTime, data.getKitGivedTime(kit), (kit.isNeedPerm() && !player.hasPermission(kit.permission())) || !allowLimit || economyCancelGive || data.getKitGivedTime(kit) + kit.getCooldown() > currentTime);
+								Sponge.eventManager().post(eventPre);
+								if(eventPre.isCancelled()) {
+									if(data.getKitGivedTime(kit) + kit.getCooldown() > currentTime) {
+										player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_WAIT), Placeholders.VALUE, timeFormat((data.getKitGivedTime(kit) + kit.getCooldown()) - currentTime, locale)));
+										return;
+									}
+									if(!allowLimit) {
+										player.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT));
+										return;
+									}
+									if(economyCancelGive) {
+										player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_NO_MONEY), Placeholders.VALUE, kit.getKitPrice().get().asComponent()));
+										return;
+									}
+									return;
+								}
+								if(kit.getKitPrice().isPresent() && plugin.getEconomy().checkPlayerBalance(player.uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney())) {
+									plugin.getEconomy().removeFromPlayerBalance(player, kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
+								}
+								giveKit(cause, audience, locale, player, data, kit, true, currentTime, false);
+							}
+						)
+						.append(kit.getLocalizedName(locale))
+					)
+				);
+			});
+			sendPaginationList(player, header, Component.text("=").color(header.color()), 15, kits);
+		} else {
+			int size = plugin.getKitService().getKits().size();
+			Component kits = getText(locale, LocalesPaths.COMMANDS_KIT_LIST_HEADER).append(text("&f: "));
+			for(sawfowl.commandpack.api.data.kits.Kit kit : plugin.getKitService().getKits()) {
+				kits = kits.append(text("&e" + kit.id()));
+				if(size > 1) {
+					kits = kits.append(text("&f, "));
+				} else kits = kits.append(text("&f."));
+				size--;
+			}
+			audience.sendMessage(kits);
+		}
+	}
+
+	private void giveKit(CommandCause cause, Audience audience, Locale locale, ServerPlayer player, sawfowl.commandpack.configure.configs.player.PlayerData data, sawfowl.commandpack.api.data.kits.Kit kit, boolean equals, long currentTime, boolean ignoreRules) {
+		if(ignoreRules) {
+			List<ItemStack> toGive = new ArrayList<>();
+			List<ItemStack> toSpawn = new ArrayList<>();
+			int emptySlots = player.inventory().primary().freeCapacity();
+			for(ItemStack item : kit.getContent()) {
+				if(emptySlots > 0) {
+					toGive.add(item);
+				} else toSpawn.add(item);
+				emptySlots--;
+			}
+			player.inventory().primary().offer(toGive.toArray(new ItemStack[] {}));
+			spawnItems(toSpawn, player);
+			runCommands(player, kit);
+			return;
+		}
+		ItemStack[] items = kit.getContent().toArray(new ItemStack[] {});
+		InventoryTransactionResult result = null;
+		boolean gived = false;
+		if(player.inventory().primary().freeCapacity() < items.length) {
+			switch (kit.getGiveRule()) {
+			case IGNORE_FULL_INVENTORY:
+				player.inventory().primary().offer(items); gived = true;
+				break;
+			case MESSAGE_IF_INVENTORY_FULL:
+				player.sendMessage(TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_KIT_INVENTORY_FULL), () -> {
+					List<ItemStack> toGive = new ArrayList<>();
+					List<ItemStack> toSpawn = new ArrayList<>();
+					int emptySlots = player.inventory().primary().freeCapacity();
+					for(ItemStack item : kit.getContent()) {
+						if(emptySlots > 0) {
+							toGive.add(item);
+						} else toSpawn.add(item);
+						emptySlots--;
+					}
+					long current = Duration.ofMillis(System.currentTimeMillis()).getSeconds();
+					boolean allowLimit = kit.isUnlimited() || !data.isGivedKit(kit) || data.getKitGivedData(kit).getGivedCount() < kit.getGiveLimit();
+					boolean economyCancelGive = kit.getKitPrice().isPresent() && ! plugin.getEconomy().checkPlayerBalance(player.uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
+					KitGiveEvent.Pre eventPre = createPreEvent(cause, audience, kit, player, currentTime + kit.getCooldown(), data.getKitGivedTime(kit), (kit.isNeedPerm() && !player.hasPermission(kit.permission())) || !allowLimit || economyCancelGive || data.getKitGivedTime(kit) + kit.getCooldown() > current);
+					Sponge.eventManager().post(eventPre);
+					if(eventPre.isCancelled()) {
+						if(data.getKitGivedTime(kit) + kit.getCooldown() > currentTime) {
+							audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_WAIT), Placeholders.VALUE, timeFormat((data.getKitGivedTime(kit) + kit.getCooldown()) - current, locale)));
+							return;
+						}
+						if(!allowLimit) {
+							audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT));
+							return;
+						}
+						if(economyCancelGive) {
+							player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_NO_MONEY), Placeholders.VALUE, kit.getKitPrice().get().asComponent()));
+							return;
+						}
+						return;
+					}
+					if(kit.getKitPrice().isPresent() && plugin.getEconomy().checkPlayerBalance(player.uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney())) {
+						plugin.getEconomy().removeFromPlayerBalance(player, kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
+					}
+					InventoryTransactionResult r = player.inventory().primary().offer(toGive.toArray(new ItemStack[] {}));
+					spawnItems(toSpawn, player);
+					if(data.givedKits().containsKey(kit.id())) {
+						GivedKitData kitData = data.givedKits().get(kit.id());
+						kitData.setLastGivedTime(currentTime);
+						kitData.setGivedCount(kitData.getGivedCount() + 1);
+					} else data.givedKits().put(kit.id(), new GivedKitData(currentTime, 1));
+					Sponge.eventManager().post(createPostEvent(audience, kit, player, true, r, currentTime + kit.getCooldown()));
+					data.save();
+					return;
+				}));
+				return;
+			case USE_BACKPACK:
+				List<ItemStack> toGive = new ArrayList<>();
+				List<ItemStack> toBackPack = new ArrayList<>();
+				List<ItemStack> toSpawn = new ArrayList<>();
+				int emptySlots = player.inventory().primary().freeCapacity();
+				int backPackslots = 53 - data.getBackpack().size();
+				for(ItemStack item : kit.getContent()) {
+					if(emptySlots > 0) {
+						toGive.add(item);
+					} else if(backPackslots > 0) {
+						toBackPack.add(item);
+					} else toSpawn.add(item);
+					emptySlots--;
+				}
+				result = player.inventory().primary().offer(toGive.toArray(new ItemStack[] {}));
+				toBackPack.forEach(item -> {
+					addToBackPack(data.getBackpack(), item);
+				});
+				data.save();
+				spawnItems(toSpawn, player);
+				break;
+			case USE_ENDECHEST:
+				List<ItemStack> toGive1 = new ArrayList<>();
+				List<ItemStack> toEnderChest = new ArrayList<>();
+				List<ItemStack> toSpawn1 = new ArrayList<>();
+				int emptySlots1 = player.inventory().primary().freeCapacity();
+				int emptySlotsEnderchest = 53 - player.enderChestInventory().freeCapacity();
+				for(ItemStack item : kit.getContent()) {
+					if(emptySlots1 > 0) {
+						toGive1.add(item);
+					} else if(emptySlotsEnderchest > 0) {
+						toEnderChest.add(item);
+					} else toSpawn1.add(item);
+					emptySlots1--;
+				}
+				result = player.inventory().primary().offer(toGive1.toArray(new ItemStack[] {}));
+				player.enderChestInventory().offer(toEnderChest.toArray(new ItemStack[] {}));
+				spawnItems(toSpawn1, player);
+				break;
+			default:
+				List<ItemStack> toGive2 = new ArrayList<>();
+				List<ItemStack> toSpawn2 = new ArrayList<>();
+				int emptySlots2 = player.inventory().primary().freeCapacity();
+				for(ItemStack item : kit.getContent()) {
+					if(emptySlots2 > 0) {
+						toGive2.add(item);
+					} else toSpawn2.add(item);
+					emptySlots2--;
+				}
+				result = player.inventory().primary().offer(toGive2.toArray(new ItemStack[] {}));
+				spawnItems(toSpawn2, player);
+				break;
+			}
+		} else result = player.inventory().primary().offer(items); gived = true;
+		if(data.givedKits().containsKey(kit.id())) {
+			GivedKitData kitData = data.givedKits().get(kit.id());
+			kitData.setLastGivedTime(currentTime);
+			kitData.setGivedCount(kitData.getGivedCount() + 1);
+			data.givedKits().remove(kit.id());
+			data.givedKits().put(kit.id(), kitData);
+		} else data.givedKits().put(kit.id(), new GivedKitData(currentTime, 1));
+		data.save();
+		runCommands(player, kit);
+		Sponge.eventManager().post(createPostEvent(audience, kit, player, gived, result, currentTime + kit.getCooldown()));
+	}
+
+	private void runCommands(ServerPlayer player, sawfowl.commandpack.api.data.kits.Kit kit) {
+		kit.getExecuteCommands().ifPresent(commands -> {
+		if(!commands.isEmpty()) commands.forEach(command -> {
+				try {
+					Sponge.server().commandManager().process(Sponge.systemSubject(), player, command.replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
+				} catch (CommandException e) {
+					Sponge.systemSubject().sendMessage(e.componentMessage());
+				}
+			});
+		});
+	}
+
+	private void addToBackPack(Backpack backpack, ItemStack itemStack) {
+		for(int i = 0; i <= 53; i++) {
+			if(!backpack.getSlots().contains(i)) {
+				backpack.addItem(i, itemStack);
+				break;
+			}
+		}
+	}
+
+	private void spawnItems(List<ItemStack> items, ServerPlayer player) {
+		if(items.isEmpty()) return;
+		List<Item> itemsSpawn = new ArrayList<>();
+		items.forEach(i -> {
+			Item item = player.world().createEntity(EntityTypes.ITEM.get(), player.blockPosition());
+			item.offer(Keys.ITEM_STACK_SNAPSHOT, i.createSnapshot());
+			itemsSpawn.add(item);
+		});
+		try(StackFrame frame = Sponge.server().causeStackManager().pushCauseFrame()) {
+			frame.addContext(EventContextKeys.SPAWN_TYPE, SpawnTypes.DROPPED_ITEM);
+			player.world().spawnEntities(itemsSpawn);
+		}
+	}
+
+	private KitGiveEvent.Pre createPreEvent(CommandCause commandCause, Audience source, sawfowl.commandpack.api.data.kits.Kit kit, ServerPlayer player, long nextGiveTime, long reviousGiveTime, boolean cancel) {
+		Cause cause = Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, getContainer()).add(EventContextKeys.AUDIENCE, source).add(EventContextKeys.SUBJECT, source instanceof Subject ? (Subject) source : Sponge.systemSubject()).build(), source);
+		return new KitGiveEvent.Pre() {
+
+			boolean cancelled = !commandCause.hasPermission(Permissions.KIT_STAFF) && cancel;
+
+			@Override
+			public Cause cause() {
+				return cause;
+			}
+
+			@Override
+			public sawfowl.commandpack.api.data.kits.Kit kit() {
+				return kit;
+			}
+
+			@Override
+			public ServerPlayer getPlayer() {
+				return player;
+			}
+
+			@Override
+			public boolean isCancelled() {
+				return cancelled;
+			}
+
+			@Override
+			public void setCancelled(boolean cancel) {
+				cancelled = cancel;
+			}
+
+			@Override
+			public long getCurrentTime() {
+				return Duration.ofMillis(System.currentTimeMillis()).getSeconds();
+			}
+
+			@Override
+			public long getPreviousGiveTime() {
+				return reviousGiveTime;
+			}
+
+			@Override
+			public long getNextAllowedAccess() {
+				return nextGiveTime;
+			}
+
+			@Override
+			public GiveRule getGiveRule() {
+				return kit.getGiveRule();
+			}
+		};
+	}
+
+	private KitGiveEvent.Post createPostEvent(Audience source, sawfowl.commandpack.api.data.kits.Kit kit, ServerPlayer player, boolean isGived, InventoryTransactionResult result, long nextGiveTime) {
+		Cause cause = Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, getContainer()).add(EventContextKeys.AUDIENCE, source).add(EventContextKeys.SUBJECT, source instanceof Subject ? (Subject) source : Sponge.systemSubject()).build(), source);
+		return new KitGiveEvent.Post() {
+			
+			@Override
+			public Cause cause() {
+				return cause;
+			}
+			
+			@Override
+			public sawfowl.commandpack.api.data.kits.Kit kit() {
+				return kit;
+			}
+			
+			@Override
+			public ServerPlayer getPlayer() {
+				return player;
+			}
+			
+			@Override
+			public boolean isGived() {
+				return isGived;
+			}
+			
+			@Override
+			public InventoryTransactionResult getResult() {
+				return result;
+			}
+
+			@Override
+			public long getNextAllowedAccess() {
+				return nextGiveTime;
+			}
+		};
+	}
+
+}

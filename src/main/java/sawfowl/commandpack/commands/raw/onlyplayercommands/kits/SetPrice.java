@@ -46,7 +46,7 @@ public class SetPrice extends AbstractKitsEditCommand {
 	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
 		if(args.size() == 0) return plugin.getKitService().getKits().stream().map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
 		if(args.size() == 1 && !currentInput.endsWith(" ")) return plugin.getKitService().getKits().stream().filter(kit -> (kit.id().startsWith(args.get(0)))).map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
-		if(args.size() == 1 && currentInput.endsWith(" ")) return plugin.getEconomy().getCurrencies().stream().map(currency -> CommandCompletion.of(TextUtils.clearDecorations(currency.symbol() + " "))).collect(Collectors.toList());
+		if(plugin.getEconomy().isPresent() && args.size() == 1 && currentInput.endsWith(" ")) return plugin.getEconomy().getCurrencies().stream().map(currency -> CommandCompletion.of(TextUtils.clearDecorations(TextUtils.serializeLegacy(currency.symbol()) + " "))).collect(Collectors.toList());
 		return getEmptyCompletion();
 	}
 

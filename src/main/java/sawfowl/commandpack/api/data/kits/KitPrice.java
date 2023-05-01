@@ -7,6 +7,7 @@ import org.spongepowered.api.data.persistence.DataSerializable;
 import org.spongepowered.api.service.economy.Currency;
 
 import net.kyori.adventure.builder.AbstractBuilder;
+import net.kyori.adventure.text.Component;
 
 public interface KitPrice extends DataSerializable {
 
@@ -17,6 +18,8 @@ public interface KitPrice extends DataSerializable {
 	Currency getCurrency();
 
 	BigDecimal getMoney();
+
+	Component asComponent();
 
 	interface Builder extends AbstractBuilder<KitPrice>, org.spongepowered.api.util.Builder<KitPrice, Builder> {
 

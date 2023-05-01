@@ -49,8 +49,9 @@ public class LocalesPaths {
 	private static final Object COMMAND_ITEM = "Item";
 	private static final Object COMMAND_SERVERSTAT = "ServerStat";
 	private static final Object COMMAND_KITS = "Kits";
+	private static final Object COMMAND_KIT = "Kit";
 
-	public static final Object[] TIME_DAYS = {PATH_TIME, "Hour"};
+	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
 	public static final Object[] TIME_MINUTE = {PATH_TIME, "Minute"};
 	public static final Object[] TIME_SECOND = {PATH_TIME, "Second"};
@@ -234,5 +235,13 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_KITS_COMMANDS_EMPTY = {PATH_COMMANDS, COMMAND_KITS, "CommandsEmpty"};
 	public static final Object[] COMMANDS_KITS_COMMANDS_HEADER = {PATH_COMMANDS, COMMAND_KITS, "CommandsHeader"};
 	public static final Object[] COMMANDS_KITS_SET_PRICE = {PATH_COMMANDS, COMMAND_KITS, "SetPrice"};
+	public static final Object[] COMMANDS_KIT_LIST_HEADER = {PATH_COMMANDS, COMMAND_KIT, "ListHeader"};
+	public static final Object[] COMMANDS_KIT_VIEW = {PATH_COMMANDS, COMMAND_KIT, "View"};
+	public static final Object[] COMMANDS_KIT_NO_KITS = {PATH_COMMANDS, COMMAND_KIT, "NoKits"};
+	public static final Object[] COMMANDS_KIT_NO_PERM = {PATH_COMMANDS, COMMAND_KIT, "NoPerm"};
+	public static final Object[] COMMANDS_KIT_WAIT = {PATH_COMMANDS, COMMAND_KIT, "Wait"};
+	public static final Object[] COMMANDS_KIT_INVENTORY_FULL = {PATH_COMMANDS, COMMAND_KIT, "InventoryFull"};
+	public static final Object[] COMMANDS_KIT_GIVE_LIMIT = {PATH_COMMANDS, COMMAND_KIT, "GiveLimit"};
+	public static final Object[] COMMANDS_KIT_NO_MONEY = {PATH_COMMANDS, COMMAND_KIT, "NoMoney"};
 
 }

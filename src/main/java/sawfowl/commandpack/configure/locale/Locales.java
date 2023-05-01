@@ -244,6 +244,14 @@ public class Locales {
 		save = check(locale, toText("&aThe kit does not contain any commands."), null, LocalesPaths.COMMANDS_KITS_COMMANDS_EMPTY) || save;
 		save = check(locale, toText("&3&lCommands"), null, LocalesPaths.COMMANDS_KITS_COMMANDS_HEADER) || save;
 		save = check(locale, toText("&aA new price has been set to get a kit."), null, LocalesPaths.COMMANDS_KITS_SET_PRICE) || save;
+		save = check(locale, toText("&3Kits"), null, LocalesPaths.COMMANDS_KIT_LIST_HEADER) || save;
+		save = check(locale, toText("&7<&b&l⊙&7>&f⏊&7<&b&l⊙&7>"), null, LocalesPaths.COMMANDS_KIT_VIEW) || save;
+		save = check(locale, toText("&cThere are no kits created."), null, LocalesPaths.COMMANDS_KIT_NO_KITS) || save;
+		save = check(locale, toText("&cYou don't have permission to get this kit."), null, LocalesPaths.COMMANDS_KIT_NO_PERM) || save;
+		save = check(locale, toText("&cYou will have to wait &e" + Placeholders.VALUE + "&c before you can get this kit."), null, LocalesPaths.COMMANDS_KIT_WAIT) || save;
+		save = check(locale, toText("&eThere is not enough free space in your inventory. Are you sure you want this kit? Some of the items will fall to the ground. Click on this message to confirm."), null, LocalesPaths.COMMANDS_KIT_INVENTORY_FULL) || save;
+		save = check(locale, toText("&cYou have reached the limit for getting this kit."), null, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT) || save;
+		save = check(locale, toText("&cYou don't have enough money to buy this kit. You need at least  &e" + Placeholders.VALUE + "&c."), null, LocalesPaths.COMMANDS_KIT_NO_MONEY) || save;
 
 		if(save) save(locale);
 	}
@@ -435,6 +443,14 @@ public class Locales {
 		save = check(locale, toText("&aНабор не содержит команд."), null, LocalesPaths.COMMANDS_KITS_COMMANDS_EMPTY) || save;
 		save = check(locale, toText("&3&lКоманды"), null, LocalesPaths.COMMANDS_KITS_COMMANDS_HEADER) || save;
 		save = check(locale, toText("&aУстановлена новая цена для получения набора."), null, LocalesPaths.COMMANDS_KITS_SET_PRICE) || save;
+		save = check(locale, toText("&3Наборы"), null, LocalesPaths.COMMANDS_KIT_LIST_HEADER) || save;
+		save = check(locale, toText("&7<&b&l⊙&7>&f⏊&7<&b&l⊙&7>"), null, LocalesPaths.COMMANDS_KIT_VIEW) || save;
+		save = check(locale, toText("&cНет ни одного созданного набора."), null, LocalesPaths.COMMANDS_KIT_NO_KITS) || save;
+		save = check(locale, toText("&cУ вас нет разрешения на получение этого набора."), null, LocalesPaths.COMMANDS_KIT_NO_PERM) || save;
+		save = check(locale, toText("&cВы должны подождать &e" + Placeholders.VALUE + "&c прежде чем сможете получить этот набор."), null, LocalesPaths.COMMANDS_KIT_WAIT) || save;
+		save = check(locale, toText("&eВ вашем инвентаре недостаточно места. Вы точно хотите получить этот набор? Часть предметов выпадут на землю. Кликните на это сообщение для подтверждения."), null, LocalesPaths.COMMANDS_KIT_INVENTORY_FULL) || save;
+		save = check(locale, toText("&cВы исчерпали лимит получения данного набора."), null, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT) || save;
+		save = check(locale, toText("&cУ вас недостаточно денег для покупки этого набора. Необходимо как минимум &e" + Placeholders.VALUE + "&c."), null, LocalesPaths.COMMANDS_KIT_NO_MONEY) || save;
 
 		if(save) save(locale);
 	}

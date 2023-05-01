@@ -21,7 +21,9 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.player.Home;
+import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.player.Backpack;
+import sawfowl.commandpack.api.data.player.GivedKit;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -54,7 +56,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	@Setting("Backpack")
 	private BackpackData backpackData = new BackpackData();
 	@Setting("GivedKits")
-	private Map<String, Long> givedKits = new HashMap<>();
+	private Map<String, GivedKitData> givedKits = new HashMap<>();
 
 	@Override
 	public String getName() {
@@ -202,7 +204,22 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 		return list;
 	}
 
-	public Map<String, Long> givedKits() {
+	@Override
+	public long getKitGivedTime(Kit kit) {
+		return givedKits.containsKey(kit.id()) ? givedKits.get(kit.id()).getLastGivedTime() : 0l;
+	}
+
+	@Override
+	public boolean isGivedKit(Kit kit) {
+		return givedKits.containsKey(kit.id());
+	}
+
+	@Override
+	public GivedKit getKitGivedData(Kit kit) {
+		return givedKits.containsKey(kit.id()) ? givedKits.get(kit.id()) : null;
+	}
+
+	public Map<String, GivedKitData> givedKits() {
 		return givedKits;
 	}
 
@@ -223,11 +240,6 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 		if(getPlayer().isPresent() && !getPlayer().get().name().equals(name)) name = getPlayer().get().name();
 		((CommandPack) Sponge.pluginManager().plugin("commandpack").get().instance()).getConfigManager().savePlayerData(this);
 		return this;
-	}
-
-	@Override
-	public String toString() {
-		return "PlayerData [name=" + name + ", uuid=" + uuid + ", homes=" + homes + "]";
 	}
 
 }

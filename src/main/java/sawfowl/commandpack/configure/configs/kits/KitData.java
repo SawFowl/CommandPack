@@ -57,7 +57,7 @@ public class KitData implements Kit {
 	@Setting("Items")
 	private List<SerializedItemStack> items = new ArrayList<>();
 	@Setting("GiveRule")
-	private String giveRule;
+	private String giveRule = GiveRule.DROP.getName();
 	@Setting("Cooldown")
 	private long cooldown = 0;
 	@Setting("GiveLimit")
