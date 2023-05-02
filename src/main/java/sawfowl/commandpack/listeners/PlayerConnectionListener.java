@@ -40,6 +40,7 @@ public class PlayerConnectionListener {
 				event.player().setRotation(rotation.asVector3d());
 			});
 		}
+		plugin.getPlayersData().getTempData().updateLastActivity(event.player());
 		if(plugin.getKitService().getKits().isEmpty()) return;
 		plugin.getKitService().getKits().stream().filter(kit -> kit.isFirstTime() || kit.isGiveOnJoin()).forEach(kit -> {
 			giveKit(event.player(), kit);

@@ -3,6 +3,7 @@ package sawfowl.commandpack;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -65,6 +66,10 @@ import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.listeners.CommandLogListener;
 import sawfowl.commandpack.listeners.PlayerCommandListener;
 import sawfowl.commandpack.listeners.PlayerConnectionListener;
+import sawfowl.commandpack.listeners.PlayerInteractBlockListener;
+import sawfowl.commandpack.listeners.PlayerInteractEntityListener;
+import sawfowl.commandpack.listeners.PlayerInteractItemListener;
+import sawfowl.commandpack.listeners.PlayerInventoryListener;
 import sawfowl.commandpack.listeners.PlayerMoveListener;
 import sawfowl.commandpack.listeners.PlayerRespawnListener;
 import sawfowl.commandpack.utils.Economy;
@@ -182,8 +187,12 @@ public class CommandPack {
 		economy = new Economy(instance);
 		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerCommandListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerConnectionListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractBlockListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractEntityListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractItemListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInventoryListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerRespawnListener(instance));
 		configManager.loadKits();
 		sawfowl.commandpack.api.CommandPack api = new sawfowl.commandpack.api.CommandPack() {
@@ -246,6 +255,16 @@ public class CommandPack {
 			tps1m.put(currentTime, Sponge.server().ticksPerSecond());
 			tps5m.put(currentTime, Sponge.server().ticksPerSecond());
 			tps10m.put(currentTime, Sponge.server().ticksPerSecond());
+			Sponge.server().onlinePlayers().forEach(player -> {
+				if(getPlayersData().getTempData().isAfk(player) && !player.hasPermission(Permissions.AFK_UNLIMIT)) {
+					if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - (getMainConfig().getAfkConfig().getTurnOnDlay() + getMainConfig().getAfkConfig().getKickDelay())) {
+						player.kick(); // Добавить сообщение кика.
+					}
+				} else if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - getMainConfig().getAfkConfig().getTurnOnDlay()) {
+					getPlayersData().getTempData().setAfkStatus(player);
+					// Добавить сообщение чата о смене статуса.
+				}
+			});
 		}).build());
 		serverStartedTime = System.currentTimeMillis();
 	}

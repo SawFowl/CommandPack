@@ -120,4 +120,12 @@ public interface TempPlayerData {
 	 */
 	Map<UUID, Long> getTrackingMap(String command);
 
+	void updateLastActivity(ServerPlayer player);
+
+	long getLastActivity(ServerPlayer player);
+
+	boolean isAfk(ServerPlayer player);
+
+	void setAfkStatus(ServerPlayer player);
+
 }

@@ -58,6 +58,10 @@ public class ConfigManager {
 			commandsConfigReference.load();
 			commandsConfig = commandsConfigReference.referenceTo(CommandsConfig.class);
 			commandsConfig.get().updateCommandMap(commandsConfig);
+			plugin.getKitService().getKits().forEach(kit -> {
+				plugin.getKitService().removeKit(kit);
+			});
+			loadKits();
 		} catch (ConfigurateException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
 		}

@@ -13,13 +13,6 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class Permissions {
 
-	/**
-	 * Added to speed up the creation of commands.
-	 * Must be deleted after the job is done.
-	 */
-	@Deprecated
-	public static Permissions instance;
-
 	// User
 	public static final String HAT = "commandpack.commands.user.hat";
 	public static final String SUICIDE = "commandpack.commands.user.suicide";
@@ -113,6 +106,7 @@ public class Permissions {
 	private static final String SPEED_FLY_LIMIT = "commandpack.limits.speed";
 	private static final String ENCHANTMENT_TABLE_LIMIT = "commandpack.limits.enchantmenttable";
 	private static final String BACKPACK_LIMIT = "commandpack.limits.backpack";
+	public  static final String AFK_UNLIMIT = "commandpack.limits.unlimitafk";
 
 	private static final String WARP_ACCESS = "commandpack.access.warps";
 	private static final String RTP_WORLD_ARG_ACCESS = "commandpack.access.worlds.randomteleport";

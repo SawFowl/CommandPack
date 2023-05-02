@@ -13,6 +13,7 @@ import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportConfig;
+import sawfowl.commandpack.configure.configs.miscellaneous.AfkConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 
 @ConfigSerializable
@@ -35,6 +36,8 @@ public class MainConfig {
 	private SpawnData spawnData;
 	@Setting("RandomTeleport")
 	private RandomTeleportConfig rtpConfig = new RandomTeleportConfig();
+	@Setting("AfkSettings")
+	private AfkConfig afkConfig = new AfkConfig();
 
 	public boolean isAutoCompleteRawCommands() {
 		return autoCompleteRawCommands;
@@ -74,6 +77,10 @@ public class MainConfig {
 
 	public RandomTeleportConfig getRtpConfig() {
 		return rtpConfig;
+	}
+
+	public AfkConfig getAfkConfig() {
+		return afkConfig;
 	}
 
 }

@@ -1,5 +1,6 @@
 package sawfowl.commandpack.apiclasses;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,8 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	private Set<UUID> tptoggleSet = new HashSet<>();
 	private Map<UUID, ServerLocation> locations = new HashMap<>();
 	private Map<String, Map<UUID, Long>> cooldowns = new HashMap<>();
+	private Map<UUID, Long> lastActivity = new HashMap<>();
+	private Set<UUID> afk = new HashSet<>();
 	public TempPlayerDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
 	}
@@ -126,6 +129,28 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	public Map<UUID, Long> getTrackingMap(String command) {
 		if(Sponge.server().commandManager().knownAliases().contains(command)) return new HashMap<>();
 		return !cooldowns.containsKey(command) ? cooldowns.put(command, new HashMap<>()) : cooldowns.get(command);
+	}
+
+	@Override
+	public void updateLastActivity(ServerPlayer player) {
+		if(lastActivity.containsKey(player.uniqueId())) lastActivity.remove(player.uniqueId());
+		lastActivity.put(player.uniqueId(), Duration.ofMillis(System.currentTimeMillis()).getSeconds());
+		if(isAfk(player)) afk.remove(player.uniqueId());
+	}
+
+	@Override
+	public long getLastActivity(ServerPlayer player) {
+		return lastActivity.getOrDefault(player.uniqueId(), 0l);
+	}
+
+	@Override
+	public boolean isAfk(ServerPlayer player) {
+		return afk.contains(player.uniqueId()) && lastActivity.containsKey(player.uniqueId());
+	}
+
+	@Override
+	public void setAfkStatus(ServerPlayer player) {
+		if(!isAfk(player)) afk.add(player.uniqueId());
 	}
 
 }
