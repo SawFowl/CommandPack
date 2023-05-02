@@ -63,42 +63,17 @@ public class Kit extends AbstractRawCommand {
 			}
 			ServerPlayer target = getPlayer(cause, args).orElse(src);
 			sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(target);
-			long currentTime = Duration.ofMillis(System.currentTimeMillis()).getSeconds();
-			long nextTime = data.getKitGivedTime(kit) + kit.getCooldown() < currentTime ? currentTime + kit.getCooldown() : data.getKitGivedTime(kit) + kit.getCooldown();
-			boolean allowLimit = kit.isUnlimited() || !data.isGivedKit(kit) || data.getKitGivedData(kit).getGivedCount() < kit.getGiveLimit();
-			boolean economyCancelGive = !src.hasPermission(Permissions.KIT_STAFF) && kit.getKitPrice().isPresent() && !plugin.getEconomy().checkPlayerBalance(target.uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
-			KitGiveEvent.Pre eventPre = createPreEvent(cause, audience, kit, target, nextTime, data.getKitGivedTime(kit), (kit.isNeedPerm() && !src.hasPermission(kit.permission())) || !allowLimit || economyCancelGive || data.getKitGivedTime(kit) + kit.getCooldown() > currentTime);
-			Sponge.eventManager().post(eventPre);
-			if(eventPre.isCancelled()) {
-				if(data.getKitGivedTime(kit) + kit.getCooldown() > currentTime) {
-					src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_WAIT), Placeholders.VALUE, timeFormat((data.getKitGivedTime(kit) + kit.getCooldown()) - currentTime, locale)));
-					return;
-				}
-				if(!allowLimit) {
-					src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT));
-					return;
-				}
-				if(economyCancelGive) {
-					src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_NO_MONEY), Placeholders.VALUE, kit.getKitPrice().get().asComponent()));
-					return;
-				}
-				return;
-			}
-			if(!src.hasPermission(Permissions.KIT_STAFF) && kit.getKitPrice().isPresent() && plugin.getEconomy().checkPlayerBalance(src.uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney())) {
-				plugin.getEconomy().removeFromPlayerBalance(src, kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
-			}
-			giveKit(cause, audience, locale, target, data, kit, true, currentTime, !src.uniqueId().equals(target.uniqueId()));
+			if(target.uniqueId().equals(src.uniqueId())) {
+				delay(target, locale, consumer -> {
+					prepare(cause, audience, locale, src, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), !src.uniqueId().equals(target.uniqueId()));
+				});
+			} else prepare(cause, audience, locale, target, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), !src.uniqueId().equals(target.uniqueId()));
 		} else {
 			Optional<ServerPlayer> optTarget = getPlayer(cause, args);
 			if(!optTarget.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
 			ServerPlayer target = optTarget.get();
 			sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(target);
-			long currentTime = Duration.ofMillis(System.currentTimeMillis()).getSeconds();
-			long nextTime = data.getKitGivedTime(kit) + kit.getCooldown() < currentTime ? currentTime + kit.getCooldown() : data.getKitGivedTime(kit) + kit.getCooldown();
-			KitGiveEvent.Pre eventPre = createPreEvent(cause, audience, kit, target, nextTime, data.getKitGivedTime(kit), false);
-			Sponge.eventManager().post(eventPre);
-			if(eventPre.isCancelled()) return;
-			giveKit(cause, audience, locale, target, data, kit, true, currentTime, true);
+			prepare(cause, audience, locale, target, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), true);
 		}
 	}
 
@@ -162,31 +137,7 @@ public class Kit extends AbstractRawCommand {
 									return;
 								}
 								sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(player);
-								long currentTime = Duration.ofMillis(System.currentTimeMillis()).getSeconds();
-								long nextTime = data.getKitGivedTime(kit) + kit.getCooldown() < currentTime ? currentTime + kit.getCooldown() : data.getKitGivedTime(kit) + kit.getCooldown();
-								boolean allowLimit = kit.isUnlimited() || !data.isGivedKit(kit) || data.getKitGivedData(kit).getGivedCount() < kit.getGiveLimit();
-								boolean economyCancelGive = kit.getKitPrice().isPresent() && ! plugin.getEconomy().checkPlayerBalance(player.uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
-								KitGiveEvent.Pre eventPre = createPreEvent(cause, audience, kit, player, nextTime, data.getKitGivedTime(kit), (kit.isNeedPerm() && !player.hasPermission(kit.permission())) || !allowLimit || economyCancelGive || data.getKitGivedTime(kit) + kit.getCooldown() > currentTime);
-								Sponge.eventManager().post(eventPre);
-								if(eventPre.isCancelled()) {
-									if(data.getKitGivedTime(kit) + kit.getCooldown() > currentTime) {
-										player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_WAIT), Placeholders.VALUE, timeFormat((data.getKitGivedTime(kit) + kit.getCooldown()) - currentTime, locale)));
-										return;
-									}
-									if(!allowLimit) {
-										player.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT));
-										return;
-									}
-									if(economyCancelGive) {
-										player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_NO_MONEY), Placeholders.VALUE, kit.getKitPrice().get().asComponent()));
-										return;
-									}
-									return;
-								}
-								if(kit.getKitPrice().isPresent() && plugin.getEconomy().checkPlayerBalance(player.uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney())) {
-									plugin.getEconomy().removeFromPlayerBalance(player, kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
-								}
-								giveKit(cause, audience, locale, player, data, kit, true, currentTime, false);
+								prepare(cause, audience, locale, player, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), false);
 							}
 						)
 						.append(kit.getLocalizedName(locale))
@@ -208,7 +159,7 @@ public class Kit extends AbstractRawCommand {
 		}
 	}
 
-	private void giveKit(CommandCause cause, Audience audience, Locale locale, ServerPlayer player, sawfowl.commandpack.configure.configs.player.PlayerData data, sawfowl.commandpack.api.data.kits.Kit kit, boolean equals, long currentTime, boolean ignoreRules) {
+	private void prepare(CommandCause cause, Audience audience, Locale locale, ServerPlayer player, sawfowl.commandpack.configure.configs.player.PlayerData data, sawfowl.commandpack.api.data.kits.Kit kit, boolean equals, long currentTime, boolean ignoreRules) {
 		if(ignoreRules) {
 			List<ItemStack> toGive = new ArrayList<>();
 			List<ItemStack> toSpawn = new ArrayList<>();
@@ -225,12 +176,10 @@ public class Kit extends AbstractRawCommand {
 			return;
 		}
 		ItemStack[] items = kit.getContent().toArray(new ItemStack[] {});
-		InventoryTransactionResult result = null;
-		boolean gived = false;
 		if(player.inventory().primary().freeCapacity() < items.length) {
 			switch (kit.getGiveRule()) {
 			case IGNORE_FULL_INVENTORY:
-				player.inventory().primary().offer(items); gived = true;
+				giveKit(cause, audience, locale, player, data, kit, equals, currentTime, items, null, null, null);
 				break;
 			case MESSAGE_IF_INVENTORY_FULL:
 				player.sendMessage(TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_KIT_INVENTORY_FULL), () -> {
@@ -243,39 +192,7 @@ public class Kit extends AbstractRawCommand {
 						} else toSpawn.add(item);
 						emptySlots--;
 					}
-					long current = Duration.ofMillis(System.currentTimeMillis()).getSeconds();
-					boolean allowLimit = kit.isUnlimited() || !data.isGivedKit(kit) || data.getKitGivedData(kit).getGivedCount() < kit.getGiveLimit();
-					boolean economyCancelGive = kit.getKitPrice().isPresent() && ! plugin.getEconomy().checkPlayerBalance(player.uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
-					KitGiveEvent.Pre eventPre = createPreEvent(cause, audience, kit, player, currentTime + kit.getCooldown(), data.getKitGivedTime(kit), (kit.isNeedPerm() && !player.hasPermission(kit.permission())) || !allowLimit || economyCancelGive || data.getKitGivedTime(kit) + kit.getCooldown() > current);
-					Sponge.eventManager().post(eventPre);
-					if(eventPre.isCancelled()) {
-						if(data.getKitGivedTime(kit) + kit.getCooldown() > currentTime) {
-							audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_WAIT), Placeholders.VALUE, timeFormat((data.getKitGivedTime(kit) + kit.getCooldown()) - current, locale)));
-							return;
-						}
-						if(!allowLimit) {
-							audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT));
-							return;
-						}
-						if(economyCancelGive) {
-							player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_NO_MONEY), Placeholders.VALUE, kit.getKitPrice().get().asComponent()));
-							return;
-						}
-						return;
-					}
-					if(kit.getKitPrice().isPresent() && plugin.getEconomy().checkPlayerBalance(player.uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney())) {
-						plugin.getEconomy().removeFromPlayerBalance(player, kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
-					}
-					InventoryTransactionResult r = player.inventory().primary().offer(toGive.toArray(new ItemStack[] {}));
-					spawnItems(toSpawn, player);
-					if(data.givedKits().containsKey(kit.id())) {
-						GivedKitData kitData = data.givedKits().get(kit.id());
-						kitData.setLastGivedTime(currentTime);
-						kitData.setGivedCount(kitData.getGivedCount() + 1);
-					} else data.givedKits().put(kit.id(), new GivedKitData(currentTime, 1));
-					Sponge.eventManager().post(createPostEvent(audience, kit, player, true, r, currentTime + kit.getCooldown()));
-					data.save();
-					return;
+					giveKit(cause, audience, locale, player, data, kit, equals, currentTime, toGive.toArray(new ItemStack[] {}), null, null, toSpawn);
 				}));
 				return;
 			case USE_BACKPACK:
@@ -292,12 +209,7 @@ public class Kit extends AbstractRawCommand {
 					} else toSpawn.add(item);
 					emptySlots--;
 				}
-				result = player.inventory().primary().offer(toGive.toArray(new ItemStack[] {}));
-				toBackPack.forEach(item -> {
-					addToBackPack(data.getBackpack(), item);
-				});
-				data.save();
-				spawnItems(toSpawn, player);
+				giveKit(cause, audience, locale, player, data, kit, equals, currentTime, toGive.toArray(new ItemStack[] {}), null, toBackPack, toSpawn);
 				break;
 			case USE_ENDECHEST:
 				List<ItemStack> toGive1 = new ArrayList<>();
@@ -313,9 +225,7 @@ public class Kit extends AbstractRawCommand {
 					} else toSpawn1.add(item);
 					emptySlots1--;
 				}
-				result = player.inventory().primary().offer(toGive1.toArray(new ItemStack[] {}));
-				player.enderChestInventory().offer(toEnderChest.toArray(new ItemStack[] {}));
-				spawnItems(toSpawn1, player);
+				giveKit(cause, audience, locale, player, data, kit, equals, currentTime, toGive1.toArray(new ItemStack[] {}), toEnderChest.toArray(new ItemStack[] {}), null, toSpawn1);
 				break;
 			default:
 				List<ItemStack> toGive2 = new ArrayList<>();
@@ -327,11 +237,35 @@ public class Kit extends AbstractRawCommand {
 					} else toSpawn2.add(item);
 					emptySlots2--;
 				}
-				result = player.inventory().primary().offer(toGive2.toArray(new ItemStack[] {}));
-				spawnItems(toSpawn2, player);
+				giveKit(cause, audience, locale, player, data, kit, equals, currentTime, toGive2.toArray(new ItemStack[] {}), null, null, toSpawn2);
 				break;
 			}
-		} else result = player.inventory().primary().offer(items); gived = true;
+		} else giveKit(cause, audience, locale, player, data, kit, equals, currentTime, items, null, null, null);
+	}
+
+	private void giveKit(CommandCause cause, Audience audience, Locale locale, ServerPlayer player, sawfowl.commandpack.configure.configs.player.PlayerData data, sawfowl.commandpack.api.data.kits.Kit kit, boolean equals, long currentTime, ItemStack[] give, ItemStack[] enderchest, List<ItemStack> backpack, List<ItemStack> spawn) {
+		boolean allowLimit = kit.isUnlimited() || !data.isGivedKit(kit) || data.getKitGivedData(kit).getGivedCount() < kit.getGiveLimit();
+		boolean economyCancelGive = kit.getKitPrice().isPresent() && !plugin.getEconomy().checkPlayerBalance((audience instanceof ServerPlayer ? (ServerPlayer) audience : player).uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
+		KitGiveEvent.Pre eventPre = createPreEvent(cause, audience, kit, player, currentTime + kit.getCooldown(), data.getKitGivedTime(kit), (kit.isNeedPerm() && !player.hasPermission(kit.permission())) || !allowLimit || economyCancelGive || data.getKitGivedTime(kit) + kit.getCooldown() > currentTime);
+		Sponge.eventManager().post(eventPre);
+		if(eventPre.isCancelled()) {
+			if(data.getKitGivedTime(kit) + kit.getCooldown() > currentTime) {
+				audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_WAIT), Placeholders.VALUE, timeFormat((data.getKitGivedTime(kit) + kit.getCooldown()) - currentTime, locale)));
+				Sponge.eventManager().post(createPostEvent(audience, kit, player, false, null, currentTime + kit.getCooldown()));
+				return;
+			}
+			if(!allowLimit) {
+				audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT));
+				Sponge.eventManager().post(createPostEvent(audience, kit, player, false, null, currentTime + kit.getCooldown()));
+				return;
+			}
+			if(economyCancelGive) {
+				audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_NO_MONEY), Placeholders.VALUE, kit.getKitPrice().get().asComponent()));
+				Sponge.eventManager().post(createPostEvent(audience, kit, player, false, null, currentTime + kit.getCooldown()));
+				return;
+			}
+			return;
+		}
 		if(data.givedKits().containsKey(kit.id())) {
 			GivedKitData kitData = data.givedKits().get(kit.id());
 			kitData.setLastGivedTime(currentTime);
@@ -339,9 +273,18 @@ public class Kit extends AbstractRawCommand {
 			data.givedKits().remove(kit.id());
 			data.givedKits().put(kit.id(), kitData);
 		} else data.givedKits().put(kit.id(), new GivedKitData(currentTime, 1));
-		data.save();
+		if(kit.getKitPrice().isPresent() && plugin.getEconomy().checkPlayerBalance((audience instanceof ServerPlayer ? (ServerPlayer) audience : player).uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney())) {
+			plugin.getEconomy().removeFromPlayerBalance(audience instanceof ServerPlayer ? (ServerPlayer) audience : player, kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
+		}
+		InventoryTransactionResult result = give == null ? InventoryTransactionResult.successNoTransactions() : player.inventory().primary().offer(give);
+		if(enderchest != null) player.enderChestInventory().offer(enderchest);
+		if(backpack != null && !backpack.isEmpty()) backpack.forEach(item -> {
+			addToBackPack(data.getBackpack(), item);
+		});
+		if(spawn != null && !spawn.isEmpty()) spawnItems(spawn, player);
 		runCommands(player, kit);
-		Sponge.eventManager().post(createPostEvent(audience, kit, player, gived, result, currentTime + kit.getCooldown()));
+		data.save();
+		Sponge.eventManager().post(createPostEvent(audience, kit, player, true, result, currentTime + kit.getCooldown()));
 	}
 
 	private void runCommands(ServerPlayer player, sawfowl.commandpack.api.data.kits.Kit kit) {
