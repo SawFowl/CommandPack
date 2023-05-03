@@ -247,7 +247,7 @@ public class Kit extends AbstractRawCommand {
 	private void giveKit(CommandCause cause, Audience audience, Locale locale, ServerPlayer player, sawfowl.commandpack.configure.configs.player.PlayerData data, sawfowl.commandpack.api.data.kits.Kit kit, boolean equals, long currentTime, ItemStack[] give, ItemStack[] enderchest, List<ItemStack> backpack, List<ItemStack> spawn) {
 		boolean allowLimit = kit.isUnlimited() || !data.isGivedKit(kit) || data.getKitGivedData(kit).getGivedCount() < kit.getGiveLimit();
 		boolean economyCancelGive = kit.getKitPrice().isPresent() && !plugin.getEconomy().checkPlayerBalance((audience instanceof ServerPlayer ? (ServerPlayer) audience : player).uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
-		KitGiveEvent.Pre eventPre = createPreEvent(cause, audience, kit, player, currentTime + kit.getCooldown(), data.getKitGivedTime(kit), (kit.isNeedPerm() && !player.hasPermission(kit.permission())) || !allowLimit || economyCancelGive || data.getKitGivedTime(kit) + kit.getCooldown() > currentTime);
+		KitGiveEvent.Pre eventPre = createPreEvent(cause, audience, kit, player, currentTime + kit.getCooldown(), data.getKitGivedTime(kit), (kit.isNeedPerm() && !player.hasPermission(kit.permission()) && !player.hasPermission(Permissions.KIT_STAFF)) || !allowLimit || economyCancelGive || data.getKitGivedTime(kit) + kit.getCooldown() > currentTime);
 		Sponge.eventManager().post(eventPre);
 		if(eventPre.isCancelled()) {
 			if(data.getKitGivedTime(kit) + kit.getCooldown() > currentTime) {

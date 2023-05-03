@@ -156,6 +156,8 @@ public class CommandsConfig {
 	private CommandSettings serverStat = new CommandSettings(new String[] {"serverinfo", "gc"});
 	@Setting("Plugins")
 	private CommandSettings plugins = new CommandSettings();
+	@Setting("Mods")
+	private CommandSettings mods = new CommandSettings();
 	@Setting("Tps")
 	private CommandSettings tps = new CommandSettings();
 	@Setting("ServerTime")

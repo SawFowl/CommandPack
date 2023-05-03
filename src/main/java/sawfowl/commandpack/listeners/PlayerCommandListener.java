@@ -20,6 +20,7 @@ public class PlayerCommandListener {
 
 	@Listener(order = Order.LAST)
 	public void onExecute(ExecuteCommandEvent.Pre event, @First ServerPlayer player) {
+		if(plugin.getPlayersData().getTempData().isAfk(player) && event.command().equalsIgnoreCase("afk")) return;
 		plugin.getPlayersData().getTempData().updateLastActivity(player);
 		if(!plugin.getPlayersData().getTempData().isTrackingPlayer(player)) return;
 		plugin.getPlayersData().getTempData().getTrackingPlayerCommands(player).ifPresent(map -> {

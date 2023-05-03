@@ -160,7 +160,8 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 
 	@Override
 	public void setAfkStatus(ServerPlayer player) {
-		if(!isAfk(player)) afk.add(player.uniqueId());
+		if(isAfk(player)) return;
+		afk.add(player.uniqueId());
 		if(!player.get(Keys.VANISH_STATE).isPresent() || !player.get(Keys.VANISH_STATE).get().invisible()) {
 			Sponge.systemSubject().sendMessage(TextUtils.replace(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_AFK_ENABLE), Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))));
 			Sponge.server().onlinePlayers().forEach(p -> {

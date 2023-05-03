@@ -21,7 +21,9 @@ public class Afk extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		plugin.getPlayersData().getTempData().setAfkStatus(src);
+		if(plugin.getPlayersData().getTempData().isAfk(src)) {
+			plugin.getPlayersData().getTempData().updateLastActivity(src);
+		} else plugin.getPlayersData().getTempData().setAfkStatus(src);
 	}
 
 	@Override

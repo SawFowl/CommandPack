@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -25,7 +26,8 @@ import com.google.common.collect.Iterables;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
-
+import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.configure.Placeholders;
@@ -39,11 +41,14 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	protected final String java;
 	protected final String javaHome;
 	protected final int linesPerPage = 15;
+	private Collection<PluginContainer> containers = new ArrayList<>();
+	private List<Object> mods = new ArrayList<>();
 	public AbstractInfoCommand(CommandPack plugin) {
 		super(plugin);
 		os = System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch");
 		java = System.getProperty("java.vendor") + " " + System.getProperty("java.version");
 		javaHome = System.getProperty("java.home");
+		if(command().equals("plugins") || command().equals("mods")) fillLists();
 	}
 
 	protected void sendSystemInfo(Audience target, Locale locale, boolean isPlayer) {
@@ -62,13 +67,12 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected void sendPluginsInfo(Audience target, Locale locale, boolean isPlayer) {
-		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS);
+		Component header = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS), Placeholders.VALUE, String.valueOf(containers.size()));
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) target;
 			List<Component> content = new ArrayList<>();
 			boolean allowRefresh = player.hasPermission(Permissions.SERVER_STAT_STAFF_INFO_PLUGINS_REFRESH);
-			//FMLLoader.getLoadingModList().getMods() Протестить
-			for(PluginContainer container : Sponge.pluginManager().plugins()) {
+			for(PluginContainer container : containers) {
 				if(allowRefresh) {
 					content.add(TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON), () -> {
 						sendRefreshEvent(container);
@@ -81,9 +85,28 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 			sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, content);
 		} else {
 			header = header.append(text("&f: "));
-			int size = Sponge.pluginManager().plugins().size();
-			for(PluginContainer container : Sponge.pluginManager().plugins()) {
+			int size = containers.size();
+			for(PluginContainer container : containers) {
 				header = size > 1 ? header.append(text("&e" + container.metadata().name().orElse(container.metadata().id()) + "&f, ")) : header.append(text("&e" + container.metadata().name().orElse(container.metadata().id()) + "&f."));
+				size--;
+			}
+			target.sendMessage(header);
+		}
+	}
+
+	protected void sendModsInfo(Audience target, Locale locale, boolean isPlayer) {
+		Component header = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS), Placeholders.VALUE, String.valueOf(mods.size()));
+		if(isPlayer) {
+			List<Component> content = new ArrayList<>();
+			for(Object container : mods) {
+				content.add(text("&a" + ((ModInfo) container).getDisplayName()));
+			}
+			sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, content);
+		} else {
+			header = header.append(text("&f: "));
+			int size = mods.size();
+			for(Object container : mods) {
+				header = size > 1 ? header.append(text("&e" + ((ModInfo) container).getDisplayName() + "&f, ")) : header.append(text("&e" + ((ModInfo) container).getDisplayName() + "&f."));
 				size--;
 			}
 			target.sendMessage(header);
@@ -130,6 +153,17 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 
 	private double currentTPS() {
 		return BigDecimal.valueOf(Sponge.server().ticksPerSecond()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+	}
+
+	private void fillLists() {
+		if(plugin.isForgeServer()) {
+			FMLLoader.getLoadingModList().getMods().forEach(mod -> {
+				if(!mod.getOwningFile().getModLoader().equalsIgnoreCase("java_plain")) {
+					mods.add(mod);
+				}
+			});
+			containers = Sponge.pluginManager().plugins().stream().filter(container -> (!mods.stream().filter(mod -> ((ModInfo) mod).getModId().equals(container.metadata().id())).findFirst().isPresent())).collect(Collectors.toList());
+		} else containers = Sponge.pluginManager().plugins();
 	}
 
 }
