@@ -19,7 +19,10 @@ import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.ContainerTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.menu.ClickType;
+import org.spongepowered.api.item.inventory.menu.ClickTypes;
 import org.spongepowered.api.item.inventory.menu.InventoryMenu;
+import org.spongepowered.api.item.inventory.menu.handler.ClickHandler;
 import org.spongepowered.api.item.inventory.menu.handler.CloseHandler;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 import org.spongepowered.api.util.locale.Locales;
@@ -165,7 +168,20 @@ public class KitData implements Kit {
 		getContent().forEach(item -> {
 			menu.inventory().offer(item);
 		});
-		if(!readOnly) menu.registerClose(new CloseHandler() {
+		if(readOnly) {
+			menu.registerClick(new ClickHandler() {
+				
+				@Override
+				public boolean handle(Cause cause, Container container, ClickType<?> clickType) {
+					if(clickType == ClickTypes.CLICK_MIDDLE) {
+						carrier.closeInventory();
+						menu.inventory().clear();
+						menu.unregisterAll();
+					}
+					return false;
+				}
+			});
+		} else menu.registerClose(new CloseHandler() {
 			@Override
 			public void handle(Cause cause, Container container) {
 				items.clear();
