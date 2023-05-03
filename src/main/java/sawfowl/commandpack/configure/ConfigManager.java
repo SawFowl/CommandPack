@@ -14,6 +14,7 @@ import org.spongepowered.configurate.reference.ValueReference;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.player.Warp;
+import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.configure.configs.MainConfig;
 import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
 import sawfowl.commandpack.configure.configs.kits.KitData;
@@ -124,7 +125,7 @@ public class ConfigManager {
 		try {
 			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(playerConfig.toPath()).build().loadToReference();
 			ValueReference<PlayerData, CommentedConfigurationNode> config = configReference.referenceTo(PlayerData.class);
-			plugin.getPlayersData().addPlayerData(config.get());
+			((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(config.get());
 		} catch (ConfigurateException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
 		}

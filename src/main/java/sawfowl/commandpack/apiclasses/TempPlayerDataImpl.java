@@ -10,9 +10,11 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
 
+import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
@@ -135,7 +137,15 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	public void updateLastActivity(ServerPlayer player) {
 		if(lastActivity.containsKey(player.uniqueId())) lastActivity.remove(player.uniqueId());
 		lastActivity.put(player.uniqueId(), Duration.ofMillis(System.currentTimeMillis()).getSeconds());
-		if(isAfk(player)) afk.remove(player.uniqueId());
+		if(isAfk(player)) {
+			afk.remove(player.uniqueId());
+			if(!player.get(Keys.VANISH_STATE).isPresent() || !player.get(Keys.VANISH_STATE).get().invisible()) {
+				Sponge.systemSubject().sendMessage(TextUtils.replace(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_AFK_DISABLE), Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))));
+				Sponge.server().onlinePlayers().forEach(p -> {
+					p.sendMessage(TextUtils.replace(plugin.getLocales().getText(p.locale(), LocalesPaths.COMMANDS_AFK_DISABLE), Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))));
+				});
+			} else player.sendMessage(plugin.getLocales().getText(player.locale(), LocalesPaths.COMMANDS_AFK_DISABLE_IN_VANISH));
+		}
 	}
 
 	@Override
@@ -151,6 +161,12 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	@Override
 	public void setAfkStatus(ServerPlayer player) {
 		if(!isAfk(player)) afk.add(player.uniqueId());
+		if(!player.get(Keys.VANISH_STATE).isPresent() || !player.get(Keys.VANISH_STATE).get().invisible()) {
+			Sponge.systemSubject().sendMessage(TextUtils.replace(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_AFK_ENABLE), Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))));
+			Sponge.server().onlinePlayers().forEach(p -> {
+				p.sendMessage(TextUtils.replace(plugin.getLocales().getText(p.locale(), LocalesPaths.COMMANDS_AFK_ENABLE), Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))));
+			});
+		} else player.sendMessage(plugin.getLocales().getText(player.locale(), LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH));
 	}
 
 }

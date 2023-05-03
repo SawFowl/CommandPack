@@ -20,6 +20,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.events.KitGiveEvent;
+import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.player.GivedKitData;
 import sawfowl.commandpack.configure.configs.player.PlayerData;
@@ -33,7 +34,7 @@ public class PlayerConnectionListener {
 
 	@Listener
 	public void onConnect(ServerSideConnectionEvent.Join event) {
-		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) plugin.getPlayersData().addPlayerData(new PlayerData(event.player()).save());
+		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
 		if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterSpawn() && plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().isPresent()) {
 			event.player().setLocation(plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().get());
 			plugin.getMainConfig().getSpawnData().get().getLocationData().getPosition().getRotation().ifPresent(rotation -> {

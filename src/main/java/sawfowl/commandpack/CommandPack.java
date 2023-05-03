@@ -64,6 +64,7 @@ import sawfowl.commandpack.configure.configs.player.WarpData;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.listeners.CommandLogListener;
+import sawfowl.commandpack.listeners.PlayerChatListener;
 import sawfowl.commandpack.listeners.PlayerCommandListener;
 import sawfowl.commandpack.listeners.PlayerConnectionListener;
 import sawfowl.commandpack.listeners.PlayerInteractBlockListener;
@@ -130,8 +131,8 @@ public class CommandPack {
 		return configManager;
 	}
 
-	public sawfowl.commandpack.apiclasses.PlayersDataImpl getPlayersData() {
-		return (sawfowl.commandpack.apiclasses.PlayersDataImpl) playersData;
+	public PlayersData getPlayersData() {
+		return playersData;
 	}
 
 	public RandomTeleportService getRTPService() {
@@ -186,6 +187,7 @@ public class CommandPack {
 		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getText(Sponge.server().locale(), LocalesPaths.ECONOMY_NOT_FOUND));
 		economy = new Economy(instance);
 		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerChatListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerCommandListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerConnectionListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractBlockListener(instance));
@@ -257,13 +259,8 @@ public class CommandPack {
 			tps10m.put(currentTime, Sponge.server().ticksPerSecond());
 			Sponge.server().onlinePlayers().forEach(player -> {
 				if(getPlayersData().getTempData().isAfk(player) && !player.hasPermission(Permissions.AFK_UNLIMIT)) {
-					if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - (getMainConfig().getAfkConfig().getTurnOnDlay() + getMainConfig().getAfkConfig().getKickDelay())) {
-						player.kick(); // Добавить сообщение кика.
-					}
-				} else if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - getMainConfig().getAfkConfig().getTurnOnDlay()) {
-					getPlayersData().getTempData().setAfkStatus(player);
-					// Добавить сообщение чата о смене статуса.
-				}
+					if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - (getMainConfig().getAfkConfig().getTurnOnDlay() + getMainConfig().getAfkConfig().getKickDelay())) player.kick(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_AFK_KICK));
+				} else if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - getMainConfig().getAfkConfig().getTurnOnDlay()) getPlayersData().getTempData().setAfkStatus(player);
 			});
 		}).build());
 		serverStartedTime = System.currentTimeMillis();
@@ -272,7 +269,7 @@ public class CommandPack {
 	@Listener
 	public void onReload(RefreshGameEvent event) {
 		configManager.reloadConfigs();
-		getPlayersData().reload();
+		((PlayersDataImpl) playersData).reload();
 	}
 
 	@Listener

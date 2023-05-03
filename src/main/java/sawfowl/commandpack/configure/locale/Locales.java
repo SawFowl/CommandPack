@@ -252,6 +252,12 @@ public class Locales {
 		save = check(locale, toText("&eThere is not enough free space in your inventory. Are you sure you want this kit? Some of the items will fall to the ground. Click on this message to confirm."), null, LocalesPaths.COMMANDS_KIT_INVENTORY_FULL) || save;
 		save = check(locale, toText("&cYou have reached the limit for getting this kit."), null, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT) || save;
 		save = check(locale, toText("&cYou don't have enough money to buy this kit. You need at least  &e" + Placeholders.VALUE + "&c."), null, LocalesPaths.COMMANDS_KIT_NO_MONEY) || save;
+		save = check(locale, toText("&aYou received a kit &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_KIT_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fis now afk."), null, LocalesPaths.COMMANDS_AFK_ENABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fis no longer afk."), null, LocalesPaths.COMMANDS_AFK_DISABLE) || save;
+		save = check(locale, toText("&eYou have gone AFK, but you are currently vanished, so this has not been broadcasted."), null, LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH) || save;
+		save = check(locale, toText("&eYou have returned from AFK, but you are currently vanished, so this has not been broadcasted."), null, LocalesPaths.COMMANDS_AFK_DISABLE_IN_VANISH) || save;
+		save = check(locale, toText("&eYou have been kicked for being AFK for too long."), null, LocalesPaths.COMMANDS_AFK_KICK) || save;
 
 		if(save) save(locale);
 	}
@@ -451,6 +457,12 @@ public class Locales {
 		save = check(locale, toText("&eВ вашем инвентаре недостаточно места. Вы точно хотите получить этот набор? Часть предметов выпадут на землю. Кликните на это сообщение для подтверждения."), null, LocalesPaths.COMMANDS_KIT_INVENTORY_FULL) || save;
 		save = check(locale, toText("&cВы исчерпали лимит получения данного набора."), null, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT) || save;
 		save = check(locale, toText("&cУ вас недостаточно денег для покупки этого набора. Необходимо как минимум &e" + Placeholders.VALUE + "&c."), null, LocalesPaths.COMMANDS_KIT_NO_MONEY) || save;
+		save = check(locale, toText("&aВы получили набор &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_KIT_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fтеперь афк."), null, LocalesPaths.COMMANDS_AFK_ENABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fбольше не афк."), null, LocalesPaths.COMMANDS_AFK_DISABLE) || save;
+		save = check(locale, toText("&eВы перешли в АФК, но в настоящее время вы невидимы, так что это не транслировалось."), null, LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH) || save;
+		save = check(locale, toText("&eВы перешли из AFK, но в настоящее время вы невидимы, поэтому это не было передано."), null, LocalesPaths.COMMANDS_AFK_DISABLE_IN_VANISH) || save;
+		save = check(locale, toText("&eВы кикнуты за то, что слишком долго были АФК."), null, LocalesPaths.COMMANDS_AFK_KICK) || save;
 
 		if(save) save(locale);
 	}

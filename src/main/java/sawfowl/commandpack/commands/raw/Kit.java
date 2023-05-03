@@ -65,9 +65,9 @@ public class Kit extends AbstractRawCommand {
 			sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(target);
 			if(target.uniqueId().equals(src.uniqueId())) {
 				delay(target, locale, consumer -> {
-					prepare(cause, audience, locale, src, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), !src.uniqueId().equals(target.uniqueId()));
+					prepare(cause, audience, locale, src, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), false);
 				});
-			} else prepare(cause, audience, locale, target, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), !src.uniqueId().equals(target.uniqueId()));
+			} else prepare(cause, audience, locale, target, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), true);
 		} else {
 			Optional<ServerPlayer> optTarget = getPlayer(cause, args);
 			if(!optTarget.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
@@ -173,6 +173,7 @@ public class Kit extends AbstractRawCommand {
 			player.inventory().primary().offer(toGive.toArray(new ItemStack[] {}));
 			spawnItems(toSpawn, player);
 			runCommands(player, kit);
+			player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(player.locale())));
 			return;
 		}
 		ItemStack[] items = kit.getContent().toArray(new ItemStack[] {});
@@ -284,6 +285,7 @@ public class Kit extends AbstractRawCommand {
 		if(spawn != null && !spawn.isEmpty()) spawnItems(spawn, player);
 		runCommands(player, kit);
 		data.save();
+		player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(player.locale())));
 		Sponge.eventManager().post(createPostEvent(audience, kit, player, true, result, currentTime + kit.getCooldown()));
 	}
 
