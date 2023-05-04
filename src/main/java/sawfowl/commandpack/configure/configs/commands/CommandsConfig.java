@@ -186,6 +186,7 @@ public class CommandsConfig {
 					});
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					plugin.getLogger().error("Error when registering a command class '" + clazz.getName() +"'\n" + e.getLocalizedMessage());
+					e.printStackTrace();
 				}
 			}
 		} catch (IOException | NoSuchMethodException | SecurityException | URISyntaxException e) {

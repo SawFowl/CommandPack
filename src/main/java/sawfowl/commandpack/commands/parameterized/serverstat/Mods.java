@@ -15,6 +15,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
+import sawfowl.commandpack.commands.containerinfo.ModInfo;
 
 public class Mods extends AbstractInfoCommand {
 
@@ -37,7 +38,7 @@ public class Mods extends AbstractInfoCommand {
 	@Override
 	public Parameterized build() {
 		return builder()
-				.addChild(new ModInfo(plugin, mods).build(), "info")
+				.addChild(new ModInfo(plugin).build(), "info")
 				.build();
 	}
 

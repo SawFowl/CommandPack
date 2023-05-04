@@ -53,6 +53,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 		os = System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch");
 		java = System.getProperty("java.vendor") + " " + System.getProperty("java.version");
 		javaHome = System.getProperty("java.home");
+		plugin.getLogger().debug(containers);
 	}
 
 	protected void sendSystemInfo(Audience target, Locale locale, boolean isPlayer) {
@@ -169,14 +170,16 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected void fillLists() {
+		if(mods == null) mods = new ArrayList<>();
+		if(containers == null) containers = new ArrayList<>();
 		if(plugin.isForgeServer()) {
 			FMLLoader.getLoadingModList().getMods().forEach(mod -> {
 				if(!mod.getOwningFile().getModLoader().equalsIgnoreCase("java_plain")) {
 					mods.add(new ModContainer(mod));
 				}
 			});
-			containers = Sponge.pluginManager().plugins().stream().filter(container -> (!mods.stream().filter(mod -> mod.getModId().equals(container.metadata().id())).findFirst().isPresent())).collect(Collectors.toList());
-		} else containers = Sponge.pluginManager().plugins();
+			containers.addAll(Sponge.pluginManager().plugins().stream().filter(container -> (!mods.stream().filter(mod -> mod.getModId().equals(container.metadata().id())).findFirst().isPresent())).collect(Collectors.toList()));
+		} else containers.addAll(Sponge.pluginManager().plugins());
 	}
 
 	protected void sendPluginInfo(Audience audience, Locale locale, PluginMetadata metadata) {
@@ -184,7 +187,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_HEADER);
 		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_ID), Placeholders.VALUE, metadata.id()));
 		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_NAME), Placeholders.VALUE, metadata.name().orElse("-")));
-		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_VERSION), Placeholders.VALUE, metadata.version().getQualifier()));
+		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_VERSION), Placeholders.VALUE, (metadata.version().getMajorVersion() + "." + metadata.version().getMinorVersion() + "." + metadata.version().getIncrementalVersion() + (metadata.version().getBuildNumber() == 0 ? "" : "-" + metadata.version().getBuildNumber()))));
 		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_ENTRYPOINT), Placeholders.VALUE, metadata.entrypoint()));
 		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_DESCRIPTION), Placeholders.VALUE, metadata.description().orElse("-")));
 		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_DEPENDENCIES), Placeholders.VALUE, getDependencies(metadata)));
@@ -222,7 +225,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 		String dependencies = "";
 		int size = metadata.dependencies().size();
 		for(PluginDependency dependency : metadata.dependencies()) {
-			dependencies = dependencies + (size > 1 ? "&e" + dependency.id() + " (" + dependency.version().getRecommendedVersion().getQualifier() + ")" + "&f, " : "&e" + dependency.id() + " (" + dependency.version().getRecommendedVersion().getQualifier() + ")" + "&f.");
+			dependencies = dependencies + (size > 1 ? "&e" + dependency.id() + " (" + dependency.version().getRecommendedVersion().getMajorVersion() + "." + dependency.version().getRecommendedVersion().getMinorVersion()  + "." + dependency.version().getRecommendedVersion().getIncrementalVersion() + ")" + "&f, " : "&e" + dependency.id() + " (" + dependency.version().getRecommendedVersion().getMajorVersion() + "." + dependency.version().getRecommendedVersion().getMinorVersion()  + "." + dependency.version().getRecommendedVersion().getIncrementalVersion() + ")" + "&f.");
 			size--;
 		}
 		return TextUtils.deserializeLegacy(dependencies);
@@ -233,7 +236,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	private Component createLinkText(URL url) {
-		return TextUtils.deserializeLegacy("&e" + url.toString()).clickEvent(ClickEvent.openUrl(url));
+		return url == null ? TextUtils.deserializeLegacy("&e-") : TextUtils.deserializeLegacy("&e" + url.toString()).clickEvent(ClickEvent.openUrl(url));
 	}
 
 	private double currentTPS() {

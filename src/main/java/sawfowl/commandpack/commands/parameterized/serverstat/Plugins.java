@@ -14,6 +14,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
+import sawfowl.commandpack.commands.containerinfo.PluginInfo;
 
 public class Plugins extends AbstractInfoCommand {
 
@@ -37,7 +38,7 @@ public class Plugins extends AbstractInfoCommand {
 	public Parameterized build() {
 		return builder()
 				.addChild(new RefreshPlugin(plugin).build(), "refresh", "reload")
-				.addChild(new PluginInfo(plugin, containers).build(), "info")
+				.addChild(new PluginInfo(plugin).build(), "info")
 				.build();
 	}
 

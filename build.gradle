@@ -72,6 +72,11 @@ sponge {
 		version("${project.version}")
 		entrypoint("${project.group}.${rootProject.name}")
 		description("The Essentials plugin analog.")
+		links {
+			homepage("https://discord.gg/7xnZGSYJH9")
+			source("https://github.com/SawFowl/CommandPack")
+			issues("https://discord.gg/7xnZGSYJH9")
+		}
 		contributor("SawFowl") {
 			description("Lead Developer")
 		}
@@ -89,18 +94,18 @@ sponge {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
+	classifier = 'sources'
+	from sourceSets.main.allSource
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
+	classifier = 'javadoc'
+	from javadoc.destinationDir
 }
 
 artifacts {
-    archives sourcesJar
-    archives javadocJar
+	archives sourcesJar
+	archives javadocJar
 }
 
 configurations {

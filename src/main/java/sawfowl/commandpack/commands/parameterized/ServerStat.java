@@ -31,7 +31,7 @@ public class ServerStat extends AbstractInfoCommand {
 
 	private final Plugins plugins;
 	private final Parameterized pluginsCommand;
-	private  Mods mods;
+	private  Mods modsClass;
 	private Parameterized modsCommand;
 	private final Tps tps;
 	private final Parameterized tpsCommand;
@@ -39,15 +39,17 @@ public class ServerStat extends AbstractInfoCommand {
 	private final Parameterized timeCommand;
 	public ServerStat(CommandPack plugin) {
 		super(plugin);
+		fillLists();
 		plugins = new Plugins(plugin);
 		pluginsCommand = plugins.build();
-		mods = new Mods(plugin);
-		modsCommand = mods.build();
+		if(plugin.isForgeServer()) {
+			modsClass = new Mods(plugin);
+			modsCommand = modsClass.build();
+		}
 		this.tps = new Tps(plugin);
 		this.tpsCommand = tps.build();
 		this.time = new ServerTime(plugin);
 		this.timeCommand = time.build();
-		fillLists();
 	}
 
 	@Override
@@ -81,7 +83,7 @@ public class ServerStat extends AbstractInfoCommand {
 				event.register(getContainer(), build(), command(), getCommandSettings().getAliases());
 			} else event.register(getContainer(), build(), command());
 		}
-		if(plugin.isForgeServer()) mods.register(event);
+		if(plugin.isForgeServer()) modsClass.register(event);
 		plugins.register(event);
 		tps.enableRegister();
 		tps.register(event);

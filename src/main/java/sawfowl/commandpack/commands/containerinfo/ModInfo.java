@@ -1,4 +1,4 @@
-package sawfowl.commandpack.commands.parameterized.serverstat;
+package sawfowl.commandpack.commands.containerinfo;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,20 +18,12 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.commandpack.utils.ModContainer;
 
 public class ModInfo extends AbstractInfoCommand {
 
 	public ModInfo(CommandPack plugin) {
 		super(plugin);
-		this.CHOICES = null;
-	}
-
-	public final Value<String> CHOICES;
-	public ModInfo(CommandPack plugin, List<ModContainer> mods) {
-		super(plugin);
-		super.mods = mods;
-		CHOICES = Parameter.choices(mods.stream().map(container -> container.getModId()).toArray(String[]::new)).key("Mod").build();
+		fillLists();
 	}
 
 	@Override
@@ -57,7 +49,7 @@ public class ModInfo extends AbstractInfoCommand {
 
 	@Override
 	public String command() {
-		return "info";
+		return "modinfo";
 	}
 
 	@Override
@@ -67,6 +59,8 @@ public class ModInfo extends AbstractInfoCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
+		if(mods == null) fillLists();
+		Value<String> CHOICES = Parameter.choices(mods.stream().map(container -> container.getModId()).toArray(String[]::new)).key("Mod").build();
 		return CHOICES == null ? null : Arrays.asList(ParameterSettings.of(CHOICES, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
 	}
 

@@ -230,7 +230,7 @@ public class Locales {
 		save = check(locale, toText("&eEntrypoint&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_ENTRYPOINT) || save;
 		save = check(locale, toText("&eDescription&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_DESCRIPTION) || save;
 		save = check(locale, toText("&eDependencies&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_DEPENDENCIES) || save;
-		save = check(locale, toText("&eContributors " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_CONTRIBUTORS) || save;
+		save = check(locale, toText("&eContributors&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_CONTRIBUTORS) || save;
 		save = check(locale, toText("&eLinks&f:\n    &eHome&f: &b" + Placeholders.HOME_LINK + "\n    &eSource&f: &b" + Placeholders.SOURCE_LINK + "\n    &eIssues&f: &b" + Placeholders.ISSUES_LINK), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_LINKS) || save;
 		save = check(locale, toText("&3About mod"), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_HEADER) || save;
 		save = check(locale, toText("&2ID&f: &2" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_ID) || save;
@@ -452,7 +452,7 @@ public class Locales {
 		save = check(locale, toText("&eГлавный класс&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_ENTRYPOINT) || save;
 		save = check(locale, toText("&eОписание&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_DESCRIPTION) || save;
 		save = check(locale, toText("&eЗависимости&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_DEPENDENCIES) || save;
-		save = check(locale, toText("&eРазработчики " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_CONTRIBUTORS) || save;
+		save = check(locale, toText("&eРазработчики&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_CONTRIBUTORS) || save;
 		save = check(locale, toText("&eСсылки&f:\n    &eДомашняя страница&f: &b" + Placeholders.HOME_LINK + "\n    &eИсходный код&f: &b" + Placeholders.SOURCE_LINK + "\n    &eТрекер проблем&f: &b" + Placeholders.ISSUES_LINK), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_LINKS) || save;
 		save = check(locale, toText("&3О моде"), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_HEADER) || save;
 		save = check(locale, toText("&2ID&f: &2" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_ID) || save;

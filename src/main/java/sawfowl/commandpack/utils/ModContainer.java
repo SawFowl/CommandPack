@@ -45,7 +45,7 @@ public class ModContainer {
 		String dependencies = "";
 		int size = mod.getDependencies().size();
 		for(ModVersion dependency : mod.getDependencies()) {
-			dependencies = dependencies + (size > 1 ? "&e" + dependency.getModId() + " (" + dependency.getVersionRange().getRecommendedVersion().getQualifier() + ")" + "&f, " : "&e" + dependency.getModId() + " (" + dependency.getVersionRange().getRecommendedVersion().getQualifier()  + ")" + "&f.");
+			dependencies = dependencies + (size > 1 ? "&e" + dependency.getModId() + (dependency.getVersionRange().getRecommendedVersion() == null ? "" : " (" + dependency.getVersionRange().getRecommendedVersion().getMajorVersion() + "." + dependency.getVersionRange().getRecommendedVersion().getMinorVersion() + "." + dependency.getVersionRange().getRecommendedVersion().getIncrementalVersion() + ")" + "&f, ") : "&e" + dependency.getModId() + (dependency.getVersionRange().getRecommendedVersion() == null ? "" : " (" + dependency.getVersionRange().getRecommendedVersion().getMajorVersion() + "." + dependency.getVersionRange().getRecommendedVersion().getMinorVersion() + "." + dependency.getVersionRange().getRecommendedVersion().getIncrementalVersion() + ")" + "&f."));
 			size--;
 		}
 		return TextUtils.deserializeLegacy(dependencies);
