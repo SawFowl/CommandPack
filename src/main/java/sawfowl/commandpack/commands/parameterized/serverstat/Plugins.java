@@ -19,6 +19,7 @@ public class Plugins extends AbstractInfoCommand {
 
 	public Plugins(CommandPack plugin) {
 		super(plugin);
+		fillLists();
 	}
 
 	@Override
@@ -36,17 +37,23 @@ public class Plugins extends AbstractInfoCommand {
 	public Parameterized build() {
 		return builder()
 				.addChild(new RefreshPlugin(plugin).build(), "refresh", "reload")
+				.addChild(new PluginInfo(plugin, containers).build(), "info")
 				.build();
 	}
 
 	@Override
 	public String permission() {
-		return Permissions.SERVER_STAT_STAFF_INFO_PLUGINS;
+		return Permissions.SERVER_STAT_STAFF_PLUGINS_LIST;
 	}
 
 	@Override
 	public String command() {
 		return "plugins";
+	}
+
+	@Override
+	public String trackingName() {
+		return "serverstat";
 	}
 
 	@Override

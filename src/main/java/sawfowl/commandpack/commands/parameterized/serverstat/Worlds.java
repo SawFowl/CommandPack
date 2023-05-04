@@ -47,6 +47,11 @@ public class Worlds extends AbstractInfoCommand {
 	}
 
 	@Override
+	public String trackingName() {
+		return "serverstat";
+	}
+
+	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return null;
 	}

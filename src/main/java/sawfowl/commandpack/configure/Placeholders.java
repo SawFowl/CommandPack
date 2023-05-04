@@ -20,5 +20,9 @@ public class Placeholders {
 	public static final String ENTITIES_SIZE = "%entities-size%";
 	public static final String FROM_ALLOCATED = "%from-allocated%";
 	public static final String FROM_MAX= "%from-max%";
+	public static final String HOME_LINK = "%home-link%";
+	public static final String SOURCE_LINK = "%source-link%";
+	public static final String ISSUES_LINK = "%issues-link%";
+	public static final String UPDATE_LINK = "%update-link%";
 
 }

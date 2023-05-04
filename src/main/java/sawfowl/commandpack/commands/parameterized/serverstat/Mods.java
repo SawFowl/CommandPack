@@ -20,6 +20,7 @@ public class Mods extends AbstractInfoCommand {
 
 	public Mods(CommandPack plugin) {
 		super(plugin);
+		fillLists();
 	}
 
 	@Override
@@ -35,17 +36,24 @@ public class Mods extends AbstractInfoCommand {
 
 	@Override
 	public Parameterized build() {
-		return fastBuild();
+		return builder()
+				.addChild(new ModInfo(plugin, mods).build(), "info")
+				.build();
 	}
 
 	@Override
 	public String permission() {
-		return Permissions.SERVER_STAT_STAFF_INFO_MODS;
+		return Permissions.SERVER_STAT_STAFF_MODS_LIST;
 	}
 
 	@Override
 	public String command() {
 		return "mods";
+	}
+
+	@Override
+	public String trackingName() {
+		return "serverstat";
 	}
 
 	@Override

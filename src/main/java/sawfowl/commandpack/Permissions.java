@@ -89,8 +89,10 @@ public class Permissions {
 	public static final String SERVER_STAT_BASIC = "commandpack.commands.staff.serverstat.basic";
 	public static final String SERVER_STAT_STAFF_INFO_SYSTEM = "commandpack.commands.staff.serverstat.systeminfo";
 	public static final String SERVER_STAT_STAFF_INFO_WORLDS = "commandpack.commands.staff.serverstat.worldsinfo";
-	public static final String SERVER_STAT_STAFF_INFO_PLUGINS = "commandpack.commands.staff.serverstat.pluginsinfo";
-	public static final String SERVER_STAT_STAFF_INFO_MODS = "commandpack.commands.staff.serverstat.modsinfo";
+	public static final String SERVER_STAT_STAFF_PLUGINS_LIST = "commandpack.commands.staff.serverstat.plugins.list";
+	public static final String SERVER_STAT_STAFF_PLUGINS_INFO = "commandpack.commands.staff.serverstat.plugins.info";
+	public static final String SERVER_STAT_STAFF_MODS_LIST = "commandpack.commands.staff.serverstat.mods.list";
+	public static final String SERVER_STAT_STAFF_MODS_INFO = "commandpack.commands.staff.serverstat.mods.info";
 	public static final String SERVER_STAT_STAFF_INFO_PLUGINS_REFRESH = "commandpack.commands.staff.serverstat.pluginsrefresh";
 	public static final String SERVER_STAT_STAFF_INFO_TPS = "commandpack.commands.staff.serverstat.tps";
 	public static final String KIT_STAFF = "commandpack.commands.staff.kit";

@@ -17,6 +17,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
+import sawfowl.commandpack.commands.parameterized.serverstat.Mods;
 import sawfowl.commandpack.commands.parameterized.serverstat.Plugins;
 import sawfowl.commandpack.commands.parameterized.serverstat.ServerTime;
 import sawfowl.commandpack.commands.parameterized.serverstat.Tps;
@@ -28,20 +29,25 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class ServerStat extends AbstractInfoCommand {
 
-	final Plugins plugins;
-	final Parameterized pluginsCommand;
-	final Tps tps;
-	final Parameterized tpsCommand;
-	final ServerTime time;
-	final Parameterized timeCommand;
+	private final Plugins plugins;
+	private final Parameterized pluginsCommand;
+	private  Mods mods;
+	private Parameterized modsCommand;
+	private final Tps tps;
+	private final Parameterized tpsCommand;
+	private final ServerTime time;
+	private final Parameterized timeCommand;
 	public ServerStat(CommandPack plugin) {
 		super(plugin);
 		plugins = new Plugins(plugin);
 		pluginsCommand = plugins.build();
+		mods = new Mods(plugin);
+		modsCommand = mods.build();
 		this.tps = new Tps(plugin);
 		this.tpsCommand = tps.build();
 		this.time = new ServerTime(plugin);
 		this.timeCommand = time.build();
+		fillLists();
 	}
 
 	@Override
@@ -57,7 +63,7 @@ public class ServerStat extends AbstractInfoCommand {
 
 	@Override
 	public Parameterized build() {
-		return builder()
+		return (plugin.isForgeServer() ? builder().addChild(modsCommand, "mods") : builder())
 				.addChild(new Worlds(plugin).build(), "worlds")
 				.addChild(pluginsCommand, "plugins")
 				.addChild(tpsCommand, "tps")
@@ -75,6 +81,7 @@ public class ServerStat extends AbstractInfoCommand {
 				event.register(getContainer(), build(), command(), getCommandSettings().getAliases());
 			} else event.register(getContainer(), build(), command());
 		}
+		if(plugin.isForgeServer()) mods.register(event);
 		plugins.register(event);
 		tps.enableRegister();
 		tps.register(event);
@@ -134,11 +141,17 @@ public class ServerStat extends AbstractInfoCommand {
 			});
 			buttons = buttons.append(worlds).append(text("&r "));
 		}
-		if(isPlayer && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_INFO_PLUGINS)) {
+		if(isPlayer && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_PLUGINS_LIST)) {
 			Component plugins = TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_PLUGINS), () -> {
 				sendPluginsInfo(src, locale, isPlayer);
 			});
 			buttons = buttons.append(plugins);
+		}
+		if(plugin.isForgeServer() && isPlayer && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_MODS_LIST)) {
+			Component mods = TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_MODS), () -> {
+				sendModsInfo(src, locale, isPlayer);
+			});
+			buttons = buttons.append(text("&r ")).append(mods);
 		}
 		return buttons;
 	}

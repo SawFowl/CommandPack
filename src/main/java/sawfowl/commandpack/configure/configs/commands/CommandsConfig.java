@@ -40,7 +40,6 @@ public class CommandsConfig {
 	public CommandsConfig() {}
 
 	private Map<String, CommandSettings> map = new HashMap<>();
-	private boolean serverStatRegister;
 
 	@Setting("Suicide")
 	private CommandSettings suicide = new CommandSettings();
@@ -216,7 +215,6 @@ public class CommandsConfig {
 		reference.node().childrenMap().entrySet().forEach(entry -> {
 			map.put(entry.getKey().toString().toLowerCase(), getCommandFromNode(entry.getValue()));
 		});
-		serverStatRegister = serverStat.isEnable();
 	}
 
 	private CommandSettings getCommandFromNode(CommentedConfigurationNode node) {
@@ -264,7 +262,7 @@ public class CommandsConfig {
 	}
 
 	private void registerParameterizedCommand(RegisterCommandEvent<Parameterized> event, CommandPack plugin, CommandSettings settings, AbstractParameterizedCommand command) {
-		if((serverStatRegister && (command.command().equalsIgnoreCase("plugins") || command.command().equalsIgnoreCase("tps") || command.command().equalsIgnoreCase("servertime"))) || !settings.isEnable()) return;
+		if(!settings.isEnable() || (serverStat.isEnable() && (command.command().equalsIgnoreCase("mods") || command.command().equalsIgnoreCase("plugins") || command.command().equalsIgnoreCase("tps") || command.command().equalsIgnoreCase("servertime")))) return;
 		command.register(event);
 	}
 

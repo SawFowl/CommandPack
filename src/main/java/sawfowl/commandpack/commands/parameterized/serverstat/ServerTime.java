@@ -54,6 +54,11 @@ public class ServerTime extends AbstractInfoCommand {
 	}
 
 	@Override
+	public String trackingName() {
+		return "serverstat";
+	}
+
+	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return null;
 	}
