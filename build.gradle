@@ -96,6 +96,13 @@ sponge {
 task sourcesJar(type: Jar, dependsOn: classes) {
 	classifier = 'sources'
 	from sourceSets.main.allSource
+	exclude('sawfowl/commandpack/apiclasses/**')
+	exclude('sawfowl/commandpack/commands/**')
+	exclude('sawfowl/commandpack/configure/**')
+	exclude('sawfowl/commandpack/listeners/**')
+	exclude('sawfowl/commandpack/utils/**')
+	exclude('sawfowl/commandpack/CommandPack.java')
+	exclude('sawfowl/commandpack/Permissions.java')
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -117,6 +124,6 @@ configurations {
 javadoc {
 	options.encoding = 'UTF-8'
 	source configurations.doc.collect { zipTree(it) }
-	include '**/*.java'
+	include 'sawfowl/commandpack/api/*.java'
 	options.addStringOption('Xdoclint:none', '-quiet')
 }
