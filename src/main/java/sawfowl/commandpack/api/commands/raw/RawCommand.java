@@ -32,20 +32,42 @@ import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
 
+/**
+ * This interface is designed to simplify the creation of Raw commands.
+ *
+ * @author SawFowl
+ */
 public interface RawCommand extends PluginCommand, Raw {
 
+	/**
+	 * Command code execution.
+	 */
 	void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException;
 
+	/**
+	 * Auto-complete command arguments.
+	 */
 	List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException;
 
 	Component shortDescription(Locale locale);
 
 	Component extendedDescription(Locale locale);
 
+	/**
+	 * The method is designed to define an empty autofill list.<br>
+	 * It is recommended to create a class variable to save resources.
+	 */
 	List<CommandCompletion> getEmptyCompletion();
 
+	/**
+	 * Subcommand map.<br>
+	 * The subcommands automatically get to the first place when the arguments are autocomplete.
+	 */
 	Map<String, RawCommand> getChildExecutors();
 
+	/**
+	 * Checks for child commands and who activated the command.
+	 */
 	@Override
 	default CommandResult process(CommandCause cause, Mutable arguments) throws CommandException {
 		boolean isPlayer = cause.audience() instanceof ServerPlayer;
@@ -73,6 +95,9 @@ public interface RawCommand extends PluginCommand, Raw {
 		return success();
 	}
 
+	/**
+	 * Autocomplete arguments.
+	 */
 	@Override
 	default List<CommandCompletion> complete(CommandCause cause, Mutable arguments) throws CommandException {
 		List<String> args = Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList());
@@ -98,11 +123,17 @@ public interface RawCommand extends PluginCommand, Raw {
 		return Optional.ofNullable(extendedDescription(getLocale(cause)));
 	}
 
+	/**
+	 * Determining who can use the command.
+	 */
 	@Override
 	default boolean canExecute(CommandCause cause) {
 		return cause.hasPermission(permission());
 	}
 
+	/**
+	 * Command registration.
+	 */
 	default void register(RegisterCommandEvent<Raw> event) {
 		if(getCommandSettings() == null) {
 			event.register(getContainer(), this, command());
@@ -114,6 +145,9 @@ public interface RawCommand extends PluginCommand, Raw {
 		}
 	}
 
+	/**
+	 * Convert string to object {@link Duration}
+	 */
 	default Duration getDuration(String s, Locale locale) throws CommandException {
 		s = s.toUpperCase();
 		if (!s.contains("T")) {
@@ -139,10 +173,16 @@ public interface RawCommand extends PluginCommand, Raw {
 		}
 	}
 
+	/**
+	 * An attempt to convert a string to an integer.
+	 */
 	default Optional<Integer> parseInt(String arg) {
 		return NumberUtils.isParsable(arg) ? Optional.ofNullable(NumberUtils.createInteger(arg)) : Optional.empty();
 	}
 
+	/**
+	 * An attempt to convert a string to a fractional number.
+	 */
 	default Optional<Double> parseDouble(String arg) {
 		return NumberUtils.isParsable(arg) ? Optional.ofNullable(NumberUtils.createDouble(arg)) : Optional.empty();
 	}

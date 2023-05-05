@@ -26,21 +26,37 @@ import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
 
+/**
+ * This interface is designed to simplify the creation of commands and add additional functionality to them.
+ * 
+ * @author SawFowl
+ */
 public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 
+	/**
+	 * Command code execution.
+	 */
 	void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException;
 
+	/**
+	 * Map of arguments.<br>
+	 * The argument can be optional for the player and mandatory for the console.
+	 */
 	Map<String, ParameterSettings> getSettingsMap();
 
+	/**
+	 * Command building.
+	 */
 	Command.Parameterized build();
 
+	/**
+	 * Check the command arguments and determine who is using the command.
+	 */
 	@Override
 	default CommandResult execute(CommandContext context) throws CommandException {
 		boolean isPlayer = context.cause().audience() instanceof ServerPlayer;
 		Locale locale = getLocale(context.cause());
-		if(getSettingsMap() != null && !getSettingsMap().isEmpty()) 
-			for(ParameterSettings settings : getSettingsMap().values())
-				if(!settings.containsIn(context) && (!settings.isOptional() || (!isPlayer && !settings.isOptionalForConsole()))) exception(locale, settings.getPath());
+		if(getSettingsMap() != null && !getSettingsMap().isEmpty()) for(ParameterSettings settings : getSettingsMap().values()) if(!settings.containsIn(context) && (!settings.isOptional() || (!isPlayer && !settings.isOptionalForConsole()))) exception(locale, settings.getPath());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) context.cause().audience();
 			if(getCommandSettings() != null && getCooldowns() != null) {
@@ -59,6 +75,9 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 		return success();
 	}
 
+	/**
+	 * Command registration.
+	 */
 	default void register(RegisterCommandEvent<Parameterized> event) {
 		if(build() == null) return;
 		if(getCommandSettings() == null) {
@@ -72,10 +91,18 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 		CommandPack.getInstance().getPlayersData().getTempData().addTrackingCooldownCommand(this);
 	}
 
+	/**
+	 * Command builder.<br>
+	 * This builder adds permission.
+	 */
 	default Builder builder() {
 		return builderNoPerm().permission(permission());
 	}
 
+	/**
+	 * Command builder.<br>
+	 * This builder adds arguments if they exist.
+	 */
 	default Builder builderNoPerm() {
 		return getSettingsMap() != null && !getSettingsMap().isEmpty() ?
 				Command.builder()
@@ -85,16 +112,16 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 					.executor(this);
 	}
 
+	/**
+	 * Command building.<br>
+	 * Automatically applies permission and arguments if available.
+	 */
 	default Command.Parameterized fastBuild() {
-		return builder().build();
+		return (permission() == null ?  builderNoPerm() : builder()).build();
 	}
 
 	default Optional<ServerPlayer> getPlayer(CommandContext context) {
 		return getArgument(context, ServerPlayer.class, "Player");
-	}
-
-	default Optional<ServerPlayer> getPlayer(CommandContext context, Audience src, boolean isPlayer) {
-		return Optional.ofNullable(getPlayer(context).orElseGet(() -> (isPlayer ? (ServerPlayer) src : null)));
 	}
 
 	default Optional<String> getUser(CommandContext context) {
@@ -121,10 +148,16 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 		return getArgument(context, ServerLocation.class, "Location");
 	}
 
+	/**
+	 * Getting an object from a command argument.
+	 */
 	default <T> Optional<T> getArgument(CommandContext context, Class<T> object, String arg) {
 		return getSettingsMap() != null && getSettingsMap().containsKey(arg) ? getSettingsMap().get(arg).getParameterValue(object, context) : Optional.empty();
 	}
 
+	/**
+	 * Getting an object from a command argument.
+	 */
 	default <T> Optional<T> getArgument(CommandContext context, Value<T> value) {
 		return context.one(value);
 	}

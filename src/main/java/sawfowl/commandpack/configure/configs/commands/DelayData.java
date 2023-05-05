@@ -9,15 +9,15 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 @ConfigSerializable
-public class Delay implements sawfowl.commandpack.api.data.command.Delay {
+public class DelayData implements sawfowl.commandpack.api.data.command.Delay {
 
-	public Delay() {}
-	public Delay(long seconds) {
+	public DelayData() {}
+	public DelayData(long seconds) {
 		this.seconds = seconds;
 	}
-	public Delay(long seconds, CancelRules cancelRules) {
+	public DelayData(long seconds, CancelRulesData cancelRulesData) {
 		this.seconds = seconds;
-		this.cancelRules = cancelRules;
+		this.cancelRulesData = cancelRulesData;
 	}
 
 	public Builder builder() {
@@ -26,20 +26,20 @@ public class Delay implements sawfowl.commandpack.api.data.command.Delay {
 
 	@Setting("Seconds")
 	private long seconds = 0;
-	@Setting("CancelRules")
-	private CancelRules cancelRules = new CancelRules();
+	@Setting("CancelRulesData")
+	private CancelRulesData cancelRulesData = new CancelRulesData();
 
 	public long getSeconds() {
 		return seconds;
 	}
 
-	public CancelRules getCancelRules() {
-		return cancelRules;
+	public CancelRulesData getCancelRules() {
+		return cancelRulesData;
 	}
 
 	@Override
 	public String toString() {
-		return "Delay [Seconds=" + seconds + ", CancelRules=" + cancelRules + "]";
+		return "DelayData [Seconds=" + seconds + ", CancelRulesData=" + cancelRulesData + "]";
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class Delay implements sawfowl.commandpack.api.data.command.Delay {
 	public DataContainer toContainer() {
 		return DataContainer.createNew()
 				.set(DataQuery.of("Seconds"), seconds)
-				.set(DataQuery.of("CancelRules"), cancelRules)
+				.set(DataQuery.of("CancelRulesData"), cancelRulesData)
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
@@ -59,26 +59,26 @@ public class Delay implements sawfowl.commandpack.api.data.command.Delay {
 
 		@Override
 		public Builder setSeconds(long seconds) {
-			Delay.this.seconds = seconds;
+			DelayData.this.seconds = seconds;
 			return this;
 		}
 
 		@Override
 		public Builder setCancelRules(sawfowl.commandpack.api.data.command.CancelRules rules) {
-			Delay.this.cancelRules = new CancelRules(rules.isAllowMoving(), rules.isAllowOtherCommand());;
+			DelayData.this.cancelRulesData = new CancelRulesData(rules.isAllowMoving(), rules.isAllowOtherCommand());;
 			return this;
 		}
 
 		@Override
 		public Builder reset() {
 			seconds = 0;
-			cancelRules = new CancelRules(false, false);
+			cancelRulesData = new CancelRulesData(false, false);
 			return this;
 		}
 
 		@Override
-		public @NotNull Delay build() {
-			return Delay.this;
+		public @NotNull DelayData build() {
+			return DelayData.this;
 		}
 		
 	}

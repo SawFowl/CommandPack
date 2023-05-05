@@ -46,25 +46,25 @@ public class CommandsConfig {
 	@Setting("Hat")
 	private CommandSettings hat = new CommandSettings();
 	@Setting("Home")
-	private CommandSettings home = new CommandSettings(new Delay(3));
+	private CommandSettings home = new CommandSettings(new DelayData(3));
 	@Setting("SetHome")
 	private CommandSettings setHome = new CommandSettings();
 	@Setting("SetSpawn")
 	private CommandSettings setSpawn = new CommandSettings();
 	@Setting("Spawn")
-	private CommandSettings spawn = new CommandSettings(new Delay(3));
+	private CommandSettings spawn = new CommandSettings(new DelayData(3));
 	@Setting("SetWarp")
 	private CommandSettings setWarp = new CommandSettings();
 	@Setting("Warp")
-	private CommandSettings warp = new CommandSettings(15, new Delay(3));
+	private CommandSettings warp = new CommandSettings(15, new DelayData(3));
 	@Setting("Warps")
-	private CommandSettings warps = new CommandSettings(new Delay(3));
+	private CommandSettings warps = new CommandSettings(new DelayData(3));
 	@Setting("Tpa")
-	private CommandSettings tpa = new CommandSettings(new Delay(3), new CommandPrice("$", 5));
+	private CommandSettings tpa = new CommandSettings(new DelayData(3), new CommandPrice("$", 5));
 	@Setting("Tpahere")
-	private CommandSettings tpahere = new CommandSettings(new Delay(3), new CommandPrice("$", 10));
+	private CommandSettings tpahere = new CommandSettings(new DelayData(3), new CommandPrice("$", 10));
 	@Setting("Tpahereall")
-	private CommandSettings tpahereall = new CommandSettings(new Delay(3));
+	private CommandSettings tpahereall = new CommandSettings(new DelayData(3));
 	@Setting("Teleport")
 	private CommandSettings teleport = new CommandSettings(new String[] {"tp"});
 	@Setting("TeleportHere")
@@ -90,11 +90,11 @@ public class CommandsConfig {
 	@Setting("Jump")
 	private CommandSettings jump = new CommandSettings();
 	@Setting("Back")
-	private CommandSettings back = new CommandSettings(new Delay(15));
+	private CommandSettings back = new CommandSettings(new DelayData(15));
 	@Setting("Fly")
-	private CommandSettings fly = new CommandSettings(new Delay(5));
+	private CommandSettings fly = new CommandSettings(new DelayData(5));
 	@Setting("GodMode")
-	private CommandSettings godMode = new CommandSettings(new Delay(5), new String[] {"god"});
+	private CommandSettings godMode = new CommandSettings(new DelayData(5), new String[] {"god"});
 	@Setting("Speed")
 	private CommandSettings speed = new CommandSettings();
 	@Setting("Disposal")
@@ -185,7 +185,7 @@ public class CommandsConfig {
 						registerParameterizedCommand(event, plugin, settings, command);
 					});
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					plugin.getLogger().error("Error when registering a command class '" + clazz.getName() +"'\n" + e.getLocalizedMessage());
+					plugin.getLogger().error("Error when registering a command class '" + clazz.getName());
 					e.printStackTrace();
 				}
 			}
@@ -203,7 +203,8 @@ public class CommandsConfig {
 						if(settings.isEnable()) command.register(event);
 					});
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					plugin.getLogger().error("Error when registering a command class '" + clazz.getName() +"'\n" + e.getLocalizedMessage());
+					plugin.getLogger().error("Error when registering a command class '" + clazz.getName());
+					e.printStackTrace();
 				}
 			}
 		} catch (IOException | NoSuchMethodException | SecurityException | URISyntaxException e) {

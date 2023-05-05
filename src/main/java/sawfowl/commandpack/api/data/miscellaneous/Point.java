@@ -1,12 +1,13 @@
 package sawfowl.commandpack.api.data.miscellaneous;
 
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.math.vector.Vector3d;
 import org.spongepowered.math.vector.Vector3i;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
-@ConfigSerializable
+/**
+ * @author SawFowl
+ */
 public interface Point {
 
 	Vector3d asVector3d();

@@ -2,6 +2,11 @@ package sawfowl.commandpack.api.data.kits;
 
 import java.util.stream.Stream;
 
+/**
+ * Rules for giving the kit.
+ * 
+ * @author SawFowl
+ */
 public enum GiveRule {
 
 	IGNORE_FULL_INVENTORY {

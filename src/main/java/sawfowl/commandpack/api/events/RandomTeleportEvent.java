@@ -5,6 +5,11 @@ import org.spongepowered.api.event.entity.ChangeEntityWorldEvent;
 
 import sawfowl.commandpack.api.RandomTeleportService.RandomTeleportOptions;
 
+/**
+ * The event is triggered when using the command /randomteleport, if the position was found.
+ * 
+ * @author SawFowl
+ */
 public interface RandomTeleportEvent extends ChangeEntityWorldEvent.Reposition {
 
 	/**

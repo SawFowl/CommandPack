@@ -2,6 +2,11 @@ package sawfowl.commandpack.api;
 
 import org.spongepowered.api.event.Event;
 
+/**
+ * Plugin API.
+ * 
+ * @author SawFowl
+ */
 public interface CommandPack {
 
 	/**
@@ -19,6 +24,9 @@ public interface CommandPack {
 	 */
 	boolean isForgeServer();
 
+	/**
+	 * Kits API.
+	 */
 	KitService kitService();
 
 	public double getAverageTPS1m();
@@ -27,6 +35,9 @@ public interface CommandPack {
 
 	public double getAverageTPS10m();
 
+	/**
+	 * Event for getting the plugin API.
+	 */
 	interface PostAPI extends Event {
 
 		public CommandPack getAPI();

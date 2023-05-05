@@ -13,7 +13,7 @@ import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 
-public class ParameterSettings implements sawfowl.commandpack.api.commands.parameterized.ParameterSettings {
+public class ParameterSettingsImpl implements sawfowl.commandpack.api.commands.parameterized.ParameterSettings {
 
 	private Parameter.Value<?> parameter;
 	private Boolean optional;
@@ -21,8 +21,8 @@ public class ParameterSettings implements sawfowl.commandpack.api.commands.param
 	private Object[] path = {"NaN"};
 	private String key;
 	private int position = 0;
-	public ParameterSettings() {}
-	public ParameterSettings(Parameter.Value<?> parameter, boolean optional, boolean optionalForConsole, Object... pathException) {
+	public ParameterSettingsImpl() {}
+	public ParameterSettingsImpl(Parameter.Value<?> parameter, boolean optional, boolean optionalForConsole, Object... pathException) {
 		this.key = parameter.key().key();
 		this.parameter = parameter;
 		this.optionalForConsole = optional && optionalForConsole;
@@ -122,25 +122,25 @@ public class ParameterSettings implements sawfowl.commandpack.api.commands.param
 
 		@Override
 		public Builder setOptional(boolean optional) {
-			ParameterSettings.this.optional = optional;
+			ParameterSettingsImpl.this.optional = optional;
 			return this;
 		}
 
 		@Override
-		public ParameterSettings.Builder localeTextPath(Object[] path) {
-			ParameterSettings.this.path = path;
+		public ParameterSettingsImpl.Builder localeTextPath(Object[] path) {
+			ParameterSettingsImpl.this.path = path;
 			return this;
 		}
 
 		@Override
 		public Builder position(int position) {
-			ParameterSettings.this.position = position;
+			ParameterSettingsImpl.this.position = position;
 			return this;
 		}
 
 		@Override
-		public @NotNull ParameterSettings build() {
-			return ParameterSettings.this;
+		public @NotNull ParameterSettingsImpl build() {
+			return ParameterSettingsImpl.this;
 		}
 		
 	}

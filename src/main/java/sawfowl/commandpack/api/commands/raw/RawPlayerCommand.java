@@ -9,8 +9,17 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 
+/**
+ * This interface is designed to simplify the creation of Raw commands.<br>
+ * Commands created using this interface can only be used by players.
+ * 
+ * @author SawFowl
+ */
 public interface RawPlayerCommand extends RawCommand {
 
+	/**
+	 * Command code execution.
+	 */
 	void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException;
 
 	@Override

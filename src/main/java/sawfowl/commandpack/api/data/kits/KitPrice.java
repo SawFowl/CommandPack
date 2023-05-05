@@ -9,6 +9,9 @@ import org.spongepowered.api.service.economy.Currency;
 import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
 
+/**
+ * @author SawFowl
+ */
 public interface KitPrice extends DataSerializable {
 
 	static KitPrice of(Currency currency, BigDecimal money) {

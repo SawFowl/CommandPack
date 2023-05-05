@@ -14,7 +14,11 @@ import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
-
+/**
+ * A tool for getting random positions in the world.
+ * 
+ * @author SawFowl
+ */
 public interface RandomTeleportService {
 
 	/**

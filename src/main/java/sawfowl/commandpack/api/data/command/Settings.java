@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
-@ConfigSerializable
+/**
+ * Additional command settings.
+ * 
+ * @author SawFowl
+ */
 public interface Settings extends DataSerializable {
 
 	static Builder builder() {

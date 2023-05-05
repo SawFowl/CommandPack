@@ -32,6 +32,11 @@ import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.tasks.DelayTimerTask;
 import sawfowl.localeapi.api.TextUtils;
 
+/**
+ * An auxiliary interface for creating commands.
+ * 
+ * @author SawFowl
+ */
 public interface PluginCommand {
 
 	/**
@@ -73,6 +78,9 @@ public interface PluginCommand {
 		return CommandPack.getInstance().getPlayersData().getTempData().getTrackingMap(trackingName());
 	}
 
+	/**
+	 * Getting a localized message for the player.
+	 */
 	default Component getText(ServerPlayer player, Object[] path) {
 		return getText(player.locale(), path);
 	}
@@ -81,6 +89,9 @@ public interface PluginCommand {
 		return cause.audience() instanceof SystemSubject ? CommandPack.getInstance().getLocales().getLocaleService().getSystemOrDefaultLocale() : (cause.audience() instanceof LocaleSource ? ((LocaleSource) cause.audience()).locale() : org.spongepowered.api.util.locale.Locales.DEFAULT);
 	}
 
+	/**
+	 * Getting a localized message.
+	 */
 	default Component getText(Locale locale, Object... path) {
 		Component text = getText(path);
 		if(text != null) return text;
@@ -96,6 +107,9 @@ public interface PluginCommand {
 		return CommandResult.success();
 	}
 
+	/**
+	 * Serialization of text.
+	 */
 	default Component text(String string) {
 		if(isLegacyDecor(string)) {
 			return TextUtils.deserializeLegacy(string);
@@ -108,14 +122,24 @@ public interface PluginCommand {
 		return text(objectToString.toString());
 	}
 
+	/**
+	 * Outputs an error message when the command is executed.
+	 */
 	default CommandException exception(Component text) throws CommandException {
 		throw new CommandException(text);
 	}
 
+	/**
+	 * Outputs an error message when the command is executed.
+	 */
 	default CommandException exception(String text) throws CommandException {
 		return exception(text(text));
 	}
 
+	/**
+	 * 
+	 * Outputs a localized error message during command execution.
+	 */
 	default CommandException exception(Locale locale, Object... path) throws CommandException {
 		return exception(getText(locale, path));
 	}
@@ -136,6 +160,9 @@ public interface PluginCommand {
 		return exception(TextUtils.replaceToComponents(getText(locale, path), keys, values));
 	}
 
+	/**
+	 * Time formatting.
+	 */
 	default Component timeFormat(long second, Locale locale) {
 		long minute = TimeUnit.SECONDS.toMinutes(second);
 		long hour = TimeUnit.SECONDS.toHours(second);
@@ -149,7 +176,11 @@ public interface PluginCommand {
 		}
 		return TextUtils.replaceToComponents(Component.text(String.format((days > 9 ? "%02d" : "%01d"), days) + "%days% " + String.format((hour - (days * 24) > 9 ? "%02d" : "%01d"), hour - (days * 24)) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")), new String[] {"%days%", "%hour%", "%minute%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_DAYS), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_HOUR), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE)});
 	}
-	
+
+	/**
+	 * Code execution delay.<br>
+	 * Automatically activates the command's execution fee if required by the command's settings.
+	 */
 	default void delay(ServerPlayer player, Locale locale, ThrowingConsumer<PluginCommand, CommandException> consumer) throws CommandException {
 		if(getCommandSettings().getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(command()))) {
 			CommandPack.getInstance().getPlayersData().getTempData().addCommandTracking(command(), player);
@@ -160,6 +191,9 @@ public interface PluginCommand {
 		}
 	}
 
+	/**
+	 * Payment for the execution of the command.
+	 */
 	default void economy(ServerPlayer player, Locale locale) throws CommandException {
 		if(getCommandSettings() == null || !CommandPack.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command()))) return;
 		Price price = getCommandSettings().getPrice();
@@ -183,6 +217,9 @@ public interface PluginCommand {
 		return "0123456789abcdefklmnor".indexOf(ch) != -1;
 	}
 
+	/**
+	 * Sending a multi-page list of text.
+	 */
 	default void sendPaginationList(Audience target, Component title, Component padding, int linesPerPage, List<Component> components) {
 		if(linesPerPage < 1) linesPerPage = 5;
 		PaginationList.builder()

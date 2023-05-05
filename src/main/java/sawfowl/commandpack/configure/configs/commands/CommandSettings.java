@@ -22,17 +22,17 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 		this.aliases = aliases;
 	}
 
-	public CommandSettings(Delay delay) {
-		this.delay = delay;
+	public CommandSettings(DelayData delayData) {
+		this.delayData = delayData;
 	}
 
 	public CommandSettings(long cooldown) {
 		this.cooldown = cooldown;
 	}
 
-	public CommandSettings(long cooldown, Delay delay) {
+	public CommandSettings(long cooldown, DelayData delayData) {
 		this.cooldown = cooldown;
-		this.delay = delay;
+		this.delayData = delayData;
 	}
 
 	public CommandSettings(long cooldown, String[] aliases) {
@@ -40,8 +40,8 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 		this.aliases = aliases;
 	}
 
-	public CommandSettings(Delay delay, String[] aliases) {
-		this.delay = delay;
+	public CommandSettings(DelayData delayData, String[] aliases) {
+		this.delayData = delayData;
 		this.aliases = aliases;
 	}
 
@@ -50,26 +50,26 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 		this.aliases = aliases;
 	}
 
-	public CommandSettings(Delay delay, CommandPrice price) {
-		this.delay = delay;
+	public CommandSettings(DelayData delayData, CommandPrice price) {
+		this.delayData = delayData;
 		this.price = price;
 	}
 
-	public CommandSettings(long cooldown, Delay delay, CommandPrice price) {
+	public CommandSettings(long cooldown, DelayData delayData, CommandPrice price) {
 		this.cooldown = cooldown;
-		this.delay = delay;
+		this.delayData = delayData;
 		this.price = price;
 	}
 
-	public CommandSettings(long cooldown, Delay delay, String[] aliases) {
+	public CommandSettings(long cooldown, DelayData delayData, String[] aliases) {
 		this.cooldown = cooldown;
-		this.delay = delay;
+		this.delayData = delayData;
 		this.aliases = aliases;
 	}
 
-	public CommandSettings(long cooldown, Delay delay, CommandPrice price, String[] aliases) {
+	public CommandSettings(long cooldown, DelayData delayData, CommandPrice price, String[] aliases) {
 		this.cooldown = cooldown;
-		this.delay = delay;
+		this.delayData = delayData;
 		this.price = price;
 		this.aliases = aliases;
 	}
@@ -82,8 +82,8 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 	private String[] aliases = {};
 	@Setting("Cooldown")
 	private long cooldown = 0;
-	@Setting("Delay")
-	private Delay delay = new Delay();
+	@Setting("DelayData")
+	private DelayData delayData = new DelayData();
 	@Setting("Enable")
 	private boolean enable = true;
 	@Setting("Price")
@@ -105,8 +105,8 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 	}
 
 	@Override
-	public Delay getDelay() {
-		return delay;
+	public DelayData getDelay() {
+		return delayData;
 	}
 
 	@Override
@@ -135,7 +135,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 
 	@Override
 	public String toString() {
-		return "Settings [Aliases=" + aliases + ", Cooldown=" + cooldown + ", Delay=" + delay + ", Enable=" + enable + ", Price=" + price + "]";
+		return "Settings [Aliases=" + aliases + ", Cooldown=" + cooldown + ", DelayData=" + delayData + ", Enable=" + enable + ", Price=" + price + "]";
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 		return DataContainer.createNew()
 				.set(DataQuery.of("Aliases"), aliases)
 				.set(DataQuery.of("Cooldown"), cooldown)
-				.set(DataQuery.of("Delay"), delay)
+				.set(DataQuery.of("DelayData"), delayData)
 				.set(DataQuery.of("Enable"), enable)
 				.set(DataQuery.of("Price"), price)
 				.set(Queries.CONTENT_VERSION, contentVersion());
@@ -160,7 +160,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 		public sawfowl.commandpack.api.data.command.Settings.Builder reset() {
 			CommandSettings.this.aliases = new String[] {};
 			CommandSettings.this.cooldown = 0;
-			CommandSettings.this.delay = new sawfowl.commandpack.configure.configs.commands.Delay();
+			CommandSettings.this.delayData = new sawfowl.commandpack.configure.configs.commands.DelayData();
 			CommandSettings.this.enable = true;
 			CommandSettings.this.price = new CommandPrice();
 			return this;
@@ -191,7 +191,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 
 		@Override
 		public Builder setDelay(sawfowl.commandpack.api.data.command.Delay delay) {
-			CommandSettings.this.delay = delay instanceof sawfowl.commandpack.configure.configs.commands.Delay ? (sawfowl.commandpack.configure.configs.commands.Delay) delay : new sawfowl.commandpack.configure.configs.commands.Delay(delay.getSeconds(), new CancelRules(delay.getCancelRules().isAllowMoving(), delay.getCancelRules().isAllowOtherCommand()));
+			CommandSettings.this.delayData = delay instanceof sawfowl.commandpack.configure.configs.commands.DelayData ? (sawfowl.commandpack.configure.configs.commands.DelayData) delay : new sawfowl.commandpack.configure.configs.commands.DelayData(delay.getSeconds(), new CancelRulesData(delay.getCancelRules().isAllowMoving(), delay.getCancelRules().isAllowOtherCommand()));
 			return this;
 		}
 

@@ -5,6 +5,11 @@ import java.util.Optional;
 
 import sawfowl.commandpack.api.data.kits.Kit;
 
+/**
+ * Kits API.
+ * 
+ * @author SawFowl
+ */
 public interface KitService {
 
 	boolean addKit(Kit kit);

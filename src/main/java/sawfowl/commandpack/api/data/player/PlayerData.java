@@ -8,15 +8,16 @@ import java.util.function.Predicate;
 
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.api.data.kits.Kit;
 
 /**
  * This interface allows you to view and change plugin data for a particular player.
+ * 
+ * @author SawFowl
  */
-@ConfigSerializable
 public interface PlayerData {
 
 	/**

@@ -11,6 +11,9 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.api.data.player.Warp;
 
+/**
+ * @author SawFowl
+ */
 public interface PlayersData {
 
 	/**

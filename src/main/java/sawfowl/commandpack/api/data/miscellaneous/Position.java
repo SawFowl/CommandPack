@@ -4,11 +4,13 @@ import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.math.vector.Vector3d;
+
 import net.kyori.adventure.builder.AbstractBuilder;
 
-@ConfigSerializable
+/**
+ * @author SawFowl
+ */
 public interface Position extends Point, DataSerializable {
 
 	static Builder builder() {

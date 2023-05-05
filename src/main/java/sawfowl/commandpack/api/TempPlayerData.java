@@ -12,6 +12,8 @@ import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 
 /**
  * Used to store temporary data of players who used the functionality of the CommandPack plugin.
+ * 
+ * @author SawFowl
  */
 public interface TempPlayerData {
 

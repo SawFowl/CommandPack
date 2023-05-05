@@ -5,6 +5,11 @@ import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
+/**
+ * Setting the command execution delay.
+ * 
+ * @author SawFowl
+ */
 public interface Delay extends DataSerializable {
 
 	static Builder builder() {

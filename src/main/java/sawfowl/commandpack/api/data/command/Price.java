@@ -6,6 +6,11 @@ import org.spongepowered.api.service.economy.Currency;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
+/**
+ * Setting the command execution price.
+ * 
+ * @author SawFowl
+ */
 public interface Price extends DataSerializable {
 
 	static Builder builder() {

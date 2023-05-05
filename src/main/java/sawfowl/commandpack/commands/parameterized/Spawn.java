@@ -34,9 +34,18 @@ public class Spawn extends AbstractParameterizedCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		Optional<SpawnData> spawn = plugin.getMainConfig().getSpawnData();
-		Optional<ServerPlayer> optPlayer = getPlayer(context, src, isPlayer);
-		if(!optPlayer.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
-		teleport(optPlayer.get(), spawn, getSourceName(context.cause(), src, optPlayer.get().locale(), optPlayer.get()));
+		if(isPlayer) {
+			ServerPlayer source = (ServerPlayer) src;
+			ServerPlayer player = getPlayer(context).orElse(source);
+			if(source.uniqueId().equals(player.uniqueId())) {
+				delay(player, locale, consumer -> {
+					teleport(player, spawn, getSourceName(context.cause(), src, player.locale(), player));
+				});
+			} else teleport(player, spawn, getSourceName(context.cause(), src, player.locale(), player));
+		} else {
+			ServerPlayer player = getPlayer(context).orElse((ServerPlayer) src);
+			teleport(player, spawn, getSourceName(context.cause(), src, player.locale(), player));
+		}
 	}
 
 	@Override
@@ -51,7 +60,7 @@ public class Spawn extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.SPAWN_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.SPAWN_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 
 	@Override

@@ -12,6 +12,12 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
+/**
+ * This interface is designed to simplify the creation of commands and add additional functionality to them.<br>
+ * Commands created using this interface can only be used by players.
+ * 
+ * @author SawFowl
+ */
 public interface ParameterizedPlayerCommand extends ParameterizedCommand {
 
 	void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException;

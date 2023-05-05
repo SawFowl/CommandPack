@@ -10,6 +10,11 @@ import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
+/**
+ * Interface for additional customization of command arguments.
+ * 
+ * @author SawFowl
+ */
 public interface ParameterSettings extends DataSerializable {
 
 	static Builder builder() {

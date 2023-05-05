@@ -49,9 +49,14 @@ import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.apiclasses.KitServiceImpl;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.apiclasses.RTPService;
+import sawfowl.commandpack.commands.settings.ParameterSettingsImpl;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.configs.MainConfig;
+import sawfowl.commandpack.configure.configs.commands.CancelRulesData;
+import sawfowl.commandpack.configure.configs.commands.CommandPrice;
+import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
+import sawfowl.commandpack.configure.configs.commands.DelayData;
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportWorldConfig;
 import sawfowl.commandpack.configure.configs.kits.KitData;
 import sawfowl.commandpack.configure.configs.kits.KitPriceData;
@@ -293,31 +298,31 @@ public class CommandPack {
 		event.register(ParameterSettings.Builder.class, new Supplier<ParameterSettings.Builder>() {
 			@Override
 			public ParameterSettings.Builder get() {
-				return new sawfowl.commandpack.commands.settings.ParameterSettings().builder();
+				return new ParameterSettingsImpl().builder();
 			}
 		});
 		event.register(Price.Builder.class, new Supplier<Price.Builder>() {
 			@Override
 			public Price.Builder get() {
-				return new sawfowl.commandpack.configure.configs.commands.CommandPrice().builder();
+				return new CommandPrice().builder();
 			}
 		});
 		event.register(CancelRules.Builder.class, new Supplier<CancelRules.Builder>() {
 			@Override
 			public CancelRules.Builder get() {
-				return new sawfowl.commandpack.configure.configs.commands.CancelRules().builder();
+				return new CancelRulesData().builder();
 			}
 		});
 		event.register(Delay.Builder.class, new Supplier<Delay.Builder>() {
 			@Override
 			public Delay.Builder get() {
-				return new sawfowl.commandpack.configure.configs.commands.Delay().builder();
+				return new DelayData().builder();
 			}
 		});
 		event.register(Settings.Builder.class, new Supplier<Settings.Builder>() {
 			@Override
 			public Settings.Builder get() {
-				return new sawfowl.commandpack.configure.configs.commands.CommandSettings().builder();
+				return new CommandSettings().builder();
 			}
 		});
 		event.register(Point.Builder.class, new Supplier<Point.Builder>() {

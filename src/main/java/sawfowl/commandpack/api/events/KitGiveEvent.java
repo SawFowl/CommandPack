@@ -8,6 +8,12 @@ import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResu
 import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.kits.Kit;
 
+/**
+ * The event of giving a kit.<br>
+ * The event is not called when giving a kit with administrative permission.
+ * 
+ * @author SawFowl
+ */
 public interface KitGiveEvent extends Event {
 
 	ServerPlayer getPlayer();
@@ -16,6 +22,9 @@ public interface KitGiveEvent extends Event {
 
 	long getNextAllowedAccess();
 
+	/**
+	 * The event will be canceled by default if the player cannot currently get a kit.
+	 */
 	interface Pre extends KitGiveEvent, Cancellable {
 
 		long getCurrentTime();
@@ -26,6 +35,9 @@ public interface KitGiveEvent extends Event {
 
 	}
 
+	/**
+	 * Event is not called if no kit has been given.
+	 */
 	interface Post extends KitGiveEvent {
 
 		InventoryTransactionResult getResult();

@@ -15,6 +15,9 @@ import org.spongepowered.plugin.PluginContainer;
 import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
 
+/**
+ * @author SawFowl
+ */
 public interface Kit extends DataSerializable {
 
 	static Builder builder() {

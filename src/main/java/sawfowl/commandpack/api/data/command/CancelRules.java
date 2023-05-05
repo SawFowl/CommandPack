@@ -5,6 +5,11 @@ import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
+/**
+ * Rules for cancelling command code execution when using delayed execution.
+ * 
+ * @author SawFowl
+ */
 public interface CancelRules extends DataSerializable {
 
 	static Builder builder() {

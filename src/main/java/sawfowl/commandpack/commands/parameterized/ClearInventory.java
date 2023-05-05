@@ -65,10 +65,10 @@ public class ClearInventory extends AbstractParameterizedCommand {
 	}
 /*
 	@Override
-	public List<ParameterSettings> getParameterSettings() {
+	public List<ParameterSettingsImpl> getParameterSettings() {
 		return Arrays.asList(
-					new ParameterSettings(CommandParameters.createPlayer(Permissions.CLEAR_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-					new ParameterSettings(CommandParameters.createInventoryTypes(true), true, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT)
+					new ParameterSettingsImpl(CommandParameters.createPlayer(Permissions.CLEAR_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
+					new ParameterSettingsImpl(CommandParameters.createInventoryTypes(true), true, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT)
 				);
 	}
 */

@@ -3,13 +3,15 @@ package sawfowl.commandpack.api.data.player;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.api.data.miscellaneous.Location;
 
-@ConfigSerializable
+/**
+ * @author SawFowl
+ */
 public interface Warp extends DataSerializable {
 
 	static Builder builder() {
