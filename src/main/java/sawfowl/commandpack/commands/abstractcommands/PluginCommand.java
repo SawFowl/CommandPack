@@ -2,25 +2,22 @@ package sawfowl.commandpack.commands.abstractcommands;
 
 import java.util.Locale;
 import java.util.Optional;
+
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.SystemSubject;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
-import org.spongepowered.api.util.Nameable;
 import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.plugin.PluginContainer;
 
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.Locales;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.Logger;
 
 public abstract class PluginCommand implements sawfowl.commandpack.api.commands.PluginCommand {
@@ -73,15 +70,6 @@ public abstract class PluginCommand implements sawfowl.commandpack.api.commands.
 
 	public Optional<ServerPlayer> getPlayer(String name) {
 		return Sponge.server().player(name);
-	}
-
-	protected String getSourceName(CommandCause cause, Audience audience, Locale locale, ServerPlayer player, boolean isPlayer) {
-		return isPlayer ? player.name() :
-			audience instanceof SystemSubject ? getString(locale, LocalesPaths.NAME_SYSTEM) :
-				isCommandBlock(cause) ? getString(locale, LocalesPaths.NAME_COMMANDBLOCK) + blockCords(cause) :
-					isCommandBlockMinecart(cause) ? getString(locale, LocalesPaths.NAME_COMMANDBLOCK_MINECART) + entityCords(cause) :
-						audience instanceof Nameable ? ((Nameable) audience).name() :
-							getString(locale, LocalesPaths.NAME_UNKNOWN);
 	}
 
 	protected boolean isCommandBlock(CommandCause cause) {
