@@ -263,9 +263,11 @@ public class CommandPack {
 			tps5m.put(currentTime, Sponge.server().ticksPerSecond());
 			tps10m.put(currentTime, Sponge.server().ticksPerSecond());
 			Sponge.server().onlinePlayers().forEach(player -> {
-				if(getPlayersData().getTempData().isAfk(player) && !player.hasPermission(Permissions.AFK_UNLIMIT)) {
-					if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - (getMainConfig().getAfkConfig().getTurnOnDlay() + getMainConfig().getAfkConfig().getKickDelay())) player.kick(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_AFK_KICK));
-				} else if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - getMainConfig().getAfkConfig().getTurnOnDlay()) getPlayersData().getTempData().setAfkStatus(player);
+				if(getPlayersData().getTempData().getLastActivity(player) > 0) {
+					if(getPlayersData().getTempData().isAfk(player) && !player.hasPermission(Permissions.AFK_UNLIMIT)) {
+						if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - (getMainConfig().getAfkConfig().getTurnOnDlay() + getMainConfig().getAfkConfig().getKickDelay())) player.kick(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_AFK_KICK));
+					} else if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - getMainConfig().getAfkConfig().getTurnOnDlay()) getPlayersData().getTempData().setAfkStatus(player);
+				}
 			});
 		}).build());
 		serverStartedTime = System.currentTimeMillis();
