@@ -106,7 +106,7 @@ public class Permissions {
 	private static final String HOME_LIMIT = "commandpack.limits.home";
 	private static final String WARP_LIMIT = "commandpack.limits.warp";
 	private static final String SPEED_LIMIT = "commandpack.limits.speed";
-	private static final String SPEED_FLY_LIMIT = "commandpack.limits.speed";
+	private static final String SPEED_FLY_LIMIT = "commandpack.limits.flyspeed";
 	private static final String ENCHANTMENT_TABLE_LIMIT = "commandpack.limits.enchantmenttable";
 	private static final String BACKPACK_LIMIT = "commandpack.limits.backpack";
 	public  static final String AFK_UNLIMIT = "commandpack.limits.unlimitafk";
