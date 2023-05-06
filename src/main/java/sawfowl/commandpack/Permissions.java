@@ -58,8 +58,8 @@ public class Permissions {
 	public static final String SPAWN_STAFF = "commandpack.commands.staff.spawn";
 	public static final String WARP_STAFF = "commandpack.commands.staff.warp";
 	public static final String TELEPORT_STAFF = "commandpack.commands.staff.teleport";
-	public static final String TELEPORT_HERE_STAFF = "commandpack.commands.staff.teleport";
-	public static final String TELEPORT_HERE_ALL_STAFF = "commandpack.commands.staff.teleport";
+	public static final String TELEPORT_HERE_STAFF = "commandpack.commands.staff.tphere.one";
+	public static final String TELEPORT_HERE_ALL_STAFF = "commandpack.commands.staff.tphere.all";
 	public static final String TPPOS_STAFF = "commandpack.commands.staff.tppos";
 	public static final String RTP_STAFF = "commandpack.commands.staff.randomteleport";
 	public static final String CLEAR_STAFF = "commandpack.commands.staff.clear";
@@ -91,9 +91,9 @@ public class Permissions {
 	public static final String SERVER_STAT_STAFF_INFO_WORLDS = "commandpack.commands.staff.serverstat.worldsinfo";
 	public static final String SERVER_STAT_STAFF_PLUGINS_LIST = "commandpack.commands.staff.serverstat.plugins.list";
 	public static final String SERVER_STAT_STAFF_PLUGINS_INFO = "commandpack.commands.staff.serverstat.plugins.info";
+	public static final String SERVER_STAT_STAFF_INFO_PLUGINS_REFRESH = "commandpack.commands.staff.serverstat.plugins.refresh";
 	public static final String SERVER_STAT_STAFF_MODS_LIST = "commandpack.commands.staff.serverstat.mods.list";
 	public static final String SERVER_STAT_STAFF_MODS_INFO = "commandpack.commands.staff.serverstat.mods.info";
-	public static final String SERVER_STAT_STAFF_INFO_PLUGINS_REFRESH = "commandpack.commands.staff.serverstat.pluginsrefresh";
 	public static final String SERVER_STAT_STAFF_INFO_TPS = "commandpack.commands.staff.serverstat.tps";
 	public static final String KIT_STAFF = "commandpack.commands.staff.kit";
 

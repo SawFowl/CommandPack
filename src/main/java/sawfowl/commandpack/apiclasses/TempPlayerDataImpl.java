@@ -65,7 +65,6 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 		removeCommandTracking(command, player.uniqueId());
 	}
 
-
 	@Override
 	public void removeCommandTracking(String command, UUID uuid) {
 		if(!trackingCommandDelay.containsKey(command)) {
@@ -74,6 +73,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 		}
 		trackingCommandDelay.get(command).removeIf(u -> (u.equals(uuid)));
 	}
+
 	@Override
 	public Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(ServerPlayer player) {
 		return getTrackingPlayerCommands(player.uniqueId());

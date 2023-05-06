@@ -14,8 +14,9 @@ import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.math.vector.Vector3i;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.RandomTeleportService;
 
-public class RTPService implements sawfowl.commandpack.api.RandomTeleportService {
+public class RTPService implements RandomTeleportService {
 
 	private final CommandPack plugin;
 	public RTPService(CommandPack plugin) {
@@ -50,30 +51,7 @@ public class RTPService implements sawfowl.commandpack.api.RandomTeleportService
 		return CompletableFuture.supplyAsync(new Supplier<Optional<ServerLocation>>() {
 			@Override
 			public Optional<ServerLocation> get() {
-				int attempts = 0;
-				ServerWorld world = options.getWorldKey() == null ? currentLocation.world() : Sponge.server().worldManager().world(options.getWorldKey()).orElse(currentLocation.world());
-				while(attempts < options.getAttempts()) {
-					attempts++;
-					Optional<Integer> optX = getRandomX(currentLocation, world, options, attempts);
-					if(!optX.isPresent()) break;
-					Optional<Integer> optZ = getRandomZ(currentLocation, world, options, attempts);
-					if(!optZ.isPresent()) break;
-					Vector3i newPos = Vector3i.from(optX.get(), getRandomInt(options.getMinY(), options.getMaxY()), optZ.get());
-					if(options.getProhibitedBiomes().isEmpty() || !options.getProhibitedBiomes().contains(Biomes.registry(world).valueKey(world.biome(newPos)).asString())) {
-						Optional<ServerLocation> optLocation = Sponge.server().teleportHelper().findSafeLocation(world.location(newPos), 10, 10, 10);
-						if(optLocation.isPresent()) {
-							if(options.isOnlySurface() || !isSafe(optLocation.get())) optLocation = Optional.ofNullable(ServerLocation.of(world, world.highestPositionAt(optLocation.get().blockPosition())));
-							attempts = options.getAttempts() + 1;
-							return optLocation;
-						}
-					}
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						plugin.getLogger().error(e.getLocalizedMessage());
-					}
-				}
-				return Optional.empty();
+				return getLocation(currentLocation, options);
 			}
 		});
 	}

@@ -33,15 +33,15 @@ public class Vanish extends AbstractParameterizedCommand {
 		if(isPlayer) {
 			Optional<ServerPlayer> optTarget = getPlayer(context);
 			if(optTarget.isPresent()) {
-				vanish(optTarget.get(), src, locale, optTarget.get().uniqueId().equals(((ServerPlayer) src).uniqueId()));
+				vanish(optTarget.get(), src, locale, optTarget.get().uniqueId().equals(((ServerPlayer) src).uniqueId()), context.hasPermission(Permissions.VANISH_STAFF));
 			} else {
 				delay((ServerPlayer) src, locale, consumer -> {
-					vanish((ServerPlayer) src, src, locale, true);
+					vanish((ServerPlayer) src, src, locale, true, context.hasPermission(Permissions.VANISH_STAFF));
 				});
 			}
 		} else {
 			ServerPlayer target = getPlayer(context).get();
-			vanish(target, src, locale, false);
+			vanish(target, src, locale, false, true);
 		}
 	}
 
@@ -65,7 +65,7 @@ public class Vanish extends AbstractParameterizedCommand {
 		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.VANISH_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 
-	private void vanish(ServerPlayer target, Audience src, Locale locale, boolean equals) {
+	private void vanish(ServerPlayer target, Audience src, Locale locale, boolean equals, boolean isStaff) {
 		if(target.getKeys().contains(Keys.VANISH_STATE) && target.get(Keys.VANISH_STATE).get().invisible()) {
 			target.remove(Keys.VANISH_STATE);
 			target.offer(Keys.VANISH_STATE, VanishState.unvanished());
@@ -74,7 +74,7 @@ public class Vanish extends AbstractParameterizedCommand {
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_VANISH_UNVASHISHED_STAFF), Placeholders.PLAYER, target.name()));
 			} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_VANISH_UNVASHISHED));
 		} else {
-			target.offer(Keys.VANISH_STATE, VanishState.vanished().ignoreCollisions(true).createParticles(false).createSounds(false));
+			target.offer(Keys.VANISH_STATE, VanishState.vanished().ignoreCollisions(isStaff).createParticles(false).createSounds(!isStaff));
 			if(!equals) {
 				target.sendMessage(getText(target, LocalesPaths.COMMANDS_VANISH_VASHISHED));
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_VANISH_VASHISHED_STAFF), Placeholders.PLAYER, target.name()));
