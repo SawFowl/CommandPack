@@ -101,7 +101,6 @@ public class Permissions {
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";
 	public static final String IGNORE_DELAY_OTHER_COMMAND = "commandpack.commands.ignore.delay.othercommand";
 	public static final String IGNORE_PRICE = "commandpack.commands.ignore.price";
-	public static final String IGNORE_HIDE_COMMAND_SOURCE = "commandpack.commands.ignore.hidecommandsource";
 
 	// Limits
 	private static final String HOME_LIMIT = "commandpack.limits.home";

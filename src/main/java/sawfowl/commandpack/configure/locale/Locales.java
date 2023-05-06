@@ -101,7 +101,6 @@ public class Locales {
 		save = check(locale, toText("&aYou put an item on the head of player " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_HAT_SUCCESS_OTHER) || save;
 		save = check(locale, toText("&aThe spawn point has been set."), null, LocalesPaths.COMMANDS_SETSPAWN_SUCCESS) || save;
 		save = check(locale, toText("&aYou teleported to the spawn point."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS) || save;
-		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a teleported you to the spawnpoint."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS_OTHER) || save;
 		save = check(locale, toText("&cYour limit does not allow you to set a new home point."), null, LocalesPaths.COMMANDS_SETHOME_LIMIT) || save;
 		save = check(locale, toText("&aYou have set the home point &e" + Placeholders.HOME + "&a."), null, LocalesPaths.COMMANDS_SETHOME_SUCCESS) || save;
 		save = check(locale, toText("&cA home point with a name of &e" + Placeholders.HOME + "&c does not exist."), null, LocalesPaths.COMMANDS_HOME_NOT_FOUND) || save;
@@ -323,7 +322,6 @@ public class Locales {
 		save = check(locale, toText("&aВы надели предмет на голову игроку " + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_HAT_SUCCESS_OTHER) || save;
 		save = check(locale, toText("&aТочка спавна установленна."), null, LocalesPaths.COMMANDS_SETSPAWN_SUCCESS) || save;
 		save = check(locale, toText("&aВы переместились на спавн."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS) || save;
-		save = check(locale, toText("&e" + Placeholders.SOURCE + " &aпереместил вас на спавн."), null, LocalesPaths.COMMANDS_SPAWN_SUCCESS_OTHER) || save;
 		save = check(locale, toText("&cВаш лимит не позволяет установить новую точку дома."), null, LocalesPaths.COMMANDS_SETHOME_LIMIT) || save;
 		save = check(locale, toText("&aВы установили точку дома &e" + Placeholders.HOME + "&a."), null, LocalesPaths.COMMANDS_SETHOME_SUCCESS) || save;
 		save = check(locale, toText("&cТочка дома с именем &e" + Placeholders.HOME + "&c не существует."), null, LocalesPaths.COMMANDS_HOME_NOT_FOUND) || save;

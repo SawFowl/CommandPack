@@ -15,8 +15,8 @@ import org.spongepowered.plugin.PluginContainer;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.Locales;
@@ -75,8 +75,8 @@ public abstract class PluginCommand implements sawfowl.commandpack.api.commands.
 		return Sponge.server().player(name);
 	}
 
-	protected String getSourceName(CommandCause cause, Audience audience, Locale locale, ServerPlayer player) {
-		return plugin.getMainConfig().isHideTeleportCommandSource() && !player.hasPermission(Permissions.IGNORE_HIDE_COMMAND_SOURCE) ? player.name() :
+	protected String getSourceName(CommandCause cause, Audience audience, Locale locale, ServerPlayer player, boolean isPlayer) {
+		return isPlayer ? player.name() :
 			audience instanceof SystemSubject ? getString(locale, LocalesPaths.NAME_SYSTEM) :
 				isCommandBlock(cause) ? getString(locale, LocalesPaths.NAME_COMMANDBLOCK) + blockCords(cause) :
 					isCommandBlockMinecart(cause) ? getString(locale, LocalesPaths.NAME_COMMANDBLOCK_MINECART) + entityCords(cause) :

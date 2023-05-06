@@ -20,10 +20,8 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Spawn extends AbstractParameterizedCommand {
 
@@ -39,12 +37,12 @@ public class Spawn extends AbstractParameterizedCommand {
 			ServerPlayer player = getPlayer(context).orElse(source);
 			if(source.uniqueId().equals(player.uniqueId())) {
 				delay(player, locale, consumer -> {
-					teleport(player, spawn, getSourceName(context.cause(), src, player.locale(), player));
+					teleport(player, spawn);
 				});
-			} else teleport(player, spawn, getSourceName(context.cause(), src, player.locale(), player));
+			} else teleport(player, spawn);
 		} else {
 			ServerPlayer player = getPlayer(context).orElse((ServerPlayer) src);
-			teleport(player, spawn, getSourceName(context.cause(), src, player.locale(), player));
+			teleport(player, spawn);
 		}
 	}
 
@@ -68,7 +66,7 @@ public class Spawn extends AbstractParameterizedCommand {
 		return "spawn";
 	}
 
-	private void teleport(ServerPlayer player, Optional<SpawnData> location, String name) {
+	private void teleport(ServerPlayer player, Optional<SpawnData> location) {
 		plugin.getPlayersData().getTempData().setPreviousLocation(player);
 		if(location.isPresent() && location.get().getLocationData().getServerLocation().isPresent()) {
 			player.setLocation(location.get().getLocationData().getServerLocation().get());
@@ -76,9 +74,7 @@ public class Spawn extends AbstractParameterizedCommand {
 				player.setRotation(rotation.asVector3d());
 			});
 		} else tpDefault(player);
-		if(player.name().equals(name)) {
-			player.sendMessage(getText(player.locale(), LocalesPaths.COMMANDS_SPAWN_SUCCESS));
-		} else player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_SPAWN_SUCCESS_OTHER), Placeholders.SOURCE, name));
+		player.sendMessage(getText(player.locale(), LocalesPaths.COMMANDS_SPAWN_SUCCESS));
 	}
 
 	private void tpDefault(ServerPlayer player) {
