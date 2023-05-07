@@ -1,6 +1,4 @@
-# CommandPack
-
-
+# CommandPack [![](https://jitpack.io/v/SawFowl/CommandPack.svg)](https://jitpack.io/#SawFowl/CommandPack)
 ####  ***[LocaleAPI](https://ore.spongepowered.org/Semenkovsky_Ivan/LocaleAPI) - required.***
 
 Commands and Permissions -> https://github.com/SawFowl/CommandPack/wiki/Commands-and-Permissions---EN
@@ -21,3 +19,33 @@ Currently implemented:
 * Viewing information about mods. Plugins are separated from mods.
 * Change of time, weather, game mode. Removed game mode identifiers have been returned.
 * And much more... For more information, see the list of commands at the link above.
+
+##### For developers:
+JavaDoc -> https://sawfowl.github.io/CommandPack/
+
+##### Get API
+```java
+	private CommandPack commandPack;
+	@Listener
+	public void onCommandPackPostApiEvent(CommandPack.PostAPI event) {
+		commandPack = event.getAPI();
+	}
+```
+
+
+##### Gradle
+```gradle
+repositories {
+	...
+	maven { 
+		name = "JitPack"
+		url 'https://jitpack.io' 
+	}
+}
+dependencies {
+	...
+	implementation 'com.github.SawFowl:CommandPack:1.0'
+}
+```
+
+
