@@ -125,5 +125,14 @@ javadoc {
 	options.encoding = 'UTF-8'
 	source configurations.doc.collect { zipTree(it) }
 	include 'sawfowl/commandpack/api/*.java'
+	include 'sawfowl/commandpack/api/commands/*.java'
+	include 'sawfowl/commandpack/api/commands/parameterized/*.java'
+	include 'sawfowl/commandpack/api/commands/raw/*.java'
+	include 'sawfowl/commandpack/api/data/*.java'
+	include 'sawfowl/commandpack/api/data/command/*.java'
+	include 'sawfowl/commandpack/api/data/kits/*.java'
+	include 'sawfowl/commandpack/api/data/miscellaneous/*.java'
+	include 'sawfowl/commandpack/api/data/player/*.java'
+	include 'sawfowl/commandpack/api/events/*.java'
 	options.addStringOption('Xdoclint:none', '-quiet')
 }
