@@ -105,18 +105,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	exclude('sawfowl/commandpack/Permissions.java')
 }
 
-task createAPIJar(type: Jar) {
-    baseName = project.name.capitalize() + 'API'
-	exclude('sawfowl/commandpack/apiclasses/**')
-	exclude('sawfowl/commandpack/commands/**')
-	exclude('sawfowl/commandpack/configure/**')
-	exclude('sawfowl/commandpack/listeners/**')
-	exclude('sawfowl/commandpack/utils/**')
-	exclude('sawfowl/commandpack/*.class')
-    with jar
-}
-
-
 task javadocJar(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
@@ -125,7 +113,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
 	archives sourcesJar
 	archives javadocJar
-	archives createAPIJar
 }
 
 configurations {
