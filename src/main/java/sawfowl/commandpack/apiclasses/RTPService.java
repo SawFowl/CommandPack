@@ -7,8 +7,12 @@ import java.util.function.Supplier;
 
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.world.biome.Biomes;
+import org.spongepowered.api.data.Keys;
+import org.spongepowered.api.data.type.MatterTypes;
+import org.spongepowered.api.registry.RegistryTypes;
+import org.spongepowered.api.world.biome.Biome;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.math.vector.Vector3i;
@@ -34,7 +38,10 @@ public class RTPService implements RandomTeleportService {
 			Optional<Integer> optZ = getRandomZ(currentLocation, world, options, attempts);
 			if(!optZ.isPresent()) break;
 			Vector3i newPos = Vector3i.from(optX.get(), getRandomInt(options.getMinY(), options.getMaxY()), optZ.get());
-			if(options.getProhibitedBiomes().isEmpty() || !options.getProhibitedBiomes().contains(Biomes.registry(world).valueKey(world.biome(newPos)).asString())) {
+			boolean prohibitedFluidBlock = options.isProhibitedLiquids() && isLiquid(world.location(newPos));
+			boolean prohibitedBiome = options.getProhibitedBiomes() != null && options.getProhibitedBiomes().contains(biomeID(world.biome(newPos)));
+			boolean prohibitedBlock = options.getProhibitedBlocks() != null && options.getProhibitedBlocks().contains(blockID(world.block(newPos)));
+			if(!prohibitedFluidBlock && !prohibitedBiome && !prohibitedBlock) {
 				Optional<ServerLocation> optLocation = Sponge.server().teleportHelper().findSafeLocation(world.location(newPos), 10, 10, 10);
 				if(optLocation.isPresent()) {
 					if(options.isOnlySurface() || !isSafe(optLocation.get())) optLocation = Optional.ofNullable(ServerLocation.of(world, world.highestPositionAt(optLocation.get().blockPosition())));
@@ -109,6 +116,18 @@ public class RTPService implements RandomTeleportService {
 
 	private boolean isSafe(ServerLocation location) {
 		return location.world().block(location.blockPosition()).type().equals(BlockTypes.AIR.get()) && location.world().block(location.blockPosition()).type().equals(BlockTypes.AIR.get()) && !location.world().block(location.blockPosition()).type().equals(BlockTypes.AIR.get());
+	}
+
+	private boolean isLiquid(ServerLocation location) {
+		return location.get(Keys.MATTER_TYPE).isPresent() && location.get(Keys.MATTER_TYPE).get().equals(MatterTypes.LIQUID.get());
+	}
+
+	private String blockID(BlockState block) {
+		return Sponge.game().registry(RegistryTypes.BLOCK_TYPE).valueKey(block.type()).asString();
+	}
+
+	private String biomeID(Biome biome) {
+		return Sponge.game().registry(RegistryTypes.BIOME).valueKey(biome).asString();
 	}
 
 }

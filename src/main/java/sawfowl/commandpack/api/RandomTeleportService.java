@@ -138,6 +138,16 @@ public interface RandomTeleportService {
 		 */
 		boolean isOnlySurface();
 
+		/**
+		 * If true, the search for the correct position will skip fluid blocks.
+		 */
+		boolean isProhibitedLiquids();
+
+		/**
+		 * Blocks specified in this list will not be available for teleportation by random coordinates.
+		 */
+		Set<String> getProhibitedBlocks();
+
 		interface Builder extends AbstractBuilder<RandomTeleportOptions>, org.spongepowered.api.util.Builder<RandomTeleportOptions, Builder> {
 
 			Builder setAttempts(int value);
@@ -196,6 +206,16 @@ public interface RandomTeleportService {
 			 * If true, teleportation will always take place on the surface.
 			 */
 			Builder setOnlySurface(boolean value);
+
+			/**
+			 * If true, the search for the correct position will skip fluid blocks.
+			 */
+			Builder setProhibitedLiquids(boolean prohibitedLiquids);
+
+			/**
+			 * Blocks specified in this list will not be available for teleportation by random coordinates.
+			 */
+			Builder setProhibitedBlocks(Set<String> prohibitedBlocks);
 
 		}
 
