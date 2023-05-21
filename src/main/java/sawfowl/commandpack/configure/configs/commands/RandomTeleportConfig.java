@@ -189,7 +189,7 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 	private Map<String, RandomTeleportWorldConfig> createDefault() {
 		Map<String, RandomTeleportWorldConfig> map = new HashMap<>();
 		map.put("minecraft:overworld", new RandomTeleportWorldConfig("minecraft:overworld", new HashSet<>(Arrays.asList("minecraft:ocean", "minecraft:deep_ocean", "minecraft:frozen_ocean"))));
-		map.put("minecraft:the_nether", new RandomTeleportWorldConfig("minecraft:the_nether", 128));
+		map.put("minecraft:the_nether", new RandomTeleportWorldConfig("minecraft:the_nether", 128, true));
 		map.put("minecraft:the_end", new RandomTeleportWorldConfig("minecraft:the_end"));
 		return map;
 	}

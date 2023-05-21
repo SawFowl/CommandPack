@@ -51,6 +51,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_KITS = "Kits";
 	private static final Object COMMAND_KIT = "Kit";
 	private static final Object COMMAND_AFK = "Afk";
+	private static final Object COMMAND_WORLD = "World";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -266,5 +267,9 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_AFK_ENABLE_IN_VANISH = {PATH_COMMANDS, COMMAND_AFK, "EnableInVanish"};
 	public static final Object[] COMMANDS_AFK_DISABLE_IN_VANISH = {PATH_COMMANDS, COMMAND_AFK, "DisableInVanish"};
 	public static final Object[] COMMANDS_AFK_KICK = {PATH_COMMANDS, COMMAND_AFK, "Kick"};
+	public static final Object[] COMMANDS_WORLD_CREATE = {PATH_COMMANDS, COMMAND_WORLD, "Create"};
+	public static final Object[] COMMANDS_WORLD_TELEPORT = {PATH_COMMANDS, COMMAND_WORLD, "Teleport"};
+	public static final Object[] COMMANDS_WORLD_TELEPORT_OTHER = {PATH_COMMANDS, COMMAND_WORLD, "TeleportOther"};
+	public static final Object[] COMMANDS_WORLD_DELETE = {PATH_COMMANDS, COMMAND_WORLD, "Delete"};
 
 }

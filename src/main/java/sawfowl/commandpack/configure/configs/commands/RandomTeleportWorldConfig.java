@@ -45,7 +45,7 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 	@Setting("OnlySurface")
 	private boolean onlySurface = true;
 	@Setting("ProhibitedLiquids")
-	private boolean prohibitedLiquids = true;
+	private boolean prohibitedLiquids = false;
 	@Setting("ProhibitedBlocks")
 	private Set<String> prohibitedBlocks = new HashSet<>();
 
@@ -58,21 +58,11 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 		this.prohibitedBiomes = prohibitedBiomes;
 	}
 
-	public RandomTeleportWorldConfig(String world, boolean onlySurface) {
-		this.world = world;
-		this.onlySurface = onlySurface;
-	}
-
-	public RandomTeleportWorldConfig(String world, int maxY) {
+	public RandomTeleportWorldConfig(String world, int maxY, boolean prohibitedLiquids) {
 		this.world = world;
 		this.maxY = maxY;
+		this.prohibitedLiquids = prohibitedLiquids;
 		onlySurface = false;
-	}
-
-	public RandomTeleportWorldConfig(String world, Set<String> prohibitedBiomes, boolean onlySurface) {
-		this.world = world;
-		this.prohibitedBiomes = prohibitedBiomes;
-		this.onlySurface = onlySurface;
 	}
 
 	public Builder builder() {

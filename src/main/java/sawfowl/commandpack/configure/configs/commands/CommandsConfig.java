@@ -167,6 +167,8 @@ public class CommandsConfig {
 	private CommandSettings kit = new CommandSettings();
 	@Setting("Afk")
 	private CommandSettings afk = new CommandSettings();
+	@Setting("World")
+	private CommandSettings world = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

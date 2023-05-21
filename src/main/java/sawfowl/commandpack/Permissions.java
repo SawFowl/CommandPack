@@ -96,6 +96,7 @@ public class Permissions {
 	public static final String SERVER_STAT_STAFF_MODS_INFO = "commandpack.commands.staff.serverstat.mods.info";
 	public static final String SERVER_STAT_STAFF_INFO_TPS = "commandpack.commands.staff.serverstat.tps";
 	public static final String KIT_STAFF = "commandpack.commands.staff.kit";
+	public static final String WORLD = "commandpack.commands.staff.world";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";

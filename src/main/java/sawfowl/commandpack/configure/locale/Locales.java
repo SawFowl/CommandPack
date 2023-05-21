@@ -274,6 +274,10 @@ public class Locales {
 		save = check(locale, toText("&eYou have gone AFK, but you are currently vanished, so this has not been broadcasted."), null, LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eYou have returned from AFK, but you are currently vanished, so this has not been broadcasted."), null, LocalesPaths.COMMANDS_AFK_DISABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eYou have been kicked for being AFK for too long."), null, LocalesPaths.COMMANDS_AFK_KICK) || save;
+		save = check(locale, toText("&aThe world &e\"" + Placeholders.WORLD + "\"&a is created.\n&eWorlds are created in asynchronous mode. Without server restart the world will be static."), null, LocalesPaths.COMMANDS_WORLD_CREATE) || save;
+		save = check(locale, toText("&aYou teleported into the world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_TELEPORT) || save;
+		save = check(locale, toText("&aYou teleported the player &e" + Placeholders.PLAYER + "&a to the world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_TELEPORT_OTHER) || save;
+		save = check(locale, toText("&aThe world &e\"" + Placeholders.WORLD + "\"&a is deleted."), null, LocalesPaths.COMMANDS_WORLD_DELETE) || save;
 
 		if(save) save(locale);
 	}
@@ -495,6 +499,10 @@ public class Locales {
 		save = check(locale, toText("&eВы перешли в АФК, но в настоящее время вы невидимы, так что это не транслировалось."), null, LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eВы перешли из AFK, но в настоящее время вы невидимы, поэтому это не было передано."), null, LocalesPaths.COMMANDS_AFK_DISABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eВы кикнуты за то, что слишком долго были АФК."), null, LocalesPaths.COMMANDS_AFK_KICK) || save;
+		save = check(locale, toText("&aМир &e\"" + Placeholders.WORLD + "\"&a создан.\n&eМиры создаются в асинхронном режиме. Без перезапуска сервера мир будет статичен."), null, LocalesPaths.COMMANDS_WORLD_CREATE) || save;
+		save = check(locale, toText("&aВы телепортировались в мир &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_TELEPORT) || save;
+		save = check(locale, toText("&aВы телепортировали игрока &e" + Placeholders.PLAYER + "&a в мир &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_TELEPORT_OTHER) || save;
+		save = check(locale, toText("&aМир &e\"" + Placeholders.WORLD + "\"&a удален."), null, LocalesPaths.COMMANDS_WORLD_DELETE) || save;
 
 		if(save) save(locale);
 	}
