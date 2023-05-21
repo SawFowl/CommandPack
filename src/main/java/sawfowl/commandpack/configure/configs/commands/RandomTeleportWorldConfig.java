@@ -63,6 +63,12 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 		this.onlySurface = onlySurface;
 	}
 
+	public RandomTeleportWorldConfig(String world, int maxY) {
+		this.world = world;
+		this.maxY = maxY;
+		onlySurface = false;
+	}
+
 	public RandomTeleportWorldConfig(String world, Set<String> prohibitedBiomes, boolean onlySurface) {
 		this.world = world;
 		this.prohibitedBiomes = prohibitedBiomes;

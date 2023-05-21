@@ -12,7 +12,7 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.data.type.MatterTypes;
 import org.spongepowered.api.registry.RegistryTypes;
-import org.spongepowered.api.world.biome.Biome;
+import org.spongepowered.api.world.biome.Biomes;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.math.vector.Vector3i;
@@ -38,15 +38,14 @@ public class RTPService implements RandomTeleportService {
 			Optional<Integer> optZ = getRandomZ(currentLocation, world, options, attempts);
 			if(!optZ.isPresent()) break;
 			Vector3i newPos = Vector3i.from(optX.get(), getRandomInt(options.getMinY(), options.getMaxY()), optZ.get());
-			boolean prohibitedFluidBlock = options.isProhibitedLiquids() && isLiquid(world.location(newPos));
-			boolean prohibitedBiome = options.getProhibitedBiomes() != null && options.getProhibitedBiomes().contains(biomeID(world.biome(newPos)));
-			boolean prohibitedBlock = options.getProhibitedBlocks() != null && options.getProhibitedBlocks().contains(blockID(world.block(newPos)));
-			if(!prohibitedFluidBlock && !prohibitedBiome && !prohibitedBlock) {
-				Optional<ServerLocation> optLocation = Sponge.server().teleportHelper().findSafeLocation(world.location(newPos), 10, 10, 10);
+			if(options.getProhibitedBiomes().isEmpty() || !options.getProhibitedBiomes().contains(Biomes.registry(world).valueKey(world.biome(newPos)).asString())) {
+				Optional<ServerLocation> optLocation = findSafe(ServerLocation.of(world, newPos), options);
 				if(optLocation.isPresent()) {
-					if(options.isOnlySurface() || !isSafe(optLocation.get())) optLocation = Optional.ofNullable(ServerLocation.of(world, world.highestPositionAt(optLocation.get().blockPosition())));
-					attempts = options.getAttempts() + 1;
-					return optLocation;
+					ServerLocation location = options.isOnlySurface() ? ServerLocation.of(world, world.highestPositionAt(optLocation.get().blockPosition())) : optLocation.get();
+					if((options.getProhibitedBlocks() == null || !options.getProhibitedBlocks().contains(blockID(location.block()))) && (!options.isProhibitedLiquids() || !isLiquid(location))) {
+						attempts = options.getAttempts() + 1;
+						return Optional.ofNullable(location);
+					}
 				}
 			}
 		}
@@ -115,19 +114,30 @@ public class RTPService implements RandomTeleportService {
 	}
 
 	private boolean isSafe(ServerLocation location) {
-		return location.world().block(location.blockPosition()).type().equals(BlockTypes.AIR.get()) && location.world().block(location.blockPosition()).type().equals(BlockTypes.AIR.get()) && !location.world().block(location.blockPosition()).type().equals(BlockTypes.AIR.get());
+		return location.block().type().equals(BlockTypes.AIR.get()) && ServerLocation.of(location.world(), location.x(), location.y() + 1, location.z()).block().type().equals(BlockTypes.AIR.get()) && !ServerLocation.of(location.world(), location.x(), location.y() - 1, location.z()).block().type().equals(BlockTypes.AIR.get());
 	}
 
 	private boolean isLiquid(ServerLocation location) {
-		return location.get(Keys.MATTER_TYPE).isPresent() && location.get(Keys.MATTER_TYPE).get().equals(MatterTypes.LIQUID.get());
+		return (location.get(Keys.MATTER_TYPE).isPresent() && location.get(Keys.MATTER_TYPE).get().equals(MatterTypes.LIQUID.get())) || (ServerLocation.of(location.world(), location.blockX(), location.blockY() -1, location.blockZ()).get(Keys.MATTER_TYPE).isPresent() && ServerLocation.of(location.world(), location.blockX(), location.blockY() -1, location.blockZ()).get(Keys.MATTER_TYPE).get().equals(MatterTypes.LIQUID.get()));
 	}
 
 	private String blockID(BlockState block) {
 		return Sponge.game().registry(RegistryTypes.BLOCK_TYPE).valueKey(block.type()).asString();
 	}
 
-	private String biomeID(Biome biome) {
-		return Sponge.game().registry(RegistryTypes.BIOME).valueKey(biome).asString();
+	private Optional<ServerLocation> findSafe(ServerLocation location, RandomTeleportOptions options) {
+		if(location.block().type().equals(BlockTypes.AIR.get())) {
+			for(double y = location.y(); y > options.getMinY(); y--) {
+				ServerLocation find = ServerLocation.of(location.world(), location.x(), y, location.z());
+				if(isSafe(find) && !find.block().type().equals(BlockTypes.BEDROCK.get())) return Optional.ofNullable(find);
+			}
+		} else {
+			for(double y = location.y(); y < location.world().height() && y < options.getMaxY(); y++) {
+				ServerLocation find = ServerLocation.of(location.world(), location.x(), y, location.z());
+				if(isSafe(find) && !find.block().type().equals(BlockTypes.BEDROCK.get())) return Optional.ofNullable(find);
+			}
+		}
+		return Optional.empty();
 	}
 
 }
