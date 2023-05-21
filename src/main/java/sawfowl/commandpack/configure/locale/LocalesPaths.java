@@ -166,6 +166,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_TIME_MORNING = {PATH_COMMANDS, COMMAND_TIME, "Morning"};
 	public static final Object[] COMMANDS_TIME_EVENING = {PATH_COMMANDS, COMMAND_TIME, "Evening"};
 	public static final Object[] COMMANDS_TIME_NIGHT = {PATH_COMMANDS, COMMAND_TIME, "Night"};
+	public static final Object[] COMMANDS_TIME_ADD = {PATH_COMMANDS, COMMAND_TIME, "Add"};
 	public static final Object[] COMMANDS_ENCHANT_ITEM_IS_NOT_PRESENT = {PATH_COMMANDS, COMMAND_ENCHANT, PATH_EXCEPTIONS, "ItemIsNotPresent"};
 	public static final Object[] COMMANDS_ENCHANT_SUCCES = {PATH_COMMANDS, COMMAND_ENCHANT, "Success"};
 	public static final Object[] COMMANDS_ANVIL = {PATH_COMMANDS, COMMAND_ANVIL, "Other"};

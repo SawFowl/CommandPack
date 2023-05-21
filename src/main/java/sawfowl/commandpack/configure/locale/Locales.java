@@ -173,6 +173,7 @@ public class Locales {
 		save = check(locale, toText("&aYou have set the day in the world &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_DAY) || save;
 		save = check(locale, toText("&aYou have set an evening in the world &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_EVENING) || save;
 		save = check(locale, toText("&aYou have set the night in the world &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_NIGHT) || save;
+		save = check(locale, toText("&aYou have changed the time in the world &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_ADD) || save;
 		save = check(locale, toText("&cYou have to hold the item you want to enchant in your hand."), null, LocalesPaths.COMMANDS_ENCHANT_ITEM_IS_NOT_PRESENT) || save;
 		save = check(locale, toText("&aYou have added an enchantment to the item in your hand."), null, LocalesPaths.COMMANDS_ENCHANT_SUCCES) || save;
 		save = check(locale, toText("&aYou opened the anvil inventory to player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_ANVIL) || save;
@@ -398,6 +399,7 @@ public class Locales {
 		save = check(locale, toText("&aВы установили день в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_DAY) || save;
 		save = check(locale, toText("&aВы установили вечер в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_EVENING) || save;
 		save = check(locale, toText("&aВы установили ночь в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_NIGHT) || save;
+		save = check(locale, toText("&aВы изменили время в мире &e" + Placeholders.WORLD + "&a."), null, LocalesPaths.COMMANDS_TIME_ADD) || save;
 		save = check(locale, toText("&cВы должны держать в руке предмет который хотите зачаровать."), null, LocalesPaths.COMMANDS_ENCHANT_ITEM_IS_NOT_PRESENT) || save;
 		save = check(locale, toText("&aВы добавили зачарование к предмету в вашей руке."), null, LocalesPaths.COMMANDS_ENCHANT_SUCCES) || save;
 		save = check(locale, toText("&aВы открыли инвентарь наковальни игроку &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_ANVIL) || save;
