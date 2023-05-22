@@ -31,9 +31,9 @@ public class Unload extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		if(args.length == 0 || !args[0].startsWith("sponge") || !Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
+		if(args.length == 0 || !Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
 		for(ServerPlayer player : Sponge.server().onlinePlayers()) if(player.world().key().asString().equalsIgnoreCase(args[0])) player.setLocation(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().location(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().spawnPosition()));
-		if(Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).get().isLoaded()) exception(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_UNLOADED), Placeholders.WORLD, args[0]));
+		if(!Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).get().isLoaded()) exception(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_UNLOADED), Placeholders.WORLD, args[0]));
 		Sponge.server().worldManager().unloadWorld(ResourceKey.resolve(args[0])).thenRunAsync(() -> {
 			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_UNLOAD), Placeholders.WORLD, args[0]));
 		});

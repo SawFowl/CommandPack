@@ -1,6 +1,7 @@
 package sawfowl.commandpack.api;
 
 import org.spongepowered.api.event.Event;
+import org.spongepowered.api.world.generation.ChunkGenerator;
 
 /**
  * Plugin API.
@@ -28,6 +29,11 @@ public interface CommandPack {
 	 * Kits API.
 	 */
 	KitService kitService();
+
+	/**
+	 * 	Empty world generator
+	 */
+	ChunkGenerator getEmptyWorldGenerator();
 
 	public double getAverageTPS1m();
 

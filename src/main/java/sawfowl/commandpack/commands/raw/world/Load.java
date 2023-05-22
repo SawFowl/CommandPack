@@ -28,8 +28,8 @@ public class Load extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		if(args.length == 0 || !args[0].startsWith("sponge") || !Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
-		if(Sponge.server().worldManager().offlineWorldKeys().stream().map(ResourceKey::asString).filter(k -> k.equals(args[0])).findFirst().isPresent()) exception(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_LOADED), Placeholders.WORLD, args[0]));
+		if(args.length == 0) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
+		if(!Sponge.server().worldManager().offlineWorldKeys().stream().map(ResourceKey::asString).filter(k -> k.equals(args[0])).findFirst().isPresent()) exception(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_LOADED), Placeholders.WORLD, args[0]));
 		Sponge.server().worldManager().loadWorld(ResourceKey.resolve(args[0])).thenRunAsync(() -> {
 			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_LOAD), Placeholders.WORLD, args[0]));
 		});

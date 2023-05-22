@@ -11,24 +11,20 @@ import java.util.stream.Collectors;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.registry.RegistryReference;
 import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.WorldType;
 import org.spongepowered.api.world.WorldTypes;
-import org.spongepowered.api.world.biome.Biomes;
 import org.spongepowered.api.world.generation.ChunkGenerator;
-import org.spongepowered.api.world.generation.config.FlatGeneratorConfig;
 import org.spongepowered.api.world.generation.config.WorldGenerationConfig;
-import org.spongepowered.api.world.generation.config.flat.LayerConfig;
-import org.spongepowered.api.world.generation.config.structure.StructureGenerationConfig;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.api.world.server.WorldTemplate;
 
@@ -115,9 +111,9 @@ public class Create extends AbstractWorldCommand {
 		return text("&c/world create <WorldType> <GeneratorType> <Name> [Seed] [GenerateFeatures] [BonusChest]");
 	}
 
-	@Listener
+	@Listener(order = Order.LAST)
 	public void onServerStarted(StartedEngineEvent<Server> event) {
-		if(plugin.isForgeServer()) chunkGenerators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureConfig(StructureGenerationConfig.none()).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
+		if(plugin.isForgeServer()) chunkGenerators.put("empty", plugin.getAPI().getEmptyWorldGenerator());
 		Sponge.eventManager().unregisterListeners(this);
 	}
 

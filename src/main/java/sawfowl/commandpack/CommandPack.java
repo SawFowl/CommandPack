@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.config.ConfigDir;
@@ -24,11 +25,17 @@ import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.world.biome.Biomes;
+import org.spongepowered.api.world.generation.ChunkGenerator;
+import org.spongepowered.api.world.generation.config.FlatGeneratorConfig;
+import org.spongepowered.api.world.generation.config.flat.LayerConfig;
+import org.spongepowered.api.world.generation.config.structure.StructureGenerationConfig;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
 
 import com.google.inject.Inject;
 
+import net.kyori.adventure.builder.AbstractBuilder;
 import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.KitService;
 import sawfowl.commandpack.api.PlayersData;
@@ -99,6 +106,7 @@ public class CommandPack {
 	private Map<Long, Double> tps5m = new HashMap<>();
 	private Map<Long, Double> tps10m = new HashMap<>();
 	private long serverStartedTime;
+	private sawfowl.commandpack.api.CommandPack api;
 
 	public static CommandPack getInstance() {
 		return instance;
@@ -168,6 +176,10 @@ public class CommandPack {
 		return (System.currentTimeMillis() - serverStartedTime) / 1000;
 	}
 
+	public sawfowl.commandpack.api.CommandPack getAPI() {
+		return api;
+	}
+
 	@Inject
 	public CommandPack(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
 		instance = this;
@@ -202,7 +214,8 @@ public class CommandPack {
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerRespawnListener(instance));
 		configManager.loadKits();
-		sawfowl.commandpack.api.CommandPack api = new sawfowl.commandpack.api.CommandPack() {
+		ChunkGenerator emptyGenerator = ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureConfig(StructureGenerationConfig.none()).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build());
+		api = new sawfowl.commandpack.api.CommandPack() {
 
 			@Override
 			public PlayersData playersData() {
@@ -237,6 +250,11 @@ public class CommandPack {
 			@Override
 			public KitService kitService() {
 				return kitService;
+			}
+
+			@Override
+			public ChunkGenerator getEmptyWorldGenerator() {
+				return emptyGenerator;
 			}
 
 		};
