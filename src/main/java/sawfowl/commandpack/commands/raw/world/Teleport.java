@@ -66,10 +66,14 @@ public class Teleport extends AbstractWorldCommand {
 
 	@Override
 	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
+		if(!plugin.getMainConfig().isAutoCompleteRawCommands()) return getEmptyCompletion();
 		if(args.isEmpty()) return Sponge.server().worldManager().worlds().stream().map(ServerWorld::key).map(ResourceKey::asString).map(CommandCompletion::of).collect(Collectors.toList());
-		if(args.size() == 1 && !currentInput.endsWith(" ")) return Sponge.server().worldManager().worlds().stream().map(ServerWorld::key).map(ResourceKey::asString).filter(w -> w.startsWith(args.get(0))).map(CommandCompletion::of).collect(Collectors.toList());
-		if(args.size() == 1 && currentInput.endsWith(" ") && Sponge.server().worldManager().worldExists(ResourceKey.resolve(args.get(0)))) return Sponge.server().onlinePlayers().stream().map(ServerPlayer::name).map(CommandCompletion::of).collect(Collectors.toList());
-		if(args.size() == 2 && !currentInput.endsWith(" ") && Sponge.server().worldManager().worldExists(ResourceKey.resolve(args.get(0)))) return Sponge.server().onlinePlayers().stream().map(ServerPlayer::name).filter(w -> w.startsWith(args.get(1))).map(CommandCompletion::of).collect(Collectors.toList());
+		if(args.size() == 1) {
+			if(currentInput.endsWith(" ")) {
+				return Sponge.server().onlinePlayers().stream().map(ServerPlayer::name).map(CommandCompletion::of).collect(Collectors.toList());
+			} else return Sponge.server().worldManager().worlds().stream().map(ServerWorld::key).map(ResourceKey::asString).filter(w -> (w.startsWith(args.get(0)) || (w.contains(":") && !w.endsWith(":") && w.split(":")[1].startsWith(args.get(0))) || (args.get(0).contains(w) && !args.get(0).contains(w + " ")))).map(w -> CommandCompletion.of(w, text("&3World"))).collect(Collectors.toList());
+		}
+		if(args.size() == 2 && !currentInput.endsWith(" ")) return Sponge.server().onlinePlayers().stream().map(ServerPlayer::name).filter(p -> (p.startsWith(args.get(1)))).map(p -> CommandCompletion.of(p, text("&3Player"))).collect(Collectors.toList());
 		return getEmptyCompletion();
 	}
 

@@ -272,5 +272,11 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_WORLD_TELEPORT = {PATH_COMMANDS, COMMAND_WORLD, "Teleport"};
 	public static final Object[] COMMANDS_WORLD_TELEPORT_OTHER = {PATH_COMMANDS, COMMAND_WORLD, "TeleportOther"};
 	public static final Object[] COMMANDS_WORLD_DELETE = {PATH_COMMANDS, COMMAND_WORLD, "Delete"};
+	public static final Object[] COMMANDS_WORLD_LOAD = {PATH_COMMANDS, COMMAND_WORLD, "Load"};
+	public static final Object[] COMMANDS_WORLD_LOADED = {PATH_COMMANDS, COMMAND_WORLD, PATH_EXCEPTIONS, "Loaded"};
+	public static final Object[] COMMANDS_WORLD_UNLOAD = {PATH_COMMANDS, COMMAND_WORLD, "Unload"};
+	public static final Object[] COMMANDS_WORLD_UNLOADED = {PATH_COMMANDS, COMMAND_WORLD, PATH_EXCEPTIONS, "Unloaded"};
+	public static final Object[] COMMANDS_WORLD_SETSPAWN = {PATH_COMMANDS, COMMAND_WORLD, "SetSpawn"};
+	public static final Object[] COMMANDS_WORLD_SETBORDER = {PATH_COMMANDS, COMMAND_WORLD, "SetBorder"};
 
 }

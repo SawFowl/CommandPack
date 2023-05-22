@@ -279,6 +279,12 @@ public class Locales {
 		save = check(locale, toText("&aYou teleported into the world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_TELEPORT) || save;
 		save = check(locale, toText("&aYou teleported the player &e" + Placeholders.PLAYER + "&a to the world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_TELEPORT_OTHER) || save;
 		save = check(locale, toText("&aThe world &e\"" + Placeholders.WORLD + "\"&a is deleted."), null, LocalesPaths.COMMANDS_WORLD_DELETE) || save;
+		save = check(locale, toText("&aThe world &e\"" + Placeholders.WORLD + "\"&a is unloaded."), null, LocalesPaths.COMMANDS_WORLD_UNLOAD) || save;
+		save = check(locale, toText("&cThe world &e\"" + Placeholders.WORLD + "\"&c is not loaded."), null, LocalesPaths.COMMANDS_WORLD_UNLOADED) || save;
+		save = check(locale, toText("&aThe world &e\"" + Placeholders.WORLD + "\"&a is loaded."), null, LocalesPaths.COMMANDS_WORLD_LOAD) || save;
+		save = check(locale, toText("&cThe world &e\"" + Placeholders.WORLD + "\"&c is already loaded."), null, LocalesPaths.COMMANDS_WORLD_LOADED) || save;
+		save = check(locale, toText("&aSpawn point is set in the world &e\"" + Placeholders.WORLD + "\"&a at the coordinates &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETSPAWN) || save;
+		save = check(locale, toText("&aThe radius of world &e\"" + Placeholders.WORLD + "\"&a border is set to the value &e" + Placeholders.VALUE + "&a with the center at the coordinates &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETBORDER) || save;
 
 		if(save) save(locale);
 	}
@@ -505,6 +511,12 @@ public class Locales {
 		save = check(locale, toText("&aВы телепортировались в мир &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_TELEPORT) || save;
 		save = check(locale, toText("&aВы телепортировали игрока &e" + Placeholders.PLAYER + "&a в мир &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_TELEPORT_OTHER) || save;
 		save = check(locale, toText("&aМир &e\"" + Placeholders.WORLD + "\"&a удален."), null, LocalesPaths.COMMANDS_WORLD_DELETE) || save;
+		save = check(locale, toText("&aМир &e\"" + Placeholders.WORLD + "\"&a выгружен."), null, LocalesPaths.COMMANDS_WORLD_UNLOAD) || save;
+		save = check(locale, toText("&cМир &e\"" + Placeholders.WORLD + "\"&c не загружен."), null, LocalesPaths.COMMANDS_WORLD_UNLOADED) || save;
+		save = check(locale, toText("&aМир &e\"" + Placeholders.WORLD + "\"&a загружен."), null, LocalesPaths.COMMANDS_WORLD_LOAD) || save;
+		save = check(locale, toText("&cМир &e\"" + Placeholders.WORLD + "\"&c уже загружен."), null, LocalesPaths.COMMANDS_WORLD_LOADED) || save;
+		save = check(locale, toText("&aУстановлена точка спавна в мире &e\"" + Placeholders.WORLD + "\"&a по координатам &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETSPAWN) || save;
+		save = check(locale, toText("&aУстановлен радиус границы мира &e\"" + Placeholders.WORLD + "\"&a в значении &e" + Placeholders.VALUE + "&a с центром по координатам &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETBORDER) || save;
 
 		if(save) save(locale);
 	}
