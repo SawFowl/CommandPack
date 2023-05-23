@@ -10,6 +10,7 @@ import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
+import org.spongepowered.api.world.DefaultWorldKeys;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -28,8 +29,8 @@ public class Load extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		if(args.length == 0) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
-		if(!Sponge.server().worldManager().offlineWorldKeys().stream().map(ResourceKey::asString).filter(k -> k.equals(args[0])).findFirst().isPresent()) exception(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_LOADED), Placeholders.WORLD, args[0]));
+		if(args.length == 0 || DefaultWorldKeys.DEFAULT.asString().equals(args[0])) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
+		if(!Sponge.server().worldManager().offlineWorldKeys().stream().map(ResourceKey::asString).filter(k -> k.equals(args[0])).findFirst().isPresent()) exceptionAppendUsage(cause, TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_LOADED), Placeholders.WORLD, args[0]));
 		Sponge.server().worldManager().loadWorld(ResourceKey.resolve(args[0])).thenRunAsync(() -> {
 			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_LOAD), Placeholders.WORLD, args[0]));
 		});
@@ -38,8 +39,8 @@ public class Load extends AbstractWorldCommand {
 	@Override
 	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
 		if(!plugin.getMainConfig().isAutoCompleteRawCommands()) return getEmptyCompletion();
-		if(args.size() == 0) return Sponge.server().worldManager().offlineWorldKeys().stream().map(ResourceKey::asString).filter(k -> k.startsWith("sponge")).map(CommandCompletion::of).collect(Collectors.toList());
-		if(args.size() == 1 && !currentInput.endsWith(" ")) return Sponge.server().worldManager().offlineWorldKeys().stream().map(ResourceKey::asString).filter(w -> (w.split(":")[1].startsWith(args.get(0))) || (args.get(0).contains(w) && !args.get(0).contains(w + " "))).map(CommandCompletion::of).collect(Collectors.toList());
+		if(args.size() == 0) return Sponge.server().worldManager().offlineWorldKeys().stream().map(ResourceKey::asString).filter(k -> !k.equals(DefaultWorldKeys.DEFAULT.asString())).map(CommandCompletion::of).collect(Collectors.toList());
+		if(args.size() == 1 && !currentInput.endsWith(" ")) return Sponge.server().worldManager().offlineWorldKeys().stream().map(ResourceKey::asString).filter(k -> (!k.equals(DefaultWorldKeys.DEFAULT.asString()) && (k.split(":")[1].startsWith(args.get(0))) || (args.get(0).contains(k) && !args.get(0).contains(k + " ")))).map(CommandCompletion::of).collect(Collectors.toList());
 		return getEmptyCompletion();
 	}
 

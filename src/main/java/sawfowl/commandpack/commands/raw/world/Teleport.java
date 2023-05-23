@@ -33,9 +33,9 @@ public class Teleport extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		if(args.length == 0) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
+		if(args.length == 0) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
 		Optional<ServerWorld> optWorld = Sponge.server().worldManager().world(ResourceKey.resolve(args[0]));
-		if(!optWorld.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
+		if(!optWorld.isPresent()) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
 		Optional<ServerPlayer> player = args.length == 2 ? Sponge.server().player(args[1]) : Optional.empty();
 		ServerLocation location = findSafe(ServerLocation.of(optWorld.get(), optWorld.get().properties().spawnPosition()));
 		if(isPlayer) {
@@ -57,7 +57,7 @@ public class Teleport extends AbstractWorldCommand {
 				});
 			}
 		} else {
-			if(!player.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
+			if(!player.isPresent()) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
 			player.get().setLocation(location);
 			player.get().sendMessage(TextUtils.replace(getText(player.get().locale(), LocalesPaths.COMMANDS_WORLD_TELEPORT), Placeholders.WORLD, optWorld.get().key().asString()));
 			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_TELEPORT_OTHER), new String[] {Placeholders.PLAYER, Placeholders.WORLD}, new Object[] {player.get().name(), optWorld.get().key().asString()}));

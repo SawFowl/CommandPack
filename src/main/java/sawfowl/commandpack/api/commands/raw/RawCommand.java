@@ -187,4 +187,12 @@ public interface RawCommand extends PluginCommand, Raw {
 		return NumberUtils.isParsable(arg) ? Optional.ofNullable(NumberUtils.createDouble(arg)) : Optional.empty();
 	}
 
+	default CommandException exceptionAppendUsage(CommandCause cause, Component text) throws CommandException {
+		throw new CommandException(text.append(Component.newline()).append(usage(cause)));
+	}
+
+	default CommandException exceptionAppendUsage(CommandCause cause, Locale locale, Object[] localePath) throws CommandException {
+		throw new CommandException(getText(locale, localePath).append(Component.newline()).append(usage(cause)));
+	}
+
 }

@@ -1,5 +1,8 @@
 package sawfowl.commandpack.api;
 
+import java.util.Optional;
+import java.util.Set;
+
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.world.generation.ChunkGenerator;
 
@@ -31,9 +34,20 @@ public interface CommandPack {
 	KitService kitService();
 
 	/**
-	 * 	Empty world generator
+	 * Registration of the custom chunk generator.<br>
+	 * All registered generators will be available in the command `/world create`.
 	 */
-	ChunkGenerator getEmptyWorldGenerator();
+	void registerCustomGenerator(String name, ChunkGenerator chunkGenerator);
+
+	/**
+	 * Getting a custom chunk generator.
+	 */
+	Optional<ChunkGenerator> getCustomGenerator(String name);
+
+	/**
+	 * Get a {@link Set} of names of all registered custom chunk generators.
+	 */
+	Set<String> getAvailableGenerators();
 
 	public double getAverageTPS1m();
 

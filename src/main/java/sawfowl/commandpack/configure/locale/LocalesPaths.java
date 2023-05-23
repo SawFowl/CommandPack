@@ -278,5 +278,22 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_WORLD_UNLOADED = {PATH_COMMANDS, COMMAND_WORLD, PATH_EXCEPTIONS, "Unloaded"};
 	public static final Object[] COMMANDS_WORLD_SETSPAWN = {PATH_COMMANDS, COMMAND_WORLD, "SetSpawn"};
 	public static final Object[] COMMANDS_WORLD_SETBORDER = {PATH_COMMANDS, COMMAND_WORLD, "SetBorder"};
+	public static final Object[] COMMANDS_WORLD_ENABLE = {PATH_COMMANDS, COMMAND_WORLD, "Enable"};
+	public static final Object[] COMMANDS_WORLD_DISABLE = {PATH_COMMANDS, COMMAND_WORLD, "Disable"};
+	public static final Object[] COMMANDS_WORLD_ENABLE_PVP = {PATH_COMMANDS, COMMAND_WORLD, "EnablePvP"};
+	public static final Object[] COMMANDS_WORLD_DISABLE_PVP = {PATH_COMMANDS, COMMAND_WORLD, "DisablePvP"};
+	public static final Object[] COMMANDS_WORLD_DIFFICULTY_PEACEFUL = {PATH_COMMANDS, COMMAND_WORLD, "Difficulty", "Peaceful"};
+	public static final Object[] COMMANDS_WORLD_DIFFICULTY_EASY = {PATH_COMMANDS, COMMAND_WORLD, "Difficulty", "Easy"};
+	public static final Object[] COMMANDS_WORLD_DIFFICULTY_NORMAL = {PATH_COMMANDS, COMMAND_WORLD, "Difficulty", "Normal"};
+	public static final Object[] COMMANDS_WORLD_DIFFICULTY_HARD = {PATH_COMMANDS, COMMAND_WORLD, "Difficulty", "Hard"};
+	public static final Object[] COMMANDS_WORLD_GAMEMODE_SURVIVAL = {PATH_COMMANDS, COMMAND_WORLD, "GameMode", "Survival"};
+	public static final Object[] COMMANDS_WORLD_GAMEMODE_CREATIVE = {PATH_COMMANDS, COMMAND_WORLD, "GameMode", "Creative"};
+	public static final Object[] COMMANDS_WORLD_GAMEMODE_ADVENTURE = {PATH_COMMANDS, COMMAND_WORLD, "GameMode", "Adventure"};
+	public static final Object[] COMMANDS_WORLD_GAMEMODE_SPECTATOR = {PATH_COMMANDS, COMMAND_WORLD, "GameMode", "Spectator"};
+	public static final Object[] COMMANDS_WORLD_VIEWDISTANCE = {PATH_COMMANDS, COMMAND_WORLD, "ViewDistance"};
+	public static final Object[] COMMANDS_WORLD_GAMERULE_SUCCESS = {PATH_COMMANDS, COMMAND_WORLD, "GameRule", "Success"};
+	public static final Object[] COMMANDS_WORLD_GAMERULE_INCORECT_VALUE = {PATH_COMMANDS, COMMAND_WORLD, PATH_EXCEPTIONS, "GameRule", "IncorectValue"};
+	public static final Object[] COMMANDS_WORLD_GAMERULE_UNKNOWN_TYPE = {PATH_COMMANDS, COMMAND_WORLD, PATH_EXCEPTIONS, "GameRule", "UnknownType"};
+	public static final Object[] COMMANDS_WORLD_GAMERULES = {PATH_COMMANDS, COMMAND_WORLD, "GameRules", "List"};
 
 }

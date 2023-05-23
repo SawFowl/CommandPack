@@ -285,6 +285,23 @@ public class Locales {
 		save = check(locale, toText("&cThe world &e\"" + Placeholders.WORLD + "\"&c is already loaded."), null, LocalesPaths.COMMANDS_WORLD_LOADED) || save;
 		save = check(locale, toText("&aSpawn point is set in the world &e\"" + Placeholders.WORLD + "\"&a at the coordinates &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETSPAWN) || save;
 		save = check(locale, toText("&aThe radius of world &e\"" + Placeholders.WORLD + "\"&a border is set to the value &e" + Placeholders.VALUE + "&a with the center at the coordinates &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETBORDER) || save;
+		save = check(locale, toText("&aThe world &e\"" + Placeholders.WORLD + "\"&a will be loaded when the server starts up."), null, LocalesPaths.COMMANDS_WORLD_ENABLE) || save;
+		save = check(locale, toText("&aThe world &e\"" + Placeholders.WORLD + "\"&a will not load when the server starts."), null, LocalesPaths.COMMANDS_WORLD_DISABLE) || save;
+		save = check(locale, toText("&aPvP enabled in the world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_ENABLE_PVP) || save;
+		save = check(locale, toText("&aPvP disabled in the world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_DISABLE_PVP) || save;
+		save = check(locale, toText("&aA peaceful difficulty in the world of&e\"" + Placeholders.WORLD + "\"&a has been set."), null, LocalesPaths.COMMANDS_WORLD_DIFFICULTY_PEACEFUL) || save;
+		save = check(locale, toText("&aThe low difficulty in the world &e\"" + Placeholders.WORLD + "\"&a has been set."), null, LocalesPaths.COMMANDS_WORLD_DIFFICULTY_EASY) || save;
+		save = check(locale, toText("&aThe normal difficulty in the world &e\"" + Placeholders.WORLD + "\"&a has been set."), null, LocalesPaths.COMMANDS_WORLD_DIFFICULTY_NORMAL) || save;
+		save = check(locale, toText("&aThe hard difficulty in the world &e\"" + Placeholders.WORLD + "\"&a has been set."), null, LocalesPaths.COMMANDS_WORLD_DIFFICULTY_HARD) || save;
+		save = check(locale, toText("&aSurvival mode is set in world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_GAMEMODE_SURVIVAL) || save;
+		save = check(locale, toText("&aThe creative mode is set in world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_GAMEMODE_CREATIVE) || save;
+		save = check(locale, toText("&aThe adventure mode is set in world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_GAMEMODE_ADVENTURE) || save;
+		save = check(locale, toText("&aSpectator mode is set to world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_GAMEMODE_SPECTATOR) || save;
+		save = check(locale, toText("&aThe view distance in world &e\"" + Placeholders.WORLD + "\"&a is set to &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_VIEWDISTANCE) || save;
+		save = check(locale, toText("&aGame rule &e" + Placeholders.RULE + "&a in world &e\"" + Placeholders.WORLD + "\"&a is set to &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_SUCCESS) || save;
+		save = check(locale, toText("&eGame rules &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULES) || save;
+		save = check(locale, toText("&eInvalid value specified for game rule &e" + Placeholders.RULE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_INCORECT_VALUE) || save;
+		save = check(locale, toText("&cFailed to determine the type of game rule &e" + Placeholders.RULE + "&c. No changes have been made."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_UNKNOWN_TYPE) || save;
 
 		if(save) save(locale);
 	}
@@ -517,6 +534,23 @@ public class Locales {
 		save = check(locale, toText("&cМир &e\"" + Placeholders.WORLD + "\"&c уже загружен."), null, LocalesPaths.COMMANDS_WORLD_LOADED) || save;
 		save = check(locale, toText("&aУстановлена точка спавна в мире &e\"" + Placeholders.WORLD + "\"&a по координатам &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETSPAWN) || save;
 		save = check(locale, toText("&aУстановлен радиус границы мира &e\"" + Placeholders.WORLD + "\"&a в значении &e" + Placeholders.VALUE + "&a с центром по координатам &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETBORDER) || save;
+		save = check(locale, toText("&aМир &e\"" + Placeholders.WORLD + "\"&a будет загружаться при старте сервера."), null, LocalesPaths.COMMANDS_WORLD_ENABLE) || save;
+		save = check(locale, toText("&aМир &e\"" + Placeholders.WORLD + "\"&a не будет загружаться при старте сервера."), null, LocalesPaths.COMMANDS_WORLD_DISABLE) || save;
+		save = check(locale, toText("&aPvP включено в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_ENABLE_PVP) || save;
+		save = check(locale, toText("&aPvP выключено в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_DISABLE_PVP) || save;
+		save = check(locale, toText("&aУстановлена мирная сложность в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_DIFFICULTY_PEACEFUL) || save;
+		save = check(locale, toText("&aУстановлена низкая сложность в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_DIFFICULTY_EASY) || save;
+		save = check(locale, toText("&aУстановлена средняя сложность в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_DIFFICULTY_NORMAL) || save;
+		save = check(locale, toText("&aУстановлена высокая сложность в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_DIFFICULTY_HARD) || save;
+		save = check(locale, toText("&aУстановлен режим выживания в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_GAMEMODE_SURVIVAL) || save;
+		save = check(locale, toText("&aУстановлен творческий режим в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_GAMEMODE_CREATIVE) || save;
+		save = check(locale, toText("&aУстановлен режим приключения в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_GAMEMODE_ADVENTURE) || save;
+		save = check(locale, toText("&aУстановлен режим наблюдателя в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_GAMEMODE_SPECTATOR) || save;
+		save = check(locale, toText("&aУстановлена дистанция видимости в мире &e\"" + Placeholders.WORLD + "\"&a в значении &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_VIEWDISTANCE) || save;
+		save = check(locale, toText("&aИгровое правило &e" + Placeholders.RULE + "&a в мире &e\"" + Placeholders.WORLD + "\"&a установленно в значении &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_SUCCESS) || save;
+		save = check(locale, toText("&6Игровые правила &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULES) || save;
+		save = check(locale, toText("&cУказано недопустимое значение для игрового правила &e" + Placeholders.RULE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_INCORECT_VALUE) || save;
+		save = check(locale, toText("&cНе удалось определить тип игрового правила &e" + Placeholders.RULE + "&c. Изменения не внесены."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_UNKNOWN_TYPE) || save;
 
 		if(save) save(locale);
 	}

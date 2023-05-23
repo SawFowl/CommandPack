@@ -19,14 +19,19 @@ public class World extends AbstractWorldCommand {
 	public World(CommandPack plugin) {
 		super(plugin);
 		getChildExecutors().put("create", new Create(plugin));
-		Teleport teleport = new Teleport(plugin);
-		getChildExecutors().put("teleport", teleport);
-		getChildExecutors().put("tp", teleport);
 		getChildExecutors().put("delete", new Delete(plugin));
-		getChildExecutors().put("unload", new Unload(plugin));
+		getChildExecutors().put("teleport", new Teleport(plugin));
+		getChildExecutors().put("tp", getChildExecutors().get("teleport"));
 		getChildExecutors().put("load", new Load(plugin));
+		getChildExecutors().put("unload", new Unload(plugin));
+		getChildExecutors().put("enable", new Enable(plugin));
+		getChildExecutors().put("disable", new Disable(plugin));
 		getChildExecutors().put("setspawn", new SetWorldSpawn(plugin));
 		getChildExecutors().put("setborder", new SetBorder(plugin));
+		getChildExecutors().put("pvp", new PvP(plugin));
+		getChildExecutors().put("difficulty", new Difficulty(plugin));
+		getChildExecutors().put("gamemode", new GameMode(plugin));
+		getChildExecutors().put("gamerule", new GameRule(plugin));
 	}
 
 	@Override
@@ -56,6 +61,6 @@ public class World extends AbstractWorldCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/world create|delete|teleport|load|unload");
+		return text("&c/world create|delete|teleport|load|unload|enable|disable|setspawn|setborder|pvp|difficulty|gamemode|gamerule");
 	}
 }

@@ -53,10 +53,10 @@ public class Create extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		if(args.length < 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT);
+		if(args.length < 2) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT);
 		Optional<WorldType> optType = WorldTypes.registry().findValue(ResourceKey.resolve(args[0]));
-		if(!optType.isPresent() || !chunkGenerators.containsKey(args[1])) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT);
-		if(args.length == 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);
+		if(!optType.isPresent() || !chunkGenerators.containsKey(args[1])) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT);
+		if(args.length == 2) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);
 		String name = args[2];
 		WorldType type = optType.get();
 		WorldTemplate.Builder builder = (WorldTemplate.builder().displayName(text(name)).generator(chunkGenerators.get(args[1])).gameMode(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().gameMode().asDefaultedReference(RegistryTypes.GAME_MODE)).hardcore(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().hardcore()).difficulty(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().difficulty().asDefaultedReference(RegistryTypes.DIFFICULTY)).performsSpawnLogic(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().performsSpawnLogic()).pvp(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().pvp()).loadOnStartup(true).key(ResourceKey.sponge(TextUtils.clearDecorations(name).toLowerCase())).worldType(RegistryReference.referenced(Sponge.server(), RegistryTypes.WORLD_TYPE, type)));
@@ -113,7 +113,9 @@ public class Create extends AbstractWorldCommand {
 
 	@Listener(order = Order.LAST)
 	public void onServerStarted(StartedEngineEvent<Server> event) {
-		if(plugin.isForgeServer()) chunkGenerators.put("empty", plugin.getAPI().getEmptyWorldGenerator());
+		plugin.getAPI().getAvailableGenerators().forEach(generator -> {
+			chunkGenerators.put(generator.toLowerCase(), plugin.getAPI().getCustomGenerator(generator).get());
+		});
 		Sponge.eventManager().unregisterListeners(this);
 	}
 

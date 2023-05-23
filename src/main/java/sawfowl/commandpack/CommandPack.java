@@ -5,7 +5,10 @@ import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -107,6 +110,7 @@ public class CommandPack {
 	private Map<Long, Double> tps10m = new HashMap<>();
 	private long serverStartedTime;
 	private sawfowl.commandpack.api.CommandPack api;
+	private Map<String, ChunkGenerator> generators = new HashMap<>();
 
 	public static CommandPack getInstance() {
 		return instance;
@@ -214,7 +218,7 @@ public class CommandPack {
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerRespawnListener(instance));
 		configManager.loadKits();
-		ChunkGenerator emptyGenerator = ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureConfig(StructureGenerationConfig.none()).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build());
+		generators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureConfig(StructureGenerationConfig.none()).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
 		api = new sawfowl.commandpack.api.CommandPack() {
 
 			@Override
@@ -253,8 +257,18 @@ public class CommandPack {
 			}
 
 			@Override
-			public ChunkGenerator getEmptyWorldGenerator() {
-				return emptyGenerator;
+			public void registerCustomGenerator(String name, ChunkGenerator chunkGenerator) {
+				generators.put(name, chunkGenerator);
+			}
+
+			@Override
+			public Optional<ChunkGenerator> getCustomGenerator(String name) {
+				return Optional.ofNullable(generators.getOrDefault(name, null));
+			}
+
+			@Override
+			public Set<String> getAvailableGenerators() {
+				return new HashSet<>(generators.keySet());
 			}
 
 		};
