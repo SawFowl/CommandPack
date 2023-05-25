@@ -1,7 +1,10 @@
 package sawfowl.commandpack.api.commands.raw;
 
+import java.util.Optional;
+
+@FunctionalInterface
 public interface RawSupplier<T> {
 
-	T get(String[] args);
+	Optional<T> get(String[] args);
 
 }

@@ -66,7 +66,7 @@ public class GiveLimit extends AbstractKitsEditCommand {
 	}
 
 	@Override
-	public List<RawArgument<?>> getArguments() {
+	public List<RawArgument<?>> arguments() {
 		return null;
 	}
 

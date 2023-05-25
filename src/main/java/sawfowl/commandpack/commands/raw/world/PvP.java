@@ -68,11 +68,11 @@ public class PvP extends AbstractWorldCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/cworld pvp <World> <Boolean>");
+		return text("&c/world pvp <World> <Boolean>");
 	}
 
 	@Override
-	public List<RawArgument<?>> getArguments() {
+	public List<RawArgument<?>> arguments() {
 		return null;
 	}
 

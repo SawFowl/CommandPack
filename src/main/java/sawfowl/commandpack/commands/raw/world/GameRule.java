@@ -106,11 +106,11 @@ public class GameRule extends AbstractWorldCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/cworld gamemode <World> <GameRule> <Value>");
+		return text("&c/world gamerule <World> <GameRule> <Value>");
 	}
 
 	@Override
-	public List<RawArgument<?>> getArguments() {
+	public List<RawArgument<?>> arguments() {
 		return null;
 	}
 

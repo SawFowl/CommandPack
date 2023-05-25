@@ -1,6 +1,7 @@
 package sawfowl.commandpack.commands.settings;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -15,28 +16,27 @@ import sawfowl.commandpack.api.commands.raw.RawSupplier;
 
 public class RawArgumentImpl<T> implements RawArgument<T> {
 
-	public Builder builder() {
-		return new Builder();
+	@SuppressWarnings("hiding")
+	public <T> Builder<T> builder() {
+		return new Builder<T>();
 	}
 
 	private Supplier<Stream<String>> variants;
 	private RawSupplier<T> result;
 	private boolean isOptional = false;
 	private boolean isOptionalForConsole = false;
-	private Object defaultValue;
 	private int cursor;
-	private Object[] localesPath = new Object[]{};
+	private Object[] localesPath;
+	private Class<?> clazz;
 
 	@Override
 	public Stream<String> getVariants() {
 		return variants == null ? new ArrayList<String>().stream() : variants.get();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public T getResult(Class<T> object, String[] args) {
-		if(result == null) return (T) defaultValue;
-		return defaultValue == null ? result.get(args) : (T) defaultValue;
+	public Optional<T> getResult(Class<T> clazz, String[] args) {
+		return result == null ? Optional.empty() : result.get(args);
 	}
 
 	@Override
@@ -60,6 +60,11 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	}
 
 	@Override
+	public Class<?> getClazz() {
+		return clazz;
+	}
+
+	@Override
 	public int contentVersion() {
 		return 1;
 	}
@@ -70,54 +75,55 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 				.set(DataQuery.of("Variants"), variants)
 				.set(DataQuery.of("Optional"), isOptional)
 				.set(DataQuery.of("OptionalForConsole"), isOptionalForConsole)
-				.set(DataQuery.of("Default"), defaultValue)
 				.set(DataQuery.of("Cursor"), cursor)
 				.set(DataQuery.of("LocalesPath"), localesPath)
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
-	private class Builder implements RawArgument.Builder {
+	@SuppressWarnings("hiding")
+	private class Builder<T> implements RawArgument.Builder<T> {
 
+		@SuppressWarnings("unchecked")
 		@Override
-		public @NotNull RawArgument<?> build() {
-			return RawArgumentImpl.this;
+		public @NotNull RawArgument<T> build() {
+			return (@NotNull RawArgument<T>) RawArgumentImpl.this;
 		}
 
 		@Override
-		public Builder variants(Supplier<Stream<String>> variants) {
+		public Builder<T> variants(Supplier<Stream<String>> variants) {
 			RawArgumentImpl.this.variants = variants;
 			return this;
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public Builder result(RawSupplier<?> result) {
-			RawArgumentImpl.this.result = (RawSupplier<T>) result;
+		public Builder<T> result(Class<?> clazz, RawSupplier<?> result) {
+			((RawArgumentImpl<T>) RawArgumentImpl.this).result = (RawSupplier<T>) result;
+			RawArgumentImpl.this.clazz = clazz;
 			return this;
 		}
 
 		@Override
-		public Builder optional(boolean value) {
+		public Builder<T> optional(boolean value) {
+			isOptional = value;
 			return this;
 		}
 
 		@Override
-		public Builder optionalForConsole(boolean value) {
+		public Builder<T> optionalForConsole(boolean value) {
+			isOptionalForConsole = value;
 			return this;
 		}
 
 		@Override
-		public Builder defaultValue(Object value) {
+		public Builder<T> cursor(int value) {
+			cursor = value;
 			return this;
 		}
 
 		@Override
-		public Builder cursor(int value) {
-			return this;
-		}
-
-		@Override
-		public Builder localesPath(Object[] value) {
+		public Builder<T> localesPath(Object[] value) {
+			localesPath = value;
 			return this;
 		}
 		

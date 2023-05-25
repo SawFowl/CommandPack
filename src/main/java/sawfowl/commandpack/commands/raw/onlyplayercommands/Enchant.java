@@ -88,7 +88,7 @@ public class Enchant extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public List<RawArgument<?>> getArguments() {
+	public List<RawArgument<?>> arguments() {
 		return null;
 	}
 

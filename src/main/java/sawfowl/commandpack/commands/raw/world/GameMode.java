@@ -80,10 +80,10 @@ public class GameMode extends AbstractWorldCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/cworld gamemode <World> <GameMode>");
+		return text("&c/world gamemode <World> <GameMode>");
 	}
 
-	private Object getLocalesPaths(String difficulty) {
+	private Object[] getLocalesPaths(String difficulty) {
 		switch (difficulty) {
 		case "creative":
 			return LocalesPaths.COMMANDS_WORLD_GAMEMODE_CREATIVE;
@@ -103,7 +103,7 @@ public class GameMode extends AbstractWorldCommand {
 	}
 
 	@Override
-	public List<RawArgument<?>> getArguments() {
+	public List<RawArgument<?>> arguments() {
 		return null;
 	}
 

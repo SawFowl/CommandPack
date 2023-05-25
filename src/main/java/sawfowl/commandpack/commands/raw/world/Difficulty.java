@@ -80,10 +80,10 @@ public class Difficulty extends AbstractWorldCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/cworld difficulty <World> <Difficulty>");
+		return text("&c/world difficulty <World> <Difficulty>");
 	}
 
-	private Object getLocalesPaths(String difficulty) {
+	private Object[] getLocalesPaths(String difficulty) {
 		switch (difficulty) {
 		case "easy":
 			return LocalesPaths.COMMANDS_WORLD_DIFFICULTY_EASY;
@@ -103,7 +103,7 @@ public class Difficulty extends AbstractWorldCommand {
 	}
 
 	@Override
-	public List<RawArgument<?>> getArguments() {
+	public List<RawArgument<?>> arguments() {
 		return null;
 	}
 

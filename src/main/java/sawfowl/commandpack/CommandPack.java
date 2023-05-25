@@ -323,6 +323,7 @@ public class CommandPack {
 		getCommandsConfig().registerRaw(event, instance);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Listener
 	public void registerBuilders(RegisterBuilderEvent event) {
 		event.register(RandomTeleportService.RandomTeleportOptions.Builder.class, new Supplier<RandomTeleportService.RandomTeleportOptions.Builder>() {

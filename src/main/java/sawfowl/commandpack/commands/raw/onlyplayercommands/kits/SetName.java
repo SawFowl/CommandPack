@@ -82,7 +82,7 @@ public class SetName extends AbstractKitsEditCommand  {
 	}
 
 	@Override
-	public List<RawArgument<?>> getArguments() {
+	public List<RawArgument<?>> arguments() {
 		return null;
 	}
 

@@ -28,6 +28,7 @@ import sawfowl.commandpack.commands.raw.world.SetBorder;
 import sawfowl.commandpack.commands.raw.world.SetWorldSpawn;
 import sawfowl.commandpack.commands.raw.world.Teleport;
 import sawfowl.commandpack.commands.raw.world.Unload;
+import sawfowl.commandpack.commands.raw.world.ViewDistance;
 
 public class World extends AbstractWorldCommand {
 
@@ -39,6 +40,7 @@ public class World extends AbstractWorldCommand {
 		getChildExecutors().put("tp", getChildExecutors().get("teleport"));
 		getChildExecutors().put("load", new Load(plugin));
 		getChildExecutors().put("unload", new Unload(plugin));
+		getChildExecutors().put("viewdistance", new ViewDistance(plugin));
 		getChildExecutors().put("enable", new Enable(plugin));
 		getChildExecutors().put("disable", new Disable(plugin));
 		getChildExecutors().put("setspawn", new SetWorldSpawn(plugin));
@@ -81,7 +83,7 @@ public class World extends AbstractWorldCommand {
 	}
 
 	@Override
-	public List<RawArgument<?>> getArguments() {
+	public List<RawArgument<?>> arguments() {
 		return null;
 	}
 }

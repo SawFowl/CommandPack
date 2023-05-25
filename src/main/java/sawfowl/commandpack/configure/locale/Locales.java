@@ -284,7 +284,7 @@ public class Locales {
 		save = check(locale, toText("&aThe world &e\"" + Placeholders.WORLD + "\"&a is loaded."), null, LocalesPaths.COMMANDS_WORLD_LOAD) || save;
 		save = check(locale, toText("&cThe world &e\"" + Placeholders.WORLD + "\"&c is already loaded."), null, LocalesPaths.COMMANDS_WORLD_LOADED) || save;
 		save = check(locale, toText("&aSpawn point is set in the world &e\"" + Placeholders.WORLD + "\"&a at the coordinates &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETSPAWN) || save;
-		save = check(locale, toText("&aThe radius of world &e\"" + Placeholders.WORLD + "\"&a border is set to the value &e" + Placeholders.VALUE + "&a with the center at the coordinates &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETBORDER) || save;
+		save = check(locale, toText("&aThe diameter of world &e\"" + Placeholders.WORLD + "\"&a border is set to the value &e" + Placeholders.VALUE + "&a with the center at the coordinates &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETBORDER) || save;
 		save = check(locale, toText("&aThe world &e\"" + Placeholders.WORLD + "\"&a will be loaded when the server starts up."), null, LocalesPaths.COMMANDS_WORLD_ENABLE) || save;
 		save = check(locale, toText("&aThe world &e\"" + Placeholders.WORLD + "\"&a will not load when the server starts."), null, LocalesPaths.COMMANDS_WORLD_DISABLE) || save;
 		save = check(locale, toText("&aPvP enabled in the world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_ENABLE_PVP) || save;
@@ -533,7 +533,7 @@ public class Locales {
 		save = check(locale, toText("&aМир &e\"" + Placeholders.WORLD + "\"&a загружен."), null, LocalesPaths.COMMANDS_WORLD_LOAD) || save;
 		save = check(locale, toText("&cМир &e\"" + Placeholders.WORLD + "\"&c уже загружен."), null, LocalesPaths.COMMANDS_WORLD_LOADED) || save;
 		save = check(locale, toText("&aУстановлена точка спавна в мире &e\"" + Placeholders.WORLD + "\"&a по координатам &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETSPAWN) || save;
-		save = check(locale, toText("&aУстановлен радиус границы мира &e\"" + Placeholders.WORLD + "\"&a в значении &e" + Placeholders.VALUE + "&a с центром по координатам &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETBORDER) || save;
+		save = check(locale, toText("&aУстановлен диаметр границы мира &e\"" + Placeholders.WORLD + "\"&a в значении &e" + Placeholders.VALUE + "&a с центром по координатам &e" + Placeholders.LOCATION + "&a."), null, LocalesPaths.COMMANDS_WORLD_SETBORDER) || save;
 		save = check(locale, toText("&aМир &e\"" + Placeholders.WORLD + "\"&a будет загружаться при старте сервера."), null, LocalesPaths.COMMANDS_WORLD_ENABLE) || save;
 		save = check(locale, toText("&aМир &e\"" + Placeholders.WORLD + "\"&a не будет загружаться при старте сервера."), null, LocalesPaths.COMMANDS_WORLD_DISABLE) || save;
 		save = check(locale, toText("&aPvP включено в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_ENABLE_PVP) || save;

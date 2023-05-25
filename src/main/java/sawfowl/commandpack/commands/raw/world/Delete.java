@@ -53,7 +53,7 @@ public class Delete extends AbstractWorldCommand {
 
 	@Override
 	public Component extendedDescription(Locale locale) {
-		return null;
+		return text("&c/world delete <World>");
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class Delete extends AbstractWorldCommand {
 	}
 
 	@Override
-	public List<RawArgument<?>> getArguments() {
+	public List<RawArgument<?>> arguments() {
 		return null;
 	}
 

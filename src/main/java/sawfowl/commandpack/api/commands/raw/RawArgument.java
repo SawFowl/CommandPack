@@ -1,5 +1,6 @@
 package sawfowl.commandpack.api.commands.raw;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -10,18 +11,19 @@ import net.kyori.adventure.builder.AbstractBuilder;
 
 public interface RawArgument<T> extends DataSerializable {
 
-	static Builder builder() {
+	@SuppressWarnings("unchecked")
+	static <T> Builder<T> builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
 	@SuppressWarnings("unchecked")
-	static <T> RawArgument<T> of(Class<T> clazz, Supplier<Stream<String>> variants, RawSupplier<?> result, boolean optional, boolean optionalForConsole, Object defaultValue, int cursor ,Object[] localesPath) {
-		return (RawArgument<T>) builder().variants(variants).result(result).optional(optional).optionalForConsole(optionalForConsole).defaultValue(defaultValue).cursor(cursor).localesPath(localesPath).build();
+	static <T> RawArgument<T> of(Class<T> clazz, Supplier<Stream<String>> variants, RawSupplier<?> result, boolean optional, boolean optionalForConsole, int cursor ,Object[] localesPath) {
+		return (RawArgument<T>) builder().variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).localesPath(localesPath).build();
 	}
 
 	Stream<String> getVariants();
 
-	T getResult(Class<T> object, String[] args);
+	Optional<T> getResult(Class<T> clazz, String[] args);
 
 	boolean isOptional();
 
@@ -31,21 +33,21 @@ public interface RawArgument<T> extends DataSerializable {
 
 	Object[] getLocalesPath();
 
-	interface Builder extends AbstractBuilder<RawArgument<?>>, org.spongepowered.api.util.Builder<RawArgument<?>, Builder> {
+	Class<?> getClazz();
 
-		Builder variants(Supplier<Stream<String>> variants);
+	interface Builder<T> extends AbstractBuilder<RawArgument<T>>, org.spongepowered.api.util.Builder<RawArgument<T>, Builder<T>> {
 
-		Builder result(RawSupplier<?> result);
+		Builder<T> variants(Supplier<Stream<String>> variants);
 
-		Builder optional(boolean value);
+		Builder<T> result(Class<?> clazz, RawSupplier<?> result);
 
-		Builder optionalForConsole(boolean value);
+		Builder<T> optional(boolean value);
 
-		Builder defaultValue(Object value);
+		Builder<T> optionalForConsole(boolean value);
 
-		Builder cursor(int value);
+		Builder<T> cursor(int value);
 
-		Builder localesPath(Object[] value);
+		Builder<T> localesPath(Object[] value);
 
 	}
 

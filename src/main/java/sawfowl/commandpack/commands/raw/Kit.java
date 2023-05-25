@@ -415,7 +415,7 @@ public class Kit extends AbstractRawCommand {
 	}
 
 	@Override
-	public List<RawArgument<?>> getArguments() {
+	public List<RawArgument<?>> arguments() {
 		return null;
 	}
 

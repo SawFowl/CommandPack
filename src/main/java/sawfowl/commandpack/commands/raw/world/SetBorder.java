@@ -34,7 +34,7 @@ public class SetBorder extends AbstractWorldCommand {
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		if(args.length == 0 || !Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).isPresent()) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
-		if(args.length == 1 || !NumberUtils.isParsable(args[0])) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+		if(args.length == 1 || !NumberUtils.isParsable(args[1])) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		ServerWorld world = Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).get();
 		int radius = NumberUtils.toInt(args[1]);
 		world.setBorder(WorldBorder.builder().center(world.properties().spawnPosition().x(), world.properties().spawnPosition().z()).targetDiameter(radius).damagePerBlock(world.border().damagePerBlock()).safeZone(world.border().safeZone()).build());
@@ -66,11 +66,11 @@ public class SetBorder extends AbstractWorldCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/cworld setborder <World> <Radius>");
+		return text("&c/world setborder <World> <Radius>");
 	}
 
 	@Override
-	public List<RawArgument<?>> getArguments() {
+	public List<RawArgument<?>> arguments() {
 		return null;
 	}
 

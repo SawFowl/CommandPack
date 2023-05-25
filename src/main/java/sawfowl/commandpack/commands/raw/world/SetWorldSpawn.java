@@ -62,7 +62,7 @@ public class SetWorldSpawn extends AbstractWorldCommand {
 	}
 
 	@Override
-	public List<RawArgument<?>> getArguments() {
+	public List<RawArgument<?>> arguments() {
 		return null;
 	}
 
