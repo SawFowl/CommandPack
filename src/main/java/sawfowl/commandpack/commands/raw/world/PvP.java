@@ -16,8 +16,11 @@ import org.spongepowered.api.world.server.ServerWorld;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
+import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.TextUtils;
 
 public class PvP extends AbstractWorldCommand {
 
@@ -30,7 +33,9 @@ public class PvP extends AbstractWorldCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		if(args.length == 0 || !Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).isPresent()) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
 		if(args.length == 1) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).get().properties().setPvp(Boolean.valueOf(args[1]));
+		boolean pvp = Boolean.valueOf(args[1]);
+		Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).get().properties().setPvp(pvp);
+		audience.sendMessage(TextUtils.replace(getText(locale, pvp ? LocalesPaths.COMMANDS_WORLD_ENABLE_PVP : LocalesPaths.COMMANDS_WORLD_DISABLE_PVP), Placeholders.WORLD, args[0]));
 	}
 
 	@Override
@@ -64,6 +69,11 @@ public class PvP extends AbstractWorldCommand {
 	@Override
 	public Component usage(CommandCause cause) {
 		return text("&c/cworld pvp <World> <Boolean>");
+	}
+
+	@Override
+	public List<RawArgument<?>> getArguments() {
+		return null;
 	}
 
 }

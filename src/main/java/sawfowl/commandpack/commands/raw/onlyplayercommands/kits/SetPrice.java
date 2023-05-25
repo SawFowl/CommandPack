@@ -15,6 +15,7 @@ import org.spongepowered.api.service.economy.Currency;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.kits.KitPrice;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
@@ -68,6 +69,11 @@ public class SetPrice extends AbstractKitsEditCommand {
 	@Override
 	public Component usage(CommandCause cause) {
 		return text("&c/kits setprice <Kit> <Currency> <Price>");
+	}
+
+	@Override
+	public List<RawArgument<?>> getArguments() {
+		return null;
 	}
 
 }

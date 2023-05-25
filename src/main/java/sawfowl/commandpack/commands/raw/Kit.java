@@ -30,6 +30,7 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.commandpack.api.events.KitGiveEvent;
@@ -411,6 +412,11 @@ public class Kit extends AbstractRawCommand {
 				return nextGiveTime;
 			}
 		};
+	}
+
+	@Override
+	public List<RawArgument<?>> getArguments() {
+		return null;
 	}
 
 }

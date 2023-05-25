@@ -18,6 +18,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -63,6 +64,11 @@ public class Disable extends AbstractWorldCommand {
 	@Override
 	public Component usage(CommandCause cause) {
 		return text("&c/cworld disable <World>");
+	}
+
+	@Override
+	public List<RawArgument<?>> getArguments() {
+		return null;
 	}
 
 }

@@ -13,6 +13,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
@@ -62,6 +63,11 @@ public class GiveLimit extends AbstractKitsEditCommand {
 	@Override
 	public Component usage(CommandCause cause) {
 		return text("&c/kits givelimit <Kit> <Limit>");
+	}
+
+	@Override
+	public List<RawArgument<?>> getArguments() {
+		return null;
 	}
 
 }

@@ -24,6 +24,7 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
@@ -84,6 +85,11 @@ public class Enchant extends AbstractPlayerCommand {
 	@Override
 	public Component usage(CommandCause cause) {
 		return text("&c/enchant <Enchantment> <Level>");
+	}
+
+	@Override
+	public List<RawArgument<?>> getArguments() {
+		return null;
 	}
 
 }

@@ -26,6 +26,7 @@ import org.spongepowered.api.scheduler.Task;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
@@ -65,6 +66,8 @@ public interface RawCommand extends PluginCommand, Raw {
 	 */
 	Map<String, RawCommand> getChildExecutors();
 
+	List<RawArgument<?>> getArguments();
+
 	/**
 	 * Checks for child commands and who activated the command.
 	 */
@@ -79,6 +82,7 @@ public interface RawCommand extends PluginCommand, Raw {
 			getChildExecutors().get(args[0]).process(cause, cause.audience(), getLocale(cause), isPlayer, list.toArray(new String[] {}), arguments);
 			return success();
 		}
+		if(getArguments() != null && !getArguments().isEmpty()) for(RawArgument<?> arg : getArguments()) if(args.length <= arg.getCursor()) exception(locale, arg.getLocalesPath());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) cause.audience();
 			Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
@@ -108,6 +112,13 @@ public interface RawCommand extends PluginCommand, Raw {
 			if(getChildExecutors().containsKey(args.get(0))) {
 				return getChildExecutors().get(args.get(0)).complete(cause, args.subList(1, args.size()), arguments, arguments.input().contains(args.get(0) + " ") ? arguments.input().replace(args.get(0) + " ", "") : arguments.input().replace(args.get(0), ""));
 			}
+		}
+		if(getArguments() != null && !getArguments().isEmpty()) {
+			if(getArguments().stream().filter(arg -> arg.getCursor() == args.size()).findFirst().isPresent()) {
+				if(arguments.input().endsWith(" ")) {
+					return getArguments().stream().filter(arg -> arg.getCursor() == args.size()).findFirst().get().getVariants().map(CommandCompletion::of).collect(Collectors.toList());
+				} else return getArguments().stream().filter(arg -> arg.getCursor() == args.size()).findFirst().get().getVariants().filter(v -> ((v.contains(":") && v.split(":")[1].startsWith(args.get(args.size() - 1)))) || (args.get(args.size() - 1).contains(v) && !args.get(args.size() - 1).contains(v + " "))).map(CommandCompletion::of).collect(Collectors.toList());
+			} else return getEmptyCompletion();
 		}
 		List<CommandCompletion> complete = complete(cause, args, arguments, arguments.input());
 		return complete == null || complete.size() == 0 ? getEmptyCompletion() : complete.stream().collect(Collectors.toList());

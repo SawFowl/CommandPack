@@ -15,6 +15,7 @@ import org.spongepowered.api.util.locale.Locales;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
@@ -61,6 +62,11 @@ public class CreateLore extends AbstractKitsEditCommand {
 	@Override
 	public Component usage(CommandCause cause) {
 		return text("&c/kits createlore <Kit>");
+	}
+
+	@Override
+	public List<RawArgument<?>> getArguments() {
+		return null;
 	}
 
 }

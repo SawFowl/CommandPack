@@ -33,6 +33,7 @@ import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -117,6 +118,11 @@ public class Create extends AbstractWorldCommand {
 			chunkGenerators.put(generator.toLowerCase(), plugin.getAPI().getCustomGenerator(generator).get());
 		});
 		Sponge.eventManager().unregisterListeners(this);
+	}
+
+	@Override
+	public List<RawArgument<?>> getArguments() {
+		return null;
 	}
 
 }

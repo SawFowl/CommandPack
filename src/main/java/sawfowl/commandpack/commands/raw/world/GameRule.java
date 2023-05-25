@@ -25,6 +25,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -84,7 +85,7 @@ public class GameRule extends AbstractWorldCommand {
 				return gamerules.keySet().stream().map(CommandCompletion::of).collect(Collectors.toList());
 			} else return Sponge.server().worldManager().worlds().stream().map(ServerWorld::key).map(ResourceKey::asString).filter(k -> (!k.equals(DefaultWorldKeys.DEFAULT.asString()) && (k.split(":")[1].startsWith(args.get(0))) || (args.get(0).contains(k) && !args.get(0).contains(k + " ")))).map(CommandCompletion::of).collect(Collectors.toList());
 		}
-		if(args.size() == 2 && !currentInput.endsWith(" ")) gamerules.keySet().stream().filter(r -> ((r.contains(":") && r.split(":")[1].startsWith(args.get(0)))) || (args.get(1).contains(r) && !args.get(1).contains(r + " "))).map(CommandCompletion::of).collect(Collectors.toList());
+		if(args.size() == 2 && !currentInput.endsWith(" ")) gamerules.keySet().stream().filter(r -> ((r.contains(":") && r.split(":")[1].startsWith(args.get(1)))) || (args.get(1).contains(r) && !args.get(1).contains(r + " "))).map(CommandCompletion::of).collect(Collectors.toList());
 		return getEmptyCompletion();
 	}
 
@@ -106,6 +107,11 @@ public class GameRule extends AbstractWorldCommand {
 	@Override
 	public Component usage(CommandCause cause) {
 		return text("&c/cworld gamemode <World> <GameRule> <Value>");
+	}
+
+	@Override
+	public List<RawArgument<?>> getArguments() {
+		return null;
 	}
 
 	@Listener(order = Order.LAST)

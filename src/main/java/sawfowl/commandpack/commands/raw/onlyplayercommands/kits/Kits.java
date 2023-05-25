@@ -18,6 +18,7 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
 
 public class Kits extends AbstractPlayerCommand {
@@ -82,6 +83,11 @@ public class Kits extends AbstractPlayerCommand {
 	public void onStarted(StartedEngineEvent<Server> event) {
 		if(plugin.getEconomy().isPresent()) getChildExecutors().put("setprice", new SetPrice(plugin));
 		Sponge.eventManager().unregisterListeners(this);
+	}
+
+	@Override
+	public List<RawArgument<?>> getArguments() {
+		return null;
 	}
 
 }

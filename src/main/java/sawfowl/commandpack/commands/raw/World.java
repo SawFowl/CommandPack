@@ -1,4 +1,4 @@
-package sawfowl.commandpack.commands.raw.world;
+package sawfowl.commandpack.commands.raw;
 
 import java.util.List;
 import java.util.Locale;
@@ -12,7 +12,22 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
+import sawfowl.commandpack.commands.raw.world.Create;
+import sawfowl.commandpack.commands.raw.world.Delete;
+import sawfowl.commandpack.commands.raw.world.Difficulty;
+import sawfowl.commandpack.commands.raw.world.Disable;
+import sawfowl.commandpack.commands.raw.world.Enable;
+import sawfowl.commandpack.commands.raw.world.Fill;
+import sawfowl.commandpack.commands.raw.world.GameMode;
+import sawfowl.commandpack.commands.raw.world.GameRule;
+import sawfowl.commandpack.commands.raw.world.Load;
+import sawfowl.commandpack.commands.raw.world.PvP;
+import sawfowl.commandpack.commands.raw.world.SetBorder;
+import sawfowl.commandpack.commands.raw.world.SetWorldSpawn;
+import sawfowl.commandpack.commands.raw.world.Teleport;
+import sawfowl.commandpack.commands.raw.world.Unload;
 
 public class World extends AbstractWorldCommand {
 
@@ -32,6 +47,7 @@ public class World extends AbstractWorldCommand {
 		getChildExecutors().put("difficulty", new Difficulty(plugin));
 		getChildExecutors().put("gamemode", new GameMode(plugin));
 		getChildExecutors().put("gamerule", new GameRule(plugin));
+		getChildExecutors().put("fill", new Fill(plugin));
 	}
 
 	@Override
@@ -61,6 +77,11 @@ public class World extends AbstractWorldCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/world create|delete|teleport|load|unload|enable|disable|setspawn|setborder|pvp|difficulty|gamemode|gamerule");
+		return text("&c/world " + String.join("|", getChildExecutors().keySet().toArray(new String[]{})));
+	}
+
+	@Override
+	public List<RawArgument<?>> getArguments() {
+		return null;
 	}
 }
