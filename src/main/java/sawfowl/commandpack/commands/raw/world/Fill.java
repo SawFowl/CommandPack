@@ -222,8 +222,7 @@ public class Fill extends AbstractWorldCommand {
 		}
 
 		private String getFilledPercent() {
-			int value = 100 * ((x + z) / (maxX + maxZ));
-			return String.valueOf(Math.abs(value));
+			return String.valueOf(100 * (((Math.abs(x) + Math.abs(z)) / ( Math.abs(maxX) + Math.abs(maxZ))));
 		}
 		
 	}
