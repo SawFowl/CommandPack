@@ -72,15 +72,15 @@ public interface RawCommand extends PluginCommand, Raw {
 		boolean isPlayer = cause.audience() instanceof ServerPlayer;
 		Locale locale = getLocale(cause);
 		String[] args = Stream.of(arguments.input().split(" ")).map(String::toString).filter(string -> (!string.equals(""))).toArray(String[]::new);
+		checkArguments(cause, args, isPlayer, locale);
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
 			List<String> list = new ArrayList<>(Arrays.asList(args));
 			list.remove(0);
 			String[] childArgs = list.toArray(new String[] {});
-			getChildExecutors().get(args[0]).checkArguments(childArgs, isPlayer, locale);
+			//getChildExecutors().get(args[0]).checkArguments(childArgs, isPlayer, locale);
 			getChildExecutors().get(args[0]).process(cause, cause.audience(), locale, isPlayer, childArgs, arguments);
 			return success();
 		}
-		checkArguments(args, isPlayer, locale);
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) cause.audience();
 			Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
@@ -103,20 +103,14 @@ public interface RawCommand extends PluginCommand, Raw {
 	@Override
 	default List<CommandCompletion> complete(CommandCause cause, Mutable arguments) throws CommandException {
 		List<String> args = Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList());
-		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
-			if(args.size() == 0 || (args.size() == 1 && !arguments.input().contains(args.get(0) + " "))) {
-				return getChildExecutors().keySet().stream().filter(command -> (args.isEmpty() || ((command.equals(args.get(0)) || command.startsWith(args.get(0))) && getChildExecutors().get(command).canExecute(cause)))).map(CommandCompletion::of).collect(Collectors.toList());
-			}
-			if(getChildExecutors().containsKey(args.get(0))) {
-				return getChildExecutors().get(args.get(0)).complete(cause, args.subList(1, args.size()), arguments, arguments.input().contains(args.get(0) + " ") ? arguments.input().replace(args.get(0) + " ", "") : arguments.input().replace(args.get(0), ""));
-			}
-		}
 		List<CommandCompletion> complete = complete(cause, args, arguments, arguments.input());
-		return complete == null || complete.size() == 0 ? getEmptyCompletion() : complete.stream().collect(Collectors.toList());
+		return complete == null || complete.size() == 0 ? (getEmptyCompletion() == null ? new ArrayList<>() : getEmptyCompletion()) : complete.stream().collect(Collectors.toList());
 	}
 
-	default void checkArguments(String[] args, boolean isPlayer, Locale locale) throws CommandException {
-		if(getArguments() != null && !getArguments().isEmpty()) for(RawArgument<?> arg : getArguments().values()) if(args.length <= arg.getCursor() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole()))) exception(locale, arg.getLocalesPath());
+	default void checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
+		if(args.length > 1 && getChildExecutors() != null && getChildExecutors().containsKey(args[0])) {
+			getChildExecutors().get(args[0]).checkArguments(cause, Arrays.copyOfRange(args, 1, args.length - 1), isPlayer, locale);
+		} else if(getArguments() != null && !getArguments().isEmpty()) for(RawArgument<?> arg : getArguments().values()) if((args.length <= arg.getCursor() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole()))) || !arg.getResultUnknownType(args).filter(r -> r.getClass() != arg.getClazz() || !r.getClass().getName().equals(arg.getClazz().getName())).isPresent()) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
 	}
 
 	/**
@@ -124,6 +118,14 @@ public interface RawCommand extends PluginCommand, Raw {
 	 */
 	default List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
 		if(getArguments() == null || !getArguments().containsKey(args.size())) return getEmptyCompletion();
+		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
+			if(args.size() == 0 || (args.size() == 1 && !currentInput.contains(args.get(0) + " "))) {
+				return getChildExecutors().keySet().stream().filter(command -> (args.isEmpty() || ((command.equals(args.get(0)) || command.startsWith(args.get(0))) && getChildExecutors().get(command).canExecute(cause)))).map(CommandCompletion::of).collect(Collectors.toList());
+			}
+			if(getChildExecutors().containsKey(args.get(0))) {
+				return getChildExecutors().get(args.get(0)).complete(cause, args.subList(1, args.size()), arguments, currentInput.contains(args.get(0) + " ") ? currentInput.replace(args.get(0) + " ", "") : currentInput.replace(args.get(0), ""));
+			}
+		}
 		if(currentInput.endsWith(" ") || args.size() == 0) {
 			RawArgument<?> rawArg = getArguments().get(args.size());
 			return rawArg.getVariants().map(CommandCompletion::of).collect(Collectors.toList());

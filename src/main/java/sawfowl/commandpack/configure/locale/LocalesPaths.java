@@ -295,5 +295,8 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_WORLD_GAMERULE_INCORECT_VALUE = {PATH_COMMANDS, COMMAND_WORLD, PATH_EXCEPTIONS, "GameRule", "IncorectValue"};
 	public static final Object[] COMMANDS_WORLD_GAMERULE_UNKNOWN_TYPE = {PATH_COMMANDS, COMMAND_WORLD, PATH_EXCEPTIONS, "GameRule", "UnknownType"};
 	public static final Object[] COMMANDS_WORLD_GAMERULES = {PATH_COMMANDS, COMMAND_WORLD, "GameRules", "List"};
+	public static final Object[] COMMANDS_WORLD_DEBUG_FILL = {PATH_COMMANDS, COMMAND_WORLD, "Fill", "Debug"};
+	public static final Object[] COMMANDS_WORLD_START_FILL = {PATH_COMMANDS, COMMAND_WORLD, "Fill", "Start"};
+	public static final Object[] COMMANDS_WORLD_STOP_FILL = {PATH_COMMANDS, COMMAND_WORLD, "Fill", "Stop"};
 
 }

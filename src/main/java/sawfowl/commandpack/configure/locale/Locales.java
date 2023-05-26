@@ -302,6 +302,9 @@ public class Locales {
 		save = check(locale, toText("&eGame rules &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULES) || save;
 		save = check(locale, toText("&eInvalid value specified for game rule &e" + Placeholders.RULE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_INCORECT_VALUE) || save;
 		save = check(locale, toText("&cFailed to determine the type of game rule &e" + Placeholders.RULE + "&c. No changes have been made."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_UNKNOWN_TYPE) || save;
+		save = check(locale, "The generation of chunks in world \"" + Placeholders.WORLD + "\" in progress. Done: " + Placeholders.VALUE + "%. The last generated chunk: " + Placeholders.LOCATION + ".", null, LocalesPaths.COMMANDS_WORLD_DEBUG_FILL) || save;
+		save = check(locale, toText("&aChunk generation in world &e\"" + Placeholders.WORLD + "\" &ahas started.\n If you stop the server, when you start this operation again, generation will start from the beginning."), null, LocalesPaths.COMMANDS_WORLD_START_FILL) || save;
+		save = check(locale, toText("&aChunk generation in world &e\"" + Placeholders.WORLD + "\"&a is suspended."), null, LocalesPaths.COMMANDS_WORLD_STOP_FILL) || save;
 
 		if(save) save(locale);
 	}
@@ -551,6 +554,9 @@ public class Locales {
 		save = check(locale, toText("&6Игровые правила &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULES) || save;
 		save = check(locale, toText("&cУказано недопустимое значение для игрового правила &e" + Placeholders.RULE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_INCORECT_VALUE) || save;
 		save = check(locale, toText("&cНе удалось определить тип игрового правила &e" + Placeholders.RULE + "&c. Изменения не внесены."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_UNKNOWN_TYPE) || save;
+		save = check(locale, "Выполняется генерация чанков в мире: " + Placeholders.WORLD + ". Выполненно: " + Placeholders.VALUE + "%. Последний сгенерированный чанк: " + Placeholders.LOCATION + ".", null, LocalesPaths.COMMANDS_WORLD_DEBUG_FILL) || save;
+		save = check(locale, toText("&aЗапущена генерация чанков в мире &e\"" + Placeholders.WORLD + "\"&a.\n Если сервер будет остановлен, то в следующий раз процедура будет запущенна с самого начала."), null, LocalesPaths.COMMANDS_WORLD_START_FILL) || save;
+		save = check(locale, toText("&aГенерация чанков в мире &e\"" + Placeholders.WORLD + "\"&a приостановлена."), null, LocalesPaths.COMMANDS_WORLD_STOP_FILL) || save;
 
 		if(save) save(locale);
 	}

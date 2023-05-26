@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
@@ -24,6 +25,8 @@ public interface RawArgument<T> extends DataSerializable {
 	Stream<String> getVariants();
 
 	Optional<T> getResult(Class<T> clazz, String[] args);
+
+	Optional<?> getResultUnknownType(String[] args) throws CommandException;
 
 	boolean isOptional();
 

@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
-
+import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
@@ -37,6 +37,15 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	@Override
 	public Optional<T> getResult(Class<T> clazz, String[] args) {
 		return result == null ? Optional.empty() : result.get(args);
+	}
+
+	@Override
+	public Optional<?> getResultUnknownType(String[] args) throws CommandException {
+		try {
+			return result == null ? Optional.empty() : result.get(args);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	@Override
