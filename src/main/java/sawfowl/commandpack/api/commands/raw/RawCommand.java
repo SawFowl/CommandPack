@@ -77,7 +77,6 @@ public interface RawCommand extends PluginCommand, Raw {
 			List<String> list = new ArrayList<>(Arrays.asList(args));
 			list.remove(0);
 			String[] childArgs = list.toArray(new String[] {});
-			//getChildExecutors().get(args[0]).checkArguments(childArgs, isPlayer, locale);
 			getChildExecutors().get(args[0]).process(cause, cause.audience(), locale, isPlayer, childArgs, arguments);
 			return success();
 		}
@@ -103,14 +102,32 @@ public interface RawCommand extends PluginCommand, Raw {
 	@Override
 	default List<CommandCompletion> complete(CommandCause cause, Mutable arguments) throws CommandException {
 		List<String> args = Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList());
-		List<CommandCompletion> complete = complete(cause, args, arguments, arguments.input());
-		return complete == null || complete.size() == 0 ? (getEmptyCompletion() == null ? new ArrayList<>() : getEmptyCompletion()) : complete.stream().collect(Collectors.toList());
+		String currentInput = arguments.input();
+		List<CommandCompletion> complete = completeChild(cause, args, arguments, currentInput);
+		return complete == null || complete.size() == 0 ? (getEmptyCompletion() == null ? new ArrayList<>() : getEmptyCompletion()) : complete;
 	}
 
 	default void checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
-		if(args.length > 1 && getChildExecutors() != null && getChildExecutors().containsKey(args[0])) {
-			getChildExecutors().get(args[0]).checkArguments(cause, Arrays.copyOfRange(args, 1, args.length - 1), isPlayer, locale);
-		} else if(getArguments() != null && !getArguments().isEmpty()) for(RawArgument<?> arg : getArguments().values()) if((args.length <= arg.getCursor() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole()))) || !arg.getResultUnknownType(args).filter(r -> r.getClass() != arg.getClazz() || !r.getClass().getName().equals(arg.getClazz().getName())).isPresent()) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
+		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
+			getChildExecutors().get(args[0]).checkArguments(cause, (args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[] {}), isPlayer, locale);
+		}
+		if(getArguments() != null && !getArguments().isEmpty()) for(RawArgument<?> arg : getArguments().values()) if((args.length <= arg.getCursor() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole()))) /*|| !arg.getResultUnknownType(args).filter(r -> r.getClass() != arg.getClazz() || !r.getClass().getName().equals(arg.getClazz().getName())).isPresent()*/) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
+	}
+
+	default List<CommandCompletion> completeChild(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
+		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
+			List<CommandCompletion> completions;
+			if(args.size() == 0 || (args.size() == 1 && !currentInput.endsWith(" "))) {
+				completions = getChildExecutors().keySet().stream().filter(command -> (args.isEmpty() || ((command.equals(args.get(0)) || command.startsWith(args.get(0))) && getChildExecutors().get(command).canExecute(cause)))).map(CommandCompletion::of).collect(Collectors.toList());
+				completions.addAll(complete(cause, args, arguments, currentInput));
+				return completions;
+			} else if(getChildExecutors().containsKey(args.get(0))) {
+				completions = getChildExecutors().get(args.get(0)).completeChild(cause, args.subList(1, args.size()), arguments, currentInput.contains(args.get(0) + " ") ? currentInput.replace(args.get(0) + " ", "") : currentInput.replace(args.get(0), ""));
+				completions.addAll(complete(cause, args, arguments, currentInput));
+				return completions;
+			}
+		}
+		return complete(cause, args, arguments, currentInput);
 	}
 
 	/**
@@ -118,14 +135,6 @@ public interface RawCommand extends PluginCommand, Raw {
 	 */
 	default List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
 		if(getArguments() == null || !getArguments().containsKey(args.size())) return getEmptyCompletion();
-		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
-			if(args.size() == 0 || (args.size() == 1 && !currentInput.contains(args.get(0) + " "))) {
-				return getChildExecutors().keySet().stream().filter(command -> (args.isEmpty() || ((command.equals(args.get(0)) || command.startsWith(args.get(0))) && getChildExecutors().get(command).canExecute(cause)))).map(CommandCompletion::of).collect(Collectors.toList());
-			}
-			if(getChildExecutors().containsKey(args.get(0))) {
-				return getChildExecutors().get(args.get(0)).complete(cause, args.subList(1, args.size()), arguments, currentInput.contains(args.get(0) + " ") ? currentInput.replace(args.get(0) + " ", "") : currentInput.replace(args.get(0), ""));
-			}
-		}
 		if(currentInput.endsWith(" ") || args.size() == 0) {
 			RawArgument<?> rawArg = getArguments().get(args.size());
 			return rawArg.getVariants().map(CommandCompletion::of).collect(Collectors.toList());
@@ -252,7 +261,7 @@ public interface RawCommand extends PluginCommand, Raw {
 
 	@SuppressWarnings("unchecked")
 	default <T> Optional<T> getArgument(Class<T> clazz, String[] args, int cursor) {
-		return getArguments() == null || !getArguments().containsKey(args.length) || getArguments().get(args.length).getClazz() != clazz || !getArguments().get(args.length).getClazz().getName().equals(clazz.getName()) ? Optional.empty() : ((RawArgument<T>) getArguments().get(args.length)).getResult(clazz, args);
+		return getArguments() == null || !getArguments().containsKey(cursor) || getArguments().get(cursor).getClazz() != clazz || !getArguments().get(cursor).getClazz().getName().equals(clazz.getName()) ? Optional.empty() : ((RawArgument<T>) getArguments().get(cursor)).getResult(clazz, args);
 	}
 
 }

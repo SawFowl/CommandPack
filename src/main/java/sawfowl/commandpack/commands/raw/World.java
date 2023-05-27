@@ -19,7 +19,7 @@ import sawfowl.commandpack.commands.raw.world.Delete;
 import sawfowl.commandpack.commands.raw.world.Difficulty;
 import sawfowl.commandpack.commands.raw.world.Disable;
 import sawfowl.commandpack.commands.raw.world.Enable;
-import sawfowl.commandpack.commands.raw.world.Fill;
+import sawfowl.commandpack.commands.raw.world.Generate;
 import sawfowl.commandpack.commands.raw.world.GameMode;
 import sawfowl.commandpack.commands.raw.world.GameRule;
 import sawfowl.commandpack.commands.raw.world.Load;
@@ -49,7 +49,7 @@ public class World extends AbstractWorldCommand {
 		getChildExecutors().put("difficulty", new Difficulty(plugin));
 		getChildExecutors().put("gamemode", new GameMode(plugin));
 		getChildExecutors().put("gamerule", new GameRule(plugin));
-		getChildExecutors().put("fill", new Fill(plugin));
+		getChildExecutors().put("generate", new Generate(plugin));
 	}
 
 	@Override
