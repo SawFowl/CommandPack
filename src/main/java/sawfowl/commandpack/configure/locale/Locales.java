@@ -243,7 +243,7 @@ public class Locales {
 		save = check(locale, toText("&aA kit &e" + Placeholders.VALUE + "&a has been saved."), null, LocalesPaths.COMMANDS_KITS_SAVED) || save;
 		save = check(locale, toText("&3Kits"), null, LocalesPaths.COMMANDS_KITS_LIST_HEADER) || save;
 		save = check(locale, toText("&cThere are no kits created."), null, LocalesPaths.COMMANDS_KITS_NO_KITS) || save;
-		save = check(locale, toText("&cThe time is not correct. Specify the duration in ISO time format."), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_INCORRECT_TIME) || save;
+		save = check(locale, toText("&cThe time is not correct. Specify the duration in ISO time format."), null, LocalesPaths.COMMANDS_EXCEPTION_COOLDOWN_INCORRECT_TIME) || save;
 		save = check(locale, toText("&aThe time to restore access to the kit &e" + Placeholders.VALUE + "&a is set."), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS) || save;
 		save = check(locale, toText("&aThe localized kit name is set."), null, LocalesPaths.COMMANDS_KITS_SET_NAME) || save;
 		save = check(locale, toText("&aA rule for the issuance of a kit has been set."), null, LocalesPaths.COMMANDS_KITS_GIVE_RULE) || save;
@@ -498,7 +498,7 @@ public class Locales {
 		save = check(locale, toText("&aНабор &e" + Placeholders.VALUE + "&a сохранен."), null, LocalesPaths.COMMANDS_KITS_SAVED) || save;
 		save = check(locale, toText("&3Наборы"), null, LocalesPaths.COMMANDS_KITS_LIST_HEADER) || save;
 		save = check(locale, toText("&cНет ни одного созданного набора."), null, LocalesPaths.COMMANDS_KITS_NO_KITS) || save;
-		save = check(locale, toText("&cВремя указанно не корректно. Нужно указать время в формате ISO."), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_INCORRECT_TIME) || save;
+		save = check(locale, toText("&cВремя указанно не корректно. Нужно указать время в формате ISO."), null, LocalesPaths.COMMANDS_EXCEPTION_COOLDOWN_INCORRECT_TIME) || save;
 		save = check(locale, toText("&aУстановлено время восстановления доступа к набору &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS) || save;
 		save = check(locale, toText("&aЛокализованное имя набора установлено."), null, LocalesPaths.COMMANDS_KITS_SET_NAME) || save;
 		save = check(locale, toText("&aУстановлено правило выдачи набора."), null, LocalesPaths.COMMANDS_KITS_GIVE_RULE) || save;

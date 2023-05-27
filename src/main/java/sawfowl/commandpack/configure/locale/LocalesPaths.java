@@ -80,6 +80,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_EXCEPTION_NAME_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "NameNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_TYPE_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "TypeNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_VALUE_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "ValueNotPresent"};
+	public static final Object[] COMMANDS_EXCEPTION_COOLDOWN_INCORRECT_TIME = {PATH_COMMANDS, PATH_EXCEPTIONS, "IncorrectTime"};
 	public static final Object[] COMMANDS_NOT_TRACKING = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "NotTracking"};
 	public static final Object[] COMMANDS_STOP_TRACKING_COMMAND = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "StopByCommand"};
 	public static final Object[] COMMANDS_STOP_TRACKING_MOVING = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "StopByMoving"};
@@ -236,7 +237,6 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_KITS_SAVED = {PATH_COMMANDS, COMMAND_KITS, "Saved"};
 	public static final Object[] COMMANDS_KITS_LIST_HEADER = {PATH_COMMANDS, COMMAND_KITS, "ListHeader"};
 	public static final Object[] COMMANDS_KITS_NO_KITS = {PATH_COMMANDS, COMMAND_KITS, "NoKits"};
-	public static final Object[] COMMANDS_KITS_COOLDOWN_INCORRECT_TIME = {PATH_COMMANDS, COMMAND_KITS, "Cooldown", PATH_EXCEPTIONS, "IncorrectTime"};
 	public static final Object[] COMMANDS_KITS_COOLDOWN_SUCCESS = {PATH_COMMANDS, COMMAND_KITS, "Cooldown", "Success"};
 	public static final Object[] COMMANDS_KITS_SET_NAME = {PATH_COMMANDS, COMMAND_KITS, "SetName"};
 	public static final Object[] COMMANDS_KITS_GIVE_RULE = {PATH_COMMANDS, COMMAND_KITS, "GiveRule"};
