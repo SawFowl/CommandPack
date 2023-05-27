@@ -111,7 +111,7 @@ public interface RawCommand extends PluginCommand, Raw {
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
 			getChildExecutors().get(args[0]).checkArguments(cause, (args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[] {}), isPlayer, locale);
 		}
-		if(getArguments() != null && !getArguments().isEmpty()) for(RawArgument<?> arg : getArguments().values()) if((args.length <= arg.getCursor() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole()))) /*|| !arg.getResultUnknownType(args).filter(r -> r.getClass() != arg.getClazz() || !r.getClass().getName().equals(arg.getClazz().getName())).isPresent()*/) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
+		if(getArguments() != null && !getArguments().isEmpty()) for(RawArgument<?> arg : getArguments().values()) if((args.length <= arg.getCursor() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole())))) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
 	}
 
 	default List<CommandCompletion> completeChild(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
@@ -219,7 +219,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	default CommandException exceptionAppendUsage(CommandCause cause, Component text) throws CommandException {
-		throw new CommandException(text.append(Component.newline()).append(usage(cause)));
+		throw new CommandException(usage(cause) == null ? text : text.append(Component.newline()).append(usage(cause)));
 	}
 
 	default CommandException exceptionAppendUsage(CommandCause cause, Locale locale, Object[] localePath) throws CommandException {
