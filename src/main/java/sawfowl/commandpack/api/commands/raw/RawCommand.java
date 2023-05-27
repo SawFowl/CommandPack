@@ -73,24 +73,11 @@ public interface RawCommand extends PluginCommand, Raw {
 		Locale locale = getLocale(cause);
 		String[] args = Stream.of(arguments.input().split(" ")).map(String::toString).filter(string -> (!string.equals(""))).toArray(String[]::new);
 		checkArguments(cause, args, isPlayer, locale);
+		checkCooldown(cause, locale, isPlayer);
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
-			List<String> list = new ArrayList<>(Arrays.asList(args));
-			list.remove(0);
-			String[] childArgs = list.toArray(new String[] {});
+			String[] childArgs = args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[] {};
 			getChildExecutors().get(args[0]).process(cause, cause.audience(), locale, isPlayer, childArgs, arguments);
 			return success();
-		}
-		if(isPlayer) {
-			ServerPlayer player = (ServerPlayer) cause.audience();
-			Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-			if(!getCooldowns().containsKey(player.uniqueId())) {
-				getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
-				Sponge.asyncScheduler().submit(Task.builder().plugin(getContainer()).interval(1, TimeUnit.SECONDS).execute(new CooldownTimerTask(player, getCommandSettings(), getCooldowns())).build());
-			} else {
-				if((getCooldowns().get(player.uniqueId())) - currentTime > 0) exception(locale, Placeholders.DELAY, timeFormat((getCooldowns().get(player.uniqueId())) - currentTime, locale), LocalesPaths.COMMANDS_COOLDOWN);
-				getCooldowns().remove(player.uniqueId());
-				getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
-			}
 		}
 		process(cause, cause.audience(), locale, isPlayer, args, arguments);
 		return success();
@@ -112,6 +99,21 @@ public interface RawCommand extends PluginCommand, Raw {
 			getChildExecutors().get(args[0]).checkArguments(cause, (args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[] {}), isPlayer, locale);
 		}
 		if(getArguments() != null && !getArguments().isEmpty()) for(RawArgument<?> arg : getArguments().values()) if((args.length <= arg.getCursor() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole())))) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
+	}
+
+	default void checkCooldown(CommandCause cause, Locale locale, boolean isPlayer) throws CommandException {
+		if(isPlayer) {
+			ServerPlayer player = (ServerPlayer) cause.audience();
+			Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+			if(!getCooldowns().containsKey(player.uniqueId())) {
+				getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
+				Sponge.asyncScheduler().submit(Task.builder().plugin(getContainer()).interval(1, TimeUnit.SECONDS).execute(new CooldownTimerTask(player, getCommandSettings(), getCooldowns())).build());
+			} else {
+				if((getCooldowns().get(player.uniqueId())) - currentTime > 0) exception(locale, Placeholders.DELAY, timeFormat((getCooldowns().get(player.uniqueId())) - currentTime, locale), LocalesPaths.COMMANDS_COOLDOWN);
+				getCooldowns().remove(player.uniqueId());
+				getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
+			}
+		}
 	}
 
 	default List<CommandCompletion> completeChild(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
