@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
@@ -33,31 +34,35 @@ public class Teleport extends AbstractWorldCommand {
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		ServerWorld world = getWorld(args, 0).get();
-		Optional<ServerPlayer> player = getPlayer(args, 0);
+		Optional<ServerPlayer> player = getPlayer(args, 1);
 		ServerLocation location = findSafe(ServerLocation.of(world, world.properties().spawnPosition()));
 		if(isPlayer) {
 			if(player.isPresent()) {
 				if(!player.get().uniqueId().equals(((ServerPlayer) audience).uniqueId())) {
+					plugin.getPlayersData().getTempData().setPreviousLocation(player.get());
 					player.get().setLocation(location);
 					player.get().sendMessage(TextUtils.replace(getText(player.get().locale(), LocalesPaths.COMMANDS_WORLD_TELEPORT), Placeholders.WORLD, world.key().asString()));
 					audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_TELEPORT_OTHER), new String[] {Placeholders.PLAYER, Placeholders.WORLD}, new Object[] {player.get().name(), world.key().asString()}));
 				} else {
 					delay(((ServerPlayer) audience), locale, consumer -> {
+						plugin.getPlayersData().getTempData().setPreviousLocation(((ServerPlayer) audience));
 						((ServerPlayer) audience).setLocation(location);
 						audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_TELEPORT), Placeholders.WORLD, world.key().asString()));
 					});
 				}
 			} else {
 				delay(((ServerPlayer) audience), locale, consumer -> {
+					plugin.getPlayersData().getTempData().setPreviousLocation(((ServerPlayer) audience));
 					((ServerPlayer) audience).setLocation(location);
 					audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_TELEPORT), Placeholders.WORLD, world.key().asString()));
 				});
 			}
 		} else {
-			if(!player.isPresent()) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
-			player.get().setLocation(location);
-			player.get().sendMessage(TextUtils.replace(getText(player.get().locale(), LocalesPaths.COMMANDS_WORLD_TELEPORT), Placeholders.WORLD, world.key().asString()));
-			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_TELEPORT_OTHER), new String[] {Placeholders.PLAYER, Placeholders.WORLD}, new Object[] {player.get().name(), world.key().asString()}));
+			ServerPlayer target = player.get();
+			plugin.getPlayersData().getTempData().setPreviousLocation(target);
+			target.setLocation(location);
+			target.sendMessage(TextUtils.replace(getText(target.locale(), LocalesPaths.COMMANDS_WORLD_TELEPORT), Placeholders.WORLD, world.key().asString()));
+			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_TELEPORT_OTHER), new String[] {Placeholders.PLAYER, Placeholders.WORLD}, new Object[] {target.name(), world.key().asString()}));
 		}
 	}
 
@@ -85,7 +90,7 @@ public class Teleport extends AbstractWorldCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			createWorldArg(),
-			RawArguments.createPlayerArgument(true, false, 1, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
+			RawArguments.createPlayerArgument(false, false, 1, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
 		);
 	}
 
