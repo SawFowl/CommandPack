@@ -113,7 +113,9 @@ public interface RawCommand extends PluginCommand, Raw {
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
 			getChildExecutors().get(args[0]).checkArguments(cause, (args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[] {}), isPlayer, locale);
 		}
-		if(getArguments() != null && !getArguments().isEmpty()) for(RawArgument<?> arg : getArguments().values()) if((args.length <= arg.getCursor() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole()))) || !arg.getResultUnknownType(args).isPresent()) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
+		if(getArguments() != null && !getArguments().isEmpty()) for(RawArgument<?> arg : getArguments().values()) {
+			if((args.length <= arg.getCursor() + 1 && ((!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole())) && !arg.getResultUnknownType(args).isPresent()))) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
+		}
 	}
 
 	default void checkCooldown(CommandCause cause, Locale locale, boolean isPlayer) throws CommandException {
@@ -153,14 +155,9 @@ public interface RawCommand extends PluginCommand, Raw {
 	default List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
 		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.size()) return getEmptyCompletion();
 		if(currentInput.endsWith(" ") || args.size() == 0) {
-			if(getArguments().containsKey(args.size())) {
-				RawArgument<?> rawArg = getArguments().get(args.size());
-				return rawArg.getVariants(args.toArray(new String[] {})).map(CommandCompletion::of).collect(Collectors.toList());
-			} return getEmptyCompletion();
-		} else {
-			RawArgument<?> rawArg = getArguments().get(args.size() - 1);
-			return rawArg.getVariants(new String[] {}).filter(v -> ((v.contains(args.get(args.size() - 1)) && !currentInput.endsWith(" ")) || (args.get(args.size() - 1).contains(v) && !args.get(args.size() - 1).contains(v + " ")) || (v.contains(":") && (v.split(":")[0].contains(args.get(args.size() - 1)) || v.split(":")[1].contains(args.get(args.size() - 1)))))).map(CommandCompletion::of).collect(Collectors.toList());
-		}
+			if(getArguments().containsKey(args.size())) return getArguments().get(args.size()).getVariants(args.toArray(new String[] {})).map(CommandCompletion::of).collect(Collectors.toList());
+			return getEmptyCompletion();
+		} else return getArguments().get(args.size() - 1).getVariants(args.toArray(new String[] {})).filter(v -> ((v.contains(args.get(args.size() - 1)) && !currentInput.endsWith(" ")) || (args.get(args.size() - 1).contains(v) && !args.get(args.size() - 1).contains(v + " ")) || (v.contains(":") && (v.split(":")[0].contains(args.get(args.size() - 1)) || v.split(":")[1].contains(args.get(args.size() - 1)))))).map(CommandCompletion::of).collect(Collectors.toList());
 	}
 
 	@Override

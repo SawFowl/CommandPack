@@ -33,14 +33,14 @@ public class Enchant extends AbstractPlayerCommand {
 
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
+		if(src.itemInHand(HandTypes.MAIN_HAND).quantity() == 0) exception(locale, LocalesPaths.COMMANDS_ENCHANT_ITEM_IS_NOT_PRESENT);
+		EnchantmentType enchant = getEnchantmentType(args, 0).get();
+		if(args.length == 1) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+		int level = getInteger(args, 1).get();
+		ItemStack stack = src.itemInHand(HandTypes.MAIN_HAND);
+		List<Enchantment> enchantments = stack.get(Keys.APPLIED_ENCHANTMENTS).orElse(new ArrayList<>());
+		enchantments.add(Enchantment.builder().type(enchant).level(level).build());
 		delay(src, locale, consumer -> {
-			if(src.itemInHand(HandTypes.MAIN_HAND).quantity() == 0) exception(locale, LocalesPaths.COMMANDS_ENCHANT_ITEM_IS_NOT_PRESENT);
-			EnchantmentType enchant = getEnchantmentType(args, 0).get();
-			if(args.length == 1) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-			int level = getInteger(args, 1).get();
-			ItemStack stack = src.itemInHand(HandTypes.MAIN_HAND);
-			List<Enchantment> enchantments = stack.get(Keys.APPLIED_ENCHANTMENTS).orElse(new ArrayList<>());
-			enchantments.add(Enchantment.builder().type(enchant).level(level).build());
 			stack.offer(Keys.APPLIED_ENCHANTMENTS, enchantments);
 			src.setItemInHand(HandTypes.MAIN_HAND, stack);
 			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ENCHANT_SUCCES));
@@ -75,8 +75,8 @@ public class Enchant extends AbstractPlayerCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createEnchantmentArgument(false, false, 0, LocalesPaths.COMMANDS_ENCHANT_ITEM_IS_NOT_PRESENT),
-			RawArguments.createIntegerArgument(Arrays.asList(1), true, true, 1, 1, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createEnchantmentArgument(false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
+			RawArguments.createIntegerArgument(new ArrayList<>(), true, true, 1, 1, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
 	}
 

@@ -1,8 +1,10 @@
 package sawfowl.commandpack.api.commands.raw;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -26,7 +28,7 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class RawArguments {
 
-	public static final Stream<String> EMPTY = Stream.empty();
+	public static final List<String> EMPTY = new ArrayList<>();
 
 	public static RawArgument<String> createStringArgument(Collection<String> variants, boolean optional, boolean optionalForConsole, int cursor, String def, Object[] localesPath) {
 		return RawArgument.of(String.class, new RawCompleterSupplier<Stream<String>>() {
@@ -38,7 +40,7 @@ public class RawArguments {
 
 			@Override
 			public Optional<String> get(String[] args) {
-				return args.length >= cursor + 1 ? variants.stream().filter(a -> a.equals(args[cursor])).findFirst() : Optional.ofNullable(def);
+				return args.length >= cursor + 1 ? (variants.isEmpty() ? Optional.ofNullable(args[cursor]) : variants.stream().filter(a -> a.equals(args[cursor])).findFirst()) : Optional.ofNullable(def);
 			}
 		}, optional, optionalForConsole, cursor, localesPath);
 	}

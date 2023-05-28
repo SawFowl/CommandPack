@@ -156,6 +156,11 @@ public class KitData implements Kit {
 	}
 
 	@Override
+	public void removeCommand(String command) {
+		if(executeCommands != null) executeCommands.removeIf(c -> c.equalsIgnoreCase(command));
+	}
+
+	@Override
 	public Optional<KitPrice> getKitPrice() {
 		return CommandPack.getInstance().getEconomy().isPresent() ? Optional.ofNullable(priceData) : Optional.empty();
 	}

@@ -48,6 +48,8 @@ public interface Kit extends DataSerializable {
 
 	Optional<List<String>> getExecuteCommands();
 
+	void removeCommand(String command);
+
 	Optional<KitPrice> getKitPrice();
 
 	default boolean isUnlimited() {

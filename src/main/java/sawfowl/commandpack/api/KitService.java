@@ -18,6 +18,8 @@ public interface KitService {
 
 	boolean removeKit(Kit kit);
 
+	boolean kitExist(String id);
+
 	Optional<Kit> getKit(String id);
 
 	Collection<Kit> getKits();

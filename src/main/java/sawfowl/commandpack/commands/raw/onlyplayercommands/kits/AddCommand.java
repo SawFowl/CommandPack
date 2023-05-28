@@ -31,18 +31,8 @@ public class AddCommand extends AbstractKitsEditCommand {
 		Kit kit = getKit(args, 0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		if(args.length < 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		List<String> list = new ArrayList<>(Arrays.asList(args));
-		list.remove(0);
-		list.remove(0);
-		String command = "";
-		for (int i = 0; i < list.size(); i++) {
-			command = command + list.get(i);
-			if(i < list.size() - 1) {
-				command = command + " ";
-			}
-		}
-		kitData.addCommands(command);
-		kit.save();
+		kitData.addCommands(String.join(" ", Arrays.copyOfRange(args, 1, args.length)));
+		kitData.save();
 		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_ADD_COMMAND));
 	}
 

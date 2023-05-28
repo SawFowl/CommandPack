@@ -263,6 +263,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_KIT_GIVE_LIMIT = {PATH_COMMANDS, COMMAND_KIT, "GiveLimit"};
 	public static final Object[] COMMANDS_KIT_NO_MONEY = {PATH_COMMANDS, COMMAND_KIT, "NoMoney"};
 	public static final Object[] COMMANDS_KIT_SUCCESS = {PATH_COMMANDS, COMMAND_KIT, "Success"};
+	public static final Object[] COMMANDS_KIT_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_KIT, "SuccessStaff"};
 	public static final Object[] COMMANDS_AFK_ENABLE = {PATH_COMMANDS, COMMAND_AFK, "Enable"};
 	public static final Object[] COMMANDS_AFK_DISABLE = {PATH_COMMANDS, COMMAND_AFK, "Disable"};
 	public static final Object[] COMMANDS_AFK_ENABLE_IN_VANISH = {PATH_COMMANDS, COMMAND_AFK, "EnableInVanish"};

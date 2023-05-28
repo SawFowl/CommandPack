@@ -19,6 +19,7 @@ import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.TextUtils;
 
 public class Edit extends AbstractKitsEditCommand {
 
@@ -33,10 +34,7 @@ public class Edit extends AbstractKitsEditCommand {
 		if(optKit.isPresent()) {
 			optKit.get().asMenu(getContainer(), src, false).open(src);
 		} else {
-			Component title = getText(locale, LocalesPaths.COMMANDS_KITS_LIST_HEADER);
-			sendPaginationList(src, title, Component.text("=").color(title.color()), 15, plugin.getKitService().getKits().stream().map(k -> k.getLocalizedName(locale).clickEvent(SpongeComponents.executeCallback(consumer -> {
-				k.asMenu(getContainer(), src, false).open(src);
-			}))).collect(Collectors.toList()));
+			sendKitsList(src, locale);
 		}
 	}
 
@@ -63,6 +61,16 @@ public class Edit extends AbstractKitsEditCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(kitArgument(0, true, true));
+	}
+
+	private void sendKitsList(ServerPlayer src, Locale locale) {
+		Component title = getText(locale, LocalesPaths.COMMANDS_KITS_LIST_HEADER);
+		sendPaginationList(src, title, Component.text("=").color(title.color()), 15, plugin.getKitService().getKits().stream().map(k -> TextUtils.createCallBack(getText(locale, LocalesPaths.REMOVE), () -> {
+			plugin.getKitService().removeKit(k);
+			sendKitsList(src, locale);
+		}).append(Component.text(" ").append(k.getLocalizedName(locale).clickEvent(SpongeComponents.executeCallback(consumer -> {
+			if(plugin.getKitService().getKit(TextUtils.clearDecorations(k.id())).isPresent()) k.asMenu(getContainer(), src, false).open(src);
+		}))))).collect(Collectors.toList()));
 	}
 
 }

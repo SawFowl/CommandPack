@@ -6,22 +6,20 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
-import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.gamerule.GameRules;
 import org.spongepowered.api.world.server.ServerWorld;
 
@@ -41,7 +39,7 @@ import sawfowl.localeapi.api.TextUtils;
 public class GameRule extends AbstractWorldCommand {
 
 	private Map<String, org.spongepowered.api.world.gamerule.GameRule<?>> gamerules = new HashMap<>();
-	private Stream<String> bools = Stream.of("true", "false");
+	private List<String> bools = Arrays.asList("true", "false");
 	public GameRule(CommandPack plugin) {
 		super(plugin);
 		Sponge.eventManager().registerListeners(getContainer(), this);
@@ -83,19 +81,6 @@ public class GameRule extends AbstractWorldCommand {
 			world.properties().setGameRule(doubleRule, value);
 			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULE_SUCCESS), new String[] {Placeholders.RULE, Placeholders.WORLD, Placeholders.VALUE}, new Object[] {rule.name(), world.key().asString(), value}));
 		} else exception(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULE_UNKNOWN_TYPE), Placeholders.RULE, rule.name()));
-	}
-
-	@Override
-	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
-		if(!plugin.getMainConfig().isAutoCompleteRawCommands()) return getEmptyCompletion();
-		if(args.size() == 0) return Sponge.server().worldManager().worlds().stream().map(ServerWorld::key).map(ResourceKey::asString).filter(k -> !k.equals(DefaultWorldKeys.DEFAULT.asString())).map(CommandCompletion::of).collect(Collectors.toList());
-		if(args.size() == 1) {
-			if(currentInput.endsWith(" ")) {
-				return gamerules.keySet().stream().map(CommandCompletion::of).collect(Collectors.toList());
-			} else return Sponge.server().worldManager().worlds().stream().map(ServerWorld::key).map(ResourceKey::asString).filter(k -> (!k.equals(DefaultWorldKeys.DEFAULT.asString()) && (k.split(":")[1].startsWith(args.get(0))) || (args.get(0).contains(k) && !args.get(0).contains(k + " ")))).map(CommandCompletion::of).collect(Collectors.toList());
-		}
-		if(args.size() == 2 && !currentInput.endsWith(" ")) gamerules.keySet().stream().filter(r -> ((r.contains(":") && r.split(":")[1].startsWith(args.get(1)))) || (args.get(1).contains(r) && !args.get(1).contains(r + " "))).map(CommandCompletion::of).collect(Collectors.toList());
-		return getEmptyCompletion();
 	}
 
 	@Override
@@ -157,13 +142,12 @@ public class GameRule extends AbstractWorldCommand {
 		return RawArgument.of(String.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
 			public Stream<String> get(String[] args) {
-				return args.length > 2 && gamerules.containsKey(args[1]) && isBooleanType(gamerules.get(args[1])) ? bools : RawArguments.EMPTY;
+				return args.length >= 2 && gamerules.containsKey(args[1]) && isBooleanType(gamerules.get(args[1])) ? bools.stream() : RawArguments.EMPTY.stream();
 			}
 		}, new RawResultSupplier<String>() {
-
 			@Override
 			public Optional<String> get(String[] args) {
-				return args.length > 2 && gamerules.containsKey(args[1]) && isBooleanType(gamerules.get(args[1])) ? bools.filter(b -> b.equals(args[2])).findFirst() : Optional.empty();
+				return args.length > 2 && gamerules.containsKey(args[1]) && isBooleanType(gamerules.get(args[1])) && BooleanUtils.toBooleanObject(args[2]) != null ? Optional.ofNullable(String.valueOf(BooleanUtils.toBooleanObject(args[2]))) : Optional.empty();
 			}
 		}, true, true, 2, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 	}

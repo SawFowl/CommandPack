@@ -197,7 +197,7 @@ public class CommandPack {
 	@Listener
 	public void onLocaleServicePostEvent(LocaleServiseEvent.Construct event) {
 		rtpService = new RTPService(instance);
-		kitService = new KitServiceImpl();
+		kitService = new KitServiceImpl(instance);
 		playersData = new PlayersDataImpl(instance);
 		configManager = new ConfigManager(instance, event.getLocaleService().getConfigurationOptions());
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());

@@ -5,12 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.spongepowered.api.ResourceKey;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
@@ -41,19 +37,6 @@ public class GameMode extends AbstractWorldCommand {
 		ServerWorld world = getWorld(args, 0).get();
 		world.properties().setGameMode(gamemodes.get(getString(args, 1).get()).get());
 		audience.sendMessage(TextUtils.replace(getText(locale, getLocalesPaths(args[1])), Placeholders.WORLD, world.key().asString()));
-	}
-
-	@Override
-	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
-		if(!plugin.getMainConfig().isAutoCompleteRawCommands()) return getEmptyCompletion();
-		if(args.size() == 0) return Sponge.server().worldManager().worlds().stream().map(ServerWorld::key).map(ResourceKey::asString).map(CommandCompletion::of).collect(Collectors.toList());
-		if(args.size() == 1) {
-			if(currentInput.endsWith(" ")) {
-				return gamemodes.keySet().stream().map(CommandCompletion::of).collect(Collectors.toList());
-			} else return Sponge.server().worldManager().worlds().stream().map(ServerWorld::key).map(ResourceKey::asString).filter(k -> (k.split(":")[1].startsWith(args.get(0))) || (args.get(0).contains(k) && !args.get(0).contains(k + " "))).map(CommandCompletion::of).collect(Collectors.toList());
-		}
-		if(args.size() == 2 && !currentInput.endsWith(" ")) return gamemodes.keySet().stream().filter(v -> v.startsWith(args.get(1))).map(CommandCompletion::of).collect(Collectors.toList());
-		return getEmptyCompletion();
 	}
 
 	@Override

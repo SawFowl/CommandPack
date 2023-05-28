@@ -270,6 +270,7 @@ public class Locales {
 		save = check(locale, toText("&cYou have reached the limit for getting this kit."), null, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT) || save;
 		save = check(locale, toText("&cYou don't have enough money to buy this kit. You need at least  &e" + Placeholders.VALUE + "&c."), null, LocalesPaths.COMMANDS_KIT_NO_MONEY) || save;
 		save = check(locale, toText("&aYou received a kit &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_KIT_SUCCESS) || save;
+		save = check(locale, toText("&aYou gave a kit &e" + Placeholders.VALUE + "&a to the player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_KIT_SUCCESS_STAFF) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fis now afk."), null, LocalesPaths.COMMANDS_AFK_ENABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fis no longer afk."), null, LocalesPaths.COMMANDS_AFK_DISABLE) || save;
 		save = check(locale, toText("&eYou have gone AFK, but you are currently vanished, so this has not been broadcasted."), null, LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH) || save;
@@ -299,7 +300,7 @@ public class Locales {
 		save = check(locale, toText("&aSpectator mode is set to world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_GAMEMODE_SPECTATOR) || save;
 		save = check(locale, toText("&aThe view distance in world &e\"" + Placeholders.WORLD + "\"&a is set to &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_VIEWDISTANCE) || save;
 		save = check(locale, toText("&aGame rule &e" + Placeholders.RULE + "&a in world &e\"" + Placeholders.WORLD + "\"&a is set to &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_SUCCESS) || save;
-		save = check(locale, toText("&eGame rules &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULES) || save;
+		save = check(locale, toText("&6Game rules&f: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULES) || save;
 		save = check(locale, toText("&eInvalid value specified for game rule &e" + Placeholders.RULE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_INCORECT_VALUE) || save;
 		save = check(locale, toText("&cFailed to determine the type of game rule &e" + Placeholders.RULE + "&c. No changes have been made."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_UNKNOWN_TYPE) || save;
 		save = check(locale, "The generation of chunks in world \"" + Placeholders.WORLD + "\" in progress. Done: " + Placeholders.VALUE + "%. The last generated chunk: " + Placeholders.LOCATION + ".", null, LocalesPaths.COMMANDS_WORLD_DEBUG_GENERATE) || save;
@@ -525,6 +526,7 @@ public class Locales {
 		save = check(locale, toText("&cВы исчерпали лимит получения данного набора."), null, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT) || save;
 		save = check(locale, toText("&cУ вас недостаточно денег для покупки этого набора. Необходимо как минимум &e" + Placeholders.VALUE + "&c."), null, LocalesPaths.COMMANDS_KIT_NO_MONEY) || save;
 		save = check(locale, toText("&aВы получили набор &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_KIT_SUCCESS) || save;
+		save = check(locale, toText("&aВы выдали набор &e" + Placeholders.VALUE + "&a игроку &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_KIT_SUCCESS_STAFF) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fтеперь афк."), null, LocalesPaths.COMMANDS_AFK_ENABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fбольше не афк."), null, LocalesPaths.COMMANDS_AFK_DISABLE) || save;
 		save = check(locale, toText("&eВы перешли в АФК, но в настоящее время вы невидимы, так что это не транслировалось."), null, LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH) || save;
@@ -554,7 +556,7 @@ public class Locales {
 		save = check(locale, toText("&aУстановлен режим наблюдателя в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_GAMEMODE_SPECTATOR) || save;
 		save = check(locale, toText("&aУстановлена дистанция видимости в мире &e\"" + Placeholders.WORLD + "\"&a в значении &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_VIEWDISTANCE) || save;
 		save = check(locale, toText("&aИгровое правило &e" + Placeholders.RULE + "&a в мире &e\"" + Placeholders.WORLD + "\"&a установленно в значении &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_SUCCESS) || save;
-		save = check(locale, toText("&6Игровые правила &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULES) || save;
+		save = check(locale, toText("&6Игровые правила&f: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULES) || save;
 		save = check(locale, toText("&cУказано недопустимое значение для игрового правила &e" + Placeholders.RULE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_INCORECT_VALUE) || save;
 		save = check(locale, toText("&cНе удалось определить тип игрового правила &e" + Placeholders.RULE + "&c. Изменения не внесены."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_UNKNOWN_TYPE) || save;
 		save = check(locale, "Выполняется генерация чанков в мире: " + Placeholders.WORLD + ". Выполненно: " + Placeholders.VALUE + "%. Последний сгенерированный чанк: " + Placeholders.LOCATION + ".", null, LocalesPaths.COMMANDS_WORLD_DEBUG_GENERATE) || save;

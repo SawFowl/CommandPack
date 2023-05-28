@@ -32,14 +32,13 @@ public class Commands extends AbstractKitsEditCommand {
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
 		Kit kit = getKit(args, 0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
-		if(args.length < 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		if(kitData.getExecuteCommands().isPresent() && kitData.getExecuteCommands().get().size() > 0) {
 			Component header = getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_HEADER);
 			List<Component> commands = new ArrayList<>();
 			kitData.getExecuteCommands().get().forEach(command -> {
 				commands.add(TextUtils.createCallBack(getText(locale, LocalesPaths.REMOVE), () -> {
 					if(kitData.getExecuteCommands().get().contains(command)) {
-						kitData.getExecuteCommands().get().remove(command);
+						kitData.removeCommand(command);
 						kitData.save();
 						src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_SUCCESS));
 					} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_FAIL));

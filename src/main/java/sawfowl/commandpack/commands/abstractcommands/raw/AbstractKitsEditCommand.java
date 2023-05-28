@@ -31,7 +31,7 @@ public abstract class AbstractKitsEditCommand extends AbstractPlayerCommand {
 		}, new RawResultSupplier<Kit>() {
 			@Override
 			public Optional<Kit> get(String[] args) {
-				return args.length >= cursor + 1 ? plugin.getKitService().getKit(args[0]) : Optional.empty();
+				return args.length >= cursor + 1 && plugin.getKitService().kitExist(args[0]) ? plugin.getKitService().getKit(args[0]) : Optional.empty();
 			}
 		}, optional, optionalForConsole, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 	}
