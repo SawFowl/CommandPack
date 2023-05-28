@@ -18,6 +18,7 @@ Currently implemented:
 * View information and reload plugins.
 * Viewing information about mods. Plugins are separated from mods.
 * Change of time, weather, game mode. Removed game mode identifiers have been returned.
+* Worlds Management.
 * And much more... For more information, see the list of commands at the link above.
 
 ##### For developers:
@@ -44,7 +45,7 @@ repositories {
 }
 dependencies {
 	...
-	implementation 'com.github.SawFowl:CommandPack:1.0'
+	implementation 'com.github.SawFowl:CommandPack:1.1'
 }
 ```
 
