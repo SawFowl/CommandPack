@@ -1,7 +1,12 @@
 package sawfowl.commandpack.commands.abstractcommands.raw;
 
+import org.spongepowered.api.world.server.ServerWorld;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.commands.raw.RawArgument;
+import sawfowl.commandpack.api.commands.raw.RawArguments;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public abstract class AbstractWorldCommand extends AbstractRawCommand {
 
@@ -17,6 +22,10 @@ public abstract class AbstractWorldCommand extends AbstractRawCommand {
 	@Override
 	public String trackingName() {
 		return "world";
+	}
+
+	protected RawArgument<ServerWorld> createWorldArg() {
+		return RawArguments.createWorldArgument(false, false, 0, null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
 	}
 
 }

@@ -1,16 +1,16 @@
 package sawfowl.commandpack.commands.raw.world;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
-import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.server.ServerWorld;
 
@@ -19,6 +19,8 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawArgument;
+import sawfowl.commandpack.api.commands.raw.RawCompleterSupplier;
+import sawfowl.commandpack.api.commands.raw.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -32,18 +34,9 @@ public class Disable extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		if(args.length == 0 || !Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).isPresent() || DefaultWorldKeys.DEFAULT.asString().equals(args[0])) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
-		for(ServerPlayer player : Sponge.server().onlinePlayers()) if(player.world().key().asString().equalsIgnoreCase(args[0])) player.setLocation(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().location(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().spawnPosition()));
-		Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).get().properties().setLoadOnStartup(false);
+		ServerWorld world = getWorld(args, 0).get();
+		world.properties().setLoadOnStartup(false);
 		audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_DISABLE), Placeholders.WORLD, args[0]));
-	}
-
-	@Override
-	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
-		if(!plugin.getMainConfig().isAutoCompleteRawCommands()) return getEmptyCompletion();
-		if(args.size() == 0) return Sponge.server().worldManager().worlds().stream().filter(w -> w.properties().loadOnStartup()).map(ServerWorld::key).map(ResourceKey::asString).filter(k -> !k.equals(DefaultWorldKeys.DEFAULT.asString())).map(CommandCompletion::of).collect(Collectors.toList());
-		if(args.size() == 1 && !currentInput.endsWith(" ")) return Sponge.server().worldManager().worlds().stream().filter(w -> w.properties().loadOnStartup()).map(ServerWorld::key).map(ResourceKey::asString).filter(k -> (!k.equals(DefaultWorldKeys.DEFAULT.asString()) && (k.split(":")[1].startsWith(args.get(0))) || (args.get(0).contains(k) && !args.get(0).contains(k + " ")))).map(CommandCompletion::of).collect(Collectors.toList());
-		return getEmptyCompletion();
 	}
 
 	@Override
@@ -68,7 +61,22 @@ public class Disable extends AbstractWorldCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return null;
+		return Arrays.asList(createWorldArgument());
+	}
+
+	private RawArgument<ServerWorld> createWorldArgument() {
+		return RawArgument.of(ServerWorld.class, new RawCompleterSupplier<Stream<String>>() {
+			@Override
+			public Stream<String> get(String[] args) {
+				return Sponge.server().worldManager().worlds().stream().filter(w -> !w.key().asString().equals(DefaultWorldKeys.DEFAULT.asString())).map(w -> w.key().asString());
+			}
+		}, new RawResultSupplier<ServerWorld>() {
+
+			@Override
+			public Optional<ServerWorld> get(String[] args) {
+				return args.length >= 1 ? Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).filter(w -> !w.key().asString().equals(DefaultWorldKeys.DEFAULT.asString())) : Optional.ofNullable(null);
+			}
+		}, false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
 	}
 
 }

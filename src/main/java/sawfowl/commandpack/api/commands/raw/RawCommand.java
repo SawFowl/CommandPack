@@ -1,5 +1,6 @@
 package sawfowl.commandpack.api.commands.raw;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.math.NumberUtils;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
@@ -22,7 +24,10 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
+import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.service.economy.Currency;
+import org.spongepowered.api.world.WorldType;
 import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.audience.Audience;
@@ -62,7 +67,17 @@ public interface RawCommand extends PluginCommand, Raw {
 	 */
 	Map<String, RawCommand> getChildExecutors();
 
+	/**
+	 * Map of command arguments.
+	 */
 	Map<Integer, RawArgument<?>> getArguments();
+
+	/**
+	 * If `false`, the player will not get a list of available command arguments. <br>
+	 * Regardless of the return value, the player will receive variants of the child commands.<br>
+	 * This parameter will be ignored when overriding the {@link #complete(CommandCause, Mutable)} method.
+	 */
+	boolean enableAutoComplete();
 
 	/**
 	 * Checks for child commands and who activated the command.
@@ -98,7 +113,7 @@ public interface RawCommand extends PluginCommand, Raw {
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
 			getChildExecutors().get(args[0]).checkArguments(cause, (args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[] {}), isPlayer, locale);
 		}
-		if(getArguments() != null && !getArguments().isEmpty()) for(RawArgument<?> arg : getArguments().values()) if((args.length <= arg.getCursor() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole())))) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
+		if(getArguments() != null && !getArguments().isEmpty()) for(RawArgument<?> arg : getArguments().values()) if((args.length <= arg.getCursor() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole()))) || !arg.getResultUnknownType(args).isPresent()) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
 	}
 
 	default void checkCooldown(CommandCause cause, Locale locale, boolean isPlayer) throws CommandException {
@@ -136,13 +151,15 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * Auto-complete command arguments.
 	 */
 	default List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
-		if(getArguments() == null || !getArguments().containsKey(args.size())) return getEmptyCompletion();
+		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.size()) return getEmptyCompletion();
 		if(currentInput.endsWith(" ") || args.size() == 0) {
-			RawArgument<?> rawArg = getArguments().get(args.size());
-			return rawArg.getVariants().map(CommandCompletion::of).collect(Collectors.toList());
+			if(getArguments().containsKey(args.size())) {
+				RawArgument<?> rawArg = getArguments().get(args.size());
+				return rawArg.getVariants(args.toArray(new String[] {})).map(CommandCompletion::of).collect(Collectors.toList());
+			} return getEmptyCompletion();
 		} else {
 			RawArgument<?> rawArg = getArguments().get(args.size() - 1);
-			return rawArg.getVariants().filter(v -> ((v.contains(args.get(args.size() - 1)) && !currentInput.endsWith(" ")) || (args.get(args.size() - 1).contains(v) && !args.get(args.size() - 1).contains(v + " ")) || (v.contains(":") && (v.split(":")[0].contains(args.get(args.size() - 1)) || v.split(":")[1].contains(args.get(args.size() - 1)))))).map(CommandCompletion::of).collect(Collectors.toList());
+			return rawArg.getVariants(new String[] {}).filter(v -> ((v.contains(args.get(args.size() - 1)) && !currentInput.endsWith(" ")) || (args.get(args.size() - 1).contains(v) && !args.get(args.size() - 1).contains(v + " ")) || (v.contains(":") && (v.split(":")[0].contains(args.get(args.size() - 1)) || v.split(":")[1].contains(args.get(args.size() - 1)))))).map(CommandCompletion::of).collect(Collectors.toList());
 		}
 	}
 
@@ -179,36 +196,9 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	/**
-	 * Convert string to object {@link Duration}
-	 */
-	default Duration getDuration(String s, Locale locale) throws CommandException {
-		s = s.toUpperCase();
-		if (!s.contains("T")) {
-			if (s.contains("D")) {
-				if (s.contains("H") || s.contains("M") || s.contains("S")) {
-					s = s.replace("D", "DT");
-				}
-			} else {
-				if (s.startsWith("P")) {
-					s = "PT" + s.substring(1);
-				} else {
-					s = "T" + s;
-				}
-			}
-		}
-		if (!s.startsWith("P")) {
-			s = "P" + s;
-		}
-		try {
-			return Duration.parse(s);
-		} catch (final DateTimeParseException ex) {
-			throw exception(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_EXCEPTION_COOLDOWN_INCORRECT_TIME));
-		}
-	}
-
-	/**
 	 * An attempt to convert a string to an integer.
 	 */
+	@Deprecated
 	default Optional<Integer> parseInt(String arg) {
 		return NumberUtils.isParsable(arg) ? Optional.ofNullable(NumberUtils.createInteger(arg)) : Optional.empty();
 	}
@@ -216,6 +206,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	/**
 	 * An attempt to convert a string to a fractional number.
 	 */
+	@Deprecated
 	default Optional<Double> parseDouble(String arg) {
 		return NumberUtils.isParsable(arg) ? Optional.ofNullable(NumberUtils.createDouble(arg)) : Optional.empty();
 	}
@@ -232,8 +223,16 @@ public interface RawCommand extends PluginCommand, Raw {
 		return getArgument(ServerWorld.class, args, cursor);
 	}
 
+
+	default Optional<WorldType> getWorldType(String[] args, int cursor) {
+		return getArgument(WorldType.class, args, cursor);
+	}
 	default Optional<ServerPlayer> getPlayer(String[] args, int cursor) {
 		return getArgument(ServerPlayer.class, args, cursor);
+	}
+
+	default Optional<EnchantmentType> getEnchantmentType(String[] args, int cursor) {
+		return getArgument(EnchantmentType.class, args, cursor);
 	}
 
 	default Optional<String> getString(String[] args, int cursor) {
@@ -256,14 +255,63 @@ public interface RawCommand extends PluginCommand, Raw {
 		return getArgument(Double.class, args, cursor);
 	}
 
-	default Optional<Duration> getDurationArg(String[] args, int cursor, Locale locale) throws CommandException {
-		Optional<String> arg = getArgument(String.class, args, cursor);
-		return arg.isPresent() ? Optional.ofNullable(getDuration(arg.get(), locale)) : Optional.empty();
+	default Optional<BigDecimal> getBigDecimal(String[] args, int cursor) {
+		return getArgument(BigDecimal.class, args, cursor);
 	}
 
+	default Optional<Locale> getLocale(String[] args, int cursor) {
+		return getArgument(Locale.class, args, cursor);
+	}
+
+	default Optional<Currency> getCurrency(String[] args, int cursor) {
+		return getArgument(Currency.class, args, cursor);
+	}
+
+	default Optional<Duration> getDurationArg(String[] args, int cursor, Locale locale) throws CommandException {
+		Optional<String> arg = getArgument(String.class, args, cursor);
+		return arg.isPresent() ? parseDuration(arg.get(), locale) : Optional.empty();
+	}
+
+	/**
+	 * Getting an object from a command argument.
+	 * 
+	 * @param <T> - The type of the returned object.
+	 * @param clazz - The class of the returned object.
+	 * @param args - All command arguments.
+	 * @param cursor - The argument number of the command.
+	 * @return {@link Optional}
+	 */
 	@SuppressWarnings("unchecked")
 	default <T> Optional<T> getArgument(Class<T> clazz, String[] args, int cursor) {
 		return getArguments() == null || !getArguments().containsKey(cursor) || getArguments().get(cursor).getClazz() != clazz || !getArguments().get(cursor).getClazz().getName().equals(clazz.getName()) ? Optional.empty() : ((RawArgument<T>) getArguments().get(cursor)).getResult(clazz, args);
+	}
+
+	/**
+	 * Convert string to object {@link Duration}
+	 */
+	default Optional<Duration> parseDuration(String s, Locale locale) throws CommandException {
+		s = s.toUpperCase();
+		if (!s.contains("T")) {
+			if (s.contains("D")) {
+				if (s.contains("H") || s.contains("M") || s.contains("S")) {
+					s = s.replace("D", "DT");
+				}
+			} else {
+				if (s.startsWith("P")) {
+					s = "PT" + s.substring(1);
+				} else {
+					s = "T" + s;
+				}
+			}
+		}
+		if (!s.startsWith("P")) {
+			s = "P" + s;
+		}
+		try {
+			return Optional.ofNullable(Duration.parse(s));
+		} catch (final DateTimeParseException ex) {
+			throw exception(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_EXCEPTION_COOLDOWN_INCORRECT_TIME));
+		}
 	}
 
 }

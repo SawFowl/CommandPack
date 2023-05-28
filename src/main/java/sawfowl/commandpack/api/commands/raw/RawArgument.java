@@ -1,7 +1,6 @@
 package sawfowl.commandpack.api.commands.raw;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.spongepowered.api.Sponge;
@@ -18,11 +17,20 @@ public interface RawArgument<T> extends DataSerializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	static <T> RawArgument<T> of(Class<T> clazz, Supplier<Stream<String>> variants, RawSupplier<?> result, boolean optional, boolean optionalForConsole, int cursor ,Object[] localesPath) {
+	static <T> RawArgument<T> of(Class<T> clazz, RawCompleterSupplier<Stream<String>> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor ,Object[] localesPath) {
 		return (RawArgument<T>) builder().variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).localesPath(localesPath).build();
 	}
 
-	Stream<String> getVariants();
+	static <T> RawArgument<T> of(Class<T> clazz, Stream<String> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor ,Object[] localesPath) {
+		return of(clazz, new RawCompleterSupplier<Stream<String>>() {
+			@Override
+			public Stream<String> get(String[] args) {
+				return variants;
+			}
+		}, result, optional, optionalForConsole, cursor, localesPath);
+	}
+
+	Stream<String> getVariants(String[] args);
 
 	Optional<T> getResult(Class<T> clazz, String[] args);
 
@@ -40,9 +48,9 @@ public interface RawArgument<T> extends DataSerializable {
 
 	interface Builder<T> extends AbstractBuilder<RawArgument<T>>, org.spongepowered.api.util.Builder<RawArgument<T>, Builder<T>> {
 
-		Builder<T> variants(Supplier<Stream<String>> variants);
+		Builder<T> variants(RawCompleterSupplier<Stream<String>> variants);
 
-		Builder<T> result(Class<?> clazz, RawSupplier<?> result);
+		Builder<T> result(Class<?> clazz, RawResultSupplier<?> result);
 
 		Builder<T> optional(boolean value);
 

@@ -1,5 +1,7 @@
 package sawfowl.commandpack.api.data.kits;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -54,6 +56,10 @@ public enum GiveRule {
 
 	public static GiveRule getRule(String name) {
 		return name == null ? DROP : Stream.of(GiveRule.values()).filter(r -> r.getName().equalsIgnoreCase(name)).findFirst().orElse(DROP);
+	}
+
+	public static List<String> getAllRules() {
+		return Stream.of(GiveRule.values()).map(GiveRule::getName).collect(Collectors.toList());
 	}
 
 }

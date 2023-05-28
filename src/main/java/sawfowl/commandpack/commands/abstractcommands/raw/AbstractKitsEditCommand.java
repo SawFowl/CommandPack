@@ -1,10 +1,15 @@
 package sawfowl.commandpack.commands.abstractcommands.raw;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.commands.raw.RawArgument;
+import sawfowl.commandpack.api.commands.raw.RawCompleterSupplier;
+import sawfowl.commandpack.api.commands.raw.RawResultSupplier;
 import sawfowl.commandpack.api.data.kits.Kit;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public abstract class AbstractKitsEditCommand extends AbstractPlayerCommand {
 
@@ -17,8 +22,22 @@ public abstract class AbstractKitsEditCommand extends AbstractPlayerCommand {
 		return Permissions.KIT_STAFF;
 	}
 
-	protected Optional<Kit> getKit(String[] args) {
-		return args.length == 0 ? Optional.empty() : plugin.getKitService().getKit(args[0]);
+	protected RawArgument<Kit> kitArgument(int cursor, boolean optional, boolean optionalForConsole) {
+		return RawArgument.of(Kit.class, new RawCompleterSupplier<Stream<String>>() {
+			@Override
+			public Stream<String> get(String[] args) {
+				return plugin.getKitService().getKits().stream().map(Kit::id);
+			}
+		}, new RawResultSupplier<Kit>() {
+			@Override
+			public Optional<Kit> get(String[] args) {
+				return args.length >= cursor + 1 ? plugin.getKitService().getKit(args[0]) : Optional.empty();
+			}
+		}, optional, optionalForConsole, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+	}
+
+	protected Optional<Kit> getKit(String[] args, int cursor) {
+		return getArgument(Kit.class, args, cursor);
 	}
 
 }

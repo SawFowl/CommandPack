@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -15,8 +14,10 @@ import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawArgument;
+import sawfowl.commandpack.api.commands.raw.RawArguments;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
@@ -31,11 +32,9 @@ public class SetName extends AbstractKitsEditCommand  {
 
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		Optional<Kit> optKit = getKit(args);
-		if(!optKit.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		KitData kit = (KitData) (optKit.get() instanceof KitData ? optKit.get() : Kit.builder().copyFrom(optKit.get()));
-		if(args.length < 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		Locale localeForName = EnumLocales.find(args[1].replace("-", "_"));
+		Kit kit = getKit(args, 0).get();
+		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
+		Locale localeForName = getLocale(args, 0).get();
 		if(args.length < 3) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);
 		List<String> list = new ArrayList<>(Arrays.asList(args));
 		list.remove(0);
@@ -47,8 +46,8 @@ public class SetName extends AbstractKitsEditCommand  {
 				name = name + " ";
 			}
 		}
-		kit.setName(localeForName, name);
-		kit.save();
+		kitData.setName(localeForName, name);
+		kitData.save();
 		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_SET_NAME));
 	}
 
@@ -83,7 +82,10 @@ public class SetName extends AbstractKitsEditCommand  {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return null;
+		return Arrays.asList(
+			kitArgument(0, false, false),
+			RawArguments.createLocaleArgument(false, false, 1, aliases)
+		);
 	}
 
 }

@@ -1,5 +1,6 @@
 package sawfowl.commandpack.commands.raw.world;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -21,6 +22,7 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawArgument;
+import sawfowl.commandpack.api.commands.raw.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -31,22 +33,13 @@ public class GameMode extends AbstractWorldCommand {
 	private Map<String, DefaultedRegistryReference<org.spongepowered.api.entity.living.player.gamemode.GameMode>> gamemodes = new HashMap<>();
 	public GameMode(CommandPack plugin) {
 		super(plugin);
-		gamemodes.put("survival", GameModes.SURVIVAL);
-		gamemodes.put("creative", GameModes.CREATIVE);
-		gamemodes.put("adventure", GameModes.ADVENTURE);
-		gamemodes.put("spectator", GameModes.SPECTATOR);
-		gamemodes.put("0", GameModes.SURVIVAL);
-		gamemodes.put("1", GameModes.CREATIVE);
-		gamemodes.put("2", GameModes.ADVENTURE);
-		gamemodes.put("3", GameModes.SPECTATOR);
+		generateMap();
 	}
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		if(args.length == 0 || !Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).isPresent()) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
-		if(args.length == 1 || !gamemodes.containsKey(args[1])) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		ServerWorld world = Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).get();
-		world.properties().setGameMode(gamemodes.get(args[1]).get());
+		ServerWorld world = getWorld(args, 0).get();
+		world.properties().setGameMode(gamemodes.get(getString(args, 1).get()).get());
 		audience.sendMessage(TextUtils.replace(getText(locale, getLocalesPaths(args[1])), Placeholders.WORLD, world.key().asString()));
 	}
 
@@ -104,7 +97,22 @@ public class GameMode extends AbstractWorldCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return null;
+		if(gamemodes.isEmpty()) generateMap();
+		return Arrays.asList(
+			createWorldArg(),
+			RawArguments.createStringArgument(gamemodes.keySet(), false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+		);
+	}
+
+	private void generateMap() {
+		gamemodes.put("survival", GameModes.SURVIVAL);
+		gamemodes.put("creative", GameModes.CREATIVE);
+		gamemodes.put("adventure", GameModes.ADVENTURE);
+		gamemodes.put("spectator", GameModes.SPECTATOR);
+		gamemodes.put("0", GameModes.SURVIVAL);
+		gamemodes.put("1", GameModes.CREATIVE);
+		gamemodes.put("2", GameModes.ADVENTURE);
+		gamemodes.put("3", GameModes.SPECTATOR);
 	}
 
 }

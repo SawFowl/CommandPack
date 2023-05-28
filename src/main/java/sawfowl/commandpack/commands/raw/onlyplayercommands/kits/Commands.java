@@ -1,9 +1,9 @@
 package sawfowl.commandpack.commands.raw.onlyplayercommands.kits;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.spongepowered.api.command.CommandCause;
@@ -13,6 +13,7 @@ import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.api.data.kits.Kit;
@@ -29,18 +30,17 @@ public class Commands extends AbstractKitsEditCommand {
 
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		Optional<Kit> optKit = getKit(args);
-		if(!optKit.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		KitData kit = (KitData) (optKit.get() instanceof KitData ? optKit.get() : Kit.builder().copyFrom(optKit.get()));
+		Kit kit = getKit(args, 0).get();
+		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		if(args.length < 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		if(kit.getExecuteCommands().isPresent() && kit.getExecuteCommands().get().size() > 0) {
+		if(kitData.getExecuteCommands().isPresent() && kitData.getExecuteCommands().get().size() > 0) {
 			Component header = getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_HEADER);
 			List<Component> commands = new ArrayList<>();
-			kit.getExecuteCommands().get().forEach(command -> {
+			kitData.getExecuteCommands().get().forEach(command -> {
 				commands.add(TextUtils.createCallBack(getText(locale, LocalesPaths.REMOVE), () -> {
-					if(kit.getExecuteCommands().get().contains(command)) {
-						kit.getExecuteCommands().get().remove(command);
-						kit.save();
+					if(kitData.getExecuteCommands().get().contains(command)) {
+						kitData.getExecuteCommands().get().remove(command);
+						kitData.save();
 						src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_SUCCESS));
 					} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_FAIL));
 				}).append(Component.text(" " + command)));
@@ -78,7 +78,7 @@ public class Commands extends AbstractKitsEditCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return null;
+		return Arrays.asList(kitArgument(0, false, false));
 	}
 
 }

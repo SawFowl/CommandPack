@@ -1,10 +1,11 @@
 package sawfowl.commandpack.commands.raw.world;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
@@ -15,8 +16,10 @@ import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawArgument;
+import sawfowl.commandpack.api.commands.raw.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -30,11 +33,9 @@ public class ViewDistance extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		if(args.length == 0 || !Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).isPresent()) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
-		if(args.length == 1 || !NumberUtils.isParsable(args[1])) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		ServerWorld world = Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).get();
-		int distance = NumberUtils.toInt(args[1]);
-		//if(distance < 1) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+		ServerWorld world = getWorld(args, 0).get();
+		int distance = getInteger(args, 1).get();
+		if(distance < 1) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		world.properties().setViewDistance(distance);
 		audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_VIEWDISTANCE), new String[] {Placeholders.WORLD, Placeholders.VALUE}, new Object[] {world.key().asString(), distance}));
 	}
@@ -69,7 +70,10 @@ public class ViewDistance extends AbstractWorldCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return null;
+		return Arrays.asList(
+			createWorldArg(),
+			RawArguments.createIntegerArgument(new ArrayList<>(), false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+		);
 	}
 
 }

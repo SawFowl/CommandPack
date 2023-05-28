@@ -1,5 +1,6 @@
 package sawfowl.commandpack.commands.raw.onlyplayercommands.kits;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -7,7 +8,6 @@ import java.util.stream.Collectors;
 
 import org.spongepowered.api.adventure.SpongeComponents;
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -29,7 +29,7 @@ public class Edit extends AbstractKitsEditCommand {
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
 		if(plugin.getKitService().getKits().isEmpty()) exception(locale, LocalesPaths.COMMANDS_KITS_NO_KITS);
-		Optional<Kit> optKit = getKit(args);
+		Optional<Kit> optKit = getKit(args, 0);
 		if(optKit.isPresent()) {
 			optKit.get().asMenu(getContainer(), src, false).open(src);
 		} else {
@@ -38,11 +38,6 @@ public class Edit extends AbstractKitsEditCommand {
 				k.asMenu(getContainer(), src, false).open(src);
 			}))).collect(Collectors.toList()));
 		}
-	}
-
-	@Override
-	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
-		return plugin.getKitService().getKits().stream().filter(kit -> (args.isEmpty() || kit.id().startsWith(args.get(0)))).map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
 	}
 
 	@Override
@@ -67,7 +62,7 @@ public class Edit extends AbstractKitsEditCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return null;
+		return Arrays.asList(kitArgument(0, true, true));
 	}
 
 }

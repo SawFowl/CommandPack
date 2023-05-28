@@ -2,7 +2,6 @@ package sawfowl.commandpack.commands.settings;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +11,8 @@ import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 
 import sawfowl.commandpack.api.commands.raw.RawArgument;
-import sawfowl.commandpack.api.commands.raw.RawSupplier;
+import sawfowl.commandpack.api.commands.raw.RawCompleterSupplier;
+import sawfowl.commandpack.api.commands.raw.RawResultSupplier;
 
 public class RawArgumentImpl<T> implements RawArgument<T> {
 
@@ -21,8 +21,8 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		return new Builder<T>();
 	}
 
-	private Supplier<Stream<String>> variants;
-	private RawSupplier<T> result;
+	private RawCompleterSupplier<Stream<String>> variants;
+	private RawResultSupplier<T> result;
 	private boolean isOptional = false;
 	private boolean isOptionalForConsole = false;
 	private int cursor;
@@ -30,8 +30,8 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	private Class<?> clazz;
 
 	@Override
-	public Stream<String> getVariants() {
-		return variants == null ? new ArrayList<String>().stream() : variants.get();
+	public Stream<String> getVariants(String[] args) {
+		return variants == null ? new ArrayList<String>().stream() : variants.get(args);
 	}
 
 	@Override
@@ -99,15 +99,15 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		}
 
 		@Override
-		public Builder<T> variants(Supplier<Stream<String>> variants) {
+		public Builder<T> variants(RawCompleterSupplier<Stream<String>> variants) {
 			RawArgumentImpl.this.variants = variants;
 			return this;
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public Builder<T> result(Class<?> clazz, RawSupplier<?> result) {
-			((RawArgumentImpl<T>) RawArgumentImpl.this).result = (RawSupplier<T>) result;
+		public Builder<T> result(Class<?> clazz, RawResultSupplier<?> result) {
+			((RawArgumentImpl<T>) RawArgumentImpl.this).result = (RawResultSupplier<T>) result;
 			RawArgumentImpl.this.clazz = clazz;
 			return this;
 		}

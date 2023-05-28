@@ -1,4 +1,4 @@
-package sawfowl.commandpack.commands.raw.onlyplayercommands.kits;
+package sawfowl.commandpack.commands.raw.onlyplayercommands;
 
 import java.util.List;
 import java.util.Locale;
@@ -6,7 +6,6 @@ import java.util.Locale;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -20,6 +19,19 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
+import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.AddCommand;
+import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.Commands;
+import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.Cooldown;
+import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.Create;
+import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.CreateLore;
+import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.Edit;
+import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.FirstTime;
+import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.GiveLimit;
+import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.GiveOnJoin;
+import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.GiveRule;
+import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.NeedPerm;
+import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.SetName;
+import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.SetPrice;
 
 public class Kits extends AbstractPlayerCommand {
 
@@ -45,11 +57,6 @@ public class Kits extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
-		return getEmptyCompletion();
-	}
-
-	@Override
 	public Component shortDescription(Locale locale) {
 		return text("Create and edit kits.");
 	}
@@ -61,7 +68,7 @@ public class Kits extends AbstractPlayerCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/kits create|edit|setname|cooldown");
+		return text("&c/kits " + String.join("|", getChildExecutors().keySet().toArray(new String[]{})));
 	}
 
 	private void addChilds() {

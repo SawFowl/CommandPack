@@ -1,15 +1,12 @@
 package sawfowl.commandpack.commands.raw.world;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.spongepowered.api.ResourceKey;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.registry.DefaultedRegistryReference;
@@ -21,6 +18,7 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawArgument;
+import sawfowl.commandpack.api.commands.raw.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -31,36 +29,14 @@ public class Difficulty extends AbstractWorldCommand {
 	private Map<String, DefaultedRegistryReference<org.spongepowered.api.world.difficulty.Difficulty>> difficulties = new HashMap<>();
 	public Difficulty(CommandPack plugin) {
 		super(plugin);
-		difficulties.put("peaceful", Difficulties.PEACEFUL);
-		difficulties.put("easy", Difficulties.EASY);
-		difficulties.put("normal", Difficulties.NORMAL);
-		difficulties.put("hard", Difficulties.HARD);
-		difficulties.put("0", Difficulties.PEACEFUL);
-		difficulties.put("1", Difficulties.EASY);
-		difficulties.put("2", Difficulties.NORMAL);
-		difficulties.put("3", Difficulties.HARD);
+		generateMap();
 	}
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		if(args.length == 0 || !Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).isPresent()) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
-		if(args.length == 1 || !difficulties.containsKey(args[1])) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		ServerWorld world = Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).get();
-		world.properties().setDifficulty(difficulties.get(args[1]).get());
+		ServerWorld world = getWorld(args, 0).get();
+		world.properties().setDifficulty(difficulties.get(getString(args, 1).get()).get());
 		audience.sendMessage(TextUtils.replace(getText(locale, getLocalesPaths(args[1])), Placeholders.WORLD, world.key().asString()));
-	}
-
-	@Override
-	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
-		if(!plugin.getMainConfig().isAutoCompleteRawCommands()) return getEmptyCompletion();
-		if(args.size() == 0) return Sponge.server().worldManager().worlds().stream().map(ServerWorld::key).map(ResourceKey::asString).map(CommandCompletion::of).collect(Collectors.toList());
-		if(args.size() == 1) {
-			if(currentInput.endsWith(" ")) {
-				return difficulties.keySet().stream().map(CommandCompletion::of).collect(Collectors.toList());
-			} else return Sponge.server().worldManager().worlds().stream().map(ServerWorld::key).map(ResourceKey::asString).filter(k -> (k.split(":")[1].startsWith(args.get(0))) || (args.get(0).contains(k) && !args.get(0).contains(k + " "))).map(CommandCompletion::of).collect(Collectors.toList());
-		}
-		if(args.size() == 2 && !currentInput.endsWith(" ")) return difficulties.keySet().stream().filter(v -> v.startsWith(args.get(1))).map(CommandCompletion::of).collect(Collectors.toList());
-		return getEmptyCompletion();
 	}
 
 	@Override
@@ -104,7 +80,22 @@ public class Difficulty extends AbstractWorldCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return null;
+		if(difficulties.isEmpty()) generateMap();
+		return Arrays.asList(
+			createWorldArg(),
+			RawArguments.createStringArgument(difficulties.keySet(), false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+		);
+	}
+
+	private void generateMap() {
+		difficulties.put("peaceful", Difficulties.PEACEFUL);
+		difficulties.put("easy", Difficulties.EASY);
+		difficulties.put("normal", Difficulties.NORMAL);
+		difficulties.put("hard", Difficulties.HARD);
+		difficulties.put("0", Difficulties.PEACEFUL);
+		difficulties.put("1", Difficulties.EASY);
+		difficulties.put("2", Difficulties.NORMAL);
+		difficulties.put("3", Difficulties.HARD);
 	}
 
 }

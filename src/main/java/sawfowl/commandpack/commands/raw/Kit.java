@@ -2,10 +2,12 @@ package sawfowl.commandpack.commands.raw;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
@@ -31,6 +33,9 @@ import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawArgument;
+import sawfowl.commandpack.api.commands.raw.RawArguments;
+import sawfowl.commandpack.api.commands.raw.RawCompleterSupplier;
+import sawfowl.commandpack.api.commands.raw.RawResultSupplier;
 import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.commandpack.api.events.KitGiveEvent;
@@ -62,7 +67,7 @@ public class Kit extends AbstractRawCommand {
 				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_NO_PERM));
 				return;
 			}
-			ServerPlayer target = getPlayer(cause, args).orElse(src);
+			ServerPlayer target = getPlayer(args, 1).orElse(src);
 			sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(target);
 			if(target.uniqueId().equals(src.uniqueId())) {
 				delay(target, locale, consumer -> {
@@ -70,9 +75,7 @@ public class Kit extends AbstractRawCommand {
 				});
 			} else prepare(cause, audience, locale, target, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), true);
 		} else {
-			Optional<ServerPlayer> optTarget = getPlayer(cause, args);
-			if(!optTarget.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
-			ServerPlayer target = optTarget.get();
+			ServerPlayer target = getPlayer(args, 1).get();
 			sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(target);
 			prepare(cause, audience, locale, target, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), true);
 		}
@@ -114,11 +117,7 @@ public class Kit extends AbstractRawCommand {
 	}
 
 	protected Optional<sawfowl.commandpack.api.data.kits.Kit> getKit(String[] args) {
-		return args.length == 0 ? Optional.empty() : plugin.getKitService().getKit(args[0]);
-	}
-
-	protected Optional<ServerPlayer> getPlayer(CommandCause cause, String[] args) {
-		return args.length < 2 || !cause.hasPermission(Permissions.KIT_STAFF) ? Optional.empty() : Sponge.server().player(args[1]);
+		return getArgument(sawfowl.commandpack.api.data.kits.Kit.class, args, 0);
 	}
 
 	private void sendKitsList(CommandCause cause, Audience audience, Locale locale, boolean isPlayer) {
@@ -416,7 +415,24 @@ public class Kit extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return null;
+		return Arrays.asList(
+			kitArgument(),
+			RawArguments.createPlayerArgument(true, false, 1, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
+		);
+	}
+
+	private RawArgument<sawfowl.commandpack.api.data.kits.Kit> kitArgument() {
+		return RawArgument.of(sawfowl.commandpack.api.data.kits.Kit.class, new RawCompleterSupplier<Stream<String>>() {
+			@Override
+			public Stream<String> get(String[] args) {
+				return plugin.getKitService().getKits().stream().map(sawfowl.commandpack.api.data.kits.Kit::id);
+			}
+		}, new RawResultSupplier<sawfowl.commandpack.api.data.kits.Kit>() {
+			@Override
+			public Optional<sawfowl.commandpack.api.data.kits.Kit> get(String[] args) {
+				return args.length >= 1 ? plugin.getKitService().getKit(args[0]) : Optional.empty();
+			}
+		}, true, true, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 	}
 
 }

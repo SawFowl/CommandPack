@@ -1,8 +1,8 @@
 package sawfowl.commandpack.commands.raw.onlyplayercommands.kits;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -16,6 +16,7 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawArgument;
+import sawfowl.commandpack.api.commands.raw.RawArguments;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
@@ -29,12 +30,10 @@ public class GiveRule extends AbstractKitsEditCommand {
 
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		Optional<Kit> optKit = getKit(args);
-		if(!optKit.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		KitData kit = (KitData) (optKit.get() instanceof KitData ? optKit.get() : Kit.builder().copyFrom(optKit.get()));
-		if(args.length < 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		kit.setRule(sawfowl.commandpack.api.data.kits.GiveRule.getRule(args[1]));
-		kit.save();
+		Kit kit = getKit(args, 0).get();
+		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
+		kitData.setRule(sawfowl.commandpack.api.data.kits.GiveRule.getRule(args[1]));
+		kitData.save();
 		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_GIVE_RULE));
 	}
 
@@ -69,7 +68,10 @@ public class GiveRule extends AbstractKitsEditCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return null;
+		return Arrays.asList(
+			kitArgument(0, false, false),
+			RawArguments.createStringArgument(sawfowl.commandpack.api.data.kits.GiveRule.getAllRules(), false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+		);
 	}
 
 }
