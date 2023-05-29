@@ -122,12 +122,37 @@ public interface TempPlayerData {
 	 */
 	Map<UUID, Long> getTrackingMap(String command);
 
+	/**
+	 * Updating the time of the player's last activity
+	 */
 	void updateLastActivity(ServerPlayer player);
 
+	/**
+	 * Getting the time of the last activity of the player.
+	 */
 	long getLastActivity(ServerPlayer player);
 
+	/**
+	 * Checks the status of the player's current activity.
+	 * @return If false, then the player was recently active.<br> 
+	 * If true, then the time has passed since the last activity of the player specified in the configuration of the plugin.
+	 */
 	boolean isAfk(ServerPlayer player);
 
+	/**
+	 * Assigning AFK status to a player.
+	 */
 	void setAfkStatus(ServerPlayer player);
+
+	/**
+	 * Switching the player's status of listening to the commands of other players.<br>
+	 * A player will not be added if he does not have permission to listen to commands.
+	 */
+	void switchSpyCommand(ServerPlayer player);
+
+	/**
+	 * Whether the player listens to other players' commands.
+	 */
+	boolean isSpyCommand(ServerPlayer player);
 
 }

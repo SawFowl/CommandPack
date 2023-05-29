@@ -309,6 +309,9 @@ public class Locales {
 		save = check(locale, toText("&aChunk generation in world &e\"" + Placeholders.WORLD + "\" &ahas started.\n If you stop the server, when you start this operation again, generation will start from the beginning."), null, LocalesPaths.COMMANDS_WORLD_START_GENERATE) || save;
 		save = check(locale, toText("&aChunk generation in world &e\"" + Placeholders.WORLD + "\"&a is suspended."), null, LocalesPaths.COMMANDS_WORLD_PAUSE_GENERATE) || save;
 		save = check(locale, toText("&aThe generation of chunks in world&e\"" + Placeholders.WORLD + "\"&a has been stopped. The task is deleted."), null, LocalesPaths.COMMANDS_WORLD_STOP_GENERATE) || save;
+		save = check(locale, toText("&aNow you will see what commands other players are using."), null, LocalesPaths.COMMANDS_COMMANDSPY_ENABLE) || save;
+		save = check(locale, toText("&aYou will no longer see what commands other players are using."), null, LocalesPaths.COMMANDS_COMMANDSPY_DISABLE) || save;
+		save = check(locale, toText("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 uses the command&f: &d" + Placeholders.COMMAND), null, LocalesPaths.COMMANDS_COMMANDSPY_SPY) || save;
 
 		if(save) save(locale);
 	}
@@ -565,6 +568,9 @@ public class Locales {
 		save = check(locale, toText("&aЗапущена генерация чанков в мире &e\"" + Placeholders.WORLD + "\"&a.\n&eЕсли сервер будет остановлен, то в следующий раз процедура будет запущенна с самого начала."), null, LocalesPaths.COMMANDS_WORLD_START_GENERATE) || save;
 		save = check(locale, toText("&aГенерация чанков в мире &e\"" + Placeholders.WORLD + "\"&a приостановлена."), null, LocalesPaths.COMMANDS_WORLD_PAUSE_GENERATE) || save;
 		save = check(locale, toText("&aГенерация чанков в мире &e\"" + Placeholders.WORLD + "\"&a прекращена. Задача удалена."), null, LocalesPaths.COMMANDS_WORLD_STOP_GENERATE) || save;
+		save = check(locale, toText("&aТеперь вы будете видеть какие команды используют другие игроки."), null, LocalesPaths.COMMANDS_COMMANDSPY_ENABLE) || save;
+		save = check(locale, toText("&aВы больше не будете видеть какие команды используют другие игроки."), null, LocalesPaths.COMMANDS_COMMANDSPY_DISABLE) || save;
+		save = check(locale, toText("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 использует команду&f: &d" + Placeholders.COMMAND), null, LocalesPaths.COMMANDS_COMMANDSPY_SPY) || save;
 
 		if(save) save(locale);
 	}

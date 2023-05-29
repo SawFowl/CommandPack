@@ -52,6 +52,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_KIT = "Kit";
 	private static final Object COMMAND_AFK = "Afk";
 	private static final Object COMMAND_WORLD = "World";
+	private static final Object COMMAND_COMMANDSPY = "CommandSpy";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -302,5 +303,8 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_WORLD_NOT_PAUSED_GENERATE = {PATH_COMMANDS, COMMAND_WORLD, "Generate", "NotPaused"};
 	public static final Object[] COMMANDS_WORLD_STOP_GENERATE = {PATH_COMMANDS, COMMAND_WORLD, "Generate", "Stop"};
 	public static final Object[] COMMANDS_WORLD_PAUSE_GENERATE = {PATH_COMMANDS, COMMAND_WORLD, "Generate", "Pause"};
+	public static final Object[] COMMANDS_COMMANDSPY_ENABLE = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Enable"};
+	public static final Object[] COMMANDS_COMMANDSPY_DISABLE = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Disable"};
+	public static final Object[] COMMANDS_COMMANDSPY_SPY = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Spy"};
 
 }
