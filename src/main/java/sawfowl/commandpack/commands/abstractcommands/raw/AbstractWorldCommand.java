@@ -4,8 +4,8 @@ import org.spongepowered.api.world.server.ServerWorld;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.api.commands.raw.RawArgument;
-import sawfowl.commandpack.api.commands.raw.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public abstract class AbstractWorldCommand extends AbstractRawCommand {

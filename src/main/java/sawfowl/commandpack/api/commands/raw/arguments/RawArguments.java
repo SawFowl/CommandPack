@@ -1,4 +1,4 @@
-package sawfowl.commandpack.api.commands.raw;
+package sawfowl.commandpack.api.commands.raw.arguments;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,9 +11,11 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.item.enchantment.EnchantmentTypes;
@@ -26,11 +28,18 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.localeapi.api.EnumLocales;
 import sawfowl.localeapi.api.TextUtils;
 
+/**
+ * This class is designed to quickly create some arguments for {@link Raw} commands.<br>
+ * Some more variants may be added in the future.
+ * 
+ * @author SawFowl
+ *
+ */
 public class RawArguments {
 
 	public static final List<String> EMPTY = new ArrayList<>();
 
-	public static RawArgument<String> createStringArgument(Collection<String> variants, boolean optional, boolean optionalForConsole, int cursor, String def, Object[] localesPath) {
+	public static RawArgument<String> createStringArgument(@NotNull Collection<String> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, Object[] localesPath) {
 		return RawArgument.of(String.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
 			public Stream<String> get(String[] args) {
@@ -45,7 +54,7 @@ public class RawArguments {
 		}, optional, optionalForConsole, cursor, localesPath);
 	}
 
-	public static RawArgument<Integer> createIntegerArgument(Collection<Integer> variants, boolean optional, boolean optionalForConsole, int cursor, Integer def, Object[] localesPath) {
+	public static RawArgument<Integer> createIntegerArgument(@NotNull Collection<Integer> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable Integer def, Object[] localesPath) {
 		return RawArgument.of(Integer.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
 			public Stream<String> get(String[] args) {
@@ -60,7 +69,7 @@ public class RawArguments {
 		}, optional, optionalForConsole, cursor, localesPath);
 	}
 
-	public static RawArgument<Long> createLongArgument(Collection<Long> variants, boolean optional, boolean optionalForConsole, int cursor, Long def, Object[] localesPath) {
+	public static RawArgument<Long> createLongArgument(@NotNull Collection<Long> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable Long def, Object[] localesPath) {
 		return RawArgument.of(Long.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
 			public Stream<String> get(String[] args) {
@@ -75,7 +84,7 @@ public class RawArguments {
 		}, optional, optionalForConsole, cursor, localesPath);
 	}
 
-	public static RawArgument<Double> createDoubleArgument(Collection<Double> variants, boolean optional, boolean optionalForConsole, int cursor, Double def, Object[] localesPath) {
+	public static RawArgument<Double> createDoubleArgument(@NotNull Collection<Double> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable Double def, Object[] localesPath) {
 		return RawArgument.of(Double.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
 			public Stream<String> get(String[] args) {
@@ -90,7 +99,7 @@ public class RawArguments {
 		}, optional, optionalForConsole, cursor, localesPath);
 	}
 
-	public static RawArgument<BigDecimal> createBigDecimalArgument(Collection<BigDecimal> variants, boolean optional, boolean optionalForConsole, int cursor, BigDecimal def, Object[] localesPath) {
+	public static RawArgument<BigDecimal> createBigDecimalArgument(@NotNull Collection<BigDecimal> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable BigDecimal def, Object[] localesPath) {
 		return RawArgument.of(BigDecimal.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
 			public Stream<String> get(String[] args) {
@@ -105,7 +114,7 @@ public class RawArguments {
 		}, optional, optionalForConsole, cursor, localesPath);
 	}
 
-	public static RawArgument<Boolean> createBooleanArgument(boolean optional, boolean optionalForConsole, int cursor, Boolean def, Object[] localesPath) {
+	public static RawArgument<Boolean> createBooleanArgument(boolean optional, boolean optionalForConsole, int cursor, @Nullable Boolean def, Object[] localesPath) {
 		return RawArgument.of(Boolean.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
 			public Stream<String> get(String[] args) {
@@ -120,7 +129,7 @@ public class RawArguments {
 		}, optional, optionalForConsole, cursor, localesPath);
 	}
 
-	public static RawArgument<ServerWorld> createWorldArgument(boolean optional, boolean optionalForConsole, int cursor, ServerWorld def, Object[] localesPath) {
+	public static RawArgument<ServerWorld> createWorldArgument(boolean optional, boolean optionalForConsole, int cursor, @Nullable ServerWorld def, Object[] localesPath) {
 		return RawArgument.of(ServerWorld.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
 			public Stream<String> get(String[] args) {

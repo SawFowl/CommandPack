@@ -86,11 +86,11 @@ public class RTPService implements RandomTeleportService {
 		int x = (options.isStartFromWorldSpawn() ? world.properties().spawnPosition() : currentLocation.blockPosition()).x();
 		x = getRandomInt(x + minRadius, x + radius);
 		if(!ThreadLocalRandom.current().nextBoolean()) x = x * -1;
-		if(x < world.min().x() || x > world.max().x()) {
+		if(x < world.border().center().floorX() - (world.border().diameter() / 2) || x > world.border().center().floorX() + (world.border().diameter() / 2)) {
 			Optional<Integer> nextFind = getRandomX(currentLocation, world, options, attempts);
 			if(nextFind.isPresent()) return nextFind;
 		}
-		return Optional.ofNullable(x);
+		return Optional.empty();
 	}
 
 	private Optional<Integer> getRandomZ(ServerLocation currentLocation, ServerWorld world, RandomTeleportOptions options, int attempts) {
@@ -102,11 +102,11 @@ public class RTPService implements RandomTeleportService {
 		int z = (options.isStartFromWorldSpawn() ? world.properties().spawnPosition() : currentLocation.blockPosition()).z();
 		z = getRandomInt(z + minRadius, z + radius);
 		if(!ThreadLocalRandom.current().nextBoolean()) z = z * -1;
-		if(z < world.min().z() || z > world.max().z()) {
+		if(z < world.border().center().floorY() - (world.border().diameter() / 2) || z > world.border().center().floorY() + (world.border().diameter() / 2)) {
 			Optional<Integer> nextFind = getRandomZ(currentLocation, world, options, attempts);
 			if(nextFind.isPresent()) return nextFind;
 		}
-		return Optional.ofNullable(z);
+		return Optional.empty();
 	}
 	
 	private int getRandomInt(int first, int second) {

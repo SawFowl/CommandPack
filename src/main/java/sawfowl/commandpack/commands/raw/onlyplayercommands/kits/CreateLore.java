@@ -13,7 +13,7 @@ import org.spongepowered.api.util.locale.Locales;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.api.commands.raw.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;

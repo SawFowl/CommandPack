@@ -10,9 +10,9 @@ import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 
-import sawfowl.commandpack.api.commands.raw.RawArgument;
-import sawfowl.commandpack.api.commands.raw.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.RawResultSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 
 public class RawArgumentImpl<T> implements RawArgument<T> {
 
@@ -95,7 +95,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		@SuppressWarnings("unchecked")
 		@Override
 		public @NotNull RawArgument<T> build() {
-			return (@NotNull RawArgument<T>) RawArgumentImpl.this;
+			return (sawfowl.commandpack.api.commands.raw.arguments.RawArgument<T>) RawArgumentImpl.this;
 		}
 
 		@Override
@@ -131,7 +131,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		}
 
 		@Override
-		public Builder<T> localesPath(Object[] value) {
+		public Builder<T> localeTextPath(Object[] value) {
 			localesPath = value;
 			return this;
 		}

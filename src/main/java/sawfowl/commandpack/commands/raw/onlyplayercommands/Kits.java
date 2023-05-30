@@ -17,7 +17,7 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.api.commands.raw.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.AddCommand;
 import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.Commands;

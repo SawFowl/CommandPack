@@ -8,8 +8,8 @@ import java.util.Map;
 import org.spongepowered.api.command.CommandCompletion;
 
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.api.commands.raw.RawArgument;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.commands.abstractcommands.PluginCommand;
 
 public abstract class AbstractRawCommand extends PluginCommand implements RawCommand {

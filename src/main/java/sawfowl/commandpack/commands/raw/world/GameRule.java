@@ -27,10 +27,10 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.api.commands.raw.RawArgument;
-import sawfowl.commandpack.api.commands.raw.RawArguments;
-import sawfowl.commandpack.api.commands.raw.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.RawResultSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -58,8 +58,9 @@ public class GameRule extends AbstractWorldCommand {
 		org.spongepowered.api.world.gamerule.GameRule<?> rule = gamerules.get(getString(args, 1).get());
 		String stringValueArg = getString(args, 2).get();
 		if(isBooleanType(rule)) {
+			if(BooleanUtils.toBooleanObject(args[2]) == null) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 			org.spongepowered.api.world.gamerule.GameRule<Boolean> boolRule = (org.spongepowered.api.world.gamerule.GameRule<Boolean>) rule;
-			boolean value = Boolean.valueOf(stringValueArg);
+			boolean value = BooleanUtils.toBooleanObject(args[2]);
 			world.properties().setGameRule(boolRule, value);
 			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULE_SUCCESS), new String[] {Placeholders.RULE, Placeholders.WORLD, Placeholders.VALUE}, new Object[] {rule.name(), world.key().asString(), value}));
 		} else if(isIntType(rule)) {
@@ -147,7 +148,7 @@ public class GameRule extends AbstractWorldCommand {
 		}, new RawResultSupplier<String>() {
 			@Override
 			public Optional<String> get(String[] args) {
-				return args.length > 2 && gamerules.containsKey(args[1]) && isBooleanType(gamerules.get(args[1])) && BooleanUtils.toBooleanObject(args[2]) != null ? Optional.ofNullable(String.valueOf(BooleanUtils.toBooleanObject(args[2]))) : Optional.empty();
+				return args.length > 2 && gamerules.containsKey(args[1]) ? Optional.ofNullable(args[2]) : Optional.empty();
 			}
 		}, true, true, 2, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 	}

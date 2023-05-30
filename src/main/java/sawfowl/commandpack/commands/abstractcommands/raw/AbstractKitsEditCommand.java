@@ -5,9 +5,9 @@ import java.util.stream.Stream;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.api.commands.raw.RawArgument;
-import sawfowl.commandpack.api.commands.raw.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.RawResultSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 

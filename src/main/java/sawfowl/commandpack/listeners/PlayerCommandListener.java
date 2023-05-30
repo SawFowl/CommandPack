@@ -7,6 +7,8 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.command.ExecuteCommandEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -41,7 +43,7 @@ public class PlayerCommandListener {
 
 	private void spyCommand(ExecuteCommandEvent.Pre event, ServerPlayer player, boolean parallel) {
 		(parallel ? Sponge.server().onlinePlayers().parallelStream() : Sponge.server().onlinePlayers().stream()).filter(p -> !p.uniqueId().equals(player.uniqueId()) && plugin.getPlayersData().getTempData().isSpyCommand(p)).forEach(p -> {
-			p.sendMessage(TextUtils.replace(plugin.getLocales().getText(p.locale(), LocalesPaths.COMMANDS_COMMANDSPY_SPY), new String[] {Placeholders.PLAYER, Placeholders.COMMAND}, new Object[] {player.name(), (event.command() + " " + event.arguments())}));
+			p.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(p.locale(), LocalesPaths.COMMANDS_COMMANDSPY_SPY), new String[] {Placeholders.PLAYER, Placeholders.COMMAND}, new Component[] {Component.text(player.name()).clickEvent(ClickEvent.suggestCommand("/tell " + player.name())), Component.text("/" + event.command() + " " + event.arguments())}));
 		});
 	}
 }

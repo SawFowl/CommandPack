@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Random;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
@@ -21,12 +22,16 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.TextUtils;
 
 public class Sun extends AbstractParameterizedCommand {
 
+	private Random random;
 	public Sun(CommandPack plugin) {
 		super(plugin);
+		random = new Random();
 	}
 
 	@Override
@@ -71,8 +76,8 @@ public class Sun extends AbstractParameterizedCommand {
 	private void setWeather(Audience src, Locale locale, ServerWorld world, Optional<Integer> duration) {
 		if(duration.isPresent()) {
 			world.setWeather(WeatherTypes.CLEAR.get(), Ticks.of(duration.get() * 20));
-		} else world.setWeather(WeatherTypes.CLEAR.get());
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_WEATHER_SUN));
+		} else world.setWeather(WeatherTypes.CLEAR.get(), Ticks.of(random.nextInt(10000) * 20));
+		src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WEATHER_SUN), Placeholders.WORLD, world.key().asString()));
 	}
 
 }
