@@ -51,6 +51,12 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 	@Setting("OnlySurface")
 	@Comment("If true, the player will always move to the surface.")
 	private boolean onlySurface = false;
+	@Setting("ProhibitedLiquids")
+	@Comment("If true, the search for the correct position will skip fluid blocks.")
+	private boolean prohibitedLiquids = true;
+	@Setting("ProhibitedBlocks")
+	@Comment("Blocks specified in this list will not be available for teleportation by random coordinates.")
+	private Set<String> prohibitedBlocks = new HashSet<>();
 
 	public ServerWorld getTargetWorld(ServerWorld source) {
 		return Sponge.server().worldManager().world(getTargetWorldId(getWorldId(source))).orElse(source);
@@ -84,6 +90,14 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 		return map.containsKey(getWorldId(world)) ? map.get(getWorldId(world)).isOnlySurface() : onlySurface;
 	}
 
+	public boolean isProhibitedLiquids(ServerWorld world) {
+		return map.containsKey(getWorldId(world)) ? map.get(getWorldId(world)).isProhibitedLiquids() : prohibitedLiquids;
+	}
+
+	public Set<String> getProhibitedBlocks(ServerWorld world) {
+		return prohibitedBlocks;
+	}
+
 	public Optional<RandomTeleportOptions> getRandomTeleportWorldConfig(ServerWorld world) {
 		return Optional.ofNullable(map.getOrDefault(getWorldId(world), null));
 	}
@@ -104,6 +118,8 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 		copy.minY = minY;
 		copy.prohibitedBiomes = prohibitedBiomes;
 		copy.onlySurface = onlySurface;
+		copy.prohibitedLiquids = prohibitedLiquids;
+		copy.prohibitedBlocks = prohibitedBlocks;
 		return copy;
 	}
 
@@ -152,6 +168,16 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 		return onlySurface;
 	}
 
+	@Override
+	public boolean isProhibitedLiquids() {
+		return prohibitedLiquids;
+	}
+
+	@Override
+	public Set<String> getProhibitedBlocks() {
+		return prohibitedBlocks;
+	}
+
 	private ResourceKey getTargetWorldId(String sourceWorldId) {
 		return map.containsKey(sourceWorldId) ? map.get(sourceWorldId).getWorldKey() : ResourceKey.resolve(sourceWorldId);
 	}
@@ -163,7 +189,7 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 	private Map<String, RandomTeleportWorldConfig> createDefault() {
 		Map<String, RandomTeleportWorldConfig> map = new HashMap<>();
 		map.put("minecraft:overworld", new RandomTeleportWorldConfig("minecraft:overworld", new HashSet<>(Arrays.asList("minecraft:ocean", "minecraft:deep_ocean", "minecraft:frozen_ocean"))));
-		map.put("minecraft:the_nether", new RandomTeleportWorldConfig("minecraft:the_nether", false));
+		map.put("minecraft:the_nether", new RandomTeleportWorldConfig("minecraft:the_nether", 128, true));
 		map.put("minecraft:the_end", new RandomTeleportWorldConfig("minecraft:the_end"));
 		return map;
 	}
@@ -185,6 +211,8 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 				.set(DataQuery.of("MinY"), minY)
 				.set(DataQuery.of("ProhibitedBiomes"), prohibitedBiomes)
 				.set(DataQuery.of("OnlySurface"), onlySurface)
+				.set(DataQuery.of("ProhibitedLiquids"), prohibitedLiquids)
+				.set(DataQuery.of("ProhibitedBlocks"), prohibitedBlocks)
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 

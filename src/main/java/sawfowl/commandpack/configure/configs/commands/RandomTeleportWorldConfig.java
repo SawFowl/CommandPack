@@ -1,5 +1,6 @@
 package sawfowl.commandpack.configure.configs.commands;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,6 +44,10 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 	private Set<String> prohibitedBiomes;
 	@Setting("OnlySurface")
 	private boolean onlySurface = true;
+	@Setting("ProhibitedLiquids")
+	private boolean prohibitedLiquids = false;
+	@Setting("ProhibitedBlocks")
+	private Set<String> prohibitedBlocks = new HashSet<>();
 
 	public RandomTeleportWorldConfig(String world) {
 		this.world = world;
@@ -53,15 +58,11 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 		this.prohibitedBiomes = prohibitedBiomes;
 	}
 
-	public RandomTeleportWorldConfig(String world, boolean onlySurface) {
+	public RandomTeleportWorldConfig(String world, int maxY, boolean prohibitedLiquids) {
 		this.world = world;
-		this.onlySurface = onlySurface;
-	}
-
-	public RandomTeleportWorldConfig(String world, Set<String> prohibitedBiomes, boolean onlySurface) {
-		this.world = world;
-		this.prohibitedBiomes = prohibitedBiomes;
-		this.onlySurface = onlySurface;
+		this.maxY = maxY;
+		this.prohibitedLiquids = prohibitedLiquids;
+		onlySurface = false;
 	}
 
 	public Builder builder() {
@@ -129,6 +130,16 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 	}
 
 	@Override
+	public boolean isProhibitedLiquids() {
+		return prohibitedLiquids;
+	}
+
+	@Override
+	public Set<String> getProhibitedBlocks() {
+		return prohibitedBlocks;
+	}
+
+	@Override
 	public int contentVersion() {
 		return 1;
 	}
@@ -145,6 +156,8 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 				.set(DataQuery.of("MinY"), minY)
 				.set(DataQuery.of("ProhibitedBiomes"), prohibitedBiomes)
 				.set(DataQuery.of("OnlySurface"), onlySurface)
+				.set(DataQuery.of("ProhibitedLiquids"), prohibitedLiquids)
+				.set(DataQuery.of("ProhibitedBlocks"), prohibitedBlocks)
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
@@ -223,6 +236,18 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 		@Override
 		public Builder setOnlySurface(boolean value) {
 			onlySurface = value;
+			return this;
+		}
+
+		@Override
+		public Builder setProhibitedLiquids(boolean prohibitedLiquids) {
+			RandomTeleportWorldConfig.this.prohibitedLiquids = prohibitedLiquids;
+			return this;
+		}
+
+		@Override
+		public Builder setProhibitedBlocks(Set<String> prohibitedBlocks) {
+			RandomTeleportWorldConfig.this.prohibitedBlocks = prohibitedBlocks;
 			return this;
 		}
 		

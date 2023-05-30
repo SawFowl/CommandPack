@@ -7,7 +7,11 @@ import java.util.function.Supplier;
 
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.Keys;
+import org.spongepowered.api.data.type.MatterTypes;
+import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.world.biome.Biomes;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
@@ -35,11 +39,13 @@ public class RTPService implements RandomTeleportService {
 			if(!optZ.isPresent()) break;
 			Vector3i newPos = Vector3i.from(optX.get(), getRandomInt(options.getMinY(), options.getMaxY()), optZ.get());
 			if(options.getProhibitedBiomes().isEmpty() || !options.getProhibitedBiomes().contains(Biomes.registry(world).valueKey(world.biome(newPos)).asString())) {
-				Optional<ServerLocation> optLocation = Sponge.server().teleportHelper().findSafeLocation(world.location(newPos), 10, 10, 10);
+				Optional<ServerLocation> optLocation = findSafe(ServerLocation.of(world, newPos), options);
 				if(optLocation.isPresent()) {
-					if(options.isOnlySurface() || !isSafe(optLocation.get())) optLocation = Optional.ofNullable(ServerLocation.of(world, world.highestPositionAt(optLocation.get().blockPosition())));
-					attempts = options.getAttempts() + 1;
-					return optLocation;
+					ServerLocation location = options.isOnlySurface() ? ServerLocation.of(world, world.highestPositionAt(optLocation.get().blockPosition())) : optLocation.get();
+					if((options.getProhibitedBlocks() == null || !options.getProhibitedBlocks().contains(blockID(location.block()))) && (!options.isProhibitedLiquids() || !isLiquid(location))) {
+						attempts = options.getAttempts() + 1;
+						return Optional.ofNullable(location);
+					}
 				}
 			}
 		}
@@ -80,11 +86,11 @@ public class RTPService implements RandomTeleportService {
 		int x = (options.isStartFromWorldSpawn() ? world.properties().spawnPosition() : currentLocation.blockPosition()).x();
 		x = getRandomInt(x + minRadius, x + radius);
 		if(!ThreadLocalRandom.current().nextBoolean()) x = x * -1;
-		if(x < world.min().x() || x > world.max().x()) {
+		if(x < world.border().center().floorX() - (world.border().diameter() / 2) || x > world.border().center().floorX() + (world.border().diameter() / 2)) {
 			Optional<Integer> nextFind = getRandomX(currentLocation, world, options, attempts);
 			if(nextFind.isPresent()) return nextFind;
 		}
-		return Optional.ofNullable(x);
+		return Optional.empty();
 	}
 
 	private Optional<Integer> getRandomZ(ServerLocation currentLocation, ServerWorld world, RandomTeleportOptions options, int attempts) {
@@ -96,11 +102,11 @@ public class RTPService implements RandomTeleportService {
 		int z = (options.isStartFromWorldSpawn() ? world.properties().spawnPosition() : currentLocation.blockPosition()).z();
 		z = getRandomInt(z + minRadius, z + radius);
 		if(!ThreadLocalRandom.current().nextBoolean()) z = z * -1;
-		if(z < world.min().z() || z > world.max().z()) {
+		if(z < world.border().center().floorY() - (world.border().diameter() / 2) || z > world.border().center().floorY() + (world.border().diameter() / 2)) {
 			Optional<Integer> nextFind = getRandomZ(currentLocation, world, options, attempts);
 			if(nextFind.isPresent()) return nextFind;
 		}
-		return Optional.ofNullable(z);
+		return Optional.empty();
 	}
 	
 	private int getRandomInt(int first, int second) {
@@ -108,7 +114,30 @@ public class RTPService implements RandomTeleportService {
 	}
 
 	private boolean isSafe(ServerLocation location) {
-		return location.world().block(location.blockPosition()).type().equals(BlockTypes.AIR.get()) && location.world().block(location.blockPosition()).type().equals(BlockTypes.AIR.get()) && !location.world().block(location.blockPosition()).type().equals(BlockTypes.AIR.get());
+		return location.block().type().equals(BlockTypes.AIR.get()) && ServerLocation.of(location.world(), location.x(), location.y() + 1, location.z()).block().type().equals(BlockTypes.AIR.get()) && !ServerLocation.of(location.world(), location.x(), location.y() - 1, location.z()).block().type().equals(BlockTypes.AIR.get());
+	}
+
+	private boolean isLiquid(ServerLocation location) {
+		return (location.get(Keys.MATTER_TYPE).isPresent() && location.get(Keys.MATTER_TYPE).get().equals(MatterTypes.LIQUID.get())) || (ServerLocation.of(location.world(), location.blockX(), location.blockY() -1, location.blockZ()).get(Keys.MATTER_TYPE).isPresent() && ServerLocation.of(location.world(), location.blockX(), location.blockY() -1, location.blockZ()).get(Keys.MATTER_TYPE).get().equals(MatterTypes.LIQUID.get()));
+	}
+
+	private String blockID(BlockState block) {
+		return Sponge.game().registry(RegistryTypes.BLOCK_TYPE).valueKey(block.type()).asString();
+	}
+
+	private Optional<ServerLocation> findSafe(ServerLocation location, RandomTeleportOptions options) {
+		if(location.block().type().equals(BlockTypes.AIR.get())) {
+			for(double y = location.y(); y > options.getMinY(); y--) {
+				ServerLocation find = ServerLocation.of(location.world(), location.x(), y, location.z());
+				if(isSafe(find) && !find.block().type().equals(BlockTypes.BEDROCK.get())) return Optional.ofNullable(find);
+			}
+		} else {
+			for(double y = location.y(); y < location.world().height() && y < options.getMaxY(); y++) {
+				ServerLocation find = ServerLocation.of(location.world(), location.x(), y, location.z());
+				if(isSafe(find) && !find.block().type().equals(BlockTypes.BEDROCK.get())) return Optional.ofNullable(find);
+			}
+		}
+		return Optional.empty();
 	}
 
 }

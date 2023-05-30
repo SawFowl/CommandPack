@@ -20,7 +20,9 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.TextUtils;
 
 public class Day extends AbstractParameterizedCommand {
 
@@ -68,7 +70,7 @@ public class Day extends AbstractParameterizedCommand {
 		if(world.properties().gameTime().hour() < 12) {
 			world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day(), 12, 0));
 		} else world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day() + 1, 12, 0));
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TIME_DAY));
+		src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_TIME_DAY), Placeholders.WORLD, world.key().asString()));
 	}
 
 }

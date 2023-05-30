@@ -2,10 +2,12 @@ package sawfowl.commandpack.commands.raw;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
@@ -30,6 +32,10 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.commandpack.api.events.KitGiveEvent;
@@ -61,19 +67,17 @@ public class Kit extends AbstractRawCommand {
 				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_NO_PERM));
 				return;
 			}
-			ServerPlayer target = getPlayer(cause, args).orElse(src);
+			ServerPlayer target = getPlayer(args, 1).orElse(src);
 			sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(target);
 			if(target.uniqueId().equals(src.uniqueId())) {
 				delay(target, locale, consumer -> {
 					prepare(cause, audience, locale, src, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), false);
 				});
-			} else prepare(cause, audience, locale, target, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), true);
+			} else prepare(cause, audience, locale, target, data, kit, false, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), true);
 		} else {
-			Optional<ServerPlayer> optTarget = getPlayer(cause, args);
-			if(!optTarget.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
-			ServerPlayer target = optTarget.get();
+			ServerPlayer target = getPlayer(args, 1).get();
 			sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(target);
-			prepare(cause, audience, locale, target, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), true);
+			prepare(cause, audience, locale, target, data, kit, false, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), true);
 		}
 	}
 
@@ -113,11 +117,7 @@ public class Kit extends AbstractRawCommand {
 	}
 
 	protected Optional<sawfowl.commandpack.api.data.kits.Kit> getKit(String[] args) {
-		return args.length == 0 ? Optional.empty() : plugin.getKitService().getKit(args[0]);
-	}
-
-	protected Optional<ServerPlayer> getPlayer(CommandCause cause, String[] args) {
-		return args.length < 2 || !cause.hasPermission(Permissions.KIT_STAFF) ? Optional.empty() : Sponge.server().player(args[1]);
+		return getArgument(sawfowl.commandpack.api.data.kits.Kit.class, args, 0);
 	}
 
 	private void sendKitsList(CommandCause cause, Audience audience, Locale locale, boolean isPlayer) {
@@ -173,7 +173,10 @@ public class Kit extends AbstractRawCommand {
 			player.inventory().primary().offer(toGive.toArray(new ItemStack[] {}));
 			spawnItems(toSpawn, player);
 			runCommands(player, kit);
-			player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(player.locale())));
+			if(!equals) {
+				player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(player.locale())));
+				audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_KIT_SUCCESS_STAFF), new String[] {Placeholders.VALUE, Placeholders.PLAYER}, new Component[] {kit.getLocalizedName(locale), text(player.name())}));
+			} else player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(player.locale())));
 			return;
 		}
 		ItemStack[] items = kit.getContent().toArray(new ItemStack[] {});
@@ -285,7 +288,10 @@ public class Kit extends AbstractRawCommand {
 		if(spawn != null && !spawn.isEmpty()) spawnItems(spawn, player);
 		runCommands(player, kit);
 		data.save();
-		player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(player.locale())));
+		if(!equals) {
+			player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(player.locale())));
+			audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_KIT_SUCCESS_STAFF), new String[] {Placeholders.VALUE, Placeholders.PLAYER}, new Component[] {kit.getLocalizedName(locale), text(player.name())}));
+		} else player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(player.locale())));
 		Sponge.eventManager().post(createPostEvent(audience, kit, player, true, result, currentTime + kit.getCooldown()));
 	}
 
@@ -411,6 +417,28 @@ public class Kit extends AbstractRawCommand {
 				return nextGiveTime;
 			}
 		};
+	}
+
+	@Override
+	public List<RawArgument<?>> arguments() {
+		return Arrays.asList(
+			kitArgument(),
+			RawArguments.createPlayerArgument(true, false, 1, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
+		);
+	}
+
+	private RawArgument<sawfowl.commandpack.api.data.kits.Kit> kitArgument() {
+		return RawArgument.of(sawfowl.commandpack.api.data.kits.Kit.class, new RawCompleterSupplier<Stream<String>>() {
+			@Override
+			public Stream<String> get(String[] args) {
+				return plugin.getKitService().getKits().stream().map(sawfowl.commandpack.api.data.kits.Kit::id);
+			}
+		}, new RawResultSupplier<sawfowl.commandpack.api.data.kits.Kit>() {
+			@Override
+			public Optional<sawfowl.commandpack.api.data.kits.Kit> get(String[] args) {
+				return args.length >= 1 ? plugin.getKitService().getKit(args[0]) : Optional.empty();
+			}
+		}, true, true, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 	}
 
 }

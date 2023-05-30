@@ -1,5 +1,6 @@
 package sawfowl.commandpack.api.commands.raw;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.math.NumberUtils;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
@@ -22,12 +24,18 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
+import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.service.economy.Currency;
+import org.spongepowered.api.world.WorldType;
+import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.PluginCommand;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
@@ -43,11 +51,6 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * Command code execution.
 	 */
 	void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException;
-
-	/**
-	 * Auto-complete command arguments.
-	 */
-	List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException;
 
 	Component shortDescription(Locale locale);
 
@@ -66,6 +69,18 @@ public interface RawCommand extends PluginCommand, Raw {
 	Map<String, RawCommand> getChildExecutors();
 
 	/**
+	 * Map of command arguments.
+	 */
+	Map<Integer, RawArgument<?>> getArguments();
+
+	/**
+	 * If `false`, the player will not get a list of available command arguments. <br>
+	 * Regardless of the return value, the player will receive variants of the child commands.<br>
+	 * This parameter will be ignored when overriding the {@link #complete(CommandCause, Mutable)} method.
+	 */
+	boolean enableAutoComplete();
+
+	/**
 	 * Checks for child commands and who activated the command.
 	 */
 	@Override
@@ -73,12 +88,38 @@ public interface RawCommand extends PluginCommand, Raw {
 		boolean isPlayer = cause.audience() instanceof ServerPlayer;
 		Locale locale = getLocale(cause);
 		String[] args = Stream.of(arguments.input().split(" ")).map(String::toString).filter(string -> (!string.equals(""))).toArray(String[]::new);
+		checkArguments(cause, args, isPlayer, locale);
+		checkCooldown(cause, locale, isPlayer);
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
-			List<String> list = new ArrayList<>(Arrays.asList(args));
-			list.remove(0);
-			getChildExecutors().get(args[0]).process(cause, cause.audience(), getLocale(cause), isPlayer, list.toArray(new String[] {}), arguments);
+			String[] childArgs = args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[] {};
+			getChildExecutors().get(args[0]).process(cause, cause.audience(), locale, isPlayer, childArgs, arguments);
 			return success();
 		}
+		process(cause, cause.audience(), locale, isPlayer, args, arguments);
+		return success();
+	}
+
+	/**
+	 * Autocomplete arguments.
+	 */
+	@Override
+	default List<CommandCompletion> complete(CommandCause cause, Mutable arguments) throws CommandException {
+		List<String> args = Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList());
+		String currentInput = arguments.input();
+		List<CommandCompletion> complete = completeChild(cause, args, arguments, currentInput);
+		return complete == null || complete.size() == 0 ? (getEmptyCompletion() == null ? new ArrayList<>() : getEmptyCompletion()) : complete;
+	}
+
+	default void checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
+		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
+			getChildExecutors().get(args[0]).checkArguments(cause, (args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[] {}), isPlayer, locale);
+		}
+		if(getArguments() != null && !getArguments().isEmpty()) for(RawArgument<?> arg : getArguments().values()) {
+			if((args.length <= arg.getCursor() + 1 && ((!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole())) && !arg.getResultUnknownType(args).isPresent()))) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
+		}
+	}
+
+	default void checkCooldown(CommandCause cause, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) cause.audience();
 			Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
@@ -91,26 +132,33 @@ public interface RawCommand extends PluginCommand, Raw {
 				getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
 			}
 		}
-		process(cause, cause.audience(), locale, isPlayer, args, arguments);
-		return success();
+	}
+
+	default List<CommandCompletion> completeChild(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
+		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
+			List<CommandCompletion> completions;
+			if(args.size() == 0 || (args.size() == 1 && !currentInput.endsWith(" "))) {
+				completions = getChildExecutors().keySet().stream().filter(command -> (args.isEmpty() || ((command.equals(args.get(0)) || command.startsWith(args.get(0))) && getChildExecutors().get(command).canExecute(cause)))).map(CommandCompletion::of).collect(Collectors.toList());
+				completions.addAll(complete(cause, args, arguments, currentInput));
+				return completions;
+			} else if(getChildExecutors().containsKey(args.get(0))) {
+				completions = getChildExecutors().get(args.get(0)).completeChild(cause, args.subList(1, args.size()), arguments, currentInput.contains(args.get(0) + " ") ? currentInput.replace(args.get(0) + " ", "") : currentInput.replace(args.get(0), ""));
+				completions.addAll(complete(cause, args, arguments, currentInput));
+				return completions;
+			}
+		}
+		return complete(cause, args, arguments, currentInput);
 	}
 
 	/**
-	 * Autocomplete arguments.
+	 * Auto-complete command arguments.
 	 */
-	@Override
-	default List<CommandCompletion> complete(CommandCause cause, Mutable arguments) throws CommandException {
-		List<String> args = Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList());
-		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
-			if(args.size() == 0 || (args.size() == 1 && !arguments.input().contains(args.get(0) + " "))) {
-				return getChildExecutors().keySet().stream().filter(command -> (args.isEmpty() || ((command.equals(args.get(0)) || command.startsWith(args.get(0))) && getChildExecutors().get(command).canExecute(cause)))).map(CommandCompletion::of).collect(Collectors.toList());
-			}
-			if(getChildExecutors().containsKey(args.get(0))) {
-				return getChildExecutors().get(args.get(0)).complete(cause, args.subList(1, args.size()), arguments, arguments.input().contains(args.get(0) + " ") ? arguments.input().replace(args.get(0) + " ", "") : arguments.input().replace(args.get(0), ""));
-			}
-		}
-		List<CommandCompletion> complete = complete(cause, args, arguments, arguments.input());
-		return complete == null || complete.size() == 0 ? getEmptyCompletion() : complete.stream().collect(Collectors.toList());
+	default List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
+		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.size()) return getEmptyCompletion();
+		if(currentInput.endsWith(" ") || args.size() == 0) {
+			if(getArguments().containsKey(args.size())) return getArguments().get(args.size()).getVariants(args.toArray(new String[] {})).map(CommandCompletion::of).collect(Collectors.toList());
+			return getEmptyCompletion();
+		} else return getArguments().get(args.size() - 1).getVariants(args.toArray(new String[] {})).filter(v -> ((v.contains(args.get(args.size() - 1)) && !currentInput.endsWith(" ")) || (args.get(args.size() - 1).contains(v) && !args.get(args.size() - 1).contains(v + " ")) || (v.contains(":") && (v.split(":")[0].contains(args.get(args.size() - 1)) || v.split(":")[1].contains(args.get(args.size() - 1)))))).map(CommandCompletion::of).collect(Collectors.toList());
 	}
 
 	@Override
@@ -146,9 +194,100 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	/**
+	 * An attempt to convert a string to an integer.
+	 */
+	@Deprecated
+	default Optional<Integer> parseInt(String arg) {
+		return NumberUtils.isParsable(arg) ? Optional.ofNullable(NumberUtils.createInteger(arg)) : Optional.empty();
+	}
+
+	/**
+	 * An attempt to convert a string to a fractional number.
+	 */
+	@Deprecated
+	default Optional<Double> parseDouble(String arg) {
+		return NumberUtils.isParsable(arg) ? Optional.ofNullable(NumberUtils.createDouble(arg)) : Optional.empty();
+	}
+
+	default CommandException exceptionAppendUsage(CommandCause cause, Component text) throws CommandException {
+		throw new CommandException(usage(cause) == null ? text : text.append(Component.newline()).append(usage(cause)));
+	}
+
+	default CommandException exceptionAppendUsage(CommandCause cause, Locale locale, Object[] localePath) throws CommandException {
+		throw new CommandException(getText(locale, localePath).append(Component.newline()).append(usage(cause)));
+	}
+
+	default Optional<ServerWorld> getWorld(String[] args, int cursor) {
+		return getArgument(ServerWorld.class, args, cursor);
+	}
+
+
+	default Optional<WorldType> getWorldType(String[] args, int cursor) {
+		return getArgument(WorldType.class, args, cursor);
+	}
+	default Optional<ServerPlayer> getPlayer(String[] args, int cursor) {
+		return getArgument(ServerPlayer.class, args, cursor);
+	}
+
+	default Optional<EnchantmentType> getEnchantmentType(String[] args, int cursor) {
+		return getArgument(EnchantmentType.class, args, cursor);
+	}
+
+	default Optional<String> getString(String[] args, int cursor) {
+		return getArgument(String.class, args, cursor);
+	}
+
+	default Optional<Boolean> getBoolean(String[] args, int cursor) {
+		return getArgument(Boolean.class, args, cursor);
+	}
+
+	default Optional<Integer> getInteger(String[] args, int cursor) {
+		return getArgument(Integer.class, args, cursor);
+	}
+
+	default Optional<Long> getLong(String[] args, int cursor) {
+		return getArgument(Long.class, args, cursor);
+	}
+
+	default Optional<Double> getDouble(String[] args, int cursor) {
+		return getArgument(Double.class, args, cursor);
+	}
+
+	default Optional<BigDecimal> getBigDecimal(String[] args, int cursor) {
+		return getArgument(BigDecimal.class, args, cursor);
+	}
+
+	default Optional<Locale> getLocale(String[] args, int cursor) {
+		return getArgument(Locale.class, args, cursor);
+	}
+
+	default Optional<Currency> getCurrency(String[] args, int cursor) {
+		return getArgument(Currency.class, args, cursor);
+	}
+
+	default Optional<Duration> getDurationArg(String[] args, int cursor, Locale locale) throws CommandException {
+		Optional<String> arg = getArgument(String.class, args, cursor);
+		return arg.isPresent() ? parseDuration(arg.get(), locale) : Optional.empty();
+	}
+
+	/**
+	 * Getting an object from a command argument.
+	 * 
+	 * @param <T> - The type of the returned object.
+	 * @param clazz - The class of the returned object.
+	 * @param args - All command arguments.
+	 * @param cursor - The argument number of the command.
+	 * @return {@link Optional}
+	 */
+	@SuppressWarnings("unchecked")
+	default <T> Optional<T> getArgument(Class<T> clazz, String[] args, int cursor) {
+		return getArguments() == null || !getArguments().containsKey(cursor) || getArguments().get(cursor).getClazz() != clazz || !getArguments().get(cursor).getClazz().getName().equals(clazz.getName()) ? Optional.empty() : ((RawArgument<T>) getArguments().get(cursor)).getResult(clazz, args);
+	}
+
+	/**
 	 * Convert string to object {@link Duration}
 	 */
-	default Duration getDuration(String s, Locale locale) throws CommandException {
+	default Optional<Duration> parseDuration(String s, Locale locale) throws CommandException {
 		s = s.toUpperCase();
 		if (!s.contains("T")) {
 			if (s.contains("D")) {
@@ -167,24 +306,10 @@ public interface RawCommand extends PluginCommand, Raw {
 			s = "P" + s;
 		}
 		try {
-			return Duration.parse(s);
+			return Optional.ofNullable(Duration.parse(s));
 		} catch (final DateTimeParseException ex) {
-			throw exception(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_KITS_COOLDOWN_INCORRECT_TIME));
+			throw exception(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_EXCEPTION_COOLDOWN_INCORRECT_TIME));
 		}
-	}
-
-	/**
-	 * An attempt to convert a string to an integer.
-	 */
-	default Optional<Integer> parseInt(String arg) {
-		return NumberUtils.isParsable(arg) ? Optional.ofNullable(NumberUtils.createInteger(arg)) : Optional.empty();
-	}
-
-	/**
-	 * An attempt to convert a string to a fractional number.
-	 */
-	default Optional<Double> parseDouble(String arg) {
-		return NumberUtils.isParsable(arg) ? Optional.ofNullable(NumberUtils.createDouble(arg)) : Optional.empty();
 	}
 
 }

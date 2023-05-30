@@ -109,6 +109,10 @@ public class ConfigManager {
 		}
 	}
 
+	public void deleteKit(String kit) {
+		kitsPath.resolve(TextUtils.clearDecorations(kit) + ".conf").toFile().delete();
+	}
+
 	public void saveKit(Kit kit) {
 		KitData data = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		if(!kitsPath.toFile().exists()) kitsPath.toFile().mkdir();

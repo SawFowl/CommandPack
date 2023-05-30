@@ -16,6 +16,7 @@ import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
@@ -31,6 +32,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	private Map<String, Map<UUID, Long>> cooldowns = new HashMap<>();
 	private Map<UUID, Long> lastActivity = new HashMap<>();
 	private Set<UUID> afk = new HashSet<>();
+	private Set<UUID> commandSpy = new HashSet<>();
 	public TempPlayerDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
 	}
@@ -168,6 +170,22 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 				p.sendMessage(TextUtils.replace(plugin.getLocales().getText(p.locale(), LocalesPaths.COMMANDS_AFK_ENABLE), Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))));
 			});
 		} else player.sendMessage(plugin.getLocales().getText(player.locale(), LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH));
+	}
+
+	@Override
+	public void switchSpyCommand(ServerPlayer player) {
+		if(isSpyCommand(player)) {
+			commandSpy.remove(player.uniqueId());
+		} else if(player.hasPermission(Permissions.COMMANDSPY)) commandSpy.add(player.uniqueId());
+	}
+
+	@Override
+	public boolean isSpyCommand(ServerPlayer player) {
+		if(!player.hasPermission(Permissions.COMMANDSPY)) {
+			if(commandSpy.contains(player.uniqueId())) commandSpy.remove(player.uniqueId());
+			return false;
+		}
+		return commandSpy.contains(player.uniqueId());
 	}
 
 }

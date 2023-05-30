@@ -51,6 +51,8 @@ public class LocalesPaths {
 	private static final Object COMMAND_KITS = "Kits";
 	private static final Object COMMAND_KIT = "Kit";
 	private static final Object COMMAND_AFK = "Afk";
+	private static final Object COMMAND_WORLD = "World";
+	private static final Object COMMAND_COMMANDSPY = "CommandSpy";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -79,6 +81,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_EXCEPTION_NAME_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "NameNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_TYPE_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "TypeNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_VALUE_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "ValueNotPresent"};
+	public static final Object[] COMMANDS_EXCEPTION_COOLDOWN_INCORRECT_TIME = {PATH_COMMANDS, PATH_EXCEPTIONS, "IncorrectTime"};
 	public static final Object[] COMMANDS_NOT_TRACKING = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "NotTracking"};
 	public static final Object[] COMMANDS_STOP_TRACKING_COMMAND = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "StopByCommand"};
 	public static final Object[] COMMANDS_STOP_TRACKING_MOVING = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_TRACKING, "StopByMoving"};
@@ -165,6 +168,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_TIME_MORNING = {PATH_COMMANDS, COMMAND_TIME, "Morning"};
 	public static final Object[] COMMANDS_TIME_EVENING = {PATH_COMMANDS, COMMAND_TIME, "Evening"};
 	public static final Object[] COMMANDS_TIME_NIGHT = {PATH_COMMANDS, COMMAND_TIME, "Night"};
+	public static final Object[] COMMANDS_TIME_ADD = {PATH_COMMANDS, COMMAND_TIME, "Add"};
 	public static final Object[] COMMANDS_ENCHANT_ITEM_IS_NOT_PRESENT = {PATH_COMMANDS, COMMAND_ENCHANT, PATH_EXCEPTIONS, "ItemIsNotPresent"};
 	public static final Object[] COMMANDS_ENCHANT_SUCCES = {PATH_COMMANDS, COMMAND_ENCHANT, "Success"};
 	public static final Object[] COMMANDS_ANVIL = {PATH_COMMANDS, COMMAND_ANVIL, "Other"};
@@ -234,7 +238,6 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_KITS_SAVED = {PATH_COMMANDS, COMMAND_KITS, "Saved"};
 	public static final Object[] COMMANDS_KITS_LIST_HEADER = {PATH_COMMANDS, COMMAND_KITS, "ListHeader"};
 	public static final Object[] COMMANDS_KITS_NO_KITS = {PATH_COMMANDS, COMMAND_KITS, "NoKits"};
-	public static final Object[] COMMANDS_KITS_COOLDOWN_INCORRECT_TIME = {PATH_COMMANDS, COMMAND_KITS, "Cooldown", PATH_EXCEPTIONS, "IncorrectTime"};
 	public static final Object[] COMMANDS_KITS_COOLDOWN_SUCCESS = {PATH_COMMANDS, COMMAND_KITS, "Cooldown", "Success"};
 	public static final Object[] COMMANDS_KITS_SET_NAME = {PATH_COMMANDS, COMMAND_KITS, "SetName"};
 	public static final Object[] COMMANDS_KITS_GIVE_RULE = {PATH_COMMANDS, COMMAND_KITS, "GiveRule"};
@@ -261,10 +264,47 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_KIT_GIVE_LIMIT = {PATH_COMMANDS, COMMAND_KIT, "GiveLimit"};
 	public static final Object[] COMMANDS_KIT_NO_MONEY = {PATH_COMMANDS, COMMAND_KIT, "NoMoney"};
 	public static final Object[] COMMANDS_KIT_SUCCESS = {PATH_COMMANDS, COMMAND_KIT, "Success"};
+	public static final Object[] COMMANDS_KIT_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_KIT, "SuccessStaff"};
 	public static final Object[] COMMANDS_AFK_ENABLE = {PATH_COMMANDS, COMMAND_AFK, "Enable"};
 	public static final Object[] COMMANDS_AFK_DISABLE = {PATH_COMMANDS, COMMAND_AFK, "Disable"};
 	public static final Object[] COMMANDS_AFK_ENABLE_IN_VANISH = {PATH_COMMANDS, COMMAND_AFK, "EnableInVanish"};
 	public static final Object[] COMMANDS_AFK_DISABLE_IN_VANISH = {PATH_COMMANDS, COMMAND_AFK, "DisableInVanish"};
 	public static final Object[] COMMANDS_AFK_KICK = {PATH_COMMANDS, COMMAND_AFK, "Kick"};
+	public static final Object[] COMMANDS_WORLD_CREATE = {PATH_COMMANDS, COMMAND_WORLD, "Create"};
+	public static final Object[] COMMANDS_WORLD_TELEPORT = {PATH_COMMANDS, COMMAND_WORLD, "Teleport"};
+	public static final Object[] COMMANDS_WORLD_TELEPORT_OTHER = {PATH_COMMANDS, COMMAND_WORLD, "TeleportOther"};
+	public static final Object[] COMMANDS_WORLD_DELETE = {PATH_COMMANDS, COMMAND_WORLD, "Delete"};
+	public static final Object[] COMMANDS_WORLD_LOAD = {PATH_COMMANDS, COMMAND_WORLD, "Load"};
+	public static final Object[] COMMANDS_WORLD_LOADED = {PATH_COMMANDS, COMMAND_WORLD, PATH_EXCEPTIONS, "Loaded"};
+	public static final Object[] COMMANDS_WORLD_UNLOAD = {PATH_COMMANDS, COMMAND_WORLD, "Unload"};
+	public static final Object[] COMMANDS_WORLD_UNLOADED = {PATH_COMMANDS, COMMAND_WORLD, PATH_EXCEPTIONS, "Unloaded"};
+	public static final Object[] COMMANDS_WORLD_SETSPAWN = {PATH_COMMANDS, COMMAND_WORLD, "SetSpawn"};
+	public static final Object[] COMMANDS_WORLD_SETBORDER = {PATH_COMMANDS, COMMAND_WORLD, "SetBorder"};
+	public static final Object[] COMMANDS_WORLD_ENABLE = {PATH_COMMANDS, COMMAND_WORLD, "Enable"};
+	public static final Object[] COMMANDS_WORLD_DISABLE = {PATH_COMMANDS, COMMAND_WORLD, "Disable"};
+	public static final Object[] COMMANDS_WORLD_ENABLE_PVP = {PATH_COMMANDS, COMMAND_WORLD, "EnablePvP"};
+	public static final Object[] COMMANDS_WORLD_DISABLE_PVP = {PATH_COMMANDS, COMMAND_WORLD, "DisablePvP"};
+	public static final Object[] COMMANDS_WORLD_DIFFICULTY_PEACEFUL = {PATH_COMMANDS, COMMAND_WORLD, "Difficulty", "Peaceful"};
+	public static final Object[] COMMANDS_WORLD_DIFFICULTY_EASY = {PATH_COMMANDS, COMMAND_WORLD, "Difficulty", "Easy"};
+	public static final Object[] COMMANDS_WORLD_DIFFICULTY_NORMAL = {PATH_COMMANDS, COMMAND_WORLD, "Difficulty", "Normal"};
+	public static final Object[] COMMANDS_WORLD_DIFFICULTY_HARD = {PATH_COMMANDS, COMMAND_WORLD, "Difficulty", "Hard"};
+	public static final Object[] COMMANDS_WORLD_GAMEMODE_SURVIVAL = {PATH_COMMANDS, COMMAND_WORLD, "GameMode", "Survival"};
+	public static final Object[] COMMANDS_WORLD_GAMEMODE_CREATIVE = {PATH_COMMANDS, COMMAND_WORLD, "GameMode", "Creative"};
+	public static final Object[] COMMANDS_WORLD_GAMEMODE_ADVENTURE = {PATH_COMMANDS, COMMAND_WORLD, "GameMode", "Adventure"};
+	public static final Object[] COMMANDS_WORLD_GAMEMODE_SPECTATOR = {PATH_COMMANDS, COMMAND_WORLD, "GameMode", "Spectator"};
+	public static final Object[] COMMANDS_WORLD_VIEWDISTANCE = {PATH_COMMANDS, COMMAND_WORLD, "ViewDistance"};
+	public static final Object[] COMMANDS_WORLD_GAMERULE_SUCCESS = {PATH_COMMANDS, COMMAND_WORLD, "GameRule", "Success"};
+	public static final Object[] COMMANDS_WORLD_GAMERULE_INCORECT_VALUE = {PATH_COMMANDS, COMMAND_WORLD, PATH_EXCEPTIONS, "GameRule", "IncorectValue"};
+	public static final Object[] COMMANDS_WORLD_GAMERULE_UNKNOWN_TYPE = {PATH_COMMANDS, COMMAND_WORLD, PATH_EXCEPTIONS, "GameRule", "UnknownType"};
+	public static final Object[] COMMANDS_WORLD_GAMERULES = {PATH_COMMANDS, COMMAND_WORLD, "GameRules", "List"};
+	public static final Object[] COMMANDS_WORLD_DEBUG_GENERATE = {PATH_COMMANDS, COMMAND_WORLD, "Generate", "Debug"};
+	public static final Object[] COMMANDS_WORLD_START_GENERATE = {PATH_COMMANDS, COMMAND_WORLD, "Generate", "Start"};
+	public static final Object[] COMMANDS_WORLD_NOT_STARTED_GENERATE = {PATH_COMMANDS, COMMAND_WORLD, "Generate", "NotStarted"};
+	public static final Object[] COMMANDS_WORLD_NOT_PAUSED_GENERATE = {PATH_COMMANDS, COMMAND_WORLD, "Generate", "NotPaused"};
+	public static final Object[] COMMANDS_WORLD_STOP_GENERATE = {PATH_COMMANDS, COMMAND_WORLD, "Generate", "Stop"};
+	public static final Object[] COMMANDS_WORLD_PAUSE_GENERATE = {PATH_COMMANDS, COMMAND_WORLD, "Generate", "Pause"};
+	public static final Object[] COMMANDS_COMMANDSPY_ENABLE = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Enable"};
+	public static final Object[] COMMANDS_COMMANDSPY_DISABLE = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Disable"};
+	public static final Object[] COMMANDS_COMMANDSPY_SPY = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Spy"};
 
 }

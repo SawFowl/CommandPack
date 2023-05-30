@@ -5,12 +5,16 @@ import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.config.ConfigDir;
@@ -24,16 +28,23 @@ import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.world.biome.Biomes;
+import org.spongepowered.api.world.generation.ChunkGenerator;
+import org.spongepowered.api.world.generation.config.FlatGeneratorConfig;
+import org.spongepowered.api.world.generation.config.flat.LayerConfig;
+import org.spongepowered.api.world.generation.config.structure.StructureGenerationConfig;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
 
 import com.google.inject.Inject;
 
+import net.kyori.adventure.builder.AbstractBuilder;
 import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.KitService;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.RandomTeleportService;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.data.command.CancelRules;
 import sawfowl.commandpack.api.data.command.Delay;
 import sawfowl.commandpack.api.data.command.Price;
@@ -50,6 +61,7 @@ import sawfowl.commandpack.apiclasses.KitServiceImpl;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.apiclasses.RTPService;
 import sawfowl.commandpack.commands.settings.ParameterSettingsImpl;
+import sawfowl.commandpack.commands.settings.RawArgumentImpl;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.configs.MainConfig;
 import sawfowl.commandpack.configure.configs.commands.CancelRulesData;
@@ -99,6 +111,8 @@ public class CommandPack {
 	private Map<Long, Double> tps5m = new HashMap<>();
 	private Map<Long, Double> tps10m = new HashMap<>();
 	private long serverStartedTime;
+	private sawfowl.commandpack.api.CommandPack api;
+	private Map<String, ChunkGenerator> generators = new HashMap<>();
 
 	public static CommandPack getInstance() {
 		return instance;
@@ -168,6 +182,10 @@ public class CommandPack {
 		return (System.currentTimeMillis() - serverStartedTime) / 1000;
 	}
 
+	public sawfowl.commandpack.api.CommandPack getAPI() {
+		return api;
+	}
+
 	@Inject
 	public CommandPack(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
 		instance = this;
@@ -179,7 +197,7 @@ public class CommandPack {
 	@Listener
 	public void onLocaleServicePostEvent(LocaleServiseEvent.Construct event) {
 		rtpService = new RTPService(instance);
-		kitService = new KitServiceImpl();
+		kitService = new KitServiceImpl(instance);
 		playersData = new PlayersDataImpl(instance);
 		configManager = new ConfigManager(instance, event.getLocaleService().getConfigurationOptions());
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
@@ -202,7 +220,8 @@ public class CommandPack {
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerRespawnListener(instance));
 		configManager.loadKits();
-		sawfowl.commandpack.api.CommandPack api = new sawfowl.commandpack.api.CommandPack() {
+		generators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureConfig(StructureGenerationConfig.none()).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
+		api = new sawfowl.commandpack.api.CommandPack() {
 
 			@Override
 			public PlayersData playersData() {
@@ -237,6 +256,21 @@ public class CommandPack {
 			@Override
 			public KitService kitService() {
 				return kitService;
+			}
+
+			@Override
+			public void registerCustomGenerator(String name, ChunkGenerator chunkGenerator) {
+				generators.put(name, chunkGenerator);
+			}
+
+			@Override
+			public Optional<ChunkGenerator> getCustomGenerator(String name) {
+				return Optional.ofNullable(generators.getOrDefault(name, null));
+			}
+
+			@Override
+			public Set<String> getAvailableGenerators() {
+				return new HashSet<>(generators.keySet());
 			}
 
 		};
@@ -289,6 +323,7 @@ public class CommandPack {
 		getCommandsConfig().registerRaw(event, instance);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Listener
 	public void registerBuilders(RegisterBuilderEvent event) {
 		event.register(RandomTeleportService.RandomTeleportOptions.Builder.class, new Supplier<RandomTeleportService.RandomTeleportOptions.Builder>() {
@@ -373,6 +408,12 @@ public class CommandPack {
 			@Override
 			public Kit.Builder get() {
 				return new KitData().builder();
+			}
+		});
+		event.register(RawArgument.Builder.class, new Supplier<RawArgument.Builder>() {
+			@Override
+			public RawArgument.Builder get() {
+				return new RawArgumentImpl<Object>().builder();
 			}
 		});
 	}
