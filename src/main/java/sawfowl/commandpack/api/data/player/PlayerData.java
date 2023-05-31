@@ -6,11 +6,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.text.Component;
-
 import sawfowl.commandpack.api.data.kits.Kit;
 
 /**
@@ -141,6 +142,9 @@ public interface PlayerData {
 	boolean isGivedKit(Kit kit);
 
 	long getKitGivedTime(Kit kit);
+
+	@SuppressWarnings("hiding")
+	<ServerPlayer> CommandResult runCommand(Locale sourceLocale, String command) throws CommandException;
 
 	PlayerData save();
 

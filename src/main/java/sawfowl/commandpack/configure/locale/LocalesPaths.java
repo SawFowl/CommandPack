@@ -73,6 +73,7 @@ public class LocalesPaths {
 	public static final Object[] NAME_UNKNOWN = {NAMES, "UnknownSource"};
 	public static final Object[] NAME_BACKPACK = {NAMES, "Backpack"};
 
+	public static final Object[] COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "PlayerIsOffline"};
 	public static final Object[] COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "PlayerNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_TARGET_SELF = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "TargetSelf"};
 	public static final Object[] COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "BooleanNotPresent"};

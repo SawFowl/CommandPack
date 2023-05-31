@@ -29,6 +29,10 @@ public class Enderchest extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		Optional<User> optUser = Optional.empty();
+		if(Sponge.server().player(getUser(context).get()).isPresent()) {
+			src.openInventory(Sponge.server().player(getUser(context).get()).get().enderChestInventory());
+			return;
+		}
 		try {
 			optUser = getUser(context).isPresent() ? Sponge.server().userManager().load(getUser(context).get()).get() : Optional.empty();
 		} catch (InterruptedException | ExecutionException e) {
