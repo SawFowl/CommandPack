@@ -79,6 +79,8 @@ public class Locales {
 		save = check(locale, toText("Unknown"), null, LocalesPaths.NAME_UNKNOWN) || save;
 		save = check(locale, toText("&6&lBackpack"), null, LocalesPaths.NAME_BACKPACK) || save;
 
+		save = check(locale, toText("&cPlayer " + Placeholders.PLAYER + "&c is offline."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE) || save;
+		save = check(locale, toText("&cYou need to specify the nickname of the player who is now online or was previously on the server.."), null, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_FOUND) || save;
 		save = check(locale, toText("&cYou need to specify the nickname of the player online."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou can't point to yourself."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
 		save = check(locale, toText("&cYou must specify a name."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
@@ -312,6 +314,8 @@ public class Locales {
 		save = check(locale, toText("&aNow you will see what commands other players are using."), null, LocalesPaths.COMMANDS_COMMANDSPY_ENABLE) || save;
 		save = check(locale, toText("&aYou will no longer see what commands other players are using."), null, LocalesPaths.COMMANDS_COMMANDSPY_DISABLE) || save;
 		save = check(locale, toText("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 uses the command&f: &d" + Placeholders.COMMAND), null, LocalesPaths.COMMANDS_COMMANDSPY_SPY) || save;
+		save = check(locale, toText("&aPing&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS) || save;
+		save = check(locale, toText("&aPing of player &e" + Placeholders.PLAYER + "&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF) || save;
 
 		if(save) save(locale);
 	}
@@ -338,6 +342,8 @@ public class Locales {
 		save = check(locale, toText("Неизвестный"), null, LocalesPaths.NAME_UNKNOWN) || save;
 		save = check(locale, toText("&6&lРюкзак"), null, LocalesPaths.NAME_BACKPACK) || save;
 
+		save = check(locale, toText("&cИгрок " + Placeholders.PLAYER + "&c оффлайн."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE) || save;
+		save = check(locale, toText("&cНужно указать ник игрока, который сейчас онлайн или ранее был на сервере."), null, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_FOUND) || save;
 		save = check(locale, toText("&cНужно указать ник игрока онлайн."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНельзя указывать на себя."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
 		save = check(locale, toText("&cНужно указать имя."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
@@ -571,6 +577,8 @@ public class Locales {
 		save = check(locale, toText("&aТеперь вы будете видеть какие команды используют другие игроки."), null, LocalesPaths.COMMANDS_COMMANDSPY_ENABLE) || save;
 		save = check(locale, toText("&aВы больше не будете видеть какие команды используют другие игроки."), null, LocalesPaths.COMMANDS_COMMANDSPY_DISABLE) || save;
 		save = check(locale, toText("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 использует команду&f: &d" + Placeholders.COMMAND), null, LocalesPaths.COMMANDS_COMMANDSPY_SPY) || save;
+		save = check(locale, toText("&aПинг&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS) || save;
+		save = check(locale, toText("&aПинг игрока &e" + Placeholders.PLAYER + "&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF) || save;
 
 		if(save) save(locale);
 	}

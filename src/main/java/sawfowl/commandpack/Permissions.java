@@ -51,6 +51,7 @@ public class Permissions {
 	public static final String SERVER_STAT_INFO_TIME = "commandpack.commands.user.serverstat.time";
 	public static final String KIT = "commandpack.commands.user.kit";
 	public static final String AFK = "commandpack.commands.user.afk";
+	public static final String PING = "commandpack.commands.user.ping";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -98,6 +99,7 @@ public class Permissions {
 	public static final String KIT_STAFF = "commandpack.commands.staff.kit";
 	public static final String WORLD = "commandpack.commands.staff.world";
 	public static final String COMMANDSPY = "commandpack.commands.staff.commandspy";
+	public static final String PING_STAFF = "commandpack.commands.staff.ping";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";

@@ -41,6 +41,7 @@ import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.commandpack.api.data.player.GivedKit;
 import sawfowl.commandpack.api.data.player.Warp;
+import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
@@ -260,7 +261,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	@SuppressWarnings("hiding")
 	@Override
 	public <ServerPlayer> CommandResult runCommand(@NotNull Locale sourceLocale, @NotNull String command) throws CommandException {
-		if(!getPlayer().isPresent() || !getPlayer().get().isOnline()) throw new CommandException(CommandPack.getInstance().getLocales().getText(sourceLocale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE));
+		if(!getPlayer().isPresent() || !getPlayer().get().isOnline()) return CommandResult.error(TextUtils.replace(CommandPack.getInstance().getLocales().getText(sourceLocale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE), Placeholders.PLAYER, name));
 		CommandMapping mapping = Sponge.server().commandManager().commandMapping(command.contains(" ") ? command.split(" ")[0] : command).get();
 		try(StackFrame frame = Sponge.server().causeStackManager().pushCauseFrame()) {
 			return mapping.registrar().canExecute(createPlayerCause(getPlayer().get(), command), mapping) ? Sponge.server().commandManager().process(getPlayer().get(), command) : CommandResult.error(CommandPack.getInstance().getLocales().getText(sourceLocale, LocalesPaths.COMMANDS_SUDO_EXECUTE_NOT_ALLOWED));

@@ -53,6 +53,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_AFK = "Afk";
 	private static final Object COMMAND_WORLD = "World";
 	private static final Object COMMAND_COMMANDSPY = "CommandSpy";
+	private static final Object COMMAND_PING = "Ping";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -74,6 +75,7 @@ public class LocalesPaths {
 	public static final Object[] NAME_BACKPACK = {NAMES, "Backpack"};
 
 	public static final Object[] COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "PlayerIsOffline"};
+	public static final Object[] COMMANDS_EXCEPTION_USER_NOT_FOUND = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "UserNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "PlayerNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_TARGET_SELF = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "TargetSelf"};
 	public static final Object[] COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "BooleanNotPresent"};
@@ -307,5 +309,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_COMMANDSPY_ENABLE = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Enable"};
 	public static final Object[] COMMANDS_COMMANDSPY_DISABLE = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Disable"};
 	public static final Object[] COMMANDS_COMMANDSPY_SPY = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Spy"};
+	public static final Object[] COMMANDS_PING_SUCCESS = {PATH_COMMANDS, COMMAND_PING, "Success"};
+	public static final Object[] COMMANDS_PING_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_PING, "SuccessStaff"};
 
 }
