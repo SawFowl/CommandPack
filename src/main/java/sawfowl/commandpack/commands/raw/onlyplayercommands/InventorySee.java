@@ -16,13 +16,15 @@ import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Cause;
-import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.event.CauseStackManager.StackFrame;
+import org.spongepowered.api.event.item.inventory.AffectSlotEvent;
 import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.ContainerTypes;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.menu.InventoryMenu;
 import org.spongepowered.api.item.inventory.menu.handler.SlotChangeHandler;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 
 import net.kyori.adventure.text.Component;
@@ -43,15 +45,15 @@ public class InventorySee extends AbstractPlayerCommand {
 
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		if(!Sponge.server().player(args[1]).isPresent()) {
+		if(!Sponge.server().player(args[0]).isPresent()) {
 			try {
-				Sponge.server().userManager().load(args[1]).get().ifPresent(user -> {
+				Sponge.server().userManager().load(args[0]).get().ifPresent(user -> {
 					open(src, user);
 				});
 			} catch (InterruptedException | ExecutionException e) {
 				exception(locale, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_FOUND);
 			}
-		} else open(src, Sponge.server().player(args[1]).get().user());
+		} else open(src, Sponge.server().player(args[0]).get().user());
 	}
 
 	@Override
@@ -109,9 +111,32 @@ public class InventorySee extends AbstractPlayerCommand {
 			@Override
 			public boolean handle(Cause cause, Container container, Slot slot, int slotIndex, ItemStackSnapshot oldStack, ItemStackSnapshot newStack) {
 				if(slotIndex > 35) return false;
-				if(newStack.type().equals(ItemTypes.AIR.get())) {
-					target.inventory().pollFrom(slotIndex);
-				} else target.inventory().set(slotIndex, newStack.createStack());
+				try(StackFrame frame = Sponge.server().causeStackManager().pushCauseFrame()) {
+					Sponge.server().scheduler().executor(getContainer()).execute(() -> {
+						Sponge.eventManager().post(new AffectSlotEvent() {
+
+							@Override
+							public Cause cause() {
+								return frame.currentCause();
+							}
+
+							@Override
+							public boolean isCancelled() {
+								return false;
+							}
+
+							@Override
+							public void setCancelled(boolean cancel) {
+							}
+
+							@Override
+							public List<SlotTransaction> transactions() {
+								return Arrays.asList(new SlotTransaction(target.inventory().slot(slotIndex).get(), target.inventory().slot(slotIndex).get().peek().createSnapshot(), newStack));
+							}
+							
+						});
+					});
+				}
 				return true;
 			}
 		});

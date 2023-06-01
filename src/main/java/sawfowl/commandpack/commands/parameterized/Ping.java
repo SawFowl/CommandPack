@@ -32,7 +32,7 @@ public class Ping extends AbstractParameterizedCommand {
 		if(isPlayer) {
 			if(player.isPresent() && !player.get().uniqueId().equals(((ServerPlayer) src).uniqueId())) {
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_PING_SUCCESS), ((ServerPlayer) src).name(), String.valueOf(((ServerPlayer) src).connection().latency())));
-			} else src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Object[] {player.get().name(), player.get().connection().latency()}));
+			} else src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_PING_SUCCESS), Placeholders.VALUE, String.valueOf(((ServerPlayer) src).connection().latency())));
 		} else {
 			src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Object[] {player.get().name(), player.get().connection().latency()}));
 		}
