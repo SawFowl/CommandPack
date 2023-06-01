@@ -41,6 +41,7 @@ public class InventorySee extends AbstractPlayerCommand {
 
 	public InventorySee(CommandPack plugin) {
 		super(plugin);
+		Sponge.eventManager().registerListeners(getContainer(), this);
 	}
 
 	@Override
@@ -111,32 +112,9 @@ public class InventorySee extends AbstractPlayerCommand {
 			@Override
 			public boolean handle(Cause cause, Container container, Slot slot, int slotIndex, ItemStackSnapshot oldStack, ItemStackSnapshot newStack) {
 				if(slotIndex > 35) return false;
-				try(StackFrame frame = Sponge.server().causeStackManager().pushCauseFrame()) {
-					Sponge.server().scheduler().executor(getContainer()).execute(() -> {
-						Sponge.eventManager().post(new AffectSlotEvent() {
-
-							@Override
-							public Cause cause() {
-								return frame.currentCause();
-							}
-
-							@Override
-							public boolean isCancelled() {
-								return false;
-							}
-
-							@Override
-							public void setCancelled(boolean cancel) {
-							}
-
-							@Override
-							public List<SlotTransaction> transactions() {
-								return Arrays.asList(new SlotTransaction(target.inventory().slot(slotIndex).get(), target.inventory().slot(slotIndex).get().peek().createSnapshot(), newStack));
-							}
-							
-						});
-					});
-				}
+				Sponge.server().scheduler().executor(getContainer()).execute(() -> {
+					target.inventory().set(slotIndex, newStack.createStack());
+				});
 				return true;
 			}
 		});
