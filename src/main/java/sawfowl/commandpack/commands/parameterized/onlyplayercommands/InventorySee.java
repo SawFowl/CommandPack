@@ -18,7 +18,9 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.TextUtils;
 
 public class InventorySee extends AbstractPlayerCommand {
 
@@ -54,13 +56,16 @@ public class InventorySee extends AbstractPlayerCommand {
 	}
 
 	private void open(ServerPlayer src, ServerPlayer target) {
-		InventoryMenu.of(ViewableInventory.builder()
+		InventoryMenu menu = InventoryMenu.of(ViewableInventory.builder()
 				.type(ContainerTypes.GENERIC_9X4)
 				.slots(target.inventory().storage().slots(), 0)
 				.slots(target.inventory().hotbar().slots(), 27)
 				.completeStructure()
 				.plugin(getContainer())
-				.identity(UUID.randomUUID()).build()).open(src);
+				.carrier(target)
+				.identity(UUID.randomUUID()).build());
+		menu.setTitle(TextUtils.replace(getText(src.locale(), LocalesPaths.COMMANDS_INVSEE_TITLE), Placeholders.PLAYER, target.name()));
+		menu.open(src);
 	}
 
 }

@@ -54,6 +54,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_WORLD = "World";
 	private static final Object COMMAND_COMMANDSPY = "CommandSpy";
 	private static final Object COMMAND_PING = "Ping";
+	private static final Object COMMAND_INVSEE = "InventorySee";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -311,5 +312,6 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_COMMANDSPY_SPY = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Spy"};
 	public static final Object[] COMMANDS_PING_SUCCESS = {PATH_COMMANDS, COMMAND_PING, "Success"};
 	public static final Object[] COMMANDS_PING_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_PING, "SuccessStaff"};
+	public static final Object[] COMMANDS_INVSEE_TITLE = {PATH_COMMANDS, COMMAND_INVSEE, "Title"};
 
 }

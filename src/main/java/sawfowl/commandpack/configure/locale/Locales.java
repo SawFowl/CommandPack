@@ -316,6 +316,7 @@ public class Locales {
 		save = check(locale, toText("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 uses the command&f: &d" + Placeholders.COMMAND), null, LocalesPaths.COMMANDS_COMMANDSPY_SPY) || save;
 		save = check(locale, toText("&aPing&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS) || save;
 		save = check(locale, toText("&aPing of player &e" + Placeholders.PLAYER + "&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF) || save;
+		save = check(locale, toText("&2&lInventory&f&l: &e&l" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_INVSEE_TITLE) || save;
 
 		if(save) save(locale);
 	}
@@ -579,6 +580,7 @@ public class Locales {
 		save = check(locale, toText("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 использует команду&f: &d" + Placeholders.COMMAND), null, LocalesPaths.COMMANDS_COMMANDSPY_SPY) || save;
 		save = check(locale, toText("&aПинг&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS) || save;
 		save = check(locale, toText("&aПинг игрока &e" + Placeholders.PLAYER + "&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF) || save;
+		save = check(locale, toText("&2&lИнвентарь&f&l: &e&l" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_INVSEE_TITLE) || save;
 
 		if(save) save(locale);
 	}
