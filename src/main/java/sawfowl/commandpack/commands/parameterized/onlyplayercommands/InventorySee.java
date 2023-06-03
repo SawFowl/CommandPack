@@ -3,6 +3,7 @@ package sawfowl.commandpack.commands.parameterized.onlyplayercommands;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
@@ -59,7 +60,7 @@ public class InventorySee extends AbstractPlayerCommand {
 				.slots(target.inventory().hotbar().slots(), 27)
 				.completeStructure()
 				.plugin(getContainer())
-				.identity(target.uniqueId()).build()).open(src);
+				.identity(UUID.randomUUID()).build()).open(src);
 	}
 
 }
