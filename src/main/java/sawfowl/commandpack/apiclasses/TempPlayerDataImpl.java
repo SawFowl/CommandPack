@@ -12,6 +12,10 @@ import java.util.UUID;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.network.ServerSideConnectionEvent;
+import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.util.Ticks;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.text.Component;
@@ -35,6 +39,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	private Set<UUID> commandSpy = new HashSet<>();
 	public TempPlayerDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
+		Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
 	}
 
 	@Override
@@ -139,15 +144,18 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	public void updateLastActivity(ServerPlayer player) {
 		if(lastActivity.containsKey(player.uniqueId())) lastActivity.remove(player.uniqueId());
 		lastActivity.put(player.uniqueId(), Duration.ofMillis(System.currentTimeMillis()).getSeconds());
-		if(isAfk(player)) {
-			afk.remove(player.uniqueId());
-			if(!player.get(Keys.VANISH_STATE).isPresent() || !player.get(Keys.VANISH_STATE).get().invisible()) {
-				Sponge.systemSubject().sendMessage(TextUtils.replace(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_AFK_DISABLE), Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))));
-				Sponge.server().onlinePlayers().forEach(p -> {
-					p.sendMessage(TextUtils.replace(plugin.getLocales().getText(p.locale(), LocalesPaths.COMMANDS_AFK_DISABLE), Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))));
-				});
-			} else player.sendMessage(plugin.getLocales().getText(player.locale(), LocalesPaths.COMMANDS_AFK_DISABLE_IN_VANISH));
-		}
+		UUID uuid = player.uniqueId();
+		Sponge.asyncScheduler().submit(Task.builder().delay(Ticks.of(10)).plugin(plugin.getPluginContainer()).execute(() -> {
+			if(isAfk(player) && Sponge.server().player(uuid).isPresent()) {
+				afk.remove(player.uniqueId());
+				if(!player.get(Keys.VANISH_STATE).isPresent() || !player.get(Keys.VANISH_STATE).get().invisible()) {
+					Sponge.systemSubject().sendMessage(TextUtils.replace(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_AFK_DISABLE), Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))));
+					Sponge.server().onlinePlayers().forEach(p -> {
+						p.sendMessage(TextUtils.replace(plugin.getLocales().getText(p.locale(), LocalesPaths.COMMANDS_AFK_DISABLE), Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))));
+					});
+				} else player.sendMessage(plugin.getLocales().getText(player.locale(), LocalesPaths.COMMANDS_AFK_DISABLE_IN_VANISH));
+			}
+		}).build());
 	}
 
 	@Override
@@ -186,6 +194,12 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 			return false;
 		}
 		return commandSpy.contains(player.uniqueId());
+	}
+
+	@Listener
+	public void onDisconnect(ServerSideConnectionEvent.Disconnect event) {
+		if(lastActivity.containsKey(event.player().uniqueId())) lastActivity.remove(event.player().uniqueId());
+		if(isAfk(event.player())) afk.remove(event.player().uniqueId());
 	}
 
 }

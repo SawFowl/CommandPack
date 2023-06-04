@@ -29,22 +29,25 @@ public class Enderchest extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		if(!getUser(context).isPresent()) {
-			src.openInventory(src.enderChestInventory());
+			delay(src, locale, consumer -> {
+				src.openInventory(src.enderChestInventory());
+			});
 			return;
 		}
-		Optional<User> optUser = Optional.empty();
 		if(Sponge.server().player(getUser(context).get()).isPresent()) {
 			src.openInventory(Sponge.server().player(getUser(context).get()).get().enderChestInventory());
 			return;
 		}
 		try {
-			optUser = getUser(context).isPresent() ? Sponge.server().userManager().load(getUser(context).get()).get() : Optional.empty();
+			Optional<User> optUser = getUser(context).isPresent() ? Sponge.server().userManager().load(getUser(context).get()).get() : Optional.empty();
+			delay(src, locale, consumer -> {
+				if(optUser.isPresent()) {
+					src.openInventory(optUser.get().enderChestInventory());
+				} else src.openInventory(src.enderChestInventory());
+			});
 		} catch (InterruptedException | ExecutionException e) {
 			// ignore
 		}
-		if(optUser.isPresent()) {
-			src.openInventory(optUser.get().enderChestInventory());
-		} else src.openInventory(src.enderChestInventory());
 	}
 
 	@Override

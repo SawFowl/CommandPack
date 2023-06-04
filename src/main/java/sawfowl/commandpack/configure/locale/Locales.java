@@ -275,6 +275,8 @@ public class Locales {
 		save = check(locale, toText("&aYou gave a kit &e" + Placeholders.VALUE + "&a to the player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_KIT_SUCCESS_STAFF) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fis now afk."), null, LocalesPaths.COMMANDS_AFK_ENABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fis no longer afk."), null, LocalesPaths.COMMANDS_AFK_DISABLE) || save;
+		save = check(locale, toText("&4&lAFK"), null, LocalesPaths.COMMANDS_AFK_TITLE) || save;
+		save = check(locale, toText("&eYou will be kicked in " + Placeholders.VALUE + "&e."), null, LocalesPaths.COMMANDS_AFK_SUBTITLE) || save;
 		save = check(locale, toText("&eYou have gone AFK, but you are currently vanished, so this has not been broadcasted."), null, LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eYou have returned from AFK, but you are currently vanished, so this has not been broadcasted."), null, LocalesPaths.COMMANDS_AFK_DISABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eYou have been kicked for being AFK for too long."), null, LocalesPaths.COMMANDS_AFK_KICK) || save;
@@ -317,6 +319,8 @@ public class Locales {
 		save = check(locale, toText("&aPing&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS) || save;
 		save = check(locale, toText("&aPing of player &e" + Placeholders.PLAYER + "&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF) || save;
 		save = check(locale, toText("&2&lInventory&f&l: &e&l" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_INVSEE_TITLE) || save;
+		save = check(locale, toText("&aOnline(" + Placeholders.VALUE + ")&f: &e"), null, LocalesPaths.COMMANDS_LIST_SUCCESS) || save;
+		save = check(locale, toText("&7" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_LIST_VANISHED) || save;
 
 		if(save) save(locale);
 	}
@@ -539,6 +543,8 @@ public class Locales {
 		save = check(locale, toText("&aВы выдали набор &e" + Placeholders.VALUE + "&a игроку &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_KIT_SUCCESS_STAFF) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fтеперь афк."), null, LocalesPaths.COMMANDS_AFK_ENABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fбольше не афк."), null, LocalesPaths.COMMANDS_AFK_DISABLE) || save;
+		save = check(locale, toText("&4&lАФК"), null, LocalesPaths.COMMANDS_AFK_TITLE) || save;
+		save = check(locale, toText("&eВы будете кикнуты через " + Placeholders.VALUE + "&e."), null, LocalesPaths.COMMANDS_AFK_SUBTITLE) || save;
 		save = check(locale, toText("&eВы перешли в АФК, но в настоящее время вы невидимы, так что это не транслировалось."), null, LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eВы перешли из AFK, но в настоящее время вы невидимы, поэтому это не было передано."), null, LocalesPaths.COMMANDS_AFK_DISABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eВы кикнуты за то, что слишком долго были АФК."), null, LocalesPaths.COMMANDS_AFK_KICK) || save;
@@ -581,6 +587,8 @@ public class Locales {
 		save = check(locale, toText("&aПинг&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS) || save;
 		save = check(locale, toText("&aПинг игрока &e" + Placeholders.PLAYER + "&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF) || save;
 		save = check(locale, toText("&2&lИнвентарь&f&l: &e&l" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_INVSEE_TITLE) || save;
+		save = check(locale, toText("&aОнлайн(" + Placeholders.VALUE + ")&f: &e"), null, LocalesPaths.COMMANDS_LIST_SUCCESS) || save;
+		save = check(locale, toText("&7" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_LIST_VANISHED) || save;
 
 		if(save) save(locale);
 	}

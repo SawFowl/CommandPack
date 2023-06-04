@@ -173,6 +173,8 @@ public class CommandsConfig {
 	private CommandSettings commandspy = new CommandSettings();
 	@Setting("Ping")
 	private CommandSettings ping = new CommandSettings();
+	@Setting("List")
+	private CommandSettings list = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

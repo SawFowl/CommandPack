@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -39,6 +40,10 @@ import org.spongepowered.plugin.builtin.jvm.Plugin;
 import com.google.inject.Inject;
 
 import net.kyori.adventure.builder.AbstractBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.TitlePart;
+import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.KitService;
 import sawfowl.commandpack.api.PlayersData;
@@ -63,6 +68,7 @@ import sawfowl.commandpack.apiclasses.RTPService;
 import sawfowl.commandpack.commands.settings.ParameterSettingsImpl;
 import sawfowl.commandpack.commands.settings.RawArgumentImpl;
 import sawfowl.commandpack.configure.ConfigManager;
+import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.MainConfig;
 import sawfowl.commandpack.configure.configs.commands.CancelRulesData;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;
@@ -299,8 +305,22 @@ public class CommandPack {
 			Sponge.server().onlinePlayers().forEach(player -> {
 				if(getPlayersData().getTempData().getLastActivity(player) > 0) {
 					if(getPlayersData().getTempData().isAfk(player) && !player.hasPermission(Permissions.AFK_UNLIMIT)) {
-						if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - (getMainConfig().getAfkConfig().getTurnOnDlay() + getMainConfig().getAfkConfig().getKickDelay())) player.kick(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_AFK_KICK));
+						if((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay()) - Duration.ofMillis(System.currentTimeMillis()).getSeconds() <= 0) {
+							player.kick(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_AFK_KICK));
+							getPlayersData().getTempData().updateLastActivity(player);
+						}
 					} else if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - getMainConfig().getAfkConfig().getTurnOnDlay()) getPlayersData().getTempData().setAfkStatus(player);
+				}
+			});
+		}).build());
+		Sponge.asyncScheduler().submit(Task.builder().delay(15, TimeUnit.SECONDS).interval(1, TimeUnit.SECONDS).plugin(pluginContainer).execute(() -> {
+			Sponge.server().onlinePlayers().forEach(player -> {
+				if(getPlayersData().getTempData().isAfk(player)) {
+					if(player.hasPermission(Permissions.AFK_UNLIMIT)) {
+						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isUnlimit()) player.sendTitlePart(TitlePart.TITLE, locales.getText(player.locale(), LocalesPaths.COMMANDS_AFK_TITLE));
+					} else {
+						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isBeforeKick()) player.showTitle(Title.title(locales.getText(player.locale(), LocalesPaths.COMMANDS_AFK_TITLE), TextUtils.replace(locales.getText(player.locale(), LocalesPaths.COMMANDS_AFK_SUBTITLE), Placeholders.VALUE, timeFormat((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay() + 1) - Duration.ofMillis(System.currentTimeMillis()).getSeconds(), player.locale()))));
+					}
 				}
 			});
 		}).build());
@@ -432,6 +452,20 @@ public class CommandPack {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	private Component timeFormat(long second, Locale locale) {
+		long minute = TimeUnit.SECONDS.toMinutes(second);
+		long hour = TimeUnit.SECONDS.toHours(second);
+		long days = TimeUnit.SECONDS.toDays(second);
+		if(days == 0) {
+			if(hour == 0) {
+				if(minute == 0) {
+					return TextUtils.replace(Component.text(String.format((second > 9 ? "%02d" : "%01d"), second) + "%second%"), "%second%", CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_SECOND));
+				} else return TextUtils.replaceToComponents(Component.text(String.format((minute > 9 ? "%02d" : "%01d"), minute) + "%minute%" + (second - (minute * 60) > 0 ? " " + String.format((second - (minute * 60) > 9 ? "%02d" : "%01d"), second - (minute * 60)) + "%second%" : "")), new String[] {"%minute%", "%second%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_SECOND)});
+			} else return TextUtils.replaceToComponents(Component.text(String.format((hour > 9 ? "%02d" : "%01d"), hour) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")), new String[] {"%hour%", "%minute%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_HOUR), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE)});
+		}
+		return TextUtils.replaceToComponents(Component.text(String.format((days > 9 ? "%02d" : "%01d"), days) + "%days% " + String.format((hour - (days * 24) > 9 ? "%02d" : "%01d"), hour - (days * 24)) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")), new String[] {"%days%", "%hour%", "%minute%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_DAYS), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_HOUR), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE)});
 	}
 
 }

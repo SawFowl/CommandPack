@@ -1,12 +1,17 @@
 package sawfowl.commandpack.commands.settings;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandCompletion;
+import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.command.parameter.Parameter.Value;
 import org.spongepowered.api.command.parameter.Parameter.Value.Builder;
+import org.spongepowered.api.command.parameter.managed.ValueCompleter;
 import org.spongepowered.api.command.parameter.managed.standard.ResourceKeyedValueParameters;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
@@ -58,7 +63,12 @@ public class CommandParameters {
 	}
 
 	public static Value<String> createUser(String permission, boolean optional) {
-		return (optional ? USER.optional() : USER).requiredPermission(permission).build();
+		return (optional ? USER.optional() : USER).requiredPermission(permission).completer(new ValueCompleter() {
+			@Override
+			public List<CommandCompletion> complete(CommandContext context, String currentInput) {
+				return Sponge.server().userManager().streamAll().filter(p -> p.name().isPresent() && (currentInput.length() == 0 || currentInput.startsWith(p.name().get()))).map(p -> CommandCompletion.of(p.name().get())).collect(Collectors.toList());
+			}
+		}).build();
 	}
 
 	public static Value<Boolean> createBoolean(String key, boolean optional) {

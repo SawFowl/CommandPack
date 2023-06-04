@@ -55,6 +55,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_COMMANDSPY = "CommandSpy";
 	private static final Object COMMAND_PING = "Ping";
 	private static final Object COMMAND_INVSEE = "InventorySee";
+	private static final Object COMMAND_LIST = "List";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -271,6 +272,8 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_KIT_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_KIT, "SuccessStaff"};
 	public static final Object[] COMMANDS_AFK_ENABLE = {PATH_COMMANDS, COMMAND_AFK, "Enable"};
 	public static final Object[] COMMANDS_AFK_DISABLE = {PATH_COMMANDS, COMMAND_AFK, "Disable"};
+	public static final Object[] COMMANDS_AFK_TITLE = {PATH_COMMANDS, COMMAND_AFK, "Title"};
+	public static final Object[] COMMANDS_AFK_SUBTITLE = {PATH_COMMANDS, COMMAND_AFK, "Subtitle"};
 	public static final Object[] COMMANDS_AFK_ENABLE_IN_VANISH = {PATH_COMMANDS, COMMAND_AFK, "EnableInVanish"};
 	public static final Object[] COMMANDS_AFK_DISABLE_IN_VANISH = {PATH_COMMANDS, COMMAND_AFK, "DisableInVanish"};
 	public static final Object[] COMMANDS_AFK_KICK = {PATH_COMMANDS, COMMAND_AFK, "Kick"};
@@ -313,5 +316,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_PING_SUCCESS = {PATH_COMMANDS, COMMAND_PING, "Success"};
 	public static final Object[] COMMANDS_PING_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_PING, "SuccessStaff"};
 	public static final Object[] COMMANDS_INVSEE_TITLE = {PATH_COMMANDS, COMMAND_INVSEE, "Title"};
+	public static final Object[] COMMANDS_LIST_SUCCESS = {PATH_COMMANDS, COMMAND_LIST, "Success"};
+	public static final Object[] COMMANDS_LIST_VANISHED = {PATH_COMMANDS, COMMAND_LIST, "Vanished"};
 
 }
