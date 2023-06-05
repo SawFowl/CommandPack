@@ -37,6 +37,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	private Map<UUID, Long> lastActivity = new HashMap<>();
 	private Set<UUID> afk = new HashSet<>();
 	private Set<UUID> commandSpy = new HashSet<>();
+	private Map<UUID, Long> vanishTime = new HashMap<>();
 	public TempPlayerDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
@@ -194,6 +195,28 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 			return false;
 		}
 		return commandSpy.contains(player.uniqueId());
+	}
+
+	@Override
+	public void setVanishTime(ServerPlayer player) {
+		removeVanishEnabledTime(player);
+		vanishTime.put(player.uniqueId(), System.currentTimeMillis());
+	}
+
+	@Override
+	public boolean isVanished(ServerPlayer player) {
+		return vanishTime.containsKey(player.uniqueId()) && player.get(Keys.VANISH_STATE).isPresent() && player.get(Keys.VANISH_STATE).get().invisible();
+	}
+
+	@Override
+	public Optional<Long> getVanishEnabledTime(ServerPlayer player) {
+		return Optional.ofNullable(vanishTime.getOrDefault(player.uniqueId(), null));
+	}
+
+
+	@Override
+	public void removeVanishEnabledTime(ServerPlayer player) {
+		if(vanishTime.containsKey(player.uniqueId())) vanishTime.remove(player.uniqueId());
 	}
 
 	@Listener

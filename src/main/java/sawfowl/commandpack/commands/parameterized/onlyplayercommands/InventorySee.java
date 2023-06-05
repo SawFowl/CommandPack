@@ -49,7 +49,7 @@ public class InventorySee extends AbstractPlayerCommand {
 				delay(src, locale, consumer -> {
 					open(src, optUser.get());
 				});
-			} else exception(locale, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_FOUND);
+			} else exception(locale, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT);
 		} catch (InterruptedException | ExecutionException e) {
 			// ignore
 		}

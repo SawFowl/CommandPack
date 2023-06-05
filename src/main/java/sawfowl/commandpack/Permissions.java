@@ -53,6 +53,7 @@ public class Permissions {
 	public static final String AFK = "commandpack.commands.user.afk";
 	public static final String PING = "commandpack.commands.user.ping";
 	public static final String LIST = "commandpack.commands.user.list";
+	public static final String SEEN = "commandpack.commands.user.seen";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -102,6 +103,7 @@ public class Permissions {
 	public static final String COMMANDSPY = "commandpack.commands.staff.commandspy";
 	public static final String PING_STAFF = "commandpack.commands.staff.ping";
 	public static final String LIST_STAFF = "commandpack.commands.staff.list";
+	public static final String SEEN_STAFF = "commandpack.commands.staff.seen";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";

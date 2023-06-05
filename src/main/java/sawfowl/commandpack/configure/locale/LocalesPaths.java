@@ -56,6 +56,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_PING = "Ping";
 	private static final Object COMMAND_INVSEE = "InventorySee";
 	private static final Object COMMAND_LIST = "List";
+	private static final Object COMMAND_SEEN = "Seen";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -77,7 +78,7 @@ public class LocalesPaths {
 	public static final Object[] NAME_BACKPACK = {NAMES, "Backpack"};
 
 	public static final Object[] COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "PlayerIsOffline"};
-	public static final Object[] COMMANDS_EXCEPTION_USER_NOT_FOUND = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "UserNotPresent"};
+	public static final Object[] COMMANDS_EXCEPTION_USER_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "UserNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "PlayerNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_TARGET_SELF = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "TargetSelf"};
 	public static final Object[] COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "BooleanNotPresent"};
@@ -315,8 +316,31 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_COMMANDSPY_SPY = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Spy"};
 	public static final Object[] COMMANDS_PING_SUCCESS = {PATH_COMMANDS, COMMAND_PING, "Success"};
 	public static final Object[] COMMANDS_PING_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_PING, "SuccessStaff"};
-	public static final Object[] COMMANDS_INVSEE_TITLE = {PATH_COMMANDS, COMMAND_INVSEE, "Title"};
 	public static final Object[] COMMANDS_LIST_SUCCESS = {PATH_COMMANDS, COMMAND_LIST, "Success"};
 	public static final Object[] COMMANDS_LIST_VANISHED = {PATH_COMMANDS, COMMAND_LIST, "Vanished"};
+	public static final Object[] COMMANDS_INVSEE_TITLE = {PATH_COMMANDS, COMMAND_INVSEE, "Title"};
+	public static final Object[] COMMANDS_SEEN_TITLE = {PATH_COMMANDS, COMMAND_SEEN, "Title"};
+	public static final Object[] COMMANDS_SEEN_ONLINE = {PATH_COMMANDS, COMMAND_SEEN, "Online"};
+	public static final Object[] COMMANDS_SEEN_OFFLINE = {PATH_COMMANDS, COMMAND_SEEN, "Offline"};
+	public static final Object[] COMMANDS_SEEN_ONLINE_TIME = {PATH_COMMANDS, COMMAND_SEEN, "OnlineTime"};
+	public static final Object[] COMMANDS_SEEN_LAST_ONLINE = {PATH_COMMANDS, COMMAND_SEEN, "LastOnline"};
+	public static final Object[] COMMANDS_SEEN_DISPLAY_NAME = {PATH_COMMANDS, COMMAND_SEEN, "DisplayName"};
+	public static final Object[] COMMANDS_SEEN_UUID = {PATH_COMMANDS, COMMAND_SEEN, "UUID"};
+	public static final Object[] COMMANDS_SEEN_IP = {PATH_COMMANDS, COMMAND_SEEN, "IP"};
+	public static final Object[] COMMANDS_SEEN_FIRST_PLAYED = {PATH_COMMANDS, COMMAND_SEEN, "FirstPlayed"};
+	public static final Object[] COMMANDS_SEEN_WALKING_SPEED = {PATH_COMMANDS, COMMAND_SEEN, "WalkingSpeed"};
+	public static final Object[] COMMANDS_SEEN_FLYING_SPEED = {PATH_COMMANDS, COMMAND_SEEN, "FlyingSpeed"};
+	public static final Object[] COMMANDS_SEEN_CURRENT_LOCATION = {PATH_COMMANDS, COMMAND_SEEN, "CurrentLocation"};
+	public static final Object[] COMMANDS_SEEN_LAST_LOCATION = {PATH_COMMANDS, COMMAND_SEEN, "LastLocation"};
+	public static final Object[] COMMANDS_SEEN_CAN_FLY = {PATH_COMMANDS, COMMAND_SEEN, "CanFly"};
+	public static final Object[] COMMANDS_SEEN_FLYING = {PATH_COMMANDS, COMMAND_SEEN, "IsFlying"};
+	public static final Object[] COMMANDS_SEEN_GAMEMODE = {PATH_COMMANDS, COMMAND_SEEN, "Gamemode"};
+	public static final Object[] COMMANDS_SEEN_VANISHED = {PATH_COMMANDS, COMMAND_SEEN, "Vanished"};
+	public static final Object[] COMMANDS_SEEN_GODMODE = {PATH_COMMANDS, COMMAND_SEEN, "Godmode"};
+	public static final Object[] COMMANDS_SEEN_AFK = {PATH_COMMANDS, COMMAND_SEEN, "AFK"};
+	public static final Object[] COMMANDS_SEEN_BAN = {PATH_COMMANDS, COMMAND_SEEN, "Ban"};
+	public static final Object[] COMMANDS_SEEN_MUTE = {PATH_COMMANDS, COMMAND_SEEN, "Mute"};
+	public static final Object[] COMMANDS_SEEN_YES = {PATH_COMMANDS, COMMAND_SEEN, "Yes"};
+	public static final Object[] COMMANDS_SEEN_NO = {PATH_COMMANDS, COMMAND_SEEN, "No"};
 
 }

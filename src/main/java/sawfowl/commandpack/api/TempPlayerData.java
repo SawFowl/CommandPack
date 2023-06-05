@@ -155,4 +155,25 @@ public interface TempPlayerData {
 	 */
 	boolean isSpyCommand(ServerPlayer player);
 
+	/**
+	 * Specify the current time as the activation time of invisibility in the player.
+	 */
+	void setVanishTime(ServerPlayer player);
+
+	/**
+	 * If true, the player is invisible and will be shown as offline in the `/seen` command.<br>
+	 * In this case, the time of the last activity will be equal to the activation time of invisibility.
+	 */
+	boolean isVanished(ServerPlayer player);
+
+	/**
+	 * The invisibility activation time with the `/vanish` command.
+	 */
+	Optional<Long> getVanishEnabledTime(ServerPlayer player);
+
+	/**
+	 * Removing the invisibility activation time.
+	 */
+	void removeVanishEnabledTime(ServerPlayer player);
+
 }

@@ -200,7 +200,7 @@ public interface PluginCommand {
 		if(price.getMoney() > 0) {
 			Currency currency = CommandPack.getInstance().getEconomy().checkCurrency(price.getCurrency());
 			BigDecimal money = createDecimal(price.getMoney());
-			if(!CommandPack.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(locale, new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command())}, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY);
+			if(!CommandPack.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(TextUtils.replaceToComponents(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY), new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command())}));
 			CommandPack.getInstance().getEconomy().removeFromPlayerBalance(player, currency, money);
 		}
 	}

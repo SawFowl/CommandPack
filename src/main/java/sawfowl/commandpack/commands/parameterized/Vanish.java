@@ -73,12 +73,14 @@ public class Vanish extends AbstractParameterizedCommand {
 				target.sendMessage(getText(target, LocalesPaths.COMMANDS_VANISH_UNVASHISHED));
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_VANISH_UNVASHISHED_STAFF), Placeholders.PLAYER, target.name()));
 			} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_VANISH_UNVASHISHED));
+			plugin.getPlayersData().getTempData().removeVanishEnabledTime(target);
 		} else {
 			target.offer(Keys.VANISH_STATE, VanishState.vanished().ignoreCollisions(isStaff).createParticles(false).createSounds(!isStaff));
 			if(!equals) {
 				target.sendMessage(getText(target, LocalesPaths.COMMANDS_VANISH_VASHISHED));
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_VANISH_VASHISHED_STAFF), Placeholders.PLAYER, target.name()));
 			} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_VANISH_VASHISHED));
+			plugin.getPlayersData().getTempData().setVanishTime(target);
 		}
 	}
 
