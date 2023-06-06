@@ -59,7 +59,12 @@ public class CommandParameters {
 	}
 
 	public static Value<String> createUser(boolean optional) {
-		return (optional ? USER.optional() : USER).build();
+		return (optional ? USER.optional() : USER).completer(new ValueCompleter() {
+			@Override
+			public List<CommandCompletion> complete(CommandContext context, String currentInput) {
+				return Sponge.server().userManager().streamAll().filter(p -> p.name().isPresent() && (currentInput.length() == 0 || currentInput.startsWith(p.name().get()))).map(p -> CommandCompletion.of(p.name().get())).collect(Collectors.toList());
+			}
+		}).build();
 	}
 
 	public static Value<String> createUser(String permission, boolean optional) {

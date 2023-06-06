@@ -35,6 +35,7 @@ public class PlayerConnectionListener {
 	@Listener
 	public void onConnect(ServerSideConnectionEvent.Join event) {
 		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
+		((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get()).setLastJoin();
 		if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterSpawn() && plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().isPresent()) {
 			event.player().setLocation(plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().get());
 			plugin.getMainConfig().getSpawnData().get().getLocationData().getPosition().getRotation().ifPresent(rotation -> {
@@ -46,6 +47,12 @@ public class PlayerConnectionListener {
 		plugin.getKitService().getKits().stream().filter(kit -> kit.isFirstTime() || kit.isGiveOnJoin()).forEach(kit -> {
 			giveKit(event.player(), kit);
 		});
+	}
+
+	@Listener
+	public void onDisconnect(ServerSideConnectionEvent.Disconnect event) {
+		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
+		((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get()).setLastExit();
 	}
 
 	private void giveKit(ServerPlayer player, Kit kit) {

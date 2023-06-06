@@ -137,6 +137,10 @@ public interface PlayerData {
 	 */
 	void sendMessage(String string);
 
+	public long getLastJoinTime();
+
+	public long getLastExitTime();
+
 	GivedKit getKitGivedData(Kit kit);
 
 	boolean isGivedKit(Kit kit);

@@ -325,7 +325,7 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is currently &2online"), null, LocalesPaths.COMMANDS_SEEN_ONLINE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is currently &4offline"), null, LocalesPaths.COMMANDS_SEEN_OFFLINE) || save;
 		save = check(locale, toText("&aOnline for&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_ONLINE_TIME) || save;
-		save = check(locale, toText("&aLast online&f: &e" + Placeholders.VALUE + "&a назад"), null, LocalesPaths.COMMANDS_SEEN_LAST_ONLINE) || save;
+		save = check(locale, toText("&aLast online&f: &e" + Placeholders.VALUE + "&a ago"), null, LocalesPaths.COMMANDS_SEEN_LAST_ONLINE) || save;
 		save = check(locale, toText("&aDisplay name&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_DISPLAY_NAME) || save;
 		save = check(locale, toText("&aUUID&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_UUID) || save;
 		save = check(locale, toText("&aIP&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_IP) || save;
@@ -333,17 +333,17 @@ public class Locales {
 		save = check(locale, toText("&aWalking speed&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_WALKING_SPEED) || save;
 		save = check(locale, toText("&aFlying speed&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_FLYING_SPEED) || save;
 		save = check(locale, toText("&aCurrent location&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_CURRENT_LOCATION) || save;
-		save = check(locale, toText("&aLast location&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_LAST_LOCATION) || save;
 		save = check(locale, toText("&aCan fly&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_CAN_FLY) || save;
 		save = check(locale, toText("&aIs flying&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_FLYING) || save;
 		save = check(locale, toText("&aGamemode&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_GAMEMODE) || save;
 		save = check(locale, toText("&aVanished&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_VANISHED) || save;
-		save = check(locale, toText("&aНеуязвимость&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_GODMODE) || save;
+		save = check(locale, toText("&aInvulnerable&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_GODMODE) || save;
 		save = check(locale, toText("&aAFK&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_AFK) || save;
 		save = check(locale, toText("&aBan&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_BAN) || save;
-		save = check(locale, toText("&aMute&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_MUTE) || save;
+		//save = check(locale, toText("&aMute&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_MUTE) || save;
 		save = check(locale, toText("&eYes"), null, LocalesPaths.COMMANDS_SEEN_YES) || save;
 		save = check(locale, toText("&eNo"), null, LocalesPaths.COMMANDS_SEEN_NO) || save;
+		save = check(locale, toText("&3="), null, LocalesPaths.COMMANDS_SEEN_PADDING) || save;
 
 		if(save) save(locale);
 	}
@@ -617,14 +617,13 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a сейчас &4оффлайн"), null, LocalesPaths.COMMANDS_SEEN_OFFLINE) || save;
 		save = check(locale, toText("&aИграет уже&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_ONLINE_TIME) || save;
 		save = check(locale, toText("&aБыл(а) в сети&f: &e" + Placeholders.VALUE + "&a назад"), null, LocalesPaths.COMMANDS_SEEN_LAST_ONLINE) || save;
-		save = check(locale, toText("&aОтображаемое имя&f: &e"), null, LocalesPaths.COMMANDS_SEEN_DISPLAY_NAME) || save;
+		save = check(locale, toText("&aОтображаемое имя&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_DISPLAY_NAME) || save;
 		save = check(locale, toText("&aUUID&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_UUID) || save;
 		save = check(locale, toText("&aIP&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_IP) || save;
 		save = check(locale, toText("&aПервый вход&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_FIRST_PLAYED) || save;
 		save = check(locale, toText("&aСкорость хотьбы&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_WALKING_SPEED) || save;
 		save = check(locale, toText("&aСкорость полета&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_FLYING_SPEED) || save;
 		save = check(locale, toText("&aТекущая локация&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_CURRENT_LOCATION) || save;
-		save = check(locale, toText("&aПоследняя локация&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_LAST_LOCATION) || save;
 		save = check(locale, toText("&aДоступность полета&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_CAN_FLY) || save;
 		save = check(locale, toText("&aПолет&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_FLYING) || save;
 		save = check(locale, toText("&aРежим игры&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_GAMEMODE) || save;
@@ -632,9 +631,10 @@ public class Locales {
 		save = check(locale, toText("&aНеуязвимость&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_GODMODE) || save;
 		save = check(locale, toText("&aАФК&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_AFK) || save;
 		save = check(locale, toText("&aБан&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_BAN) || save;
-		save = check(locale, toText("&aМут&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_MUTE) || save;
+		//save = check(locale, toText("&aМут&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_MUTE) || save;
 		save = check(locale, toText("&eДа"), null, LocalesPaths.COMMANDS_SEEN_YES) || save;
 		save = check(locale, toText("&eНет"), null, LocalesPaths.COMMANDS_SEEN_NO) || save;
+		save = check(locale, toText("&3="), null, LocalesPaths.COMMANDS_SEEN_PADDING) || save;
 
 		if(save) save(locale);
 	}

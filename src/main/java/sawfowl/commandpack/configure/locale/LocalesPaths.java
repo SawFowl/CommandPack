@@ -331,7 +331,6 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_SEEN_WALKING_SPEED = {PATH_COMMANDS, COMMAND_SEEN, "WalkingSpeed"};
 	public static final Object[] COMMANDS_SEEN_FLYING_SPEED = {PATH_COMMANDS, COMMAND_SEEN, "FlyingSpeed"};
 	public static final Object[] COMMANDS_SEEN_CURRENT_LOCATION = {PATH_COMMANDS, COMMAND_SEEN, "CurrentLocation"};
-	public static final Object[] COMMANDS_SEEN_LAST_LOCATION = {PATH_COMMANDS, COMMAND_SEEN, "LastLocation"};
 	public static final Object[] COMMANDS_SEEN_CAN_FLY = {PATH_COMMANDS, COMMAND_SEEN, "CanFly"};
 	public static final Object[] COMMANDS_SEEN_FLYING = {PATH_COMMANDS, COMMAND_SEEN, "IsFlying"};
 	public static final Object[] COMMANDS_SEEN_GAMEMODE = {PATH_COMMANDS, COMMAND_SEEN, "Gamemode"};
@@ -339,8 +338,9 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_SEEN_GODMODE = {PATH_COMMANDS, COMMAND_SEEN, "Godmode"};
 	public static final Object[] COMMANDS_SEEN_AFK = {PATH_COMMANDS, COMMAND_SEEN, "AFK"};
 	public static final Object[] COMMANDS_SEEN_BAN = {PATH_COMMANDS, COMMAND_SEEN, "Ban"};
-	public static final Object[] COMMANDS_SEEN_MUTE = {PATH_COMMANDS, COMMAND_SEEN, "Mute"};
+	//public static final Object[] COMMANDS_SEEN_MUTE = {PATH_COMMANDS, COMMAND_SEEN, "Mute"};
 	public static final Object[] COMMANDS_SEEN_YES = {PATH_COMMANDS, COMMAND_SEEN, "Yes"};
 	public static final Object[] COMMANDS_SEEN_NO = {PATH_COMMANDS, COMMAND_SEEN, "No"};
+	public static final Object[] COMMANDS_SEEN_PADDING = {PATH_COMMANDS, COMMAND_SEEN, "Padding"};
 
 }

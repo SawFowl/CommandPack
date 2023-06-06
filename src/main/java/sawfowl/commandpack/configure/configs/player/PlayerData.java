@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -74,6 +75,10 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	private BackpackData backpackData = new BackpackData();
 	@Setting("GivedKits")
 	private Map<String, GivedKitData> givedKits = new HashMap<>();
+	@Setting("LastJoin")
+	private long lastJoin;
+	@Setting("LastExit")
+	private long lastExit;
 
 	@Override
 	public String getName() {
@@ -266,6 +271,26 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 		try(StackFrame frame = Sponge.server().causeStackManager().pushCauseFrame()) {
 			return mapping.registrar().canExecute(createPlayerCause(getPlayer().get(), command), mapping) ? Sponge.server().commandManager().process(getPlayer().get(), command) : CommandResult.error(CommandPack.getInstance().getLocales().getText(sourceLocale, LocalesPaths.COMMANDS_SUDO_EXECUTE_NOT_ALLOWED));
 		}
+	}
+
+	@Override
+	public long getLastJoinTime() {
+		return lastJoin;
+	}
+
+	public void setLastJoin() {
+		lastJoin = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+		save();
+	}
+
+	@Override
+	public long getLastExitTime() {
+		return lastExit;
+	}
+
+	public void setLastExit() {
+		lastExit = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+		save();
 	}
 
 	private CommandCause createPlayerCause(ServerPlayer player, String command) {
