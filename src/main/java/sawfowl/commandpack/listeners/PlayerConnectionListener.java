@@ -216,12 +216,12 @@ public class PlayerConnectionListener {
 	private void runCommands(ServerPlayer player) {
 		if(player.hasPlayedBefore()) {
 			if(plugin.getConfigManager().getJoinCommands().isEnableRegularly() && !plugin.getConfigManager().getJoinCommands().getRegularly().isEmpty()) {
-				plugin.getConfigManager().getJoinCommands().getRegularly().forEach((k, v) -> {
-					if(k.equals("console")) {
-						Sponge.server().commandManager().complete(v.replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
-					} else if(k.equals("player")) {
+				plugin.getConfigManager().getJoinCommands().getRegularly().forEach(c -> {
+					if(c.startsWith("console:")) {
+						Sponge.server().commandManager().complete(c.split("console:")[1].replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
+					} else if(c.startsWith("player:")) {
 						try {
-							plugin.getPlayersData().getPlayerData(player.uniqueId()).get().runCommand(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), v.replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
+							plugin.getPlayersData().getPlayerData(player.uniqueId()).get().runCommand(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), c.split("player:")[1].replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
 						} catch (CommandException e) {
 							Sponge.systemSubject().sendMessage(e.componentMessage());
 						}
@@ -229,12 +229,12 @@ public class PlayerConnectionListener {
 				});
 			}
 		} else if(plugin.getConfigManager().getJoinCommands().isEnableFirstJoin() && !plugin.getConfigManager().getJoinCommands().getFirstJoin().isEmpty()) {
-			plugin.getConfigManager().getJoinCommands().getFirstJoin().forEach((k, v) -> {
-				if(k.equals("console")) {
-					Sponge.server().commandManager().complete(v.replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
-				} else if(k.equals("player")) {
+			plugin.getConfigManager().getJoinCommands().getFirstJoin().forEach(c -> {
+				if(c.startsWith("console:")) {
+					Sponge.server().commandManager().complete(c.split("console:")[1].replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
+				} else if(c.startsWith("player:")) {
 					try {
-						plugin.getPlayersData().getPlayerData(player.uniqueId()).get().runCommand(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), v.replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
+						plugin.getPlayersData().getPlayerData(player.uniqueId()).get().runCommand(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), c.split("player:")[1].replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
 					} catch (CommandException e) {
 						Sponge.systemSubject().sendMessage(e.componentMessage());
 					}
