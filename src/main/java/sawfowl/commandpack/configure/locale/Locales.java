@@ -1,5 +1,7 @@
 package sawfowl.commandpack.configure.locale;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,6 +43,10 @@ public class Locales {
 		return getAbstractLocaleUtil(locale).getComponent(json, path);
 	}
 
+	public List<Component> getListTexts(Locale locale, Object... path) {
+		return getAbstractLocaleUtil(locale).getListComponents(json, path);
+	}
+
 	public String getString(Locale locale, Object... path) {
 		return TextUtils.serializeLegacy(getText(locale, path));
 	}
@@ -72,6 +78,15 @@ public class Locales {
 		save = check(locale, toText("&7[&cRemove&7] "), null, LocalesPaths.REMOVE) || save;
 		save = check(locale, toText("&7[&aTeleport&7] "), null, LocalesPaths.TELEPORT) || save;
 		save = check(locale, toText("&7[&eTeleport&7] "), null, LocalesPaths.TELEPORTCLICKABLE) || save;
+		save = checkList(locale, Arrays.asList(
+				toText("&b================================"),
+				toText("&dGreetings &e" + Placeholders.PLAYER + "&d. Welcome to the server."),
+				toText("&dWe hope you like it here."),
+				toText("&b================================")
+				), null, LocalesPaths.MOTD) || save;
+		save = check(locale, toText("&7[&a+&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.JOIN_MESSAGE) || save;
+		save = check(locale, toText("&7[&2+&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.FIRST_JOIN_MESSAGE) || save;
+		save = check(locale, toText("&7[&c-&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.LEAVE_MESSAGE) || save;
 
 		save = check(locale, toText("Server"), null, LocalesPaths.NAME_SYSTEM) || save;
 		save = check(locale, toText("PluginCommand block"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
@@ -79,6 +94,8 @@ public class Locales {
 		save = check(locale, toText("Unknown"), null, LocalesPaths.NAME_UNKNOWN) || save;
 		save = check(locale, toText("&6&lBackpack"), null, LocalesPaths.NAME_BACKPACK) || save;
 
+		save = check(locale, toText("&cPlayer " + Placeholders.PLAYER + "&c is offline."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE) || save;
+		save = check(locale, toText("&cYou need to specify the nickname of the player who is now online or was previously on the server.."), null, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou need to specify the nickname of the player online."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou can't point to yourself."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
 		save = check(locale, toText("&cYou must specify a name."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
@@ -273,6 +290,8 @@ public class Locales {
 		save = check(locale, toText("&aYou gave a kit &e" + Placeholders.VALUE + "&a to the player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_KIT_SUCCESS_STAFF) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fis now afk."), null, LocalesPaths.COMMANDS_AFK_ENABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fis no longer afk."), null, LocalesPaths.COMMANDS_AFK_DISABLE) || save;
+		save = check(locale, toText("&4&lAFK"), null, LocalesPaths.COMMANDS_AFK_TITLE) || save;
+		save = check(locale, toText("&eYou will be kicked in " + Placeholders.VALUE + "&e."), null, LocalesPaths.COMMANDS_AFK_SUBTITLE) || save;
 		save = check(locale, toText("&eYou have gone AFK, but you are currently vanished, so this has not been broadcasted."), null, LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eYou have returned from AFK, but you are currently vanished, so this has not been broadcasted."), null, LocalesPaths.COMMANDS_AFK_DISABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eYou have been kicked for being AFK for too long."), null, LocalesPaths.COMMANDS_AFK_KICK) || save;
@@ -312,6 +331,40 @@ public class Locales {
 		save = check(locale, toText("&aNow you will see what commands other players are using."), null, LocalesPaths.COMMANDS_COMMANDSPY_ENABLE) || save;
 		save = check(locale, toText("&aYou will no longer see what commands other players are using."), null, LocalesPaths.COMMANDS_COMMANDSPY_DISABLE) || save;
 		save = check(locale, toText("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 uses the command&f: &d" + Placeholders.COMMAND), null, LocalesPaths.COMMANDS_COMMANDSPY_SPY) || save;
+		save = check(locale, toText("&aPing&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS) || save;
+		save = check(locale, toText("&aPing of player &e" + Placeholders.PLAYER + "&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF) || save;
+		save = check(locale, toText("&2&lInventory&f&l: &e&l" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_INVSEE_TITLE) || save;
+		save = check(locale, toText("&aOnline(" + Placeholders.VALUE + ")&f: &e"), null, LocalesPaths.COMMANDS_LIST_SUCCESS) || save;
+		save = check(locale, toText("&7" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_LIST_VANISHED) || save;
+		save = check(locale, toText("&3Player Info&f: " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_SEEN_TITLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is currently &2online"), null, LocalesPaths.COMMANDS_SEEN_ONLINE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is currently &4offline"), null, LocalesPaths.COMMANDS_SEEN_OFFLINE) || save;
+		save = check(locale, toText("&aOnline for&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_ONLINE_TIME) || save;
+		save = check(locale, toText("&aLast online&f: &e" + Placeholders.VALUE + "&a ago"), null, LocalesPaths.COMMANDS_SEEN_LAST_ONLINE) || save;
+		save = check(locale, toText("&aDisplay name&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_DISPLAY_NAME) || save;
+		save = check(locale, toText("&aUUID&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_UUID) || save;
+		save = check(locale, toText("&aIP&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_IP) || save;
+		save = check(locale, toText("&aFirst played&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_FIRST_PLAYED) || save;
+		save = check(locale, toText("&aWalking speed&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_WALKING_SPEED) || save;
+		save = check(locale, toText("&aFlying speed&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_FLYING_SPEED) || save;
+		save = check(locale, toText("&aCurrent location&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_CURRENT_LOCATION) || save;
+		save = check(locale, toText("&aCan fly&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_CAN_FLY) || save;
+		save = check(locale, toText("&aIs flying&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_FLYING) || save;
+		save = check(locale, toText("&aGamemode&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_GAMEMODE) || save;
+		save = check(locale, toText("&aVanished&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_VANISHED) || save;
+		save = check(locale, toText("&aInvulnerable&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_GODMODE) || save;
+		save = check(locale, toText("&aAFK&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_AFK) || save;
+		save = check(locale, toText("&aBan&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_BAN) || save;
+		//save = check(locale, toText("&aMute&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_MUTE) || save;
+		save = check(locale, toText("&eYes"), null, LocalesPaths.COMMANDS_SEEN_YES) || save;
+		save = check(locale, toText("&eNo"), null, LocalesPaths.COMMANDS_SEEN_NO) || save;
+		save = check(locale, toText("&3="), null, LocalesPaths.COMMANDS_SEEN_PADDING) || save;
+		save = check(locale, toText("&3Help"), null, LocalesPaths.COMMANDS_HELP_TITLE) || save;
+		save = checkList(locale, Arrays.asList(
+				toText("&eThe commands will be available if you have permission for them."),
+				toText("&2/spawn &f- &eteleport to a spawnpoint"),
+				toText("&2/home &f- &eteleporting to your home")
+				), null, LocalesPaths.COMMANDS_HELP_LIST) || save;
 
 		if(save) save(locale);
 	}
@@ -331,6 +384,15 @@ public class Locales {
 		save = check(locale, toText("&7[&cУдалить&7] "), null, LocalesPaths.REMOVE) || save;
 		save = check(locale, toText("&7[&aТелепорт&7] "), null, LocalesPaths.TELEPORT) || save;
 		save = check(locale, toText("&7[&eТелепорт&7] "), null, LocalesPaths.TELEPORTCLICKABLE) || save;
+		save = checkList(locale, Arrays.asList(
+				toText("&b================================"),
+				toText("&dПриветствуем &e" + Placeholders.PLAYER + "&d. Добро пожаловать на сервер."),
+				toText("&dНадеемся тебе у нас понравится."),
+				toText("&b================================")
+				), null, LocalesPaths.MOTD) || save;
+		save = check(locale, toText("&7[&a+&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.JOIN_MESSAGE) || save;
+		save = check(locale, toText("&7[&2+&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.FIRST_JOIN_MESSAGE) || save;
+		save = check(locale, toText("&7[&c-&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.LEAVE_MESSAGE) || save;
 
 		save = check(locale, toText("Сервер"), null, LocalesPaths.NAME_SYSTEM) || save;
 		save = check(locale, toText("Командный блок"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
@@ -338,6 +400,8 @@ public class Locales {
 		save = check(locale, toText("Неизвестный"), null, LocalesPaths.NAME_UNKNOWN) || save;
 		save = check(locale, toText("&6&lРюкзак"), null, LocalesPaths.NAME_BACKPACK) || save;
 
+		save = check(locale, toText("&cИгрок " + Placeholders.PLAYER + "&c оффлайн."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE) || save;
+		save = check(locale, toText("&cНужно указать ник игрока, который сейчас онлайн или ранее был на сервере."), null, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать ник игрока онлайн."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНельзя указывать на себя."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
 		save = check(locale, toText("&cНужно указать имя."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
@@ -532,6 +596,8 @@ public class Locales {
 		save = check(locale, toText("&aВы выдали набор &e" + Placeholders.VALUE + "&a игроку &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_KIT_SUCCESS_STAFF) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fтеперь афк."), null, LocalesPaths.COMMANDS_AFK_ENABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &fбольше не афк."), null, LocalesPaths.COMMANDS_AFK_DISABLE) || save;
+		save = check(locale, toText("&4&lАФК"), null, LocalesPaths.COMMANDS_AFK_TITLE) || save;
+		save = check(locale, toText("&eВы будете кикнуты через " + Placeholders.VALUE + "&e."), null, LocalesPaths.COMMANDS_AFK_SUBTITLE) || save;
 		save = check(locale, toText("&eВы перешли в АФК, но в настоящее время вы невидимы, так что это не транслировалось."), null, LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eВы перешли из AFK, но в настоящее время вы невидимы, поэтому это не было передано."), null, LocalesPaths.COMMANDS_AFK_DISABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eВы кикнуты за то, что слишком долго были АФК."), null, LocalesPaths.COMMANDS_AFK_KICK) || save;
@@ -571,6 +637,40 @@ public class Locales {
 		save = check(locale, toText("&aТеперь вы будете видеть какие команды используют другие игроки."), null, LocalesPaths.COMMANDS_COMMANDSPY_ENABLE) || save;
 		save = check(locale, toText("&aВы больше не будете видеть какие команды используют другие игроки."), null, LocalesPaths.COMMANDS_COMMANDSPY_DISABLE) || save;
 		save = check(locale, toText("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 использует команду&f: &d" + Placeholders.COMMAND), null, LocalesPaths.COMMANDS_COMMANDSPY_SPY) || save;
+		save = check(locale, toText("&aПинг&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS) || save;
+		save = check(locale, toText("&aПинг игрока &e" + Placeholders.PLAYER + "&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF) || save;
+		save = check(locale, toText("&2&lИнвентарь&f&l: &e&l" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_INVSEE_TITLE) || save;
+		save = check(locale, toText("&aОнлайн(" + Placeholders.VALUE + ")&f: &e"), null, LocalesPaths.COMMANDS_LIST_SUCCESS) || save;
+		save = check(locale, toText("&7" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_LIST_VANISHED) || save;
+		save = check(locale, toText("&3О игроке&f: " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_SEEN_TITLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a сейчас &2онлайн"), null, LocalesPaths.COMMANDS_SEEN_ONLINE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a сейчас &4оффлайн"), null, LocalesPaths.COMMANDS_SEEN_OFFLINE) || save;
+		save = check(locale, toText("&aИграет уже&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_ONLINE_TIME) || save;
+		save = check(locale, toText("&aБыл(а) в сети&f: &e" + Placeholders.VALUE + "&a назад"), null, LocalesPaths.COMMANDS_SEEN_LAST_ONLINE) || save;
+		save = check(locale, toText("&aОтображаемое имя&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_DISPLAY_NAME) || save;
+		save = check(locale, toText("&aUUID&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_UUID) || save;
+		save = check(locale, toText("&aIP&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_IP) || save;
+		save = check(locale, toText("&aПервый вход&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_FIRST_PLAYED) || save;
+		save = check(locale, toText("&aСкорость хотьбы&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_WALKING_SPEED) || save;
+		save = check(locale, toText("&aСкорость полета&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_FLYING_SPEED) || save;
+		save = check(locale, toText("&aТекущая локация&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_CURRENT_LOCATION) || save;
+		save = check(locale, toText("&aДоступность полета&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_CAN_FLY) || save;
+		save = check(locale, toText("&aПолет&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_FLYING) || save;
+		save = check(locale, toText("&aРежим игры&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_GAMEMODE) || save;
+		save = check(locale, toText("&aНевидимость&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_VANISHED) || save;
+		save = check(locale, toText("&aНеуязвимость&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_GODMODE) || save;
+		save = check(locale, toText("&aАФК&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_AFK) || save;
+		save = check(locale, toText("&aБан&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_BAN) || save;
+		//save = check(locale, toText("&aМут&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_MUTE) || save;
+		save = check(locale, toText("&eДа"), null, LocalesPaths.COMMANDS_SEEN_YES) || save;
+		save = check(locale, toText("&eНет"), null, LocalesPaths.COMMANDS_SEEN_NO) || save;
+		save = check(locale, toText("&3="), null, LocalesPaths.COMMANDS_SEEN_PADDING) || save;
+		save = check(locale, toText("&3Справка"), null, LocalesPaths.COMMANDS_HELP_TITLE) || save;
+		save = checkList(locale, Arrays.asList(
+				toText("&eКоманды будут доступны при наличии разрешения на них."),
+				toText("&2/spawn &f- &eпереместиться на спавн"),
+				toText("&2/home &f- &eтелепортация домой")
+				), null, LocalesPaths.COMMANDS_HELP_LIST) || save;
 
 		if(save) save(locale);
 	}
@@ -597,6 +697,10 @@ public class Locales {
 
 	private boolean check(Locale locale, String value, String comment, Object... path) {
 		return getAbstractLocaleUtil(locale).checkString(value, comment, path);
+	}
+
+	private boolean checkList(Locale locale, List<Component> value, String comment, Object... path) {
+		return getAbstractLocaleUtil(locale).checkListComponents(json, value, comment, path);
 	}
 
 	private void save(Locale locale) {

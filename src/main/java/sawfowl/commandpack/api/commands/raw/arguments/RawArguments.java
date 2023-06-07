@@ -54,6 +54,21 @@ public class RawArguments {
 		}, optional, optionalForConsole, cursor, localesPath);
 	}
 
+	public static RawArgument<String> createRemainingJoinedStringsArgument(boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, Object[] localesPath) {
+		return RawArgument.of(String.class, new RawCompleterSupplier<Stream<String>>() {
+			@Override
+			public Stream<String> get(String[] args) {
+				return EMPTY.stream();
+			}
+		}, new RawResultSupplier<String>() {
+
+			@Override
+			public Optional<String> get(String[] args) {
+				return args.length >= cursor + 1 ?  Optional.ofNullable(String.join(" ", Arrays.copyOfRange(args, cursor, args.length))) : Optional.ofNullable(def);
+			}
+		}, optional, optionalForConsole, cursor, localesPath);
+	}
+
 	public static RawArgument<Integer> createIntegerArgument(@NotNull Collection<Integer> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable Integer def, Object[] localesPath) {
 		return RawArgument.of(Integer.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override

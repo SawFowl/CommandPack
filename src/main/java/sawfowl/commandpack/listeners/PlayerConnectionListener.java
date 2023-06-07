@@ -1,9 +1,12 @@
 package sawfowl.commandpack.listeners;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.exception.CommandException;
+import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.event.EventContext;
@@ -12,9 +15,13 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ServerSideConnectionEvent;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.permission.Subject;
+import org.spongepowered.api.util.Ticks;
 
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.kits.GiveRule;
@@ -24,6 +31,8 @@ import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.player.GivedKitData;
 import sawfowl.commandpack.configure.configs.player.PlayerData;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.TextUtils;
 
 public class PlayerConnectionListener {
 
@@ -35,17 +44,35 @@ public class PlayerConnectionListener {
 	@Listener
 	public void onConnect(ServerSideConnectionEvent.Join event) {
 		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
+		((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get()).setLastJoin();
+		sendMotd(event.player());
+		if(!event.isMessageCancelled() && plugin.getMainConfig().isChangeConnectionMessages()) {
+			event.setMessageCancelled(true);
+			sendJoinMessage(event.player());
+		}
 		if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterSpawn() && plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().isPresent()) {
 			event.player().setLocation(plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().get());
 			plugin.getMainConfig().getSpawnData().get().getLocationData().getPosition().getRotation().ifPresent(rotation -> {
 				event.player().setRotation(rotation.asVector3d());
 			});
 		}
+		Sponge.server().scheduler().submit(Task.builder().delay(Ticks.of(10)).plugin(plugin.getPluginContainer()).execute(() -> {
+			runCommands(event.player());
+		}).build());
 		plugin.getPlayersData().getTempData().updateLastActivity(event.player());
 		if(plugin.getKitService().getKits().isEmpty()) return;
 		plugin.getKitService().getKits().stream().filter(kit -> kit.isFirstTime() || kit.isGiveOnJoin()).forEach(kit -> {
 			giveKit(event.player(), kit);
 		});
+	}
+
+	@Listener
+	public void onDisconnect(ServerSideConnectionEvent.Disconnect event) {
+		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
+		((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get()).setLastExit();
+		if(plugin.getMainConfig().isChangeConnectionMessages()) {
+			sendLeaveMessage(event.player());
+		}
 	}
 
 	private void giveKit(ServerPlayer player, Kit kit) {
@@ -191,6 +218,87 @@ public class PlayerConnectionListener {
 				return nextGiveTime;
 			}
 		};
+	}
+
+	private void runCommands(ServerPlayer player) {
+		if(player.hasPlayedBefore()) {
+			if(plugin.getConfigManager().getJoinCommands().isEnableRegularly() && !plugin.getConfigManager().getJoinCommands().getRegularly().isEmpty()) {
+				plugin.getConfigManager().getJoinCommands().getRegularly().forEach(c -> {
+					if(c.startsWith("console:")) {
+						Sponge.server().commandManager().complete(c.split("console:")[1].replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
+					} else if(c.startsWith("player:")) {
+						try {
+							plugin.getPlayersData().getPlayerData(player.uniqueId()).get().runCommand(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), c.split("player:")[1].replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
+						} catch (CommandException e) {
+							Sponge.systemSubject().sendMessage(e.componentMessage());
+						}
+					}
+				});
+			}
+		} else if(plugin.getConfigManager().getJoinCommands().isEnableFirstJoin() && !plugin.getConfigManager().getJoinCommands().getFirstJoin().isEmpty()) {
+			plugin.getConfigManager().getJoinCommands().getFirstJoin().forEach(c -> {
+				if(c.startsWith("console:")) {
+					Sponge.server().commandManager().complete(c.split("console:")[1].replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
+				} else if(c.startsWith("player:")) {
+					try {
+						plugin.getPlayersData().getPlayerData(player.uniqueId()).get().runCommand(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), c.split("player:")[1].replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
+					} catch (CommandException e) {
+						Sponge.systemSubject().sendMessage(e.componentMessage());
+					}
+				}
+			});
+		}
+	}
+
+	private void sendMotd(ServerPlayer player) {
+		if(!plugin.getMainConfig().isEnableMotd()) return;
+		List<Component> motd = plugin.getLocales().getListTexts(player.locale(), LocalesPaths.MOTD);
+		if(!motd.isEmpty()) player.sendMessage(Component.join(JoinConfiguration.newlines(), motd.stream().map(c -> TextUtils.replace(c, Placeholders.PLAYER, player.get(Keys.DISPLAY_NAME).orElse(Component.text(player.name())))).collect(Collectors.toList())));
+	}
+
+	private void sendJoinMessage(ServerPlayer player) {
+		Component prefix = getPrefix(player);
+		Component name = player.get(Keys.DISPLAY_NAME).orElse(text(player.name()));
+		Component suffix = getSuffix(player);
+		boolean before = player.hasPlayedBefore();
+		Sponge.server().onlinePlayers().forEach(p -> {
+			p.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(p.locale(), before ? LocalesPaths.JOIN_MESSAGE : LocalesPaths.FIRST_JOIN_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
+		});
+		Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.JOIN_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
+	}
+
+	private void sendLeaveMessage(ServerPlayer player) {
+		Component prefix = getPrefix(player);
+		Component name = player.get(Keys.DISPLAY_NAME).orElse(text(player.name()));
+		Component suffix = getSuffix(player);
+		Sponge.server().onlinePlayers().forEach(p -> {
+			p.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(p.locale(), LocalesPaths.LEAVE_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
+		});
+		Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.LEAVE_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
+	}
+
+	private Component getPrefix(ServerPlayer player) {
+		return player.option(Placeholders.PREFIX).isPresent() ? text(player.option("prefix").get()) : Component.empty();
+	}
+
+	private Component getSuffix(ServerPlayer player) {
+		return player.option(Placeholders.PREFIX).isPresent() ? text(player.option("suffix").get()) : Component.empty();
+	}
+
+	private Component text(String string) {
+		if(isLegacyDecor(string)) {
+			return TextUtils.deserializeLegacy(string);
+		} else {
+			return TextUtils.deserialize(string);
+		}
+	}
+
+	private boolean isLegacyDecor(String string) {
+		return string.indexOf('&') != -1 && !string.endsWith("&") && isStyleChar(string.charAt(string.indexOf("&") + 1));
+	}
+
+	private boolean isStyleChar(char ch) {
+		return "0123456789abcdefklmnor".indexOf(ch) != -1;
 	}
 
 }

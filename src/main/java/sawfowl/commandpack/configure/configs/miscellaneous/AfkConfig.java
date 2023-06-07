@@ -12,6 +12,8 @@ public class AfkConfig {
 	private int turnOnDlay = 300;
 	@Setting("KickDelay")
 	private int kickDelay = 30;
+	@Setting("AfkTitles")
+	private AfkTitlesConfig afkTitlesConfig = new AfkTitlesConfig();
 
 	public int getTurnOnDlay() {
 		return turnOnDlay;
@@ -19,6 +21,10 @@ public class AfkConfig {
 
 	public int getKickDelay() {
 		return kickDelay;
+	}
+
+	public AfkTitlesConfig getAfkTitlesConfig() {
+		return afkTitlesConfig;
 	}
 
 }

@@ -53,6 +53,11 @@ public class LocalesPaths {
 	private static final Object COMMAND_AFK = "Afk";
 	private static final Object COMMAND_WORLD = "World";
 	private static final Object COMMAND_COMMANDSPY = "CommandSpy";
+	private static final Object COMMAND_PING = "Ping";
+	private static final Object COMMAND_INVSEE = "InventorySee";
+	private static final Object COMMAND_LIST = "List";
+	private static final Object COMMAND_SEEN = "Seen";
+	private static final Object COMMAND_HELP = "help";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -62,6 +67,10 @@ public class LocalesPaths {
 	public static final Object[] REMOVE = {OTHER, "Remove"};
 	public static final Object[] TELEPORT = {OTHER, "Remove"};
 	public static final Object[] TELEPORTCLICKABLE = {OTHER, "RemoveClickable"};
+	public static final Object[] MOTD = {OTHER, "Motd"};
+	public static final Object[] JOIN_MESSAGE = {OTHER, "JoinMessage"};
+	public static final Object[] FIRST_JOIN_MESSAGE = {OTHER, "FirstJoinMessage"};
+	public static final Object[] LEAVE_MESSAGE = {OTHER, "LeaveMessage"};
 
 	public static final Object[] ECONOMY_NOT_FOUND = {PATH_ECONOMY, PATH_EXCEPTIONS, "EconomyNotFound"};
 	public static final Object[] ECONOMY_ERROR_GIVE_MONEY = {PATH_ECONOMY, PATH_EXCEPTIONS, "ErrorGiveMoney"};
@@ -73,6 +82,8 @@ public class LocalesPaths {
 	public static final Object[] NAME_UNKNOWN = {NAMES, "UnknownSource"};
 	public static final Object[] NAME_BACKPACK = {NAMES, "Backpack"};
 
+	public static final Object[] COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "PlayerIsOffline"};
+	public static final Object[] COMMANDS_EXCEPTION_USER_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "UserNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "PlayerNotPresent"};
 	public static final Object[] COMMANDS_EXCEPTION_TARGET_SELF = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "TargetSelf"};
 	public static final Object[] COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT = {PATH_COMMANDS, PATH_EXCEPTIONS, PATH_INCOMPLETE, "BooleanNotPresent"};
@@ -267,6 +278,8 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_KIT_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_KIT, "SuccessStaff"};
 	public static final Object[] COMMANDS_AFK_ENABLE = {PATH_COMMANDS, COMMAND_AFK, "Enable"};
 	public static final Object[] COMMANDS_AFK_DISABLE = {PATH_COMMANDS, COMMAND_AFK, "Disable"};
+	public static final Object[] COMMANDS_AFK_TITLE = {PATH_COMMANDS, COMMAND_AFK, "Title"};
+	public static final Object[] COMMANDS_AFK_SUBTITLE = {PATH_COMMANDS, COMMAND_AFK, "Subtitle"};
 	public static final Object[] COMMANDS_AFK_ENABLE_IN_VANISH = {PATH_COMMANDS, COMMAND_AFK, "EnableInVanish"};
 	public static final Object[] COMMANDS_AFK_DISABLE_IN_VANISH = {PATH_COMMANDS, COMMAND_AFK, "DisableInVanish"};
 	public static final Object[] COMMANDS_AFK_KICK = {PATH_COMMANDS, COMMAND_AFK, "Kick"};
@@ -306,5 +319,35 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_COMMANDSPY_ENABLE = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Enable"};
 	public static final Object[] COMMANDS_COMMANDSPY_DISABLE = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Disable"};
 	public static final Object[] COMMANDS_COMMANDSPY_SPY = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Spy"};
+	public static final Object[] COMMANDS_PING_SUCCESS = {PATH_COMMANDS, COMMAND_PING, "Success"};
+	public static final Object[] COMMANDS_PING_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_PING, "SuccessStaff"};
+	public static final Object[] COMMANDS_LIST_SUCCESS = {PATH_COMMANDS, COMMAND_LIST, "Success"};
+	public static final Object[] COMMANDS_LIST_VANISHED = {PATH_COMMANDS, COMMAND_LIST, "Vanished"};
+	public static final Object[] COMMANDS_INVSEE_TITLE = {PATH_COMMANDS, COMMAND_INVSEE, "Title"};
+	public static final Object[] COMMANDS_SEEN_TITLE = {PATH_COMMANDS, COMMAND_SEEN, "Title"};
+	public static final Object[] COMMANDS_SEEN_ONLINE = {PATH_COMMANDS, COMMAND_SEEN, "Online"};
+	public static final Object[] COMMANDS_SEEN_OFFLINE = {PATH_COMMANDS, COMMAND_SEEN, "Offline"};
+	public static final Object[] COMMANDS_SEEN_ONLINE_TIME = {PATH_COMMANDS, COMMAND_SEEN, "OnlineTime"};
+	public static final Object[] COMMANDS_SEEN_LAST_ONLINE = {PATH_COMMANDS, COMMAND_SEEN, "LastOnline"};
+	public static final Object[] COMMANDS_SEEN_DISPLAY_NAME = {PATH_COMMANDS, COMMAND_SEEN, "DisplayName"};
+	public static final Object[] COMMANDS_SEEN_UUID = {PATH_COMMANDS, COMMAND_SEEN, "UUID"};
+	public static final Object[] COMMANDS_SEEN_IP = {PATH_COMMANDS, COMMAND_SEEN, "IP"};
+	public static final Object[] COMMANDS_SEEN_FIRST_PLAYED = {PATH_COMMANDS, COMMAND_SEEN, "FirstPlayed"};
+	public static final Object[] COMMANDS_SEEN_WALKING_SPEED = {PATH_COMMANDS, COMMAND_SEEN, "WalkingSpeed"};
+	public static final Object[] COMMANDS_SEEN_FLYING_SPEED = {PATH_COMMANDS, COMMAND_SEEN, "FlyingSpeed"};
+	public static final Object[] COMMANDS_SEEN_CURRENT_LOCATION = {PATH_COMMANDS, COMMAND_SEEN, "CurrentLocation"};
+	public static final Object[] COMMANDS_SEEN_CAN_FLY = {PATH_COMMANDS, COMMAND_SEEN, "CanFly"};
+	public static final Object[] COMMANDS_SEEN_FLYING = {PATH_COMMANDS, COMMAND_SEEN, "IsFlying"};
+	public static final Object[] COMMANDS_SEEN_GAMEMODE = {PATH_COMMANDS, COMMAND_SEEN, "Gamemode"};
+	public static final Object[] COMMANDS_SEEN_VANISHED = {PATH_COMMANDS, COMMAND_SEEN, "Vanished"};
+	public static final Object[] COMMANDS_SEEN_GODMODE = {PATH_COMMANDS, COMMAND_SEEN, "Godmode"};
+	public static final Object[] COMMANDS_SEEN_AFK = {PATH_COMMANDS, COMMAND_SEEN, "AFK"};
+	public static final Object[] COMMANDS_SEEN_BAN = {PATH_COMMANDS, COMMAND_SEEN, "Ban"};
+	//public static final Object[] COMMANDS_SEEN_MUTE = {PATH_COMMANDS, COMMAND_SEEN, "Mute"};
+	public static final Object[] COMMANDS_SEEN_YES = {PATH_COMMANDS, COMMAND_SEEN, "Yes"};
+	public static final Object[] COMMANDS_SEEN_NO = {PATH_COMMANDS, COMMAND_SEEN, "No"};
+	public static final Object[] COMMANDS_SEEN_PADDING = {PATH_COMMANDS, COMMAND_SEEN, "Padding"};
+	public static final Object[] COMMANDS_HELP_TITLE = {PATH_COMMANDS, COMMAND_HELP, "Title"};
+	public static final Object[] COMMANDS_HELP_LIST = {PATH_COMMANDS, COMMAND_HELP, "List"};
 
 }

@@ -88,20 +88,17 @@ public interface RawCommand extends PluginCommand, Raw {
 		boolean isPlayer = cause.audience() instanceof ServerPlayer;
 		Locale locale = getLocale(cause);
 		String[] args = Stream.of(arguments.input().split(" ")).map(String::toString).filter(string -> (!string.equals(""))).toArray(String[]::new);
-		checkArguments(cause, args, isPlayer, locale);
 		checkCooldown(cause, locale, isPlayer);
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
 			String[] childArgs = args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[] {};
+			checkArguments(cause, childArgs, isPlayer, locale);
 			getChildExecutors().get(args[0]).process(cause, cause.audience(), locale, isPlayer, childArgs, arguments);
 			return success();
-		}
+		} else checkArguments(cause, args, isPlayer, locale);
 		process(cause, cause.audience(), locale, isPlayer, args, arguments);
 		return success();
 	}
 
-	/**
-	 * Autocomplete arguments.
-	 */
 	@Override
 	default List<CommandCompletion> complete(CommandCause cause, Mutable arguments) throws CommandException {
 		List<String> args = Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList());

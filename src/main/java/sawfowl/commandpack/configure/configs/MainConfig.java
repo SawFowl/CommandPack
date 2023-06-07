@@ -12,6 +12,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.AfkConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
@@ -38,6 +39,12 @@ public class MainConfig {
 	private RandomTeleportConfig rtpConfig = new RandomTeleportConfig();
 	@Setting("AfkSettings")
 	private AfkConfig afkConfig = new AfkConfig();
+	@Setting("EnableMotd")
+	@Comment("The message to the player at login will be taken from the localization files.\nThe player must have the permission: \'" + Permissions.MOTD_ACCESS + "\'.")
+	private boolean enableMotd = false;
+	@Setting("ChangeConnectionMessages")
+	@Comment("The messages are in the localization files.")
+	private boolean changeConnectionMessages = true;
 
 	public boolean isAutoCompleteRawCommands() {
 		return autoCompleteRawCommands;
@@ -81,6 +88,14 @@ public class MainConfig {
 
 	public AfkConfig getAfkConfig() {
 		return afkConfig;
+	}
+
+	public boolean isEnableMotd() {
+		return enableMotd;
+	}
+
+	public boolean isChangeConnectionMessages() {
+		return changeConnectionMessages;
 	}
 
 }

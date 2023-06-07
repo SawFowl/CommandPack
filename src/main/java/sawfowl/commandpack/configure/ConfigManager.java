@@ -18,6 +18,7 @@ import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.configure.configs.MainConfig;
 import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
 import sawfowl.commandpack.configure.configs.kits.KitData;
+import sawfowl.commandpack.configure.configs.miscellaneous.JoinCommands;
 import sawfowl.commandpack.configure.configs.player.PlayerData;
 import sawfowl.commandpack.configure.configs.player.WarpData;
 import sawfowl.localeapi.api.TextUtils;
@@ -28,6 +29,8 @@ public class ConfigManager {
 	private final ConfigurationOptions options;
 	private ConfigurationReference<CommentedConfigurationNode> mainConfigReference;
 	private ValueReference<MainConfig, CommentedConfigurationNode> mainConfig;
+	private ConfigurationReference<CommentedConfigurationNode> joinCommandsConfigReference;
+	private ValueReference<JoinCommands, CommentedConfigurationNode> joinCommandsConfig;
 	private ConfigurationReference<CommentedConfigurationNode> commandsConfigReference;
 	private ValueReference<CommandsConfig, CommentedConfigurationNode> commandsConfig;
 	private final Path playerDataPath;
@@ -40,12 +43,17 @@ public class ConfigManager {
 		playerDataPath = plugin.getConfigDir().resolve("PlayerData");
 		kitsPath = plugin.getConfigDir().resolve("Kits");
 		saveMainConfig();
+		saveJoinCommandsConfig();
 		saveMainCommandsConfig();
 		createWarpsConfig();
 	}
 
 	public MainConfig getMainConfig() {
 		return mainConfig.get();
+	}
+
+	public JoinCommands getJoinCommands() {
+		return joinCommandsConfig.get();
 	}
 
 	public ValueReference<CommandsConfig, CommentedConfigurationNode> getCommandsConfig() {
@@ -56,6 +64,8 @@ public class ConfigManager {
 		try {
 			mainConfigReference.load();
 			mainConfig = mainConfigReference.referenceTo(MainConfig.class);
+			joinCommandsConfigReference.load();
+			joinCommandsConfig = joinCommandsConfigReference.referenceTo(JoinCommands.class);
 			commandsConfigReference.load();
 			commandsConfig = commandsConfigReference.referenceTo(CommandsConfig.class);
 			commandsConfig.get().updateCommandMap(commandsConfig);
@@ -159,7 +169,17 @@ public class ConfigManager {
 		try {
 			mainConfigReference = HoconConfigurationLoader.builder().defaultOptions(options).path(plugin.getConfigDir().resolve("Config.conf")).build().loadToReference();
 			mainConfig = mainConfigReference.referenceTo(MainConfig.class);
-			/*if(!plugin.getConfigDir().resolve("Config.conf").toFile().exists())*/ mainConfigReference.save();
+			mainConfigReference.save();
+		} catch (ConfigurateException e) {
+			plugin.getLogger().warn(e.getLocalizedMessage());
+		}
+	}
+
+	private void saveJoinCommandsConfig() {
+		try {
+			joinCommandsConfigReference = HoconConfigurationLoader.builder().defaultOptions(options).path(plugin.getConfigDir().resolve("JoinCommands.conf")).build().loadToReference();
+			joinCommandsConfig = joinCommandsConfigReference.referenceTo(JoinCommands.class);
+			joinCommandsConfigReference.save();
 		} catch (ConfigurateException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
 		}
@@ -169,7 +189,7 @@ public class ConfigManager {
 		try {
 			commandsConfigReference = HoconConfigurationLoader.builder().defaultOptions(options).path(plugin.getConfigDir().resolve("Commands.conf")).build().loadToReference();
 			commandsConfig = commandsConfigReference.referenceTo(CommandsConfig.class);
-			/*if(!plugin.getConfigDir().resolve("Commands.conf").toFile().exists())*/ commandsConfigReference.save();
+			commandsConfigReference.save();
 			commandsConfig.get().updateCommandMap(commandsConfig);
 		} catch (ConfigurateException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
