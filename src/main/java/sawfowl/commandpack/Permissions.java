@@ -54,6 +54,7 @@ public class Permissions {
 	public static final String PING = "commandpack.commands.user.ping";
 	public static final String LIST = "commandpack.commands.user.list";
 	public static final String SEEN = "commandpack.commands.user.seen";
+	public static final String HELP = "commandpack.commands.user.help";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -127,6 +128,7 @@ public class Permissions {
 	private static final String TIME_ACCESS = "commandpack.access.time";
 	private static final String TIME_WORLD_ACCESS = "commandpack.access.worlds.time";
 	private static final String KIT_ACCESS = "commandpack.access.kit";
+	public static final String MOTD_ACCESS = "commandpack.access.motd";
 
 	public static String getIgnoreDelayTimer(String command) {
 		return IGNORE_DELAY_TIMER + "." + command;

@@ -177,6 +177,8 @@ public class CommandsConfig {
 	private CommandSettings list = new CommandSettings();
 	@Setting("Seen")
 	private CommandSettings seen = new CommandSettings(new String[] {"playerinfo", "playerstat", "whois"});
+	@Setting("Help")
+	private CommandSettings help = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

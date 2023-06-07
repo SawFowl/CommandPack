@@ -1,5 +1,7 @@
 package sawfowl.commandpack.configure.locale;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,6 +43,10 @@ public class Locales {
 		return getAbstractLocaleUtil(locale).getComponent(json, path);
 	}
 
+	public List<Component> getListTexts(Locale locale, Object... path) {
+		return getAbstractLocaleUtil(locale).getListComponents(json, path);
+	}
+
 	public String getString(Locale locale, Object... path) {
 		return TextUtils.serializeLegacy(getText(locale, path));
 	}
@@ -72,6 +78,12 @@ public class Locales {
 		save = check(locale, toText("&7[&cRemove&7] "), null, LocalesPaths.REMOVE) || save;
 		save = check(locale, toText("&7[&aTeleport&7] "), null, LocalesPaths.TELEPORT) || save;
 		save = check(locale, toText("&7[&eTeleport&7] "), null, LocalesPaths.TELEPORTCLICKABLE) || save;
+		save = checkList(locale, Arrays.asList(
+				toText("&b================================"),
+				toText("&dGreetings &e" + Placeholders.PLAYER + "&d. Welcome to the server."),
+				toText("&dWe hope you like it here."),
+				toText("&b================================")
+				), null, LocalesPaths.MOTD) || save;
 
 		save = check(locale, toText("Server"), null, LocalesPaths.NAME_SYSTEM) || save;
 		save = check(locale, toText("PluginCommand block"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
@@ -344,6 +356,12 @@ public class Locales {
 		save = check(locale, toText("&eYes"), null, LocalesPaths.COMMANDS_SEEN_YES) || save;
 		save = check(locale, toText("&eNo"), null, LocalesPaths.COMMANDS_SEEN_NO) || save;
 		save = check(locale, toText("&3="), null, LocalesPaths.COMMANDS_SEEN_PADDING) || save;
+		save = check(locale, toText("&3Help"), null, LocalesPaths.COMMANDS_HELP_TITLE) || save;
+		save = checkList(locale, Arrays.asList(
+				toText("&eThe commands will be available if you have permission for them."),
+				toText("&2/spawn &f- &eteleport to a spawnpoint"),
+				toText("&2/home &f- &eteleporting to your home")
+				), null, LocalesPaths.COMMANDS_HELP_LIST) || save;
 
 		if(save) save(locale);
 	}
@@ -363,6 +381,12 @@ public class Locales {
 		save = check(locale, toText("&7[&cУдалить&7] "), null, LocalesPaths.REMOVE) || save;
 		save = check(locale, toText("&7[&aТелепорт&7] "), null, LocalesPaths.TELEPORT) || save;
 		save = check(locale, toText("&7[&eТелепорт&7] "), null, LocalesPaths.TELEPORTCLICKABLE) || save;
+		save = checkList(locale, Arrays.asList(
+				toText("&b================================"),
+				toText("&dПриветствуем &e" + Placeholders.PLAYER + "&d. Добро пожаловать на сервер."),
+				toText("&dНадеемся тебе у нас понравится."),
+				toText("&b================================")
+				), null, LocalesPaths.MOTD) || save;
 
 		save = check(locale, toText("Сервер"), null, LocalesPaths.NAME_SYSTEM) || save;
 		save = check(locale, toText("Командный блок"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
@@ -635,6 +659,12 @@ public class Locales {
 		save = check(locale, toText("&eДа"), null, LocalesPaths.COMMANDS_SEEN_YES) || save;
 		save = check(locale, toText("&eНет"), null, LocalesPaths.COMMANDS_SEEN_NO) || save;
 		save = check(locale, toText("&3="), null, LocalesPaths.COMMANDS_SEEN_PADDING) || save;
+		save = check(locale, toText("&3Справка"), null, LocalesPaths.COMMANDS_HELP_TITLE) || save;
+		save = checkList(locale, Arrays.asList(
+				toText("&eКоманды будут доступны при наличии разрешения на них."),
+				toText("&2/spawn &f- &eпереместиться на спавн"),
+				toText("&2/home &f- &eтелепортация домой")
+				), null, LocalesPaths.COMMANDS_HELP_LIST) || save;
 
 		if(save) save(locale);
 	}
@@ -661,6 +691,10 @@ public class Locales {
 
 	private boolean check(Locale locale, String value, String comment, Object... path) {
 		return getAbstractLocaleUtil(locale).checkString(value, comment, path);
+	}
+
+	private boolean checkList(Locale locale, List<Component> value, String comment, Object... path) {
+		return getAbstractLocaleUtil(locale).checkListComponents(json, value, comment, path);
 	}
 
 	private void save(Locale locale) {

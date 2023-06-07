@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.SystemSubject;
@@ -95,12 +96,11 @@ public interface PluginCommand {
 	default Component getText(Locale locale, Object... path) {
 		Component text = getText(path);
 		if(text != null) return text;
-		String str = CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getString(path);
-		if(isLegacyDecor(str)) {
-			return TextUtils.deserializeLegacy(str);
-		} else {
-			return TextUtils.deserialize(str);
-		}
+		return text(CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getString(path));
+	}
+
+	default List<Component> getListTexts(Locale locale, Object... path) {
+		return CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getListStrings(path).stream().map(s -> text(s)).collect(Collectors.toList());
 	}
 
 	default CommandResult success() {
@@ -227,7 +227,6 @@ public interface PluginCommand {
 			.title(title)
 			.contents(components)
 			.padding(padding)
-			.contents(components)
 			.sendTo(target);
 	}
 

@@ -57,6 +57,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_INVSEE = "InventorySee";
 	private static final Object COMMAND_LIST = "List";
 	private static final Object COMMAND_SEEN = "Seen";
+	private static final Object COMMAND_HELP = "help";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -66,6 +67,7 @@ public class LocalesPaths {
 	public static final Object[] REMOVE = {OTHER, "Remove"};
 	public static final Object[] TELEPORT = {OTHER, "Remove"};
 	public static final Object[] TELEPORTCLICKABLE = {OTHER, "RemoveClickable"};
+	public static final Object[] MOTD = {OTHER, "Motd"};
 
 	public static final Object[] ECONOMY_NOT_FOUND = {PATH_ECONOMY, PATH_EXCEPTIONS, "EconomyNotFound"};
 	public static final Object[] ECONOMY_ERROR_GIVE_MONEY = {PATH_ECONOMY, PATH_EXCEPTIONS, "ErrorGiveMoney"};
@@ -342,5 +344,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_SEEN_YES = {PATH_COMMANDS, COMMAND_SEEN, "Yes"};
 	public static final Object[] COMMANDS_SEEN_NO = {PATH_COMMANDS, COMMAND_SEEN, "No"};
 	public static final Object[] COMMANDS_SEEN_PADDING = {PATH_COMMANDS, COMMAND_SEEN, "Padding"};
+	public static final Object[] COMMANDS_HELP_TITLE = {PATH_COMMANDS, COMMAND_HELP, "Title"};
+	public static final Object[] COMMANDS_HELP_LIST = {PATH_COMMANDS, COMMAND_HELP, "List"};
 
 }
