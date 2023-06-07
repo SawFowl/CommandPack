@@ -147,6 +147,9 @@ public interface PlayerData {
 
 	long getKitGivedTime(Kit kit);
 
+	/**
+	 * Forcing a player to use a command.
+	 */
 	@SuppressWarnings("hiding")
 	<ServerPlayer> CommandResult runCommand(Locale sourceLocale, String command) throws CommandException;
 
