@@ -42,6 +42,9 @@ public class MainConfig {
 	@Setting("EnableMotd")
 	@Comment("The message to the player at login will be taken from the localization files.\nThe player must have the permission: \'" + Permissions.MOTD_ACCESS + "\'.")
 	private boolean enableMotd = false;
+	@Setting("ChangeConnectionMessages")
+	@Comment("The messages are in the localization files.")
+	private boolean changeConnectionMessages = true;
 
 	public boolean isAutoCompleteRawCommands() {
 		return autoCompleteRawCommands;
@@ -89,6 +92,10 @@ public class MainConfig {
 
 	public boolean isEnableMotd() {
 		return enableMotd;
+	}
+
+	public boolean isChangeConnectionMessages() {
+		return changeConnectionMessages;
 	}
 
 }

@@ -84,6 +84,9 @@ public class Locales {
 				toText("&dWe hope you like it here."),
 				toText("&b================================")
 				), null, LocalesPaths.MOTD) || save;
+		save = check(locale, toText("&7[&a+&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.JOIN_MESSAGE) || save;
+		save = check(locale, toText("&7[&2+&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.FIRST_JOIN_MESSAGE) || save;
+		save = check(locale, toText("&7[&c-&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.LEAVE_MESSAGE) || save;
 
 		save = check(locale, toText("Server"), null, LocalesPaths.NAME_SYSTEM) || save;
 		save = check(locale, toText("PluginCommand block"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
@@ -387,6 +390,9 @@ public class Locales {
 				toText("&dНадеемся тебе у нас понравится."),
 				toText("&b================================")
 				), null, LocalesPaths.MOTD) || save;
+		save = check(locale, toText("&7[&a+&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.JOIN_MESSAGE) || save;
+		save = check(locale, toText("&7[&2+&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.FIRST_JOIN_MESSAGE) || save;
+		save = check(locale, toText("&7[&c-&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.LEAVE_MESSAGE) || save;
 
 		save = check(locale, toText("Сервер"), null, LocalesPaths.NAME_SYSTEM) || save;
 		save = check(locale, toText("Командный блок"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;

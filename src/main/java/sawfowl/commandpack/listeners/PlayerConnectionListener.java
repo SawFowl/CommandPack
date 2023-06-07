@@ -46,6 +46,10 @@ public class PlayerConnectionListener {
 		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
 		((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get()).setLastJoin();
 		sendMotd(event.player());
+		if(!event.isMessageCancelled() && plugin.getMainConfig().isChangeConnectionMessages()) {
+			event.setMessageCancelled(true);
+			sendJoinMessage(event.player());
+		}
 		if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterSpawn() && plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().isPresent()) {
 			event.player().setLocation(plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().get());
 			plugin.getMainConfig().getSpawnData().get().getLocationData().getPosition().getRotation().ifPresent(rotation -> {
@@ -66,6 +70,9 @@ public class PlayerConnectionListener {
 	public void onDisconnect(ServerSideConnectionEvent.Disconnect event) {
 		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
 		((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get()).setLastExit();
+		if(plugin.getMainConfig().isChangeConnectionMessages()) {
+			sendLeaveMessage(event.player());
+		}
 	}
 
 	private void giveKit(ServerPlayer player, Kit kit) {
@@ -247,6 +254,51 @@ public class PlayerConnectionListener {
 		if(!plugin.getMainConfig().isEnableMotd()) return;
 		List<Component> motd = plugin.getLocales().getListTexts(player.locale(), LocalesPaths.MOTD);
 		if(!motd.isEmpty()) player.sendMessage(Component.join(JoinConfiguration.newlines(), motd.stream().map(c -> TextUtils.replace(c, Placeholders.PLAYER, player.get(Keys.DISPLAY_NAME).orElse(Component.text(player.name())))).collect(Collectors.toList())));
+	}
+
+	private void sendJoinMessage(ServerPlayer player) {
+		Component prefix = getPrefix(player);
+		Component name = player.get(Keys.DISPLAY_NAME).orElse(text(player.name()));
+		Component suffix = getSuffix(player);
+		boolean before = player.hasPlayedBefore();
+		Sponge.server().onlinePlayers().forEach(p -> {
+			p.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(p.locale(), before ? LocalesPaths.JOIN_MESSAGE : LocalesPaths.FIRST_JOIN_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
+		});
+		Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.JOIN_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
+	}
+
+	private void sendLeaveMessage(ServerPlayer player) {
+		Component prefix = getPrefix(player);
+		Component name = player.get(Keys.DISPLAY_NAME).orElse(text(player.name()));
+		Component suffix = getSuffix(player);
+		Sponge.server().onlinePlayers().forEach(p -> {
+			p.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(p.locale(), LocalesPaths.LEAVE_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
+		});
+		Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.LEAVE_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
+	}
+
+	private Component getPrefix(ServerPlayer player) {
+		return player.option(Placeholders.PREFIX).isPresent() ? text(player.option("prefix").get()) : Component.empty();
+	}
+
+	private Component getSuffix(ServerPlayer player) {
+		return player.option(Placeholders.PREFIX).isPresent() ? text(player.option("suffix").get()) : Component.empty();
+	}
+
+	private Component text(String string) {
+		if(isLegacyDecor(string)) {
+			return TextUtils.deserializeLegacy(string);
+		} else {
+			return TextUtils.deserialize(string);
+		}
+	}
+
+	private boolean isLegacyDecor(String string) {
+		return string.indexOf('&') != -1 && !string.endsWith("&") && isStyleChar(string.charAt(string.indexOf("&") + 1));
+	}
+
+	private boolean isStyleChar(char ch) {
+		return "0123456789abcdefklmnor".indexOf(ch) != -1;
 	}
 
 }

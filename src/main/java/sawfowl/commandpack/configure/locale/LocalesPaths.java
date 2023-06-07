@@ -68,6 +68,9 @@ public class LocalesPaths {
 	public static final Object[] TELEPORT = {OTHER, "Remove"};
 	public static final Object[] TELEPORTCLICKABLE = {OTHER, "RemoveClickable"};
 	public static final Object[] MOTD = {OTHER, "Motd"};
+	public static final Object[] JOIN_MESSAGE = {OTHER, "JoinMessage"};
+	public static final Object[] FIRST_JOIN_MESSAGE = {OTHER, "FirstJoinMessage"};
+	public static final Object[] LEAVE_MESSAGE = {OTHER, "LeaveMessage"};
 
 	public static final Object[] ECONOMY_NOT_FOUND = {PATH_ECONOMY, PATH_EXCEPTIONS, "EconomyNotFound"};
 	public static final Object[] ECONOMY_ERROR_GIVE_MONEY = {PATH_ECONOMY, PATH_EXCEPTIONS, "ErrorGiveMoney"};

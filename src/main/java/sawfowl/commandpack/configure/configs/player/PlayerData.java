@@ -269,7 +269,9 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 		if(!getPlayer().isPresent() || !getPlayer().get().isOnline()) return CommandResult.error(TextUtils.replace(CommandPack.getInstance().getLocales().getText(sourceLocale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE), Placeholders.PLAYER, name));
 		CommandMapping mapping = Sponge.server().commandManager().commandMapping(command.contains(" ") ? command.split(" ")[0] : command).get();
 		try(StackFrame frame = Sponge.server().causeStackManager().pushCauseFrame()) {
-			return mapping.registrar().canExecute(createPlayerCause(getPlayer().get(), command), mapping) ? Sponge.server().commandManager().process(getPlayer().get(), command) : CommandResult.error(CommandPack.getInstance().getLocales().getText(sourceLocale, LocalesPaths.COMMANDS_SUDO_EXECUTE_NOT_ALLOWED));
+			frame.addContext(EventContextKeys.SUBJECT, getPlayer().get());
+			frame.pushCause(getPlayer().get());
+			return mapping.registrar().canExecute(createPlayerCause(getPlayer().get(), command), mapping) ? Sponge.server().commandManager().process(getPlayer().get(), getPlayer().get(), command) : CommandResult.error(CommandPack.getInstance().getLocales().getText(sourceLocale, LocalesPaths.COMMANDS_SUDO_EXECUTE_NOT_ALLOWED));
 		}
 	}
 
