@@ -62,7 +62,7 @@ public class CommandParameters {
 		return (optional ? USER.optional() : USER).completer(new ValueCompleter() {
 			@Override
 			public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-				return Sponge.server().userManager().streamAll().filter(p -> p.name().isPresent() && (currentInput.length() == 0 || currentInput.startsWith(p.name().get()))).map(p -> CommandCompletion.of(p.name().get())).collect(Collectors.toList());
+				return Sponge.server().userManager().streamAll().filter(p -> p.name().isPresent() && (currentInput.length() == 0 || p.name().get().startsWith(currentInput))).map(p -> CommandCompletion.of(p.name().get())).collect(Collectors.toList());
 			}
 		}).build();
 	}
@@ -71,7 +71,7 @@ public class CommandParameters {
 		return (optional ? USER.optional() : USER).requiredPermission(permission).completer(new ValueCompleter() {
 			@Override
 			public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-				return Sponge.server().userManager().streamAll().filter(p -> p.name().isPresent() && (currentInput.length() == 0 || currentInput.startsWith(p.name().get()))).map(p -> CommandCompletion.of(p.name().get())).collect(Collectors.toList());
+				return Sponge.server().userManager().streamAll().filter(p -> p.name().isPresent() && (currentInput.length() == 0 || p.name().get().startsWith(currentInput))).map(p -> CommandCompletion.of(p.name().get())).collect(Collectors.toList());
 			}
 		}).build();
 	}
