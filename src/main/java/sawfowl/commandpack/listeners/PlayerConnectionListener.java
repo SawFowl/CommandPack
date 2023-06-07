@@ -48,7 +48,8 @@ public class PlayerConnectionListener {
 		sendMotd(event.player());
 		if(!event.isMessageCancelled() && plugin.getMainConfig().isChangeConnectionMessages()) {
 			event.setMessageCancelled(true);
-			sendJoinMessage(event.player());
+			if((!event.player().get(Keys.VANISH_STATE).isPresent() || !event.player().get(Keys.VANISH_STATE).get().invisible())) sendJoinMessage(event.player());
+			Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.JOIN_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {getPrefix(event.player()), event.player().get(Keys.DISPLAY_NAME).orElse(text(event.player().name())), getSuffix(event.player())}));
 		}
 		if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterSpawn() && plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().isPresent()) {
 			event.player().setLocation(plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().get());
@@ -71,7 +72,9 @@ public class PlayerConnectionListener {
 		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
 		((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get()).setLastExit();
 		if(plugin.getMainConfig().isChangeConnectionMessages()) {
-			sendLeaveMessage(event.player());
+			if(TextUtils.serializeLegacy(event.message()).length() > 0) event.setMessage(Component.empty());
+			if((!event.player().get(Keys.VANISH_STATE).isPresent() || !event.player().get(Keys.VANISH_STATE).get().invisible())) sendLeaveMessage(event.player());
+			Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.LEAVE_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {getPrefix(event.player()), event.player().get(Keys.DISPLAY_NAME).orElse(text(event.player().name())), getSuffix(event.player())}));
 		}
 	}
 
@@ -264,7 +267,6 @@ public class PlayerConnectionListener {
 		Sponge.server().onlinePlayers().forEach(p -> {
 			p.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(p.locale(), before ? LocalesPaths.JOIN_MESSAGE : LocalesPaths.FIRST_JOIN_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
 		});
-		Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.JOIN_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
 	}
 
 	private void sendLeaveMessage(ServerPlayer player) {
@@ -274,7 +276,6 @@ public class PlayerConnectionListener {
 		Sponge.server().onlinePlayers().forEach(p -> {
 			p.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(p.locale(), LocalesPaths.LEAVE_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
 		});
-		Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.LEAVE_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
 	}
 
 	private Component getPrefix(ServerPlayer player) {
