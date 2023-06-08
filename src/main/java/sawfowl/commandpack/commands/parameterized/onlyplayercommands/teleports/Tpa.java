@@ -35,12 +35,15 @@ public class Tpa extends AbstractPlayerCommand {
 		if(plugin.getPlayersData().getTempData().isDisableTpRequests(target)) exception(locale, LocalesPaths.COMMANDS_TPA_DISABLE_TP_REQUESTS);
 		delay(src, locale, consumer -> {
 			UUID source = src.uniqueId();
+			TpaAccess access = new TpaAccess();
 			target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_TPA_REQUEST_MESSAGE), Placeholders.PLAYER, src.get(Keys.CUSTOM_NAME).orElse(text(src.name()))).clickEvent(SpongeComponents.executeCallback(cause -> {
+				if(!access.access) return;
 				if(Sponge.server().player(source).isPresent()) {
 					plugin.getPlayersData().getTempData().setPreviousLocation(src);
 					src.setLocation(target.serverLocation());
 					src.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_ACCEPTED));
 				} else target.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE));
+				access.access = false;
 			})));
 			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TPA_SUCCESS));
 		});
@@ -64,6 +67,10 @@ public class Tpa extends AbstractPlayerCommand {
 	@Override
 	public String command() {
 		return "tpa";
+	}
+
+	private class TpaAccess {
+		public boolean access = true;
 	}
 
 }

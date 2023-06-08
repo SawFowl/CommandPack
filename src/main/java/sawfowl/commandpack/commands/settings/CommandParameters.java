@@ -12,7 +12,6 @@ import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.command.parameter.Parameter.Value;
 import org.spongepowered.api.command.parameter.Parameter.Value.Builder;
 import org.spongepowered.api.command.parameter.managed.ValueCompleter;
-import org.spongepowered.api.command.parameter.managed.standard.ResourceKeyedValueParameters;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
@@ -21,26 +20,6 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.localeapi.api.EnumLocales;
 
 public class CommandParameters {
-
-	public static final Builder<ServerPlayer> PLAYER = Parameter.player().key("Player");
-
-	public static final Builder<String> USER = Parameter.string().key("User").completer(ResourceKeyedValueParameters.PLAYER.get());
-
-	public static final Builder<Boolean> BOOLEAN = Parameter.bool();
-
-	public static final Builder<String> STRING = Parameter.string();
-
-	public static final Builder<String> STRINGS = Parameter.remainingJoinedStrings();
-
-	public static final Builder<Integer> INTEGER = Parameter.integerNumber();
-
-	public static final Builder<Double> DOUBLE = Parameter.doubleNumber();
-
-	public static final Builder<ServerLocation> LOCATION = Parameter.location().key("Location");
-
-	public static final Builder<ServerWorld> WORLD = Parameter.world().key("World");
-
-	public static final Builder<String> INVENTORY_TYPES = Parameter.choices("all", "equipment", "hotbar", "primary", "enderchest").key("InventoryType");
 
 	public static final Value<Duration> DURATION = Parameter.duration().key("Duration").build();
 
@@ -51,15 +30,15 @@ public class CommandParameters {
 	public static final Value<String> PLUGINS = Parameter.choices(Sponge.pluginManager().plugins().stream().map(p -> p.metadata().id()).toArray(String[]::new)).key("Plugin").build();
 
 	public static Value<ServerPlayer> createPlayer(boolean optional) {
-		return (optional ? PLAYER.optional() : PLAYER).build();
+		return (optional ? Parameter.player().key("Player").optional() : Parameter.player().key("Player")).build();
 	}
 
 	public static Value<ServerPlayer> createPlayer(String permission, boolean optional) {
-		return (optional ? PLAYER.optional() : PLAYER).requiredPermission(permission).build();
+		return (optional ? Parameter.player().key("Player").optional() : Parameter.player().key("Player")).requiredPermission(permission).build();
 	}
 
 	public static Value<String> createUser(boolean optional) {
-		return (optional ? USER.optional() : USER).completer(new ValueCompleter() {
+		return (optional ? Parameter.string().key("User").optional() : Parameter.string().key("User")).completer(new ValueCompleter() {
 			@Override
 			public List<CommandCompletion> complete(CommandContext context, String currentInput) {
 				return Sponge.server().userManager().streamAll().filter(p -> p.name().isPresent() && (currentInput.length() == 0 || p.name().get().startsWith(currentInput))).map(p -> CommandCompletion.of(p.name().get())).collect(Collectors.toList());
@@ -68,7 +47,7 @@ public class CommandParameters {
 	}
 
 	public static Value<String> createUser(String permission, boolean optional) {
-		return (optional ? USER.optional() : USER).requiredPermission(permission).completer(new ValueCompleter() {
+		return (optional ? Parameter.string().key("User").optional() : Parameter.string().key("User")).requiredPermission(permission).completer(new ValueCompleter() {
 			@Override
 			public List<CommandCompletion> complete(CommandContext context, String currentInput) {
 				return Sponge.server().userManager().streamAll().filter(p -> p.name().isPresent() && (currentInput.length() == 0 || p.name().get().startsWith(currentInput))).map(p -> CommandCompletion.of(p.name().get())).collect(Collectors.toList());
@@ -77,31 +56,31 @@ public class CommandParameters {
 	}
 
 	public static Value<Boolean> createBoolean(String key, boolean optional) {
-		return (optional ? BOOLEAN.optional() : BOOLEAN).key(key).build();
+		return (optional ? Parameter.bool().optional() : Parameter.bool()).key(key).build();
 	}
 
 	public static Value<Boolean> createBoolean(String key, String permission, boolean optional) {
-		return (optional ? BOOLEAN.optional() : BOOLEAN).key(key).requiredPermission(permission).build();
+		return (optional ? Parameter.bool().optional() : Parameter.bool()).key(key).requiredPermission(permission).build();
 	}
 
 	public static Value<String> createString(String key, boolean optional) {
-		return (optional ? STRING.optional() : STRING).key(key).build();
+		return (optional ? Parameter.string().optional() : Parameter.string()).key(key).build();
 	}
 
 	public static Value<String> createStrings(String key, boolean optional) {
-		return (optional ? STRINGS.optional() : STRINGS).key(key).build();
+		return (optional ? Parameter.remainingJoinedStrings().optional() : Parameter.remainingJoinedStrings()).key(key).build();
 	}
 
 	public static Value<String> createString(String key, String permission, boolean optional) {
-		return (optional ? STRING.optional() : STRING).key(key).requiredPermission(permission).build();
+		return (optional ? Parameter.string().optional() : Parameter.string()).key(key).requiredPermission(permission).build();
 	}
 
 	public static Value<Integer> createInteger(String key, boolean optional) {
-		return (optional ? INTEGER.optional() : INTEGER).key(key).build();
+		return (optional ? Parameter.integerNumber().optional() : Parameter.integerNumber()).key(key).build();
 	}
 
 	public static Value<Integer> createInteger(String key, String permission, boolean optional) {
-		return (optional ? INTEGER.optional() : INTEGER).key(key).requiredPermission(permission).build();
+		return (optional ? Parameter.integerNumber().optional() : Parameter.integerNumber()).key(key).requiredPermission(permission).build();
 	}
 
 	public static Value<Integer>  createRangedInteger(String key, int min, int max, boolean optional) {
@@ -117,7 +96,7 @@ public class CommandParameters {
 	}
 
 	public static Value<Double> createDouble(String key, boolean optional) {
-		return (optional ? DOUBLE.optional() : DOUBLE).key(key).build();
+		return (optional ? Parameter.doubleNumber().optional() : Parameter.doubleNumber()).key(key).build();
 	}
 
 	public static Value<Double> createRangedDouble(String key, boolean optional, double min, double max) {
@@ -127,27 +106,27 @@ public class CommandParameters {
 	}
 
 	public static Value<Double> createDouble(String key, String permission, boolean optional) {
-		return (optional ? DOUBLE.optional() : DOUBLE).key(key).requiredPermission(permission).build();
+		return (optional ? Parameter.doubleNumber().optional() : Parameter.doubleNumber()).key(key).requiredPermission(permission).build();
 	}
 
 	public static Value<ServerLocation> createLocation(boolean optional) {
-		return (optional ? LOCATION.optional() : LOCATION).build();
+		return (optional ? Parameter.location().key("Location").optional() : Parameter.location().key("Location")).build();
 	}
 
 	public static Value<String> createInventoryTypes(String permission, boolean optional) {
-		return (optional ? INVENTORY_TYPES.optional() : INVENTORY_TYPES).requiredPermission(permission).build();
+		return (optional ? Parameter.choices("all", "equipment", "hotbar", "primary", "enderchest").key("InventoryType").optional() : Parameter.choices("all", "equipment", "hotbar", "primary", "enderchest").key("InventoryType")).requiredPermission(permission).build();
 	}
 
 	public static Value<String> createInventoryTypes(boolean optional) {
-		return (optional ? INVENTORY_TYPES.optional() : INVENTORY_TYPES).build();
+		return (optional ? Parameter.choices("all", "equipment", "hotbar", "primary", "enderchest").key("InventoryType").optional() : Parameter.choices("all", "equipment", "hotbar", "primary", "enderchest").key("InventoryType")).build();
 	}
 
 	public static Value<ServerWorld> createWorld(String permission, boolean optional) {
-		return (optional ? WORLD.optional() : WORLD).requiredPermission(permission).build();
+		return (optional ? Parameter.world().key("World").optional() : Parameter.world().key("World")).requiredPermission(permission).build();
 	}
 
 	public static Value<ServerWorld> createWorld(boolean optional) {
-		return (optional ? WORLD.optional() : WORLD).build();
+		return (optional ? Parameter.world().key("World").optional() : Parameter.world().key("World")).build();
 	}
 
 }

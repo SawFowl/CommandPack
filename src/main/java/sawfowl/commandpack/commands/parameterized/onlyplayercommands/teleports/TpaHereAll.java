@@ -31,11 +31,14 @@ public class TpaHereAll extends AbstractPlayerCommand {
 		delay(src, locale, consumer -> {
 			UUID source = src.uniqueId();
 			Sponge.server().onlinePlayers().forEach(target -> {
+				TpaAccess access = new TpaAccess();
 				if(!target.uniqueId().equals(src.uniqueId())) target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE), Placeholders.PLAYER, src.get(Keys.CUSTOM_NAME).orElse(text(src.name()))).clickEvent(SpongeComponents.executeCallback(cause -> {
+					if(!access.access) return;
 					if(Sponge.server().player(source).isPresent()) {
 						plugin.getPlayersData().getTempData().setPreviousLocation(target);
 						target.setLocation(src.serverLocation());
 					} else target.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE));
+					access.access = false;
 				})));
 			});
 			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TPA_SUCCESS));
@@ -60,6 +63,10 @@ public class TpaHereAll extends AbstractPlayerCommand {
 	@Override
 	public String command() {
 		return "tpahereall";
+	}
+
+	private class TpaAccess {
+		public boolean access = true;
 	}
 
 }
