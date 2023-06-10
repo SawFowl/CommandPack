@@ -6,6 +6,10 @@ Commands and Permissions -> https://github.com/SawFowl/CommandPack/wiki/Commands
 
 Currently implemented:
 * Multilanguage. Ability to translate the plugin into any language. All languages will be used at the same time.
+* Customizable ability to save inventory and experience of the player at death(metaperms).
+* Customizable restrictions on entity spawns.
+* Logging the list of mods installed on the client player connects to the server.
+* Configurable restrictions on allowable mods on the player’s client that connects to the server.
 * Command execution conditions, as well as adding command aliases.  The economy is supported.
 * All teleportation commands, including teleportation requests and teleportation to random coordinates. 
 * System of server and private warps.
@@ -18,7 +22,9 @@ Currently implemented:
 * View information and reload plugins.
 * Viewing information about mods. Plugins are separated from mods.
 * Change of time, weather, game mode. Removed game mode identifiers have been returned.
-* Worlds Management.
+* Worlds Management(full).
+* Join/Leave messages
+* Join commands
 * And much more... For more information, see the list of commands at the link above.
 
 ##### For developers:
