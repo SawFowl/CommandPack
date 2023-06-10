@@ -45,7 +45,7 @@ repositories {
 }
 dependencies {
 	...
-	implementation 'com.github.SawFowl:CommandPack:1.2'
+	implementation 'com.github.SawFowl:CommandPack:1.3'
 }
 ```
 
