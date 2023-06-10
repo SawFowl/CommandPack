@@ -118,6 +118,8 @@ public class Permissions {
 	private static final String SPEED_FLY_LIMIT = "commandpack.limits.flyspeed";
 	private static final String ENCHANTMENT_TABLE_LIMIT = "commandpack.limits.enchantmenttable";
 	private static final String BACKPACK_LIMIT = "commandpack.limits.backpack";
+	private static final String KEEP_INVENTORY = "commandpack.keep.inventory";
+	private static final String KEEP_EXP = "commandpack.keep.exp";
 	public  static final String AFK_UNLIMIT = "commandpack.limits.unlimitafk";
 
 	private static final String WARP_ACCESS = "commandpack.access.warps";
@@ -128,7 +130,8 @@ public class Permissions {
 	private static final String TIME_ACCESS = "commandpack.access.time";
 	private static final String TIME_WORLD_ACCESS = "commandpack.access.worlds.time";
 	private static final String KIT_ACCESS = "commandpack.access.kit";
-	public static final String MOTD_ACCESS = "commandpack.access.motd";
+	public  static final String MOTD_ACCESS = "commandpack.access.motd";
+	public  static final String ALL_MODS_ACCESS = "commandpack.access.allmods";
 
 	public static String getIgnoreDelayTimer(String command) {
 		return IGNORE_DELAY_TIMER + "." + command;
@@ -196,6 +199,14 @@ public class Permissions {
 
 	public static int getBackpackLimit(ServerPlayer player) {
 		return !player.option(BACKPACK_LIMIT).isPresent() ? 1 : toInt(player.option(BACKPACK_LIMIT).get(), 1);
+	}
+
+	public static double getKeepInventoryLimit(ServerPlayer player) {
+		return player.option(KEEP_INVENTORY).map(o -> toDouble(o, 0)).orElse(0d);
+	}
+
+	public static double getKeepExpLimit(ServerPlayer player) {
+		return player.option(KEEP_EXP).map(o -> toDouble(o, 0)).orElse(0d);
 	}
 
 	private static int toInt(String option, int def) {

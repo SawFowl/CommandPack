@@ -15,6 +15,8 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.AfkConfig;
+import sawfowl.commandpack.configure.configs.miscellaneous.RestrictEntitySpawn;
+import sawfowl.commandpack.configure.configs.miscellaneous.RestrictMods;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 
 @ConfigSerializable
@@ -45,6 +47,15 @@ public class MainConfig {
 	@Setting("ChangeConnectionMessages")
 	@Comment("The messages are in the localization files.")
 	private boolean changeConnectionMessages = true;
+	@Setting("PrintPlayerMods")
+	@Comment("If true, then a message will be sent to the console with a list of mods in the player when he connects to the server.\nThis option only works if the server uses Forge.")
+	private boolean printPlayerMods = true;
+	@Setting("RestrictMods")
+	@Comment("Use this configuration section to control which with mods a player can join into the server.\nThis option only works if the server uses Forge.")
+	private RestrictMods restrictMods = new RestrictMods();
+	@Setting("RestrictEntitySpawn")
+	@Comment("Use this configuration section to control which entities can spawn on the server.\nSettings for worlds have a higher priority than global settings.\nAn entity with the id \"minecraft:player\" will always be able to spawn regardless of these settings.")
+	private RestrictEntitySpawn restrictEntitySpawn = new RestrictEntitySpawn();
 
 	public boolean isAutoCompleteRawCommands() {
 		return autoCompleteRawCommands;
@@ -96,6 +107,18 @@ public class MainConfig {
 
 	public boolean isChangeConnectionMessages() {
 		return changeConnectionMessages;
+	}
+
+	public boolean isPrintPlayerMods() {
+		return printPlayerMods;
+	}
+
+	public RestrictMods getRestrictMods() {
+		return restrictMods;
+	}
+
+	public RestrictEntitySpawn getRestrictEntitySpawn() {
+		return restrictEntitySpawn;
 	}
 
 }

@@ -10,6 +10,7 @@ import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -26,6 +27,7 @@ import sawfowl.commandpack.commands.raw.world.Load;
 import sawfowl.commandpack.commands.raw.world.PvP;
 import sawfowl.commandpack.commands.raw.world.SetBorder;
 import sawfowl.commandpack.commands.raw.world.SetWorldSpawn;
+import sawfowl.commandpack.commands.raw.world.SpawnLogic;
 import sawfowl.commandpack.commands.raw.world.Teleport;
 import sawfowl.commandpack.commands.raw.world.Unload;
 import sawfowl.commandpack.commands.raw.world.ViewDistance;
@@ -44,6 +46,7 @@ public class World extends AbstractWorldCommand {
 		getChildExecutors().put("enable", new Enable(plugin));
 		getChildExecutors().put("disable", new Disable(plugin));
 		getChildExecutors().put("setspawn", new SetWorldSpawn(plugin));
+		getChildExecutors().put("spawnlogic", new SpawnLogic(plugin));
 		getChildExecutors().put("setborder", new SetBorder(plugin));
 		getChildExecutors().put("pvp", new PvP(plugin));
 		getChildExecutors().put("difficulty", new Difficulty(plugin));
@@ -54,7 +57,9 @@ public class World extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		audience.sendMessage(usage(cause));
+		getChildExecutors().forEach((k, v) -> {
+			if(v.canExecute(cause)) audience.sendMessage(v.usage(cause).color(NamedTextColor.GREEN));
+		});
 	}
 
 	@Override
