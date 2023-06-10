@@ -87,6 +87,10 @@ public class Locales {
 		save = check(locale, toText("&7[&a+&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.JOIN_MESSAGE) || save;
 		save = check(locale, toText("&7[&2+&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.FIRST_JOIN_MESSAGE) || save;
 		save = check(locale, toText("&7[&c-&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.LEAVE_MESSAGE) || save;
+		save = check(locale, toText("&aYour inventory will be saved. The chance of saving each item is &e" + Placeholders.VALUE + "%&a. Items will be returned to you after respawn."), null, LocalesPaths.KEEP_INVENTORY) || save;
+		save = check(locale, toText("&aYour experience will be saved to the extent of &e" + Placeholders.VALUE + "%&a. Experience will be returned to you after respawn."), null, LocalesPaths.KEEP_EXP) || save;
+		save = check(locale, "The player " + Placeholders.PLAYER + " login to the server with the mods: " + Placeholders.VALUE + ".", null, LocalesPaths.PLAYER_MODS_LIST) || save;
+		save = check(locale, toText("&cThe server has a ban on the use of some of the mods you have&f:\n&c" + Placeholders.VALUE + "."), null, LocalesPaths.ILLEGAL_MODS_LIST) || save;
 
 		save = check(locale, toText("Server"), null, LocalesPaths.NAME_SYSTEM) || save;
 		save = check(locale, toText("PluginCommand block"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
@@ -328,6 +332,8 @@ public class Locales {
 		save = check(locale, toText("&aChunk generation in world &e\"" + Placeholders.WORLD + "\" &ahas started.\n If you stop the server, when you start this operation again, generation will start from the beginning."), null, LocalesPaths.COMMANDS_WORLD_START_GENERATE) || save;
 		save = check(locale, toText("&aChunk generation in world &e\"" + Placeholders.WORLD + "\"&a is suspended."), null, LocalesPaths.COMMANDS_WORLD_PAUSE_GENERATE) || save;
 		save = check(locale, toText("&aThe generation of chunks in world&e\"" + Placeholders.WORLD + "\"&a has been stopped. The task is deleted."), null, LocalesPaths.COMMANDS_WORLD_STOP_GENERATE) || save;
+		save = check(locale, toText("&aEnabled the logic of spawn in the world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_ENABLE) || save;
+		save = check(locale, toText("&aDisabled the logic of spawn in the world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_DISABLE) || save;
 		save = check(locale, toText("&aNow you will see what commands other players are using."), null, LocalesPaths.COMMANDS_COMMANDSPY_ENABLE) || save;
 		save = check(locale, toText("&aYou will no longer see what commands other players are using."), null, LocalesPaths.COMMANDS_COMMANDSPY_DISABLE) || save;
 		save = check(locale, toText("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 uses the command&f: &d" + Placeholders.COMMAND), null, LocalesPaths.COMMANDS_COMMANDSPY_SPY) || save;
@@ -393,6 +399,10 @@ public class Locales {
 		save = check(locale, toText("&7[&a+&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.JOIN_MESSAGE) || save;
 		save = check(locale, toText("&7[&2+&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.FIRST_JOIN_MESSAGE) || save;
 		save = check(locale, toText("&7[&c-&7]&r " + Placeholders.PREFIX + " " + Placeholders.PLAYER + " " + Placeholders.SUFFIX), null, LocalesPaths.LEAVE_MESSAGE) || save;
+		save = check(locale, toText("&aВаш инвентарь будет сохранен. Шанс сохранения каждого предмета равен &e" + Placeholders.VALUE + "%&a. Вещи будут вам возвращены после респавна."), null, LocalesPaths.KEEP_INVENTORY) || save;
+		save = check(locale, toText("&aВаш опыт будет сохранен в объеме &e" + Placeholders.VALUE + "%&a. Опыт будет вам возвращен после респавна."), null, LocalesPaths.KEEP_EXP) || save;
+		save = check(locale, "Игрок " + Placeholders.PLAYER + " входит на сервер с модами: " + Placeholders.VALUE + ".", null, LocalesPaths.PLAYER_MODS_LIST) || save;
+		save = check(locale, toText("&cНа сервере установлен запрет на использование некоторых из имеющихся у вас модов&f:\n&c" + Placeholders.VALUE + "."), null, LocalesPaths.ILLEGAL_MODS_LIST) || save;
 
 		save = check(locale, toText("Сервер"), null, LocalesPaths.NAME_SYSTEM) || save;
 		save = check(locale, toText("Командный блок"), null, LocalesPaths.NAME_COMMANDBLOCK) || save;
@@ -634,6 +644,8 @@ public class Locales {
 		save = check(locale, toText("&aЗапущена генерация чанков в мире &e\"" + Placeholders.WORLD + "\"&a.\n&eЕсли сервер будет остановлен, то в следующий раз процедура будет запущенна с самого начала."), null, LocalesPaths.COMMANDS_WORLD_START_GENERATE) || save;
 		save = check(locale, toText("&aГенерация чанков в мире &e\"" + Placeholders.WORLD + "\"&a приостановлена."), null, LocalesPaths.COMMANDS_WORLD_PAUSE_GENERATE) || save;
 		save = check(locale, toText("&aГенерация чанков в мире &e\"" + Placeholders.WORLD + "\"&a прекращена. Задача удалена."), null, LocalesPaths.COMMANDS_WORLD_STOP_GENERATE) || save;
+		save = check(locale, toText("&aВключена логика спавна в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_ENABLE) || save;
+		save = check(locale, toText("&aВыключена логика спавна в мире &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_DISABLE) || save;
 		save = check(locale, toText("&aТеперь вы будете видеть какие команды используют другие игроки."), null, LocalesPaths.COMMANDS_COMMANDSPY_ENABLE) || save;
 		save = check(locale, toText("&aВы больше не будете видеть какие команды используют другие игроки."), null, LocalesPaths.COMMANDS_COMMANDSPY_DISABLE) || save;
 		save = check(locale, toText("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 использует команду&f: &d" + Placeholders.COMMAND), null, LocalesPaths.COMMANDS_COMMANDSPY_SPY) || save;

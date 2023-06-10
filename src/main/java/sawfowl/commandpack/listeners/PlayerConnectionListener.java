@@ -1,6 +1,7 @@
 package sawfowl.commandpack.listeners;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,8 +23,10 @@ import org.spongepowered.api.util.Ticks;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
-
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.fml.network.NetworkHooks;
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.events.KitGiveEvent;
@@ -43,6 +46,18 @@ public class PlayerConnectionListener {
 
 	@Listener
 	public void onConnect(ServerSideConnectionEvent.Join event) {
+		if(plugin.isForgeServer()) {
+			if(plugin.getMainConfig().isPrintPlayerMods()) plugin.getLogger().info(plugin.getLocales().getString(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.PLAYER_MODS_LIST).replace(Placeholders.PLAYER, event.player().name()).replace(Placeholders.VALUE, String.join(", ", getModList(event.player()))));
+			if(plugin.getMainConfig().getRestrictMods().isEnable() && !event.player().hasPermission(Permissions.ALL_MODS_ACCESS)) {
+				Sponge.server().scheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).delay(Ticks.of(10)).execute(() -> {
+					List<String> banedPlayerMods = new ArrayList<>();
+					getModList(event.player()).forEach(mod -> {
+						if(!plugin.getMainConfig().getRestrictMods().isAllowedPlayerMod(mod)) banedPlayerMods.add(mod);
+					});
+					if(!banedPlayerMods.isEmpty() && event.player().isOnline()) event.player().kick(TextUtils.replace(plugin.getLocales().getText(event.player().locale(), LocalesPaths.ILLEGAL_MODS_LIST), Placeholders.VALUE, String.join(", ", banedPlayerMods)));
+				}).build());
+			}
+		}
 		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
 		((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get()).setLastJoin();
 		sendMotd(event.player());
@@ -300,6 +315,10 @@ public class PlayerConnectionListener {
 
 	private boolean isStyleChar(char ch) {
 		return "0123456789abcdefklmnor".indexOf(ch) != -1;
+	}
+
+	private List<String> getModList(ServerPlayer player) {
+		return NetworkHooks.getConnectionData(((ServerPlayerEntity) player).connection.connection).getModList();
 	}
 
 }

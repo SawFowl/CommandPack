@@ -12,7 +12,7 @@ import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-
+import net.kyori.adventure.text.event.ClickEvent;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
@@ -53,7 +53,7 @@ public class ViewDistance extends AbstractWorldCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/world viewdistance <World> <Distance>");
+		return text("&c/world viewdistance <World> <Distance>").clickEvent(ClickEvent.suggestCommand("/world viewdistance"));
 	}
 
 	@Override

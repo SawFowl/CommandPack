@@ -15,7 +15,7 @@ import org.spongepowered.api.world.DefaultWorldKeys;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-
+import net.kyori.adventure.text.event.ClickEvent;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
@@ -57,7 +57,7 @@ public class Load extends AbstractWorldCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/world load <UnloadedWorld>");
+		return text("&c/world load <UnloadedWorld>").clickEvent(ClickEvent.suggestCommand("/world load"));
 	}
 
 	@Override

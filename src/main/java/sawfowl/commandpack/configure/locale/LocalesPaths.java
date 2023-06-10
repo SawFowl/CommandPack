@@ -71,6 +71,10 @@ public class LocalesPaths {
 	public static final Object[] JOIN_MESSAGE = {OTHER, "JoinMessage"};
 	public static final Object[] FIRST_JOIN_MESSAGE = {OTHER, "FirstJoinMessage"};
 	public static final Object[] LEAVE_MESSAGE = {OTHER, "LeaveMessage"};
+	public static final Object[] KEEP_INVENTORY = {OTHER, "KeepInventory"};
+	public static final Object[] KEEP_EXP = {OTHER, "KeepExp"};
+	public static final Object[] PLAYER_MODS_LIST = {OTHER, "PlayerModsList"};
+	public static final Object[] ILLEGAL_MODS_LIST = {OTHER, "IllegalMods"};
 
 	public static final Object[] ECONOMY_NOT_FOUND = {PATH_ECONOMY, PATH_EXCEPTIONS, "EconomyNotFound"};
 	public static final Object[] ECONOMY_ERROR_GIVE_MONEY = {PATH_ECONOMY, PATH_EXCEPTIONS, "ErrorGiveMoney"};
@@ -316,6 +320,8 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_WORLD_NOT_PAUSED_GENERATE = {PATH_COMMANDS, COMMAND_WORLD, "Generate", "NotPaused"};
 	public static final Object[] COMMANDS_WORLD_STOP_GENERATE = {PATH_COMMANDS, COMMAND_WORLD, "Generate", "Stop"};
 	public static final Object[] COMMANDS_WORLD_PAUSE_GENERATE = {PATH_COMMANDS, COMMAND_WORLD, "Generate", "Pause"};
+	public static final Object[] COMMANDS_WORLD_SPAWN_LOGIC_ENABLE = {PATH_COMMANDS, COMMAND_WORLD, "SpawnLogic", "Enable"};
+	public static final Object[] COMMANDS_WORLD_SPAWN_LOGIC_DISABLE = {PATH_COMMANDS, COMMAND_WORLD, "SpawnLogic", "Disable"};
 	public static final Object[] COMMANDS_COMMANDSPY_ENABLE = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Enable"};
 	public static final Object[] COMMANDS_COMMANDSPY_DISABLE = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Disable"};
 	public static final Object[] COMMANDS_COMMANDSPY_SPY = {PATH_COMMANDS, COMMAND_COMMANDSPY, "Spy"};

@@ -95,7 +95,7 @@ import sawfowl.commandpack.listeners.PlayerInteractEntityListener;
 import sawfowl.commandpack.listeners.PlayerInteractItemListener;
 import sawfowl.commandpack.listeners.PlayerInventoryListener;
 import sawfowl.commandpack.listeners.PlayerMoveListener;
-import sawfowl.commandpack.listeners.PlayerRespawnListener;
+import sawfowl.commandpack.listeners.PlayerDeathAndRespawnListener;
 import sawfowl.commandpack.utils.Economy;
 import sawfowl.commandpack.utils.Logger;
 
@@ -224,7 +224,7 @@ public class CommandPack {
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractItemListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInventoryListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerRespawnListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerDeathAndRespawnListener(instance));
 		configManager.loadKits();
 		generators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureConfig(StructureGenerationConfig.none()).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
 		api = new sawfowl.commandpack.api.CommandPack() {

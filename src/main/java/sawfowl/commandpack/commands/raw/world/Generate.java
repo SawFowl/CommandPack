@@ -21,7 +21,7 @@ import org.spongepowered.math.vector.Vector3i;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-
+import net.kyori.adventure.text.event.ClickEvent;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
@@ -92,7 +92,7 @@ public class Generate extends AbstractWorldCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/world generate <World> <Action> [Interval] [MaxMemory] [Chunks]");
+		return text("&c/world generate <World> <Action> [Interval] [MaxMemory] [Chunks]").clickEvent(ClickEvent.suggestCommand("/world generate"));
 	}
 
 	@Override

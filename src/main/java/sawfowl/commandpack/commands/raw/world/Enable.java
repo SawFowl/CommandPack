@@ -16,7 +16,7 @@ import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-
+import net.kyori.adventure.text.event.ClickEvent;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
@@ -56,7 +56,7 @@ public class Enable extends AbstractWorldCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/world enable <World>");
+		return text("&c/world enable <World>").clickEvent(ClickEvent.suggestCommand("/world enable"));
 	}
 
 	@Override
