@@ -179,6 +179,12 @@ public class CommandsConfig {
 	private CommandSettings seen = new CommandSettings(new String[] {"playerinfo", "playerstat", "whois"});
 	@Setting("Help")
 	private CommandSettings help = new CommandSettings();
+	@Setting("Glow")
+	private CommandSettings glow = new CommandSettings();
+	@Setting("Flame")
+	private CommandSettings flame = new CommandSettings(new String[] {"burn", "fire"});
+	@Setting("Extinguish")
+	private CommandSettings extinguish = new CommandSettings(new String[] {"ext"});
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

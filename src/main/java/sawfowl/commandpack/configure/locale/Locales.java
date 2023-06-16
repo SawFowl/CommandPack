@@ -371,6 +371,15 @@ public class Locales {
 				toText("&2/spawn &f- &eteleport to a spawnpoint"),
 				toText("&2/home &f- &eteleporting to your home")
 				), null, LocalesPaths.COMMANDS_HELP_LIST) || save;
+		save = check(locale, toText("&aNow you're glowing."), null, LocalesPaths.COMMANDS_GLOW_ENABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is now glowing."), null, LocalesPaths.COMMANDS_GLOW_ENABLE_STAFF) || save;
+		save = check(locale, toText("&aYou don't glow anymore."), null, LocalesPaths.COMMANDS_GLOW_DISABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is no longer glowing."), null, LocalesPaths.COMMANDS_GLOW_DISABLE_STAFF) || save;
+		save = check(locale, toText("&aYou are burning."), null, LocalesPaths.COMMANDS_FLAME_SUCCESS) || save;
+		save = check(locale, toText("&4You are burning!"), null, LocalesPaths.COMMANDS_FLAME_SUCCESS_DAMAGE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is now burning."), null, LocalesPaths.COMMANDS_FLAME_SUCCESS_STAFF) || save;
+		save = check(locale, toText("&aFire extinguished."), null, LocalesPaths.COMMANDS_EXTINGUISH_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is extinguished."), null, LocalesPaths.COMMANDS_EXTINGUISH_SUCCESS_STAFF) || save;
 
 		if(save) save(locale);
 	}
@@ -683,6 +692,15 @@ public class Locales {
 				toText("&2/spawn &f- &eпереместиться на спавн"),
 				toText("&2/home &f- &eтелепортация домой")
 				), null, LocalesPaths.COMMANDS_HELP_LIST) || save;
+		save = check(locale, toText("&aТеперь вы светитесь."), null, LocalesPaths.COMMANDS_GLOW_ENABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a теперь светится."), null, LocalesPaths.COMMANDS_GLOW_ENABLE_STAFF) || save;
+		save = check(locale, toText("&aВы больше не светитесь."), null, LocalesPaths.COMMANDS_GLOW_DISABLE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a больше не светится."), null, LocalesPaths.COMMANDS_GLOW_DISABLE_STAFF) || save;
+		save = check(locale, toText("&aВы горите."), null, LocalesPaths.COMMANDS_FLAME_SUCCESS) || save;
+		save = check(locale, toText("&4Вы горите!"), null, LocalesPaths.COMMANDS_FLAME_SUCCESS_DAMAGE) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a теперь горит."), null, LocalesPaths.COMMANDS_FLAME_SUCCESS_STAFF) || save;
+		save = check(locale, toText("&aОгонь потушен."), null, LocalesPaths.COMMANDS_EXTINGUISH_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a не горит."), null, LocalesPaths.COMMANDS_EXTINGUISH_SUCCESS_STAFF) || save;
 
 		if(save) save(locale);
 	}

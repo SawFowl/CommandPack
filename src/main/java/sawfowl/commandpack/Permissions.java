@@ -55,6 +55,9 @@ public class Permissions {
 	public static final String LIST = "commandpack.commands.user.list";
 	public static final String SEEN = "commandpack.commands.user.seen";
 	public static final String HELP = "commandpack.commands.user.help";
+	public static final String GLOW = "commandpack.commands.user.glow";
+	public static final String FLAME = "commandpack.commands.user.flame";
+	public static final String EXTINGUISH = "commandpack.commands.user.extinguish";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -105,6 +108,9 @@ public class Permissions {
 	public static final String PING_STAFF = "commandpack.commands.staff.ping";
 	public static final String LIST_STAFF = "commandpack.commands.staff.list";
 	public static final String SEEN_STAFF = "commandpack.commands.staff.seen";
+	public static final String GLOW_STAFF = "commandpack.commands.staff.glow";
+	public static final String FLAME_STAFF = "commandpack.commands.staff.flame";
+	public static final String EXTINGUISH_STAFF = "commandpack.commands.user.extinguish";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";

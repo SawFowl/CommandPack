@@ -57,7 +57,10 @@ public class LocalesPaths {
 	private static final Object COMMAND_INVSEE = "InventorySee";
 	private static final Object COMMAND_LIST = "List";
 	private static final Object COMMAND_SEEN = "Seen";
-	private static final Object COMMAND_HELP = "help";
+	private static final Object COMMAND_HELP = "Help";
+	private static final Object COMMAND_GLOW = "Glow";
+	private static final Object COMMAND_FLAME = "Flame";
+	private static final Object COMMAND_EXTINGUISH = "Extinguish";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -355,5 +358,14 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_SEEN_PADDING = {PATH_COMMANDS, COMMAND_SEEN, "Padding"};
 	public static final Object[] COMMANDS_HELP_TITLE = {PATH_COMMANDS, COMMAND_HELP, "Title"};
 	public static final Object[] COMMANDS_HELP_LIST = {PATH_COMMANDS, COMMAND_HELP, "List"};
+	public static final Object[] COMMANDS_GLOW_ENABLE = {PATH_COMMANDS, COMMAND_GLOW, "Enable"};
+	public static final Object[] COMMANDS_GLOW_ENABLE_STAFF = {PATH_COMMANDS, COMMAND_GLOW, "EnableStaff"};
+	public static final Object[] COMMANDS_GLOW_DISABLE = {PATH_COMMANDS, COMMAND_GLOW, "Disable"};
+	public static final Object[] COMMANDS_GLOW_DISABLE_STAFF = {PATH_COMMANDS, COMMAND_GLOW, "DisableStaff"};
+	public static final Object[] COMMANDS_FLAME_SUCCESS = {PATH_COMMANDS, COMMAND_FLAME, "Success"};
+	public static final Object[] COMMANDS_FLAME_SUCCESS_DAMAGE = {PATH_COMMANDS, COMMAND_FLAME, "SuccessDamage"};
+	public static final Object[] COMMANDS_FLAME_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_FLAME, "SuccessStaff"};
+	public static final Object[] COMMANDS_EXTINGUISH_SUCCESS = {PATH_COMMANDS, COMMAND_EXTINGUISH, "Success"};
+	public static final Object[] COMMANDS_EXTINGUISH_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_EXTINGUISH, "SuccessStaff"};
 
 }
