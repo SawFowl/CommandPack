@@ -1,4 +1,4 @@
-package sawfowl.commandpack.configure.configs.miscellaneous;
+package sawfowl.commandpack.configure.configs.punishment;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;

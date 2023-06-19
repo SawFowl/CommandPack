@@ -11,7 +11,7 @@ import org.spongepowered.api.service.ban.Ban.IP;
 import org.spongepowered.api.service.ban.Ban.Profile;
 
 import sawfowl.commandpack.api.CommandPack;
-import sawfowl.commandpack.apiclasses.punishment.PunishmentService;
+import sawfowl.commandpack.api.PunishmentService;
 
 public class PunishmentServiceImpl implements PunishmentService {
 

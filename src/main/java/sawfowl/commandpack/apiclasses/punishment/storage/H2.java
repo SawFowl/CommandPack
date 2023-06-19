@@ -11,14 +11,16 @@ public class H2 extends AbstractPunishmentStorage {
 	public H2(CommandPack plugin) {
 		super(plugin);
 		file = plugin.getConfigDir().resolve("Punishments.h2").toFile();
+		checkFile();
 	}
 
-	void checkFile() {
-			try {
-				if(!file.exists()) file.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	private void checkFile() {
+		if(file.exists()) return;
+		try {
+			 file.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

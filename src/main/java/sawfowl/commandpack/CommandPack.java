@@ -62,6 +62,9 @@ import sawfowl.commandpack.api.data.miscellaneous.Position;
 import sawfowl.commandpack.api.data.player.Home;
 import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.commandpack.api.data.player.Warp;
+import sawfowl.commandpack.api.data.punishment.Mute;
+import sawfowl.commandpack.api.data.punishment.Warn;
+import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.apiclasses.KitServiceImpl;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.apiclasses.RTPService;
@@ -84,6 +87,9 @@ import sawfowl.commandpack.configure.configs.miscellaneous.PointData;
 import sawfowl.commandpack.configure.configs.player.BackpackData;
 import sawfowl.commandpack.configure.configs.player.HomeData;
 import sawfowl.commandpack.configure.configs.player.WarpData;
+import sawfowl.commandpack.configure.configs.punishment.MuteData;
+import sawfowl.commandpack.configure.configs.punishment.WarnData;
+import sawfowl.commandpack.configure.configs.punishment.WarnsData;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.listeners.CommandLogListener;
@@ -434,6 +440,24 @@ public class CommandPack {
 			@Override
 			public RawArgument.Builder get() {
 				return new RawArgumentImpl<Object>().builder();
+			}
+		});
+		event.register(Mute.Builder.class, new Supplier<Mute.Builder>() {
+			@Override
+			public Mute.Builder get() {
+				return new MuteData().builder();
+			}
+		});
+		event.register(Warn.Builder.class, new Supplier<Warn.Builder>() {
+			@Override
+			public Warn.Builder get() {
+				return new WarnData().builder();
+			}
+		});
+		event.register(Warns.Builder.class, new Supplier<Warns.Builder>() {
+			@Override
+			public Warns.Builder get() {
+				return new WarnsData().builder();
 			}
 		});
 	}

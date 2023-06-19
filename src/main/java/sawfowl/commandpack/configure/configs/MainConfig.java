@@ -16,10 +16,10 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.AfkConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.MySqlConfig;
-import sawfowl.commandpack.configure.configs.miscellaneous.Punishment;
 import sawfowl.commandpack.configure.configs.miscellaneous.RestrictEntitySpawn;
 import sawfowl.commandpack.configure.configs.miscellaneous.RestrictMods;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
+import sawfowl.commandpack.configure.configs.punishment.Punishment;
 
 @ConfigSerializable
 public class MainConfig {

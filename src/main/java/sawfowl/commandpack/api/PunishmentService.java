@@ -1,4 +1,4 @@
-package sawfowl.commandpack.apiclasses.punishment;
+package sawfowl.commandpack.api;
 
 import org.spongepowered.api.service.ban.BanService;
 
