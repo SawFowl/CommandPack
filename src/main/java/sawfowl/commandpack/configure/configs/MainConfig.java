@@ -15,6 +15,8 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.AfkConfig;
+import sawfowl.commandpack.configure.configs.miscellaneous.MySqlConfig;
+import sawfowl.commandpack.configure.configs.miscellaneous.Punishment;
 import sawfowl.commandpack.configure.configs.miscellaneous.RestrictEntitySpawn;
 import sawfowl.commandpack.configure.configs.miscellaneous.RestrictMods;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
@@ -56,6 +58,11 @@ public class MainConfig {
 	@Setting("RestrictEntitySpawn")
 	@Comment("Use this configuration section to control which entities can spawn on the server.\nSettings for worlds have a higher priority than global settings.\nAn entity with the id \"minecraft:player\" will always be able to spawn regardless of these settings.")
 	private RestrictEntitySpawn restrictEntitySpawn = new RestrictEntitySpawn();
+	@Setting("MySQL")
+	@Comment("Configure this if you need to store player punishment data in a MySQL database.")
+	private MySqlConfig mySqlConfig = new MySqlConfig();
+	@Setting("Punishment")
+	private Punishment punishment = new Punishment();
 
 	public boolean isAutoCompleteRawCommands() {
 		return autoCompleteRawCommands;
@@ -119,6 +126,14 @@ public class MainConfig {
 
 	public RestrictEntitySpawn getRestrictEntitySpawn() {
 		return restrictEntitySpawn;
+	}
+
+	public MySqlConfig getMySqlConfig() {
+		return mySqlConfig;
+	}
+
+	public Punishment getPunishment() {
+		return punishment;
 	}
 
 }
