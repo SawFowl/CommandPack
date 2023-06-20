@@ -1,8 +1,10 @@
 package sawfowl.commandpack.commands.parameterized.punishments;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -62,12 +64,22 @@ public class Ban extends AbstractParameterizedCommand {
 				if(duration.isPresent()) banBuilder = banBuilder.expirationDate(Instant.now().plusSeconds(duration.get().getSeconds()));
 				Optional<String> reason = getString(context, "Reason");
 				if(reason.isPresent()) banBuilder = banBuilder.reason(text(reason.get()));
-				plugin.getPunishmentService().add(banBuilder.build());
-				if(duration.isPresent()) {
-					Sponge.server().onlinePlayers().forEach(player -> {
-						player.sendMessage(TextUtils.replace(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(user.name())}));
-					});
-				}
+				org.spongepowered.api.service.ban.Ban ban = banBuilder.build();
+				plugin.getPunishmentService().add(ban);
+				if(ban.expirationDate().isPresent()) {
+					Sponge.systemSubject().sendMessage(TextUtils.replace(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(user.name()), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), ban), ban.reason().orElse(text("&f-"))}));	
+				} else Sponge.systemSubject().sendMessage(TextUtils.replace(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(user.name()), ban.reason().orElse(text("&f-"))}));
+				if(plugin.getMainConfig().getPunishment().getAnnounce().isBan()) {
+					if(ban.expirationDate().isPresent()) {
+						Sponge.server().onlinePlayers().forEach(player -> {
+							player.sendMessage(TextUtils.replace(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(user.name()), expire(player.locale(), ban), ban.reason().orElse(text("&f-"))}));
+						});
+					} else {
+						Sponge.server().onlinePlayers().forEach(player -> {
+							player.sendMessage(TextUtils.replace(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(user.name()), ban.reason().orElse(text("&f-"))}));
+						});
+					}
+				} else src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BAN_SUCCESS), Placeholders.PLAYER, user.name()));
 			});
 		});
 	}
@@ -96,6 +108,13 @@ public class Ban extends AbstractParameterizedCommand {
 			ParameterSettings.of(reason, true, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 			
 		);
+	}
+
+	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
+		SimpleDateFormat format = new SimpleDateFormat(getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
+		return text(format.format(calendar.getTime()));
 	}
 
 }

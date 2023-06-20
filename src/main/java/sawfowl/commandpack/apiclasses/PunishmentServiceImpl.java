@@ -32,19 +32,34 @@ public class PunishmentServiceImpl implements PunishmentService {
 
 	@Override
 	public CompletableFuture<Collection<? extends Ban>> bans() {
+		return CompletableFuture.completedFuture(getAllBans());
+	}
+
+	@Override
+	public Collection<Ban> getAllBans() {
 		Collection<Ban> bans = storage.getBans().values().stream().map(b -> (Ban) b).collect(Collectors.toList());
 		bans.addAll(storage.getBansIP().values());
-		return CompletableFuture.completedFuture(bans);
+		return bans;
 	}
 
 	@Override
 	public CompletableFuture<Collection<Profile>> profileBans() {
-		return CompletableFuture.completedFuture(storage.getBans().values());
+		return CompletableFuture.completedFuture(getAllProfileBans());
+	}
+
+	@Override
+	public Collection<Profile> getAllProfileBans() {
+		return storage.getBans().values();
 	}
 
 	@Override
 	public CompletableFuture<Collection<IP>> ipBans() {
-		return CompletableFuture.completedFuture(storage.getBansIP().values());
+		return CompletableFuture.completedFuture(getAllIPBans());
+	}
+
+	@Override
+	public Collection<IP> getAllIPBans() {
+		return storage.getBansIP().values();
 	}
 
 	@Override

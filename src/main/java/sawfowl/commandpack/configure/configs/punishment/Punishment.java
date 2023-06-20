@@ -14,14 +14,8 @@ public class Punishment {
 	private boolean enable = false;
 	@Setting("StorageType")
 	private String storageType = StorageType.FILE.typeName();
-	@Setting("AnnounceBan")
-	private boolean announceBan = false;
-	@Setting("AnnounceBan")
-	private boolean announceMute = false;
-	@Setting("AnnounceMute")
-	private boolean announceKick = false;
-	@Setting("AnnounceWarn")
-	private boolean announceWarn = false;
+	@Setting("Announce")
+	private Announce announce = new Announce();
 
 	public boolean isEnable() {
 		return enable;
@@ -31,20 +25,8 @@ public class Punishment {
 		return StorageType.getType(storageType);
 	}
 
-	public boolean isAnnounceBan() {
-		return announceBan;
-	}
-
-	public boolean isAnnounceMute() {
-		return announceMute;
-	}
-
-	public boolean isAnnounceKick() {
-		return announceKick;
-	}
-
-	public boolean isAnnounceWarn() {
-		return announceWarn;
+	public Announce getAnnounce() {
+		return announce;
 	}
 
 }

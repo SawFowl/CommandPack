@@ -112,6 +112,7 @@ public class Permissions {
 	public static final String FLAME_STAFF = "commandpack.commands.staff.flame";
 	public static final String EXTINGUISH_STAFF = "commandpack.commands.staff.extinguish";
 	public static final String BAN_STAFF = "commandpack.commands.staff.ban";
+	public static final String UNBAN_STAFF = "commandpack.commands.staff.unban";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";

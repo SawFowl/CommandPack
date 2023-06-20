@@ -78,7 +78,7 @@ public class CommandsConfig {
 	@Setting("TpToggle")
 	private CommandSettings tptoggle = new CommandSettings();
 	@Setting("Clearinventory")
-	private CommandSettings clearinventory = new CommandSettings(new String[] {"clear"});
+	private CommandSettings clearinventory = new CommandSettings(new String[] {"clear", "ci"});
 	@Setting("Repair")
 	private CommandSettings repair = new CommandSettings(new CommandPrice("$", 20), new String[] {"fix"});
 	@Setting("Enderchest")
@@ -179,12 +179,16 @@ public class CommandsConfig {
 	private CommandSettings seen = new CommandSettings(new String[] {"playerinfo", "playerstat", "whois"});
 	@Setting("Help")
 	private CommandSettings help = new CommandSettings();
-	@Setting("Glow")
+	@Setting("Glow") // Дополнить инфу по обнове
 	private CommandSettings glow = new CommandSettings();
 	@Setting("Flame")
 	private CommandSettings flame = new CommandSettings(new String[] {"burn", "fire"});
 	@Setting("Extinguish")
 	private CommandSettings extinguish = new CommandSettings(new String[] {"ext"});
+	@Setting("Ban")
+	private CommandSettings ban = new CommandSettings();
+	@Setting("Unban")
+	private CommandSettings unban = new CommandSettings(new String[] {"pardon"});
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

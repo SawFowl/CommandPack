@@ -385,6 +385,8 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently bans player &e" + Placeholders.PLAYER + "\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&cIt's impossible to ban &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_BAN_IGNORE) || save;
 		save = check(locale, toText("&ePlayer &e" + Placeholders.PLAYER + "&e has already been banned on this server."), null, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED) || save;
+		save = check(locale, toText("&aYou unbanned &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a unbans &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT) || save;
 
 		if(save) save(locale);
 	}
@@ -711,6 +713,8 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a навсегда банит игрока &e" + Placeholders.PLAYER + "\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&cНевозможно забанить &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_BAN_IGNORE) || save;
 		save = check(locale, toText("&eИгрок &e" + Placeholders.PLAYER + "&e уже имеет бан на этом сервере."), null, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED) || save;
+		save = check(locale, toText("&aВы разбанили &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a снимает бан с &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT) || save;
 
 		if(save) save(locale);
 	}
