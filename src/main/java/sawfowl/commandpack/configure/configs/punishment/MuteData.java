@@ -29,8 +29,6 @@ public class MuteData implements Mute {
 
 	@Setting("CreationDate")
 	private long creationDate;
-	@Setting("Indefinitely")
-	private boolean indefinitely = false;
 	@Setting("UUID")
 	private UUID uuid;
 	@Setting("Name")
@@ -49,7 +47,7 @@ public class MuteData implements Mute {
 
 	@Override
 	public boolean isIndefinitely() {
-		return indefinitely;
+		return expired != null || expired <= 0;
 	}
 
 	@Override
@@ -92,7 +90,6 @@ public class MuteData implements Mute {
 
 		@Override
 		public @NotNull Mute build() {
-			if(expired == null) indefinitely = true;
 			if(creationDate == 0) creationDate = System.currentTimeMillis() / 1000;
 			return MuteData.this;
 		}
@@ -139,6 +136,24 @@ public class MuteData implements Mute {
 		public Mute.Builder reason(Component value) {
 			reason = TextUtils.serializeJson(value);
 			return this;
+		}
+
+		@Override
+		public Mute from(Mute mute) {
+			creationDate = mute.getCreationDate().getEpochSecond();
+			uuid = mute.getUniqueId();
+			name = mute.getName();
+			mute.getExpirationDate().ifPresent(e -> {
+				expired = e.getEpochSecond();
+			});
+			mute.getReason().ifPresent(r -> {
+				reason = TextUtils.serializeJson(r);
+			});
+			mute.getSource().ifPresent(s -> {
+				source = TextUtils.serializeJson(s);
+			});
+			uuid = mute.getUniqueId();
+			return MuteData.this;
 		}
 		
 	}

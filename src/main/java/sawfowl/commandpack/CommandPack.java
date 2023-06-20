@@ -23,12 +23,15 @@ import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.event.EventContext;
 import org.spongepowered.api.event.EventContextKeys;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.lifecycle.ProvideServiceEvent;
 import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
 import org.spongepowered.api.event.lifecycle.RegisterBuilderEvent;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.service.ban.BanService;
+import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.world.biome.Biomes;
 import org.spongepowered.api.world.generation.ChunkGenerator;
 import org.spongepowered.api.world.generation.config.FlatGeneratorConfig;
@@ -47,6 +50,7 @@ import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.KitService;
 import sawfowl.commandpack.api.PlayersData;
+import sawfowl.commandpack.api.PunishmentService;
 import sawfowl.commandpack.api.RandomTeleportService;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -67,6 +71,7 @@ import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.apiclasses.KitServiceImpl;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
+import sawfowl.commandpack.apiclasses.PunishmentServiceImpl;
 import sawfowl.commandpack.apiclasses.RTPService;
 import sawfowl.commandpack.commands.settings.ParameterSettingsImpl;
 import sawfowl.commandpack.commands.settings.RawArgumentImpl;
@@ -124,6 +129,7 @@ public class CommandPack {
 	private Map<Long, Double> tps10m = new HashMap<>();
 	private long serverStartedTime;
 	private sawfowl.commandpack.api.CommandPack api;
+	private PunishmentService punishmentService;
 	private Map<String, ChunkGenerator> generators = new HashMap<>();
 
 	public static CommandPack getInstance() {
@@ -196,6 +202,10 @@ public class CommandPack {
 
 	public sawfowl.commandpack.api.CommandPack getAPI() {
 		return api;
+	}
+
+	public PunishmentService getPunishmentService() {
+		return punishmentService;
 	}
 
 	@Inject
@@ -285,6 +295,11 @@ public class CommandPack {
 				return new HashSet<>(generators.keySet());
 			}
 
+			@Override
+			public Optional<PunishmentService> getPunishmentService() {
+				return Optional.ofNullable(punishmentService);
+			}
+
 		};
 
 		Sponge.eventManager().post(new sawfowl.commandpack.api.CommandPack.PostAPI() {
@@ -331,6 +346,17 @@ public class CommandPack {
 			});
 		}).build());
 		serverStartedTime = System.currentTimeMillis();
+	}
+
+	@Listener
+	public void onProvideBanService(ProvideServiceEvent<BanService> event) {
+		if(!getMainConfig().getPunishment().isEnable()) return;
+		punishmentService = new PunishmentServiceImpl(instance);
+		event.suggest(() -> punishmentService);
+	}
+
+	@Listener
+	public void onProvideEconomyService(ProvideServiceEvent<EconomyService> event) {
 	}
 
 	@Listener

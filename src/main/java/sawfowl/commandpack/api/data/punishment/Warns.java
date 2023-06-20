@@ -9,6 +9,7 @@ import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.builder.AbstractBuilder;
+import sawfowl.commandpack.configure.configs.punishment.WarnsData;
 
 public interface Warns extends DataSerializable {
 
@@ -39,6 +40,8 @@ public interface Warns extends DataSerializable {
 		Builder target(User value);
 
 		Builder warn(Warn value);
+
+		WarnsData from(Warns warns);
 
 	}
 

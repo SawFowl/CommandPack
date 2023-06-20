@@ -29,8 +29,6 @@ public class WarnData implements Warn {
 
 	@Setting("CreationDate")
 	private long creationDate;
-	@Setting("Indefinitely")
-	private boolean indefinitely = false;
 	@Setting("Expired")
 	private Long expired;
 	@Setting("Source")
@@ -47,7 +45,7 @@ public class WarnData implements Warn {
 
 	@Override
 	public boolean isIndefinitely() {
-		return indefinitely;
+		return expired != null || expired <= 0;
 	}
 
 	@Override
@@ -97,7 +95,6 @@ public class WarnData implements Warn {
 
 		@Override
 		public @NotNull Warn build() {
-			if(expired == null) indefinitely = true;
 			if(creationDate == 0) creationDate = System.currentTimeMillis() / 1000;
 			uuid = UUID.randomUUID();
 			return WarnData.this;
@@ -136,7 +133,6 @@ public class WarnData implements Warn {
 		@Override
 		public Warn from(Warn warn) {
 			creationDate = warn.getCreationDate().getEpochSecond();
-			indefinitely = warn.isIndefinitely();
 			warn.getExpirationDate().ifPresent(e -> {
 				expired = e.getEpochSecond();
 			});

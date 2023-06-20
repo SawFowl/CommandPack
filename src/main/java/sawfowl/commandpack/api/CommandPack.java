@@ -49,6 +49,11 @@ public interface CommandPack {
 	 */
 	Set<String> getAvailableGenerators();
 
+	/**
+	 * A system for punishing players.
+	 */
+	Optional<PunishmentService> getPunishmentService();
+
 	public double getAverageTPS1m();
 
 	public double getAverageTPS5m();

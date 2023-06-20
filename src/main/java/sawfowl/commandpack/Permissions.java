@@ -110,12 +110,14 @@ public class Permissions {
 	public static final String SEEN_STAFF = "commandpack.commands.staff.seen";
 	public static final String GLOW_STAFF = "commandpack.commands.staff.glow";
 	public static final String FLAME_STAFF = "commandpack.commands.staff.flame";
-	public static final String EXTINGUISH_STAFF = "commandpack.commands.user.extinguish";
+	public static final String EXTINGUISH_STAFF = "commandpack.commands.staff.extinguish";
+	public static final String BAN_STAFF = "commandpack.commands.staff.ban";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";
 	public static final String IGNORE_DELAY_OTHER_COMMAND = "commandpack.commands.ignore.delay.othercommand";
 	public static final String IGNORE_PRICE = "commandpack.commands.ignore.price";
+	public static final String IGNORE_BAN = "commandpack.commands.ignore.ban";
 
 	// Limits
 	private static final String HOME_LIMIT = "commandpack.limits.home";

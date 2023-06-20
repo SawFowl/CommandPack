@@ -48,6 +48,8 @@ public interface Mute extends DataSerializable {
 
 		Builder reason(Component value);
 
+		Mute from(Mute mute);
+
 	}
 
 }

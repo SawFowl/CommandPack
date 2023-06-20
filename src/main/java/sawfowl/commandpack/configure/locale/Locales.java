@@ -380,6 +380,11 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is now burning."), null, LocalesPaths.COMMANDS_FLAME_SUCCESS_STAFF) || save;
 		save = check(locale, toText("&aFire extinguished."), null, LocalesPaths.COMMANDS_EXTINGUISH_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is extinguished."), null, LocalesPaths.COMMANDS_EXTINGUISH_SUCCESS_STAFF) || save;
+		save = check(locale, toText("&aYou've banned &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_BAN_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a bans player &e" + Placeholders.PLAYER + "&a.\n&aEnd of ban &e" + Placeholders.TIME + "\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently bans player &e" + Placeholders.PLAYER + "\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT) || save;
+		save = check(locale, toText("&cIt's impossible to ban &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_BAN_IGNORE) || save;
+		save = check(locale, toText("&ePlayer &e" + Placeholders.PLAYER + "&e has already been banned on this server."), null, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED) || save;
 
 		if(save) save(locale);
 	}
@@ -701,6 +706,11 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a теперь горит."), null, LocalesPaths.COMMANDS_FLAME_SUCCESS_STAFF) || save;
 		save = check(locale, toText("&aОгонь потушен."), null, LocalesPaths.COMMANDS_EXTINGUISH_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a не горит."), null, LocalesPaths.COMMANDS_EXTINGUISH_SUCCESS_STAFF) || save;
+		save = check(locale, toText("&aВы забанили &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_BAN_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a банит игрока &e" + Placeholders.PLAYER + "&a.&a\nОкончание бана &e" + Placeholders.TIME + "\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a навсегда банит игрока &e" + Placeholders.PLAYER + "\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT) || save;
+		save = check(locale, toText("&cНевозможно забанить &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_BAN_IGNORE) || save;
+		save = check(locale, toText("&eИгрок &e" + Placeholders.PLAYER + "&e уже имеет бан на этом сервере."), null, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED) || save;
 
 		if(save) save(locale);
 	}

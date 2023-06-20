@@ -129,4 +129,8 @@ public class CommandParameters {
 		return (optional ? Parameter.world().key("World").optional() : Parameter.world().key("World")).build();
 	}
 
+	public static Value<Duration> createDuration(boolean optional) {
+		return (optional ? Parameter.duration().key("Duration").optional() : Parameter.duration().key("Duration")).build();
+	}
+
 }

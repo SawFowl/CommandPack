@@ -58,9 +58,10 @@ public class LocalesPaths {
 	private static final Object COMMAND_LIST = "List";
 	private static final Object COMMAND_SEEN = "Seen";
 	private static final Object COMMAND_HELP = "Help";
-	private static final Object COMMAND_GLOW = "Glow";
+	private static final Object COMMAND_GLOW = "Glow"; // Добавить в инфо по обнове.
 	private static final Object COMMAND_FLAME = "Flame";
 	private static final Object COMMAND_EXTINGUISH = "Extinguish";
+	private static final Object COMMAND_BAN = "Ban";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -367,5 +368,10 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_FLAME_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_FLAME, "SuccessStaff"};
 	public static final Object[] COMMANDS_EXTINGUISH_SUCCESS = {PATH_COMMANDS, COMMAND_EXTINGUISH, "Success"};
 	public static final Object[] COMMANDS_EXTINGUISH_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_EXTINGUISH, "SuccessStaff"};
+	public static final Object[] COMMANDS_BAN_SUCCESS = {PATH_COMMANDS, COMMAND_BAN, "Success"};
+	public static final Object[] COMMANDS_BAN_ANNOUNCEMENT = {PATH_COMMANDS, COMMAND_BAN, "Announcement"};
+	public static final Object[] COMMANDS_BAN_ANNOUNCEMENT_PERMANENT = {PATH_COMMANDS, COMMAND_BAN, "SuccessPermanent"};
+	public static final Object[] COMMANDS_BAN_IGNORE = {PATH_COMMANDS, COMMAND_BAN, "Ignore"};
+	public static final Object[] COMMANDS_BAN_ALREADY_BANNED = {PATH_COMMANDS, COMMAND_BAN, "AlreadyBanned"};
 
 }

@@ -9,6 +9,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ban.Ban;
 import org.spongepowered.api.service.ban.Ban.Builder;
+import org.spongepowered.api.service.ban.BanTypes;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
@@ -32,7 +33,6 @@ public class BanData {
 	}
 	public BanData(Ban.Profile ban) {
 		creationDate = ban.creationDate().getEpochSecond();
-		indefinitely = ban.isIndefinite();
 		uuid = ban.profile().uniqueId();
 		name = ban.profile().name().orElse(ban.profile().examinableName());
 		ban.expirationDate().ifPresent(date -> {
@@ -45,11 +45,8 @@ public class BanData {
 			reason = TextUtils.serializeJson(r);
 		});
 	}
-	public BanData(Ban.IP ban, GameProfile gameProfile) {
+	public BanData(Ban.IP ban) {
 		creationDate = ban.creationDate().getEpochSecond();
-		indefinitely = ban.isIndefinite();
-		uuid = gameProfile.uniqueId();
-		name = gameProfile.name().orElse(gameProfile.examinableName());
 		ban.expirationDate().ifPresent(date -> {
 			expired = date.getEpochSecond();
 		});
@@ -64,8 +61,6 @@ public class BanData {
 
 	@Setting("CreationDate")
 	private long creationDate;
-	@Setting("Indefinitely")
-	private boolean indefinitely;
 	@Setting("UUID")
 	private UUID uuid;
 	@Setting("Name")
@@ -85,15 +80,15 @@ public class BanData {
 	}
 
 	public boolean isIndefinitely() {
-		return indefinitely;
+		return expired != null || expired <= 0;
 	}
 
-	public UUID getUniqueId() {
-		return uuid;
+	public Optional<UUID> getUniqueId() {
+		return Optional.ofNullable(uuid);
 	}
 
-	public String getName() {
-		return name;
+	public Optional<String> getName() {
+		return Optional.ofNullable(name);
 	}
 
 	public Optional<Instant> getExpirationDate() {
@@ -125,8 +120,10 @@ public class BanData {
 		Optional<Component> reason = getReason();
 		if(reason.isPresent()) builder = builder.source(reason.get());
 		if(inetAddress == null) {
+			builder.type(BanTypes.PROFILE);
 			builder = builder.profile(getGameProfile());
 		} else {
+			builder.type(BanTypes.IP);
 			builder = builder.address(inetAddress);
 		}
 		return builder.build();

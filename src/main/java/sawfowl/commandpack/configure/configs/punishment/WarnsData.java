@@ -115,6 +115,15 @@ public class WarnsData implements Warns {
 			inAllTime++;
 			return this;
 		}
+
+		@Override
+		public WarnsData from(Warns warns) {
+			uuid = warns.getUniqueId();
+			name = warns.getName();
+			WarnsData.this.warns = warns.getWarns().stream().map(warn -> (WarnData) (warn instanceof WarnData ? warn : Warn.builder().from(warn))).collect(Collectors.toList());
+			inAllTime = warns.inAllTime();
+			return WarnsData.this;
+		}
 		
 	}
 
