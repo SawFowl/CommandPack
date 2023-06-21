@@ -189,6 +189,10 @@ public class CommandsConfig {
 	private CommandSettings ban = new CommandSettings();
 	@Setting("Unban")
 	private CommandSettings unban = new CommandSettings(new String[] {"pardon"});
+	@Setting("Banip")
+	private CommandSettings banip = new CommandSettings();
+	@Setting("Unban")
+	private CommandSettings unbanip = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

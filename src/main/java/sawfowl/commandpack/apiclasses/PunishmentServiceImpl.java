@@ -10,6 +10,7 @@ import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ban.Ban;
 import org.spongepowered.api.service.ban.Ban.IP;
 import org.spongepowered.api.service.ban.Ban.Profile;
+import org.spongepowered.api.service.ban.BanTypes;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.PunishmentService;
@@ -84,14 +85,14 @@ public class PunishmentServiceImpl implements PunishmentService {
 
 	@Override
 	public CompletableFuture<Boolean> remove(Ban ban) {
-		if(ban instanceof IP) {
+		if(ban.type().equals(BanTypes.IP.get())) {
 			return pardon(((IP) ban).address());
 		} else return pardon(((Profile) ban).profile());
 	}
 
 	@Override
 	public CompletableFuture<Optional<? extends Ban>> add(Ban ban) {
-		if(ban instanceof IP) {
+		if(ban.type().equals(BanTypes.IP.get())) {
 			storage.saveBan((IP) ban);
 		} else storage.saveBan((Profile) ban);
 		return CompletableFuture.completedFuture(Optional.ofNullable(ban));

@@ -20,17 +20,7 @@ import sawfowl.localeapi.api.TextUtils;
 @ConfigSerializable
 public class BanData {
 
-	public BanData() {
-		if(uuid == null) return;
-		Sponge.server().gameProfileManager().cache().findById(uuid).ifPresent(p -> {
-			gameProfile = p;
-		});
-		if(gameProfile == null) {
-			Sponge.server().gameProfileManager().profile(uuid).thenAccept(p -> {
-				gameProfile = p;
-			});
-		}
-	}
+	public BanData() {}
 	public BanData(Ban.Profile ban) {
 		creationDate = ban.creationDate().getEpochSecond();
 		uuid = ban.profile().uniqueId();

@@ -59,7 +59,8 @@ public class Ban extends AbstractParameterizedCommand {
 					src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED), Placeholders.PLAYER, user.name()));
 					return;
 				}
-				Builder banBuilder = org.spongepowered.api.service.ban.Ban.builder().type(BanTypes.PROFILE).profile(user.profile()).startDate(Instant.now()).source(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server"));
+				Component source = isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server");
+				Builder banBuilder = org.spongepowered.api.service.ban.Ban.builder().type(BanTypes.PROFILE).profile(user.profile()).startDate(Instant.now()).source(source);
 				Optional<Duration> duration = getArgument(context, this.duration);
 				if(duration.isPresent()) banBuilder = banBuilder.expirationDate(Instant.now().plusSeconds(duration.get().getSeconds()));
 				Optional<String> reason = getString(context, "Reason");
@@ -72,11 +73,11 @@ public class Ban extends AbstractParameterizedCommand {
 				if(plugin.getMainConfig().getPunishment().getAnnounce().isBan()) {
 					if(ban.expirationDate().isPresent()) {
 						Sponge.server().onlinePlayers().forEach(player -> {
-							player.sendMessage(TextUtils.replace(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(user.name()), expire(player.locale(), ban), ban.reason().orElse(text("&f-"))}));
+							player.sendMessage(TextUtils.replace(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {source, text(user.name()), expire(player.locale(), ban), ban.reason().orElse(text("&f-"))}));
 						});
 					} else {
 						Sponge.server().onlinePlayers().forEach(player -> {
-							player.sendMessage(TextUtils.replace(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(user.name()), ban.reason().orElse(text("&f-"))}));
+							player.sendMessage(TextUtils.replace(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {source, text(user.name()), ban.reason().orElse(text("&f-"))}));
 						});
 					}
 				} else src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BAN_SUCCESS), Placeholders.PLAYER, user.name()));
@@ -106,7 +107,6 @@ public class Ban extends AbstractParameterizedCommand {
 			ParameterSettings.of(CommandParameters.createUser(false), false, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT),
 			ParameterSettings.of(duration, true, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
 			ParameterSettings.of(reason, true, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
-			
 		);
 	}
 

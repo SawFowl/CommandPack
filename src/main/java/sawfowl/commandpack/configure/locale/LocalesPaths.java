@@ -63,6 +63,8 @@ public class LocalesPaths {
 	private static final Object COMMAND_EXTINGUISH = "Extinguish";
 	private static final Object COMMAND_BAN = "Ban";
 	private static final Object COMMAND_UNBAN = "Unban";
+	private static final Object COMMAND_BANIP = "Banip";
+	private static final Object COMMAND_UNBANIP = "Unbanip";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -376,5 +378,10 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_BAN_ALREADY_BANNED = {PATH_COMMANDS, COMMAND_BAN, "AlreadyBanned"};
 	public static final Object[] COMMANDS_UNBAN_SUCCESS = {PATH_COMMANDS, COMMAND_UNBAN, "Success"};
 	public static final Object[] COMMANDS_UNBAN_ANNOUNCEMENT = {PATH_COMMANDS, COMMAND_UNBAN, "Announcement"};
+	public static final Object[] COMMANDS_BANIP_SUCCESS = {PATH_COMMANDS, COMMAND_BANIP, "Success"};
+	public static final Object[] COMMANDS_BANIP_ANNOUNCEMENT = {PATH_COMMANDS, COMMAND_BANIP, "Announcement"};
+	public static final Object[] COMMANDS_BANIP_ANNOUNCEMENT_PERMANENT = {PATH_COMMANDS, COMMAND_BANIP, "SuccessPermanent"};
+	public static final Object[] COMMANDS_BANIP_ALREADY_BANNED = {PATH_COMMANDS, COMMAND_BANIP, "AlreadyBanned"};
+	public static final Object[] COMMANDS_UNBANIP_SUCCESS = {PATH_COMMANDS, COMMAND_UNBANIP, "Success"};
 
 }
