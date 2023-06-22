@@ -385,12 +385,18 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently bans player &e" + Placeholders.PLAYER + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&cIt's impossible to ban &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_BAN_IGNORE) || save;
 		save = check(locale, toText("&ePlayer &e" + Placeholders.PLAYER + "&e has already been banned on this server."), null, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED) || save;
+		save = check(locale, toText("&bYou are banned on the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_DISCONNECT) || save;
 		save = check(locale, toText("&aYou unbanned &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a unbans &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT) || save;
 		save = check(locale, toText("&aYou unbanned &e" + Placeholders.PLAYER + "&a and his IP &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_BANIP_SUCCESS) || save;
-		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a bans player &e" + Placeholders.PLAYER + "&a by IP.\n&aEnd of ban &e" + Placeholders.TIME + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT) || save;
-		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently bans player &e" + Placeholders.PLAYER + "&a by IP.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a bans player &e" + Placeholders.PLAYER + "&a by IP.\n&aEnd of ban &e" + Placeholders.TIME + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently bans player &e" + Placeholders.PLAYER + "&a by IP.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT_PERMANENT) || save;
+		save = check(locale, toText("&bYour IP is banned on the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANIP_DISCONNECT) || save;
 		save = check(locale, toText("&aYou unbanned IP &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_UNBANIP_SUCCESS) || save;
+		save = check(locale, toText("&aYou kicked &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_KICK_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&bkicked you from the server.\n&bReason: &e" + Placeholders.VALUE + "&b."), null, LocalesPaths.COMMANDS_KICK_DISCONNECT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&akicks out from the server  " + Placeholders.PLAYER + ".\n&aReason: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_KICK_ANNOUNCEMENT) || save;
+		save = check(locale, toText("&cYou can't kick &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_KICK_SUCCESS) || save;
 
 		if(save) save(locale);
 	}
@@ -717,12 +723,18 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a навсегда банит игрока &e" + Placeholders.PLAYER + "&a.\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&cНевозможно забанить &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_BAN_IGNORE) || save;
 		save = check(locale, toText("&eИгрок &e" + Placeholders.PLAYER + "&e уже имеет бан на этом сервере."), null, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED) || save;
+		save = check(locale, toText("&bВы забанены на сервере.\n&bБан выдан &e" + Placeholders.SOURCE + "\n&bПричина: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_DISCONNECT) || save;
 		save = check(locale, toText("&aВы разбанили &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a снимает бан с &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT) || save;
 		save = check(locale, toText("&aВы забанили игрока &e" + Placeholders.PLAYER + "&a и его IP &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_BANIP_SUCCESS) || save;
-		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a банит по IP игрока &e" + Placeholders.PLAYER + "&a.\nОкончание бана &e" + Placeholders.TIME + "&a.\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT) || save;
-		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a навсегда банит по IP игрока &e" + Placeholders.PLAYER + "&a.\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a банит по IP игрока &e" + Placeholders.PLAYER + "&a.\nОкончание бана &e" + Placeholders.TIME + "&a.\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a навсегда банит по IP игрока &e" + Placeholders.PLAYER + "&a.\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT_PERMANENT) || save;
+		save = check(locale, toText("&bВаш IP забанен на сервере.\n&bБан выдан &e" + Placeholders.SOURCE + "\n&bПричина: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANIP_DISCONNECT) || save;
 		save = check(locale, toText("&aВы разбанили IP &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_UNBANIP_SUCCESS) || save;
+		save = check(locale, toText("&aВы кикнули &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_KICK_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&bкикнул вас с сервера.\n&bПричина: &e" + Placeholders.VALUE + "&b."), null, LocalesPaths.COMMANDS_KICK_DISCONNECT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&aкикает с сервера" + Placeholders.PLAYER + ".\n&aПричина: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_KICK_ANNOUNCEMENT) || save;
+		save = check(locale, toText("&cНельзя кикнуть &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_KICK_SUCCESS) || save;
 
 		if(save) save(locale);
 	}

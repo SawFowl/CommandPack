@@ -193,6 +193,8 @@ public class CommandsConfig {
 	private CommandSettings banip = new CommandSettings();
 	@Setting("Unban")
 	private CommandSettings unbanip = new CommandSettings();
+	@Setting("Kick")
+	private CommandSettings kick = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

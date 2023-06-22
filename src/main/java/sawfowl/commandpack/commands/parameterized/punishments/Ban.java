@@ -44,6 +44,7 @@ public class Ban extends AbstractParameterizedCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		String userName = getUser(context).get();
+		if(isPlayer && userName.equals(((ServerPlayer) src).name())) exception(getText(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF));
 		Sponge.server().userManager().load(userName).thenAccept(optional -> {
 			if(!optional.isPresent()) {
 				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
@@ -67,6 +68,7 @@ public class Ban extends AbstractParameterizedCommand {
 				if(reason.isPresent()) banBuilder = banBuilder.reason(text(reason.get()));
 				org.spongepowered.api.service.ban.Ban ban = banBuilder.build();
 				plugin.getPunishmentService().add(ban);
+				if(user.player().isPresent() && user.isOnline()) user.player().get().kick(TextUtils.replace(getText(user.player().get(), LocalesPaths.COMMANDS_BAN_DISCONNECT), new String[] {Placeholders.SOURCE, Placeholders.VALUE}, new Component[] {source, text(reason.orElse("-"))}));
 				if(ban.expirationDate().isPresent()) {
 					Sponge.systemSubject().sendMessage(TextUtils.replace(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(user.name()), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), ban), ban.reason().orElse(text("&f-"))}));	
 				} else Sponge.systemSubject().sendMessage(TextUtils.replace(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(user.name()), ban.reason().orElse(text("&f-"))}));

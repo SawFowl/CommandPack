@@ -43,7 +43,8 @@ public class Banip extends AbstractParameterizedCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		ServerPlayer target = getPlayer(context).get();
-		if(target.hasPermission(Permissions.IGNORE_BAN)) exception(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BAN_IGNORE), Placeholders.PLAYER, target.name()));
+		if(isPlayer && target.name().equals(((ServerPlayer) src).name())) exception(getText(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF));
+		if(target.hasPermission(Permissions.IGNORE_BANIP)) exception(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BAN_IGNORE), Placeholders.PLAYER, target.name()));
 		Component source = isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server");
 		Builder banBuilder = org.spongepowered.api.service.ban.Ban.builder().type(BanTypes.PROFILE).profile(target.profile()).startDate(Instant.now()).source(source);
 		Builder banIPBuilder = org.spongepowered.api.service.ban.Ban.builder().type(BanTypes.IP).address(target.connection().address().getAddress()).startDate(Instant.now()).source(source);
@@ -60,6 +61,7 @@ public class Banip extends AbstractParameterizedCommand {
 		org.spongepowered.api.service.ban.Ban ban = banIPBuilder.build();
 		plugin.getPunishmentService().add(banBuilder.build());
 		plugin.getPunishmentService().add(ban);
+		if(target.isOnline()) target.kick(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_BANIP_DISCONNECT), new String[] {Placeholders.SOURCE, Placeholders.VALUE}, new Component[] {source, text(reason.orElse("-"))}));
 		if(ban.expirationDate().isPresent()) {
 			Sponge.systemSubject().sendMessage(TextUtils.replace(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(target.name()), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), ban), ban.reason().orElse(text("&f-"))}));	
 		} else Sponge.systemSubject().sendMessage(TextUtils.replace(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(target.name()), ban.reason().orElse(text("&f-"))}));

@@ -65,6 +65,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_UNBAN = "Unban";
 	private static final Object COMMAND_BANIP = "Banip";
 	private static final Object COMMAND_UNBANIP = "Unbanip";
+	private static final Object COMMAND_KICK = "Kick";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -376,12 +377,18 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_BAN_ANNOUNCEMENT_PERMANENT = {PATH_COMMANDS, COMMAND_BAN, "SuccessPermanent"};
 	public static final Object[] COMMANDS_BAN_IGNORE = {PATH_COMMANDS, COMMAND_BAN, "Ignore"};
 	public static final Object[] COMMANDS_BAN_ALREADY_BANNED = {PATH_COMMANDS, COMMAND_BAN, "AlreadyBanned"};
+	public static final Object[] COMMANDS_BAN_DISCONNECT = {PATH_COMMANDS, COMMAND_BAN, "Disconnect"};
 	public static final Object[] COMMANDS_UNBAN_SUCCESS = {PATH_COMMANDS, COMMAND_UNBAN, "Success"};
 	public static final Object[] COMMANDS_UNBAN_ANNOUNCEMENT = {PATH_COMMANDS, COMMAND_UNBAN, "Announcement"};
 	public static final Object[] COMMANDS_BANIP_SUCCESS = {PATH_COMMANDS, COMMAND_BANIP, "Success"};
 	public static final Object[] COMMANDS_BANIP_ANNOUNCEMENT = {PATH_COMMANDS, COMMAND_BANIP, "Announcement"};
 	public static final Object[] COMMANDS_BANIP_ANNOUNCEMENT_PERMANENT = {PATH_COMMANDS, COMMAND_BANIP, "SuccessPermanent"};
 	public static final Object[] COMMANDS_BANIP_ALREADY_BANNED = {PATH_COMMANDS, COMMAND_BANIP, "AlreadyBanned"};
+	public static final Object[] COMMANDS_BANIP_DISCONNECT = {PATH_COMMANDS, COMMAND_BANIP, "Disconnect"};
 	public static final Object[] COMMANDS_UNBANIP_SUCCESS = {PATH_COMMANDS, COMMAND_UNBANIP, "Success"};
+	public static final Object[] COMMANDS_KICK_SUCCESS = {PATH_COMMANDS, COMMAND_KICK, "Success"};
+	public static final Object[] COMMANDS_KICK_DISCONNECT = {PATH_COMMANDS, COMMAND_KICK, "Disconnect"};
+	public static final Object[] COMMANDS_KICK_ANNOUNCEMENT = {PATH_COMMANDS, COMMAND_KICK, "Announcement"};
+	public static final Object[] COMMANDS_KICK_IGNORE = {PATH_COMMANDS, COMMAND_KICK, "Ignore"};
 
 }
