@@ -1,5 +1,6 @@
 package sawfowl.commandpack.configure.configs.punishment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -11,9 +12,15 @@ import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
+import org.spongepowered.configurate.reference.ConfigurationReference;
+import org.spongepowered.configurate.reference.ValueReference;
 
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
 
@@ -52,11 +59,13 @@ public class WarnsData implements Warns {
 
 	@Override
 	public List<Warn> getWarns() {
+		checkExpired();
 		return warns.stream().map(w -> Warn.builder().from(w)).collect(Collectors.toList());
 	}
 
 	@Override
 	public int totalWarns() {
+		checkExpired();
 		return warns.size();
 	}
 
@@ -74,7 +83,7 @@ public class WarnsData implements Warns {
 
 	@Override
 	public void checkExpired() {
-		warns.removeIf(w -> !w.isIndefinitely() && (System.currentTimeMillis() / 1000) >= w.getExpirationDate().get().getEpochSecond());
+		warns.removeIf(WarnData::isExpired);
 	}
 
 	@Override
@@ -86,6 +95,18 @@ public class WarnsData implements Warns {
 	public DataContainer toContainer() {
 		return DataContainer.createNew()
 				.set(Queries.CONTENT_VERSION, contentVersion());
+	}
+
+	@Override
+	public void saveFile() {
+		checkExpired();
+		try {
+			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(CommandPack.getInstance().getLocales().getLocaleService().getConfigurationOptions()).path(CommandPack.getInstance().getConfigDir().resolve("Modules" + File.separator + "Punishment" + File.separator + "Warns").resolve(getUniqueId().toString() + ".conf")).build().loadToReference();
+			ValueReference<WarnsData, CommentedConfigurationNode> config = configReference.referenceTo(WarnsData.class);
+			config.setAndSave((WarnsData) (this instanceof WarnsData ? this : Warns.builder().from(this)));
+		} catch (ConfigurateException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private class Builder implements Warns.Builder {

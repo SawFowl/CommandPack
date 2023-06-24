@@ -91,6 +91,11 @@ public class WarnData implements Warn {
 		return obj instanceof WarnData && Objects.equals(uuid, ((WarnData) obj).uuid);
 	}
 
+	@Override
+	public boolean isExpired() {
+		return expired != null && expired >= Instant.now().getEpochSecond();
+	}
+
 	private class Builder implements Warn.Builder {
 
 		@Override

@@ -10,6 +10,7 @@ import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ban.Ban;
 import org.spongepowered.api.service.ban.Ban.IP;
 import org.spongepowered.api.service.ban.Ban.Profile;
+import org.spongepowered.configurate.ConfigurationOptions;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.punishment.Mute;
@@ -22,8 +23,10 @@ public abstract class AbstractPunishmentStorage {
 	Map<InetAddress, Ban.IP> bansIP = new HashMap<>();
 	Map<UUID, Mute> mutes = new HashMap<>();
 	Map<UUID, Warns> warns = new HashMap<>();
+	ConfigurationOptions options;
 	public AbstractPunishmentStorage(CommandPack plugin) {
 		this.plugin = plugin;
+		options = plugin.getLocales().getLocaleService().getConfigurationOptions();
 		load();
 	}
 
@@ -52,12 +55,19 @@ public abstract class AbstractPunishmentStorage {
 	}
 
 	public Optional<Mute> getMute(UUID uuid) {
-		return Optional.ofNullable(mutes.getOrDefault(uuid, null));
+		Optional<Mute> mute = Optional.ofNullable(mutes.getOrDefault(uuid, null));
+		if(mute.isPresent() && mute.get().isExpired()) {
+			deleteMute(mute.get());
+			return Optional.empty();
+		}
+		return mute;
 	}
 
 	public Optional<Warns> getWarns(UUID uuid) {
 		return Optional.ofNullable(warns.getOrDefault(uuid, null));
 	}
+
+	public abstract void load();
 
 	public abstract void saveBan(Profile ban);
 
@@ -69,12 +79,10 @@ public abstract class AbstractPunishmentStorage {
 
 	public abstract void saveMute(Mute mute);
 
-	public abstract void deleteMute(Mute mute);
+	public abstract boolean deleteMute(Mute mute);
 
 	public abstract void saveWarns(Warns warns);
 
-	public abstract void deleteWarns(Warns warns);
-
-	public abstract void load();
+	public abstract boolean deleteWarns(Warns warns);
 
 }

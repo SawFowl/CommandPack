@@ -76,7 +76,7 @@ public class Unbanip extends AbstractRawCommand {
 			@Override
 			public Optional<InetAddress> get(String[] args) {
 				Collection<IP> variants = plugin.getPunishmentService().getAllIPBans();
-				return args.length == 0 || variants.isEmpty() ? Optional.ofNullable(null) : variants.stream().filter(i -> i.address().getHostAddress().equals(args[0])).findFirst().map(IP::address);
+				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(i -> i.address().getHostAddress().equals(args[0])).findFirst().map(IP::address);
 			}
 		}, false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
 	}

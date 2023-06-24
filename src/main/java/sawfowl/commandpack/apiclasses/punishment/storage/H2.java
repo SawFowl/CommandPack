@@ -53,7 +53,8 @@ public class H2 extends AbstractPunishmentStorage {
 	}
 
 	@Override
-	public void deleteMute(Mute mute) {
+	public boolean deleteMute(Mute mute) {
+		return false;
 	}
 
 	@Override
@@ -61,7 +62,8 @@ public class H2 extends AbstractPunishmentStorage {
 	}
 
 	@Override
-	public void deleteWarns(Warns warns) {
+	public boolean deleteWarns(Warns warns) {
+		return false;
 	}
 
 	@Override

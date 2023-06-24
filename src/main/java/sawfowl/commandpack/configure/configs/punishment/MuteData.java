@@ -76,6 +76,11 @@ public class MuteData implements Mute {
 	}
 
 	@Override
+	public boolean isExpired() {
+		return expired != null && expired >= Instant.now().getEpochSecond();
+	}
+
+	@Override
 	public int contentVersion() {
 		return 1;
 	}

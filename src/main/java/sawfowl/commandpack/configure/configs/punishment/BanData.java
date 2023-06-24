@@ -1,6 +1,7 @@
 package sawfowl.commandpack.configure.configs.punishment;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,7 +47,7 @@ public class BanData {
 		ban.reason().ifPresent(r -> {
 			reason = TextUtils.serializeJson(r);
 		});
-		inetAddress = ban.address();
+		inetAddress = ban.address().getHostAddress();
 	}
 
 	@Setting("CreationDate")
@@ -62,7 +63,7 @@ public class BanData {
 	@Setting("Reason")
 	private String reason;
 	@Setting("Address")
-	private InetAddress inetAddress;
+	private String inetAddress;
 	private GameProfile gameProfile;
 
 	public Instant getCreationDate() {
@@ -98,7 +99,13 @@ public class BanData {
 	}
 
 	public Optional<InetAddress> getInetAddress() {
-		return Optional.ofNullable(inetAddress);
+		try {
+			return Optional.ofNullable(InetAddress.getByName(inetAddress));
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Optional.empty();
 	}
 
 	public org.spongepowered.api.service.ban.Ban getBan() {
@@ -108,13 +115,17 @@ public class BanData {
 		Optional<Component> source = getSource();
 		if(source.isPresent()) builder = builder.source(source.get());
 		Optional<Component> reason = getReason();
-		if(reason.isPresent()) builder = builder.source(reason.get());
+		if(reason.isPresent()) builder = builder.reason(reason.get());
 		if(inetAddress == null) {
 			builder.type(BanTypes.PROFILE);
 			builder = builder.profile(getGameProfile());
 		} else {
 			builder.type(BanTypes.IP);
-			builder = builder.address(inetAddress);
+			try {
+				builder = builder.address(InetAddress.getByName(inetAddress));
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
 		}
 		return builder.build();
 	}

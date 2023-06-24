@@ -397,6 +397,13 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&bkicked you from the server.\n&bReason: &e" + Placeholders.VALUE + "&b."), null, LocalesPaths.COMMANDS_KICK_DISCONNECT) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&akicks out from the server  " + Placeholders.PLAYER + ".\n&aReason: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_KICK_ANNOUNCEMENT) || save;
 		save = check(locale, toText("&cYou can't kick &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_KICK_SUCCESS) || save;
+		save = check(locale, toText("&aYou blocked the chat to the player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_MUTE_SUCCESS) || save;
+		save = check(locale, toText("&cYou are blocked from writing in chat blocked until &e" + Placeholders.TIME + "&c.\nReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET) || save;
+		save = check(locale, toText("&cYou are permanently blocked from writing in the chat.\nReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a mute player &e" + Placeholders.PLAYER + "&a.\nEnd of mute &e" + Placeholders.TIME + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_ANNOUNCEMENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently mute player &e" + Placeholders.PLAYER + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_ANNOUNCEMENT_PERMANENT) || save;
+		save = check(locale, toText("&cUnable to block chat for player &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_MUTE_IGNORE) || save;
+		save = check(locale, toText("&ePlayer &e" + Placeholders.PLAYER + "&e already cannot write in chat."), null, LocalesPaths.COMMANDS_MUTE_ALREADY_MUTED) || save;
 
 		if(save) save(locale);
 	}
@@ -723,7 +730,8 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a навсегда банит игрока &e" + Placeholders.PLAYER + "&a.\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&cНевозможно забанить &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_BAN_IGNORE) || save;
 		save = check(locale, toText("&eИгрок &e" + Placeholders.PLAYER + "&e уже имеет бан на этом сервере."), null, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED) || save;
-		save = check(locale, toText("&bВы забанены на сервере.\n&bБан выдан &e" + Placeholders.SOURCE + "\n&bПричина: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_DISCONNECT) || save;
+		save = check(locale, toText("&bВы забанены на сервере до &e" + Placeholders.TIME + ".\n&bБан выдан &e" + Placeholders.SOURCE + "\n&bПричина: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_DISCONNECT) || save;
+		save = check(locale, toText("&bВы на всегда забанены на сервере.\n&bБан выдан &e" + Placeholders.SOURCE + "\n&bПричина: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_DISCONNECT_PERMANENT) || save;
 		save = check(locale, toText("&aВы разбанили &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a снимает бан с &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT) || save;
 		save = check(locale, toText("&aВы забанили игрока &e" + Placeholders.PLAYER + "&a и его IP &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_BANIP_SUCCESS) || save;
@@ -735,6 +743,13 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&bкикнул вас с сервера.\n&bПричина: &e" + Placeholders.VALUE + "&b."), null, LocalesPaths.COMMANDS_KICK_DISCONNECT) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&aкикает с сервера" + Placeholders.PLAYER + ".\n&aПричина: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_KICK_ANNOUNCEMENT) || save;
 		save = check(locale, toText("&cНельзя кикнуть &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_KICK_SUCCESS) || save;
+		save = check(locale, toText("&aВы заблокировали чат игроку &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_MUTE_SUCCESS) || save;
+		save = check(locale, toText("&cВам заблокирована возможность писать в чат до &e" + Placeholders.TIME + "&c.\nПричина: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET) || save;
+		save = check(locale, toText("&cВам на всегда заблокирована возможность писать в чат.\nПричина: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a блокирует возможность писать в чат игроку &e" + Placeholders.PLAYER + "&a.\nОкончание мута &e" + Placeholders.TIME + "&a.\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_ANNOUNCEMENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a навсегда блокирует возможность писать в чат игроку &e" + Placeholders.PLAYER + "&a.\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_ANNOUNCEMENT_PERMANENT) || save;
+		save = check(locale, toText("&cНевозможно заблокировать чат игроку &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_MUTE_IGNORE) || save;
+		save = check(locale, toText("&eИгрок &e" + Placeholders.PLAYER + "&e уже не может писать в чат."), null, LocalesPaths.COMMANDS_MUTE_ALREADY_MUTED) || save;
 
 		if(save) save(locale);
 	}

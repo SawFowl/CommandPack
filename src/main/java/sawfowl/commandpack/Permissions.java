@@ -116,6 +116,7 @@ public class Permissions {
 	public static final String UNBAN_STAFF = "commandpack.commands.staff.unban";
 	public static final String UNBANIP_STAFF = "commandpack.commands.staff.unbanip";
 	public static final String KICK_STAFF = "commandpack.commands.staff.kick";
+	public static final String MUTE_STAFF = "commandpack.commands.staff.mute";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";
@@ -123,7 +124,8 @@ public class Permissions {
 	public static final String IGNORE_PRICE = "commandpack.commands.ignore.price";
 	public static final String IGNORE_BAN = "commandpack.commands.ignore.ban";
 	public static final String IGNORE_BANIP = "commandpack.commands.ignore.banip";
-	public static final String IGNORE_KICK = "commandpack.commands.ignore.ban";
+	public static final String IGNORE_KICK = "commandpack.commands.ignore.kick";
+	public static final String IGNORE_MUTE = "commandpack.commands.ignore.mute";
 
 	// Limits
 	private static final String HOME_LIMIT = "commandpack.limits.home";

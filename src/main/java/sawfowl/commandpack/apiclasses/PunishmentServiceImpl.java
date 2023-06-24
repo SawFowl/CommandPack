@@ -3,9 +3,11 @@ package sawfowl.commandpack.apiclasses;
 import java.net.InetAddress;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ban.Ban;
 import org.spongepowered.api.service.ban.Ban.IP;
@@ -14,6 +16,8 @@ import org.spongepowered.api.service.ban.BanTypes;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.PunishmentService;
+import sawfowl.commandpack.api.data.punishment.Mute;
+import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.apiclasses.punishment.storage.AbstractPunishmentStorage;
 import sawfowl.commandpack.apiclasses.punishment.storage.FileStorage;
 
@@ -96,6 +100,46 @@ public class PunishmentServiceImpl implements PunishmentService {
 			storage.saveBan((IP) ban);
 		} else storage.saveBan((Profile) ban);
 		return CompletableFuture.completedFuture(Optional.ofNullable(ban));
+	}
+
+	@Override
+	public Optional<Mute> getMute(UUID uuid) {
+		return storage.getMute(uuid);
+	}
+
+	@Override
+	public Optional<Mute> getMute(ServerPlayer player) {
+		return getMute(player.uniqueId());
+	}
+
+	@Override
+	public void addMute(Mute mute) {
+		storage.saveMute(mute);
+	}
+
+	@Override
+	public boolean removeMute(Mute mute) {
+		return storage.deleteMute(mute);
+	}
+
+	@Override
+	public Optional<Warns> getWarns(UUID uuid) {
+		return storage.getWarns(uuid);
+	}
+
+	@Override
+	public Optional<Warns> getWarns(ServerPlayer player) {
+		return getWarns(player.uniqueId());
+	}
+
+	@Override
+	public void addWarns(Warns warns) {
+		storage.saveWarns(warns);
+	}
+
+	@Override
+	public boolean removeWarns(Warns warns) {
+		return storage.deleteWarns(warns);
 	}
 
 }

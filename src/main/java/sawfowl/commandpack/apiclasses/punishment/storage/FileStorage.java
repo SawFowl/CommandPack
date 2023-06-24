@@ -10,7 +10,6 @@ import org.spongepowered.api.service.ban.Ban.IP;
 import org.spongepowered.api.service.ban.Ban.Profile;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.ConfigurationOptions;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.configurate.reference.ConfigurationReference;
 import org.spongepowered.configurate.reference.ValueReference;
@@ -28,19 +27,17 @@ public class FileStorage extends AbstractPunishmentStorage {
 	private Path bansIPPath;
 	private Path mutesPath;
 	private Path warnsPath;
-	private ConfigurationOptions options;
 	public FileStorage(CommandPack plugin) {
 		super(plugin);
-		bansPath = plugin.getConfigDir().resolve("Modules").resolve("Punishment").resolve("Bans");
-		bansIPPath = plugin.getConfigDir().resolve("Modules").resolve("Punishment").resolve("BansIP");
-		mutesPath = plugin.getConfigDir().resolve("Modules").resolve("Punishment").resolve("Mutes");
-		warnsPath = plugin.getConfigDir().resolve("Modules").resolve("Punishment").resolve("Warns");
-		options = plugin.getLocales().getLocaleService().getConfigurationOptions();
-		checkPaths();
-		load();
 	}
 
 	private void checkPaths() {
+		if(!plugin.getConfigDir().resolve("Modules").toFile().exists()) plugin.getConfigDir().resolve("Modules").toFile().mkdir();
+		if(!plugin.getConfigDir().resolve("Modules"+ File.separator + "Punishment").toFile().exists()) plugin.getConfigDir().resolve("Modules"+ File.separator + "Punishment").toFile().mkdir();
+		bansPath = plugin.getConfigDir().resolve("Modules" + File.separator + "Punishment" + File.separator + "Bans");
+		bansIPPath = plugin.getConfigDir().resolve("Modules" + File.separator + "Punishment" + File.separator + "BansIP");
+		mutesPath = plugin.getConfigDir().resolve("Modules" + File.separator + "Punishment" + File.separator + "Mutes");
+		warnsPath = plugin.getConfigDir().resolve("Modules" + File.separator + "Punishment" + File.separator + "Warns");
 		if(!bansPath.toFile().exists()) bansPath.toFile().mkdir();
 		if(!bansIPPath.toFile().exists()) bansIPPath.toFile().mkdir();
 		if(!mutesPath.toFile().exists()) mutesPath.toFile().mkdir();
@@ -107,10 +104,10 @@ public class FileStorage extends AbstractPunishmentStorage {
 	}
 
 	@Override
-	public void deleteMute(Mute mute) {
+	public boolean deleteMute(Mute mute) {
 		if(mutes.containsKey(mute.getUniqueId())) mutes.remove(mute.getUniqueId());
 		File file = mutesPath.resolve(mute.getUniqueId().toString() + ".conf").toFile();
-		if(file.exists()) file.delete();
+		return file.exists() && file.delete();
 	}
 
 	@Override
@@ -128,14 +125,15 @@ public class FileStorage extends AbstractPunishmentStorage {
 	}
 
 	@Override
-	public void deleteWarns(Warns warns) {
+	public boolean deleteWarns(Warns warns) {
 		if(super.warns.containsKey(warns.getUniqueId())) super.warns.remove(warns.getUniqueId());
 		File file = warnsPath.resolve(warns.getUniqueId().toString() + ".conf").toFile();
-		if(file.exists()) file.delete();
+		return file.exists() && file.delete();
 	}
 
 	@Override
 	public void load() {
+		checkPaths();
 		if(bansPath.toFile().exists() && bansPath.toFile().listFiles().length > 0) for(File file : bansPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) loadBanData(file);
 		if(bansIPPath.toFile().exists() && bansIPPath.toFile().listFiles().length > 0) for(File file : bansIPPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) loadBanIPData(file);
 		if(mutesPath.toFile().exists() && mutesPath.toFile().listFiles().length > 0) for(File file : mutesPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) loadMuteData(file);

@@ -29,6 +29,8 @@ public interface Warn extends DataSerializable {
 
 	UUID getUniqueId();
 
+	boolean isExpired();
+
 	interface Builder extends AbstractBuilder<Warn>, org.spongepowered.api.util.Builder<Warn, Builder> {
 
 		Builder creationDate(Instant value);

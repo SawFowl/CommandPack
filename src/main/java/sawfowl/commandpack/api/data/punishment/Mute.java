@@ -31,6 +31,8 @@ public interface Mute extends DataSerializable {
 	Optional<Component> getSource();
 
 	Optional<Component> getReason();
+
+	boolean isExpired();
 	
 	interface Builder extends AbstractBuilder<Mute>, org.spongepowered.api.util.Builder<Mute, Builder> {
 

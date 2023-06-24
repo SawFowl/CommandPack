@@ -66,6 +66,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_BANIP = "Banip";
 	private static final Object COMMAND_UNBANIP = "Unbanip";
 	private static final Object COMMAND_KICK = "Kick";
+	private static final Object COMMAND_MUTE = "Mute";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -374,10 +375,11 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_EXTINGUISH_SUCCESS_STAFF = {PATH_COMMANDS, COMMAND_EXTINGUISH, "SuccessStaff"};
 	public static final Object[] COMMANDS_BAN_SUCCESS = {PATH_COMMANDS, COMMAND_BAN, "Success"};
 	public static final Object[] COMMANDS_BAN_ANNOUNCEMENT = {PATH_COMMANDS, COMMAND_BAN, "Announcement"};
-	public static final Object[] COMMANDS_BAN_ANNOUNCEMENT_PERMANENT = {PATH_COMMANDS, COMMAND_BAN, "SuccessPermanent"};
+	public static final Object[] COMMANDS_BAN_ANNOUNCEMENT_PERMANENT = {PATH_COMMANDS, COMMAND_BAN, "AnnouncementPermanent"};
 	public static final Object[] COMMANDS_BAN_IGNORE = {PATH_COMMANDS, COMMAND_BAN, "Ignore"};
 	public static final Object[] COMMANDS_BAN_ALREADY_BANNED = {PATH_COMMANDS, COMMAND_BAN, "AlreadyBanned"};
 	public static final Object[] COMMANDS_BAN_DISCONNECT = {PATH_COMMANDS, COMMAND_BAN, "Disconnect"};
+	public static final Object[] COMMANDS_BAN_DISCONNECT_PERMANENT = {PATH_COMMANDS, COMMAND_BAN, "DisconnectPermanent"};
 	public static final Object[] COMMANDS_UNBAN_SUCCESS = {PATH_COMMANDS, COMMAND_UNBAN, "Success"};
 	public static final Object[] COMMANDS_UNBAN_ANNOUNCEMENT = {PATH_COMMANDS, COMMAND_UNBAN, "Announcement"};
 	public static final Object[] COMMANDS_BANIP_SUCCESS = {PATH_COMMANDS, COMMAND_BANIP, "Success"};
@@ -390,5 +392,12 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_KICK_DISCONNECT = {PATH_COMMANDS, COMMAND_KICK, "Disconnect"};
 	public static final Object[] COMMANDS_KICK_ANNOUNCEMENT = {PATH_COMMANDS, COMMAND_KICK, "Announcement"};
 	public static final Object[] COMMANDS_KICK_IGNORE = {PATH_COMMANDS, COMMAND_KICK, "Ignore"};
+	public static final Object[] COMMANDS_MUTE_SUCCESS = {PATH_COMMANDS, COMMAND_MUTE, "Success"};
+	public static final Object[] COMMANDS_MUTE_SUCCESS_TARGET = {PATH_COMMANDS, COMMAND_MUTE, "SuccessTarget"};
+	public static final Object[] COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT = {PATH_COMMANDS, COMMAND_MUTE, "SuccessTargetPermanent"};
+	public static final Object[] COMMANDS_MUTE_ANNOUNCEMENT = {PATH_COMMANDS, COMMAND_MUTE, "Announcement"};
+	public static final Object[] COMMANDS_MUTE_ANNOUNCEMENT_PERMANENT = {PATH_COMMANDS, COMMAND_MUTE, "AnnouncementPermanent"};
+	public static final Object[] COMMANDS_MUTE_IGNORE = {PATH_COMMANDS, COMMAND_MUTE, "Ignore"};
+	public static final Object[] COMMANDS_MUTE_ALREADY_MUTED = {PATH_COMMANDS, COMMAND_MUTE, "AlreadyBanned"};
 
 }

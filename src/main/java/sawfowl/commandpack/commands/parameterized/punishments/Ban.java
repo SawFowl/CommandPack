@@ -33,12 +33,8 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class Ban extends AbstractParameterizedCommand {
 
-	private Value<Duration> duration;
-	private Value<String> reason;
 	public Ban(CommandPack plugin) {
 		super(plugin);
-		duration = CommandParameters.createDuration(true);
-		reason = CommandParameters.createStrings("Reason", true);
 	}
 
 	@Override
@@ -51,7 +47,7 @@ public class Ban extends AbstractParameterizedCommand {
 				return;
 			}
 			User user = optional.get();
-			if(user.hasPermission(Permissions.IGNORE_BAN)) {
+			if(user.hasPermission(Permissions.IGNORE_BAN) && isPlayer) {
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BAN_IGNORE), Placeholders.PLAYER, user.name()));
 				return;
 			}
@@ -62,24 +58,24 @@ public class Ban extends AbstractParameterizedCommand {
 				}
 				Component source = isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server");
 				Builder banBuilder = org.spongepowered.api.service.ban.Ban.builder().type(BanTypes.PROFILE).profile(user.profile()).startDate(Instant.now()).source(source);
-				Optional<Duration> duration = getArgument(context, this.duration);
+				Optional<Duration> duration = getArgument(context, Duration.class, "Duration");
 				if(duration.isPresent()) banBuilder = banBuilder.expirationDate(Instant.now().plusSeconds(duration.get().getSeconds()));
 				Optional<String> reason = getString(context, "Reason");
 				if(reason.isPresent()) banBuilder = banBuilder.reason(text(reason.get()));
 				org.spongepowered.api.service.ban.Ban ban = banBuilder.build();
 				plugin.getPunishmentService().add(ban);
-				if(user.player().isPresent() && user.isOnline()) user.player().get().kick(TextUtils.replace(getText(user.player().get(), LocalesPaths.COMMANDS_BAN_DISCONNECT), new String[] {Placeholders.SOURCE, Placeholders.VALUE}, new Component[] {source, text(reason.orElse("-"))}));
+				if(user.player().isPresent() && user.isOnline()) user.player().get().kick(TextUtils.replaceToComponents(getText(user.player().get(), ban.expirationDate().isPresent() ? LocalesPaths.COMMANDS_BAN_DISCONNECT : LocalesPaths.COMMANDS_BAN_DISCONNECT_PERMANENT), new String[] {Placeholders.TIME, Placeholders.SOURCE, Placeholders.VALUE}, new Component[] {(ban.expirationDate().isPresent() ? expire(user.player().get().locale(), ban) : text("")), source, text(reason.orElse("-"))}));
 				if(ban.expirationDate().isPresent()) {
-					Sponge.systemSubject().sendMessage(TextUtils.replace(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(user.name()), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), ban), ban.reason().orElse(text("&f-"))}));	
-				} else Sponge.systemSubject().sendMessage(TextUtils.replace(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(user.name()), ban.reason().orElse(text("&f-"))}));
+					Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {source, text(user.name()), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), ban), ban.reason().orElse(text("&f-"))}));	
+				} else Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {source, text(user.name()), ban.reason().orElse(text("&f-"))}));
 				if(plugin.getMainConfig().getPunishment().getAnnounce().isBan()) {
 					if(ban.expirationDate().isPresent()) {
 						Sponge.server().onlinePlayers().forEach(player -> {
-							player.sendMessage(TextUtils.replace(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {source, text(user.name()), expire(player.locale(), ban), ban.reason().orElse(text("&f-"))}));
+							player.sendMessage(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {source, text(user.name()), expire(player.locale(), ban), ban.reason().orElse(text("&f-"))}));
 						});
 					} else {
 						Sponge.server().onlinePlayers().forEach(player -> {
-							player.sendMessage(TextUtils.replace(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {source, text(user.name()), ban.reason().orElse(text("&f-"))}));
+							player.sendMessage(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {source, text(user.name()), ban.reason().orElse(text("&f-"))}));
 						});
 					}
 				} else src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BAN_SUCCESS), Placeholders.PLAYER, user.name()));
@@ -107,12 +103,13 @@ public class Ban extends AbstractParameterizedCommand {
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
 			ParameterSettings.of(CommandParameters.createUser(false), false, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT),
-			ParameterSettings.of(duration, true, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			ParameterSettings.of(reason, true, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			ParameterSettings.of(CommandParameters.createDuration(true), true, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			ParameterSettings.of(CommandParameters.createStrings("Reason", true), true, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
 	}
 
 	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
+		if(!ban.expirationDate().isPresent()) return Component.empty();
 		SimpleDateFormat format = new SimpleDateFormat(getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
