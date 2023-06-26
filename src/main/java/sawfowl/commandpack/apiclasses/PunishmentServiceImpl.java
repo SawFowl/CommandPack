@@ -113,6 +113,11 @@ public class PunishmentServiceImpl implements PunishmentService {
 	}
 
 	@Override
+	public Collection<Mute> getAllMutes() {
+		return storage.getMutes().values();
+	}
+
+	@Override
 	public void addMute(Mute mute) {
 		storage.saveMute(mute);
 	}
@@ -130,6 +135,11 @@ public class PunishmentServiceImpl implements PunishmentService {
 	@Override
 	public Optional<Warns> getWarns(ServerPlayer player) {
 		return getWarns(player.uniqueId());
+	}
+
+	@Override
+	public Collection<Warns> getAllWarns() {
+		return storage.getWarns().values();
 	}
 
 	@Override

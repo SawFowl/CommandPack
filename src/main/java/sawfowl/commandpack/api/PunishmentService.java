@@ -24,6 +24,8 @@ public interface PunishmentService extends BanService {
 
 	Optional<Mute> getMute(ServerPlayer player);
 
+	Collection<Mute> getAllMutes();
+
 	public void addMute(Mute mute);
 
 	public boolean removeMute(Mute mute);
@@ -31,6 +33,8 @@ public interface PunishmentService extends BanService {
 	Optional<Warns> getWarns(UUID uuid);
 
 	Optional<Warns> getWarns(ServerPlayer player);
+
+	Collection<Warns> getAllWarns();
 
 	void addWarns(Warns warns);
 

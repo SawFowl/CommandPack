@@ -404,6 +404,9 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently mute player &e" + Placeholders.PLAYER + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&cUnable to block chat for player &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_MUTE_IGNORE) || save;
 		save = check(locale, toText("&ePlayer &e" + Placeholders.PLAYER + "&e already cannot write in chat."), null, LocalesPaths.COMMANDS_MUTE_ALREADY_MUTED) || save;
+		save = check(locale, toText("&aYou unmuted &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNMUTE_SUCCESS) || save;
+		save = check(locale, toText("&aYou can write in the chat again."), null, LocalesPaths.COMMANDS_UNMUTE_SUCCESS_TARGET) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a unmute &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNMUTE_ANNOUNCEMENT) || save;
 
 		if(save) save(locale);
 	}
@@ -750,6 +753,9 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a навсегда блокирует возможность писать в чат игроку &e" + Placeholders.PLAYER + "&a.\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&cНевозможно заблокировать чат игроку &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_MUTE_IGNORE) || save;
 		save = check(locale, toText("&eИгрок &e" + Placeholders.PLAYER + "&e уже не может писать в чат."), null, LocalesPaths.COMMANDS_MUTE_ALREADY_MUTED) || save;
+		save = check(locale, toText("&aВы размутили &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNMUTE_SUCCESS) || save;
+		save = check(locale, toText("&aВы снова можете писать в чат."), null, LocalesPaths.COMMANDS_UNMUTE_SUCCESS_TARGET) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a снимает мут с &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNMUTE_ANNOUNCEMENT) || save;
 
 		if(save) save(locale);
 	}

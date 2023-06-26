@@ -46,7 +46,6 @@ public class RawArguments {
 				return variants.stream();
 			}
 		}, new RawResultSupplier<String>() {
-
 			@Override
 			public Optional<String> get(String[] args) {
 				return args.length >= cursor + 1 ? (variants.isEmpty() ? Optional.ofNullable(args[cursor]) : variants.stream().filter(a -> a.equals(args[cursor])).findFirst()) : Optional.ofNullable(def);
@@ -61,7 +60,6 @@ public class RawArguments {
 				return EMPTY.stream();
 			}
 		}, new RawResultSupplier<String>() {
-
 			@Override
 			public Optional<String> get(String[] args) {
 				return args.length >= cursor + 1 ?  Optional.ofNullable(String.join(" ", Arrays.copyOfRange(args, cursor, args.length))) : Optional.ofNullable(def);
@@ -76,7 +74,6 @@ public class RawArguments {
 				return variants.stream().map(String::valueOf);
 			}
 		}, new RawResultSupplier<Integer>() {
-
 			@Override
 			public Optional<Integer> get(String[] args) {
 				return args.length >= cursor + 1 && NumberUtils.isParsable(args[cursor]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createInteger(args[cursor])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createInteger(args[cursor])) : Optional.ofNullable(def);
@@ -91,7 +88,6 @@ public class RawArguments {
 				return variants.stream().map(String::valueOf);
 			}
 		}, new RawResultSupplier<Long>() {
-
 			@Override
 			public Optional<Long> get(String[] args) {
 				return args.length >= cursor + 1 && NumberUtils.isParsable(args[cursor]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createLong(args[cursor])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createLong(args[cursor])) : Optional.ofNullable(def);
@@ -106,7 +102,6 @@ public class RawArguments {
 				return variants.stream().map(String::valueOf);
 			}
 		}, new RawResultSupplier<Double>() {
-
 			@Override
 			public Optional<Double> get(String[] args) {
 				return args.length >= cursor + 1 && NumberUtils.isParsable(args[cursor]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createDouble(args[cursor])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createDouble(args[cursor])) : Optional.ofNullable(def);
@@ -121,7 +116,6 @@ public class RawArguments {
 				return variants.stream().map(v -> String.valueOf(v.doubleValue()));
 			}
 		}, new RawResultSupplier<BigDecimal>() {
-
 			@Override
 			public Optional<BigDecimal> get(String[] args) {
 				return args.length >= cursor + 1 && NumberUtils.isParsable(args[cursor]) && (variants.isEmpty() || variants.stream().filter(a -> a.doubleValue() == NumberUtils.createDouble(args[cursor])).findFirst().isPresent()) ? Optional.ofNullable(BigDecimal.valueOf(NumberUtils.createDouble(args[cursor]))) : Optional.ofNullable(def);
@@ -136,7 +130,6 @@ public class RawArguments {
 				return Arrays.asList("true", "false").stream();
 			}
 		}, new RawResultSupplier<Boolean>() {
-
 			@Override
 			public Optional<Boolean> get(String[] args) {
 				return args.length >= cursor + 1 && BooleanUtils.toBooleanObject(args[cursor]) != null ? Optional.ofNullable(BooleanUtils.toBooleanObject(args[cursor])) : Optional.ofNullable(def);
@@ -151,7 +144,6 @@ public class RawArguments {
 				return Sponge.server().worldManager().worlds().stream().map(ServerWorld::key).map(ResourceKey::asString);
 			}
 		}, new RawResultSupplier<ServerWorld>() {
-
 			@Override
 			public Optional<ServerWorld> get(String[] args) {
 				return args.length >= cursor + 1 ? Sponge.server().worldManager().world(ResourceKey.resolve(args[cursor])) : Optional.ofNullable(def);
@@ -166,7 +158,6 @@ public class RawArguments {
 				return WorldTypes.registry().streamEntries().map(e -> e.key().asString());
 			}
 		}, new RawResultSupplier<WorldType>() {
-
 			@Override
 			public Optional<WorldType> get(String[] args) {
 				return args.length >= cursor + 1 ? WorldTypes.registry().streamEntries().filter(e -> e.key().asString().equals(args[cursor])).map(e -> e.value()).findFirst() : Optional.empty();
@@ -181,7 +172,6 @@ public class RawArguments {
 				return Sponge.server().onlinePlayers().stream().map(ServerPlayer::name);
 			}
 		}, new RawResultSupplier<ServerPlayer>() {
-
 			@Override
 			public Optional<ServerPlayer> get(String[] args) {
 				return args.length >= cursor + 1 ? Sponge.server().player(args[cursor]) : Optional.empty();
@@ -196,7 +186,6 @@ public class RawArguments {
 				return EnchantmentTypes.registry().streamEntries().map(e -> e.key().asString());
 			}
 		}, new RawResultSupplier<EnchantmentType>() {
-
 			@Override
 			public Optional<EnchantmentType> get(String[] args) {
 				return args.length >= cursor + 1 ? EnchantmentTypes.registry().streamEntries().filter(e -> e.key().asString().equals(args[cursor])).map(e -> e.value()).findFirst() : Optional.empty();
@@ -211,7 +200,6 @@ public class RawArguments {
 				return Stream.of(EnumLocales.values()).map(EnumLocales::getTag);
 			}
 		}, new RawResultSupplier<Locale>() {
-
 			@Override
 			public Optional<Locale> get(String[] args) {
 				return args.length >= cursor + 1 ? Stream.of(EnumLocales.values()).filter(l -> l.getTag().equalsIgnoreCase(args[cursor])).map(EnumLocales::get).findFirst() : Optional.empty();
@@ -226,7 +214,6 @@ public class RawArguments {
 				return CommandPack.getInstance().getEconomy().getCurrencies().stream().map(Currency::symbol).map(c -> TextUtils.clearDecorations(c));
 			}
 		}, new RawResultSupplier<Currency>() {
-
 			@Override
 			public Optional<Currency> get(String[] args) {
 				return args.length >= cursor + 1 ? Optional.ofNullable(CommandPack.getInstance().getEconomy().checkCurrency(args[cursor])) : Optional.empty();

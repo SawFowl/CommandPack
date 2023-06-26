@@ -117,6 +117,7 @@ public class Permissions {
 	public static final String UNBANIP_STAFF = "commandpack.commands.staff.unbanip";
 	public static final String KICK_STAFF = "commandpack.commands.staff.kick";
 	public static final String MUTE_STAFF = "commandpack.commands.staff.mute";
+	public static final String UNMUTE_STAFF = "commandpack.commands.staff.unmute";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";

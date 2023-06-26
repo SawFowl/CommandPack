@@ -67,6 +67,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_UNBANIP = "Unbanip";
 	private static final Object COMMAND_KICK = "Kick";
 	private static final Object COMMAND_MUTE = "Mute";
+	private static final Object COMMAND_UNMUTE = "Unute";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -399,5 +400,8 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_MUTE_ANNOUNCEMENT_PERMANENT = {PATH_COMMANDS, COMMAND_MUTE, "AnnouncementPermanent"};
 	public static final Object[] COMMANDS_MUTE_IGNORE = {PATH_COMMANDS, COMMAND_MUTE, "Ignore"};
 	public static final Object[] COMMANDS_MUTE_ALREADY_MUTED = {PATH_COMMANDS, COMMAND_MUTE, "AlreadyBanned"};
+	public static final Object[] COMMANDS_UNMUTE_SUCCESS = {PATH_COMMANDS, COMMAND_UNMUTE, "Success"};
+	public static final Object[] COMMANDS_UNMUTE_SUCCESS_TARGET = {PATH_COMMANDS, COMMAND_UNMUTE, "SuccessTarget"};
+	public static final Object[] COMMANDS_UNMUTE_ANNOUNCEMENT = {PATH_COMMANDS, COMMAND_UNMUTE, "Announcement"};
 
 }
