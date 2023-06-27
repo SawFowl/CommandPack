@@ -14,9 +14,10 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 
 import net.kyori.adventure.text.Component;
-
+import net.kyori.adventure.text.event.ClickEvent;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.AddCommand;
@@ -53,7 +54,13 @@ public class Kits extends AbstractPlayerCommand {
 
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		src.sendMessage(usage(cause));
+		Component message = null;
+		for(RawCommand command : getChildExecutors().values()) {
+			if(message == null) {
+				message = command.usage(cause).clickEvent(ClickEvent.suggestCommand("/kits " + command.command() + " "));
+			} else message = message.append(Component.newline()).append(command.usage(cause).clickEvent(ClickEvent.suggestCommand("/kits " + command.command() + " ")));
+		}
+		src.sendMessage(message);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package sawfowl.commandpack.utils.tasks;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -30,13 +31,12 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class DelayTimerTask implements Consumer<ScheduledTask> {
 
-	public DelayTimerTask(ThrowingConsumer<PluginCommand, CommandException> consumer, ServerPlayer player, long seconds, PluginContainer container, String command, Settings settings, PluginCommand commandClass) {
+	public DelayTimerTask(ThrowingConsumer<PluginCommand, CommandException> consumer, ServerPlayer player, PluginContainer container, String command, PluginCommand commandClass) {
 		this.uuid = player.uniqueId();
-		this.seconds = seconds;
+		this.seconds = commandClass.getCommandSettings().getDelay().getSeconds();
 		this.consumer = consumer;
 		this.container = container;
 		this.command = command;
-		this.settings = settings;
 		this.commandClass = commandClass;
 	}
 
@@ -48,15 +48,15 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 	boolean first = true;
 	private final PluginContainer container;
 	final String command;
-	final Settings settings;
 	private PluginCommand commandClass;
 	@Override
 	public void accept(ScheduledTask task) {
+		Optional<Map<String, Settings>> trackingPlayerCommands = CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(uuid);
 		if(seconds <= 0 || !getPlayer(uuid).isPresent() || !getPlayer(uuid).get().isOnline()) {
 			Sponge.server().scheduler().executor(container).execute(() -> {
 				getPlayer(uuid).ifPresent(player -> {
 					try {
-						if(CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(player).isPresent() && CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(uuid).get().containsKey(command)) {
+						if(trackingPlayerCommands.isPresent() && trackingPlayerCommands.get().containsKey(command)) {
 							economy(player, player.locale());
 							consumer.accept(commandClass);
 						}
@@ -65,7 +65,7 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 					}
 				});
 			});
-			if(CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(uuid).isPresent() && CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(uuid).get().containsKey(command)) CommandPack.getInstance().getPlayersData().getTempData().removeCommandTracking(command, uuid);;
+			if(trackingPlayerCommands.isPresent() && trackingPlayerCommands.get().containsKey(command)) CommandPack.getInstance().getPlayersData().getTempData().removeCommandTracking(command, uuid);
 			task.cancel();
 			return;
 		} else {
@@ -74,7 +74,7 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 				return;
 			}
 			ServerPlayer player = getPlayer(uuid).get();
-			if(!CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(player).isPresent() || !CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(player).get().containsKey(command)) {
+			if(!trackingPlayerCommands.isPresent() || !trackingPlayerCommands.get().containsKey(command)) {
 				task.cancel();
 				return;
 			}
@@ -97,8 +97,8 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 	}
 
 	void economy(ServerPlayer player, Locale locale) throws CommandException {
-		if(settings == null || CommandPack.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command))) return;
-		Price price = settings.getPrice();
+		if(commandClass.getCommandSettings() == null || CommandPack.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command))) return;
+		Price price = commandClass.getCommandSettings().getPrice();
 		if(price.getMoney() > 0) {
 			Currency currency = CommandPack.getInstance().getEconomy().checkCurrency(price.getCurrency());
 			BigDecimal money = createDecimal(price.getMoney());

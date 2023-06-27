@@ -8,7 +8,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import sawfowl.commandpack.api.commands.PluginCommand;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
+import sawfowl.commandpack.api.data.command.Settings;
 
 /**
  * Used to store temporary data of players who used the functionality of the CommandPack plugin.
@@ -18,8 +18,13 @@ import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 public interface TempPlayerData {
 
 	/**
+	 * Registering to track a command.
+	 */
+	void registerCommandTracking(PluginCommand command);
+
+	/**
 	 * Adding command usage tracking.<br>
-	 * Only CommandPack plugin commands are accepted.
+	 * Only CommandPack plugin API commands are accepted.
 	 * 
 	 * @param command - Settings or alias.
 	 * @param player - The player.
@@ -71,7 +76,7 @@ public interface TempPlayerData {
 	 * @param player - Settings or alias.
 	 * @return - Empty {@link Optional} or tracking {@link Map}
 	 */
-	Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(ServerPlayer player);
+	Optional<Map<String, Settings>> getTrackingPlayerCommands(ServerPlayer player);
 
 	/**
 	 * Getting a tracking map of waiting execute player commands.<br>
@@ -80,7 +85,7 @@ public interface TempPlayerData {
 	 * @param player - Settings or alias.
 	 * @return - Empty {@link Optional} or tracking {@link Map}
 	 */
-	Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(UUID uuid);
+	Optional<Map<String, Settings>> getTrackingPlayerCommands(UUID uuid);
 
 	/**
 	 * Change the status of receiving teleportation requests.

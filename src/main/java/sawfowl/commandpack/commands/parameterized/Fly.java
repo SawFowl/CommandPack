@@ -67,8 +67,8 @@ public class Fly extends AbstractParameterizedCommand {
 
 	private boolean setFly(ServerPlayer player) {
 		boolean newValue = !isFlying(player);
-		player.offer(Keys.CAN_FLY, !newValue);
-		if(!newValue) player.offer(Keys.IS_FLYING, !newValue);
+		player.offer(Keys.CAN_FLY, newValue);
+		if(!newValue) player.offer(Keys.IS_FLYING, newValue);
 		return isFlying(player);
 	}
 

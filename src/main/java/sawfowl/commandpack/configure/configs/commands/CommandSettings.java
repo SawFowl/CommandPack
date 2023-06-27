@@ -2,6 +2,8 @@ package sawfowl.commandpack.configure.configs.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -88,6 +90,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 	private boolean enable = true;
 	@Setting("Price")
 	private CommandPrice price = new CommandPrice();
+	private UUID uuid = UUID.randomUUID();
 
 	@Override
 	public String[] getAliases() {
@@ -134,13 +137,24 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 	}
 
 	@Override
-	public String toString() {
-		return "Settings [Aliases=" + aliases + ", Cooldown=" + cooldown + ", DelayData=" + delayData + ", Enable=" + enable + ", Price=" + price + "]";
+	public int contentVersion() {
+		return 1;
 	}
 
 	@Override
-	public int contentVersion() {
-		return 1;
+	public int hashCode() {
+		return Objects.hash(uuid);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this != obj || !(obj instanceof CommandSettings)) return false;
+		return Objects.equals(uuid, ((CommandSettings) obj).uuid);
+	}
+
+	@Override
+	public String toString() {
+		return "CommandSettings [uuid=" + uuid + "]";
 	}
 
 	@Override

@@ -3,8 +3,8 @@ package sawfowl.commandpack.apiclasses;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -19,18 +19,20 @@ import org.spongepowered.api.util.Ticks;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.PluginCommand;
+import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerData {
 
 	private final CommandPack plugin;
-	private Map<String, List<UUID>> trackingCommandDelay = new HashMap<>();
+	private Map<String, Set<UUID>> trackingCommandDelay = new HashMap<>();
+	private Map<String, Settings> commandsSettings = new HashMap<>();
 	private Set<UUID> tptoggleSet = new HashSet<>();
 	private Map<UUID, ServerLocation> locations = new HashMap<>();
 	private Map<String, Map<UUID, Long>> cooldowns = new HashMap<>();
@@ -44,18 +46,15 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	}
 
 	@Override
+	public void registerCommandTracking(PluginCommand command) {
+		trackingCommandDelay.put(command.trackingName(), new HashSet<UUID>());
+		commandsSettings.put(command.trackingName(), command.getCommandSettings());
+	}
+
+	@Override
 	public void addCommandTracking(String command, ServerPlayer player) {
-		if(!trackingCommandDelay.containsKey(command)) {
-			if(plugin.getCommandsConfig().getCommandConfig(command).getAliases().length == 0) {
-				plugin.getLogger().error(TextUtils.replace(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING), Placeholders.COMMAND, command));
-				return;
-			} else {
-				trackingCommandDelay.keySet().stream().filter(c -> (!plugin.getCommandsConfig().getCommandConfig(c).getAliasesList().contains(command))).findFirst().ifPresent(c -> {
-					trackingCommandDelay.get(c).add(player.uniqueId());
-					return;
-				});
-			}
-		} else trackingCommandDelay.get(command).add(player.uniqueId());
+		if(!trackingCommandDelay.containsKey(command)) plugin.getLogger().error(TextUtils.replace(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING), Placeholders.COMMAND, command));
+		if(!trackingCommandDelay.get(command).contains(player.uniqueId())) trackingCommandDelay.get(command).add(player.uniqueId());
 	}
 
 	@Override
@@ -83,18 +82,21 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	}
 
 	@Override
-	public Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(ServerPlayer player) {
+	public Optional<Map<String, Settings>> getTrackingPlayerCommands(ServerPlayer player) {
 		return getTrackingPlayerCommands(player.uniqueId());
 	}
 
 	@Override
-	public Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(UUID uuid) {
-		Map<String, CommandSettings> commands = new HashMap<>();
-		trackingCommandDelay.entrySet().stream().filter(entry -> (entry.getValue().contains(uuid))).forEach(entry -> {
-			CommandSettings commandSettings = plugin.getCommandsConfig().getCommandConfig(entry.getKey());
-			commands.put(entry.getKey(), commandSettings);
-		});
-		return !isTrackingPlayer(uuid) || commands.isEmpty() ? Optional.empty() : Optional.ofNullable(commands);
+	public Optional<Map<String, Settings>> getTrackingPlayerCommands(UUID uuid) {
+		for(Entry<String, Set<UUID>> entry : trackingCommandDelay.entrySet()) {
+			if(entry.getValue().contains(uuid) && commandsSettings.containsKey(entry.getKey())) {
+				Settings commandSettings = commandsSettings.get(entry.getKey());
+				Map<String, Settings> commands = new HashMap<>();
+				commands.put(entry.getKey(), commandSettings);
+				return Optional.ofNullable(commands);
+			}
+		}
+		return Optional.empty();
 	}
 
 	@Override

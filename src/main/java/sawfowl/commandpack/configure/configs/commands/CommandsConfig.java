@@ -232,7 +232,10 @@ public class CommandsConfig {
 				try {
 					AbstractRawCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
-						if(settings.isEnable()) command.register(event);
+						if(settings.isEnable()) {
+							command.register(event);
+							plugin.getPlayersData().getTempData().registerCommandTracking(command);
+						}
 					});
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					plugin.getLogger().error("Error when registering a command class '" + clazz.getName());
@@ -298,6 +301,7 @@ public class CommandsConfig {
 	private void registerParameterizedCommand(RegisterCommandEvent<Parameterized> event, CommandPack plugin, CommandSettings settings, AbstractParameterizedCommand command) {
 		if(!settings.isEnable() || (serverStat.isEnable() && (command.command().equalsIgnoreCase("mods") || command.command().equalsIgnoreCase("plugins") || command.command().equalsIgnoreCase("tps") || command.command().equalsIgnoreCase("servertime")))) return;
 		command.register(event);
+		plugin.getPlayersData().getTempData().registerCommandTracking(command);
 	}
 
 }

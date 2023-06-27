@@ -81,7 +81,7 @@ public class Glow extends AbstractParameterizedCommand {
 
 	private boolean setGlow(Entity target) {
 		boolean newValue = !isGlow(target);
-		target.offer(Keys.IS_GLOWING, !newValue);
+		target.offer(Keys.IS_GLOWING, newValue);
 		return isGlow(target);
 	}
 
