@@ -139,7 +139,6 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 
 	@Override
 	public Map<UUID, Long> getTrackingMap(String command) {
-		if(Sponge.server().commandManager().knownAliases().contains(command)) return new HashMap<>();
 		return !cooldowns.containsKey(command) ? cooldowns.put(command, new HashMap<>()) : cooldowns.get(command);
 	}
 

@@ -124,6 +124,7 @@ public class Permissions {
 	public static final String WARNS_STAFF = "commandpack.commands.staff.warnings";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
+	public static final String IGNORE_COOLDOWN = "commandpack.commands.ignore.cooldown";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";
 	public static final String IGNORE_DELAY_OTHER_COMMAND = "commandpack.commands.ignore.delay.othercommand";
 	public static final String IGNORE_PRICE = "commandpack.commands.ignore.price";
@@ -157,6 +158,10 @@ public class Permissions {
 
 	public static String getIgnoreDelayTimer(String command) {
 		return IGNORE_DELAY_TIMER + "." + command;
+	}
+
+	public static String getIgnoreCooldown(String command) {
+		return IGNORE_COOLDOWN + "." + command;
 	}
 
 	public static String getIgnoreDelayMoving(String command) {

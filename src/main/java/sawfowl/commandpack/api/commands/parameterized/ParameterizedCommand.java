@@ -21,6 +21,7 @@ import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -59,7 +60,7 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 		if(getSettingsMap() != null && !getSettingsMap().isEmpty()) for(ParameterSettings settings : getSettingsMap().values()) if(!settings.containsIn(context) && (!settings.isOptional() || (!isPlayer && !settings.isOptionalForConsole()))) exception(locale, settings.getPath());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) context.cause().audience();
-			if(getCommandSettings() != null && getCooldowns() != null) {
+			if(getCommandSettings() != null && getCooldowns() != null && !player.hasPermission(Permissions.getIgnoreCooldown(trackingName()))) {
 				Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
 				if(!getCooldowns().containsKey(player.uniqueId())) {
 					getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
