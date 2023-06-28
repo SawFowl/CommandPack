@@ -9,13 +9,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
@@ -25,7 +23,6 @@ import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
-import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.world.WorldType;
 import org.spongepowered.api.world.server.ServerWorld;
@@ -36,9 +33,7 @@ import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
-import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
 
 /**
  * This interface is designed to simplify the creation of Raw commands.
@@ -118,21 +113,6 @@ public interface RawCommand extends PluginCommand, Raw {
 		} else {
 			if(getArguments() != null) for(RawArgument<?> arg : getArguments().values()) {
 				if(!arg.getResultUnknownType(args).isPresent() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole()))) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
-			}
-		}
-	}
-
-	default void checkCooldown(CommandCause cause, Locale locale, boolean isPlayer) throws CommandException {
-		if(isPlayer) {
-			ServerPlayer player = (ServerPlayer) cause.audience();
-			Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-			if(!getCooldowns().containsKey(player.uniqueId())) {
-				getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
-				Sponge.asyncScheduler().submit(Task.builder().plugin(getContainer()).interval(1, TimeUnit.SECONDS).execute(new CooldownTimerTask(player, getCommandSettings(), getCooldowns())).build());
-			} else {
-				if((getCooldowns().get(player.uniqueId())) - currentTime > 0) exception(locale, Placeholders.DELAY, timeFormat((getCooldowns().get(player.uniqueId())) - currentTime, locale), LocalesPaths.COMMANDS_COOLDOWN);
-				getCooldowns().remove(player.uniqueId());
-				getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
 			}
 		}
 	}

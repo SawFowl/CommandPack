@@ -30,6 +30,7 @@ import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.ThrowingConsumer;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
 import sawfowl.commandpack.utils.tasks.DelayTimerTask;
 import sawfowl.localeapi.api.TextUtils;
 
@@ -73,6 +74,23 @@ public interface PluginCommand {
 	 */
 	default String trackingName() {
 		return command();
+	}
+
+	default void checkCooldown(CommandCause cause, Locale locale, boolean isPlayer) throws CommandException {
+		if(isPlayer) {
+			ServerPlayer player = (ServerPlayer) cause.audience();
+			if(getCommandSettings() != null && getCooldowns() != null && !player.hasPermission(Permissions.getIgnoreCooldown(trackingName()))) {
+				Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+				if(!getCooldowns().containsKey(player.uniqueId())) {
+					getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
+					Sponge.asyncScheduler().submit(Task.builder().plugin(getContainer()).interval(1, TimeUnit.SECONDS).execute(new CooldownTimerTask(player, getCommandSettings(), getCooldowns())).build());
+				} else {
+					if((getCooldowns().get(player.uniqueId())) - currentTime > 0) exception(locale, Placeholders.DELAY, timeFormat((getCooldowns().get(player.uniqueId())) - currentTime, locale), LocalesPaths.COMMANDS_COOLDOWN);
+					getCooldowns().remove(player.uniqueId());
+					getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
+				}
+			}
+		}
 	}
 
 	default Map<UUID, Long> getCooldowns() {
