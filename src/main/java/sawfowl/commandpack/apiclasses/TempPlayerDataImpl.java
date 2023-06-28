@@ -187,12 +187,12 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	public void switchSpyCommand(ServerPlayer player) {
 		if(isSpyCommand(player)) {
 			commandSpy.remove(player.uniqueId());
-		} else if(player.hasPermission(Permissions.COMMANDSPY)) commandSpy.add(player.uniqueId());
+		} else if(player.hasPermission(Permissions.COMMANDSPY_STAFF)) commandSpy.add(player.uniqueId());
 	}
 
 	@Override
 	public boolean isSpyCommand(ServerPlayer player) {
-		if(!player.hasPermission(Permissions.COMMANDSPY)) {
+		if(!player.hasPermission(Permissions.COMMANDSPY_STAFF)) {
 			if(commandSpy.contains(player.uniqueId())) commandSpy.remove(player.uniqueId());
 			return false;
 		}

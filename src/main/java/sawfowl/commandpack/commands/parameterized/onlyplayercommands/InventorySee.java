@@ -67,7 +67,7 @@ public class InventorySee extends AbstractPlayerCommand {
 
 	@Override
 	public String permission() {
-		return Permissions.ENDERCHEST;
+		return Permissions.INVENTORYSEE;
 	}
 
 	@Override
@@ -84,6 +84,7 @@ public class InventorySee extends AbstractPlayerCommand {
 				.plugin(getContainer())
 				.carrier(target)
 				.identity(UUID.randomUUID()).build());
+		if(!src.hasPermission(Permissions.INVENTORYSEE_STAFF)) menu = menu.setReadOnly(true);
 		menu.setTitle(TextUtils.replace(getText(src.locale(), LocalesPaths.COMMANDS_INVSEE_TITLE), Placeholders.PLAYER, target.name()));
 		menu.open(src);
 	}
@@ -97,6 +98,7 @@ public class InventorySee extends AbstractPlayerCommand {
 				.plugin(getContainer())
 				.carrier(target)
 				.identity(UUID.randomUUID()).build());
+		if(!src.hasPermission(Permissions.INVENTORYSEE_STAFF)) menu = menu.setReadOnly(true);
 		menu.setTitle(TextUtils.replace(getText(src.locale(), LocalesPaths.COMMANDS_INVSEE_TITLE), Placeholders.PLAYER, target.name()));
 		menu.open(src);
 	}

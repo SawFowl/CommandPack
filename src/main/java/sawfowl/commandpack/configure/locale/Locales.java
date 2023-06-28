@@ -407,6 +407,20 @@ public class Locales {
 		save = check(locale, toText("&aYou unmuted &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNMUTE_SUCCESS) || save;
 		save = check(locale, toText("&aYou can write in the chat again."), null, LocalesPaths.COMMANDS_UNMUTE_SUCCESS_TARGET) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a unmute &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNMUTE_ANNOUNCEMENT) || save;
+		save = check(locale, toText("&aYou warned the player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_WARN_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a warned you.\nReason: &e\"" + Placeholders.VALUE + "&e\"&a.\nValid until &e" + Placeholders.TIME), null, LocalesPaths.COMMANDS_WARN_SUCCESS_TARGET) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a has issued a permanent warning to you.\nReason:  &e\"" + Placeholders.VALUE + "&e\"&a."), null, LocalesPaths.COMMANDS_WARN_SUCCESS_TARGET_PERMANENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a has warned player &e" + Placeholders.PLAYER + "&a.\nValid until &e" + Placeholders.TIME + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_WARN_ANNOUNCEMENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a issues a permanent warning to player &e" + Placeholders.PLAYER + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_WARN_ANNOUNCEMENT_PERMANENT) || save;
+		save = check(locale, toText("&cIt is not possible to give a warning to &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_WARN_IGNORE) || save;
+		save = check(locale, toText("&4Automatic issuance of punishments"), null, LocalesPaths.COMMANDS_WARN_SOURCE_NAME_AUTOPUNISH) || save;
+		save = check(locale, toText("&cWarning limit reached before ban &e" + Placeholders.VALUE + "&c."), null, LocalesPaths.COMMANDS_WARN_BAN_LIMIT) || save;
+		save = check(locale, toText("&cWarning limit reached before mute &e" + Placeholders.VALUE + "&c."), null, LocalesPaths.COMMANDS_WARN_MUTE_LIMIT) || save;
+		save = check(locale, toText("&cWarning limit reached before kick &e" + Placeholders.VALUE + "&c."), null, LocalesPaths.COMMANDS_WARN_KICK_LIMIT) || save;
+		save = check(locale, toText("&aWarnings in all time &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WARNS_ALLTIME) || save;
+		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a warnings in all time &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET) || save;
+		save = check(locale, toText("&3" + Placeholders.PLAYER + " warnings"), null, LocalesPaths.COMMANDS_WARNS_TITLE) || save;
+		save = check(locale, toText("&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_WARNS_REASON) || save;
 
 		if(save) save(locale);
 	}
@@ -756,6 +770,20 @@ public class Locales {
 		save = check(locale, toText("&aВы размутили &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNMUTE_SUCCESS) || save;
 		save = check(locale, toText("&aВы снова можете писать в чат."), null, LocalesPaths.COMMANDS_UNMUTE_SUCCESS_TARGET) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a снимает мут с &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNMUTE_ANNOUNCEMENT) || save;
+		save = check(locale, toText("&aВы сделали предупреждение игроку &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_WARN_SUCCESS) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a сделал вам предупреждение.\n&aПричина: &e\"" + Placeholders.VALUE + "&e\"&a.\nДействительно до &e" + Placeholders.TIME), null, LocalesPaths.COMMANDS_WARN_SUCCESS_TARGET) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a сделал вам перманентное предупреждение.\n&aПричина: &e\"" + Placeholders.VALUE + "&e\"&a."), null, LocalesPaths.COMMANDS_WARN_SUCCESS_TARGET_PERMANENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a делает предупреждение игроку &e" + Placeholders.PLAYER + "&a.\nДействительно до &e" + Placeholders.TIME + "&a.\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_WARN_ANNOUNCEMENT) || save;
+		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a делает перманентное предупреждение игроку &e" + Placeholders.PLAYER + "&a.\n&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_WARN_ANNOUNCEMENT_PERMANENT) || save;
+		save = check(locale, toText("&cНевозможно сделать предупреждение &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_WARN_IGNORE) || save;
+		save = check(locale, toText("&4Автоматическая выдача наказаний"), null, LocalesPaths.COMMANDS_WARN_SOURCE_NAME_AUTOPUNISH) || save;
+		save = check(locale, toText("&cДостигнут лимит предупреждений до бана &e" + Placeholders.VALUE + "&c."), null, LocalesPaths.COMMANDS_WARN_BAN_LIMIT) || save;
+		save = check(locale, toText("&cДостигнут лимит предупреждений до мута &e" + Placeholders.VALUE + "&c."), null, LocalesPaths.COMMANDS_WARN_MUTE_LIMIT) || save;
+		save = check(locale, toText("&cДостигнут лимит предупреждений до кика &e" + Placeholders.VALUE + "&c."), null, LocalesPaths.COMMANDS_WARN_KICK_LIMIT) || save;
+		save = check(locale, toText("&aПредупреждений за все время &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WARNS_ALLTIME) || save;
+		save = check(locale, toText("&aПредупреждений у &e" + Placeholders.PLAYER + "&a за все время &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET) || save;
+		save = check(locale, toText("&3Предупреждения " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_WARNS_TITLE) || save;
+		save = check(locale, toText("&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_WARNS_REASON) || save;
 
 		if(save) save(locale);
 	}

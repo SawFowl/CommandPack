@@ -4,12 +4,14 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.service.ban.Ban;
 import org.spongepowered.api.service.ban.Ban.IP;
 import org.spongepowered.api.service.ban.BanService;
 
 import sawfowl.commandpack.api.data.punishment.Mute;
+import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
 
 public interface PunishmentService extends BanService {
@@ -37,6 +39,8 @@ public interface PunishmentService extends BanService {
 	Collection<Warns> getAllWarns();
 
 	void addWarns(Warns warns);
+
+	void addWarn(User user, Warn warns);
 
 	boolean removeWarns(Warns warns);
 

@@ -16,7 +16,7 @@ public abstract class AbstractWorldCommand extends AbstractRawCommand {
 
 	@Override
 	public String permission() {
-		return Permissions.WORLD;
+		return Permissions.WORLD_STAFF;
 	}
 
 	@Override

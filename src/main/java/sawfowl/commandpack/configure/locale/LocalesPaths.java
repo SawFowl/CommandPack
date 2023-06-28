@@ -68,6 +68,8 @@ public class LocalesPaths {
 	private static final Object COMMAND_KICK = "Kick";
 	private static final Object COMMAND_MUTE = "Mute";
 	private static final Object COMMAND_UNMUTE = "Unute";
+	private static final Object COMMAND_WARN = "Warn";
+	private static final Object COMMAND_WARNS = "Warns";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -403,5 +405,19 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_UNMUTE_SUCCESS = {PATH_COMMANDS, COMMAND_UNMUTE, "Success"};
 	public static final Object[] COMMANDS_UNMUTE_SUCCESS_TARGET = {PATH_COMMANDS, COMMAND_UNMUTE, "SuccessTarget"};
 	public static final Object[] COMMANDS_UNMUTE_ANNOUNCEMENT = {PATH_COMMANDS, COMMAND_UNMUTE, "Announcement"};
+	public static final Object[] COMMANDS_WARN_SUCCESS = {PATH_COMMANDS, COMMAND_WARN, "Success"};
+	public static final Object[] COMMANDS_WARN_SUCCESS_TARGET = {PATH_COMMANDS, COMMAND_WARN, "SuccessTarget"};
+	public static final Object[] COMMANDS_WARN_SUCCESS_TARGET_PERMANENT = {PATH_COMMANDS, COMMAND_WARN, "SuccessTargetPermanent"};
+	public static final Object[] COMMANDS_WARN_ANNOUNCEMENT = {PATH_COMMANDS, COMMAND_WARN, "Announcement"};
+	public static final Object[] COMMANDS_WARN_ANNOUNCEMENT_PERMANENT = {PATH_COMMANDS, COMMAND_WARN, "AnnouncementPermanent"};
+	public static final Object[] COMMANDS_WARN_IGNORE = {PATH_COMMANDS, COMMAND_WARN, "Ignore"};
+	public static final Object[] COMMANDS_WARN_SOURCE_NAME_AUTOPUNISH = {PATH_COMMANDS, COMMAND_WARN, "SourceNameAutoPunish"};
+	public static final Object[] COMMANDS_WARN_BAN_LIMIT = {PATH_COMMANDS, COMMAND_WARN, "BanLimit"};
+	public static final Object[] COMMANDS_WARN_MUTE_LIMIT = {PATH_COMMANDS, COMMAND_WARN, "MuteLimit"};
+	public static final Object[] COMMANDS_WARN_KICK_LIMIT = {PATH_COMMANDS, COMMAND_WARN, "KickLimit"};
+	public static final Object[] COMMANDS_WARNS_TITLE = {PATH_COMMANDS, COMMAND_WARNS, "Title"};
+	public static final Object[] COMMANDS_WARNS_ALLTIME = {PATH_COMMANDS, COMMAND_WARNS, "AllTime"};
+	public static final Object[] COMMANDS_WARNS_ALLTIME_TARGET = {PATH_COMMANDS, COMMAND_WARNS, "AllTimeTarget"};
+	public static final Object[] COMMANDS_WARNS_REASON = {PATH_COMMANDS, COMMAND_WARNS, "Reason"};
 
 }

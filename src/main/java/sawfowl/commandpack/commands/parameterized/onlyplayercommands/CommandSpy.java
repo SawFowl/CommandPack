@@ -33,7 +33,7 @@ public class CommandSpy extends AbstractPlayerCommand {
 
 	@Override
 	public String permission() {
-		return Permissions.COMMANDSPY;
+		return Permissions.COMMANDSPY_STAFF;
 	}
 
 	@Override

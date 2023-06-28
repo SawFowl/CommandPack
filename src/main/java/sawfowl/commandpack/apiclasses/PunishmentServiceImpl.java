@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ban.Ban;
@@ -17,6 +18,7 @@ import org.spongepowered.api.service.ban.BanTypes;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.PunishmentService;
 import sawfowl.commandpack.api.data.punishment.Mute;
+import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.apiclasses.punishment.storage.AbstractPunishmentStorage;
 import sawfowl.commandpack.apiclasses.punishment.storage.FileStorage;
@@ -145,6 +147,16 @@ public class PunishmentServiceImpl implements PunishmentService {
 	@Override
 	public void addWarns(Warns warns) {
 		storage.saveWarns(warns);
+	}
+
+	@Override
+	public void addWarn(User user, Warn warn) {
+		Optional<Warns> optWarns = getWarns(user.uniqueId());
+		if(optWarns.isPresent()) {
+			Warns warns = optWarns.get();
+			warns.addWarn(warn);
+			warns.saveFile();
+		} else addWarns(Warns.builder().target(user).warn(warn).build());
 	}
 
 	@Override

@@ -24,9 +24,9 @@ public class PlayerChatListener {
 	}
 
 	@Listener(order = Order.LAST)
-	public void onExecute(PlayerChatEvent event, @First ServerPlayer player) {
+	public void onSendMessage(PlayerChatEvent event, @First ServerPlayer player) {
 		plugin.getPlayersData().getTempData().updateLastActivity(player);
-		plugin.getPunishmentService().getMute(player).ifPresent(mute -> {
+		if(plugin.getMainConfig().getPunishment().isEnable()) plugin.getPunishmentService().getMute(player).ifPresent(mute -> {
 			player.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(player.locale(), mute.getExpirationDate().isPresent() ? LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET : LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.TIME, Placeholders.VALUE}, new Component[] {mute.getSource().orElse(text("&e-")), expire(player.locale(), mute), mute.getReason().orElse(text("&e-"))}));
 			event.setCancelled(true);
 		});

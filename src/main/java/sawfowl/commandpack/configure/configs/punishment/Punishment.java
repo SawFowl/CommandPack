@@ -16,6 +16,8 @@ public class Punishment {
 	private String storageType = StorageType.FILE.typeName();
 	@Setting("Announce")
 	private Announce announce = new Announce();
+	@Setting("WarnsBefore")
+	private WarnsBefore warnsBefore = new WarnsBefore();
 
 	public boolean isEnable() {
 		return enable;
@@ -27,6 +29,10 @@ public class Punishment {
 
 	public Announce getAnnounce() {
 		return announce;
+	}
+
+	public WarnsBefore getWarnsBefore() {
+		return warnsBefore;
 	}
 
 }

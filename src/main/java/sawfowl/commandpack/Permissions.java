@@ -35,6 +35,7 @@ public class Permissions {
 	public static final String JUMP = "commandpack.commands.user.jump";
 	public static final String FLY = "commandpack.commands.user.fly";
 	public static final String GODMODE = "commandpack.commands.user.godmode";
+	public static final String INVENTORYSEE = "commandpack.commands.user.inventorysee";
 	public static final String SPEED = "commandpack.commands.user.speed";
 	public static final String SPEED_FLY = "commandpack.commands.user.flyspeed";
 	public static final String DISPOSAL = "commandpack.commands.user.disposal";
@@ -58,6 +59,7 @@ public class Permissions {
 	public static final String GLOW = "commandpack.commands.user.glow";
 	public static final String FLAME = "commandpack.commands.user.flame";
 	public static final String EXTINGUISH = "commandpack.commands.user.extinguish";
+	public static final String WARNS = "commandpack.commands.user.warnings";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -103,8 +105,8 @@ public class Permissions {
 	public static final String SERVER_STAT_STAFF_MODS_INFO = "commandpack.commands.staff.serverstat.mods.info";
 	public static final String SERVER_STAT_STAFF_INFO_TPS = "commandpack.commands.staff.serverstat.tps";
 	public static final String KIT_STAFF = "commandpack.commands.staff.kit";
-	public static final String WORLD = "commandpack.commands.staff.world";
-	public static final String COMMANDSPY = "commandpack.commands.staff.commandspy";
+	public static final String WORLD_STAFF = "commandpack.commands.staff.world";
+	public static final String COMMANDSPY_STAFF = "commandpack.commands.staff.commandspy";
 	public static final String PING_STAFF = "commandpack.commands.staff.ping";
 	public static final String LIST_STAFF = "commandpack.commands.staff.list";
 	public static final String SEEN_STAFF = "commandpack.commands.staff.seen";
@@ -118,6 +120,8 @@ public class Permissions {
 	public static final String KICK_STAFF = "commandpack.commands.staff.kick";
 	public static final String MUTE_STAFF = "commandpack.commands.staff.mute";
 	public static final String UNMUTE_STAFF = "commandpack.commands.staff.unmute";
+	public static final String WARN_STAFF = "commandpack.commands.staff.warn";
+	public static final String WARNS_STAFF = "commandpack.commands.staff.warnings";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";
@@ -127,6 +131,7 @@ public class Permissions {
 	public static final String IGNORE_BANIP = "commandpack.commands.ignore.banip";
 	public static final String IGNORE_KICK = "commandpack.commands.ignore.kick";
 	public static final String IGNORE_MUTE = "commandpack.commands.ignore.mute";
+	public static final String IGNORE_WARN = "commandpack.commands.ignore.ban";
 
 	// Limits
 	private static final String HOME_LIMIT = "commandpack.limits.home";
