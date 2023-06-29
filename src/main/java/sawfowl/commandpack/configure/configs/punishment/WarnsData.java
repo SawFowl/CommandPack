@@ -1,8 +1,9 @@
 package sawfowl.commandpack.configure.configs.punishment;
 
-import java.io.File;
-import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -12,15 +13,9 @@ import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
-import org.spongepowered.configurate.CommentedConfigurationNode;
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
-import org.spongepowered.configurate.reference.ConfigurationReference;
-import org.spongepowered.configurate.reference.ValueReference;
 
-import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
 
@@ -38,7 +33,7 @@ public class WarnsData implements Warns {
 	@Setting("Name")
 	private String name;
 	@Setting("Warns")
-	private List<WarnData> warns = new ArrayList<>();
+	private Set<WarnData> warns = new HashSet<WarnData>().stream().sorted(Comparator.comparing(WarnData::getCreationDate)).collect(Collectors.toSet());
 	@Setting("InAllTime")
 	int inAllTime = 0;
 
@@ -60,7 +55,7 @@ public class WarnsData implements Warns {
 	@Override
 	public List<Warn> getWarns() {
 		checkExpired();
-		return warns.stream().map(w -> Warn.builder().from(w)).collect(Collectors.toList());
+		return warns.stream().map(w -> Warn.builder().from(w)).sorted(Comparator.comparing(Warn::getCreationDate)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -97,18 +92,6 @@ public class WarnsData implements Warns {
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
-	@Override
-	public void saveFile() {
-		checkExpired();
-		try {
-			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(CommandPack.getInstance().getLocales().getLocaleService().getConfigurationOptions()).path(CommandPack.getInstance().getConfigDir().resolve("Modules" + File.separator + "Punishment" + File.separator + "Warns").resolve(getUniqueId().toString() + ".conf")).build().loadToReference();
-			ValueReference<WarnsData, CommentedConfigurationNode> config = configReference.referenceTo(WarnsData.class);
-			config.setAndSave((WarnsData) (this instanceof WarnsData ? this : Warns.builder().from(this)));
-		} catch (ConfigurateException e) {
-			e.printStackTrace();
-		}
-	}
-
 	private class Builder implements Warns.Builder {
 
 		@Override
@@ -141,7 +124,7 @@ public class WarnsData implements Warns {
 		public WarnsData from(Warns warns) {
 			uuid = warns.getUniqueId();
 			name = warns.getName();
-			WarnsData.this.warns = warns.getWarns().stream().map(warn -> (WarnData) (warn instanceof WarnData ? warn : Warn.builder().from(warn))).collect(Collectors.toList());
+			WarnsData.this.warns = warns.getWarns().stream().map(warn -> (WarnData) (warn instanceof WarnData ? warn : Warn.builder().from(warn))).collect(Collectors.toSet());
 			inAllTime = warns.inAllTime();
 			return WarnsData.this;
 		}

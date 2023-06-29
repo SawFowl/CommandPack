@@ -19,12 +19,12 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
-import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
@@ -96,13 +96,13 @@ public class Warnings extends AbstractRawCommand {
 				Collection<Warns> variants = plugin.getPunishmentService().getAllWarns();
 				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(w -> w.getName().equals(args[0])).findFirst();
 			}
-		}, true, true, 0, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
+		}, true, true, 0, Permissions.WARNS_OTHER, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
 	}
 
-	private Component timeFormat(Locale locale, Warn warn) {
+	private Component timeFormat(Locale locale, long time) {
 		SimpleDateFormat format = new SimpleDateFormat(getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
 		Calendar calendar = Calendar.getInstance(locale);
-		calendar.setTimeInMillis(warn.getCreationDate().toEpochMilli());
+		calendar.setTimeInMillis(time);
 		return text(format.format(calendar.getTime()));
 	}
 
@@ -112,15 +112,14 @@ public class Warnings extends AbstractRawCommand {
 		warns.getWarns().forEach(warn -> {
 			Component removeText = TextUtils.createCallBack(getText(locale, LocalesPaths.REMOVE), consumer -> {
 				Optional<Warns> find = plugin.getPunishmentService().getWarns(warns.getUniqueId());
-				if(!find.isPresent()) return;
-				find.get().removeWarn(warn);
-				find.get().saveFile();
+				plugin.getPunishmentService().removeWarn(warns.getUniqueId(), warn);
 				sendWarnsList(audience, locale, find.get(), remove, isPlayer);
 			});
-			Component w = isPlayer ? timeFormat(locale, warn).hoverEvent(HoverEvent.showText(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARNS_REASON), Placeholders.VALUE, warn.getReason().orElse(text("&e-"))))) : timeFormat(locale, warn).append(text("  ")).append(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARNS_REASON), Placeholders.VALUE, warn.getReason().orElse(text("&e-"))));
+			Component w = isPlayer ? TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_WARNS_TIMES), new String[] {Placeholders.TIME, Placeholders.LIMIT}, new Component[] {timeFormat(locale, warn.getCreationDate().toEpochMilli()), warn.getExpirationDate().map(i -> timeFormat(locale, i.toEpochMilli())).orElse(text("&c∞"))}).hoverEvent(HoverEvent.showText(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARNS_REASON), Placeholders.VALUE, warn.getReason().orElse(text("&e-"))))) : TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_WARNS_TIMES), new String[] {Placeholders.TIME, Placeholders.LIMIT}, new Component[] {timeFormat(locale, warn.getCreationDate().toEpochMilli()), warn.getExpirationDate().map(i -> timeFormat(locale, i.toEpochMilli())).orElse(text("&c∞"))}).append(text("  ")).append(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARNS_REASON), Placeholders.VALUE, warn.getReason().orElse(text("&e-"))));
 			list.add(remove ? removeText.append(text("    ")).append(w) : w);
 		});
-		sendPaginationList(audience, getText(locale, LocalesPaths.COMMANDS_WARNS_TITLE), text("=").color(getText(locale, LocalesPaths.COMMANDS_WARNS_TITLE).color()), 10, list);
+		Component title = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARNS_TITLE), Placeholders.PLAYER, warns.getName());
+		sendPaginationList(audience, title, text("=").color(title.color()), 10, list);
 	}
 
 }

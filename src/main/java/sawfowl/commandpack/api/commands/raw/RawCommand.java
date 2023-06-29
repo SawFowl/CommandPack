@@ -82,8 +82,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	default CommandResult process(CommandCause cause, Mutable arguments) throws CommandException {
 		boolean isPlayer = cause.audience() instanceof ServerPlayer;
 		Locale locale = getLocale(cause);
-		String[] args = Stream.of(arguments.input().split(" ")).map(String::toString).filter(string -> (!string.equals(""))).toArray(String[]::new);
-		checkChildAndArguments(cause, args, isPlayer, locale);
+		String[] args = checkChildAndArguments(cause, Stream.of(arguments.input().split(" ")).map(String::toString).filter(string -> (!string.equals(""))).toArray(String[]::new), isPlayer, locale);
 		checkCooldown(cause, locale, isPlayer);
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
 			getChildExecutors().get(args[0]).process(cause, cause.audience(), locale, isPlayer, (args.length > 1 ? Arrays.copyOfRange(args, 1, args.length + 1) : new String[] {}), arguments);
@@ -101,13 +100,21 @@ public interface RawCommand extends PluginCommand, Raw {
 		return complete == null || complete.size() == 0 ? (getEmptyCompletion() == null ? new ArrayList<>() : getEmptyCompletion()) : complete;
 	}
 
-	default void checkChildAndArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
+	default String[] checkChildAndArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
 			getChildExecutors().get(args[0]).checkChildAndArguments(cause, (args.length > 1 ? Arrays.copyOfRange(args, 1, args.length + 1) : new String[] {}), isPlayer, locale);
-		} else checkArguments(cause, args, isPlayer, locale);
+			return args;
+		} else return checkArguments(cause, args, isPlayer, locale);
 	}
 
-	default void checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
+	default String[] checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
+		if(args.length != 0) {
+			int i = 0;
+			while(i < args.length - 1) {
+				if(getArguments().get(i).getResultUnknownType(args).isPresent() && !getArguments().get(i).hasPermission(cause)) return Arrays.copyOfRange(args, 0, i);
+				i++;
+			}
+		}
 		if(args.length != 0 && getArguments() != null && !getArguments().isEmpty()) {
 			if(getArguments().containsKey(args.length - 1) && !getArguments().get(args.length - 1).getResultUnknownType(args).isPresent() && (!getArguments().get(args.length - 1).isOptional() || (!isPlayer && !getArguments().get(args.length - 1).isOptionalForConsole()))) exceptionAppendUsage(cause, getText(locale, getArguments().get(args.length - 1).getLocalesPath()));
 		} else {
@@ -115,6 +122,7 @@ public interface RawCommand extends PluginCommand, Raw {
 				if(!arg.getResultUnknownType(args).isPresent() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole()))) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
 			}
 		}
+		return args;
 	}
 
 	default List<CommandCompletion> completeChild(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
@@ -137,7 +145,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * Auto-complete command arguments.
 	 */
 	default List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
-		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.size()) return getEmptyCompletion();
+		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.size() || !getArguments().get(args.size() > 0 ? args.size() - 1 : 0).hasPermission(cause)) return getEmptyCompletion();
 		if(currentInput.endsWith(" ") || args.size() == 0) {
 			if(getArguments().containsKey(args.size())) return getArguments().get(args.size()).getVariants(args.toArray(new String[] {})).map(CommandCompletion::of).collect(Collectors.toList());
 			return getEmptyCompletion();

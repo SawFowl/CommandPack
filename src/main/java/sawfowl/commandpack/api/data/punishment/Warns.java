@@ -33,8 +33,6 @@ public interface Warns extends DataSerializable {
 
 	void checkExpired();
 
-	void saveFile();
-
 	interface Builder extends AbstractBuilder<Warns>, org.spongepowered.api.util.Builder<Warns, Builder> {
 
 		Builder target(ServerPlayer value);

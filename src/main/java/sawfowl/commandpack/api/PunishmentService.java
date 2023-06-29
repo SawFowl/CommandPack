@@ -42,6 +42,10 @@ public interface PunishmentService extends BanService {
 
 	void addWarn(User user, Warn warns);
 
+	void removeWarn(User user, Warn warn);
+
+	void removeWarn(UUID user, Warn warn);
+
 	boolean removeWarns(Warns warns);
 
 }

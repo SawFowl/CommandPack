@@ -243,7 +243,7 @@ public class Locales {
 		save = check(locale, toText("&eMods &7(&b" + Placeholders.VALUE + "&7)&e"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS) || save;
 		save = check(locale, toText("&7[&6Refresh&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON) || save;
 		save = check(locale, toText("&eAn attempt is made to reboot the plugin. If the plugin does not implement listening to the reboot event, there will be no effect."), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE) || save;
-		save = check(locale, "MM.dd.yyyy HH:mm:s", null, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT) || save;
+		save = check(locale, "MM.dd.yyyy HH:mm:ss", null, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT) || save;
 		save = check(locale, toText("&3About plugin"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_HEADER) || save;
 		save = check(locale, toText("&eID&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_ID) || save;
 		save = check(locale, toText("&eName&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_NAME) || save;
@@ -421,6 +421,7 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a warnings in all time &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET) || save;
 		save = check(locale, toText("&3" + Placeholders.PLAYER + " warnings"), null, LocalesPaths.COMMANDS_WARNS_TITLE) || save;
 		save = check(locale, toText("&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_WARNS_REASON) || save;
+		save = check(locale, toText("&e" + Placeholders.TIME + " &a➢ &e" + Placeholders.LIMIT), null, LocalesPaths.COMMANDS_WARNS_TIMES) || save;
 
 		if(save) save(locale);
 	}
@@ -605,7 +606,7 @@ public class Locales {
 		save = check(locale, toText("&eМоды &7(&b" + Placeholders.VALUE + "&7)&e"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS) || save;
 		save = check(locale, toText("&7[&6Перезагрузить&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON) || save;
 		save = check(locale, toText("&eВыполняется попытка перезагрузки плагина. Если в плагине не реализована прослушка события перезагрузки, то эффекта не будет."), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE) || save;
-		save = check(locale, "d.MM.yyyy HH:mm:s", null, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT) || save;
+		save = check(locale, "d.MM.yyyy HH:mm:ss", null, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT) || save;
 		save = check(locale, toText("&3О плагине"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_HEADER) || save;
 		save = check(locale, toText("&eID&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_ID) || save;
 		save = check(locale, toText("&eНазвание&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_NAME) || save;
@@ -784,6 +785,7 @@ public class Locales {
 		save = check(locale, toText("&aПредупреждений у &e" + Placeholders.PLAYER + "&a за все время &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET) || save;
 		save = check(locale, toText("&3Предупреждения " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_WARNS_TITLE) || save;
 		save = check(locale, toText("&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_WARNS_REASON) || save;
+		save = check(locale, toText("&e" + Placeholders.TIME + " &a➢ &e" + Placeholders.LIMIT), null, LocalesPaths.COMMANDS_WARNS_TIMES) || save;
 
 		if(save) save(locale);
 	}

@@ -3,7 +3,6 @@ package sawfowl.commandpack.configure.configs.punishment;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.data.Keys;
@@ -29,18 +28,16 @@ public class WarnData implements Warn {
 
 	@Setting("CreationDate")
 	private long creationDate;
-	@Setting("Expired")
+	@Setting("ExpirationDate")
 	private Long expired;
 	@Setting("Source")
 	private String source;
 	@Setting("Reason")
 	private String reason;
-	@Setting("WarnUUID")
-	private UUID uuid;
 
 	@Override
 	public Instant getCreationDate() {
-		return Instant.ofEpochSecond(creationDate);
+		return Instant.ofEpochMilli(creationDate);
 	}
 
 	@Override
@@ -50,7 +47,7 @@ public class WarnData implements Warn {
 
 	@Override
 	public Optional<Instant> getExpirationDate() {
-		return Optional.ofNullable(expired).map(e -> Instant.ofEpochSecond(e));
+		return Optional.ofNullable(expired).map(e -> Instant.ofEpochMilli(e));
 	}
 
 	@Override
@@ -61,11 +58,6 @@ public class WarnData implements Warn {
 	@Override
 	public Optional<Component> getReason() {
 		return Optional.ofNullable(reason).map(r -> TextUtils.deserializeJson(r));
-	}
-
-	@Override
-	public UUID getUniqueId() {
-		return uuid;
 	}
 
 	@Override
@@ -81,33 +73,32 @@ public class WarnData implements Warn {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(uuid);
+		return Objects.hash(creationDate);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == null || getClass() != obj.getClass()) return false;
 		if(this == obj) return true;
-		return obj instanceof WarnData && Objects.equals(uuid, ((WarnData) obj).uuid);
+		return obj instanceof WarnData && creationDate == ((WarnData) obj).creationDate && source.equals(((WarnData) obj).source);
 	}
 
 	@Override
 	public boolean isExpired() {
-		return expired != null && expired >= Instant.now().getEpochSecond();
+		return expired != null && expired <= System.currentTimeMillis();
 	}
 
 	private class Builder implements Warn.Builder {
 
 		@Override
 		public @NotNull Warn build() {
-			if(creationDate == 0) creationDate = System.currentTimeMillis() / 1000;
-			uuid = UUID.randomUUID();
+			if(creationDate == 0) creationDate = System.currentTimeMillis();
 			return WarnData.this;
 		}
 
 		@Override
 		public Warn.Builder creationDate(Instant value) {
-			creationDate = value.getEpochSecond();
+			creationDate = value.toEpochMilli();
 			return this;
 		}
 
@@ -125,7 +116,7 @@ public class WarnData implements Warn {
 
 		@Override
 		public Warn.Builder expirationDate(Instant value) {
-			expired = value.getEpochSecond();
+			expired = value.toEpochMilli();
 			return this;
 		}
 
@@ -137,9 +128,9 @@ public class WarnData implements Warn {
 
 		@Override
 		public Warn from(Warn warn) {
-			creationDate = warn.getCreationDate().getEpochSecond();
+			creationDate = warn.getCreationDate().toEpochMilli();
 			warn.getExpirationDate().ifPresent(e -> {
-				expired = e.getEpochSecond();
+				expired = e.toEpochMilli();
 			});
 			warn.getReason().ifPresent(r -> {
 				reason = TextUtils.serializeJson(r);
@@ -147,7 +138,6 @@ public class WarnData implements Warn {
 			warn.getSource().ifPresent(s -> {
 				source = TextUtils.serializeJson(s);
 			});
-			uuid = warn.getUniqueId();
 			return WarnData.this;
 		}
 		

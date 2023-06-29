@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
@@ -28,6 +29,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	private int cursor;
 	private Object[] localesPath;
 	private Class<?> clazz;
+	private String permission;
 
 	@Override
 	public Stream<String> getVariants(String[] args) {
@@ -71,6 +73,16 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	@Override
 	public Class<?> getClazz() {
 		return clazz;
+	}
+
+	@Override
+	public Optional<String> getPermision() {
+		return Optional.ofNullable(permission);
+	}
+
+	@Override
+	public boolean hasPermission(CommandCause cause) {
+		return getPermision().map(p -> cause.hasPermission(p)).orElse(true);
 	}
 
 	@Override
@@ -133,6 +145,12 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		@Override
 		public Builder<T> localeTextPath(Object[] value) {
 			localesPath = value;
+			return this;
+		}
+
+		@Override
+		public sawfowl.commandpack.api.commands.raw.arguments.RawArgument.Builder<T> permission(String value) {
+			permission = value;
 			return this;
 		}
 		

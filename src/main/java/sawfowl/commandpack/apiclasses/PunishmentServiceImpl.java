@@ -155,8 +155,21 @@ public class PunishmentServiceImpl implements PunishmentService {
 		if(optWarns.isPresent()) {
 			Warns warns = optWarns.get();
 			warns.addWarn(warn);
-			warns.saveFile();
+			storage.saveWarns(warns);
 		} else addWarns(Warns.builder().target(user).warn(warn).build());
+	}
+
+	@Override
+	public void removeWarn(UUID user, Warn warn) {
+		getWarns(user).ifPresent(warns -> {
+			warns.removeWarn(warn);
+			storage.saveWarns(warns);
+		});
+	}
+
+	@Override
+	public void removeWarn(User user, Warn warn) {
+		removeWarn(user.uniqueId(), warn);
 	}
 
 	@Override

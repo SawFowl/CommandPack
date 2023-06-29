@@ -419,5 +419,6 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_WARNS_ALLTIME = {PATH_COMMANDS, COMMAND_WARNS, "AllTime"};
 	public static final Object[] COMMANDS_WARNS_ALLTIME_TARGET = {PATH_COMMANDS, COMMAND_WARNS, "AllTimeTarget"};
 	public static final Object[] COMMANDS_WARNS_REASON = {PATH_COMMANDS, COMMAND_WARNS, "Reason"};
+	public static final Object[] COMMANDS_WARNS_TIMES = {PATH_COMMANDS, COMMAND_WARNS, "Times"};
 
 }

@@ -59,7 +59,8 @@ public class Permissions {
 	public static final String GLOW = "commandpack.commands.user.glow";
 	public static final String FLAME = "commandpack.commands.user.flame";
 	public static final String EXTINGUISH = "commandpack.commands.user.extinguish";
-	public static final String WARNS = "commandpack.commands.user.warnings";
+	public static final String WARNS = "commandpack.commands.user.warnings.self";
+	public static final String WARNS_OTHER = "commandpack.commands.user.warnings.other";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
