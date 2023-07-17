@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
+
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.Queries;
@@ -41,13 +42,23 @@ public class WarnData implements Warn {
 	}
 
 	@Override
+	public long getCreationTime() {
+		return creationDate;
+	}
+
+	@Override
 	public boolean isIndefinitely() {
-		return expired != null || expired <= 0;
+		return expired == null || expired <= 0;
 	}
 
 	@Override
 	public Optional<Instant> getExpirationDate() {
 		return Optional.ofNullable(expired).map(e -> Instant.ofEpochMilli(e));
+	}
+
+	@Override
+	public long getExpirationTime() {
+		return expired;
 	}
 
 	@Override

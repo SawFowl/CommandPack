@@ -2,8 +2,8 @@ package sawfowl.commandpack.api.data.punishment;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -19,9 +19,14 @@ public interface Warn extends DataSerializable {
 
 	Instant getCreationDate();
 
+	long getCreationTime();
+
 	boolean isIndefinitely();
 
 	Optional<Instant> getExpirationDate();
+
+	@Nullable
+	long getExpirationTime();
 
 	Optional<Component> getSource();
 

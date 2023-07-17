@@ -43,11 +43,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 
 	@Override
 	public Optional<?> getResultUnknownType(String[] args) throws CommandException {
-		try {
-			return result == null ? Optional.empty() : result.get(args);
-		} catch (Exception e) {
-			return null;
-		}
+		return result == null ? Optional.empty() : result.get(args);
 	}
 
 	@Override

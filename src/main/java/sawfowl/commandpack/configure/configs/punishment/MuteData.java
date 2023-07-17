@@ -47,7 +47,7 @@ public class MuteData implements Mute {
 
 	@Override
 	public boolean isIndefinitely() {
-		return expired != null || expired <= 0;
+		return expired == null || expired <= 0;
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class MuteData implements Mute {
 
 	@Override
 	public boolean isExpired() {
-		return expired != null && expired >= Instant.now().getEpochSecond();
+		return expired != null && expired <= Instant.now().getEpochSecond();
 	}
 
 	@Override
@@ -89,6 +89,11 @@ public class MuteData implements Mute {
 	public DataContainer toContainer() {
 		return DataContainer.createNew()
 				.set(Queries.CONTENT_VERSION, contentVersion());
+	}
+
+	@Override
+	public String toString() {
+		return "Mute [CreationDate=" + creationDate + ", UniqueId=" + uuid + ", Name=" + name + ", Expired=" + expired + ", Source=" + source + ", Reason=" + reason + "]";
 	}
 
 	private class Builder implements Mute.Builder {

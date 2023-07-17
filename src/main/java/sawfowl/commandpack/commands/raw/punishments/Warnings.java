@@ -12,9 +12,11 @@ import java.util.stream.Stream;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
+import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -97,6 +99,19 @@ public class Warnings extends AbstractRawCommand {
 				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(w -> w.getName().equals(args[0])).findFirst();
 			}
 		}, true, true, 0, Permissions.WARNS_OTHER, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
+	}
+
+	@Override
+	public void register(RegisterCommandEvent<Raw> event) {
+		if(!plugin.getMainConfig().getPunishment().isEnable()) return;
+		if(getCommandSettings() == null) {
+			event.register(getContainer(), this, command());
+		} else {
+			if(!getCommandSettings().isEnable()) return;
+			if(getCommandSettings().getAliases() != null && getCommandSettings().getAliases().length > 0) {
+				event.register(getContainer(), this, command(), getCommandSettings().getAliases());
+			} else event.register(getContainer(), this, command());
+		}
 	}
 
 	private Component timeFormat(Locale locale, long time) {

@@ -71,7 +71,7 @@ public class BanData {
 	}
 
 	public boolean isIndefinitely() {
-		return expired != null || expired <= 0;
+		return expired == null || expired <= 0;
 	}
 
 	public Optional<UUID> getUniqueId() {
