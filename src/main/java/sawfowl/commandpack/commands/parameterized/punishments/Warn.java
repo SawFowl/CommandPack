@@ -54,9 +54,13 @@ public class Warn extends AbstractParameterizedCommand {
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARN_IGNORE), Placeholders.PLAYER, user.name()));
 				return;
 			}
+			Optional<Duration> duration = getArgument(context, Duration.class, "Duration");
+			if(!duration.isPresent() && !context.cause().hasPermission(Permissions.PERMANENT_WARN_ACCESS)) {
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_EXCEPTION_DURATION_NOT_PRESENT));
+				return;
+			}
 			Component source = isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server");
 			Builder warnBuilder = sawfowl.commandpack.api.data.punishment.Warn.builder().creationDate(Instant.now()).source(source);
-			Optional<Duration> duration = getArgument(context, Duration.class, "Duration");
 			if(duration.isPresent() && duration.get().getSeconds() > 0) warnBuilder = warnBuilder.expirationDate(Instant.now().plusSeconds(duration.get().getSeconds()));
 			Optional<String> reason = getString(context, "Reason");
 			if(reason.isPresent()) warnBuilder = warnBuilder.reason(text(reason.get()));

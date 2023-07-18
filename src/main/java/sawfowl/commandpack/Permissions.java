@@ -156,6 +156,9 @@ public class Permissions {
 	private static final String KIT_ACCESS = "commandpack.access.kit";
 	public  static final String MOTD_ACCESS = "commandpack.access.motd";
 	public  static final String ALL_MODS_ACCESS = "commandpack.access.allmods";
+	public  static final String PERMANENT_WARN_ACCESS = "commandpack.access.permanent.warn";
+	public  static final String PERMANENT_MUTE_ACCESS = "commandpack.access.permanent.mute";
+	public  static final String PERMANENT_BAN_ACCESS = "commandpack.access.permanent.ban";
 
 	public static String getIgnoreDelayTimer(String command) {
 		return IGNORE_DELAY_TIMER + "." + command;

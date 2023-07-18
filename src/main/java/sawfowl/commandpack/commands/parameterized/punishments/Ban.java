@@ -56,9 +56,13 @@ public class Ban extends AbstractParameterizedCommand {
 					src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED), Placeholders.PLAYER, user.name()));
 					return;
 				}
+				Optional<Duration> duration = getArgument(context, Duration.class, "Duration");
+				if(!duration.isPresent() && !context.cause().hasPermission(Permissions.PERMANENT_BAN_ACCESS)) {
+					src.sendMessage(getText(locale, LocalesPaths.COMMANDS_EXCEPTION_DURATION_NOT_PRESENT));
+					return;
+				}
 				Component source = isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server");
 				Builder banBuilder = org.spongepowered.api.service.ban.Ban.builder().type(BanTypes.PROFILE).profile(user.profile()).startDate(Instant.now()).source(source);
-				Optional<Duration> duration = getArgument(context, Duration.class, "Duration");
 				if(duration.isPresent()) banBuilder = banBuilder.expirationDate(Instant.now().plusSeconds(duration.get().getSeconds()));
 				Optional<String> reason = getString(context, "Reason");
 				if(reason.isPresent()) banBuilder = banBuilder.reason(text(reason.get()));

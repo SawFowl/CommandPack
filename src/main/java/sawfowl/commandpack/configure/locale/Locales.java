@@ -105,6 +105,7 @@ public class Locales {
 		save = check(locale, toText("&cYou must specify a name."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou must specify a type."), null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou must specify a value."), null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT) || save;
+		save = check(locale, toText("&cSpecify the duration in ISO time format."), null, LocalesPaths.COMMANDS_EXCEPTION_DURATION_NOT_PRESENT) || save;
 		save = check(locale, toText("&cIt is necessary to specify the command argument as boolean. More information about the arguments of the entered command can be found in the documentation of the plugin."), null, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou need to specify the coordinates."), null, LocalesPaths.COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou have to specify the world."), null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT) || save;
@@ -468,6 +469,7 @@ public class Locales {
 		save = check(locale, toText("&cНужно указать имя."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать тип."), null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать значение."), null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT) || save;
+		save = check(locale, toText("&cНужно указать время в формате ISO."), null, LocalesPaths.COMMANDS_EXCEPTION_DURATION_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать аргумент команды вида boolean. Подробнее об аргументах введенной команды можно узнать в документации плагина."), null, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать координаты."), null, LocalesPaths.COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT) || save;
 		save = check(locale, toText("&cНужно указать мир."), null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT) || save;
