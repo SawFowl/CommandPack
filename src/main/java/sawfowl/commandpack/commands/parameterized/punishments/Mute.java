@@ -53,9 +53,13 @@ public class Mute extends AbstractParameterizedCommand {
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_MUTE_ALREADY_MUTED), Placeholders.PLAYER, user.name()));
 				return;
 			}
+			Optional<Duration> duration = getArgument(context, Duration.class, "Duration");
+			if(!duration.isPresent() && !context.cause().hasPermission(Permissions.PERMANENT_MUTE_ACCESS)) {
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_EXCEPTION_DURATION_NOT_PRESENT));
+				return;
+			}
 			Component source = isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server");
 			Builder muteBuilder = sawfowl.commandpack.api.data.punishment.Mute.builder().creationDate(Instant.now()).source(source).target(user);
-			Optional<Duration> duration = getArgument(context, Duration.class, "Duration");
 			if(duration.isPresent()) muteBuilder = muteBuilder.expirationDate(Instant.now().plusSeconds(duration.get().getSeconds()));
 			Optional<String> reason = getString(context, "Reason");
 			if(reason.isPresent()) muteBuilder = muteBuilder.reason(text(reason.get()));

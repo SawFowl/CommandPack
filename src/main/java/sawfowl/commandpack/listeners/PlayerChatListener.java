@@ -3,6 +3,7 @@ package sawfowl.commandpack.listeners;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
@@ -12,6 +13,7 @@ import org.spongepowered.api.event.message.PlayerChatEvent;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
@@ -26,10 +28,12 @@ public class PlayerChatListener {
 	@Listener(order = Order.LAST)
 	public void onSendMessage(PlayerChatEvent event, @First ServerPlayer player) {
 		plugin.getPlayersData().getTempData().updateLastActivity(player);
-		if(plugin.getMainConfig().getPunishment().isEnable()) plugin.getPunishmentService().getMute(player).ifPresent(mute -> {
-			player.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(player.locale(), mute.getExpirationDate().isPresent() ? LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET : LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.TIME, Placeholders.VALUE}, new Component[] {mute.getSource().orElse(text("&e-")), expire(player.locale(), mute), mute.getReason().orElse(text("&e-"))}));
-			event.setCancelled(true);
-		});
+		if(!plugin.getMainConfig().getPunishment().isEnable()) return;
+		Optional<Mute> optMute = plugin.getPunishmentService().getMute(player);
+		if(!optMute.isPresent()) return;
+		Mute mute = optMute.get();
+		event.setCancelled(true);
+		player.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(player.locale(), mute.getExpirationDate().isPresent() ? LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET : LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.TIME, Placeholders.VALUE}, new Component[] {mute.getSource().orElse(text("&e-")), expire(player.locale(), mute), mute.getReason().orElse(text("&e-"))}));
 	}
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
