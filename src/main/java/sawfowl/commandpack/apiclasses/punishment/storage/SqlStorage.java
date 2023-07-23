@@ -303,7 +303,7 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 			return statement.execute(sql);
 		}
 		catch (SQLException e) {
-			plugin.getLogger().error("Error during H2SQL query execution '" + sql + "'...\n" + e.getLocalizedMessage());
+			plugin.getLogger().error("Error during SQL query execution '" + sql + "'...\n" + e.getLocalizedMessage());
 			return false;
 		}
 	}
