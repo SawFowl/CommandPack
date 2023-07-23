@@ -95,6 +95,11 @@ sponge {
 			loadOrder("after")
 			version("1.0.0")
 		}
+		dependency("h2driver") {
+			optional(true)
+			loadOrder("after")
+			version("1.0.0")
+		}
 	}
 }
 

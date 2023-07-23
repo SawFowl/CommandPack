@@ -102,7 +102,6 @@ public class BanData {
 		try {
 			return Optional.ofNullable(InetAddress.getByName(inetAddress));
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return Optional.empty();

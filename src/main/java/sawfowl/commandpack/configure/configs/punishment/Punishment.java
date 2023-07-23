@@ -1,6 +1,7 @@
 package sawfowl.commandpack.configure.configs.punishment;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.utils.StorageType;
@@ -18,6 +19,9 @@ public class Punishment {
 	private Announce announce = new Announce();
 	@Setting("WarnsBefore")
 	private WarnsBefore warnsBefore = new WarnsBefore();
+	@Setting("MySqlQueries")
+	@Comment("Configuring queries to work with the MySQL database.\nChanging the settings can help in creating compatibility with other plugins.")
+	private Queries mySqlQueries = new Queries();
 
 	public boolean isEnable() {
 		return enable;
@@ -33,6 +37,10 @@ public class Punishment {
 
 	public WarnsBefore getWarnsBefore() {
 		return warnsBefore;
+	}
+
+	public Queries getMySqlQueries() {
+		return mySqlQueries;
 	}
 
 }

@@ -42,6 +42,8 @@ public interface Mute extends DataSerializable {
 
 		Builder target(User value);
 
+		Builder target(UUID uuid, String name);
+
 		Builder source(Component name);
 
 		Builder source(ServerPlayer value);

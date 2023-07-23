@@ -118,9 +118,16 @@ public class MuteData implements Mute {
 		}
 
 		@Override
-		public sawfowl.commandpack.api.data.punishment.Mute.Builder target(User value) {
+		public Mute.Builder target(User value) {
 			uuid = value.uniqueId();
 			name = value.name();
+			return this;
+		}
+
+		@Override
+		public Mute.Builder target(UUID uuid, String name) {
+			MuteData.this.uuid = uuid;
+			MuteData.this.name = name;
 			return this;
 		}
 

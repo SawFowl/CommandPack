@@ -28,7 +28,7 @@ public enum StorageType {
 	public abstract String typeName();
 
 	public static StorageType getType(String name) {
-		return Stream.of(StorageType.values()).filter(t -> t.typeName().equals(name)).findFirst().orElse(FILE);
+		return Stream.of(StorageType.values()).filter(t -> t.typeName().equalsIgnoreCase(name)).findFirst().orElse(FILE);
 	}
 
 }

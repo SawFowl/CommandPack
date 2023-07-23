@@ -3,6 +3,7 @@ package sawfowl.commandpack.apiclasses.punishment.storage;
 import java.io.File;
 import java.net.InetAddress;
 import java.nio.file.Path;
+import java.util.UUID;
 
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ban.Ban;
@@ -125,9 +126,9 @@ public class FileStorage extends AbstractPunishmentStorage {
 	}
 
 	@Override
-	public boolean deleteWarns(Warns warns) {
-		if(super.warns.containsKey(warns.getUniqueId())) super.warns.remove(warns.getUniqueId());
-		File file = warnsPath.resolve(warns.getUniqueId().toString() + ".conf").toFile();
+	public boolean deleteWarns(UUID player) {
+		if(warns.containsKey(player)) warns.remove(player);
+		File file = warnsPath.resolve(player.toString() + ".conf").toFile();
 		return file.exists() && file.delete();
 	}
 

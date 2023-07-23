@@ -99,7 +99,7 @@ public class Locales {
 		save = check(locale, toText("&6&lBackpack"), null, LocalesPaths.NAME_BACKPACK) || save;
 
 		save = check(locale, toText("&cPlayer " + Placeholders.PLAYER + "&c is offline."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE) || save;
-		save = check(locale, toText("&cYou need to specify the nickname of the player who is now online or was previously on the server.."), null, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT) || save;
+		save = check(locale, toText("&cYou need to specify the nickname of the player who is now online or was previously on the server."), null, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou need to specify the nickname of the player online."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou can't point to yourself."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
 		save = check(locale, toText("&cYou must specify a name."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
@@ -210,7 +210,7 @@ public class Locales {
 		save = check(locale, toText("&eAn attempt is made to forcibly execute a command by the player &6" + Placeholders.PLAYER + "&e."), null, LocalesPaths.COMMANDS_SUDO_SUCCESS) || save;
 		save = check(locale, toText("&aYou are now invisible."), null, LocalesPaths.COMMANDS_VANISH_VASHISHED) || save;
 		save = check(locale, toText("&aYou are visible again."), null, LocalesPaths.COMMANDS_VANISH_UNVASHISHED) || save;
-		save = check(locale, toText("&aThe player &e" + Placeholders.PLAYER + "&a is now invisible.."), null, LocalesPaths.COMMANDS_VANISH_VASHISHED_STAFF) || save;
+		save = check(locale, toText("&aThe player &e" + Placeholders.PLAYER + "&a is now invisible."), null, LocalesPaths.COMMANDS_VANISH_VASHISHED_STAFF) || save;
 		save = check(locale, toText("&aThe player &e" + Placeholders.PLAYER + "&a is visible again."), null, LocalesPaths.COMMANDS_VANISH_UNVASHISHED_STAFF) || save;
 		save = check(locale, toText("&aYour nickname has been changed to &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_NICK_SET_SELF) || save;
 		save = check(locale, toText("&aYour nickname has been changed to the original."), null, LocalesPaths.COMMANDS_NICK_CLEAR_SELF) || save;
@@ -327,7 +327,7 @@ public class Locales {
 		save = check(locale, toText("&eInvalid value specified for game rule &e" + Placeholders.RULE + "&a."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_INCORECT_VALUE) || save;
 		save = check(locale, toText("&cFailed to determine the type of game rule &e" + Placeholders.RULE + "&c. No changes have been made."), null, LocalesPaths.COMMANDS_WORLD_GAMERULE_UNKNOWN_TYPE) || save;
 		save = check(locale, "The generation of chunks in world \"" + Placeholders.WORLD + "\" in progress. Done: " + Placeholders.VALUE + "%. The last generated chunk: " + Placeholders.LOCATION + ".", null, LocalesPaths.COMMANDS_WORLD_DEBUG_GENERATE) || save;
-		save = check(locale, toText("&cThe task of generating chunks in world &e\"" + Placeholders.WORLD + "\"&c is missing.."), null, LocalesPaths.COMMANDS_WORLD_NOT_STARTED_GENERATE) || save;
+		save = check(locale, toText("&cThe task of generating chunks in world &e\"" + Placeholders.WORLD + "\"&c is missing."), null, LocalesPaths.COMMANDS_WORLD_NOT_STARTED_GENERATE) || save;
 		save = check(locale, toText("&cYou cannot delete an active generation task. Put it on pause first."), null, LocalesPaths.COMMANDS_WORLD_NOT_PAUSED_GENERATE) || save;
 		save = check(locale, toText("&aChunk generation in world &e\"" + Placeholders.WORLD + "\" &ahas started.\n If you stop the server, when you start this operation again, generation will start from the beginning."), null, LocalesPaths.COMMANDS_WORLD_START_GENERATE) || save;
 		save = check(locale, toText("&aChunk generation in world &e\"" + Placeholders.WORLD + "\"&a is suspended."), null, LocalesPaths.COMMANDS_WORLD_PAUSE_GENERATE) || save;
@@ -384,7 +384,7 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a bans player &e" + Placeholders.PLAYER + "&a.\n&aEnd of ban &e" + Placeholders.TIME + "\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently bans player &e" + Placeholders.PLAYER + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&cIt's impossible to ban &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_BAN_IGNORE) || save;
-		save = check(locale, toText("&ePlayer &e" + Placeholders.PLAYER + "&e has already been banned on this server."), null, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED) || save;
+		save = check(locale, toText("&ePlayer &e" + Placeholders.PLAYER + "&e has already banned on this server."), null, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED) || save;
 		save = check(locale, toText("&bYou are banned on the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_DISCONNECT) || save;
 		save = check(locale, toText("&aYou unbanned &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a unbans &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT) || save;

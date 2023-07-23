@@ -16,6 +16,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
 
@@ -68,17 +69,21 @@ public class WarnsData implements Warns {
 	public void addWarn(Warn warn) {
 		warns.add((WarnData) (warn instanceof WarnData ? warn : Warn.builder().from(warn)));
 		inAllTime++;
+		save();
 	}
 
 	@Override
 	public void removeWarn(Warn warn) {
 		WarnData data = (WarnData) (warn instanceof WarnData ? warn : Warn.builder().from(warn));
 		if(warns.contains(data)) warns.remove(data);
+		save();
 	}
 
 	@Override
 	public void checkExpired() {
+		int size = warns.size();
 		warns.removeIf(WarnData::isExpired);
+		if(warns.size() < size) save();
 	}
 
 	@Override
@@ -90,6 +95,11 @@ public class WarnsData implements Warns {
 	public DataContainer toContainer() {
 		return DataContainer.createNew()
 				.set(Queries.CONTENT_VERSION, contentVersion());
+	}
+
+	private void save() {
+		CommandPack.getInstance().getPunishmentService().removeWarns(uuid);
+		CommandPack.getInstance().getPunishmentService().addWarns(this);
 	}
 
 	private class Builder implements Warns.Builder {

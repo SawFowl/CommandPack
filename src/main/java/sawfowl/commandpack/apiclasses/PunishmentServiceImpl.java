@@ -22,6 +22,9 @@ import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.apiclasses.punishment.storage.AbstractPunishmentStorage;
 import sawfowl.commandpack.apiclasses.punishment.storage.FileStorage;
+import sawfowl.commandpack.apiclasses.punishment.storage.H2Storage;
+import sawfowl.commandpack.apiclasses.punishment.storage.MySqlStorage;
+import sawfowl.commandpack.utils.MariaDB;
 
 public class PunishmentServiceImpl implements PunishmentService {
 
@@ -30,10 +33,26 @@ public class PunishmentServiceImpl implements PunishmentService {
 	public PunishmentServiceImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		switch (plugin.getMainConfig().getPunishment().getStorageType()) {
-
-		default:
-			storage = new FileStorage(plugin);
-			break;
+			case H2:
+				try {
+					Class.forName("org.h2.Driver");
+					storage = new H2Storage(plugin);
+				} catch (Exception e) {
+					storage = new FileStorage(plugin);
+					plugin.getLogger().warn("H2 driver not found! Configuration files based data storage will be used.");
+				}
+				break;
+			case MYSQL:
+				Optional<MariaDB> optMariaDB = plugin.getMariaDB();
+				if(optMariaDB.isPresent()) {
+					storage = new MySqlStorage(plugin);
+				} else {
+					storage = new FileStorage(plugin);
+					plugin.getLogger().error("MySql or MariaDB Driver not found! Configuration files based data storage will be used.");
+				}
+			default:
+				storage = new FileStorage(plugin);
+				break;
 		}
 	}
 
@@ -173,8 +192,8 @@ public class PunishmentServiceImpl implements PunishmentService {
 	}
 
 	@Override
-	public boolean removeWarns(Warns warns) {
-		return storage.deleteWarns(warns);
+	public boolean removeWarns(UUID player) {
+		return storage.deleteWarns(player);
 	}
 
 }

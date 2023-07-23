@@ -18,14 +18,14 @@ public class MariaDB {
 	private final String ssl;
 	private Connection connection;
 
-	public MariaDB(CommandPack instance, String hostname, String port, String database, String username, String password, String ssl) {
+	public MariaDB(CommandPack instance) {
 		this.plugin = instance;
-		this.hostname = hostname;
-		this.port = port;
-		this.database = database;
-		this.user = username;
-		this.password = password;
-		this.ssl = ssl;
+		this.hostname = plugin.getMainConfig().getMySqlConfig().getHost();
+		this.port = plugin.getMainConfig().getMySqlConfig().getPort();
+		this.database = plugin.getMainConfig().getMySqlConfig().getDatabase();
+		this.user = plugin.getMainConfig().getMySqlConfig().getUser();
+		this.password = plugin.getMainConfig().getMySqlConfig().getPassword();
+		this.ssl = plugin.getMainConfig().getMySqlConfig().getSSL();
 		this.connection = null;
 	}
 
@@ -36,12 +36,10 @@ public class MariaDB {
 		properties.setProperty("password", this.password);
 		properties.setProperty("useSSL", this.ssl);
 		try {
-			this.connection = DriverManager.getConnection(url, properties);
+			return this.connection = DriverManager.getConnection(url, properties);
 		} catch (SQLException e) {
-			plugin.getLogger().error("JDBC Driver not found!");
-			plugin.getLogger().error(e.getMessage());
+			return null;
 		}
-		return this.connection;
 	}
 	
 	public boolean checkConnection() {

@@ -109,6 +109,7 @@ import sawfowl.commandpack.listeners.PlayerMoveListener;
 import sawfowl.commandpack.listeners.PlayerDeathAndRespawnListener;
 import sawfowl.commandpack.utils.Economy;
 import sawfowl.commandpack.utils.Logger;
+import sawfowl.commandpack.utils.MariaDB;
 
 @Plugin("commandpack")
 public class CommandPack {
@@ -131,6 +132,7 @@ public class CommandPack {
 	private sawfowl.commandpack.api.CommandPack api;
 	private PunishmentService punishmentService;
 	private Map<String, ChunkGenerator> generators = new HashMap<>();
+	private MariaDB mariaDB;
 
 	public static CommandPack getInstance() {
 		return instance;
@@ -208,6 +210,10 @@ public class CommandPack {
 		return punishmentService;
 	}
 
+	public Optional<MariaDB> getMariaDB() {
+		return Optional.ofNullable(mariaDB);
+	}
+
 	@Inject
 	public CommandPack(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
 		instance = this;
@@ -225,6 +231,10 @@ public class CommandPack {
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
 		configManager.loadPlayersData();
 		isForge = checkForge();
+		if(getMainConfig().getMySqlConfig().isEnable()) {
+			mariaDB = new MariaDB(instance);
+			if(mariaDB.openConnection() == null) mariaDB = null;
+		}
 	}
 
 	@Listener
