@@ -801,7 +801,7 @@ public class Locales {
 	}
 
 	private AbstractLocaleUtil getAbstractLocaleUtil(Locale locale) {
-		return localeService.getPluginLocales(pluginid).getOrDefault(locale, localeService.getPluginLocales("wasted").get(org.spongepowered.api.util.locale.Locales.DEFAULT));
+		return localeService.getPluginLocales(pluginid).getOrDefault(locale, localeService.getPluginLocales(pluginid).get(org.spongepowered.api.util.locale.Locales.DEFAULT));
 	}
 
 	private Component toText(String string) {
