@@ -10,11 +10,11 @@ public class Queries {
 	public Queries(){}
 
 	@Setting("CreateProfileBanTable")
-	private String createProfileBansTableSql = "CREATE TABLE IF NOT EXISTS bans(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, creation_date UNSIGNED BIGINT, expiration_date UNSIGNED BIGINT, reason TEXT, PRIMARY KEY(UUID))";
+	private String createProfileBansTableSql = "CREATE TABLE IF NOT EXISTS bans(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, creation_date BIGINT, expiration_date BIGINT, reason TEXT, PRIMARY KEY(UUID))";
 	@Setting("CreateIPBansTable")
-	private String createIPBansTableSql = "CREATE TABLE IF NOT EXISTS bans_ip(ip VARCHAR(128) UNIQUE, source TEXT, creation_date UNSIGNED BIGINT, expiration_date UNSIGNED BIGINT, reason TEXT, PRIMARY KEY(ip))";
+	private String createIPBansTableSql = "CREATE TABLE IF NOT EXISTS bans_ip(ip VARCHAR(128) UNIQUE, source TEXT, creation_date BIGINT, expiration_date BIGINT, reason TEXT, PRIMARY KEY(ip))";
 	@Setting("CreateMutesTable")
-	private String createMutesTableSql = "CREATE TABLE IF NOT EXISTS mutes(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, creation_date UNSIGNED BIGINT, expiration_date UNSIGNED BIGINT, reason TEXT, PRIMARY KEY(uuid))";
+	private String createMutesTableSql = "CREATE TABLE IF NOT EXISTS mutes(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, creation_date BIGINT, expiration_date BIGINT, reason TEXT, PRIMARY KEY(uuid))";
 	@Setting("CreateWarnsTable")
 	private String createWarnsTableSql = "CREATE TABLE IF NOT EXISTS warns(uuid VARCHAR(128) UNIQUE, warns_data LONGTEXT, PRIMARY KEY(uuid))";
 	@Setting("SelectAllProfileBans")
@@ -27,11 +27,11 @@ public class Queries {
 	private String selectAllWarnsSql = "SELECT * FROM warns";
 	@Setting("InsertProfileBan")
 	private String insertProfileBanSql = "REPLACE INTO bans (uuid, name, source, creation_date, expiration_date, reason) VALUES(?, ?, ?, ?, ?, ?)";
-	@Setting("InsertProfileBan")
+	@Setting("InsertIpBan")
 	private String insertIPBanSql = "REPLACE INTO bans_ip (ip, source, creation_date, expiration_date, reason) VALUES(?, ?, ?, ?, ?)";
-	@Setting("InsertProfileBan")
-	private String insertMuteSql = "REPLACE INTO MUTES (uuid, name, source, creation_date, expiration_date, reason) VALUES(?, ?, ?, ?, ?, ?)";
-	@Setting("InsertProfileBan")
+	@Setting("InsertMute")
+	private String insertMuteSql = "REPLACE INTO mutes (uuid, name, source, creation_date, expiration_date, reason) VALUES(?, ?, ?, ?, ?, ?)";
+	@Setting("InsertWarns")
 	private String insertWarnsSql = "REPLACE INTO warns (uuid, warns_data) VALUES(?, ?)";
 	@Setting("DeleteProfileBan")
 	private String deleteProfileBanSql = "DELETE FROM bans WHERE uuid = ?";
@@ -45,7 +45,7 @@ public class Queries {
 	@Comment("Names of columns for receiving data.")
 	private Columns columns = new Columns();
 	@Setting("Patterns")
-	@Comment("The order of columns for writing data to the database.\nRearrange the placeholders as you need. Their order must match the order of the columns in the database. separation of placeholders - >|<.\nColumn names are specified in the request to add data to the database.")
+	@Comment("The order of columns for writing data to the database.\nRearrange the placeholders as you need. Their order must match the order of the columns in the database. Separation of placeholders - '><'.\nColumn names are specified in the request to add data to the database.")
 	private Patterns patterns = new Patterns();
 
 	public String createProfileBansTableSql() {

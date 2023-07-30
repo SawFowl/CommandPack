@@ -9,11 +9,11 @@ public class Patterns {
 	public Patterns(){}
 
 	@Setting("Ban")
-	private String ban = "%uuid%>|<%name%>|<%source%>|<%creation%>|<%expiration%>|<%reason%";
+	private String ban = "%uuid%><%name%><%source%><%creation%><%expiration%><%reason%";
 	@Setting("BanIP")
-	private String banIP = "%ip%>|<%source%>|<%creation%>|<%expiration%>|<%reason%";
+	private String banIP = "%ip%><%source%><%creation%><%expiration%><%reason%";
 	@Setting("Mute")
-	private String mute = "%uuid%>|<%name%>|<%source%>|<%creation%>|<%expiration%>|<%reason%";
+	private String mute = "%uuid%><%name%><%source%><%creation%><%expiration%><%reason%";
 
 	public String getBan() {
 		return ban;

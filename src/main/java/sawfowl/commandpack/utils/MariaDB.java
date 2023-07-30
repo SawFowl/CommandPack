@@ -57,7 +57,7 @@ public class MariaDB {
 		} catch (SQLException e) {
 			plugin.getLogger().error(e.getMessage());
 		}
-		return null;
+		return this.connection;
 	}
 
 	public void closeConnection() {

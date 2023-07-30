@@ -183,37 +183,34 @@ public class MySqlStorage extends SqlStorage {
 
 	@Override
 	public Object[] insertProfileBanObjects(Profile ban) throws ConfigurateException {
-		String result = plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getBan()
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getBan()
 				.replace("%uuid%", ban.profile().uniqueId().toString())
 				.replace("%name%", ban.profile().name().orElse(ban.profile().examinableName()))
-				.replace("%source%", ban.banSource().map(TextUtils::serializeLegacy).orElse("empty"))
+				.replace("%source%", ban.banSource().map(TextUtils::serializeLegacy).orElse("n/a"))
 				.replace("%creation%", String.valueOf(ban.creationDate().toEpochMilli()))
 				.replace("%expiration%", ban.expirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("empty"))
-				.replace("%reason%", ban.reason().map(TextUtils::serializeLegacy).orElse("empty")).replace(">|<empty", "");
-		return result.split(">|<");
+				.replace("%reason%", ban.reason().map(TextUtils::serializeLegacy).orElse("n/a")).split("><");
 	}
 
 	@Override
 	public Object[] insertIPBanObjects(IP ban) throws ConfigurateException {
-		String result = plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getBan()
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getBan()
 				.replace("%ip%", ban.address().getHostAddress())
-				.replace("%source%", ban.banSource().map(TextUtils::serializeLegacy).orElse("empty"))
+				.replace("%source%", ban.banSource().map(TextUtils::serializeLegacy).orElse("n/a"))
 				.replace("%creation%", String.valueOf(ban.creationDate().toEpochMilli()))
 				.replace("%expiration%", ban.expirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("empty"))
-				.replace("%reason%", ban.reason().map(TextUtils::serializeLegacy).orElse("empty")).replace(">|<empty", "");
-		return result.split(">|<");
+				.replace("%reason%", ban.reason().map(TextUtils::serializeLegacy).orElse("n/a")).split("><");
 	}
 
 	@Override
 	public Object[] insertMuteObjects(Mute mute) throws ConfigurateException {
-		String result = plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getBan()
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getBan()
 				.replace("%uuid%", mute.getUniqueId().toString())
 				.replace("%name%", mute.getName())
-				.replace("%source%", mute.getSource().map(TextUtils::serializeLegacy).orElse("empty"))
+				.replace("%source%", mute.getSource().map(TextUtils::serializeLegacy).orElse("n/a"))
 				.replace("%creation%", String.valueOf(mute.getCreationDate().toEpochMilli()))
 				.replace("%expiration%", mute.getExpirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("empty"))
-				.replace("%reason%", mute.getReason().map(TextUtils::serializeLegacy).orElse("empty")).replace(">|<empty", "");
-		return result.split(">|<");
+				.replace("%reason%", mute.getReason().map(TextUtils::serializeLegacy).orElse("n/a")).split("><");
 	}
 
 	@Override

@@ -37,6 +37,7 @@ public class PunishmentServiceImpl implements PunishmentService {
 				try {
 					Class.forName("org.h2.Driver");
 					storage = new H2Storage(plugin);
+					plugin.getLogger().info("The h2 database is used to store the punishment system data.");
 				} catch (Exception e) {
 					storage = new FileStorage(plugin);
 					plugin.getLogger().warn("H2 driver not found! Configuration files based data storage will be used.");
@@ -46,10 +47,12 @@ public class PunishmentServiceImpl implements PunishmentService {
 				Optional<MariaDB> optMariaDB = plugin.getMariaDB();
 				if(optMariaDB.isPresent()) {
 					storage = new MySqlStorage(plugin);
+					plugin.getLogger().info("The mysql database is used to store the punishment system data.");
 				} else {
 					storage = new FileStorage(plugin);
 					plugin.getLogger().error("MySql or MariaDB Driver not found! Configuration files based data storage will be used.");
 				}
+				break;
 			default:
 				storage = new FileStorage(plugin);
 				break;

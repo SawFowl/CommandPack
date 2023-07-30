@@ -78,7 +78,7 @@ public class Mute extends AbstractParameterizedCommand {
 				});
 			} else {
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_MUTE_SUCCESS), Placeholders.PLAYER, userName));
-				if(user.player().isPresent() && user.isOnline()) user.player().get().sendMessage(TextUtils.replaceToComponents(getText(locale, mute.getExpirationDate().isPresent() ? LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET : LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.TIME}, new Component[] {source, expire(user.player().get().locale(), mute)}));
+				if(user.player().isPresent() && user.isOnline()) user.player().get().sendMessage(TextUtils.replaceToComponents(getText(locale, mute.getExpirationDate().isPresent() ? LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET : LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.TIME, Placeholders.VALUE}, new Component[] {source, expire(user.player().get().locale(), mute), mute.getReason().orElse(text("-"))}));
 			}
 		});
 	}
