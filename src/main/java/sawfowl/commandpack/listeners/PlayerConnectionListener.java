@@ -77,7 +77,7 @@ public class PlayerConnectionListener {
 		Sponge.server().scheduler().submit(Task.builder().delay(Ticks.of(10)).plugin(plugin.getPluginContainer()).execute(() -> {
 			runCommands(event.player());
 		}).build());
-		plugin.getPlayersData().getTempData().updateLastActivity(event.player());
+		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(event.player());
 		if(plugin.getKitService().getKits().isEmpty()) return;
 		plugin.getKitService().getKits().stream().filter(kit -> kit.isFirstTime() || kit.isGiveOnJoin()).forEach(kit -> {
 			giveKit(event.player(), kit);

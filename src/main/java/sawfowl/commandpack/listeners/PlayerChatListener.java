@@ -27,7 +27,7 @@ public class PlayerChatListener {
 
 	@Listener(order = Order.LAST)
 	public void onSendMessage(PlayerChatEvent event, @First ServerPlayer player) {
-		plugin.getPlayersData().getTempData().updateLastActivity(player);
+		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(player);
 		if(!plugin.getMainConfig().getPunishment().isEnable()) return;
 		Optional<Mute> optMute = plugin.getPunishmentService().getMute(player);
 		if(!optMute.isPresent()) return;

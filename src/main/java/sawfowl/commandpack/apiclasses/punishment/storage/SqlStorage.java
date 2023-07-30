@@ -223,6 +223,7 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 			while(!results.isClosed() && results.next()) loadMute(results);
 			results = resultSet(selectAllWarnsSql);
 			while(!results.isClosed() && results.next()) loadWarns(results);
+			extend();
 		} catch (SQLException e) {
 			plugin.getLogger().error(e.getLocalizedMessage());
 		}

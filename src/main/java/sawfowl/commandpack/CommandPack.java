@@ -333,7 +333,7 @@ public class CommandPack {
 			tps1m.put(currentTime, Sponge.server().ticksPerSecond());
 			tps5m.put(currentTime, Sponge.server().ticksPerSecond());
 			tps10m.put(currentTime, Sponge.server().ticksPerSecond());
-			Sponge.server().onlinePlayers().forEach(player -> {
+			if(getMainConfig().getAfkConfig().isEnable()) Sponge.server().onlinePlayers().forEach(player -> {
 				if(getPlayersData().getTempData().getLastActivity(player) > 0) {
 					if(getPlayersData().getTempData().isAfk(player) && !player.hasPermission(Permissions.AFK_UNLIMIT)) {
 						if((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay()) - Duration.ofMillis(System.currentTimeMillis()).getSeconds() <= 0) {

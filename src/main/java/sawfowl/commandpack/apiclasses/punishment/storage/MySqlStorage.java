@@ -43,7 +43,6 @@ public class MySqlStorage extends SqlStorage {
 
 	@Override
 	public String createProfileBansTableSql() {
-		plugin.getMainConfig().getMySqlConfig().getPrefix();
 		return plugin.getMainConfig().getPunishment().getMySqlQueries().createProfileBansTableSql();
 	}
 

@@ -12,13 +12,10 @@ public class MySqlConfig {
 	private String host = "localhost";
 
 	@Setting("Port")
-	private String port = "3306";
+	private int port = 3306;
 
 	@Setting("DataBase")
 	private String database = "commandpack";
-
-	@Setting("Prefix")
-	private String prefix = "cp_";
 
 	@Setting("User")
 	private String user = "user";
@@ -38,15 +35,15 @@ public class MySqlConfig {
 	}
 
 	public String getPort() {
+		return String.valueOf(port);
+	}
+
+	public int getPortInt() {
 		return port;
 	}
 
 	public String getDatabase() {
 		return database;
-	}
-
-	public String getPrefix() {
-		return prefix;
 	}
 
 	public String getUser() {

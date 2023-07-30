@@ -16,7 +16,7 @@ public class PlayerInteractEntityListener {
 
 	@Listener
 	public void onInteract(InteractEntityEvent event, @First ServerPlayer player) {
-		plugin.getPlayersData().getTempData().updateLastActivity(player);
+		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(player);
 	}
 
 }

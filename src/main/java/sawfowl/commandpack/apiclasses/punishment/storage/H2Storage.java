@@ -190,5 +190,4 @@ public class H2Storage extends SqlStorage {
 		loader.save(node);
 		return new Object[] {warns.getUniqueId(), sink};
 	}
-
 }

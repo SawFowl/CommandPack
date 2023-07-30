@@ -44,6 +44,9 @@ public class Queries {
 	@Setting("Columns")
 	@Comment("Names of columns for receiving data.")
 	private Columns columns = new Columns();
+	@Setting("Tables")
+	@Comment("Table names for automatic data synchronization.")
+	private String[] tables = {"bans", "bans_ip", "mutes", "warns"};
 	@Setting("Patterns")
 	@Comment("The order of columns for writing data to the database.\nRearrange the placeholders as you need. Their order must match the order of the columns in the database. Separation of placeholders - '><'.\nColumn names are specified in the request to add data to the database.")
 	private Patterns patterns = new Patterns();
@@ -118,6 +121,10 @@ public class Queries {
 
 	public Patterns getPatterns() {
 		return patterns;
+	}
+
+	public String[] getTables() {
+		return tables;
 	}
 
 }

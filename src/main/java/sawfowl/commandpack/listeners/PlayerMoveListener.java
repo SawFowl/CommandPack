@@ -23,7 +23,7 @@ public class PlayerMoveListener {
 	@Listener
 	public void onMove(MoveEntityEvent event, @First ServerPlayer player) {
 		if(event.originalPosition().distanceSquared(event.destinationPosition()) == 0d) return;
-		plugin.getPlayersData().getTempData().updateLastActivity(player);
+		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(player);
 		event.context().get(EventContextKeys.MOVEMENT_TYPE).ifPresent(type -> {
 			if(type == MovementTypes.ENTITY_TELEPORT || type == MovementTypes.COMMAND) plugin.getPlayersData().getTempData().setPreviousLocation(player);
 		});
