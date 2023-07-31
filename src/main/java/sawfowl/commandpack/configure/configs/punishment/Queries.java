@@ -10,13 +10,13 @@ public class Queries {
 	public Queries(){}
 
 	@Setting("CreateProfileBanTable")
-	private String createProfileBansTableSql = "CREATE TABLE IF NOT EXISTS bans(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, creation_date BIGINT, expiration_date BIGINT, reason TEXT, PRIMARY KEY(UUID))";
+	private String createProfileBansTableSql = "CREATE TABLE IF NOT EXISTS bans(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, created BIGINT, expiration BIGINT, reason TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(UUID))";
 	@Setting("CreateIPBansTable")
-	private String createIPBansTableSql = "CREATE TABLE IF NOT EXISTS bans_ip(ip VARCHAR(128) UNIQUE, source TEXT, creation_date BIGINT, expiration_date BIGINT, reason TEXT, PRIMARY KEY(ip))";
+	private String createIPBansTableSql = "CREATE TABLE IF NOT EXISTS bans_ip(ip VARCHAR(128) UNIQUE, source TEXT, created BIGINT, expiration BIGINT, reason TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(ip))";
 	@Setting("CreateMutesTable")
-	private String createMutesTableSql = "CREATE TABLE IF NOT EXISTS mutes(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, creation_date BIGINT, expiration_date BIGINT, reason TEXT, PRIMARY KEY(uuid))";
+	private String createMutesTableSql = "CREATE TABLE IF NOT EXISTS mutes(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, created BIGINT, expiration BIGINT, reason TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(uuid))";
 	@Setting("CreateWarnsTable")
-	private String createWarnsTableSql = "CREATE TABLE IF NOT EXISTS warns(uuid VARCHAR(128) UNIQUE, warns_data LONGTEXT, PRIMARY KEY(uuid))";
+	private String createWarnsTableSql = "CREATE TABLE IF NOT EXISTS warns(uuid VARCHAR(128) UNIQUE, warns_data LONGTEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(uuid))";
 	@Setting("SelectAllProfileBans")
 	private String selectAllProfileBansSql = "SELECT * FROM bans";
 	@Setting("SelectAllIPBans")
@@ -26,11 +26,11 @@ public class Queries {
 	@Setting("SelectAllWarns")
 	private String selectAllWarnsSql = "SELECT * FROM warns";
 	@Setting("InsertProfileBan")
-	private String insertProfileBanSql = "REPLACE INTO bans (uuid, name, source, creation_date, expiration_date, reason) VALUES(?, ?, ?, ?, ?, ?)";
+	private String insertProfileBanSql = "REPLACE INTO bans (uuid, name, source, created, expiration, reason) VALUES(?, ?, ?, ?, ?, ?)";
 	@Setting("InsertIpBan")
-	private String insertIPBanSql = "REPLACE INTO bans_ip (ip, source, creation_date, expiration_date, reason) VALUES(?, ?, ?, ?, ?)";
+	private String insertIPBanSql = "REPLACE INTO bans_ip (ip, source, created, expiration, reason) VALUES(?, ?, ?, ?, ?)";
 	@Setting("InsertMute")
-	private String insertMuteSql = "REPLACE INTO mutes (uuid, name, source, creation_date, expiration_date, reason) VALUES(?, ?, ?, ?, ?, ?)";
+	private String insertMuteSql = "REPLACE INTO mutes (uuid, name, source, created, expiration, reason) VALUES(?, ?, ?, ?, ?, ?)";
 	@Setting("InsertWarns")
 	private String insertWarnsSql = "REPLACE INTO warns (uuid, warns_data) VALUES(?, ?)";
 	@Setting("DeleteProfileBan")

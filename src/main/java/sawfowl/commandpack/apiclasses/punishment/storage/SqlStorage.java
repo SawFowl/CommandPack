@@ -29,22 +29,22 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 
 	protected Connection connection;
 	protected Statement statement;
-	private String createProfileBansTableSql;
-	private String createIPBansTableSql;
-	private String createMutesTableSql;
-	private String createWarnsTableSql;
-	private String selectAllProfileBansSql;
-	private String selectAllIPBansSql;
-	private String selectAllMutesSql;
-	private String selectAllWarnsSql;
-	private String insertProfileBanSql;
-	private String insertIPBanSql;
-	private String insertMuteSql;
-	private String insertWarnsSql;
-	private String deleteProfileBanSql;
-	private String deleteIPBanSql;
-	private String deleteMuteSql;
-	private String deleteWarnsSql;
+	protected String createProfileBansTableSql;
+	protected String createIPBansTableSql;
+	protected String createMutesTableSql;
+	protected String createWarnsTableSql;
+	protected String selectAllProfileBansSql;
+	protected String selectAllIPBansSql;
+	protected String selectAllMutesSql;
+	protected String selectAllWarnsSql;
+	protected String insertProfileBanSql;
+	protected String insertIPBanSql;
+	protected String insertMuteSql;
+	protected String insertWarnsSql;
+	protected String deleteProfileBanSql;
+	protected String deleteIPBanSql;
+	protected String deleteMuteSql;
+	protected String deleteWarnsSql;
 	public SqlStorage(CommandPack plugin) {
 		super(plugin);
 	}
@@ -223,7 +223,6 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 			while(!results.isClosed() && results.next()) loadMute(results);
 			results = resultSet(selectAllWarnsSql);
 			while(!results.isClosed() && results.next()) loadWarns(results);
-			extend();
 		} catch (SQLException e) {
 			plugin.getLogger().error(e.getLocalizedMessage());
 		}
@@ -288,7 +287,7 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 		connection = getConnection();
 	}
 
-	private void closeConnection() {
+	protected void closeConnection() {
 		try {
 			if(connection != null && !connection.isClosed()) connection.close();
 			connection = null;

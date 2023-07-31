@@ -20,7 +20,7 @@ public class Punishment {
 	@Setting("WarnsBefore")
 	private WarnsBefore warnsBefore = new WarnsBefore();
 	@Setting("MySqlQueries")
-	@Comment("Configuring queries to work with the MySQL database.\nChanging the settings can help in creating compatibility with other plugins.")
+	@Comment("Configuring queries to work with the MySQL database.\nChanging the settings can help in creating compatibility with other plugins.\nDo not remove the `written` column from queries. It is used for automatic data synchronization.")
 	private Queries mySqlQueries = new Queries();
 
 	public boolean isEnable() {
