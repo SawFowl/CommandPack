@@ -47,7 +47,7 @@ public class PunishmentServiceImpl implements PunishmentService {
 				Optional<MariaDB> optMariaDB = plugin.getMariaDB();
 				if(optMariaDB.isPresent()) {
 					storage = new MySqlStorage(plugin);
-					plugin.getLogger().info("The mysql database is used to store the punishment system data.");
+					plugin.getLogger().info("The MySql database is used to store the punishment system data.");
 				} else {
 					storage = new FileStorage(plugin);
 					plugin.getLogger().error("MySql or MariaDB Driver not found! Configuration files based data storage will be used.");

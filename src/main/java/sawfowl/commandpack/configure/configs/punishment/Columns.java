@@ -16,10 +16,10 @@ public class Columns {
 	private String name = "name";
 	@Setting("Source")
 	private String source = "source";
-	@Setting("CreationDate")
-	private String creationDate = "creation_date";
-	@Setting("ExpirationDate")
-	private String expirationDate = "expiration_date";
+	@Setting("Created")
+	private String created = "created";
+	@Setting("Expiration")
+	private String expiration = "expiration";
 	@Setting("Reason")
 	private String reason = "reason";
 
@@ -39,12 +39,12 @@ public class Columns {
 		return source;
 	}
 
-	public String getCreationDate() {
-		return creationDate;
+	public String getCreated() {
+		return created;
 	}
 
-	public String getExpirationDate() {
-		return expirationDate;
+	public String getExpiration() {
+		return expiration;
 	}
 
 	public String getReason() {

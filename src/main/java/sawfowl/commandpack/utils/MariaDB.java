@@ -17,6 +17,8 @@ public class MariaDB {
 	private final String hostname;
 	private final String ssl;
 	private Connection connection;
+	private String url;
+	private Properties properties;
 
 	public MariaDB(CommandPack instance) {
 		this.plugin = instance;
@@ -30,8 +32,8 @@ public class MariaDB {
 	}
 
 	public Connection openConnection() {
-		String url = "jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database;
-		Properties properties = new Properties();
+		url = "jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database;
+		properties = new Properties();
 		properties.setProperty("user", this.user);
 		properties.setProperty("password", this.password);
 		properties.setProperty("useSSL", this.ssl);
@@ -40,6 +42,10 @@ public class MariaDB {
 		} catch (SQLException e) {
 			return null;
 		}
+	}
+
+	public Connection createNewConnection() throws SQLException {
+		return DriverManager.getConnection(url, properties);
 	}
 	
 	public boolean checkConnection() {
