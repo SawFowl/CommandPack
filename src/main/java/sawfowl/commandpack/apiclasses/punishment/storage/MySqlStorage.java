@@ -61,10 +61,10 @@ public class MySqlStorage extends SqlStorage {
 		try {
 			selectConnection = plugin.getMariaDB().get().createNewConnection();
 			deleteConnection = plugin.getMariaDB().get().createNewConnection();
+			sync();
 		} catch (SQLException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
 		}
-		sync();
 	}
 
 	@Override
