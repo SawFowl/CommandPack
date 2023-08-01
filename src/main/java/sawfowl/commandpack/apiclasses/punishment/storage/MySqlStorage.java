@@ -8,8 +8,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -30,6 +34,7 @@ import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warns;
@@ -52,12 +57,16 @@ public class MySqlStorage extends SqlStorage {
 	private Connection deleteConnection;
 	private Statement selectStatement;
 	private Statement deleteStatement;
+	private boolean unixTime = false;
+	private DateFormat dateFormat;
 	public MySqlStorage(CommandPack plugin) {
 		super(plugin);
 		selectBans = "SELECT * FROM " + plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().get("bans");
 		selectBansIP = "SELECT * FROM " + plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().get("bans_ip");
 		selectMutes = "SELECT * FROM " + plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().get("mutes");
 		selectWarns = "SELECT * FROM " + plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().get("warns");
+		unixTime = plugin.getMainConfig().getPunishment().getMySqlQueries().isUnixTime();
+		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 		try {
 			selectConnection = plugin.getMariaDB().get().createNewConnection();
 			deleteConnection = plugin.getMariaDB().get().createNewConnection();
@@ -162,13 +171,20 @@ public class MySqlStorage extends SqlStorage {
 		UUID uuid = UUID.fromString(results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getUniqueId()));
 		String name = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getName());
 		String source = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getSource());
-		Long creation = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated());
-		Long expiration = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration());
 		String reason = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getReason());
 		Profile.Builder builder = Ban.builder().type(BanTypes.PROFILE).profile(GameProfile.of(uuid, name));
 		if(source != null) builder = builder.source(text(source));
-		if(creation != null) builder = builder.startDate(Instant.ofEpochMilli(creation));
-		if(expiration != null && expiration > 0) builder = builder.expirationDate(Instant.ofEpochMilli(expiration));
+		if(unixTime) {
+			Long creation = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated());
+			if(creation != null) builder = builder.startDate(Instant.ofEpochMilli(creation));
+			Long expiration = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration());
+			if(expiration != null && expiration > 0) builder = builder.expirationDate(Instant.ofEpochMilli(expiration));
+		} else {
+			LocalDateTime creation = results.getObject(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated(), LocalDateTime.class);
+			if(creation != null) builder = builder.startDate(creation.atOffset(ZoneOffset.UTC).toInstant());
+			LocalDateTime expiration = results.getObject(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration(), LocalDateTime.class);
+			if(expiration != null && expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.MIN.toEpochSecond(ZoneOffset.UTC)) builder = builder.expirationDate(creation.atOffset(ZoneOffset.UTC).toInstant());
+		}
 		if(reason != null) builder = builder.reason(text(reason));
 		if(bans.containsKey(uuid)) bans.remove(uuid);
 		Profile ban = (Profile) builder.build();
@@ -182,15 +198,23 @@ public class MySqlStorage extends SqlStorage {
 	@Override
 	public void loadBanIP(ResultSet results) throws SQLException {
 		try {
+			
 			InetAddress ip = InetAddress.getByName(results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIp()));
 			String source = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getSource());
-			Long creation = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated());
-			Long expiration = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration());
 			String reason = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getReason());
 			IP.Builder builder = Ban.builder().type(BanTypes.IP).address(ip);
 			if(source != null) builder = builder.source(text(source));
-			if(creation != null) builder = builder.startDate(Instant.ofEpochMilli(creation));
-			if(expiration != null && expiration > 0) builder = builder.expirationDate(Instant.ofEpochMilli(expiration));
+			if(unixTime) {
+				Long creation = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated());
+				if(creation != null) builder = builder.startDate(Instant.ofEpochMilli(creation));
+				Long expiration = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration());
+				if(expiration != null && expiration > 0) builder = builder.expirationDate(Instant.ofEpochMilli(expiration));
+			} else {
+				LocalDateTime creation = results.getObject(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated(), LocalDateTime.class);
+				if(creation != null) builder = builder.startDate(creation.atOffset(ZoneOffset.UTC).toInstant());
+				LocalDateTime expiration = results.getObject(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration(), LocalDateTime.class);
+				if(expiration != null && expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.MIN.toEpochSecond(ZoneOffset.UTC)) builder = builder.expirationDate(creation.atOffset(ZoneOffset.UTC).toInstant());
+			}
 			if(reason != null) builder = builder.reason(text(reason));
 			if(bansIP.containsKey(ip)) bansIP.remove(ip);
 			IP ban = (IP) builder.build();
@@ -209,13 +233,20 @@ public class MySqlStorage extends SqlStorage {
 		UUID uuid = UUID.fromString(results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getUniqueId()));
 		String name = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getName());
 		String source = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getSource());
-		Long creation = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated());
-		Long expiration = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration());
 		String reason = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getReason());
 		Mute.Builder builder = Mute.builder().target(uuid, name);
 		if(source != null) builder = builder.source(TextUtils.deserialize(source));
-		if(creation != null) builder = builder.creationDate(Instant.ofEpochMilli(creation));
-		if(expiration != null && expiration > 0) builder = builder.expirationDate(Instant.ofEpochMilli(expiration));
+		if(unixTime) {
+			Long creation = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated());
+			if(creation != null) builder = builder.creationDate(Instant.ofEpochMilli(creation));
+			Long expiration = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration());
+			if(expiration != null && expiration > 0) builder = builder.expirationDate(Instant.ofEpochMilli(expiration));
+		} else {
+			LocalDateTime creation = results.getObject(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated(), LocalDateTime.class);
+			if(creation != null) builder = builder.creationDate(creation.atOffset(ZoneOffset.UTC).toInstant());
+			LocalDateTime expiration = results.getObject(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration(), LocalDateTime.class);
+			if(expiration != null && expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.MIN.toEpochSecond(ZoneOffset.UTC)) builder = builder.expirationDate(creation.atOffset(ZoneOffset.UTC).toInstant());
+		}
 		if(reason != null) builder = builder.reason(TextUtils.deserialize(reason));
 		if(mutes.containsKey(uuid)) mutes.remove(uuid);
 		mutes.put(uuid, builder.build());
@@ -237,8 +268,8 @@ public class MySqlStorage extends SqlStorage {
 				.replace("%uuid%", ban.profile().uniqueId().toString())
 				.replace("%name%", ban.profile().name().orElse(ban.profile().examinableName()))
 				.replace("%source%", ban.banSource().map(TextUtils::serializeLegacy).orElse("n/a"))
-				.replace("%creation%", String.valueOf(ban.creationDate().toEpochMilli()))
-				.replace("%expiration%", ban.expirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("0"))
+				.replace("%creation%", unixTime ? String.valueOf(ban.creationDate().toEpochMilli()) : dateFormat.format(Timestamp.from(ban.creationDate())))
+				.replace("%expiration%", unixTime ? ban.expirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("0") : ban.expirationDate().map(instant -> dateFormat.format(Timestamp.from(instant))).orElse(dateFormat.format(Timestamp.from(Instant.MIN))))
 				.replace("%reason%", ban.reason().map(TextUtils::serializeLegacy).orElse("n/a")).split("><");
 	}
 
@@ -247,8 +278,8 @@ public class MySqlStorage extends SqlStorage {
 		return plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getBan()
 				.replace("%ip%", ban.address().getHostAddress())
 				.replace("%source%", ban.banSource().map(TextUtils::serializeLegacy).orElse("n/a"))
-				.replace("%creation%", String.valueOf(ban.creationDate().toEpochMilli()))
-				.replace("%expiration%", ban.expirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("0"))
+				.replace("%creation%", unixTime ? String.valueOf(ban.creationDate().toEpochMilli()) : dateFormat.format(Timestamp.from(ban.creationDate())))
+				.replace("%expiration%", unixTime ? ban.expirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("0") : ban.expirationDate().map(instant -> dateFormat.format(Timestamp.from(instant))).orElse(dateFormat.format(Timestamp.from(Instant.MIN))))
 				.replace("%reason%", ban.reason().map(TextUtils::serializeLegacy).orElse("n/a")).split("><");
 	}
 
@@ -258,8 +289,8 @@ public class MySqlStorage extends SqlStorage {
 				.replace("%uuid%", mute.getUniqueId().toString())
 				.replace("%name%", mute.getName())
 				.replace("%source%", mute.getSource().map(TextUtils::serializeLegacy).orElse("n/a"))
-				.replace("%creation%", String.valueOf(mute.getCreationDate().toEpochMilli()))
-				.replace("%expiration%", mute.getExpirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("0"))
+				.replace("%creation%", unixTime ? String.valueOf(mute.getCreationDate().toEpochMilli()) : dateFormat.format(Timestamp.from(mute.getCreationDate())))
+				.replace("%expiration%", unixTime ? mute.getExpirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("0") : mute.getExpirationDate().map(instant -> dateFormat.format(Timestamp.from(instant))).orElse(dateFormat.format(Timestamp.from(Instant.MIN))))
 				.replace("%reason%", mute.getReason().map(TextUtils::serializeLegacy).orElse("n/a")).split("><");
 	}
 

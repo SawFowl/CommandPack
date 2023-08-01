@@ -13,14 +13,18 @@ public class Queries {
 
 	public Queries(){}
 
-	String[] tablesArray = {"bans", "bans_ip", "mutes", "warns"};
-	String[] indexesArray = {"uuid", "ip"};
+	private String unixTimeFormat = "BIGINT";
+	private String dateTimeFormat = "DATETIME";
+	private String[] tablesArray = {"bans", "bans_ip", "mutes", "warns"};
+	private String[] indexesArray = {"uuid", "ip"};
 	@Setting("CreateProfileBanTable")
-	private String createProfileBansTableSql = "CREATE TABLE IF NOT EXISTS bans(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, created BIGINT, expiration BIGINT, reason TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(UUID))";
+	private String createProfileBansTableSql = "CREATE TABLE IF NOT EXISTS bans(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, created %time%, expiration %time%, reason TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(UUID))";
 	@Setting("CreateIPBansTable")
-	private String createIPBansTableSql = "CREATE TABLE IF NOT EXISTS bans_ip(ip VARCHAR(128) UNIQUE, source TEXT, created BIGINT, expiration BIGINT, reason TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(ip))";
+	private String createIPBansTableSql = "CREATE TABLE IF NOT EXISTS bans_ip(ip VARCHAR(128) UNIQUE, source TEXT, created %time%, expiration %time%, reason TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(ip))";
+	@Setting("CombinedBansSql")
+	private String createCombinedBansSql = "CREATE TABLE IF NOT EXISTS bans(id BIGINT UNSIGNED AUTO_INCREMENT UNIQUE, uuid VARCHAR(128) UNIQUE, ip VARCHAR(128), ip VARCHAR(128), source TEXT, created %time%, expiration %time%, reason TEXT, ipban TINYINT(1) DEFAULT 0, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(id))";
 	@Setting("CreateMutesTable")
-	private String createMutesTableSql = "CREATE TABLE IF NOT EXISTS mutes(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, created BIGINT, expiration BIGINT, reason TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(uuid))";
+	private String createMutesTableSql = "CREATE TABLE IF NOT EXISTS mutes(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, created %time%, expiration %time%, reason TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(uuid))";
 	@Setting("CreateWarnsTable")
 	private String createWarnsTableSql = "CREATE TABLE IF NOT EXISTS warns(uuid VARCHAR(128) UNIQUE, warns_data LONGTEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(uuid))";
 	@Setting("SelectAllProfileBans")
@@ -62,69 +66,79 @@ public class Queries {
 	@Setting("SyncIntervals")
 	@Comment("Intervals between plugin data updates.\nTime is indicated in seconds.")
 	private SyncIntervals syncIntervals = new SyncIntervals();
+	@Setting("UnixTime")
+	@Comment("Using unix time in database queries.\nIf you change the time format, you may need to delete tables.\nUse only to ensure compatibility with other plugins.")
+	private boolean unixTime = false;
+	@Setting("CreateCombinedBansTable")
+	@Comment("Creating a combined table with bans data.\nWhen using this option, you will need to modify the queries to write data to the database.")
+	private boolean createCombinedBansTable = false;
 
 	public String createProfileBansTableSql() {
-		return createProfileBansTableSql;
+		return createProfileBansTableSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String createIPBansTableSql() {
-		return createIPBansTableSql;
+		return createIPBansTableSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String createMutesTableSql() {
-		return createMutesTableSql;
+		return createMutesTableSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+	}
+
+	public String createCombinedBansSql() {
+		return createCombinedBansSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String createWarnsTableSql() {
-		return createWarnsTableSql;
+		return createWarnsTableSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String selectAllProfileBansSql() {
-		return selectAllProfileBansSql;
+		return selectAllProfileBansSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String selectAllIPBansSql() {
-		return selectAllIPBansSql;
+		return selectAllIPBansSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String selectAllMutesSql() {
-		return selectAllMutesSql;
+		return selectAllMutesSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String selectAllWarnsSql() {
-		return selectAllWarnsSql;
+		return selectAllWarnsSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String insertProfileBanSql() {
-		return insertProfileBanSql;
+		return insertProfileBanSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String insertIPBanSql() {
-		return insertIPBanSql;
+		return insertIPBanSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String insertMuteSql() {
-		return insertMuteSql;
+		return insertMuteSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String insertWarnsSql() {
-		return insertWarnsSql;
+		return insertWarnsSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String deleteProfileBanSql() {
-		return deleteProfileBanSql;
+		return deleteProfileBanSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String deleteIPBanSql() {
-		return deleteIPBanSql;
+		return deleteIPBanSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String deleteMuteSql() {
-		return deleteMuteSql;
+		return deleteMuteSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public String deleteWarnsSql() {
-		return deleteWarnsSql;
+		return deleteWarnsSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
 	}
 
 	public Columns getColumns() {
@@ -145,6 +159,14 @@ public class Queries {
 
 	public SyncIntervals getSyncIntervals() {
 		return syncIntervals;
+	}
+
+	public boolean isUnixTime() {
+		return unixTime;
+	}
+
+	public boolean isCreateCombinedBansTable() {
+		return createCombinedBansTable;
 	}
 
 }
