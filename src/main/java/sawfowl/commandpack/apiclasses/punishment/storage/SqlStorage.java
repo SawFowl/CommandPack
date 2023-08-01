@@ -49,6 +49,8 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 		super(plugin);
 	}
 
+	public abstract void setFormatter();
+
 	public abstract boolean removeBeforeAdd();
 
 	public abstract Connection getConnection() throws SQLException;
@@ -215,6 +217,8 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 			closeConnection();
 			openConnection();
 			createTables();
+			setFormatter();
+			plugin.getLogger().warn(selectAllProfileBansSql);
 			ResultSet results = resultSet(selectAllProfileBansSql);
 			while(!results.isClosed() && results.next()) loadBanProfile(results);
 			results = resultSet(selectAllIPBansSql);

@@ -30,6 +30,10 @@ public class H2Storage extends SqlStorage {
 	}
 
 	@Override
+	public void setFormatter() {
+	}
+
+	@Override
 	public boolean removeBeforeAdd() {
 		return true;
 	}

@@ -22,6 +22,8 @@ public class Columns {
 	private String expiration = "expiration";
 	@Setting("Reason")
 	private String reason = "reason";
+	@Setting("IPBan")
+	private String ipBan = "ipban";
 
 	public String getUniqueId() {
 		return uuid;
@@ -49,6 +51,10 @@ public class Columns {
 
 	public String getReason() {
 		return reason;
+	}
+
+	public String getIpBan() {
+		return ipBan;
 	}
 
 }

@@ -1,6 +1,10 @@
 package sawfowl.commandpack.configure.configs.punishment;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -13,8 +17,8 @@ public class Queries {
 
 	public Queries(){}
 
-	private String unixTimeFormat = "BIGINT";
-	private String dateTimeFormat = "DATETIME";
+	private String unixTimeFormatPlaceholder = "BIGINT";
+	private String dateTimeFormatPlaceholder = "DATETIME";
 	private String[] tablesArray = {"bans", "bans_ip", "mutes", "warns"};
 	private String[] indexesArray = {"uuid", "ip"};
 	@Setting("CreateProfileBanTable")
@@ -22,7 +26,7 @@ public class Queries {
 	@Setting("CreateIPBansTable")
 	private String createIPBansTableSql = "CREATE TABLE IF NOT EXISTS bans_ip(ip VARCHAR(128) UNIQUE, source TEXT, created %time%, expiration %time%, reason TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(ip))";
 	@Setting("CombinedBansSql")
-	private String createCombinedBansSql = "CREATE TABLE IF NOT EXISTS bans(id BIGINT UNSIGNED AUTO_INCREMENT UNIQUE, uuid VARCHAR(128) UNIQUE, ip VARCHAR(128), ip VARCHAR(128), source TEXT, created %time%, expiration %time%, reason TEXT, ipban TINYINT(1) DEFAULT 0, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(id))";
+	private String createCombinedBansSql = "CREATE TABLE IF NOT EXISTS bans(id BIGINT UNSIGNED AUTO_INCREMENT UNIQUE, uuid VARCHAR(128) UNIQUE, ip VARCHAR(128), source TEXT, created %time%, expiration %time%, reason TEXT, ipban TINYINT(1) DEFAULT 0, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(id))";
 	@Setting("CreateMutesTable")
 	private String createMutesTableSql = "CREATE TABLE IF NOT EXISTS mutes(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, created %time%, expiration %time%, reason TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(uuid))";
 	@Setting("CreateWarnsTable")
@@ -39,6 +43,8 @@ public class Queries {
 	private String insertProfileBanSql = "REPLACE INTO bans (uuid, name, source, created, expiration, reason) VALUES(?, ?, ?, ?, ?, ?)";
 	@Setting("InsertIpBan")
 	private String insertIPBanSql = "REPLACE INTO bans_ip (ip, source, created, expiration, reason) VALUES(?, ?, ?, ?, ?)";
+	@Setting("InsertCombitedBan")
+	private String insertCombitedBanSql = "REPLACE INTO bans (uuid, ip, name, source, created, expiration, reason, ipban) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 	@Setting("InsertMute")
 	private String insertMuteSql = "REPLACE INTO mutes (uuid, name, source, created, expiration, reason) VALUES(?, ?, ?, ?, ?, ?)";
 	@Setting("InsertWarns")
@@ -70,75 +76,85 @@ public class Queries {
 	@Comment("Using unix time in database queries.\nIf you change the time format, you may need to delete tables.\nUse only to ensure compatibility with other plugins.")
 	private boolean unixTime = false;
 	@Setting("CreateCombinedBansTable")
-	@Comment("Creating a combined table with bans data.\nWhen using this option, you will need to modify the queries to write data to the database.")
+	@Comment("Creating a combined table with bans data.\nNot recommended.")
 	private boolean createCombinedBansTable = false;
+	@Setting("DateTimeFormat")
+	@Comment("Don't change unnecessarily.")
+	private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+	@Setting("TimeZone")
+	@Comment("Set your date time zone.\nAvailable options can be viewed at the link - https://gist.github.com/SawFowl/12dc8342e14bce41f95411f833d911f4")
+	private String timeZone = "UTC";
 
 	public String createProfileBansTableSql() {
-		return createProfileBansTableSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return createProfileBansTableSql.replace("%time%", unixTime ? unixTimeFormatPlaceholder : dateTimeFormatPlaceholder);
 	}
 
 	public String createIPBansTableSql() {
-		return createIPBansTableSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return createIPBansTableSql.replace("%time%", unixTime ? unixTimeFormatPlaceholder : dateTimeFormatPlaceholder);
 	}
 
 	public String createMutesTableSql() {
-		return createMutesTableSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return createMutesTableSql.replace("%time%", unixTime ? unixTimeFormatPlaceholder : dateTimeFormatPlaceholder);
 	}
 
 	public String createCombinedBansSql() {
-		return createCombinedBansSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return createCombinedBansSql.replace("%time%", unixTime ? unixTimeFormatPlaceholder : dateTimeFormatPlaceholder);
 	}
 
 	public String createWarnsTableSql() {
-		return createWarnsTableSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return createWarnsTableSql.replace("%time%", unixTime ? unixTimeFormatPlaceholder : dateTimeFormatPlaceholder);
 	}
 
 	public String selectAllProfileBansSql() {
-		return selectAllProfileBansSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return selectAllProfileBansSql;
 	}
 
 	public String selectAllIPBansSql() {
-		return selectAllIPBansSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return selectAllIPBansSql;
 	}
 
 	public String selectAllMutesSql() {
-		return selectAllMutesSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return selectAllMutesSql;
 	}
 
 	public String selectAllWarnsSql() {
-		return selectAllWarnsSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return selectAllWarnsSql;
 	}
 
 	public String insertProfileBanSql() {
-		return insertProfileBanSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return insertProfileBanSql;
 	}
 
 	public String insertIPBanSql() {
-		return insertIPBanSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return insertIPBanSql;
+	}
+
+	public String getInsertCombitedBanSql() {
+		return insertCombitedBanSql;
 	}
 
 	public String insertMuteSql() {
-		return insertMuteSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return insertMuteSql;
 	}
 
 	public String insertWarnsSql() {
-		return insertWarnsSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return insertWarnsSql;
 	}
 
 	public String deleteProfileBanSql() {
-		return deleteProfileBanSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return deleteProfileBanSql.replace("%time%", unixTime ? unixTimeFormatPlaceholder : dateTimeFormatPlaceholder);
 	}
 
 	public String deleteIPBanSql() {
-		return deleteIPBanSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return deleteIPBanSql.replace("%time%", unixTime ? unixTimeFormatPlaceholder : dateTimeFormatPlaceholder);
 	}
 
 	public String deleteMuteSql() {
-		return deleteMuteSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return deleteMuteSql.replace("%time%", unixTime ? unixTimeFormatPlaceholder : dateTimeFormatPlaceholder);
 	}
 
 	public String deleteWarnsSql() {
-		return deleteWarnsSql.replace("%time%", unixTime ? unixTimeFormat : dateTimeFormat);
+		return deleteWarnsSql.replace("%time%", unixTime ? unixTimeFormatPlaceholder : dateTimeFormatPlaceholder);
 	}
 
 	public Columns getColumns() {
@@ -167,6 +183,18 @@ public class Queries {
 
 	public boolean isCreateCombinedBansTable() {
 		return createCombinedBansTable;
+	}
+
+	public DateFormat createDateTimeFormat() {
+		return new SimpleDateFormat(dateTimeFormat);
+	}
+
+	public String getDateTimeFormat() {
+		return dateTimeFormat;
+	}
+
+	public TimeZone getTimeZone() {
+		return TimeZone.getTimeZone(timeZone);
 	}
 
 }

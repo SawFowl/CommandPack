@@ -12,6 +12,8 @@ public class Patterns {
 	private String ban = "%uuid%><%name%><%source%><%creation%><%expiration%><%reason%";
 	@Setting("BanIP")
 	private String banIP = "%ip%><%source%><%creation%><%expiration%><%reason%";
+	@Setting("CombinetBan")
+	private String combinetBan = "%uuid%><%name%><%ip%><%source%><%creation%><%expiration%><%reason%><%ipban%";
 	@Setting("Mute")
 	private String mute = "%uuid%><%name%><%source%><%creation%><%expiration%><%reason%";
 
@@ -25,6 +27,10 @@ public class Patterns {
 
 	public String getMute() {
 		return mute;
+	}
+
+	public String getCombinetBan() {
+		return combinetBan;
 	}
 
 }
