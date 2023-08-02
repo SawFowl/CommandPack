@@ -13,7 +13,7 @@ public class Insert {
 	@Setting("IpBan")
 	private String insertIPBanSql = "REPLACE INTO bans_ip (ip, source, created, expiration, reason) VALUES(?, ?, ?, ?, ?)";
 	@Setting("CombitedBan")
-	private String insertCombitedBanSql = "REPLACE INTO bans (uuid, ip, name, source, created, expiration, reason, ipban) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+	private String insertCombitedBanSql = "REPLACE INTO bans (uuid, name, ip, source, created, expiration, reason, ipban) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 	@Setting("Mute")
 	private String insertMuteSql = "REPLACE INTO mutes (uuid, name, source, created, expiration, reason) VALUES(?, ?, ?, ?, ?, ?)";
 	@Setting("Warns")

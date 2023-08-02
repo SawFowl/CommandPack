@@ -91,7 +91,7 @@ public class H2Storage extends SqlStorage {
 
 	@Override
 	public String insertIPBanSql() {
-		return "INSERT INTO BANS_IP (UUID, BAN_DATA) VALUES(?, ?)";
+		return "INSERT INTO BANS_IP (IP, BAN_DATA) VALUES(?, ?)";
 	}
 
 	@Override

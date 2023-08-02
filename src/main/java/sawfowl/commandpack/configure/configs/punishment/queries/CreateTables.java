@@ -16,7 +16,7 @@ public class CreateTables {
 	@Setting("IPBans")
 	private String createIPBansTableSql = "CREATE TABLE IF NOT EXISTS bans_ip(ip VARCHAR(128) UNIQUE, source TEXT, created %time%, expiration %time%, reason TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(ip))";
 	@Setting("CombinedBans")
-	private String createCombinedBansSql = "CREATE TABLE IF NOT EXISTS bans(id BIGINT UNSIGNED AUTO_INCREMENT UNIQUE, uuid VARCHAR(128) UNIQUE, ip VARCHAR(128), source TEXT, created %time%, expiration %time%, reason TEXT, ipban TINYINT(1) DEFAULT 0, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(id))";
+	private String createCombinedBansSql = "CREATE TABLE IF NOT EXISTS bans(id BIGINT UNSIGNED AUTO_INCREMENT UNIQUE, uuid VARCHAR(128) UNIQUE, name TEXT, ip VARCHAR(128), source TEXT, created %time%, expiration %time%, reason TEXT, ipban TINYINT(1) DEFAULT 0, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(id))";
 	@Setting("Mutes")
 	private String createMutesTableSql = "CREATE TABLE IF NOT EXISTS mutes(uuid VARCHAR(128) UNIQUE, name TEXT, source TEXT, created %time%, expiration %time%, reason TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(uuid))";
 	@Setting("Warns")

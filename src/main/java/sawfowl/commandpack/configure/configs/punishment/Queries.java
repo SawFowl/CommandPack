@@ -7,14 +7,18 @@ import java.util.TimeZone;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.spongepowered.api.util.locale.Locales;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import sawfowl.commandpack.configure.configs.punishment.queries.Columns;
 import sawfowl.commandpack.configure.configs.punishment.queries.CreateTables;
 import sawfowl.commandpack.configure.configs.punishment.queries.Delete;
 import sawfowl.commandpack.configure.configs.punishment.queries.Insert;
+import sawfowl.commandpack.configure.configs.punishment.queries.Patterns;
 import sawfowl.commandpack.configure.configs.punishment.queries.Select;
+import sawfowl.commandpack.configure.configs.punishment.queries.SyncIntervals;
 
 @ConfigSerializable
 public class Queries {
@@ -49,9 +53,6 @@ public class Queries {
 	@Setting("CreateCombinedBansTable")
 	@Comment("Creating a combined table with bans data.\nNot recommended.")
 	private boolean createCombinedBansTable = false;
-	@Setting("DateTimeFormat")
-	@Comment("Don't change unnecessarily.")
-	private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 	@Setting("TimeZone")
 	@Comment("Set your date time zone.\nAvailable options can be viewed at the link - https://gist.github.com/SawFowl/12dc8342e14bce41f95411f833d911f4")
 	private String timeZone = "UTC";
@@ -78,14 +79,6 @@ public class Queries {
 
 	public boolean isCreateCombinedBansTable() {
 		return createCombinedBansTable;
-	}
-
-	public DateFormat createDateTimeFormat() {
-		return new SimpleDateFormat(dateTimeFormat);
-	}
-
-	public String getDateTimeFormat() {
-		return dateTimeFormat;
 	}
 
 	public TimeZone getTimeZone() {

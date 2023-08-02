@@ -199,6 +199,7 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 	@Override
 	public void load() {
 		try {
+			setFormatter();
 			createProfileBansTableSql = createProfileBansTableSql();
 			createIPBansTableSql = createIPBansTableSql();
 			createMutesTableSql = createMutesTableSql();
@@ -218,8 +219,6 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 			closeConnection();
 			openConnection();
 			createTables();
-			setFormatter();
-			plugin.getLogger().warn(selectAllProfileBansSql);
 			ResultSet results = resultSet(selectAllProfileBansSql);
 			while(!results.isClosed() && results.next()) loadBanProfile(results);
 			if(plugin.getMainConfig().getPunishment().getStorageType() != StorageType.MYSQL || !plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable()) {
