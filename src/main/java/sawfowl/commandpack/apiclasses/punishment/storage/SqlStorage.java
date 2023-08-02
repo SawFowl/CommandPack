@@ -24,6 +24,7 @@ import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.configure.configs.punishment.BanData;
 import sawfowl.commandpack.configure.configs.punishment.MuteData;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
+import sawfowl.commandpack.utils.StorageType;
 
 public abstract class SqlStorage extends AbstractPunishmentStorage {
 
@@ -221,8 +222,10 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 			plugin.getLogger().warn(selectAllProfileBansSql);
 			ResultSet results = resultSet(selectAllProfileBansSql);
 			while(!results.isClosed() && results.next()) loadBanProfile(results);
-			results = resultSet(selectAllIPBansSql);
-			while(!results.isClosed() && results.next()) loadBanIP(results);
+			if(plugin.getMainConfig().getPunishment().getStorageType() != StorageType.MYSQL || !plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable()) {
+				results = resultSet(selectAllIPBansSql);
+				while(!results.isClosed() && results.next()) loadBanIP(results);
+			}
 			results = resultSet(selectAllMutesSql);
 			while(!results.isClosed() && results.next()) loadMute(results);
 			results = resultSet(selectAllWarnsSql);
@@ -282,7 +285,7 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 
 	protected void createTables() {
 		executeSQL(createProfileBansTableSql);
-		executeSQL(createIPBansTableSql);
+		if(plugin.getMainConfig().getPunishment().getStorageType() != StorageType.MYSQL || !plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable()) executeSQL(createIPBansTableSql);
 		executeSQL(createMutesTableSql);
 		executeSQL(createWarnsTableSql);
 	}

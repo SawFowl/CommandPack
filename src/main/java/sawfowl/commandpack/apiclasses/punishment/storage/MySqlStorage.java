@@ -71,7 +71,7 @@ public class MySqlStorage extends SqlStorage {
 		selectBansIP = "SELECT * FROM " + plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().get(plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable() ? "bans" : "bans_ip");
 		selectMutes = "SELECT * FROM " + plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().get("mutes");
 		selectWarns = "SELECT * FROM " + plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().get("warns");
-		unixTime = plugin.getMainConfig().getPunishment().getMySqlQueries().isUnixTime();
+		unixTime = plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime();
 		combined = plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable();
 		try {
 			selectConnection = plugin.getMariaDB().get().createNewConnection();
@@ -103,98 +103,119 @@ public class MySqlStorage extends SqlStorage {
 
 	@Override
 	public String createProfileBansTableSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().createProfileBansTableSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().createProfileBansTableSql();
 	}
 
 	@Override
 	public String createIPBansTableSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().createIPBansTableSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().createIPBansTableSql();
 	}
 
 	@Override
 	public String createMutesTableSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().createMutesTableSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().createMutesTableSql();
 	}
 
 	@Override
 	public String createWarnsTableSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().createWarnsTableSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().createWarnsTableSql();
 	}
 
 	@Override
 	public String selectAllProfileBansSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().selectAllProfileBansSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getSelect().selectAllProfileBansSql();
 	}
 
 	@Override
 	public String selectAllIPBansSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().selectAllIPBansSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getSelect().selectAllIPBansSql();
 	}
 
 	@Override
 	public String selectAllMutesSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().selectAllMutesSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getSelect().selectAllMutesSql();
 	}
 
 	@Override
 	public String selectAllWarnsSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().selectAllWarnsSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getSelect().selectAllWarnsSql();
 	}
 
 	@Override
 	public String insertProfileBanSql() {
-		return combined ? plugin.getMainConfig().getPunishment().getMySqlQueries().getInsertCombitedBanSql() : plugin.getMainConfig().getPunishment().getMySqlQueries().insertProfileBanSql();
+		return combined ? plugin.getMainConfig().getPunishment().getMySqlQueries().getInsert().getInsertCombitedBanSql() : plugin.getMainConfig().getPunishment().getMySqlQueries().getInsert().insertProfileBanSql();
 	}
 
 	@Override
 	public String insertIPBanSql() {
-		return combined ? plugin.getMainConfig().getPunishment().getMySqlQueries().getInsertCombitedBanSql() : plugin.getMainConfig().getPunishment().getMySqlQueries().insertIPBanSql();
+		return combined ? plugin.getMainConfig().getPunishment().getMySqlQueries().getInsert().getInsertCombitedBanSql() : plugin.getMainConfig().getPunishment().getMySqlQueries().getInsert().insertIPBanSql();
 	}
 
 	@Override
 	public String insertMuteSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().insertMuteSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getInsert().insertMuteSql();
 	}
 
 	@Override
 	public String insertWarnsSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().insertWarnsSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getInsert().insertWarnsSql();
 	}
 
 	@Override
 	public String deleteProfileBanSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().deleteProfileBanSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getDelete().deleteProfileBanSql();
 	}
 
 	@Override
 	public String deleteIPBanSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().deleteIPBanSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getDelete().deleteIPBanSql();
 	}
 
 	@Override
 	public String deleteMuteSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().deleteMuteSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getDelete().deleteMuteSql();
 	}
 
 	@Override
 	public String deleteWarnsSql() {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().deleteWarnsSql();
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getDelete().deleteWarnsSql();
 	}
 
 	@Override
 	public void loadBanProfile(ResultSet results) throws SQLException {
-		UUID uuid = UUID.fromString(results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getUniqueId()));
+		String uuidString = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getUniqueId());
 		String name = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getName());
-		String source = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getSource());
-		String reason = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getReason());
-		Profile.Builder builder = Ban.builder().type(BanTypes.PROFILE).profile(GameProfile.of(uuid, name));
-		if(source != null) builder = builder.source(text(source));
-		builder = loadTimes(builder, results);
-		if(reason != null) builder = builder.reason(text(reason));
-		if(bans.containsKey(uuid)) bans.remove(uuid);
-		Profile ban = (Profile) builder.build();
-		bans.put(uuid, ban);
-		findProfileKick(uuid, ban);
+		Ban.Builder builder = loadTexts(loadTimes(Ban.builder(), results), results);
+		if(combined) {
+			boolean ipBan = results.getBoolean(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIpBan());
+			if(ipBan) {
+				try {
+					InetAddress ip = InetAddress.getByName(results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIp()));
+					builder = builder.type(BanTypes.IP).address(ip);
+					if(bansIP.containsKey(ip)) bansIP.remove(ip);
+					IP ban = (IP) builder.build();
+					bansIP.put(ip, (IP) builder.build());
+					findIpKick(ip, ban);
+				} catch (UnknownHostException | SQLException e) {
+					plugin.getLogger().error(e.getLocalizedMessage());
+				}
+			} else {
+				if(uuidString.equals("-")) return;
+				UUID uuid = UUID.fromString(uuidString);
+				builder = builder.type(BanTypes.PROFILE).profile(GameProfile.of(uuid, name));
+				if(bans.containsKey(uuid)) bans.remove(uuid);
+				Profile ban = (Profile) builder.build();
+				bans.put(uuid, ban);
+				findProfileKick(uuid, ban);
+			}
+		} else {
+			UUID uuid = UUID.fromString(uuidString);
+			builder = builder.type(BanTypes.PROFILE).profile(GameProfile.of(uuid, name));
+			if(bans.containsKey(uuid)) bans.remove(uuid);
+			Profile ban = (Profile) builder.build();
+			bans.put(uuid, ban);
+			findProfileKick(uuid, ban);
+		}
 	}
 
 	private void findProfileKick(UUID uuid, Profile ban) {
@@ -206,20 +227,16 @@ public class MySqlStorage extends SqlStorage {
 
 	@Override
 	public void loadBanIP(ResultSet results) throws SQLException {
+		if(combined) return;
 		try {
 			InetAddress ip = InetAddress.getByName(results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIp()));
-			String source = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getSource());
-			String reason = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getReason());
-			IP.Builder builder = Ban.builder().type(BanTypes.IP).address(ip);
-			if(source != null) builder = builder.source(text(source));
-			builder = loadTimes(builder, results);
-			if(reason != null) builder = builder.reason(text(reason));
+			IP.Builder builder = loadTexts(loadTimes(Ban.builder().type(BanTypes.IP).address(ip), results), results);
 			if(bansIP.containsKey(ip)) bansIP.remove(ip);
 			IP ban = (IP) builder.build();
 			bansIP.put(ip, (IP) builder.build());
 			findIpKick(ip, ban);
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			plugin.getLogger().error(e.getLocalizedMessage());
 		}
 	}
 
@@ -242,6 +259,14 @@ public class MySqlStorage extends SqlStorage {
 			String expirationString = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration());
 			if(expirationString != null && !expirationString.equals(min)) builder = builder.expirationDate(LocalDateTime.parse(expirationString, formatter).atZone(timeZone.toZoneId()).toInstant());
 		}
+		return builder;
+	}
+
+	private Ban.Builder loadTexts(Ban.Builder builder, ResultSet results) throws SQLException {
+		String source = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getSource());
+		String reason = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getReason());
+		if(source != null) builder = builder.source(text(source));
+		if(reason != null) builder = builder.reason(text(reason));
 		return builder;
 	}
 
