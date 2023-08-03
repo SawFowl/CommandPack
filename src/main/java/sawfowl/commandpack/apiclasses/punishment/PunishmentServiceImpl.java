@@ -62,7 +62,12 @@ public class PunishmentServiceImpl implements PunishmentService {
 
 	@Override
 	public void saveBans(Profile profile, IP ip) {
-		if(storage.getStorageType() == StorageType.MYSQL) ((MySqlStorage) storage).saveBans(profile, ip);
+		if(storage.getStorageType() == StorageType.MYSQL) {
+			((MySqlStorage) storage).saveBans(profile, ip);
+		} else {
+			if(profile != null) storage.saveBan(profile);
+			if(ip != null) storage.saveBan(ip);
+		}
 	}
 
 	@Override
