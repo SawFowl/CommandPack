@@ -13,7 +13,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,6 +42,7 @@ import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.utils.StorageType;
 import sawfowl.localeapi.api.TextUtils;
 
 public class MySqlStorage extends SqlStorage {
@@ -59,10 +59,10 @@ public class MySqlStorage extends SqlStorage {
 	private Connection deleteConnection;
 	private Statement selectStatement;
 	private Statement deleteStatement;
-	private DateFormat dateFormat;
-	private DateTimeFormatter formatter;
-	private String min = dateFormat.format(Timestamp.from(Instant.MIN));
 	private TimeZone timeZone;
+	private DateTimeFormatter formatter;
+	private DateFormat dateFormat;
+	private String min = dateFormat.format(Timestamp.from(Instant.MIN));
 	public MySqlStorage(CommandPack plugin) {
 		super(plugin);
 		selectBans = "SELECT * FROM " + plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().get("bans");
@@ -79,12 +79,16 @@ public class MySqlStorage extends SqlStorage {
 	}
 
 	@Override
+	public StorageType getStorageType() {
+		return StorageType.MYSQL;
+	}
+
+	@Override
 	public void setFormatter() {
-		timeZone = plugin.getMainConfig().getPunishment().getMySqlQueries().getTimeZone();
+		timeZone = plugin.getMainConfig().getPunishment().getTimeZone();
 		dateFormat = plugin.getMainConfig().getPunishment().createDateTimeFormat();
 		dateFormat.setTimeZone(timeZone);
-		formatter = DateTimeFormatter.ofPattern(plugin.getMainConfig().getPunishment().getDateTimeFormat());
-		formatter = formatter.withZone(timeZone.toZoneId());
+		formatter = DateTimeFormatter.ofPattern(plugin.getMainConfig().getPunishment().getDateTimeFormat()).withZone(timeZone.toZoneId());
 	}
 
 	@Override
@@ -177,41 +181,46 @@ public class MySqlStorage extends SqlStorage {
 		return plugin.getMainConfig().getPunishment().getMySqlQueries().getDelete().deleteWarnsSql();
 	}
 
+	public void saveBans(Profile profile, IP ip) {
+		if(plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable()) {
+			bans.put(profile.profile().uniqueId(), profile);
+			try {
+				if(removeBeforeAdd()) createStatement(deleteProfileBanSql, new Object[] {profile.profile().uniqueId()}).execute();;
+				createStatement(insertProfileBanSql, insertBothBanObjects(profile, ip)).execute();
+			} catch (SQLException e) {
+				plugin.getLogger().error(e.getLocalizedMessage());
+			}
+		} else {
+			if(profile != null) saveBan(profile);
+			if(ip != null) saveBan(ip);
+		}
+	}
+
 	@Override
 	public void loadBanProfile(ResultSet results) throws SQLException {
 		String uuidString = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getUniqueId());
 		String name = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getName());
 		Ban.Builder builder = loadTexts(loadTimes(Ban.builder(), results), results);
 		if(plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable()) {
-			boolean ipBan = results.getBoolean(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIpBan());
-			if(ipBan) {
-				try {
-					InetAddress ip = InetAddress.getByName(results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIp()));
-					builder = builder.type(BanTypes.IP).address(ip);
-					if(bansIP.containsKey(ip)) bansIP.remove(ip);
-					IP ban = (IP) builder.build();
-					bansIP.put(ip, (IP) builder.build());
-					findIpKick(ip, ban);
-				} catch (UnknownHostException | SQLException e) {
-					plugin.getLogger().error(e.getLocalizedMessage());
-				}
-			} else {
-				if(uuidString.equals("-")) return;
-				UUID uuid = UUID.fromString(uuidString);
-				builder = builder.type(BanTypes.PROFILE).profile(GameProfile.of(uuid, name));
-				if(bans.containsKey(uuid)) bans.remove(uuid);
-				Profile ban = (Profile) builder.build();
-				bans.put(uuid, ban);
-				findProfileKick(uuid, ban);
+			if(results.getBoolean(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIpBan())) try {
+				Ban.Builder ipBuilder = loadTexts(loadTimes(Ban.builder(), results), results);
+				InetAddress ip = InetAddress.getByName(results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIp()));
+				ipBuilder = ipBuilder.type(BanTypes.IP).address(ip);
+				if(bansIP.containsKey(ip)) bansIP.remove(ip);
+				IP ban = (IP) ipBuilder.build();
+				bansIP.put(ip, (IP) ipBuilder.build());
+				findIpKick(ip, ban);
+			} catch (UnknownHostException | SQLException e) {
+				plugin.getLogger().error(e.getLocalizedMessage());
 			}
-		} else {
-			UUID uuid = UUID.fromString(uuidString);
-			builder = builder.type(BanTypes.PROFILE).profile(GameProfile.of(uuid, name));
-			if(bans.containsKey(uuid)) bans.remove(uuid);
-			Profile ban = (Profile) builder.build();
-			bans.put(uuid, ban);
-			findProfileKick(uuid, ban);
+			if(uuidString == null || name == null || uuidString.equalsIgnoreCase("NULL") || name.equalsIgnoreCase("NULL")) return;
 		}
+		UUID uuid = UUID.fromString(uuidString);
+		builder = builder.type(BanTypes.PROFILE).profile(GameProfile.of(uuid, name));
+		if(bans.containsKey(uuid)) bans.remove(uuid);
+		Profile ban = (Profile) builder.build();
+		bans.put(uuid, ban);
+		findProfileKick(uuid, ban);
 	}
 
 	private void findProfileKick(UUID uuid, Profile ban) {
@@ -276,14 +285,14 @@ public class MySqlStorage extends SqlStorage {
 		if(source != null) builder = builder.source(TextUtils.deserialize(source));
 		if(plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime()) {
 			Long creation = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated());
-			if(creation != null) builder = builder.creationDate(Instant.ofEpochMilli(creation));
+			if(creation != null) builder = builder.created(Instant.ofEpochMilli(creation));
 			Long expiration = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration());
-			if(expiration != null && expiration > 0) builder = builder.expirationDate(Instant.ofEpochMilli(expiration));
+			if(expiration != null && expiration > 0) builder = builder.expiration(Instant.ofEpochMilli(expiration));
 		} else {
-			LocalDateTime creation = results.getObject(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated(), LocalDateTime.class);
-			if(creation != null) builder = builder.creationDate(creation.atOffset(ZoneOffset.UTC).toInstant());
-			LocalDateTime expiration = results.getObject(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration(), LocalDateTime.class);
-			if(expiration != null && expiration.toEpochSecond(ZoneOffset.UTC) > LocalDateTime.MIN.toEpochSecond(ZoneOffset.UTC)) builder = builder.expirationDate(creation.atOffset(ZoneOffset.UTC).toInstant());
+			String creation = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated());
+			if(creation != null) builder = builder.created(LocalDateTime.parse(creation, formatter).atZone(timeZone.toZoneId()).toInstant());
+			String expirationString = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration());
+			if(expirationString != null && !expirationString.equals(min)) builder = builder.expiration(LocalDateTime.parse(expirationString, formatter).atZone(timeZone.toZoneId()).toInstant());
 		}
 		if(reason != null) builder = builder.reason(TextUtils.deserialize(reason));
 		if(mutes.containsKey(uuid)) mutes.remove(uuid);
@@ -302,18 +311,7 @@ public class MySqlStorage extends SqlStorage {
 
 	@Override
 	public Object[] insertProfileBanObjects(Profile ban) throws ConfigurateException {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable() ? 
-				plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getCombinetBan()
-				.replace("%uuid%", ban.profile().uniqueId().toString())
-				.replace("%name%", ban.profile().name().orElse(ban.profile().examinableName()))
-				.replace("%ip%", "NULL")
-				.replace("%source%", ban.banSource().map(TextUtils::serializeLegacy).orElse("n/a"))
-				.replace("%creation%", plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime() ? String.valueOf(ban.creationDate().toEpochMilli()) : dateFormat.format(Timestamp.from(ban.creationDate())))
-				.replace("%expiration%", plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime() ? ban.expirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("0") : ban.expirationDate().map(instant -> dateFormat.format(Timestamp.from(instant))).orElse(min))
-				.replace("%reason%", ban.reason().map(TextUtils::serializeLegacy).orElse("n/a"))
-				.replace("%ipban%", "0").split("><")
-				:
-				plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getBan()
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getBan()
 				.replace("%uuid%", ban.profile().uniqueId().toString())
 				.replace("%name%", ban.profile().name().orElse(ban.profile().examinableName()))
 				.replace("%source%", ban.banSource().map(TextUtils::serializeLegacy).orElse("n/a"))
@@ -324,23 +322,24 @@ public class MySqlStorage extends SqlStorage {
 
 	@Override
 	public Object[] insertIPBanObjects(IP ban) throws ConfigurateException {
-		return plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable() ? 
-				plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getCombinetBan()
-				.replace("%uuid%", "NULL")
-				.replace("%name%", "NULL")
-				.replace("%ip%", ban.address().getHostAddress())
-				.replace("%source%", ban.banSource().map(TextUtils::serializeLegacy).orElse("n/a"))
-				.replace("%creation%", plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime() ? String.valueOf(ban.creationDate().toEpochMilli()) : dateFormat.format(Timestamp.from(ban.creationDate())))
-				.replace("%expiration%", plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime() ? ban.expirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("0") : ban.expirationDate().map(instant -> dateFormat.format(Timestamp.from(instant))).orElse(min))
-				.replace("%reason%", ban.reason().map(TextUtils::serializeLegacy).orElse("n/a"))
-				.replace("%ipban%", "1").split("><")
-				:
-				plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getBanIP()
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getBanIP()
 				.replace("%ip%", ban.address().getHostAddress())
 				.replace("%source%", ban.banSource().map(TextUtils::serializeLegacy).orElse("n/a"))
 				.replace("%creation%", plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime() ? String.valueOf(ban.creationDate().toEpochMilli()) : dateFormat.format(Timestamp.from(ban.creationDate())))
 				.replace("%expiration%", plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime() ? ban.expirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("0") : ban.expirationDate().map(instant -> dateFormat.format(Timestamp.from(instant))).orElse(min))
 				.replace("%reason%", ban.reason().map(TextUtils::serializeLegacy).orElse("n/a")).split("><");
+	}
+
+	private Object[] insertBothBanObjects(Profile profile, IP ip) {
+		return plugin.getMainConfig().getPunishment().getMySqlQueries().getPatterns().getCombinetBan()
+				.replace("%uuid%", profile.profile().uuid().toString())
+				.replace("%name%", profile.profile().name().orElse(profile.profile().examinableName()))
+				.replace("%ip%", ip.address().getHostAddress())
+				.replace("%source%", ip.banSource().map(TextUtils::serializeLegacy).orElse("n/a"))
+				.replace("%creation%", plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime() ? String.valueOf(ip.creationDate().toEpochMilli()) : dateFormat.format(Timestamp.from(ip.creationDate())))
+				.replace("%expiration%", plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime() ? ip.expirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("0") : ip.expirationDate().map(instant -> dateFormat.format(Timestamp.from(instant))).orElse(min))
+				.replace("%reason%", ip.reason().map(TextUtils::serializeLegacy).orElse("n/a"))
+				.replace("%ipban%", "1").split("><");
 	}
 
 	@Override
@@ -349,8 +348,8 @@ public class MySqlStorage extends SqlStorage {
 				.replace("%uuid%", mute.getUniqueId().toString())
 				.replace("%name%", mute.getName())
 				.replace("%source%", mute.getSource().map(TextUtils::serializeLegacy).orElse("n/a"))
-				.replace("%creation%", plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime() ? String.valueOf(mute.getCreationDate().toEpochMilli()) : dateFormat.format(Timestamp.from(mute.getCreationDate())))
-				.replace("%expiration%", plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime() ? mute.getExpirationDate().map(Instant::toEpochMilli).map(Object::toString).orElse("0") : mute.getExpirationDate().map(instant -> dateFormat.format(Timestamp.from(instant))).orElse(min))
+				.replace("%creation%", plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime() ? String.valueOf(mute.getCreated().toEpochMilli()) : mute.getCreatedTimeString())
+				.replace("%expiration%", plugin.getMainConfig().getPunishment().getMySqlQueries().getCreateTables().isUnixTime() ? mute.getExpiration().map(Instant::toEpochMilli).map(Object::toString).orElse("0") : mute.getExpirationTimeString().orElse(min))
 				.replace("%reason%", mute.getReason().map(TextUtils::serializeLegacy).orElse("n/a")).split("><");
 	}
 

@@ -18,7 +18,9 @@ public interface Mute extends DataSerializable {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
-	Instant getCreationDate();
+	Instant getCreated();
+
+	String getCreatedTimeString();
 
 	boolean isIndefinitely();
 
@@ -26,7 +28,9 @@ public interface Mute extends DataSerializable {
 
 	String getName();
 
-	Optional<Instant> getExpirationDate();
+	Optional<Instant> getExpiration();
+
+	Optional<String> getExpirationTimeString();
 
 	Optional<Component> getSource();
 
@@ -36,7 +40,7 @@ public interface Mute extends DataSerializable {
 	
 	interface Builder extends AbstractBuilder<Mute>, org.spongepowered.api.util.Builder<Mute, Builder> {
 
-		Builder creationDate(Instant value);
+		Builder created(Instant value);
 
 		Builder target(ServerPlayer value);
 
@@ -48,7 +52,7 @@ public interface Mute extends DataSerializable {
 
 		Builder source(ServerPlayer value);
 
-		Builder expirationDate(Instant value);
+		Builder expiration(Instant value);
 
 		Builder reason(Component value);
 

@@ -18,6 +18,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.service.ban.BanTypes;
 import org.spongepowered.api.service.ban.Ban.Builder;
 import org.spongepowered.api.service.ban.Ban.IP;
+import org.spongepowered.api.service.ban.Ban.Profile;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -55,8 +56,7 @@ public class Banip extends AbstractParameterizedCommand {
 			banBuilder = banBuilder.reason(text(reason.get()));
 		}
 		org.spongepowered.api.service.ban.Ban.IP ban = (IP) banIPBuilder.build();
-		plugin.getPunishmentService().add(ban);
-		plugin.getPunishmentService().add(banBuilder.build());
+		plugin.getPunishmentService().saveBans((Profile) banBuilder.build(), ban);
 		if(target.isOnline()) target.kick(TextUtils.replaceToComponents(getText(target, ban.expirationDate().isPresent() ? LocalesPaths.COMMANDS_BAN_DISCONNECT : LocalesPaths.COMMANDS_BAN_DISCONNECT_PERMANENT), new String[] {Placeholders.TIME, Placeholders.SOURCE, Placeholders.VALUE}, new Component[] {(ban.expirationDate().isPresent() ? expire(target.locale(), ban) : text("")), source, text(reason.orElse("-"))}));
 		if(ban.expirationDate().isPresent()) {
 			Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {(isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(target.name()), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), ban), ban.reason().orElse(text("&f-"))}));	

@@ -1,13 +1,9 @@
 package sawfowl.commandpack.configure.configs.punishment;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.spongepowered.api.util.locale.Locales;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
@@ -53,9 +49,6 @@ public class Queries {
 	@Setting("CreateCombinedBansTable")
 	@Comment("Creating a combined table with bans data.\nNot recommended.")
 	private boolean createCombinedBansTable = false;
-	@Setting("TimeZone")
-	@Comment("Set your date time zone.\nAvailable options can be viewed at the link - https://gist.github.com/SawFowl/12dc8342e14bce41f95411f833d911f4")
-	private String timeZone = "UTC";
 
 	public Columns getColumns() {
 		return columns;
@@ -79,10 +72,6 @@ public class Queries {
 
 	public boolean isCreateCombinedBansTable() {
 		return createCombinedBansTable;
-	}
-
-	public TimeZone getTimeZone() {
-		return TimeZone.getTimeZone(timeZone);
 	}
 
 	public CreateTables getCreateTables() {

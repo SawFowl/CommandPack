@@ -16,6 +16,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.api.data.punishment.Warn;
+import sawfowl.commandpack.utils.TimeConverter;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
@@ -27,38 +28,48 @@ public class WarnData implements Warn {
 		return new Builder();
 	}
 
-	@Setting("CreationDate")
-	private long creationDate;
-	@Setting("ExpirationDate")
-	private Long expired;
+	@Setting("Created")
+	private String created;
+	@Setting("Expiration")
+	private String expiration;
 	@Setting("Source")
 	private String source;
 	@Setting("Reason")
 	private String reason;
 
 	@Override
-	public Instant getCreationDate() {
-		return Instant.ofEpochMilli(creationDate);
+	public Instant getCreated() {
+		return TimeConverter.fromString(created);
+	}
+
+	@Override
+	public String getCreatedTimeString() {
+		return created;
 	}
 
 	@Override
 	public long getCreationTime() {
-		return creationDate;
+		return getCreated().toEpochMilli();
 	}
 
 	@Override
 	public boolean isIndefinitely() {
-		return expired == null || expired <= 0;
+		return expiration == null || TimeConverter.fromString(expiration).toEpochMilli() <= 0;
 	}
 
 	@Override
-	public Optional<Instant> getExpirationDate() {
-		return Optional.ofNullable(expired).map(e -> Instant.ofEpochMilli(e));
+	public Optional<Instant> getExpiration() {
+		return getExpirationTimeString().map(e -> TimeConverter.fromString(e));
+	}
+
+	@Override
+	public Optional<String> getExpirationTimeString() {
+		return Optional.ofNullable(expiration);
 	}
 
 	@Override
 	public long getExpirationTime() {
-		return expired;
+		return expiration == null ? 0 : TimeConverter.fromString(expiration).toEpochMilli();
 	}
 
 	@Override
@@ -84,32 +95,32 @@ public class WarnData implements Warn {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(creationDate);
+		return Objects.hash(created);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == null || getClass() != obj.getClass()) return false;
 		if(this == obj) return true;
-		return obj instanceof WarnData && creationDate == ((WarnData) obj).creationDate && source.equals(((WarnData) obj).source);
+		return obj instanceof WarnData && created == ((WarnData) obj).created && source.equals(((WarnData) obj).source);
 	}
 
 	@Override
 	public boolean isExpired() {
-		return expired != null && expired <= System.currentTimeMillis();
+		return expiration != null && getExpirationTime() != 0 && getExpirationTime() <= System.currentTimeMillis();
 	}
 
 	private class Builder implements Warn.Builder {
 
 		@Override
 		public @NotNull Warn build() {
-			if(creationDate == 0) creationDate = System.currentTimeMillis();
+			if(created == null) created = TimeConverter.toString(Instant.now());
 			return WarnData.this;
 		}
 
 		@Override
-		public Warn.Builder creationDate(Instant value) {
-			creationDate = value.toEpochMilli();
+		public Warn.Builder created(Instant value) {
+			created = TimeConverter.toString(value);
 			return this;
 		}
 
@@ -126,8 +137,8 @@ public class WarnData implements Warn {
 		}
 
 		@Override
-		public Warn.Builder expirationDate(Instant value) {
-			expired = value.toEpochMilli();
+		public Warn.Builder expiration(Instant value) {
+			expiration = TimeConverter.toString(value);
 			return this;
 		}
 
@@ -139,9 +150,9 @@ public class WarnData implements Warn {
 
 		@Override
 		public Warn from(Warn warn) {
-			creationDate = warn.getCreationDate().toEpochMilli();
-			warn.getExpirationDate().ifPresent(e -> {
-				expired = e.toEpochMilli();
+			created = TimeConverter.toString(warn.getCreated());
+			warn.getExpiration().ifPresent(e -> {
+				expiration = TimeConverter.toString(e);
 			});
 			warn.getReason().ifPresent(r -> {
 				reason = TextUtils.serializeJson(r);

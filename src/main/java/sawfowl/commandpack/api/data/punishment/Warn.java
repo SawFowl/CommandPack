@@ -17,13 +17,17 @@ public interface Warn extends DataSerializable {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
-	Instant getCreationDate();
+	Instant getCreated();
+
+	String getCreatedTimeString();
 
 	long getCreationTime();
 
 	boolean isIndefinitely();
 
-	Optional<Instant> getExpirationDate();
+	Optional<Instant> getExpiration();
+
+	Optional<String> getExpirationTimeString();
 
 	@Nullable
 	long getExpirationTime();
@@ -36,13 +40,13 @@ public interface Warn extends DataSerializable {
 
 	interface Builder extends AbstractBuilder<Warn>, org.spongepowered.api.util.Builder<Warn, Builder> {
 
-		Builder creationDate(Instant value);
+		Builder created(Instant value);
 
 		Builder source(Component name);
 
 		Builder source(ServerPlayer value);
 
-		Builder expirationDate(Instant value);
+		Builder expiration(Instant value);
 
 		Builder reason(Component value);
 

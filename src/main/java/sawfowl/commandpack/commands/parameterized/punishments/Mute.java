@@ -59,8 +59,8 @@ public class Mute extends AbstractParameterizedCommand {
 				return;
 			}
 			Component source = isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server");
-			Builder muteBuilder = sawfowl.commandpack.api.data.punishment.Mute.builder().creationDate(Instant.now()).source(source).target(user);
-			if(duration.isPresent()) muteBuilder = muteBuilder.expirationDate(Instant.now().plusSeconds(duration.get().getSeconds()));
+			Builder muteBuilder = sawfowl.commandpack.api.data.punishment.Mute.builder().created(Instant.now()).source(source).target(user);
+			if(duration.isPresent()) muteBuilder = muteBuilder.expiration(Instant.now().plusSeconds(duration.get().getSeconds()));
 			Optional<String> reason = getString(context, "Reason");
 			if(reason.isPresent()) muteBuilder = muteBuilder.reason(text(reason.get()));
 			sawfowl.commandpack.api.data.punishment.Mute mute = muteBuilder.build();
@@ -78,7 +78,7 @@ public class Mute extends AbstractParameterizedCommand {
 				});
 			} else {
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_MUTE_SUCCESS), Placeholders.PLAYER, userName));
-				if(user.player().isPresent() && user.isOnline()) user.player().get().sendMessage(TextUtils.replaceToComponents(getText(locale, mute.getExpirationDate().isPresent() ? LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET : LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.TIME, Placeholders.VALUE}, new Component[] {source, expire(user.player().get().locale(), mute), mute.getReason().orElse(text("-"))}));
+				if(user.player().isPresent() && user.isOnline()) user.player().get().sendMessage(TextUtils.replaceToComponents(getText(locale, mute.getExpiration().isPresent() ? LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET : LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.TIME, Placeholders.VALUE}, new Component[] {source, expire(user.player().get().locale(), mute), mute.getReason().orElse(text("-"))}));
 			}
 		});
 	}
@@ -109,10 +109,10 @@ public class Mute extends AbstractParameterizedCommand {
 	}
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
-		if(!mute.getExpirationDate().isPresent()) return Component.empty();
+		if(!mute.getExpiration().isPresent()) return Component.empty();
 		SimpleDateFormat format = new SimpleDateFormat(getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
 		Calendar calendar = Calendar.getInstance(locale);
-		calendar.setTimeInMillis(mute.getExpirationDate().get().toEpochMilli());
+		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 

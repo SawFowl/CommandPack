@@ -1,4 +1,4 @@
-package sawfowl.commandpack.apiclasses;
+package sawfowl.commandpack.apiclasses.punishment;
 
 import java.net.InetAddress;
 import java.util.Collection;
@@ -25,6 +25,7 @@ import sawfowl.commandpack.apiclasses.punishment.storage.FileStorage;
 import sawfowl.commandpack.apiclasses.punishment.storage.H2Storage;
 import sawfowl.commandpack.apiclasses.punishment.storage.MySqlStorage;
 import sawfowl.commandpack.utils.MariaDB;
+import sawfowl.commandpack.utils.StorageType;
 
 public class PunishmentServiceImpl implements PunishmentService {
 
@@ -57,6 +58,11 @@ public class PunishmentServiceImpl implements PunishmentService {
 				storage = new FileStorage(plugin);
 				break;
 		}
+	}
+
+	@Override
+	public void saveBans(Profile profile, IP ip) {
+		if(storage.getStorageType() == StorageType.MYSQL) ((MySqlStorage) storage).saveBans(profile, ip);
 	}
 
 	@Override

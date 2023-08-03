@@ -33,14 +33,14 @@ public class PlayerChatListener {
 		if(!optMute.isPresent()) return;
 		Mute mute = optMute.get();
 		event.setCancelled(true);
-		player.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(player.locale(), mute.getExpirationDate().isPresent() ? LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET : LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.TIME, Placeholders.VALUE}, new Component[] {mute.getSource().orElse(text("&e-")), expire(player.locale(), mute), mute.getReason().orElse(text("&e-"))}));
+		player.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(player.locale(), mute.getExpiration().isPresent() ? LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET : LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.TIME, Placeholders.VALUE}, new Component[] {mute.getSource().orElse(text("&e-")), expire(player.locale(), mute), mute.getReason().orElse(text("&e-"))}));
 	}
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
-		if(!mute.getExpirationDate().isPresent()) return Component.empty();
+		if(!mute.getExpiration().isPresent()) return Component.empty();
 		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
 		Calendar calendar = Calendar.getInstance(locale);
-		calendar.setTimeInMillis(mute.getExpirationDate().get().toEpochMilli());
+		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 

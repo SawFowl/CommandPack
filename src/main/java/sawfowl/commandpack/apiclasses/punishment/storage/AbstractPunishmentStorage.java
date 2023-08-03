@@ -18,6 +18,7 @@ import org.spongepowered.configurate.ConfigurationOptions;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warns;
+import sawfowl.commandpack.utils.StorageType;
 
 public abstract class AbstractPunishmentStorage extends Thread {
 
@@ -54,6 +55,26 @@ public abstract class AbstractPunishmentStorage extends Thread {
 			warns = null;
 		}).build());
 	}
+
+	public abstract void load();
+
+	public abstract void saveBan(Profile ban);
+
+	public abstract boolean deleteBan(GameProfile profile);
+
+	public abstract void saveBan(IP ban);
+
+	public abstract boolean deleteIPBan(InetAddress address);
+
+	public abstract void saveMute(Mute mute);
+
+	public abstract boolean deleteMute(Mute mute);
+
+	public abstract void saveWarns(Warns warns);
+
+	public abstract boolean deleteWarns(UUID player);
+
+	public abstract StorageType getStorageType();
 
 	public Map<UUID, Ban.Profile> getBans() {
 		return bans;
@@ -93,23 +114,5 @@ public abstract class AbstractPunishmentStorage extends Thread {
 		if(optWarns.isPresent()) optWarns.get().checkExpired();
 		return optWarns;
 	}
-
-	public abstract void load();
-
-	public abstract void saveBan(Profile ban);
-
-	public abstract boolean deleteBan(GameProfile profile);
-
-	public abstract void saveBan(IP ban);
-
-	public abstract boolean deleteIPBan(InetAddress address);
-
-	public abstract void saveMute(Mute mute);
-
-	public abstract boolean deleteMute(Mute mute);
-
-	public abstract void saveWarns(Warns warns);
-
-	public abstract boolean deleteWarns(UUID player);
 
 }

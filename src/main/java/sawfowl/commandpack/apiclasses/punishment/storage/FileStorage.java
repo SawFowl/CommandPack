@@ -21,6 +21,7 @@ import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.configure.configs.punishment.BanData;
 import sawfowl.commandpack.configure.configs.punishment.MuteData;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
+import sawfowl.commandpack.utils.StorageType;
 
 public class FileStorage extends AbstractPunishmentStorage {
 
@@ -30,6 +31,11 @@ public class FileStorage extends AbstractPunishmentStorage {
 	private Path warnsPath;
 	public FileStorage(CommandPack plugin) {
 		super(plugin);
+	}
+
+	@Override
+	public StorageType getStorageType() {
+		return StorageType.FILE;
 	}
 
 	private void checkPaths() {

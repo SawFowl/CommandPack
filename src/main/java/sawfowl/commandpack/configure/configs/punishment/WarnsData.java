@@ -34,7 +34,7 @@ public class WarnsData implements Warns {
 	@Setting("Name")
 	private String name;
 	@Setting("Warns")
-	private Set<WarnData> warns = new HashSet<WarnData>().stream().sorted(Comparator.comparing(WarnData::getCreationDate)).collect(Collectors.toSet());
+	private Set<WarnData> warns = new HashSet<WarnData>().stream().sorted(Comparator.comparing(WarnData::getCreated)).collect(Collectors.toSet());
 	@Setting("InAllTime")
 	int inAllTime = 0;
 
@@ -56,7 +56,7 @@ public class WarnsData implements Warns {
 	@Override
 	public List<Warn> getWarns() {
 		checkExpired();
-		return warns.stream().map(w -> Warn.builder().from(w)).sorted(Comparator.comparing(Warn::getCreationDate)).collect(Collectors.toList());
+		return warns.stream().map(w -> Warn.builder().from(w)).sorted(Comparator.comparing(Warn::getCreated)).collect(Collectors.toList());
 	}
 
 	@Override

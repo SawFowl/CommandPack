@@ -60,13 +60,13 @@ public class Warn extends AbstractParameterizedCommand {
 				return;
 			}
 			Component source = isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server");
-			Builder warnBuilder = sawfowl.commandpack.api.data.punishment.Warn.builder().creationDate(Instant.now()).source(source);
-			if(duration.isPresent() && duration.get().getSeconds() > 0) warnBuilder = warnBuilder.expirationDate(Instant.now().plusSeconds(duration.get().getSeconds()));
+			Builder warnBuilder = sawfowl.commandpack.api.data.punishment.Warn.builder().created(Instant.now()).source(source);
+			if(duration.isPresent() && duration.get().getSeconds() > 0) warnBuilder = warnBuilder.expiration(Instant.now().plusSeconds(duration.get().getSeconds()));
 			Optional<String> reason = getString(context, "Reason");
 			if(reason.isPresent()) warnBuilder = warnBuilder.reason(text(reason.get()));
 			sawfowl.commandpack.api.data.punishment.Warn warn = warnBuilder.build();
 			plugin.getPunishmentService().addWarn(user, warn);
-			if(warn.getExpirationDate().isPresent()) {
+			if(warn.getExpiration().isPresent()) {
 				Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_WARN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {source, text(user.name()), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), warn), warn.getReason().orElse(text("&f-"))}));	
 			} else Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_WARN_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {source, text(user.name()), warn.getReason().orElse(text("&f-"))}));
 			if(plugin.getMainConfig().getPunishment().getAnnounce().isWarn()) {
@@ -79,7 +79,7 @@ public class Warn extends AbstractParameterizedCommand {
 				});
 			} else {
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARN_SUCCESS), Placeholders.PLAYER, userName));
-				if(user.player().isPresent() && user.isOnline()) user.player().get().sendMessage(TextUtils.replaceToComponents(getText(user.player().get(), warn.getExpirationDate().isPresent() ? LocalesPaths.COMMANDS_WARN_SUCCESS_TARGET : LocalesPaths.COMMANDS_WARN_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.VALUE, Placeholders.TIME}, new Component[] {source, warn.getReason().orElse(text("&e-")), expire(user.player().get().locale(), warn)}));
+				if(user.player().isPresent() && user.isOnline()) user.player().get().sendMessage(TextUtils.replaceToComponents(getText(user.player().get(), warn.getExpiration().isPresent() ? LocalesPaths.COMMANDS_WARN_SUCCESS_TARGET : LocalesPaths.COMMANDS_WARN_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.VALUE, Placeholders.TIME}, new Component[] {source, warn.getReason().orElse(text("&e-")), expire(user.player().get().locale(), warn)}));
 			}
 			Warns warns = plugin.getPunishmentService().getWarns(user.uniqueId()).get();
 			if(!plugin.getPunishmentService().getMute(user.uniqueId()).isPresent() && warns.totalWarns() >= plugin.getMainConfig().getPunishment().getWarnsBefore().getMute()) tryMute(user, warns, src, locale);
@@ -117,10 +117,10 @@ public class Warn extends AbstractParameterizedCommand {
 	}
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Warn warn) {
-		if(!warn.getExpirationDate().isPresent()) return Component.empty();
+		if(!warn.getExpiration().isPresent()) return Component.empty();
 		SimpleDateFormat format = new SimpleDateFormat(getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
 		Calendar calendar = Calendar.getInstance(locale);
-		calendar.setTimeInMillis(warn.getExpirationDate().get().toEpochMilli());
+		calendar.setTimeInMillis(warn.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 
@@ -139,26 +139,26 @@ public class Warn extends AbstractParameterizedCommand {
 	}
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
-		if(!mute.getExpirationDate().isPresent()) return Component.empty();
+		if(!mute.getExpiration().isPresent()) return Component.empty();
 		SimpleDateFormat format = new SimpleDateFormat(getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
 		Calendar calendar = Calendar.getInstance(locale);
-		calendar.setTimeInMillis(mute.getExpirationDate().get().toEpochMilli());
+		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 
 	private void tryMute(User user, Warns warns, Audience src, Locale locale) {
 		Optional<sawfowl.commandpack.api.data.punishment.Warn> find = findTempWarn(warns);
-		Mute.Builder muteBuilder = Mute.builder().target(user).creationDate(Instant.now()).source(getText(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale()), LocalesPaths.COMMANDS_WARN_SOURCE_NAME_AUTOPUNISH)).reason(getText(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale()), LocalesPaths.COMMANDS_WARN_BAN_LIMIT));
-		Optional<Instant> expire = find.isPresent() ? find.get().getExpirationDate() : (plugin.getMainConfig().getPunishment().getWarnsBefore().getPunishTime().getBanTime() > 0 ? Optional.ofNullable(Instant.now().plusSeconds(plugin.getMainConfig().getPunishment().getWarnsBefore().getPunishTime().getBanTime())) : Optional.empty());
-		if(expire.isPresent()) muteBuilder = muteBuilder.expirationDate(expire.get());
+		Mute.Builder muteBuilder = Mute.builder().target(user).created(Instant.now()).source(getText(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale()), LocalesPaths.COMMANDS_WARN_SOURCE_NAME_AUTOPUNISH)).reason(getText(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale()), LocalesPaths.COMMANDS_WARN_BAN_LIMIT));
+		Optional<Instant> expire = find.isPresent() ? find.get().getExpiration() : (plugin.getMainConfig().getPunishment().getWarnsBefore().getPunishTime().getBanTime() > 0 ? Optional.ofNullable(Instant.now().plusSeconds(plugin.getMainConfig().getPunishment().getWarnsBefore().getPunishTime().getBanTime())) : Optional.empty());
+		if(expire.isPresent()) muteBuilder = muteBuilder.expiration(expire.get());
 		muteBuilder = muteBuilder.reason(TextUtils.replace(getText(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale()), LocalesPaths.COMMANDS_WARN_MUTE_LIMIT), Placeholders.VALUE, String.valueOf(plugin.getMainConfig().getPunishment().getWarnsBefore().getMute())));
 		Mute mute = muteBuilder.build();
 		plugin.getPunishmentService().addMute(mute);
-		if(mute.getExpirationDate().isPresent()) {
+		if(mute.getExpiration().isPresent()) {
 			Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_MUTE_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_WARN_SOURCE_NAME_AUTOPUNISH), text(user.name()), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), mute), TextUtils.replace(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_WARN_MUTE_LIMIT), Placeholders.VALUE, String.valueOf(plugin.getMainConfig().getPunishment().getWarnsBefore().getMute()))}));	
 		} else Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_MUTE_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_WARN_SOURCE_NAME_AUTOPUNISH), text(user.name()), TextUtils.replace(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_WARN_MUTE_LIMIT), Placeholders.VALUE, String.valueOf(plugin.getMainConfig().getPunishment().getWarnsBefore().getMute()))}));
 		if(plugin.getMainConfig().getPunishment().getAnnounce().isBan()) {
-			if(mute.getExpirationDate().isPresent()) {
+			if(mute.getExpiration().isPresent()) {
 				Sponge.server().onlinePlayers().forEach(player -> {
 					player.sendMessage(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_MUTE_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {getText(player, LocalesPaths.COMMANDS_WARN_SOURCE_NAME_AUTOPUNISH), user.get(Keys.DISPLAY_NAME).orElse(text(user.name())), expire(player.locale(), mute), getText(player, LocalesPaths.COMMANDS_WARN_MUTE_LIMIT)}));
 				});
@@ -169,7 +169,7 @@ public class Warn extends AbstractParameterizedCommand {
 			}
 		} else {
 			src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_MUTE_SUCCESS), Placeholders.PLAYER, user.name()));
-			if(user.player().isPresent() && user.isOnline()) user.player().get().sendMessage(TextUtils.replaceToComponents(getText(user.player().get(), mute.getExpirationDate().isPresent() ? LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET : LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.TIME, Placeholders.VALUE}, new Component[] {getText(user.player().get(), LocalesPaths.COMMANDS_WARN_SOURCE_NAME_AUTOPUNISH), expire(user.player().get().locale(), mute), TextUtils.replace(getText(user.player().get(), LocalesPaths.COMMANDS_WARN_MUTE_LIMIT), Placeholders.VALUE, String.valueOf(plugin.getMainConfig().getPunishment().getWarnsBefore().getMute()))}));
+			if(user.player().isPresent() && user.isOnline()) user.player().get().sendMessage(TextUtils.replaceToComponents(getText(user.player().get(), mute.getExpiration().isPresent() ? LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET : LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.TIME, Placeholders.VALUE}, new Component[] {getText(user.player().get(), LocalesPaths.COMMANDS_WARN_SOURCE_NAME_AUTOPUNISH), expire(user.player().get().locale(), mute), TextUtils.replace(getText(user.player().get(), LocalesPaths.COMMANDS_WARN_MUTE_LIMIT), Placeholders.VALUE, String.valueOf(plugin.getMainConfig().getPunishment().getWarnsBefore().getMute()))}));
 		}
 	}
 
@@ -187,7 +187,7 @@ public class Warn extends AbstractParameterizedCommand {
 	private void tryBan(User user, Warns warns, Audience src, Locale locale, Component source) {
 		Optional<sawfowl.commandpack.api.data.punishment.Warn> find = findTempWarn(warns);
 		Ban.Builder banBuilder = org.spongepowered.api.service.ban.Ban.builder().type(BanTypes.PROFILE).profile(user.profile()).startDate(Instant.now()).source(getText(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale()), LocalesPaths.COMMANDS_WARN_SOURCE_NAME_AUTOPUNISH)).reason(getText(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale()), LocalesPaths.COMMANDS_WARN_BAN_LIMIT));
-		Optional<Instant> expire = find.isPresent() ? find.get().getExpirationDate() : (plugin.getMainConfig().getPunishment().getWarnsBefore().getPunishTime().getBanTime() > 0 ? Optional.ofNullable(Instant.now().plusSeconds(plugin.getMainConfig().getPunishment().getWarnsBefore().getPunishTime().getBanTime())) : Optional.empty());
+		Optional<Instant> expire = find.isPresent() ? find.get().getExpiration() : (plugin.getMainConfig().getPunishment().getWarnsBefore().getPunishTime().getBanTime() > 0 ? Optional.ofNullable(Instant.now().plusSeconds(plugin.getMainConfig().getPunishment().getWarnsBefore().getPunishTime().getBanTime())) : Optional.empty());
 		if(expire.isPresent()) banBuilder = banBuilder.expirationDate(expire.get());
 		banBuilder = banBuilder.reason(TextUtils.replace(getText(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale()), LocalesPaths.COMMANDS_WARN_BAN_LIMIT), Placeholders.VALUE, String.valueOf(plugin.getMainConfig().getPunishment().getWarnsBefore().getBan())));
 		Ban ban = banBuilder.build();

@@ -22,11 +22,17 @@ import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.configure.configs.punishment.BanData;
 import sawfowl.commandpack.configure.configs.punishment.MuteData;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
+import sawfowl.commandpack.utils.StorageType;
 
 public class H2Storage extends SqlStorage {
 
 	public H2Storage(CommandPack plugin) {
 		super(plugin);
+	}
+
+	@Override
+	public StorageType getStorageType() {
+		return StorageType.H2;
 	}
 
 	@Override

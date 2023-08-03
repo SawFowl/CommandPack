@@ -15,7 +15,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
-
+import sawfowl.commandpack.utils.TimeConverter;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
@@ -23,11 +23,11 @@ public class BanData {
 
 	public BanData() {}
 	public BanData(Ban.Profile ban) {
-		creationDate = ban.creationDate().getEpochSecond();
+		created = TimeConverter.toString(ban.creationDate());
 		uuid = ban.profile().uniqueId();
 		name = ban.profile().name().orElse(ban.profile().examinableName());
-		ban.expirationDate().ifPresent(date -> {
-			expired = date.getEpochSecond();
+		ban.expirationDate().ifPresent(time -> {
+			expiration = TimeConverter.toString(time);
 		});
 		ban.banSource().ifPresent(s -> {
 			source = TextUtils.serializeJson(s);
@@ -37,9 +37,9 @@ public class BanData {
 		});
 	}
 	public BanData(Ban.IP ban) {
-		creationDate = ban.creationDate().getEpochSecond();
-		ban.expirationDate().ifPresent(date -> {
-			expired = date.getEpochSecond();
+		created = TimeConverter.toString(ban.creationDate());
+		ban.expirationDate().ifPresent(time -> {
+			expiration = TimeConverter.toString(time);
 		});
 		ban.banSource().ifPresent(s -> {
 			source = TextUtils.serializeJson(s);
@@ -50,14 +50,14 @@ public class BanData {
 		inetAddress = ban.address().getHostAddress();
 	}
 
-	@Setting("CreationDate")
-	private long creationDate;
+	@Setting("Created")
+	private String created;
 	@Setting("UUID")
 	private UUID uuid;
 	@Setting("Name")
 	private String name;
-	@Setting("Expired")
-	private Long expired;
+	@Setting("Expiration")
+	private String expiration;
 	@Setting("Source")
 	private String source;
 	@Setting("Reason")
@@ -67,11 +67,11 @@ public class BanData {
 	private GameProfile gameProfile;
 
 	public Instant getCreationDate() {
-		return Instant.ofEpochSecond(creationDate);
+		return TimeConverter.fromString(created);
 	}
 
 	public boolean isIndefinitely() {
-		return expired == null || expired <= 0;
+		return expiration == null || TimeConverter.fromString(expiration).toEpochMilli() <= 0;
 	}
 
 	public Optional<UUID> getUniqueId() {
@@ -83,7 +83,7 @@ public class BanData {
 	}
 
 	public Optional<Instant> getExpirationDate() {
-		return Optional.ofNullable(expired).map(e -> Instant.ofEpochSecond(e));
+		return Optional.ofNullable(expiration).map(e -> TimeConverter.fromString(e));
 	}
 
 	public Optional<Component> getSource() {

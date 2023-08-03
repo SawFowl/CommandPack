@@ -16,6 +16,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.api.data.punishment.Mute;
+import sawfowl.commandpack.utils.TimeConverter;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
@@ -27,27 +28,32 @@ public class MuteData implements Mute {
 		return new Builder();
 	}
 
-	@Setting("CreationDate")
-	private long creationDate;
+	@Setting("Created")
+	private String created;
 	@Setting("UUID")
 	private UUID uuid;
 	@Setting("Name")
 	private String name;
-	@Setting("Expired")
-	private Long expired;
+	@Setting("Expiration")
+	private String expiration;
 	@Setting("Source")
 	private String source;
 	@Setting("Reason")
 	private String reason;
 
 	@Override
-	public Instant getCreationDate() {
-		return Instant.ofEpochSecond(creationDate);
+	public Instant getCreated() {
+		return TimeConverter.fromString(created);
+	}
+
+	@Override
+	public String getCreatedTimeString() {
+		return created;
 	}
 
 	@Override
 	public boolean isIndefinitely() {
-		return expired == null || expired <= 0;
+		return expiration == null || TimeConverter.fromString(expiration).toEpochMilli() <= 0;
 	}
 
 	@Override
@@ -61,8 +67,13 @@ public class MuteData implements Mute {
 	}
 
 	@Override
-	public Optional<Instant> getExpirationDate() {
-		return Optional.ofNullable(expired).map(e -> Instant.ofEpochSecond(e));
+	public Optional<Instant> getExpiration() {
+		return getExpirationTimeString().map(e -> TimeConverter.fromString(e));
+	}
+
+	@Override
+	public Optional<String> getExpirationTimeString() {
+		return Optional.ofNullable(expiration);
 	}
 
 	@Override
@@ -77,7 +88,7 @@ public class MuteData implements Mute {
 
 	@Override
 	public boolean isExpired() {
-		return expired != null && expired <= Instant.now().getEpochSecond();
+		return expiration != null && TimeConverter.fromString(expiration).toEpochMilli() <= Instant.now().getEpochSecond();
 	}
 
 	@Override
@@ -93,20 +104,20 @@ public class MuteData implements Mute {
 
 	@Override
 	public String toString() {
-		return "Mute [CreationDate=" + creationDate + ", UniqueId=" + uuid + ", Name=" + name + ", Expired=" + expired + ", Source=" + source + ", Reason=" + reason + "]";
+		return "Mute [CreationDate=" + created + ", UniqueId=" + uuid + ", Name=" + name + ", Expired=" + expiration + ", Source=" + source + ", Reason=" + reason + "]";
 	}
 
 	private class Builder implements Mute.Builder {
 
 		@Override
 		public @NotNull Mute build() {
-			if(creationDate == 0) creationDate = System.currentTimeMillis() / 1000;
+			if(created == null) created = TimeConverter.toString(Instant.now());
 			return MuteData.this;
 		}
 
 		@Override
-		public Mute.Builder creationDate(Instant value) {
-			creationDate = value.getEpochSecond();
+		public Mute.Builder created(Instant value) {
+			created = TimeConverter.toString(value);
 			return this;
 		}
 
@@ -144,8 +155,8 @@ public class MuteData implements Mute {
 		}
 
 		@Override
-		public Mute.Builder expirationDate(Instant value) {
-			expired = value.getEpochSecond();
+		public Mute.Builder expiration(Instant value) {
+			expiration = TimeConverter.toString(value);
 			return this;
 		}
 
@@ -157,11 +168,11 @@ public class MuteData implements Mute {
 
 		@Override
 		public Mute from(Mute mute) {
-			creationDate = mute.getCreationDate().getEpochSecond();
+			created = TimeConverter.toString(mute.getCreated());
 			uuid = mute.getUniqueId();
 			name = mute.getName();
-			mute.getExpirationDate().ifPresent(e -> {
-				expired = e.getEpochSecond();
+			mute.getExpiration().ifPresent(e -> {
+				expiration = TimeConverter.toString(e);
 			});
 			mute.getReason().ifPresent(r -> {
 				reason = TextUtils.serializeJson(r);

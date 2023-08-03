@@ -2,6 +2,7 @@ package sawfowl.commandpack.configure.configs.punishment;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import org.spongepowered.api.util.locale.Locales;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -30,6 +31,9 @@ public class Punishment {
 	@Setting("DateTimeFormat")
 	@Comment("Don't change unnecessarily.")
 	private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+	@Setting("TimeZone")
+	@Comment("Set your date time zone.\nAvailable options can be viewed at the link - https://gist.github.com/SawFowl/12dc8342e14bce41f95411f833d911f4")
+	private String timeZone = "UTC";
 
 	public boolean isEnable() {
 		return enable;
@@ -57,6 +61,10 @@ public class Punishment {
 
 	public String getDateTimeFormat() {
 		return dateTimeFormat;
+	}
+
+	public TimeZone getTimeZone() {
+		return TimeZone.getTimeZone(timeZone);
 	}
 
 }

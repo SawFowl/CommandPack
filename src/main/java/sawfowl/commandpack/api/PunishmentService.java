@@ -8,6 +8,7 @@ import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.service.ban.Ban;
 import org.spongepowered.api.service.ban.Ban.IP;
+import org.spongepowered.api.service.ban.Ban.Profile;
 import org.spongepowered.api.service.ban.BanService;
 
 import sawfowl.commandpack.api.data.punishment.Mute;
@@ -15,6 +16,8 @@ import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
 
 public interface PunishmentService extends BanService {
+
+	void saveBans(Profile profile, IP ip);
 
 	Collection<Ban> getAllBans();
 
