@@ -207,6 +207,7 @@ public class MySqlStorage extends SqlStorage {
 				ipBuilder = ipBuilder.type(BanTypes.IP).address(ip);
 				if(bansIP.containsKey(ip)) bansIP.remove(ip);
 				IP ban = (IP) ipBuilder.build();
+				if(ban.expirationDate().isPresent() && ban.expirationDate().get().toEpochMilli() < ban.creationDate().toEpochMilli()) return;
 				bansIP.put(ip, (IP) ipBuilder.build());
 				findIpKick(ip, ban);
 			} catch (UnknownHostException | SQLException e) {
@@ -218,6 +219,7 @@ public class MySqlStorage extends SqlStorage {
 		builder = builder.type(BanTypes.PROFILE).profile(GameProfile.of(uuid, name));
 		if(bans.containsKey(uuid)) bans.remove(uuid);
 		Profile ban = (Profile) builder.build();
+		if(ban.expirationDate().isPresent() && ban.expirationDate().get().toEpochMilli() < ban.creationDate().toEpochMilli()) return;
 		bans.put(uuid, ban);
 		findProfileKick(uuid, ban);
 	}
@@ -237,6 +239,7 @@ public class MySqlStorage extends SqlStorage {
 			IP.Builder builder = loadTexts(loadTimes(Ban.builder().type(BanTypes.IP).address(ip), results), results);
 			if(bansIP.containsKey(ip)) bansIP.remove(ip);
 			IP ban = (IP) builder.build();
+			if(ban.expirationDate().isPresent() && ban.expirationDate().get().toEpochMilli() < ban.creationDate().toEpochMilli()) return;
 			bansIP.put(ip, (IP) builder.build());
 			findIpKick(ip, ban);
 		} catch (UnknownHostException e) {
@@ -295,7 +298,9 @@ public class MySqlStorage extends SqlStorage {
 		}
 		if(reason != null) builder = builder.reason(TextUtils.deserialize(reason));
 		if(mutes.containsKey(uuid)) mutes.remove(uuid);
-		mutes.put(uuid, builder.build());
+		Mute mute = builder.build();
+		if(mute.getExpiration().isPresent() && mute.getExpiration().get().toEpochMilli() < mute.getCreated().toEpochMilli()) return;
+		mutes.put(uuid, mute);
 	}
 
 	@Override
