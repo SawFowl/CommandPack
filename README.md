@@ -25,6 +25,7 @@ Currently implemented:
 * Worlds Management(full).
 * Join/Leave messages
 * Join commands
+* Flexible punishment system with support for h2 and MySQL databases (large customization).
 * And much more... For more information, see the list of commands at the link above.
 
 ##### For developers:
