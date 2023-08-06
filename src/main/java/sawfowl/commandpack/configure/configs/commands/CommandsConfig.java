@@ -203,6 +203,10 @@ public class CommandsConfig {
 	private CommandSettings warn = new CommandSettings();
 	@Setting("Warnings")
 	private CommandSettings warns = new CommandSettings(new String[] {"warns"});
+	@Setting("BanList")
+	private CommandSettings banList = new CommandSettings(new String[] {"bans"});
+	@Setting("BanInfo")
+	private CommandSettings banInfo = new CommandSettings();
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

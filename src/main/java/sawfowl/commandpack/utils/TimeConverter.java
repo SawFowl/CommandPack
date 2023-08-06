@@ -12,8 +12,8 @@ import sawfowl.commandpack.CommandPack;
 public class TimeConverter {
 
 	private static final CommandPack plugin = CommandPack.getInstance();
-	private static final TimeZone timeZone = plugin.getMainConfig().getPunishment().getTimeZone();
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(plugin.getMainConfig().getPunishment().getDateTimeFormat()).withZone(timeZone.toZoneId());
+	private static final TimeZone timeZone = plugin.getMainConfig().getMySqlConfig().getTimeZone();
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(plugin.getMainConfig().getMySqlConfig().getDateTimeFormat()).withZone(timeZone.toZoneId());
 	private static final DateFormat dateFormat = setDateFormat();
 
 	public static String toString(Instant time) {
@@ -25,7 +25,7 @@ public class TimeConverter {
 	}
 
 	private static DateFormat setDateFormat() {
-		DateFormat dateFormat = plugin.getMainConfig().getPunishment().createDateTimeFormat();
+		DateFormat dateFormat = plugin.getMainConfig().getMySqlConfig().createDateTimeFormat();
 		dateFormat.setTimeZone(timeZone);
 		return dateFormat;
 	}

@@ -7,14 +7,10 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
-import org.spongepowered.api.data.Keys;
-import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
-import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ban.Ban.Profile;
 
 import net.kyori.adventure.audience.Audience;
@@ -28,24 +24,20 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.utils.TimeConverter;
 import sawfowl.localeapi.api.TextUtils;
 
-public class Unban extends AbstractRawCommand {
+public class BanInfo extends AbstractRawCommand {
 
-	public Unban(CommandPack plugin) {
+	public BanInfo(CommandPack plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		GameProfile profile = getArgument(GameProfile.class, args, 0).get();
-		plugin.getPunishmentService().pardon(profile);
-		Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, new Component[] {(isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(profile.name().orElse(profile.examinableName()))}));
-		if(plugin.getMainConfig().getPunishment().getAnnounce().isUnban()) {
-			Sponge.server().onlinePlayers().forEach(player -> {
-				player.sendMessage(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, new Component[] {(isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(profile.name().orElse(profile.examinableName()))}));
-			});
-		} else audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_UNBAN_SUCCESS), Placeholders.PLAYER, profile.name().orElse(profile.examinableName())));
+		Profile ban = getArgument(Profile.class, args, 0).get();
+		Component title = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANINFO_TITLE), Placeholders.PLAYER, ban.profile().name().orElse(ban.profile().examinableName()));
+		sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANINFO_SUCCESS), new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT))), ban.reason().orElse(text("-"))})));
 	}
 
 	@Override
@@ -60,31 +52,31 @@ public class Unban extends AbstractRawCommand {
 
 	@Override
 	public String permission() {
-		return Permissions.UNBAN_STAFF;
+		return Permissions.BANINFO;
 	}
 
 	@Override
 	public String command() {
-		return "unban";
+		return "baninfo";
 	}
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/unban <Player>");
+		return null;
 	}
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArgument.of(GameProfile.class, new RawCompleterSupplier<Stream<String>>() {
+		return Arrays.asList(RawArgument.of(Profile.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
 			public Stream<String> get(String[] args) {
 				return plugin.getPunishmentService().getAllProfileBans().stream().map(p -> p.profile().name().orElse(p.profile().examinableName()));
 			}
-		}, new RawResultSupplier<GameProfile>() {
+		}, new RawResultSupplier<Profile>() {
 			@Override
-			public Optional<GameProfile> get(String[] args) {
+			public Optional<Profile> get(String[] args) {
 				Collection<Profile> variants = plugin.getPunishmentService().getAllProfileBans();
-				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(p -> p.profile().name().orElse(p.profile().examinableName()).equals(args[0])).findFirst().map(Profile::profile);
+				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(p -> p.profile().name().orElse(p.profile().examinableName()).equals(args[0])).findFirst();
 			}
 		}, false, false, 0, LocalesPaths.COMMANDS_BANINFO_NOT_PRESENT));
 	}

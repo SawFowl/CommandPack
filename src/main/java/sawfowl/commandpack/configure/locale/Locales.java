@@ -423,6 +423,17 @@ public class Locales {
 		save = check(locale, toText("&3" + Placeholders.PLAYER + " warnings"), null, LocalesPaths.COMMANDS_WARNS_TITLE) || save;
 		save = check(locale, toText("&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_WARNS_REASON) || save;
 		save = check(locale, toText("&e" + Placeholders.TIME + " &a➢ &e" + Placeholders.LIMIT), null, LocalesPaths.COMMANDS_WARNS_TIMES) || save;
+		save = check(locale, toText("&aThere are no bans to display."), null, LocalesPaths.COMMANDS_BANLIST_EMPTY) || save;
+		save = check(locale, toText("&3%profile% &3|| %ip%"), null, LocalesPaths.COMMANDS_BANLIST_TITLE) || save;
+		save = check(locale, toText("&7[&ePlayers&7]"), null, LocalesPaths.COMMANDS_BANLIST_PROFILE) || save;
+		save = check(locale, toText("&7[&eIP&7]"), null, LocalesPaths.COMMANDS_BANLIST_IP) || save;
+		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANLIST_LIST_ELEMENT) || save;
+		save = check(locale, toText("&aPlayer&f: &e" + Placeholders.PLAYER + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANLIST_BANINFO_PLAYER) || save;
+		save = check(locale, toText("&aIP&f: &e" + Placeholders.VALUE + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANLIST_BANINFO_IP) || save;
+		save = check(locale, toText("&cPermanent"), null, LocalesPaths.COMMANDS_BANINFO_PERMANENT) || save;
+		save = check(locale, toText("&cYou need to specify the nickname of the banned player."), null, LocalesPaths.COMMANDS_BANINFO_NOT_PRESENT) || save;
+		save = check(locale, toText("&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANINFO_SUCCESS) || save;
+		save = check(locale, toText("&3Ban Info " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_BANINFO_TITLE) || save;
 
 		if(save) save(locale);
 	}
@@ -788,6 +799,17 @@ public class Locales {
 		save = check(locale, toText("&3Предупреждения " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_WARNS_TITLE) || save;
 		save = check(locale, toText("&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_WARNS_REASON) || save;
 		save = check(locale, toText("&e" + Placeholders.TIME + " &a➢ &e" + Placeholders.LIMIT), null, LocalesPaths.COMMANDS_WARNS_TIMES) || save;
+		save = check(locale, toText("&aНет банов для отображения."), null, LocalesPaths.COMMANDS_BANLIST_EMPTY) || save;
+		save = check(locale, toText("&3%profile% &3|| %ip%"), null, LocalesPaths.COMMANDS_BANLIST_TITLE) || save;
+		save = check(locale, toText("&7[&eИгроки&7]"), null, LocalesPaths.COMMANDS_BANLIST_PROFILE) || save;
+		save = check(locale, toText("&7[&eIP&7]"), null, LocalesPaths.COMMANDS_BANLIST_IP) || save;
+		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANLIST_LIST_ELEMENT) || save;
+		save = check(locale, toText("&aИгрок&f: &e" + Placeholders.PLAYER + "\n&aЗабанил&f: &e" + Placeholders.SOURCE + "\n&aСоздан&f: &e" + Placeholders.CREATED + "\n&aИстекает&f: &e" + Placeholders.EXPIRE + "\n&aПричина&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANLIST_BANINFO_PLAYER) || save;
+		save = check(locale, toText("&aIP&f: &e" + Placeholders.VALUE + "\n&aЗабанивший&f: &e" + Placeholders.SOURCE + "\n&aСоздан&f: &e" + Placeholders.CREATED + "\n&aИстекает&f: &e" + Placeholders.EXPIRE + "\n&aПричина&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANLIST_BANINFO_IP) || save;
+		save = check(locale, toText("&cПерманентно"), null, LocalesPaths.COMMANDS_BANINFO_PERMANENT) || save;
+		save = check(locale, toText("&cНужно указать ник забаненого игрока."), null, LocalesPaths.COMMANDS_BANINFO_NOT_PRESENT) || save;
+		save = check(locale, toText("&aЗабанил&f: &e" + Placeholders.SOURCE + "\n&aСоздан&f: &e" + Placeholders.CREATED + "\n&aИстекает&f: &e" + Placeholders.EXPIRE + "\n&aПричина&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANINFO_SUCCESS) || save;
+		save = check(locale, toText("&3Информация о бане " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_BANINFO_TITLE) || save;
 
 		if(save) save(locale);
 	}

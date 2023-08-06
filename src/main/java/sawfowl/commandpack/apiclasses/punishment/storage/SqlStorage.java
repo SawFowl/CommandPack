@@ -50,8 +50,6 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 		super(plugin);
 	}
 
-	public abstract void setFormatter();
-
 	public abstract boolean removeBeforeAdd();
 
 	public abstract Connection getConnection() throws SQLException;
@@ -199,7 +197,6 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 	@Override
 	public void load() {
 		try {
-			setFormatter();
 			createProfileBansTableSql = createProfileBansTableSql();
 			createIPBansTableSql = createIPBansTableSql();
 			createMutesTableSql = createMutesTableSql();

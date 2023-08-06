@@ -28,5 +28,8 @@ public class Placeholders {
 	public static final String SOURCE_LINK = "%source-link%";
 	public static final String ISSUES_LINK = "%issues-link%";
 	public static final String UPDATE_LINK = "%update-link%";
+	public static final String CREATED = "%created%";
+	public static final String EXPIRE = "%expire%";
+	public static final String REASON = "%reason%";
 
 }

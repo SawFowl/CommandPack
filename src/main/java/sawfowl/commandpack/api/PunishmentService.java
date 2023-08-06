@@ -21,7 +21,7 @@ public interface PunishmentService extends BanService {
 
 	Collection<Ban> getAllBans();
 
-	Collection<Ban.Profile> getAllProfileBans();
+	Collection<Profile> getAllProfileBans();
 
 	Collection<IP> getAllIPBans();
 

@@ -70,6 +70,8 @@ public class LocalesPaths {
 	private static final Object COMMAND_UNMUTE = "Unute";
 	private static final Object COMMAND_WARN = "Warn";
 	private static final Object COMMAND_WARNS = "Warns";
+	private static final Object COMMAND_BANLIST = "BanList";
+	private static final Object COMMAND_BANINFO = "BanInfo";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -421,5 +423,16 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_WARNS_ALLTIME_TARGET = {PATH_COMMANDS, COMMAND_WARNS, "AllTimeTarget"};
 	public static final Object[] COMMANDS_WARNS_REASON = {PATH_COMMANDS, COMMAND_WARNS, "Reason"};
 	public static final Object[] COMMANDS_WARNS_TIMES = {PATH_COMMANDS, COMMAND_WARNS, "Times"};
+	public static final Object[] COMMANDS_BANLIST_EMPTY = {PATH_COMMANDS, COMMAND_BANLIST, "Empty"};
+	public static final Object[] COMMANDS_BANLIST_TITLE = {PATH_COMMANDS, COMMAND_BANLIST, "Title"};
+	public static final Object[] COMMANDS_BANLIST_PROFILE = {PATH_COMMANDS, COMMAND_BANLIST, "Profile"};
+	public static final Object[] COMMANDS_BANLIST_IP = {PATH_COMMANDS, COMMAND_BANLIST, "IP"};
+	public static final Object[] COMMANDS_BANLIST_LIST_ELEMENT = {PATH_COMMANDS, COMMAND_BANLIST, "Element"};
+	public static final Object[] COMMANDS_BANLIST_BANINFO_PLAYER = {PATH_COMMANDS, COMMAND_BANLIST, "Info", "Player"};
+	public static final Object[] COMMANDS_BANLIST_BANINFO_IP = {PATH_COMMANDS, COMMAND_BANLIST, "Info", "Player"};
+	public static final Object[] COMMANDS_BANINFO_PERMANENT = {PATH_COMMANDS, COMMAND_BANLIST, "Permanent"};
+	public static final Object[] COMMANDS_BANINFO_NOT_PRESENT = {PATH_COMMANDS, COMMAND_BANINFO, "NotPresent"};
+	public static final Object[] COMMANDS_BANINFO_SUCCESS = {PATH_COMMANDS, COMMAND_BANINFO, "Success"};
+	public static final Object[] COMMANDS_BANINFO_TITLE = {PATH_COMMANDS, COMMAND_BANINFO, "Title"};
 
 }
