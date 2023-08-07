@@ -154,7 +154,7 @@ public class CommandsConfig {
 	@Setting("ServerStat")
 	private CommandSettings serverStat = new CommandSettings(new String[] {"serverinfo", "gc"});
 	@Setting("Plugins")
-	private CommandSettings plugins = new CommandSettings();
+	private CommandSettings plugins = new CommandSettings(new String[] {"pl"});
 	@Setting("Mods")
 	private CommandSettings mods = new CommandSettings();
 	@Setting("Tps")
@@ -207,6 +207,10 @@ public class CommandsConfig {
 	private CommandSettings banList = new CommandSettings(new String[] {"bans"});
 	@Setting("BanInfo")
 	private CommandSettings banInfo = new CommandSettings();
+	@Setting("MuteInfo")
+	private CommandSettings muteInfo = new CommandSettings();
+	@Setting("MuteList")
+	private CommandSettings muteList = new CommandSettings(new String[] {"mutes"});
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

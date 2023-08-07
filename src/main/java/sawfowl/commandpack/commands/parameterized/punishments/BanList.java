@@ -10,6 +10,7 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.command.parameter.Parameter.Value;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -43,10 +44,8 @@ public class BanList extends AbstractParameterizedCommand {
 		boolean unban = isPlayer && context.hasPermission(Permissions.UNBANIP_STAFF);
 		List<Component> bans = new ArrayList<Component>();
 		plugin.getPunishmentService().getAllIPBans().forEach(ban -> {
-			Component banInfo = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANLIST_LIST_ELEMENT), Placeholders.VALUE, ban.address().getHostAddress());
-			if(isPlayer) banInfo = banInfo.hoverEvent(
-					HoverEvent.showText(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANLIST_BANINFO_IP), new String[] {Placeholders.VALUE, Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {text(ban.address().getHostAddress()), ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT))), ban.reason().orElse(text("-"))}))
-					);
+			Component banInfo = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANLIST_ELEMENT), Placeholders.VALUE, ban.address().getHostAddress());
+			if(isPlayer && context.hasPermission(Permissions.BANINFO)) banInfo = banInfo.hoverEvent(HoverEvent.showText(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANLIST_BANINFO_IP), new String[] {Placeholders.VALUE, Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {text(ban.address().getHostAddress()), ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(getText(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT)), ban.reason().orElse(text("-"))})));
 			bans.add(unban ? TextUtils.createCallBack(getText(locale, LocalesPaths.REMOVE), cause -> {
 				plugin.getPunishmentService().remove(ban);
 				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_UNBANIP_SUCCESS), Placeholders.VALUE, ban.address().getHostAddress()));
@@ -56,7 +55,7 @@ public class BanList extends AbstractParameterizedCommand {
 			int i = 1;
 			for(Component ban : bans) {
 				if(i >= 50) return;
-				src.sendMessage(text(i + "➤").append(ban));
+				src.sendMessage(text(i + " ➤ ").append(ban));
 				i++;
 			}
 		} else {
@@ -67,7 +66,9 @@ public class BanList extends AbstractParameterizedCommand {
 					src.sendMessage(e.componentMessage());
 				}
 			}), getText(locale, LocalesPaths.COMMANDS_BANLIST_IP)});
-			sendPaginationList(src, title, text("=").color(title.color()), 10, bans);
+			delay((ServerPlayer) src, locale, consumer -> {
+				sendPaginationList(src, title, text("=").color(title.color()), 10, bans);
+			});
 		}
 	}
 
@@ -76,7 +77,7 @@ public class BanList extends AbstractParameterizedCommand {
 		boolean unban = isPlayer && context.hasPermission(Permissions.UNBAN_STAFF);
 		List<Component> bans = new ArrayList<Component>();
 		plugin.getPunishmentService().getAllProfileBans().forEach(ban -> {
-			Component banInfo = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANLIST_LIST_ELEMENT), Placeholders.VALUE, ban.profile().name().orElse(ban.profile().examinableName()));
+			Component banInfo = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANLIST_ELEMENT), Placeholders.VALUE, ban.profile().name().orElse(ban.profile().examinableName()));
 			if(isPlayer) banInfo = banInfo.hoverEvent(
 					HoverEvent.showText(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANLIST_BANINFO_PLAYER), new String[] {Placeholders.PLAYER, Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {text(ban.profile().name().orElse(ban.profile().examinableName())), ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT))), ban.reason().orElse(text("-"))}))
 					);

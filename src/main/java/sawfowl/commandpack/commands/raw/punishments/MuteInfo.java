@@ -12,7 +12,6 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
-import org.spongepowered.api.service.ban.Ban.Profile;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -22,27 +21,28 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
+import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.TimeConverter;
 import sawfowl.localeapi.api.TextUtils;
 
-public class BanInfo extends AbstractRawCommand {
+public class MuteInfo extends AbstractRawCommand {
 
-	public BanInfo(CommandPack plugin) {
+	public MuteInfo(CommandPack plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		Profile ban = getArgument(Profile.class, args, 0).get();
-		Component title = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANINFO_TITLE), Placeholders.PLAYER, ban.profile().name().orElse(ban.profile().examinableName()));
+		Mute mute = getArgument(Mute.class, args, 0).get();
+		Component title = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_TITLE), Placeholders.PLAYER, mute.getName());
 		if(isPlayer) {
 			delay((ServerPlayer) audience, locale, consumer -> {
-				sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANINFO_SUCCESS), new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT))), ban.reason().orElse(text("-"))})));
+				sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_SUCCESS), new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {mute.getSource().orElse(text("n/a")), text(TimeConverter.toString(mute.getCreated())), mute.getExpiration().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_PERMANENT))), mute.getReason().orElse(text("-"))})));
 			});
-		} else sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANINFO_SUCCESS), new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT))), ban.reason().orElse(text("-"))})));
+		} else sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_SUCCESS), new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {mute.getSource().orElse(text("n/a")), text(TimeConverter.toString(mute.getCreated())), mute.getExpiration().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_PERMANENT))), mute.getReason().orElse(text("-"))})));
 	}
 
 	@Override
@@ -57,12 +57,12 @@ public class BanInfo extends AbstractRawCommand {
 
 	@Override
 	public String permission() {
-		return Permissions.BANINFO;
+		return Permissions.MUTEINFO;
 	}
 
 	@Override
 	public String command() {
-		return "baninfo";
+		return "muteinfo";
 	}
 
 	@Override
@@ -72,18 +72,18 @@ public class BanInfo extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArgument.of(Profile.class, new RawCompleterSupplier<Stream<String>>() {
+		return Arrays.asList(RawArgument.of(Mute.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
 			public Stream<String> get(String[] args) {
 				return plugin.getPunishmentService().getAllProfileBans().stream().map(p -> p.profile().name().orElse(p.profile().examinableName()));
 			}
-		}, new RawResultSupplier<Profile>() {
+		}, new RawResultSupplier<Mute>() {
 			@Override
-			public Optional<Profile> get(String[] args) {
-				Collection<Profile> variants = plugin.getPunishmentService().getAllProfileBans();
-				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(p -> p.profile().name().orElse(p.profile().examinableName()).equals(args[0])).findFirst();
+			public Optional<Mute> get(String[] args) {
+				Collection<Mute> variants = plugin.getPunishmentService().getAllMutes();
+				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(p -> p.getName().equals(args[0])).findFirst();
 			}
-		}, false, false, 0, LocalesPaths.COMMANDS_BANINFO_NOT_PRESENT));
+		}, false, false, 0, LocalesPaths.COMMANDS_MUTEINFO_NOT_PRESENT));
 	}
 
 	@Override

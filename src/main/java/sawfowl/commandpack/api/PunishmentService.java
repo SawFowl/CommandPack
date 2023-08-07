@@ -19,6 +19,8 @@ public interface PunishmentService extends BanService {
 
 	void saveBans(Profile profile, IP ip);
 
+	Optional<Profile> findBan(UUID uuid);
+
 	Collection<Ban> getAllBans();
 
 	Collection<Profile> getAllProfileBans();

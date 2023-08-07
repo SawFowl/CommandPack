@@ -362,7 +362,8 @@ public class Locales {
 		save = check(locale, toText("&aInvulnerable&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_GODMODE) || save;
 		save = check(locale, toText("&aAFK&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_AFK) || save;
 		save = check(locale, toText("&aBan&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_BAN) || save;
-		//save = check(locale, toText("&aMute&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_MUTE) || save;
+		save = check(locale, toText("&aMute&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_MUTE) || save;
+		save = check(locale, toText("&aWarns&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_WARNS) || save;
 		save = check(locale, toText("&eYes"), null, LocalesPaths.COMMANDS_SEEN_YES) || save;
 		save = check(locale, toText("&eNo"), null, LocalesPaths.COMMANDS_SEEN_NO) || save;
 		save = check(locale, toText("&3="), null, LocalesPaths.COMMANDS_SEEN_PADDING) || save;
@@ -427,13 +428,21 @@ public class Locales {
 		save = check(locale, toText("&3%profile% &3|| %ip%"), null, LocalesPaths.COMMANDS_BANLIST_TITLE) || save;
 		save = check(locale, toText("&7[&ePlayers&7]"), null, LocalesPaths.COMMANDS_BANLIST_PROFILE) || save;
 		save = check(locale, toText("&7[&eIP&7]"), null, LocalesPaths.COMMANDS_BANLIST_IP) || save;
-		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANLIST_LIST_ELEMENT) || save;
+		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANLIST_ELEMENT) || save;
 		save = check(locale, toText("&aPlayer&f: &e" + Placeholders.PLAYER + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANLIST_BANINFO_PLAYER) || save;
 		save = check(locale, toText("&aIP&f: &e" + Placeholders.VALUE + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANLIST_BANINFO_IP) || save;
 		save = check(locale, toText("&cPermanent"), null, LocalesPaths.COMMANDS_BANINFO_PERMANENT) || save;
 		save = check(locale, toText("&cYou need to specify the nickname of the banned player."), null, LocalesPaths.COMMANDS_BANINFO_NOT_PRESENT) || save;
 		save = check(locale, toText("&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANINFO_SUCCESS) || save;
 		save = check(locale, toText("&3Ban Info " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_BANINFO_TITLE) || save;
+		save = check(locale, toText("&cPermanent"), null, LocalesPaths.COMMANDS_MUTEINFO_PERMANENT) || save;
+		save = check(locale, toText("&cYou need to specify the nickname of the player with blocked chat."), null, LocalesPaths.COMMANDS_MUTEINFO_NOT_PRESENT) || save;
+		save = check(locale, toText("&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_MUTEINFO_SUCCESS) || save;
+		save = check(locale, toText("&3Mute Info " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_MUTEINFO_TITLE) || save;
+		save = check(locale, toText("&cThere are no mutes to display."), null, LocalesPaths.COMMANDS_MUTELIST_EMPTY) || save;
+		save = check(locale, toText("&3Mutes (" + Placeholders.VALUE + ")"), null, LocalesPaths.COMMANDS_MUTELIST_TITLE) || save;
+		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTELIST_ELEMENT) || save;
+		save = check(locale, toText("&aPlayer&f: &e" + Placeholders.PLAYER + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_MUTELIST_INFO) || save;
 
 		if(save) save(locale);
 	}
@@ -737,7 +746,8 @@ public class Locales {
 		save = check(locale, toText("&aНеуязвимость&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_GODMODE) || save;
 		save = check(locale, toText("&aАФК&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_AFK) || save;
 		save = check(locale, toText("&aБан&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_BAN) || save;
-		//save = check(locale, toText("&aМут&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_MUTE) || save;
+		save = check(locale, toText("&aМут&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_MUTE) || save;
+		save = check(locale, toText("&aПредупреждений&f: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SEEN_WARNS) || save;
 		save = check(locale, toText("&eДа"), null, LocalesPaths.COMMANDS_SEEN_YES) || save;
 		save = check(locale, toText("&eНет"), null, LocalesPaths.COMMANDS_SEEN_NO) || save;
 		save = check(locale, toText("&3="), null, LocalesPaths.COMMANDS_SEEN_PADDING) || save;
@@ -799,17 +809,25 @@ public class Locales {
 		save = check(locale, toText("&3Предупреждения " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_WARNS_TITLE) || save;
 		save = check(locale, toText("&aПричина: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_WARNS_REASON) || save;
 		save = check(locale, toText("&e" + Placeholders.TIME + " &a➢ &e" + Placeholders.LIMIT), null, LocalesPaths.COMMANDS_WARNS_TIMES) || save;
-		save = check(locale, toText("&aНет банов для отображения."), null, LocalesPaths.COMMANDS_BANLIST_EMPTY) || save;
+		save = check(locale, toText("&cНет банов для отображения."), null, LocalesPaths.COMMANDS_BANLIST_EMPTY) || save;
 		save = check(locale, toText("&3%profile% &3|| %ip%"), null, LocalesPaths.COMMANDS_BANLIST_TITLE) || save;
 		save = check(locale, toText("&7[&eИгроки&7]"), null, LocalesPaths.COMMANDS_BANLIST_PROFILE) || save;
 		save = check(locale, toText("&7[&eIP&7]"), null, LocalesPaths.COMMANDS_BANLIST_IP) || save;
-		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANLIST_LIST_ELEMENT) || save;
+		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANLIST_ELEMENT) || save;
 		save = check(locale, toText("&aИгрок&f: &e" + Placeholders.PLAYER + "\n&aЗабанил&f: &e" + Placeholders.SOURCE + "\n&aСоздан&f: &e" + Placeholders.CREATED + "\n&aИстекает&f: &e" + Placeholders.EXPIRE + "\n&aПричина&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANLIST_BANINFO_PLAYER) || save;
 		save = check(locale, toText("&aIP&f: &e" + Placeholders.VALUE + "\n&aЗабанивший&f: &e" + Placeholders.SOURCE + "\n&aСоздан&f: &e" + Placeholders.CREATED + "\n&aИстекает&f: &e" + Placeholders.EXPIRE + "\n&aПричина&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANLIST_BANINFO_IP) || save;
 		save = check(locale, toText("&cПерманентно"), null, LocalesPaths.COMMANDS_BANINFO_PERMANENT) || save;
 		save = check(locale, toText("&cНужно указать ник забаненого игрока."), null, LocalesPaths.COMMANDS_BANINFO_NOT_PRESENT) || save;
 		save = check(locale, toText("&aЗабанил&f: &e" + Placeholders.SOURCE + "\n&aСоздан&f: &e" + Placeholders.CREATED + "\n&aИстекает&f: &e" + Placeholders.EXPIRE + "\n&aПричина&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANINFO_SUCCESS) || save;
 		save = check(locale, toText("&3Информация о бане " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_BANINFO_TITLE) || save;
+		save = check(locale, toText("&cПерманентно"), null, LocalesPaths.COMMANDS_MUTEINFO_PERMANENT) || save;
+		save = check(locale, toText("&cНужно указать ник игрока с заблокированным чатом."), null, LocalesPaths.COMMANDS_MUTEINFO_NOT_PRESENT) || save;
+		save = check(locale, toText("&aЗаглушил&f: &e" + Placeholders.SOURCE + "\n&aСоздан&f: &e" + Placeholders.CREATED + "\n&aИстекает&f: &e" + Placeholders.EXPIRE + "\n&aПричина&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_MUTEINFO_SUCCESS) || save;
+		save = check(locale, toText("&3Информация о муте " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_MUTEINFO_TITLE) || save;
+		save = check(locale, toText("&cНет мутов для отображения."), null, LocalesPaths.COMMANDS_MUTELIST_EMPTY) || save;
+		save = check(locale, toText("&3Список мутов (" + Placeholders.VALUE + ")"), null, LocalesPaths.COMMANDS_MUTELIST_TITLE) || save;
+		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTELIST_ELEMENT) || save;
+		save = check(locale, toText("&aИгрок&f: &e" + Placeholders.PLAYER + "\n&aЗаглушил&f: &e" + Placeholders.SOURCE + "\n&aСоздан&f: &e" + Placeholders.CREATED + "\n&aИстекает&f: &e" + Placeholders.EXPIRE + "\n&aПричина&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_MUTELIST_INFO) || save;
 
 		if(save) save(locale);
 	}

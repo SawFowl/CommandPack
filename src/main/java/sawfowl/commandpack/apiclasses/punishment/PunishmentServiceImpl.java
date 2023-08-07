@@ -138,6 +138,11 @@ public class PunishmentServiceImpl implements PunishmentService {
 	}
 
 	@Override
+	public Optional<Profile> findBan(UUID uuid) {
+		return storage.getBan(uuid);
+	}
+
+	@Override
 	public Optional<Mute> getMute(UUID uuid) {
 		return storage.getMute(uuid);
 	}

@@ -63,6 +63,8 @@ public class Permissions {
 	public static final String WARNS_OTHER = "commandpack.commands.user.warnings.other";
 	public static final String BANLIST = "commandpack.commands.user.banlist";
 	public static final String BANINFO = "commandpack.commands.user.baninfo";
+	public static final String MUTEINFO = "commandpack.commands.user.muteinfo";
+	public static final String MUTELIST = "commandpack.commands.user.mutelist";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
