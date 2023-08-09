@@ -14,6 +14,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportConfig;
+import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.AfkConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.MySqlConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.RestrictEntitySpawn;
@@ -63,6 +64,8 @@ public class MainConfig {
 	private MySqlConfig mySqlConfig = new MySqlConfig();
 	@Setting("Punishment")
 	private Punishment punishment = new Punishment();
+	@Setting("Economy")
+	private EconomyConfig economy = new EconomyConfig();
 
 	public boolean isAutoCompleteRawCommands() {
 		return autoCompleteRawCommands;
@@ -134,6 +137,10 @@ public class MainConfig {
 
 	public Punishment getPunishment() {
 		return punishment;
+	}
+
+	public EconomyConfig getEconomy() {
+		return economy;
 	}
 
 }

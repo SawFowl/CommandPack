@@ -6,6 +6,8 @@ import java.util.Set;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.world.generation.ChunkGenerator;
 
+import sawfowl.commandpack.api.services.PunishmentService;
+
 /**
  * Plugin API.
  * 

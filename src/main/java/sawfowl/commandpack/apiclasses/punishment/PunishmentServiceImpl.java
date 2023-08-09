@@ -16,10 +16,10 @@ import org.spongepowered.api.service.ban.Ban.Profile;
 import org.spongepowered.api.service.ban.BanTypes;
 
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.api.PunishmentService;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
+import sawfowl.commandpack.api.services.PunishmentService;
 import sawfowl.commandpack.apiclasses.punishment.storage.AbstractPunishmentStorage;
 import sawfowl.commandpack.apiclasses.punishment.storage.FileStorage;
 import sawfowl.commandpack.apiclasses.punishment.storage.H2Storage;

@@ -1,4 +1,4 @@
-package sawfowl.commandpack.api;
+package sawfowl.commandpack.api.services;
 
 import java.util.Collection;
 import java.util.Optional;

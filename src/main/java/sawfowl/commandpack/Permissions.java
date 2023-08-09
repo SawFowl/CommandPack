@@ -65,6 +65,9 @@ public class Permissions {
 	public static final String BANINFO = "commandpack.commands.user.baninfo";
 	public static final String MUTEINFO = "commandpack.commands.user.muteinfo";
 	public static final String MUTELIST = "commandpack.commands.user.mutelist";
+	public static final String BALANCE = "commandpack.commands.user.balance.self";
+	public static final String BALANCE_OTHER = "commandpack.commands.user.balance.other";
+	public static final String BALANCE_HIDE = "commandpack.commands.user.balance.hide";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -127,6 +130,7 @@ public class Permissions {
 	public static final String UNMUTE_STAFF = "commandpack.commands.staff.unmute";
 	public static final String WARN_STAFF = "commandpack.commands.staff.warn";
 	public static final String WARNS_STAFF = "commandpack.commands.staff.warnings";
+	public static final String BALANCE_STAFF = "commandpack.commands.staff.balance";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_COOLDOWN = "commandpack.commands.ignore.cooldown";
