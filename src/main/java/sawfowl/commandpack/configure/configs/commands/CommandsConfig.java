@@ -211,6 +211,8 @@ public class CommandsConfig {
 	private CommandSettings muteInfo = new CommandSettings();
 	@Setting("MuteList")
 	private CommandSettings muteList = new CommandSettings(new String[] {"mutes"});
+	@Setting("Balance")
+	private CommandSettings balance = new CommandSettings(new String[] {"money"});
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

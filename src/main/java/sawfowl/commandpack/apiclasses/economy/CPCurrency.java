@@ -15,9 +15,13 @@ import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 public class CPCurrency implements Currency {
 
 	private final EconomyConfig config = CommandPack.getInstance().getMainConfig().getEconomy();
+	private Component name;
+	private Component pluralName;
 	public CPCurrency() {}
 	public CPCurrency(char symbol) {
 		this.symbol = symbol;
+		setName();
+		setPluralName();
 	}
 
 	@Setting("Symbol")
@@ -25,12 +29,12 @@ public class CPCurrency implements Currency {
 
 	@Override
 	public Component displayName() {
-		return config.getCurrency(symbol).map(c -> c.displayName()).orElse(symbol());
+		return name == null ? setName() : name;
 	}
 
 	@Override
 	public Component pluralDisplayName() {
-		return config.getCurrency(symbol).map(c -> c.pluralDisplayName()).orElse(symbol());
+		return pluralName == null ? setPluralName() : pluralName;
 	}
 
 	@Override
@@ -40,7 +44,7 @@ public class CPCurrency implements Currency {
 
 	@Override
 	public Component format(BigDecimal amount, int numFractionDigits) {
-		return symbol().append(Component.text(amount.setScale(numFractionDigits, RoundingMode.HALF_UP).doubleValue()));
+		return symbol().append(Component.text(amount.setScale(numFractionDigits < 0 ? defaultFractionDigits() : numFractionDigits, RoundingMode.HALF_UP).doubleValue()));
 	}
 
 	@Override
@@ -51,6 +55,14 @@ public class CPCurrency implements Currency {
 	@Override
 	public boolean isDefault() {
 		return config.getCurrency(symbol).map(c -> c.isDefault()).orElse(false);
+	}
+
+	private Component setName() {
+		return name = config.getCurrency(symbol).map(c -> c.displayName()).orElse(symbol());
+	}
+
+	private Component setPluralName() {
+		return pluralName = config.getCurrency(symbol).map(c -> c.pluralDisplayName()).orElse(symbol());
 	}
 
 }

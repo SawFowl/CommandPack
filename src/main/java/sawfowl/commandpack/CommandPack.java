@@ -240,7 +240,7 @@ public class CommandPack {
 	@Listener
 	public void onServerStarted(StartedEngineEvent<Server> event) {
 		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getText(Sponge.server().locale(), LocalesPaths.ECONOMY_NOT_FOUND));
-		economy = new Economy(instance);
+		if(economy == null) economy = new Economy(instance);
 		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerChatListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerCommandListener(instance));
@@ -360,13 +360,12 @@ public class CommandPack {
 
 	@Listener
 	public void onProvideBanService(ProvideServiceEvent<BanService> event) {
-		if(!getMainConfig().getPunishment().isEnable()) return;
-		punishmentService = new PunishmentServiceImpl(instance);
-		event.suggest(() -> punishmentService);
+		if(getMainConfig().getPunishment().isEnable()) event.suggest(() -> punishmentService = new PunishmentServiceImpl(instance));
 	}
 
 	@Listener
 	public void onProvideEconomyService(ProvideServiceEvent<EconomyService> event) {
+		if(getMainConfig().getEconomy().isEnable()) new Economy(instance).createEconomy(event);
 	}
 
 	@Listener

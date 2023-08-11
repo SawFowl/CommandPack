@@ -40,7 +40,7 @@ public class FileStorage extends AbstractPunishmentStorage {
 
 	private void checkPaths() {
 		if(!plugin.getConfigDir().resolve("Modules").toFile().exists()) plugin.getConfigDir().resolve("Modules").toFile().mkdir();
-		if(!plugin.getConfigDir().resolve("Modules"+ File.separator + "Punishment").toFile().exists()) plugin.getConfigDir().resolve("Modules"+ File.separator + "Punishment").toFile().mkdir();
+		if(!plugin.getConfigDir().resolve("Modules" + File.separator + "Punishment").toFile().exists()) plugin.getConfigDir().resolve("Modules" + File.separator + "Punishment").toFile().mkdir();
 		bansPath = plugin.getConfigDir().resolve("Modules" + File.separator + "Punishment" + File.separator + "Bans");
 		bansIPPath = plugin.getConfigDir().resolve("Modules" + File.separator + "Punishment" + File.separator + "BansIP");
 		mutesPath = plugin.getConfigDir().resolve("Modules" + File.separator + "Punishment" + File.separator + "Mutes");

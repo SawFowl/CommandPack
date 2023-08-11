@@ -6,22 +6,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Cause;
-import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.context.Context;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.account.Account;
-import org.spongepowered.api.service.economy.account.UniqueAccount;
+import org.spongepowered.api.service.economy.account.VirtualAccount;
 import org.spongepowered.api.service.economy.transaction.ResultType;
 import org.spongepowered.api.service.economy.transaction.TransactionResult;
 import org.spongepowered.api.service.economy.transaction.TransactionType;
 import org.spongepowered.api.service.economy.transaction.TransactionTypes;
 import org.spongepowered.api.service.economy.transaction.TransferResult;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
@@ -30,47 +25,28 @@ import sawfowl.commandpack.apiclasses.economy.storage.AbstractEconomyStorage;
 import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 import sawfowl.localeapi.api.TextUtils;
 
-@ConfigSerializable
-public class CPUniqueAccount implements UniqueAccount {
+public class CPAccount implements Account, VirtualAccount {
 
-	@Setting("UUID")
-	private UUID userId;
-	@Setting("Name")
-	private String displayName = "n/a";
+	@Setting("Identifier")
+	private String identifier;
 	@Setting("Balances")
 	private Map<Currency, BigDecimal> balances;
 	private EconomyConfig config = CommandPack.getInstance().getMainConfig().getEconomy();
 	private AbstractEconomyStorage storage;
-	public CPUniqueAccount(UUID userId, Map<Currency, BigDecimal> balances) {
-		this.userId = userId;
+	public CPAccount(String identifier, Map<Currency, BigDecimal> balances) {
+		this.identifier = identifier;
 		this.balances = balances;
-		Optional<ServerPlayer> optPlayer = Sponge.server().player(userId);
-		if(optPlayer.isPresent()) {
-			setName(optPlayer.get().name());
-			return;
-		}
-		Optional<GameProfile> optProfile = Sponge.server().gameProfileManager().cache().findById(userId);
-		if(optProfile.isPresent()) {
-			setName(optProfile.get().name().orElse(optProfile.get().examinableName()));
-			return;
-		}
-		Sponge.server().userManager().load(userId).thenAccept(optUser -> {
-			if(optUser.isPresent()) {
-				setName(optUser.get().name());
-				return;
-			}
-		});
-		save();
-	}
-
-	public void setName(String name) {
-		this.displayName = name;
 		save();
 	}
 
 	@Override
+	public String identifier() {
+		return identifier;
+	}
+
+	@Override
 	public Component displayName() {
-		return text(displayName);
+		return text(identifier);
 	}
 
 	@Override
@@ -146,7 +122,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public Account account() {
-				return CPUniqueAccount.this;
+				return CPAccount.this;
 			}
 		};
 	}
@@ -189,7 +165,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public Account account() {
-				return CPUniqueAccount.this;
+				return CPAccount.this;
 			}
 		};
 	}
@@ -233,7 +209,7 @@ public class CPUniqueAccount implements UniqueAccount {
 					
 					@Override
 					public Account account() {
-						return CPUniqueAccount.this;
+						return CPAccount.this;
 					}
 				}
 				);
@@ -282,7 +258,7 @@ public class CPUniqueAccount implements UniqueAccount {
 					
 					@Override
 					public Account account() {
-						return CPUniqueAccount.this;
+						return CPAccount.this;
 					}
 				}
 				);
@@ -328,7 +304,7 @@ public class CPUniqueAccount implements UniqueAccount {
 				
 				@Override
 				public Account account() {
-					return CPUniqueAccount.this;
+					return CPAccount.this;
 				}
 			};
 		}
@@ -368,7 +344,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public Account account() {
-				return CPUniqueAccount.this;
+				return CPAccount.this;
 			}
 		};
 	}
@@ -409,7 +385,7 @@ public class CPUniqueAccount implements UniqueAccount {
 				
 				@Override
 				public Account account() {
-					return CPUniqueAccount.this;
+					return CPAccount.this;
 				}
 			};
 		}
@@ -449,7 +425,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public Account account() {
-				return CPUniqueAccount.this;
+				return CPAccount.this;
 			}
 		};
 	}
@@ -494,7 +470,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public Account account() {
-				return CPUniqueAccount.this;
+				return CPAccount.this;
 			}
 		};
 	}
@@ -539,7 +515,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public Account account() {
-				return CPUniqueAccount.this;
+				return CPAccount.this;
 			}
 		};
 	}
@@ -584,7 +560,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public Account account() {
-				return CPUniqueAccount.this;
+				return CPAccount.this;
 			}
 		};
 	}
@@ -629,7 +605,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public Account account() {
-				return CPUniqueAccount.this;
+				return CPAccount.this;
 			}
 		};
 	}
@@ -665,7 +641,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public Account account() {
-				return CPUniqueAccount.this;
+				return CPAccount.this;
 			}
 			
 			@Override
@@ -705,7 +681,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public Account account() {
-				return CPUniqueAccount.this;
+				return CPAccount.this;
 			}
 			
 			@Override
@@ -746,7 +722,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public Account account() {
-				return CPUniqueAccount.this;
+				return CPAccount.this;
 			}
 			
 			@Override
@@ -786,7 +762,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public Account account() {
-				return CPUniqueAccount.this;
+				return CPAccount.this;
 			}
 			
 			@Override
@@ -794,16 +770,6 @@ public class CPUniqueAccount implements UniqueAccount {
 				return to;
 			}
 		};
-	}
-
-	@Override
-	public String identifier() {
-		return displayName;
-	}
-
-	@Override
-	public UUID uniqueId() {
-		return userId;
 	}
 
 	private Component text(String string) {
@@ -822,13 +788,13 @@ public class CPUniqueAccount implements UniqueAccount {
 		return "0123456789abcdefklmnor".indexOf(ch) != -1;
 	}
 
-	public CPUniqueAccount setStorage(AbstractEconomyStorage storage) {
+	public CPAccount setStorage(AbstractEconomyStorage storage) {
 		if(this.storage == null) this.storage = storage;
 		return this;
 	}
 
 	private void save() {
-		storage.saveUniqueAccount(this);
+		storage.saveAccount(this);
 	}
 
 }

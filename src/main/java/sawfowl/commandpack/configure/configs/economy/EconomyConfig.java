@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
+import sawfowl.commandpack.utils.StorageType;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
@@ -20,6 +22,9 @@ public class EconomyConfig {
 	private boolean enable = false;
 	@Setting("Currencies")
 	private List<Currency> currencies = new ArrayList<Currency>(Arrays.asList(new Currency()));
+	@Setting("StorageType")
+	@Comment("Available values: File, H2, MySql.")
+	private String storageType = StorageType.FILE.typeName();
 
 	public boolean isEnable() {
 		return enable;
@@ -44,6 +49,10 @@ public class EconomyConfig {
 	public Currency getDefaultCurrency() {
 		if(currencies.isEmpty()) currencies.add(new Currency());
 		return currencies.stream().filter(c -> c.isDefault()).findFirst().orElse(currencies.get(0));
+	}
+
+	public StorageType getStorageType() {
+		return StorageType.getType(storageType);
 	}
 
 }

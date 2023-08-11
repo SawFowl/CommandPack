@@ -15,14 +15,12 @@ public enum StorageType {
 		public String typeName() {
 			return "H2";
 		}
-		
 	},
 	MYSQL {
 		@Override
 		public String typeName() {
 			return "MySql";
 		}
-		
 	};
 
 	public abstract String typeName();
