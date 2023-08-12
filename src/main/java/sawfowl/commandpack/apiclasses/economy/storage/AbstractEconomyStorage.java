@@ -26,13 +26,16 @@ public abstract class AbstractEconomyStorage extends Thread {
 
 	final CommandPack plugin;
 	final EconomyServiceImpl economyService;
+
 	Map<UUID, UniqueAccount> uniqueAccounts = new HashMap<UUID, UniqueAccount>();
 	Map<String, Account> accounts = new HashMap<String, Account>();
 	ConfigurationOptions options;
+	Map<Currency, BigDecimal> defaultBalances;
 	public AbstractEconomyStorage(CommandPack plugin, EconomyServiceImpl economyService) {
 		this.plugin = plugin;
 		this.economyService = economyService;
 		options = plugin.getLocales().getLocaleService().getConfigurationOptions();
+		defaultBalances = createDefaultBalances();
 		try {
 			load();
 		} catch (ConfigurateException e) {
@@ -42,10 +45,6 @@ public abstract class AbstractEconomyStorage extends Thread {
 
 	public abstract void load() throws ConfigurateException;
 
-	public abstract UniqueAccount createUniqueAccount(UUID uuid);
-
-	public abstract Account createAccount(String identifier);
-
 	public abstract void removeUniqueAccount(UUID uuid);
 
 	public abstract void removeAccount(String identifier);
@@ -53,6 +52,18 @@ public abstract class AbstractEconomyStorage extends Thread {
 	public abstract void saveUniqueAccount(CPUniqueAccount account);
 
 	public abstract void saveAccount(CPAccount account);
+
+	public  UniqueAccount createUniqueAccount(UUID uuid) {
+		return uniqueAccounts.put(uuid, new CPUniqueAccount(uuid, defaultBalances, this));
+	}
+
+	public Account createAccount(String identifier) {
+		return accounts.put(identifier, new CPAccount(identifier, defaultBalances, this));
+	}
+
+	public EconomyServiceImpl getEconomyService() {
+		return economyService;
+	}
 
 	public boolean hasAccount(UUID uuid) {
 		return uniqueAccounts.containsKey(uuid);
@@ -63,11 +74,11 @@ public abstract class AbstractEconomyStorage extends Thread {
 	}
 
 	public Optional<UniqueAccount> findOrCreateAccount(UUID uuid) {
-		return Optional.ofNullable(uniqueAccounts.getOrDefault(uuid, createUniqueAccount(uuid)));
+		return Optional.ofNullable(hasAccount(uuid) ? uniqueAccounts.get(uuid) : createUniqueAccount(uuid));
 	}
 
 	public Optional<Account> findOrCreateAccount(String identifier) {
-		return Optional.ofNullable(accounts.getOrDefault(identifier, createAccount(identifier)));
+		return Optional.ofNullable(hasAccount(identifier) ? accounts.get(identifier) : createAccount(identifier));
 	}
 
 	public Stream<UniqueAccount> streamUniqueAccounts() {

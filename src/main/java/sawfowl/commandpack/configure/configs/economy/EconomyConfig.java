@@ -21,7 +21,7 @@ public class EconomyConfig {
 	@Setting("Enable")
 	private boolean enable = false;
 	@Setting("Currencies")
-	private List<Currency> currencies = new ArrayList<Currency>(Arrays.asList(new Currency()));
+	private List<CurrencyConfig> currencies = new ArrayList<CurrencyConfig>(Arrays.asList(new CurrencyConfig()));
 	@Setting("StorageType")
 	@Comment("Available values: File, H2, MySql.")
 	private String storageType = StorageType.FILE.typeName();
@@ -30,24 +30,24 @@ public class EconomyConfig {
 		return enable;
 	}
 
-	public List<Currency> getCurrencies() {
+	public List<CurrencyConfig> getCurrencies() {
 		return currencies;
 	}
 
-	public Optional<Currency> getCurrency(char symbol) {
+	public Optional<CurrencyConfig> getCurrency(char symbol) {
 		return currencies.stream().filter(c -> c.getSymbol() == symbol).findFirst();
 	}
 
-	public Optional<Currency> getCurrency(String name) {
+	public Optional<CurrencyConfig> getCurrency(String name) {
 		return currencies.stream().filter(c -> c.getName().equals(name) || (name.length() == 1 && name.charAt(0) == c.getSymbol())).findFirst();
 	}
 
-	public Optional<Currency> getCurrency(Component displayName) {
+	public Optional<CurrencyConfig> getCurrency(Component displayName) {
 		return getCurrency(TextUtils.serializeLegacy(displayName));
 	}
 
-	public Currency getDefaultCurrency() {
-		if(currencies.isEmpty()) currencies.add(new Currency());
+	public CurrencyConfig getDefaultCurrency() {
+		if(currencies.isEmpty()) currencies.add(new CurrencyConfig());
 		return currencies.stream().filter(c -> c.isDefault()).findFirst().orElse(currencies.get(0));
 	}
 

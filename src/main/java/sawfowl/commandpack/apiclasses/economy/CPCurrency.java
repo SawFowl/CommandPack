@@ -4,14 +4,12 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import org.spongepowered.api.service.economy.Currency;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 
-@ConfigSerializable
 public class CPCurrency implements Currency {
 
 	private final EconomyConfig config = CommandPack.getInstance().getMainConfig().getEconomy();

@@ -8,9 +8,9 @@ import net.kyori.adventure.text.Component;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
-public class Currency {
+public class CurrencyConfig {
 
-	public Currency(){}
+	public CurrencyConfig(){}
 
 	@Setting("Name")
 	private String name = "Dollar";
@@ -72,6 +72,13 @@ public class Currency {
 
 	private boolean isStyleChar(char ch) {
 		return "0123456789abcdefklmnor".indexOf(ch) != -1;
+	}
+
+	@Override
+	public String toString() {
+		return "CurrencyConfig [name=" + name + ", pluralName=" + pluralName + ", symbol=" + symbol
+				+ ", startingBalance=" + startingBalance + ", isDefault=" + isDefault + ", transferPerm=" + transferPerm
+				+ "]";
 	}
 
 }

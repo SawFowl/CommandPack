@@ -17,26 +17,35 @@ import org.spongepowered.api.service.economy.transaction.TransactionResult;
 import org.spongepowered.api.service.economy.transaction.TransactionType;
 import org.spongepowered.api.service.economy.transaction.TransactionTypes;
 import org.spongepowered.api.service.economy.transaction.TransferResult;
-import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.apiclasses.economy.storage.AbstractEconomyStorage;
 import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
+import sawfowl.commandpack.configure.configs.economy.SerializedAccount;
 import sawfowl.localeapi.api.TextUtils;
 
 public class CPAccount implements Account, VirtualAccount {
 
-	@Setting("Identifier")
 	private String identifier;
-	@Setting("Balances")
 	private Map<Currency, BigDecimal> balances;
 	private EconomyConfig config = CommandPack.getInstance().getMainConfig().getEconomy();
 	private AbstractEconomyStorage storage;
-	public CPAccount(String identifier, Map<Currency, BigDecimal> balances) {
+	public CPAccount(){}
+	public CPAccount(String identifier, Map<Currency, BigDecimal> balances, AbstractEconomyStorage storage) {
 		this.identifier = identifier;
 		this.balances = balances;
+		this.storage = storage;
 		save();
+	}
+
+	public static CPAccount deserealize(SerializedAccount serializedAccount, AbstractEconomyStorage storage) {
+		CPAccount account = new CPAccount();
+		account.storage = storage;
+		account.identifier = serializedAccount.getName();
+		account.balances = serializedAccount.getBalances(storage.getEconomyService().getCurrenciesMap());
+		return account;
 	}
 
 	@Override
@@ -270,7 +279,7 @@ public class CPAccount implements Account, VirtualAccount {
 
 	@Override
 	public TransactionResult resetBalance(Currency currency, Set<Context> contexts) {
-		Optional<sawfowl.commandpack.configure.configs.economy.Currency> optConfig = config.getCurrency(currency.displayName());
+		Optional<sawfowl.commandpack.configure.configs.economy.CurrencyConfig> optConfig = config.getCurrency(currency.displayName());
 		boolean contains = balances.containsKey(currency);
 		if(!optConfig.isPresent() && contains) {
 			balances.remove(currency);
@@ -308,7 +317,7 @@ public class CPAccount implements Account, VirtualAccount {
 				}
 			};
 		}
-		sawfowl.commandpack.configure.configs.economy.Currency config = optConfig.get();
+		sawfowl.commandpack.configure.configs.economy.CurrencyConfig config = optConfig.get();
 		TransactionType type = (!contains || balances.get(currency).doubleValue() < config.getStartingBalance() ? TransactionTypes.DEPOSIT : TransactionTypes.WITHDRAW).get();
 		BigDecimal amount = BigDecimal.valueOf(config.getStartingBalance());
 		if(contains) {
@@ -351,7 +360,7 @@ public class CPAccount implements Account, VirtualAccount {
 
 	@Override
 	public TransactionResult resetBalance(Currency currency, Cause cause) {
-		Optional<sawfowl.commandpack.configure.configs.economy.Currency> optConfig = config.getCurrency(currency.displayName());
+		Optional<sawfowl.commandpack.configure.configs.economy.CurrencyConfig> optConfig = config.getCurrency(currency.displayName());
 		boolean contains = balances.containsKey(currency);
 		if(!optConfig.isPresent() && contains) {
 			balances.remove(currency);
@@ -389,7 +398,7 @@ public class CPAccount implements Account, VirtualAccount {
 				}
 			};
 		}
-		sawfowl.commandpack.configure.configs.economy.Currency config = optConfig.get();
+		sawfowl.commandpack.configure.configs.economy.CurrencyConfig config = optConfig.get();
 		TransactionType type = (!contains || balances.get(currency).doubleValue() < config.getStartingBalance() ? TransactionTypes.DEPOSIT : TransactionTypes.WITHDRAW).get();
 		BigDecimal amount = BigDecimal.valueOf(config.getStartingBalance());
 		if(contains) {
@@ -789,12 +798,15 @@ public class CPAccount implements Account, VirtualAccount {
 	}
 
 	public CPAccount setStorage(AbstractEconomyStorage storage) {
-		if(this.storage == null) this.storage = storage;
+		if(this.storage == null) {
+			this.storage = storage;
+			save();
+		}
 		return this;
 	}
 
-	private void save() {
-		storage.saveAccount(this);
+	public void save() {
+		if(storage != null) storage.saveAccount(this);
 	}
 
 }

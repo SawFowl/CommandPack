@@ -37,7 +37,8 @@ public class Economy {
 	}
 
 	public void createEconomy(ProvideServiceEvent<EconomyService> event) {
-		event.suggest(() -> economyService = economyServiceImpl = new EconomyServiceImpl(plugin));
+		economyService = economyServiceImpl = new EconomyServiceImpl(plugin);
+		event.suggest(() -> economyService);
 		Registry<Currency> currencyRegistry = RegistryTypes.CURRENCY.get();
 		for(Currency currency : economyServiceImpl.getCurrencies()) currencyRegistry.register(currencyRegistry.type().location(), currency);
 	}

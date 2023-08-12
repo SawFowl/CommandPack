@@ -31,7 +31,11 @@ public interface Warns extends DataSerializable {
 
 	void removeWarn(Warn warn);
 
+	void removeWarn(String created);
+
 	void checkExpired();
+
+	void clear();
 
 	interface Builder extends AbstractBuilder<Warns>, org.spongepowered.api.util.Builder<Warns, Builder> {
 

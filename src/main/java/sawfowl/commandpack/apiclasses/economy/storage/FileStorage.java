@@ -4,8 +4,6 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.UUID;
 
-import org.spongepowered.api.service.economy.account.Account;
-import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
@@ -16,6 +14,8 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
 import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
+import sawfowl.commandpack.configure.configs.economy.SerializedAccount;
+import sawfowl.commandpack.configure.configs.economy.SerializedUniqueAccount;
 
 public class FileStorage extends AbstractEconomyStorage {
 
@@ -30,13 +30,13 @@ public class FileStorage extends AbstractEconomyStorage {
 		checkPaths();
 		for(File file : playersPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) {
 			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(file.toPath()).build().loadToReference();
-			ValueReference<CPUniqueAccount, CommentedConfigurationNode> config = configReference.referenceTo(CPUniqueAccount.class);
-			uniqueAccounts.put(config.get().uniqueId(), config.get().setStorage(this));
+			ValueReference<SerializedUniqueAccount, CommentedConfigurationNode> config = configReference.referenceTo(SerializedUniqueAccount.class);
+			uniqueAccounts.put(config.get().getUserId(), CPUniqueAccount.deserealize(config.get(), this));
 		}
 		for(File file : otherPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) {
 			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(file.toPath()).build().loadToReference();
-			ValueReference<CPAccount, CommentedConfigurationNode> config = configReference.referenceTo(CPAccount.class);
-			accounts.put(config.get().identifier(), config.get().setStorage(this));
+			ValueReference<SerializedAccount, CommentedConfigurationNode> config = configReference.referenceTo(SerializedAccount.class);
+			accounts.put(config.get().getName(), CPAccount.deserealize(config.get(), this));
 		}
 	}
 
@@ -47,16 +47,6 @@ public class FileStorage extends AbstractEconomyStorage {
 		otherPath = plugin.getConfigDir().resolve("Modules" + File.separator + "Economy" + File.separator + "Other");
 		if(!playersPath.toFile().exists()) playersPath.toFile().mkdir();
 		if(!otherPath.toFile().exists()) otherPath.toFile().mkdir();
-	}
-
-	@Override
-	public UniqueAccount createUniqueAccount(UUID uuid) {
-		return uniqueAccounts.put(uuid, new CPUniqueAccount(uuid, createDefaultBalances()).setStorage(this));
-	}
-
-	@Override
-	public Account createAccount(String identifier) {
-		return accounts.put(identifier, new CPAccount(identifier, createDefaultBalances()).setStorage(this));
 	}
 
 	@Override
@@ -80,8 +70,8 @@ public class FileStorage extends AbstractEconomyStorage {
 		checkPaths();
 		try {
 			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(playersPath.resolve(account.uniqueId().toString() + ".conf")).build().loadToReference();
-			ValueReference<CPUniqueAccount, CommentedConfigurationNode> config = configReference.referenceTo(CPUniqueAccount.class);
-			config.setAndSave(account);
+			ValueReference<SerializedUniqueAccount, CommentedConfigurationNode> config = configReference.referenceTo(SerializedUniqueAccount.class);
+			config.setAndSave(new SerializedUniqueAccount(account));
 		} catch (ConfigurateException e) {
 			e.printStackTrace();
 		}
@@ -92,8 +82,8 @@ public class FileStorage extends AbstractEconomyStorage {
 		checkPaths();
 		try {
 			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(otherPath.resolve(account.identifier() + ".conf")).build().loadToReference();
-			ValueReference<CPAccount, CommentedConfigurationNode> config = configReference.referenceTo(CPAccount.class);
-			config.setAndSave(account);
+			ValueReference<SerializedAccount, CommentedConfigurationNode> config = configReference.referenceTo(SerializedAccount.class);
+			config.setAndSave(new SerializedAccount(account));
 		} catch (ConfigurateException e) {
 			e.printStackTrace();
 		}

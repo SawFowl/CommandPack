@@ -88,22 +88,22 @@ public class H2Storage extends SqlStorage {
 
 	@Override
 	public String insertProfileBanSql() {
-		return "INSERT INTO BANS (UUID, BAN_DATA) VALUES(?, ?)";
+		return "MERGE INTO BANS (UUID, BAN_DATA) VALUES(?, ?)";
 	}
 
 	@Override
 	public String insertIPBanSql() {
-		return "INSERT INTO BANS_IP (IP, BAN_DATA) VALUES(?, ?)";
+		return "MERGE INTO BANS_IP (IP, BAN_DATA) VALUES(?, ?)";
 	}
 
 	@Override
 	public String insertMuteSql() {
-		return "INSERT INTO MUTES (UUID, MUTE_DATA) VALUES(?, ?)";
+		return "MERGE INTO MUTES (UUID, MUTE_DATA) VALUES(?, ?)";
 	}
 
 	@Override
 	public String insertWarnsSql() {
-		return "INSERT INTO WARNS (UUID, WARNS_DATA) VALUES(?, ?)";
+		return "MERGE INTO WARNS (UUID, WARNS_DATA) VALUES(?, ?)";
 	}
 
 	@Override

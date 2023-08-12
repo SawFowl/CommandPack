@@ -21,29 +21,27 @@ import org.spongepowered.api.service.economy.transaction.TransactionResult;
 import org.spongepowered.api.service.economy.transaction.TransactionType;
 import org.spongepowered.api.service.economy.transaction.TransactionTypes;
 import org.spongepowered.api.service.economy.transaction.TransferResult;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.apiclasses.economy.storage.AbstractEconomyStorage;
 import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
+import sawfowl.commandpack.configure.configs.economy.SerializedUniqueAccount;
 import sawfowl.localeapi.api.TextUtils;
 
-@ConfigSerializable
 public class CPUniqueAccount implements UniqueAccount {
 
-	@Setting("UUID")
 	private UUID userId;
-	@Setting("Name")
 	private String displayName = "n/a";
-	@Setting("Balances")
 	private Map<Currency, BigDecimal> balances;
 	private EconomyConfig config = CommandPack.getInstance().getMainConfig().getEconomy();
 	private AbstractEconomyStorage storage;
-	public CPUniqueAccount(UUID userId, Map<Currency, BigDecimal> balances) {
+	private CPUniqueAccount(){}
+	public CPUniqueAccount(UUID userId, Map<Currency, BigDecimal> balances, AbstractEconomyStorage storage) {
 		this.userId = userId;
 		this.balances = balances;
+		this.storage = storage;
 		Optional<ServerPlayer> optPlayer = Sponge.server().player(userId);
 		if(optPlayer.isPresent()) {
 			setName(optPlayer.get().name());
@@ -61,6 +59,15 @@ public class CPUniqueAccount implements UniqueAccount {
 			}
 		});
 		save();
+	}
+
+	public static CPUniqueAccount deserealize(SerializedUniqueAccount account, AbstractEconomyStorage storage) {
+		CPUniqueAccount uniqueAccount = new CPUniqueAccount();
+		uniqueAccount.storage = storage;
+		uniqueAccount.userId = account.getUserId();
+		uniqueAccount.displayName = account.getName();
+		uniqueAccount.balances = account.getBalances(storage.getEconomyService().getCurrenciesMap());
+		return uniqueAccount;
 	}
 
 	public void setName(String name) {
@@ -294,7 +301,7 @@ public class CPUniqueAccount implements UniqueAccount {
 
 	@Override
 	public TransactionResult resetBalance(Currency currency, Set<Context> contexts) {
-		Optional<sawfowl.commandpack.configure.configs.economy.Currency> optConfig = config.getCurrency(currency.displayName());
+		Optional<sawfowl.commandpack.configure.configs.economy.CurrencyConfig> optConfig = config.getCurrency(currency.displayName());
 		boolean contains = balances.containsKey(currency);
 		if(!optConfig.isPresent() && contains) {
 			balances.remove(currency);
@@ -332,7 +339,7 @@ public class CPUniqueAccount implements UniqueAccount {
 				}
 			};
 		}
-		sawfowl.commandpack.configure.configs.economy.Currency config = optConfig.get();
+		sawfowl.commandpack.configure.configs.economy.CurrencyConfig config = optConfig.get();
 		TransactionType type = (!contains || balances.get(currency).doubleValue() < config.getStartingBalance() ? TransactionTypes.DEPOSIT : TransactionTypes.WITHDRAW).get();
 		BigDecimal amount = BigDecimal.valueOf(config.getStartingBalance());
 		if(contains) {
@@ -375,7 +382,7 @@ public class CPUniqueAccount implements UniqueAccount {
 
 	@Override
 	public TransactionResult resetBalance(Currency currency, Cause cause) {
-		Optional<sawfowl.commandpack.configure.configs.economy.Currency> optConfig = config.getCurrency(currency.displayName());
+		Optional<sawfowl.commandpack.configure.configs.economy.CurrencyConfig> optConfig = config.getCurrency(currency.displayName());
 		boolean contains = balances.containsKey(currency);
 		if(!optConfig.isPresent() && contains) {
 			balances.remove(currency);
@@ -413,7 +420,7 @@ public class CPUniqueAccount implements UniqueAccount {
 				}
 			};
 		}
-		sawfowl.commandpack.configure.configs.economy.Currency config = optConfig.get();
+		sawfowl.commandpack.configure.configs.economy.CurrencyConfig config = optConfig.get();
 		TransactionType type = (!contains || balances.get(currency).doubleValue() < config.getStartingBalance() ? TransactionTypes.DEPOSIT : TransactionTypes.WITHDRAW).get();
 		BigDecimal amount = BigDecimal.valueOf(config.getStartingBalance());
 		if(contains) {
@@ -823,12 +830,22 @@ public class CPUniqueAccount implements UniqueAccount {
 	}
 
 	public CPUniqueAccount setStorage(AbstractEconomyStorage storage) {
-		if(this.storage == null) this.storage = storage;
+		if(this.storage == null) {
+			this.storage = storage;
+			save();
+		}
 		return this;
 	}
 
-	private void save() {
-		storage.saveUniqueAccount(this);
+	public void save() {
+		if(storage != null) {
+			storage.saveUniqueAccount(this);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "CPUniqueAccount [userId=" + userId + ", displayName=" + displayName + ", balances=" + balances + "]";
 	}
 
 }

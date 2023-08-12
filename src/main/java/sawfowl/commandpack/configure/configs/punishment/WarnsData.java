@@ -80,6 +80,11 @@ public class WarnsData implements Warns {
 	}
 
 	@Override
+	public void removeWarn(String created) {
+		warns.removeIf(warn -> warn.getCreatedTimeString().equals(created));
+	}
+
+	@Override
 	public void checkExpired() {
 		int size = warns.size();
 		warns.removeIf(WarnData::isExpired);
@@ -95,6 +100,12 @@ public class WarnsData implements Warns {
 	public DataContainer toContainer() {
 		return DataContainer.createNew()
 				.set(Queries.CONTENT_VERSION, contentVersion());
+	}
+
+	@Override
+	public void clear() {
+		warns.clear();
+		save();
 	}
 
 	private void save() {

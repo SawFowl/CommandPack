@@ -18,6 +18,9 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.apiclasses.economy.storage.AbstractEconomyStorage;
 import sawfowl.commandpack.apiclasses.economy.storage.FileStorage;
+import sawfowl.commandpack.apiclasses.economy.storage.H2Storage;
+import sawfowl.commandpack.apiclasses.economy.storage.MySqlStorage;
+import sawfowl.commandpack.utils.MariaDB;
 
 public class EconomyServiceImpl implements CPEconomyService {
 
@@ -30,27 +33,47 @@ public class EconomyServiceImpl implements CPEconomyService {
 	public EconomyServiceImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		def = new CPCurrency(plugin.getMainConfig().getEconomy().getDefaultCurrency().getSymbol());
-		for(sawfowl.commandpack.configure.configs.economy.Currency currency : plugin.getMainConfig().getEconomy().getCurrencies()) {
+		for(sawfowl.commandpack.configure.configs.economy.CurrencyConfig currency : plugin.getMainConfig().getEconomy().getCurrencies()) {
 			currenciesMap.put(currency.getSymbol(), new CPCurrency(currency.getSymbol()));
 		}
-		currencies = currenciesMap.values().toArray(Currency[]::new);
-		virtualAccounts.put("Server", new CPAccount("Server", new HashMap<Currency, BigDecimal>()));
 		switch (plugin.getMainConfig().getEconomy().getStorageType()) {
 			case FILE:
 				storage = new FileStorage(plugin, this);
 				break;
-	
+			case H2:
+				try {
+					Class.forName("org.h2.Driver");
+					storage = new H2Storage(plugin, this);
+					plugin.getLogger().info("The h2 database is used to store the economy data.");
+				} catch (Exception e) {
+					storage = new FileStorage(plugin, this);
+					plugin.getLogger().warn("H2 driver not found! Configuration files based data storage will be used.");
+				}
+				break;
+			case MYSQL:
+				Optional<MariaDB> optMariaDB = plugin.getMariaDB();
+				if(optMariaDB.isPresent()) {
+					storage = new MySqlStorage(plugin, this);
+					plugin.getLogger().info("The MySql database is used to store the economy data.");
+				} else {
+					storage = new FileStorage(plugin, this);
+					plugin.getLogger().error("MySql or MariaDB Driver not found! Configuration files based data storage will be used.");
+				}
+				break;
 			default:
 				storage = new FileStorage(plugin, this);
 				break;
 		}
+		currencies = currenciesMap.values().toArray(new Currency[]{});
+		virtualAccounts.put("Server", new CPAccount("Server", new HashMap<Currency, BigDecimal>(), null));
 	}
 
-
+	@Override
 	public Currency[] getCurrencies() {
 		return currencies;
 	}
 
+	@Override
 	public Map<Character, Currency> getCurrenciesMap() {
 		return new HashMap<Character, Currency>(currenciesMap);
 	}
