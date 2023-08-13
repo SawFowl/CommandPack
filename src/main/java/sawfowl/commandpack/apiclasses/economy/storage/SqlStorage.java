@@ -34,9 +34,9 @@ public abstract class SqlStorage extends AbstractEconomyStorage {
 	private String removeAccount;
 	private String insertUniqueAccount;
 	private String insertAccount;
-	private String uuidCollumn;
-	private String identifierCollumn;
-	private String dataCollumn;
+	protected String uuidCollumn;
+	protected String identifierCollumn;
+	protected String dataCollumn;
 	public SqlStorage(CommandPack plugin, EconomyServiceImpl economyService) {
 		super(plugin, economyService);
 	}
@@ -145,7 +145,7 @@ public abstract class SqlStorage extends AbstractEconomyStorage {
 		return statement;
 	}
 
-	private CPUniqueAccount uniqueAccountFromString(String string) {
+	protected CPUniqueAccount uniqueAccountFromString(String string) {
 		StringReader source = new StringReader(string);
 		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(plugin.getLocales().getLocaleService().getConfigurationOptions()).source(() -> new BufferedReader(source)).build();
 		try {
@@ -157,7 +157,7 @@ public abstract class SqlStorage extends AbstractEconomyStorage {
 		}
 	}
 
-	private CPAccount accountFromString(String string) {
+	protected CPAccount accountFromString(String string) {
 		StringReader source = new StringReader(string);
 		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(plugin.getLocales().getLocaleService().getConfigurationOptions()).source(() -> new BufferedReader(source)).build();
 		try {

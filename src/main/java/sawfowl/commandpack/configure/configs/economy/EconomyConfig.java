@@ -25,6 +25,9 @@ public class EconomyConfig {
 	@Setting("StorageType")
 	@Comment("Available values: File, H2, MySql.")
 	private String storageType = StorageType.FILE.typeName();
+	@Setting("UpdateInterval")
+	@Comment("The time between polls of the MySql database to update the data in the cache.\nThe time is specified in milliseconds.")
+	private long updateInterval = 500;
 
 	public boolean isEnable() {
 		return enable;
@@ -53,6 +56,10 @@ public class EconomyConfig {
 
 	public StorageType getStorageType() {
 		return StorageType.getType(storageType);
+	}
+
+	public long getUpdateInterval() {
+		return updateInterval;
 	}
 
 }
