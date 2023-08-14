@@ -1,5 +1,7 @@
 package sawfowl.commandpack.configure.configs.economy;
 
+import java.util.Objects;
+
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
@@ -19,6 +21,9 @@ public class CurrencyConfig {
 	@Setting("DBCollumn")
 	@Comment("This option is only used when selecting MySql to store the economy data.\nEach currency must have its own column name to record data correctly.\nCan be used to customize compatibility with Bukkit economy plugin databases.\nUse compatibility at your own risk.\nStable work is not guaranteed.")
 	private String dbCollumn = "dollars";
+	@Setting("ID")
+	@Comment("This option is only used when selecting MySql to store the economy data.\nEach currency must have its own id.\nIt is not allowed to change it after creating tables.\nIt is also not allowed to insert new currencies by id between existing ones.")
+	private int dbID = 0;
 	@Setting("Symbol")
 	private char symbol = '$';
 	@Setting("StartingBalance")
@@ -86,6 +91,23 @@ public class CurrencyConfig {
 
 	public String getCollumn() {
 		return dbCollumn;
+	}
+
+	public int getID() {
+		return dbID;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(dbCollumn, dbID, name);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+		CurrencyConfig other = (CurrencyConfig) obj;
+		return Objects.equals(dbCollumn, other.dbCollumn) && dbID == other.dbID && Objects.equals(name, other.name);
 	}
 
 }

@@ -59,8 +59,7 @@ public abstract class SqlStorage extends AbstractEconomyStorage {
 	protected ResultSet resultSet(String sql) throws SQLException {
 		if(connection == null || connection.isClosed()) connection = createConnection();
 		if(statement == null || statement.isClosed()) statement = connection.createStatement();
-		ResultSet result = statement.executeQuery(sql);
-		return result;
+		return statement.executeQuery(sql);
 	}
 
 	protected PreparedStatement createStatement(String sql, Object[] objects) throws SQLException {

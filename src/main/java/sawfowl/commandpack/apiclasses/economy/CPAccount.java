@@ -40,11 +40,19 @@ public class CPAccount implements Account, VirtualAccount {
 		save();
 	}
 
+	public static CPAccount create(String identifier, Map<Currency, BigDecimal> balances, AbstractEconomyStorage storage) {
+		CPAccount account = new CPAccount();
+		account.identifier = identifier;
+		account.balances = balances;
+		account.storage = storage;
+		return account;
+	}
+
 	public static CPAccount deserealize(SerializedAccount serializedAccount, AbstractEconomyStorage storage) {
 		CPAccount account = new CPAccount();
-		account.storage = storage;
 		account.identifier = serializedAccount.getName();
 		account.balances = serializedAccount.getBalances(storage.getEconomyService().getCurrenciesMap());
+		account.storage = storage;
 		return account;
 	}
 

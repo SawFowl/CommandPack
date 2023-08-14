@@ -8,6 +8,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import org.spongepowered.api.ResourceKey;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.AccountDeletionResultType;
@@ -33,8 +36,12 @@ public class EconomyServiceImpl implements CPEconomyService {
 	public EconomyServiceImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		def = new CPCurrency(plugin.getMainConfig().getEconomy().getDefaultCurrency().getSymbol());
-		for(sawfowl.commandpack.configure.configs.economy.CurrencyConfig currency : plugin.getMainConfig().getEconomy().getCurrencies()) {
-			currenciesMap.put(currency.getSymbol(), new CPCurrency(currency.getSymbol()));
+		for(sawfowl.commandpack.configure.configs.economy.CurrencyConfig currencyConfig : plugin.getMainConfig().getEconomy().getCurrencies()) {
+			Currency currency = new CPCurrency(currencyConfig.getSymbol());
+			currenciesMap.put(currencyConfig.getSymbol(), currency);
+			Sponge.game().findRegistry(RegistryTypes.CURRENCY).ifPresent(registry -> {
+				registry.register(ResourceKey.resolve("cpcurrency" + currencyConfig.getName()), currency);
+			});
 		}
 		switch (plugin.getMainConfig().getEconomy().getStorageType()) {
 			case FILE:

@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.ProvideServiceEvent;
-import org.spongepowered.api.registry.Registry;
 import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.EconomyService;
@@ -39,8 +38,6 @@ public class Economy {
 	public void createEconomy(ProvideServiceEvent<EconomyService> event) {
 		economyService = economyServiceImpl = new EconomyServiceImpl(plugin);
 		event.suggest(() -> economyService);
-		Registry<Currency> currencyRegistry = RegistryTypes.CURRENCY.get();
-		for(Currency currency : economyServiceImpl.getCurrencies()) currencyRegistry.register(currencyRegistry.type().location(), currency);
 	}
 
 	public EconomyServiceImpl getEconomyService() {

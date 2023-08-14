@@ -61,6 +61,15 @@ public class CPUniqueAccount implements UniqueAccount {
 		save();
 	}
 
+	public static CPUniqueAccount create(UUID userId, String identifier, Map<Currency, BigDecimal> balances, AbstractEconomyStorage storage) {
+		CPUniqueAccount uniqueAccount = new CPUniqueAccount();
+		uniqueAccount.userId = userId;
+		uniqueAccount.displayName = identifier;
+		uniqueAccount.balances = balances;
+		uniqueAccount.storage = storage;
+		return uniqueAccount;
+	}
+
 	public static CPUniqueAccount deserealize(SerializedUniqueAccount account, AbstractEconomyStorage storage) {
 		CPUniqueAccount uniqueAccount = new CPUniqueAccount();
 		uniqueAccount.storage = storage;

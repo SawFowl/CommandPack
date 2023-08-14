@@ -22,17 +22,17 @@ import sawfowl.commandpack.configure.configs.economy.SerializedUniqueAccount;
 
 public class H2Storage extends SqlStorage {
 
-	private String createUniqueAccountsTable = "CREATE TABLE IF NOT EXISTS ECONOMY_UNIQUE_ACCOUNTS(UUID VARCHAR(128) NOT NULL UNIQUE, ACCOUNT_DATA TEXT, PRIMARY KEY(UUID))";
-	private String createAccountsTable = "CREATE TABLE IF NOT EXISTS ECONOMY_ACCOUNTS(IDENTIFIER VARCHAR(128) NOT NULL UNIQUE, ACCOUNT_DATA TEXT, PRIMARY KEY(IDENTIFIER))";
-	private String loadAllUniqueAccounts = "SELECT * FROM ECONOMY_UNIQUE_ACCOUNTS";
-	private String loadAllAccounts = "SELECT * FROM ECONOMY_ACCOUNTS";
-	private String removeUniqueAccount = "DELETE FROM ECONOMY_UNIQUE_ACCOUNTS WHERE UUID = ?";
-	private String removeAccount = "DELETE FROM ECONOMY_ACCOUNTS WHERE IDENTIFIER = ?";
-	private String insertUniqueAccount = "MERGE INTO ECONOMY_UNIQUE_ACCOUNTS (UUID, ACCOUNT_DATA) VALUES(?, ?)";
-	private String insertAccount = "MERGE INTO ECONOMY_ACCOUNTS (IDENTIFIER, ACCOUNT_DATA) VALUES(?, ?)";
-	private String uuidCollumn = "UUID";
-	private String identifierCollumn = "IDENTIFIER";
-	private String dataCollumn = "ACCOUNT_DATA";
+	private String createUniqueAccountsTable;
+	private String createAccountsTable;
+	private String loadAllUniqueAccounts;
+	private String loadAllAccounts;
+	private String removeUniqueAccount;
+	private String removeAccount;
+	private String insertUniqueAccount;
+	private String insertAccount;
+	private String uuidCollumn;
+	private String identifierCollumn;
+	private String dataCollumn;
 	public H2Storage(CommandPack plugin, EconomyServiceImpl economyService) {
 		super(plugin, economyService);
 	}
@@ -81,6 +81,19 @@ public class H2Storage extends SqlStorage {
 
 	@Override
 	protected void createTablesAndLoad() throws SQLException {
+
+		createUniqueAccountsTable = "CREATE TABLE IF NOT EXISTS ECONOMY_UNIQUE_ACCOUNTS(UUID VARCHAR(128) NOT NULL UNIQUE, ACCOUNT_DATA TEXT, PRIMARY KEY(UUID))";
+		createAccountsTable = "CREATE TABLE IF NOT EXISTS ECONOMY_ACCOUNTS(IDENTIFIER VARCHAR(128) NOT NULL UNIQUE, ACCOUNT_DATA TEXT, PRIMARY KEY(IDENTIFIER))";
+		loadAllUniqueAccounts = "SELECT * FROM ECONOMY_UNIQUE_ACCOUNTS";
+		loadAllAccounts = "SELECT * FROM ECONOMY_ACCOUNTS";
+		removeUniqueAccount = "DELETE FROM ECONOMY_UNIQUE_ACCOUNTS WHERE UUID = ?";
+		removeAccount = "DELETE FROM ECONOMY_ACCOUNTS WHERE IDENTIFIER = ?";
+		insertUniqueAccount = "MERGE INTO ECONOMY_UNIQUE_ACCOUNTS (UUID, ACCOUNT_DATA) VALUES(?, ?)";
+		insertAccount = "MERGE INTO ECONOMY_ACCOUNTS (IDENTIFIER, ACCOUNT_DATA) VALUES(?, ?)";
+		uuidCollumn = "UUID";
+		identifierCollumn = "IDENTIFIER";
+		dataCollumn = "ACCOUNT_DATA";
+
 		executeSQL(createUniqueAccountsTable);
 		executeSQL(createAccountsTable);
 		ResultSet resultSetUniqueAccounts = resultSet(loadAllUniqueAccounts);
