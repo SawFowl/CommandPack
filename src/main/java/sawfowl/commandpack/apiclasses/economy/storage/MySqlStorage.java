@@ -3,87 +3,120 @@ package sawfowl.commandpack.apiclasses.economy.storage;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.service.economy.Currency;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
 import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
+import sawfowl.commandpack.configure.configs.economy.dbsettings.DBSettings;
 
 public class MySqlStorage extends SqlStorage {
 
 	private String lastUpdateUniqueAccounts;
 	private String lastUpdateAccounts;
-	private String writtenCollumn = "written";
-	public MySqlStorage(CommandPack plugin, EconomyServiceImpl cp_economyService) {
-		super(plugin, cp_economyService);
+	private String writtenCollumn;	
+	private String createUniqueAccountsTable;
+	private String createAccountsTable;
+	private String loadAllUniqueAccounts;
+	private String loadAllAccounts;
+	private String removeUniqueAccount;
+	private String removeAccount;
+	private String insertUniqueAccount;
+	private String insertAccount;
+	private String uuidCollumn;
+	private String identifierCollumn;
+	private String uniqueAccountsTable;
+	private String accountsTable;
+	private Map<CurrencyData, Currency> currenciesCollumns = new HashMap<CurrencyData, Currency>();
+	public MySqlStorage(CommandPack plugin, EconomyServiceImpl economyService) {
+		super(plugin, economyService);
+		economyService.getCurrenciesMap().forEach((k, v) -> {
+			plugin.getMainConfig().getEconomy().getCurrency(k).ifPresent(c -> {
+				currenciesCollumns.put(new CurrencyData(c.getCollumn(), c.getStartingBalance()), v);
+			});
+		});
+		uniqueAccountsTable = getSettings().getTables().getUniqueAccounts();
+		accountsTable = getSettings().getTables().getAccounts();
+		writtenCollumn = "written";
+		uuidCollumn = getSettings().getCollumns().getUuid();
+		identifierCollumn = getSettings().getCollumns().getIdentifier();
+		createUniqueAccountsTable = "CREATE TABLE IF NOT EXISTS " + uniqueAccountsTable + "(" + uuidCollumn + " VARCHAR(128) UNIQUE, " + identifierCollumn + " VARCHAR(128), PRIMARY KEY(" + uuidCollumn + "))";
+		createAccountsTable = "CREATE TABLE IF NOT EXISTS " + accountsTable + "(" + identifierCollumn + " VARCHAR(128) UNIQUE, PRIMARY KEY(" + identifierCollumn + "))";
+		loadAllUniqueAccounts = "SELECT * FROM " + uniqueAccountsTable;
+		loadAllAccounts = "SELECT * FROM " + accountsTable;
+		removeUniqueAccount = "DELETE FROM " + uniqueAccountsTable + " WHERE " + uuidCollumn + " = ?";
+		removeAccount = "DELETE FROM " + accountsTable + " WHERE " + identifierCollumn + " = ?";
+		String args = "";
+		for(int i = currenciesCollumns.size(); i > 0; i--) {
+			args = args + ", ?";
+		}
+		insertUniqueAccount = "REPLACE INTO " + uniqueAccountsTable + " (" + uuidCollumn + ", " + identifierCollumn + ") VALUES(?, ? " + args + ")";
+		insertAccount = "REPLACE INTO " + accountsTable + " (" + identifierCollumn + ") VALUES(? " + args + ")";
 		Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(plugin.getMainConfig().getEconomy().getUpdateInterval(), TimeUnit.MILLISECONDS).execute(() -> {
 			sync();
 		}).build());
 	}
 
 	@Override
-	protected Connection getConnection() throws SQLException {
+	protected Connection createConnection() throws SQLException {
 		return plugin.getMariaDB().get().createNewConnection();
 	}
 
 	@Override
-	protected String createUniqueAccountsTable() {
-		return "CREATE TABLE IF NOT EXISTS cp_economy_unique_accounts(uuid VARCHAR(128) UNIQUE, account_data LONGTEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(uuid))";
+	protected void createTablesAndLoad() throws SQLException {
+		executeSQL(createUniqueAccountsTable);
+		executeSQL(createAccountsTable);
+		if(resultSet("SHOW TABLES LIKE '" + uniqueAccountsTable + "'").next() && resultSet("SHOW TABLES LIKE '" + accountsTable + "'").next()) {
+			currenciesCollumns.keySet().forEach(currency -> {
+				executeSQL("ALTER TABLE " + uniqueAccountsTable + " ADD COLUMN IF NOT EXISTS " + currency.collumn + " DOUBLE DEFAULT " + currency.defaultValue + ";");
+				executeSQL("ALTER TABLE " + accountsTable + " ADD COLUMN IF NOT EXISTS " + currency.collumn + " DOUBLE DEFAULT " + currency.defaultValue + ";");
+			});
+			executeSQL("ALTER TABLE " + uniqueAccountsTable + " ADD COLUMN IF NOT EXISTS " + writtenCollumn + " DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;");
+			executeSQL("ALTER TABLE " + accountsTable + " ADD COLUMN IF NOT EXISTS " + writtenCollumn + " DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;");
+		}
+		ResultSet resultSetUniqueAccounts = resultSet(loadAllUniqueAccounts);
+		while(resultSetUniqueAccounts.next()) {
+			
+		};
+		ResultSet resultSetAccounts = resultSet(loadAllAccounts);
+		while(resultSetAccounts.next()) {
+			
+		};
 	}
 
 	@Override
-	protected String createAccountsTable() {
-		return "CREATE TABLE IF NOT EXISTS cp_economy_accounts(identifier VARCHAR(128) UNIQUE, account_data LONGTEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(identifier))";
+	public void saveUniqueAccount(CPUniqueAccount account) {
 	}
 
 	@Override
-	protected String loadAllUniqueAccounts() {
-		return "SELECT * FROM cp_economy_unique_accounts";
+	public void saveAccount(CPAccount account) {
 	}
 
 	@Override
-	protected String loadAllAccounts() {
-		return "SELECT * FROM cp_economy_accounts";
+	public void removeUniqueAccount(UUID uuid) {
+		try {
+			createStatement(removeUniqueAccount, new Object[] {uniqueAccounts.remove(uuid).uniqueId()}).execute();
+		} catch (SQLException e) {
+			plugin.getLogger().warn("Error when deleting UniqueAccount '" + uuid + "'" + e.getLocalizedMessage());
+		}
 	}
 
 	@Override
-	protected String removeUniqueAccount() {
-		return "DELETE FROM cp_economy_unique_accounts WHERE uuid = ?";
-	}
-
-	@Override
-	protected String removeAccount() {
-		return "DELETE FROM cp_economy_accounts WHERE identifier = ?";
-	}
-
-	@Override
-	protected String insertUniqueAccount() {
-		return "REPLACE INTO cp_economy_unique_accounts (uuid, account_data) VALUES(?, ?)";
-	}
-
-	@Override
-	protected String insertAccount() {
-		return "REPLACE INTO cp_economy_accounts (identifier, account_data) VALUES(?, ?)";
-	}
-
-	@Override
-	protected String uuidCollumn() {
-		return "uuid";
-	}
-
-	@Override
-	protected String identifierCollumn() {
-		return "identifier";
-	}
-
-	@Override
-	protected String dataCollumn() {
-		return "account_data";
+	public void removeAccount(String identifier) {
+		try {
+			createStatement(removeAccount, new Object[] {accounts.remove(identifier).identifier()}).execute();
+		} catch (SQLException e) {
+			plugin.getLogger().warn("Error when deleting Account '" + identifier + "'" + e.getLocalizedMessage());
+		}
 	}
 
 	private void sync() {
@@ -103,10 +136,6 @@ public class MySqlStorage extends SqlStorage {
 				timeUpdate = false;
 			}
 			UUID uuid = UUID.fromString(resultSet.getString(uuidCollumn));
-			CPUniqueAccount account = uniqueAccountFromString(resultSet.getString(dataCollumn));
-			if(uniqueAccounts.containsKey(uuid)) {
-				uniqueAccounts.replace(uuid, account);
-			} else uniqueAccounts.put(uuid, account);
 		}
 	}
 
@@ -118,11 +147,33 @@ public class MySqlStorage extends SqlStorage {
 				timeUpdate = false;
 			}
 			String identifier = resultSet.getString(identifierCollumn);
-			CPAccount account = accountFromString(resultSet.getString(dataCollumn));
-			if(accounts.containsKey(identifier)) {
-				accounts.replace(identifier, account);
-			} else accounts.put(identifier, account);
 		}
+	}
+
+	private DBSettings getSettings() {
+		return plugin.getMainConfig().getEconomy().getDBSettings();
+	}
+
+	class CurrencyData {
+
+		final String collumn;
+		final double defaultValue;
+		CurrencyData(String collumn, double defaultValue) {
+			this.collumn = collumn;
+			this.defaultValue = defaultValue;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(collumn);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == null || getClass() != obj.getClass()) return false;
+			return this == obj || Objects.equals(collumn, ((CurrencyData) obj).collumn);
+		}
+
 	}
 
 }

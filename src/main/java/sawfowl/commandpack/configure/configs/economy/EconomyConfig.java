@@ -10,6 +10,7 @@ import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
+import sawfowl.commandpack.configure.configs.economy.dbsettings.DBSettings;
 import sawfowl.commandpack.utils.StorageType;
 import sawfowl.localeapi.api.TextUtils;
 
@@ -28,6 +29,9 @@ public class EconomyConfig {
 	@Setting("UpdateInterval")
 	@Comment("The time between polls of the MySql database to update the data in the cache.\nThe time is specified in milliseconds.")
 	private long updateInterval = 500;
+	@Setting("DBSettings")
+	@Comment("This options is only used when selecting MySql to store the economy data.\nCan be used to customize compatibility with Bukkit economy plugin databases.\nUse compatibility at your own risk.\nStable work is not guaranteed.")
+	private DBSettings dbSettings = new DBSettings();
 
 	public boolean isEnable() {
 		return enable;
@@ -60,6 +64,10 @@ public class EconomyConfig {
 
 	public long getUpdateInterval() {
 		return updateInterval;
+	}
+
+	public DBSettings getDBSettings() {
+		return dbSettings;
 	}
 
 }

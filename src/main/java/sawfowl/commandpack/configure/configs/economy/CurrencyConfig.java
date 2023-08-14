@@ -16,6 +16,9 @@ public class CurrencyConfig {
 	private String name = "Dollar";
 	@Setting("PluralName")
 	private String pluralName = "Dollars";
+	@Setting("DBCollumn")
+	@Comment("This option is only used when selecting MySql to store the economy data.\nEach currency must have its own column name to record data correctly.\nCan be used to customize compatibility with Bukkit economy plugin databases.\nUse compatibility at your own risk.\nStable work is not guaranteed.")
+	private String dbCollumn = "dollars";
 	@Setting("Symbol")
 	private char symbol = '$';
 	@Setting("StartingBalance")
@@ -79,6 +82,10 @@ public class CurrencyConfig {
 		return "CurrencyConfig [name=" + name + ", pluralName=" + pluralName + ", symbol=" + symbol
 				+ ", startingBalance=" + startingBalance + ", isDefault=" + isDefault + ", transferPerm=" + transferPerm
 				+ "]";
+	}
+
+	public String getCollumn() {
+		return dbCollumn;
 	}
 
 }
