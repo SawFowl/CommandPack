@@ -443,7 +443,16 @@ public class Locales {
 		save = check(locale, toText("&3Mutes (" + Placeholders.VALUE + ")"), null, LocalesPaths.COMMANDS_MUTELIST_TITLE) || save;
 		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTELIST_ELEMENT) || save;
 		save = check(locale, toText("&aPlayer&f: &e" + Placeholders.PLAYER + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_MUTELIST_INFO) || save;
-
+		save = check(locale, toText("&3Your balance"), null, LocalesPaths.COMMANDS_BALANCE_SELF_TITLE) || save;
+		save = check(locale, toText("&a" + Placeholders.CURRENCY_NAME + "&f: &e" + Placeholders.VALUE), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_BALANCE_SELF_LIST) || save;
+		save = check(locale, toText("&3Balance: " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE) || save;
+		save = check(locale, toText("&a" + Placeholders.CURRENCY_NAME + "&f: &e" + Placeholders.VALUE), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_BALANCE_OTHER_LIST) || save;
+		save = check(locale, toText("&cThe balance of player &e" + Placeholders.PLAYER + "&c is hidden."), null, LocalesPaths.COMMANDS_BALANCE_OTHER_HIDEN) || save;
+		save = check(locale, toText("&aYour balance is hidden from other players.."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_HIDEN) || save;
+		save = check(locale, toText("&aOther players can once again view your balance."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_OPEN) || save;
+		save = check(locale, toText("&aThe balance of the player &e" + Placeholders.PLAYER + "&a is hidden from other players."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN) || save;
+		save = check(locale, toText("&aPlayer balance &e" + Placeholders.PLAYER + "&a is once again available for other players to view."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN) || save;
+		
 		if(save) save(locale);
 	}
 
@@ -828,7 +837,16 @@ public class Locales {
 		save = check(locale, toText("&3Список мутов (" + Placeholders.VALUE + ")"), null, LocalesPaths.COMMANDS_MUTELIST_TITLE) || save;
 		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTELIST_ELEMENT) || save;
 		save = check(locale, toText("&aИгрок&f: &e" + Placeholders.PLAYER + "\n&aЗаглушил&f: &e" + Placeholders.SOURCE + "\n&aСоздан&f: &e" + Placeholders.CREATED + "\n&aИстекает&f: &e" + Placeholders.EXPIRE + "\n&aПричина&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_MUTELIST_INFO) || save;
-
+		save = check(locale, toText("&3Ваш баланс"), null, LocalesPaths.COMMANDS_BALANCE_SELF_TITLE) || save;
+		save = check(locale, toText("&a" + Placeholders.CURRENCY_NAME + "&f: &e" + Placeholders.VALUE), "Для отображения типа валюты можно использовать следующие плейсхолдеры:\n" + Placeholders.CURRENCY_SYMBOL + " - Отобразит символ валюты.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Отобразит символ валюты с применением оформления из ее названия.\n" + Placeholders.CURRENCY_NAME + " - Отобразит название валюты.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Отобразит название валюты в множественном числе.", LocalesPaths.COMMANDS_BALANCE_SELF_LIST) || save;
+		save = check(locale, toText("&3Баланс: " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE) || save;
+		save = check(locale, toText("&a" + Placeholders.CURRENCY_NAME + "&f: &e" + Placeholders.VALUE), "Для отображения типа валюты можно использовать следующие плейсхолдеры:\n" + Placeholders.CURRENCY_SYMBOL + " - Отобразит символ валюты.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Отобразит символ валюты с применением оформления из ее названия.\n" + Placeholders.CURRENCY_NAME + " - Отобразит название валюты.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Отобразит название валюты в множественном числе.", LocalesPaths.COMMANDS_BALANCE_OTHER_LIST) || save;
+		save = check(locale, toText("&cБаланс игрока &e" + Placeholders.PLAYER + "&c скрыт."), null, LocalesPaths.COMMANDS_BALANCE_OTHER_HIDEN) || save;
+		save = check(locale, toText("&aВаш баланс скрыт от других игроков."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_HIDEN) || save;
+		save = check(locale, toText("&aДругие игроки снова могут просматривать ваш баланс."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_OPEN) || save;
+		save = check(locale, toText("&aБаланс игрока &e" + Placeholders.PLAYER + "&a скрыт от других игроков."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN) || save;
+		save = check(locale, toText("&aБаланс игрока &e" + Placeholders.PLAYER + "&a снова доступен для просмотра другим игрокам."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN) || save;
+		
 		if(save) save(locale);
 	}
 

@@ -71,7 +71,7 @@ public class Unmute extends AbstractRawCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/unmute <Player>");
+		return text("&c/unmute <Profile>");
 	}
 
 	@Override

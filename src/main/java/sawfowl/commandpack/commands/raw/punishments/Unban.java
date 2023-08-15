@@ -70,7 +70,7 @@ public class Unban extends AbstractRawCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/unban <Player>");
+		return text("&c/unban <Profile>");
 	}
 
 	@Override

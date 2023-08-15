@@ -31,5 +31,9 @@ public class Placeholders {
 	public static final String CREATED = "%created%";
 	public static final String EXPIRE = "%expire%";
 	public static final String REASON = "%reason%";
+	public static final String CURRENCY_SYMBOL = "%currency-symbol%";
+	public static final String CURRENCY_STYLED_SYMBOL = "%currency-styled-symbol%";
+	public static final String CURRENCY_NAME = "%currency-symbol%";
+	public static final String CURRENCY_PLURAL_NAME = "%currency-plural-name%";
 
 }

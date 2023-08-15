@@ -3,13 +3,16 @@ package sawfowl.commandpack.apiclasses.economy;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.account.Account;
@@ -24,6 +27,7 @@ import sawfowl.commandpack.apiclasses.economy.storage.FileStorage;
 import sawfowl.commandpack.apiclasses.economy.storage.H2Storage;
 import sawfowl.commandpack.apiclasses.economy.storage.MySqlStorage;
 import sawfowl.commandpack.utils.MariaDB;
+import sawfowl.localeapi.api.TextUtils;
 
 public class EconomyServiceImpl implements CPEconomyService {
 
@@ -33,6 +37,7 @@ public class EconomyServiceImpl implements CPEconomyService {
 	private Currency[] currencies;
 	private Map<Character, Currency> currenciesMap = new HashMap<Character, Currency>();
 	private Map<String, VirtualAccount> virtualAccounts = new HashMap<String, VirtualAccount>();
+	private Set<UUID> hidenBalances = new HashSet<UUID>();
 	public EconomyServiceImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		def = new CPCurrency(plugin.getMainConfig().getEconomy().getDefaultCurrency().getSymbol());
@@ -40,7 +45,7 @@ public class EconomyServiceImpl implements CPEconomyService {
 			Currency currency = new CPCurrency(currencyConfig.getSymbol());
 			currenciesMap.put(currencyConfig.getSymbol(), currency);
 			Sponge.game().findRegistry(RegistryTypes.CURRENCY).ifPresent(registry -> {
-				registry.register(ResourceKey.resolve("cpcurrency" + currencyConfig.getName()), currency);
+				registry.register(ResourceKey.resolve("cpcurrency:" + TextUtils.clearDecorations(currency.displayName()).toLowerCase()), currency);
 			});
 		}
 		switch (plugin.getMainConfig().getEconomy().getStorageType()) {
@@ -73,16 +78,6 @@ public class EconomyServiceImpl implements CPEconomyService {
 		}
 		currencies = currenciesMap.values().toArray(new Currency[]{});
 		virtualAccounts.put("Server", new CPAccount("Server", new HashMap<Currency, BigDecimal>(), null));
-	}
-
-	@Override
-	public Currency[] getCurrencies() {
-		return currencies;
-	}
-
-	@Override
-	public Map<Character, Currency> getCurrenciesMap() {
-		return new HashMap<Character, Currency>(currenciesMap);
 	}
 
 	@Override
@@ -138,6 +133,37 @@ public class EconomyServiceImpl implements CPEconomyService {
 	@Override
 	public AccountDeletionResultType deleteAccount(String identifier) {
 		return storage.deleteAccount(identifier);
+	}
+
+	@Override
+	public Currency[] getCurrencies() {
+		return currencies;
+	}
+
+	@Override
+	public Map<Character, Currency> getCurrenciesMap() {
+		return new HashMap<Character, Currency>(currenciesMap);
+	}
+
+	@Override
+	public void hide(UUID uuid) {
+		if(isHiden(uuid)) {
+			hidenBalances.add(uuid);
+		} else hidenBalances.remove(uuid);
+	}
+
+	@Override
+	public boolean isHiden(UniqueAccount account) {
+		return hidenBalances.contains(account.uniqueId());
+	}
+
+	@Override
+	public boolean isHiden(UUID uuid) {
+		return hidenBalances.contains(uuid);
+	}
+
+	public void checkAccounts(ServerPlayer player) {
+		storage.checkAccounts(player);
 	}
 
 }

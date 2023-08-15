@@ -67,7 +67,7 @@ public class MuteInfo extends AbstractRawCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return null;
+		return text("&c/muteinfo <Profile>");
 	}
 
 	@Override

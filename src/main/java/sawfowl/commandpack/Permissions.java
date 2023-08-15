@@ -67,7 +67,8 @@ public class Permissions {
 	public static final String MUTELIST = "commandpack.commands.user.mutelist";
 	public static final String BALANCE = "commandpack.commands.user.balance.self";
 	public static final String BALANCE_OTHER = "commandpack.commands.user.balance.other";
-	public static final String BALANCE_HIDE = "commandpack.commands.user.balance.hide";
+	public static final String BALANCE_HIDEN_VIEW = "commandpack.commands.user.balance.hiddenview";
+	public static final String HIDE_BALANCE = "commandpack.commands.user.hidebalance";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -167,6 +168,7 @@ public class Permissions {
 	public  static final String PERMANENT_WARN_ACCESS = "commandpack.access.permanent.warn";
 	public  static final String PERMANENT_MUTE_ACCESS = "commandpack.access.permanent.mute";
 	public  static final String PERMANENT_BAN_ACCESS = "commandpack.access.permanent.ban";
+	private  static final String CURRENCY_ACCESS = "commandpack.access.currency.";
 
 	public static String getIgnoreDelayTimer(String command) {
 		return IGNORE_DELAY_TIMER + "." + command;
@@ -214,6 +216,10 @@ public class Permissions {
 
 	public static String getKitPermission(Kit kit) {
 		return KIT_ACCESS + "." + TextUtils.clearDecorations(kit.id());
+	}
+
+	public static String getCurrencyAccess(String currency) {
+		return CURRENCY_ACCESS + currency;
 	}
 
 	public static int getHomeLimit(ServerPlayer player) {

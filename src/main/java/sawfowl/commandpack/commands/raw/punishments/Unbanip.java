@@ -62,7 +62,7 @@ public class Unbanip extends AbstractRawCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return null;
+		return text("&c/unbanip <IP>");
 	}
 
 	@Override

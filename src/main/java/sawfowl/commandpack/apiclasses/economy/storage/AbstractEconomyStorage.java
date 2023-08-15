@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
 
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.AccountDeletionResultType;
@@ -111,6 +112,14 @@ public abstract class AbstractEconomyStorage extends Thread {
 			});
 		}
 		return balances;
+	}
+
+	public void checkAccounts(ServerPlayer player) {
+		if(hasAccount(player.uniqueId()) || !hasAccount(player.name())) return;
+		CPUniqueAccount account = CPUniqueAccount.create(player.uniqueId(), player.name(), accounts.get(player.name()).balances(), this);
+		uniqueAccounts.put(player.uniqueId(), account);
+		removeAccount(player.name());
+		account.save();
 	}
 
 }

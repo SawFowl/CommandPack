@@ -74,6 +74,8 @@ public class LocalesPaths {
 	private static final Object COMMAND_BANINFO = "BanInfo";
 	private static final Object COMMAND_MUTEINFO = "MuteInfo";
 	private static final Object COMMAND_MUTELIST = "MuteList";
+	private static final Object COMMAND_BALANCE = "Balance";
+	private static final Object COMMAND_HIDE_BALANCE = "HideBalance";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -445,5 +447,14 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_MUTELIST_TITLE = {PATH_COMMANDS, COMMAND_BANLIST, "Title"};
 	public static final Object[] COMMANDS_MUTELIST_ELEMENT = {PATH_COMMANDS, COMMAND_BANLIST, "Element"};
 	public static final Object[] COMMANDS_MUTELIST_INFO = {PATH_COMMANDS, COMMAND_MUTELIST, "Info"};
+	public static final Object[] COMMANDS_BALANCE_SELF_TITLE = {PATH_COMMANDS, COMMAND_BALANCE, "Self", "Title"};
+	public static final Object[] COMMANDS_BALANCE_SELF_LIST = {PATH_COMMANDS, COMMAND_BALANCE, "Self", "List"};
+	public static final Object[] COMMANDS_BALANCE_OTHER_TITLE = {PATH_COMMANDS, COMMAND_BALANCE, "Other", "Title"};
+	public static final Object[] COMMANDS_BALANCE_OTHER_LIST = {PATH_COMMANDS, COMMAND_BALANCE, "Other", "List"};
+	public static final Object[] COMMANDS_BALANCE_OTHER_HIDEN = {PATH_COMMANDS, COMMAND_BALANCE, PATH_EXCEPTIONS, "Hiden"};
+	public static final Object[] COMMANDS_HIDE_BALANCE_SELF_HIDEN = {PATH_COMMANDS, COMMAND_HIDE_BALANCE, "Self", "Hiden"};
+	public static final Object[] COMMANDS_HIDE_BALANCE_SELF_OPEN = {PATH_COMMANDS, COMMAND_HIDE_BALANCE, "Self", "Open"};
+	public static final Object[] COMMANDS_HIDE_BALANCE_OTHER_HIDEN = {PATH_COMMANDS, COMMAND_HIDE_BALANCE, "Other", "Hiden"};
+	public static final Object[] COMMANDS_HIDE_BALANCE_OTHER_OPEN = {PATH_COMMANDS, COMMAND_HIDE_BALANCE, "Other", "Open"};
 
 }

@@ -81,7 +81,7 @@ public class Warnings extends AbstractRawCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return cause.subject() instanceof ServerPlayer ? text("&c/warnings [User]") : text("&c/warnings <User>");
+		return cause.subject() instanceof ServerPlayer ? text("&c/warnings [Profile]") : text("&c/warnings <Profile>");
 	}
 
 	@Override

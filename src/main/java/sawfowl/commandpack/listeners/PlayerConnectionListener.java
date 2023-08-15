@@ -60,6 +60,7 @@ public class PlayerConnectionListener {
 				}).build());
 			}
 		}
+		if(plugin.getMainConfig().getEconomy().isEnable()) plugin.getEconomy().getEconomyService().checkAccounts(event.player());
 		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
 		((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get()).setLastJoin();
 		sendMotd(event.player());

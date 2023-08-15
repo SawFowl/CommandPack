@@ -45,14 +45,7 @@ public class Economy {
 	}
 
 	public BigDecimal getPlayerBalance(UUID uuid, Currency currency) {
-		try {
-			Optional<UniqueAccount> uOpt = economyService.findOrCreateAccount(uuid);
-			if (uOpt.isPresent()) {
-				return uOpt.get().balance(currency);
-			}
-		} catch (Exception ignored) {
-		}
-		return BigDecimal.ZERO;
+		return economyService.findOrCreateAccount(uuid).map(account -> account.balance(currency)).orElse(BigDecimal.ZERO);
 	}
 
 	public boolean isPresent() {
@@ -77,7 +70,6 @@ public class Economy {
 				}
 				}
 			} catch (Exception ignored) {
-				ignored.printStackTrace();
 		}
 		return false;
 	}
@@ -96,7 +88,6 @@ public class Economy {
 				}
 				}
 			} catch (Exception ignored) {
-				ignored.printStackTrace();
 		}
 		return false;
 	}
