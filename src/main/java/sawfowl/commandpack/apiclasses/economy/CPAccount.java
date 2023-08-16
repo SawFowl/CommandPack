@@ -104,6 +104,8 @@ public class CPAccount implements Account, VirtualAccount {
 	@Override
 	public TransactionResult setBalance(Currency currency, BigDecimal amount, Set<Context> contexts) {
 		TransactionType type = TransactionTypes.DEPOSIT.get();
+		if(amount.doubleValue() < 0) amount = BigDecimal.ZERO;
+		BigDecimal finalAmount = amount;
 		if(balances.containsKey(currency)) {
 			if(balances.get(currency).doubleValue() > amount.doubleValue()) type = TransactionTypes.WITHDRAW.get();
 			balances.replace(currency, amount);
@@ -134,7 +136,7 @@ public class CPAccount implements Account, VirtualAccount {
 			
 			@Override
 			public BigDecimal amount() {
-				return amount;
+				return finalAmount;
 			}
 			
 			@Override
@@ -147,6 +149,8 @@ public class CPAccount implements Account, VirtualAccount {
 	@Override
 	public TransactionResult setBalance(Currency currency, BigDecimal amount, Cause cause) {
 		TransactionType type = TransactionTypes.DEPOSIT.get();
+		if(amount.doubleValue() < 0) amount = BigDecimal.ZERO;
+		BigDecimal finalAmount = amount;
 		if(balances.containsKey(currency)) {
 			if(balances.get(currency).doubleValue() > amount.doubleValue()) type = TransactionTypes.WITHDRAW.get();
 			balances.replace(currency, amount);
@@ -177,7 +181,7 @@ public class CPAccount implements Account, VirtualAccount {
 			
 			@Override
 			public BigDecimal amount() {
-				return amount;
+				return finalAmount;
 			}
 			
 			@Override
@@ -455,6 +459,7 @@ public class CPAccount implements Account, VirtualAccount {
 			amount = balances.get(currency).add(amount);
 			balances.replace(currency, amount);
 		} balances.put(currency, amount);
+		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		TransactionType finalType = type;
 		BigDecimal finalAmount = amount;
 		save();
@@ -500,6 +505,7 @@ public class CPAccount implements Account, VirtualAccount {
 			amount = balances.get(currency).add(amount);
 			balances.replace(currency, amount);
 		} balances.put(currency, amount);
+		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		TransactionType finalType = type;
 		BigDecimal finalAmount = amount;
 		save();
@@ -545,6 +551,7 @@ public class CPAccount implements Account, VirtualAccount {
 			amount = balances.get(currency).subtract(amount);
 			balances.replace(currency, amount);
 		} balances.put(currency, amount);
+		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		TransactionType finalType = type;
 		BigDecimal finalAmount = amount;
 		save();
@@ -590,6 +597,7 @@ public class CPAccount implements Account, VirtualAccount {
 			amount = balances.get(currency).subtract(amount);
 			balances.replace(currency, amount);
 		} balances.put(currency, amount);
+		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		TransactionType finalType = type;
 		BigDecimal finalAmount = amount;
 		save();
@@ -638,7 +646,7 @@ public class CPAccount implements Account, VirtualAccount {
 			
 			@Override
 			public ResultType result() {
-				return ResultType.FAILED;
+				return ResultType.ACCOUNT_NO_FUNDS;
 			}
 			
 			@Override
@@ -719,7 +727,7 @@ public class CPAccount implements Account, VirtualAccount {
 			
 			@Override
 			public ResultType result() {
-				return ResultType.FAILED;
+				return ResultType.ACCOUNT_NO_FUNDS;
 			}
 			
 			@Override
