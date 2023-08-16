@@ -8,6 +8,8 @@ public class Columns {
 
 	public Columns(){}
 
+	@Setting("Id")
+	private String id = "id";
 	@Setting("UniqueId")
 	private String uuid = "uuid";
 	@Setting("IP")
@@ -24,6 +26,10 @@ public class Columns {
 	private String reason = "reason";
 	@Setting("IPBan")
 	private String ipBan = "ipban";
+
+	public String getId() {
+		return id;
+	}
 
 	public String getUniqueId() {
 		return uuid;

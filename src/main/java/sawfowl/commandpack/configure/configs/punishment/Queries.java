@@ -9,12 +9,9 @@ import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.configure.configs.punishment.queries.Columns;
-import sawfowl.commandpack.configure.configs.punishment.queries.CreateTables;
-import sawfowl.commandpack.configure.configs.punishment.queries.Delete;
-import sawfowl.commandpack.configure.configs.punishment.queries.Insert;
 import sawfowl.commandpack.configure.configs.punishment.queries.Patterns;
-import sawfowl.commandpack.configure.configs.punishment.queries.Select;
 import sawfowl.commandpack.configure.configs.punishment.queries.SyncIntervals;
+import sawfowl.commandpack.configure.configs.punishment.queries.Tables;
 
 @ConfigSerializable
 public class Queries {
@@ -23,19 +20,9 @@ public class Queries {
 
 	private String[] tablesArray = {"bans", "bans_ip", "mutes", "warns"};
 	private String[] indexesArray = {"uuid", "ip"};
-	@Setting("CreateTables")
-	private CreateTables createTables = new CreateTables();
-	@Setting("Select")
-	private Select select = new Select();
-	@Setting("Insert")
-	private Insert insert = new Insert();
-	@Setting("Delete")
-	private Delete delete = new Delete();
 	@Setting("Columns")
 	@Comment("Names of columns for receiving data.")
 	private Columns columns = new Columns();
-	@Setting("Tables")
-	@Comment("Table names for automatic data synchronization.")
 	private Map<String, String> tables = IntStream.range(0, tablesArray.length).boxed().collect(Collectors.toMap(i -> tablesArray[i], i -> tablesArray[i]));
 	@Setting("Indexes")
 	@Comment("Indexed column names for automatic data synchronization.")
@@ -43,12 +30,18 @@ public class Queries {
 	@Setting("Patterns")
 	@Comment("The order of columns for writing data to the database.\nRearrange the placeholders as you need. Their order must match the order of the columns in the database. Separation of placeholders - '><'.\nColumn names are specified in the request to add data to the database.")
 	private Patterns patterns = new Patterns();
+	@Setting("Tables")
+	@Comment("Table names for automatic data synchronization.")
+	private Tables tables2 = new Tables();
 	@Setting("SyncIntervals")
 	@Comment("Intervals between plugin data updates.\nTime is indicated in seconds.")
 	private SyncIntervals syncIntervals = new SyncIntervals();
 	@Setting("CreateCombinedBansTable")
 	@Comment("Creating a combined table with bans data.\nNot recommended.")
 	private boolean createCombinedBansTable = false;
+	@Setting("UnixTime")
+	@Comment("Using unix time in database queries.\nIf you change the time format, you may need to delete tables.\nUse only to ensure compatibility with other plugins.")
+	private boolean unixTime = false;
 
 	public Columns getColumns() {
 		return columns;
@@ -74,20 +67,12 @@ public class Queries {
 		return createCombinedBansTable;
 	}
 
-	public CreateTables getCreateTables() {
-		return createTables;
+	public boolean isUnixTime() {
+		return unixTime;
 	}
 
-	public Select getSelect() {
-		return select;
-	}
-
-	public Insert getInsert() {
-		return insert;
-	}
-
-	public Delete getDelete() {
-		return delete;
+	public Tables getTables2() {
+		return tables2;
 	}
 
 }
