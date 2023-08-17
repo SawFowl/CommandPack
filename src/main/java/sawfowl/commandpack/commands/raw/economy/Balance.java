@@ -46,8 +46,8 @@ public class Balance extends AbstractRawCommand {
 					Component title = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE), Placeholders.PLAYER, optTarget.get().displayName());
 					for(Currency currency : plugin.getEconomy().getEconomyService().getCurrencies()) {
 						if(plugin.getEconomy().getEconomyService().defaultCurrency().equals(currency) || source.hasPermission(Permissions.getCurrencyAccess(TextUtils.clearDecorations(currency.displayName())))) {
-							double balance = plugin.getEconomy().getPlayerBalance(optTarget.get().uniqueId(), plugin.getEconomy().getEconomyService().defaultCurrency()).doubleValue();
-							Component message = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_LIST), new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)});
+							double balance = plugin.getEconomy().getPlayerBalance(optTarget.get().uniqueId(), currency).doubleValue();
+							Component message = TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_LIST), new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)});
 							messages.add(message);
 						}
 					}
@@ -55,8 +55,8 @@ public class Balance extends AbstractRawCommand {
 				} else {
 					Component title = getText(source.locale(), LocalesPaths.COMMANDS_BALANCE_SELF_TITLE);
 					for(Currency currency : plugin.getEconomy().getEconomyService().getCurrencies()) {
-						double balance = plugin.getEconomy().getPlayerBalance(source.uniqueId(), plugin.getEconomy().getEconomyService().defaultCurrency()).doubleValue();
-						Component message = TextUtils.replace(getText(source.locale(), LocalesPaths.COMMANDS_BALANCE_SELF_LIST), new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)});
+						double balance = plugin.getEconomy().getPlayerBalance(source.uniqueId(), currency).doubleValue();
+						Component message = TextUtils.replaceToComponents(getText(source.locale(), LocalesPaths.COMMANDS_BALANCE_SELF_LIST), new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)});
 						messages.add(message);
 					}
 					sendPaginationList(source, title, text("=").color(title.color()), 10, messages);
@@ -66,8 +66,8 @@ public class Balance extends AbstractRawCommand {
 			UniqueAccount account = getArgument(UniqueAccount.class, args, 0).get();
 			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE), Placeholders.PLAYER, account.displayName()).append(text(":")));
 			for(Currency currency : plugin.getEconomy().getEconomyService().getCurrencies()) {
-				double balance = plugin.getEconomy().getPlayerBalance(account.uniqueId(), plugin.getEconomy().getEconomyService().defaultCurrency()).doubleValue();
-				Component message = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_LIST), new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)});
+				double balance = plugin.getEconomy().getPlayerBalance(account.uniqueId(), currency).doubleValue();
+				Component message = TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_LIST), new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)});
 				audience.sendMessage(message);
 			}
 		}

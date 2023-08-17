@@ -41,17 +41,18 @@ public class EconomyServiceImpl implements CPEconomyService {
 	public EconomyServiceImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		def = new CPCurrency(plugin.getMainConfig().getEconomy().getDefaultCurrency().getSymbol());
+		currenciesMap.put(plugin.getMainConfig().getEconomy().getDefaultCurrency().getSymbol(), def);
 		for(sawfowl.commandpack.configure.configs.economy.CurrencyConfig currencyConfig : plugin.getMainConfig().getEconomy().getCurrencies()) {
 			Currency currency = new CPCurrency(currencyConfig.getSymbol());
-			currenciesMap.put(currencyConfig.getSymbol(), currency);
-			Sponge.game().findRegistry(RegistryTypes.CURRENCY).ifPresent(registry -> {
-				registry.register(ResourceKey.resolve("cpcurrency:" + TextUtils.clearDecorations(currency.displayName()).toLowerCase()), currency);
-			});
+			if(!currenciesMap.containsKey(currencyConfig.getSymbol())) {
+				currenciesMap.put(currencyConfig.getSymbol(), currency);
+				Sponge.game().findRegistry(RegistryTypes.CURRENCY).ifPresent(registry -> {
+					if(!registry.findValue(ResourceKey.resolve("cpcurrency:" + TextUtils.clearDecorations(currency.displayName()).toLowerCase())).isPresent()) registry.register(ResourceKey.resolve("cpcurrency:" + TextUtils.clearDecorations(currency.displayName()).toLowerCase()), currency);
+				});
+			}
 		}
+		currencies = currenciesMap.values().toArray(new Currency[]{});
 		switch (plugin.getMainConfig().getEconomy().getStorageType()) {
-			case FILE:
-				storage = new FileStorage(plugin, this);
-				break;
 			case H2:
 				try {
 					Class.forName("org.h2.Driver");
@@ -76,7 +77,6 @@ public class EconomyServiceImpl implements CPEconomyService {
 				storage = new FileStorage(plugin, this);
 				break;
 		}
-		currencies = currenciesMap.values().toArray(new Currency[]{});
 		virtualAccounts.put("Server", new CPAccount("Server", new HashMap<Currency, BigDecimal>(), null));
 	}
 
@@ -147,7 +147,7 @@ public class EconomyServiceImpl implements CPEconomyService {
 
 	@Override
 	public void hide(UUID uuid) {
-		if(isHiden(uuid)) {
+		if(!isHiden(uuid)) {
 			hidenBalances.add(uuid);
 		} else hidenBalances.remove(uuid);
 	}

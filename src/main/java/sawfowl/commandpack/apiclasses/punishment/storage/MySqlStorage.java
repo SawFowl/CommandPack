@@ -75,10 +75,10 @@ public class MySqlStorage extends SqlStorage {
 	private String deleteWarnsSql;
 	public MySqlStorage(CommandPack plugin) {
 		super(plugin);
-		selectBans = "SELECT * FROM " + plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().getBans();
-		selectBansIP = isCombined ? selectBans : "SELECT * FROM " + plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().getIpbans();
-		selectMutes = "SELECT * FROM " + plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().getMutes();
-		selectWarns = "SELECT * FROM " + plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().getWarns();
+		selectBans = selectAllProfileBansSql + " WHERE " + plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getUniqueId() + " = '";
+		selectBansIP = isCombined ? selectBans : selectAllIPBansSql + " WHERE " + plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getIp() + " = '";
+		selectMutes = selectAllMutesSql + " WHERE " + plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getUniqueId() + " = '";
+		selectWarns = selectAllWarnsSql + " WHERE " + plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getUniqueId() + " = '";
 		try {
 			selectConnection = plugin.getMariaDB().get().createNewConnection();
 			deleteConnection = plugin.getMariaDB().get().createNewConnection();
@@ -119,7 +119,7 @@ public class MySqlStorage extends SqlStorage {
 	}
 
 	public void saveBans(Profile profile, IP ip) {
-		if(plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable()) {
+		if(plugin.getMainConfig().getPunishment().getDBSettings().isCreateCombinedBansTable()) {
 			bans.put(profile.profile().uniqueId(), profile);
 			try {
 				if(removeBeforeAdd()) createStatement(deleteProfileBanSql, new Object[] {profile.profile().uniqueId()}).execute();;
@@ -137,17 +137,17 @@ public class MySqlStorage extends SqlStorage {
 
 		String unixTimeFormatPlaceholder = "BIGINT";
 		String dateTimeFormatPlaceholder = "DATETIME";
-		isCombined = plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable();
-		isUnixTime = plugin.getMainConfig().getPunishment().getMySqlQueries().isUnixTime();
+		isCombined = plugin.getMainConfig().getPunishment().getDBSettings().isCreateCombinedBansTable();
+		isUnixTime = plugin.getMainConfig().getPunishment().getDBSettings().isUnixTime();
 		createProfileBansTableSql = replaceCollumns(replaceBansTableName(createProfileBansTableSql().replace("%time%", isUnixTime ? unixTimeFormatPlaceholder : dateTimeFormatPlaceholder)));
 		createIPBansTableSql = replaceCollumns(createIPBansTableSql().replace("%time%", isUnixTime ? unixTimeFormatPlaceholder : dateTimeFormatPlaceholder));
-		createMutesTableSql = replaceCollumns(replaceMutesTableName("CREATE TABLE IF NOT EXISTS %mutes%(%uuid% VARCHAR(128) UNIQUE, %name% TEXT, %source% TEXT, %created% %time%, %expiration% %time%, %reason% TEXT, %written% DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(%uuid%))".replace("%time%", isUnixTime ? unixTimeFormatPlaceholder : dateTimeFormatPlaceholder)));
+		createMutesTableSql = replaceCollumns(replaceMutesTableName("CREATE TABLE IF NOT EXISTS %mutes%(%uuid% VARCHAR(128) UNIQUE, %name% TEXT, %source% TEXT, %created% %time%, %expiration% %time%, %reason% TEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(%uuid%))".replace("%time%", isUnixTime ? unixTimeFormatPlaceholder : dateTimeFormatPlaceholder)));
 		createWarnsTableSql = replaceWarnsTableName("CREATE TABLE IF NOT EXISTS %warns%(uuid VARCHAR(128) UNIQUE, warns_data LONGTEXT, written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(uuid))");
 		selectAllProfileBansSql = replacePrimaryCollumns(replaceBansTableName("SELECT * FROM %bans%"));
 		selectAllIPBansSql = replacePrimaryCollumns(replaceBansIpTableName("SELECT * FROM %bans_ip%"));
 		selectAllMutesSql = replacePrimaryCollumns(replaceMutesTableName("SELECT * FROM %mutes%"));
 		selectAllWarnsSql = replacePrimaryCollumns(replaceWarnsTableName("SELECT * FROM %warns%"));
-		insertProfileBanSql = replaceCollumns(replaceBansTableName(dateTimeFormatPlaceholder));
+		insertProfileBanSql = replaceCollumns(replaceBansTableName(insertProfileBanSql()));
 		insertIPBanSql = replaceCollumns(insertIPBanSql());
 		insertMuteSql = replaceCollumns(replaceMutesTableName("REPLACE INTO %mutes% (%uuid%, %name%, %source%, %created%, %expiration%, %reason%) VALUES(?, ?, ?, ?, ?, ?)"));
 		insertWarnsSql = replaceWarnsTableName("REPLACE INTO %warns% (uuid, warns_data) VALUES(?, ?)");
@@ -157,12 +157,12 @@ public class MySqlStorage extends SqlStorage {
 		deleteWarnsSql = replaceWarnsTableName("DELETE FROM %warns% WHERE uuid = ?");
 
 		executeSQL(createProfileBansTableSql);
-		if(!plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable()) executeSQL(createIPBansTableSql);
+		if(!plugin.getMainConfig().getPunishment().getDBSettings().isCreateCombinedBansTable()) executeSQL(createIPBansTableSql);
 		executeSQL(createMutesTableSql);
 		executeSQL(createWarnsTableSql);
 		ResultSet results = resultSet(selectAllProfileBansSql);
 		while(!results.isClosed() && results.next()) loadBanProfile(results);
-		if(plugin.getMainConfig().getPunishment().getStorageType() != StorageType.MYSQL || !plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable()) {
+		if(plugin.getMainConfig().getPunishment().getStorageType() != StorageType.MYSQL || !plugin.getMainConfig().getPunishment().getDBSettings().isCreateCombinedBansTable()) {
 			results = resultSet(selectAllIPBansSql);
 			while(!results.isClosed() && results.next()) loadBanIP(results);
 		}
@@ -265,13 +265,13 @@ public class MySqlStorage extends SqlStorage {
 	}
 
 	public void loadBanProfile(ResultSet results) throws SQLException {
-		String uuidString = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getUniqueId());
-		String name = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getName());
+		String uuidString = results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getUniqueId());
+		String name = results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getName());
 		Ban.Builder builder = loadTexts(loadTimes(Ban.builder(), results), results);
-		if(plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable()) {
-			if(results.getBoolean(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIpBan())) try {
+		if(plugin.getMainConfig().getPunishment().getDBSettings().isCreateCombinedBansTable()) {
+			if(results.getBoolean(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getIpBan())) try {
 				Ban.Builder ipBuilder = loadTexts(loadTimes(Ban.builder(), results), results);
-				InetAddress ip = InetAddress.getByName(results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIp()));
+				InetAddress ip = InetAddress.getByName(results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getIp()));
 				ipBuilder = ipBuilder.type(BanTypes.IP).address(ip);
 				if(bansIP.containsKey(ip)) bansIP.remove(ip);
 				IP ban = (IP) ipBuilder.build();
@@ -300,9 +300,9 @@ public class MySqlStorage extends SqlStorage {
 	}
 
 	public void loadBanIP(ResultSet results) throws SQLException {
-		if(plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable()) return;
+		if(plugin.getMainConfig().getPunishment().getDBSettings().isCreateCombinedBansTable()) return;
 		try {
-			InetAddress ip = InetAddress.getByName(results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIp()));
+			InetAddress ip = InetAddress.getByName(results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getIp()));
 			IP.Builder builder = loadTexts(loadTimes(Ban.builder().type(BanTypes.IP).address(ip), results), results);
 			if(bansIP.containsKey(ip)) bansIP.remove(ip);
 			IP ban = (IP) builder.build();
@@ -323,43 +323,43 @@ public class MySqlStorage extends SqlStorage {
 
 	private Ban.Builder loadTimes(Ban.Builder builder, ResultSet results) throws SQLException {
 		if(isUnixTime) {
-			Long creation = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated());
+			Long creation = results.getLong(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getCreated());
 			if(creation != null) builder = builder.startDate(Instant.ofEpochMilli(creation));
-			Long expiration = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration());
+			Long expiration = results.getLong(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getExpiration());
 			if(expiration != null && expiration > 0) builder = builder.expirationDate(Instant.ofEpochMilli(expiration));
 		} else {
-			String creation = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated());
+			String creation = results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getCreated());
 			if(creation != null) builder = builder.startDate(TimeConverter.fromString(creation));
-			String expirationString = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration());
+			String expirationString = results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getExpiration());
 			if(expirationString != null && !expirationString.equals(creation)) builder = builder.expirationDate(TimeConverter.fromString(expirationString));
 		}
 		return builder;
 	}
 
 	private Ban.Builder loadTexts(Ban.Builder builder, ResultSet results) throws SQLException {
-		String source = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getSource());
-		String reason = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getReason());
+		String source = results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getSource());
+		String reason = results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getReason());
 		if(source != null) builder = builder.source(text(source));
 		if(reason != null) builder = builder.reason(text(reason));
 		return builder;
 	}
 
 	public void loadMute(ResultSet results) throws SQLException {
-		UUID uuid = UUID.fromString(results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getUniqueId()));
-		String name = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getName());
-		String source = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getSource());
-		String reason = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getReason());
+		UUID uuid = UUID.fromString(results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getUniqueId()));
+		String name = results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getName());
+		String source = results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getSource());
+		String reason = results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getReason());
 		Mute.Builder builder = Mute.builder().target(uuid, name);
 		if(source != null) builder = builder.source(TextUtils.deserialize(source));
 		if(isUnixTime) {
-			Long creation = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated());
+			Long creation = results.getLong(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getCreated());
 			if(creation != null) builder = builder.created(Instant.ofEpochMilli(creation));
-			Long expiration = results.getLong(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration());
+			Long expiration = results.getLong(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getExpiration());
 			if(expiration != null && expiration > 0) builder = builder.expiration(Instant.ofEpochMilli(expiration));
 		} else {
-			String creation = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated());
+			String creation = results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getCreated());
 			if(creation != null) builder = builder.created(TimeConverter.fromString(creation));
-			String expirationString = results.getString(plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getExpiration());
+			String expirationString = results.getString(plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getExpiration());
 			if(expirationString != null && !expirationString.equals(creation)) builder = builder.expiration(TimeConverter.fromString(expirationString));
 		}
 		if(reason != null) builder = builder.reason(TextUtils.deserialize(reason));
@@ -455,10 +455,10 @@ public class MySqlStorage extends SqlStorage {
 	}
 
 	private void sync() throws SQLException {
-		for(String string : plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().values()) {
+		for(String string : plugin.getMainConfig().getPunishment().getDBSettings().getTables().values()) {
 			if(resultSet("SHOW TABLES LIKE '" + string + "'").next()) executeSQL("ALTER TABLE " + string + " ADD COLUMN IF NOT EXISTS written DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;");
 		}
-		Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(plugin.getMainConfig().getPunishment().getMySqlQueries().getSyncIntervals().getDelete(), TimeUnit.SECONDS).execute(() -> {
+		Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(plugin.getMainConfig().getPunishment().getDBSettings().getSyncIntervals().getDelete(), TimeUnit.SECONDS).execute(() -> {
 			try {
 				checkBans();
 				checkBansIP();
@@ -468,10 +468,10 @@ public class MySqlStorage extends SqlStorage {
 				plugin.getLogger().error(e.getLocalizedMessage());
 			}
 		}).build());
-		Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(plugin.getMainConfig().getPunishment().getMySqlQueries().getSyncIntervals().getFindNew(), TimeUnit.SECONDS).execute(() -> {
+		Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(plugin.getMainConfig().getPunishment().getDBSettings().getSyncIntervals().getFindNew(), TimeUnit.SECONDS).execute(() -> {
 			try {
 				syncBans();
-				if(!plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable()) syncBansIP();
+				if(!plugin.getMainConfig().getPunishment().getDBSettings().isCreateCombinedBansTable()) syncBansIP();
 				syncMutes();
 				syncWarns();
 			} catch (SQLException e) {
@@ -482,47 +482,47 @@ public class MySqlStorage extends SqlStorage {
 
 	private void checkBans() throws SQLException {
 		for(UUID uuid : new ArrayList<>(bans.keySet())) {
-			ResultSet results = resultSetDelete(selectBans + " WHERE " + plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getUniqueId() + " = '" + uuid.toString() + "'");
+			ResultSet results = resultSetDelete(selectBans + uuid.toString() + "'");
 			if(!results.isClosed() && !results.next()) bans.remove(uuid);
 		}
 	}
 
 	private void checkBansIP() throws SQLException {
 		for(InetAddress address : new ArrayList<>(bansIP.keySet())) {
-			ResultSet results = resultSetDelete(selectBansIP + " WHERE " + plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIp() + " = '" + address.getHostAddress() + "'");
+			ResultSet results = resultSetDelete(selectBansIP + address.getHostAddress() + "'");
 			if(!results.isClosed() && !results.next()) bansIP.remove(address);
 		}
 	}
 
 	private void checkMutes() throws SQLException {
 		for(UUID uuid : new ArrayList<>(mutes.keySet())) {
-			ResultSet results = resultSetDelete(selectMutes + " WHERE " + plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getUniqueId() + " = '" + uuid.toString() + "'");
+			ResultSet results = resultSetDelete(selectMutes + uuid.toString() + "'");
 			if(!results.isClosed() && !results.next()) mutes.remove(uuid);
 		}
 	}
 
 	private void checkWarns() throws SQLException {
 		for(UUID uuid : new ArrayList<>(warns.keySet())) {
-			ResultSet results = resultSetDelete(selectWarns + " WHERE " + plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getUniqueId() + " = '" + uuid.toString() + "'");
+			ResultSet results = resultSetDelete(selectWarns + uuid.toString() + "'");
 			if(!results.isClosed() && !results.next()) warns.remove(uuid);
 		}
 	}
 
 	private void syncBans() throws SQLException {
 		if(lastBan == null) {
-			ResultSet getBanLastTime = resultSetSelect(selectBans + " ORDER BY written DESC LIMIT 1;");
+			ResultSet getBanLastTime = resultSetSelect(selectAllProfileBansSql + " ORDER BY written DESC LIMIT 1;");
 			if(getBanLastTime.isClosed() || !getBanLastTime.next()) return;
 			lastBan = getBanLastTime.getString("written");
 			getBanLastTime = null;
 		}
-		ResultSet results = resultSetSelect(bans.isEmpty() || lastBan == null ? selectBans : selectBans + " WHERE written > '" + lastBan + "';");
+		ResultSet results = resultSetSelect(bans.isEmpty() || lastBan == null ? selectAllProfileBansSql : selectAllProfileBansSql + " WHERE written > '" + lastBan + "' ORDER BY written;");
 		boolean update = false;
 		while(!results.isClosed() && results.next()) {
 			update = true;
 			loadBanProfile(results);
 		}
 		if(bans.isEmpty() || !update) return;
-		ResultSet getBanLastTime = resultSetSelect(selectBans + " ORDER BY written DESC LIMIT 1;");
+		ResultSet getBanLastTime = resultSetSelect(selectAllProfileBansSql + " ORDER BY written DESC LIMIT 1;");
 		if(getBanLastTime.isClosed() || !getBanLastTime.next()) return;
 		lastBan = getBanLastTime.getString("written");
 		getBanLastTime = null;
@@ -530,19 +530,20 @@ public class MySqlStorage extends SqlStorage {
 
 	private void syncBansIP() throws SQLException {
 		if(lastBanIP == null) {
-			ResultSet getBanLastTime = resultSetSelect(selectBansIP + " ORDER BY written DESC LIMIT 1;");
+			ResultSet getBanLastTime = resultSetSelect(selectAllIPBansSql + " ORDER BY written DESC LIMIT 1;");
 			if(getBanLastTime.isClosed() || !getBanLastTime.next()) return;
 			lastBanIP = getBanLastTime.getString("written");
 			getBanLastTime = null;
 		}
-		ResultSet results = resultSetSelect(bansIP.isEmpty() || lastBanIP == null ? selectBansIP : selectBansIP + " WHERE written > '" + lastBanIP + "';");
+		plugin.getLogger().warn(selectAllIPBansSql);
+		ResultSet results = resultSetSelect(bansIP.isEmpty() || lastBanIP == null ? selectAllIPBansSql : selectAllIPBansSql + " WHERE written > '" + lastBanIP + "' ORDER BY written;");
 		boolean update = false;
 		while(!results.isClosed() && results.next()) {
 			update = true;
 			loadBanIP(results);
 		}
 		if(bansIP.isEmpty() || !update) return;
-		ResultSet getBanLastTime = resultSetSelect(selectBansIP + " ORDER BY written DESC LIMIT 1;");
+		ResultSet getBanLastTime = resultSetSelect(selectAllIPBansSql + " ORDER BY written DESC LIMIT 1;");
 		if(getBanLastTime.isClosed() || !getBanLastTime.next()) return;
 		lastBanIP = getBanLastTime.getString("written");
 		getBanLastTime = null;
@@ -550,19 +551,19 @@ public class MySqlStorage extends SqlStorage {
 
 	private void syncMutes() throws SQLException {
 		if(lastMute == null) {
-			ResultSet getMuteLastTime = resultSetSelect(selectMutes + " ORDER BY written DESC LIMIT 1;");
+			ResultSet getMuteLastTime = resultSetSelect(selectAllMutesSql + " ORDER BY written DESC LIMIT 1;");
 			if(getMuteLastTime.isClosed() || !getMuteLastTime.next()) return;
 			lastMute = getMuteLastTime.getString("written");
 			getMuteLastTime = null;
 		}
-		ResultSet results = resultSetSelect(mutes.isEmpty() || lastMute == null ? selectMutes : selectMutes + " WHERE written > '" + lastMute + "';");
+		ResultSet results = resultSetSelect(mutes.isEmpty() || lastMute == null ? selectAllMutesSql : selectAllMutesSql + " WHERE written > '" + lastMute + "' ORDER BY written;");
 		boolean update = false;
 		while(!results.isClosed() && results.next()) {
 			update = true;
 			loadMute(results);
 		}
 		if(mutes.isEmpty() || !update) return;
-		ResultSet getMuteLastTime = resultSetSelect(selectMutes + " ORDER BY written DESC LIMIT 1;");
+		ResultSet getMuteLastTime = resultSetSelect(selectAllMutesSql + " ORDER BY written DESC LIMIT 1;");
 		if(getMuteLastTime.isClosed() || !getMuteLastTime.next()) return;
 		lastMute = getMuteLastTime.getString("written");
 		getMuteLastTime = null;
@@ -570,19 +571,19 @@ public class MySqlStorage extends SqlStorage {
 
 	private void syncWarns() throws SQLException {
 		if(lastWarns == null) {
-			ResultSet getWarnsLastTime = resultSetSelect(selectWarns + " ORDER BY written DESC LIMIT 1;");
+			ResultSet getWarnsLastTime = resultSetSelect(selectAllWarnsSql + " ORDER BY written DESC LIMIT 1;");
 			if(getWarnsLastTime.isClosed() || !getWarnsLastTime.next()) return;
 			lastWarns = getWarnsLastTime.getString("written");
 			getWarnsLastTime = null;
 		}
-		ResultSet results = resultSetSelect(warns.isEmpty() || lastWarns == null ? selectWarns : selectWarns + " WHERE written > '" + lastWarns + "';");
+		ResultSet results = resultSetSelect(warns.isEmpty() || lastWarns == null ? selectAllWarnsSql : selectAllWarnsSql + " WHERE written > '" + lastWarns + "' ORDER BY written;");
 		boolean update = false;
 		while(!results.isClosed() && results.next()) {
 			update = true;
 			loadWarns(results);
 		}
 		if(warns.isEmpty() || !update) return;
-		ResultSet getBanLastTime = resultSetSelect(selectWarns + " ORDER BY written DESC LIMIT 1;");
+		ResultSet getBanLastTime = resultSetSelect(selectAllWarnsSql + " ORDER BY written DESC LIMIT 1;");
 		if(getBanLastTime.isClosed() || !getBanLastTime.next()) return;
 		lastWarns = getBanLastTime.getString("written");
 		getBanLastTime = null;
@@ -641,35 +642,35 @@ public class MySqlStorage extends SqlStorage {
 	}
 
 	private String replaceBansTableName(String banQuery) {
-		return banQuery.replaceFirst("%bans%", plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().getBans());
+		return banQuery.replaceFirst("%bans%", plugin.getMainConfig().getPunishment().getDBSettings().getTables().getBans());
 	}
 
 	private String replaceBansIpTableName(String banQuery) {
-		return banQuery.replaceFirst("%bans_ip%", plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().getIpbans());
+		return banQuery.replaceFirst("%bans_ip%", isCombined ? plugin.getMainConfig().getPunishment().getDBSettings().getTables().getBans() : plugin.getMainConfig().getPunishment().getDBSettings().getTables().getIpbans());
 	}
 
 	private String replaceMutesTableName(String banQuery) {
-		return banQuery.replaceFirst("%mutes%", plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().getMutes());
+		return banQuery.replaceFirst("%mutes%", plugin.getMainConfig().getPunishment().getDBSettings().getTables().getMutes());
 	}
 
 	private String replaceWarnsTableName(String banQuery) {
-		return banQuery.replaceFirst("%warns%", plugin.getMainConfig().getPunishment().getMySqlQueries().getTables().getWarns());
+		return banQuery.replaceFirst("%warns%", plugin.getMainConfig().getPunishment().getDBSettings().getTables().getWarns());
 	}
 
 	private String replacePrimaryCollumns(String query) {
-		return query.replaceFirst("%id%", plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getId())
-				.replaceFirst("%uuid%", plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getUniqueId())
-				.replaceFirst("%ip%", plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIp());
+		return query.replace("%id%", plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getId())
+				.replace("%uuid%", plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getUniqueId())
+				.replace("%ip%", plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getIp());
 	}
 
 	private String replaceCollumns(String query) {
 		return replacePrimaryCollumns(query)
-				.replaceFirst("%name%", plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getName())
-				.replaceFirst("%source%", plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getSource())
-				.replaceFirst("%created%", plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getCreated())
-				.replaceFirst("%expiration%", plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getId())
-				.replaceFirst("%reason%", plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getReason())
-				.replaceFirst("%ipban%", plugin.getMainConfig().getPunishment().getMySqlQueries().getColumns().getIpBan());
+				.replaceFirst("%name%", plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getName())
+				.replaceFirst("%source%", plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getSource())
+				.replaceFirst("%created%", plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getCreated())
+				.replaceFirst("%expiration%", plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getExpiration())
+				.replaceFirst("%reason%", plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getReason())
+				.replaceFirst("%ipban%", plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getIpBan());
 	}
 
 }

@@ -8,7 +8,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
@@ -73,7 +72,7 @@ public interface RawArgument<T> extends DataSerializable {
 	/**
 	 * Retrieves an object from the command's argument string without converting it to a specific type.
 	 */
-	Optional<?> getResultUnknownType(String[] args) throws CommandException;
+	Optional<?> getResultUnknownType(String[] args);
 
 	/**
 	 * Whether the argument is optional.

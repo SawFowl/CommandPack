@@ -32,11 +32,13 @@ public abstract class AbstractEconomyStorage extends Thread {
 	Map<String, Account> accounts = new HashMap<String, Account>();
 	ConfigurationOptions options;
 	Map<Currency, BigDecimal> defaultBalances;
+	private Map<Character, Currency> currenciesMap;
 	public AbstractEconomyStorage(CommandPack plugin, EconomyServiceImpl economyService) {
 		this.plugin = plugin;
 		this.economyService = economyService;
 		options = plugin.getLocales().getLocaleService().getConfigurationOptions();
 		defaultBalances = createDefaultBalances();
+		currenciesMap = economyService.getCurrenciesMap();
 		try {
 			load();
 		} catch (ConfigurateException e) {
@@ -120,6 +122,10 @@ public abstract class AbstractEconomyStorage extends Thread {
 		uniqueAccounts.put(player.uniqueId(), account);
 		removeAccount(player.name());
 		account.save();
+	}
+
+	public Map<Character, Currency> getCurrenciesMap() {
+		return currenciesMap;
 	}
 
 }

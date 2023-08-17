@@ -92,7 +92,7 @@ public class H2Storage extends SqlStorage {
 		executeSQL(createWarnsTableSql);
 		ResultSet results = resultSet(selectAllProfileBansSql);
 		while(!results.isClosed() && results.next()) loadBanProfile(results);
-		if(plugin.getMainConfig().getPunishment().getStorageType() != StorageType.MYSQL || !plugin.getMainConfig().getPunishment().getMySqlQueries().isCreateCombinedBansTable()) {
+		if(plugin.getMainConfig().getPunishment().getStorageType() != StorageType.MYSQL || !plugin.getMainConfig().getPunishment().getDBSettings().isCreateCombinedBansTable()) {
 			results = resultSet(selectAllIPBansSql);
 			while(!results.isClosed() && results.next()) loadBanIP(results);
 		}

@@ -215,6 +215,8 @@ public class CommandsConfig {
 	private CommandSettings balance = new CommandSettings(new String[] {"money"});
 	@Setting("HideBalance")
 	private CommandSettings hideBalance = new CommandSettings();
+	@Setting("SetBalance")
+	private CommandSettings setBalance = new CommandSettings(new String[] {"setmoney"});
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

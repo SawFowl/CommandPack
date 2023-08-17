@@ -108,9 +108,11 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	default String[] checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
+		Optional<RawArgument<?>> emptyArg = getArguments().values().stream().filter(arg -> !arg.getResultUnknownType(args).isPresent() && (!arg.isOptional() || !isPlayer && !arg.isOptionalForConsole())).findFirst();
+		if(emptyArg.isPresent()) exception(getText(locale, emptyArg.get().getLocalesPath()).append(Component.newline()).append(usage(cause)));
 		if(args.length != 0) {
 			int i = 0;
-			while(i < args.length - 1) {
+			for(@SuppressWarnings("unused") String arg : args) {
 				if(getArguments().get(i).getResultUnknownType(args).isPresent() && !getArguments().get(i).hasPermission(cause)) return Arrays.copyOfRange(args, 0, i);
 				i++;
 			}

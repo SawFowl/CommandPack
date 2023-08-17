@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -30,7 +31,7 @@ import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 import sawfowl.commandpack.configure.configs.economy.SerializedUniqueAccount;
 import sawfowl.localeapi.api.TextUtils;
 
-public class CPUniqueAccount implements UniqueAccount {
+public class CPUniqueAccount extends CPAccount implements UniqueAccount {
 
 	private UUID userId;
 	private String displayName = "n/a";
@@ -85,6 +86,16 @@ public class CPUniqueAccount implements UniqueAccount {
 	}
 
 	@Override
+	public UUID uniqueId() {
+		return userId;
+	}
+
+	@Override
+	public String identifier() {
+		return displayName;
+	}
+
+	@Override
 	public Component displayName() {
 		return text(displayName);
 	}
@@ -127,10 +138,13 @@ public class CPUniqueAccount implements UniqueAccount {
 	@Override
 	public TransactionResult setBalance(Currency currency, BigDecimal amount, Set<Context> contexts) {
 		TransactionType type = TransactionTypes.DEPOSIT.get();
+		if(amount.doubleValue() < 0) amount = BigDecimal.ZERO;
+		BigDecimal finalAmount = amount;
 		if(balances.containsKey(currency)) {
 			if(balances.get(currency).doubleValue() > amount.doubleValue()) type = TransactionTypes.WITHDRAW.get();
-			balances.replace(currency, amount);
-		} balances.put(currency, amount);
+			balances.remove(currency);
+		} 
+		balances.put(currency, amount);
 		TransactionType finalType = type;
 		save();
 		return new TransactionResult() {
@@ -157,7 +171,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public BigDecimal amount() {
-				return amount;
+				return finalAmount;
 			}
 			
 			@Override
@@ -170,10 +184,13 @@ public class CPUniqueAccount implements UniqueAccount {
 	@Override
 	public TransactionResult setBalance(Currency currency, BigDecimal amount, Cause cause) {
 		TransactionType type = TransactionTypes.DEPOSIT.get();
+		if(amount.doubleValue() < 0) amount = BigDecimal.ZERO;
+		BigDecimal finalAmount = amount;
 		if(balances.containsKey(currency)) {
 			if(balances.get(currency).doubleValue() > amount.doubleValue()) type = TransactionTypes.WITHDRAW.get();
-			balances.replace(currency, amount);
-		} balances.put(currency, amount);
+			balances.remove(currency);
+		}
+		balances.put(currency, amount);
 		TransactionType finalType = type;
 		save();
 		return new TransactionResult() {
@@ -200,7 +217,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public BigDecimal amount() {
-				return amount;
+				return finalAmount;
 			}
 			
 			@Override
@@ -219,7 +236,8 @@ public class CPUniqueAccount implements UniqueAccount {
 			if(optCurrency.isPresent()) {
 				TransactionType type = balances.get(optCurrency.get()).doubleValue() < cur.getStartingBalance() ? TransactionTypes.DEPOSIT.get() : TransactionTypes.WITHDRAW.get();
 				BigDecimal amount = BigDecimal.valueOf(cur.getStartingBalance());
-				balances.replace(optCurrency.get(), amount);
+				balances.remove(optCurrency.get());
+				balances.put(optCurrency.get(), amount);
 				transacrions.put(optCurrency.get(), new TransactionResult() {
 					
 					@Override
@@ -268,7 +286,8 @@ public class CPUniqueAccount implements UniqueAccount {
 			if(optCurrency.isPresent()) {
 				TransactionType type = balances.get(optCurrency.get()).doubleValue() < cur.getStartingBalance() ? TransactionTypes.DEPOSIT.get() : TransactionTypes.WITHDRAW.get();
 				BigDecimal amount = BigDecimal.valueOf(cur.getStartingBalance());
-				balances.replace(optCurrency.get(), amount);
+				balances.remove(optCurrency.get());
+				balances.put(optCurrency.get(), amount);
 				transacrions.put(optCurrency.get(), new TransactionResult() {
 					
 					@Override
@@ -314,6 +333,7 @@ public class CPUniqueAccount implements UniqueAccount {
 		boolean contains = balances.containsKey(currency);
 		if(!optConfig.isPresent() && contains) {
 			balances.remove(currency);
+			balances.put(currency, BigDecimal.valueOf(optConfig.map(config -> config.getStartingBalance()).orElse(0d)));
 			save();
 			return new TransactionResult() {
 				
@@ -352,8 +372,9 @@ public class CPUniqueAccount implements UniqueAccount {
 		TransactionType type = (!contains || balances.get(currency).doubleValue() < config.getStartingBalance() ? TransactionTypes.DEPOSIT : TransactionTypes.WITHDRAW).get();
 		BigDecimal amount = BigDecimal.valueOf(config.getStartingBalance());
 		if(contains) {
-			balances.replace(currency, amount);
-		} else balances.put(currency, amount);
+			balances.remove(currency);
+		} 
+		balances.put(currency, amount);
 		save();
 		return new TransactionResult() {
 			
@@ -395,6 +416,7 @@ public class CPUniqueAccount implements UniqueAccount {
 		boolean contains = balances.containsKey(currency);
 		if(!optConfig.isPresent() && contains) {
 			balances.remove(currency);
+			balances.put(currency, BigDecimal.valueOf(optConfig.map(config -> config.getStartingBalance()).orElse(0d)));
 			save();
 			return new TransactionResult() {
 				
@@ -433,8 +455,9 @@ public class CPUniqueAccount implements UniqueAccount {
 		TransactionType type = (!contains || balances.get(currency).doubleValue() < config.getStartingBalance() ? TransactionTypes.DEPOSIT : TransactionTypes.WITHDRAW).get();
 		BigDecimal amount = BigDecimal.valueOf(config.getStartingBalance());
 		if(contains) {
-			balances.replace(currency, amount);
-		} else balances.put(currency, amount);
+			balances.remove(currency, amount);
+		}
+		balances.put(currency, amount);
 		save();
 		return new TransactionResult() {
 			
@@ -476,8 +499,10 @@ public class CPUniqueAccount implements UniqueAccount {
 		if(balances.containsKey(currency)) {
 			if(amount.doubleValue() < 0) type = TransactionTypes.WITHDRAW.get();
 			amount = balances.get(currency).add(amount);
-			balances.replace(currency, amount);
-		} balances.put(currency, amount);
+			balances.remove(currency);
+		}
+		balances.put(currency, amount);
+		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		TransactionType finalType = type;
 		BigDecimal finalAmount = amount;
 		save();
@@ -521,8 +546,10 @@ public class CPUniqueAccount implements UniqueAccount {
 		if(balances.containsKey(currency)) {
 			if(amount.doubleValue() < 0) type = TransactionTypes.WITHDRAW.get();
 			amount = balances.get(currency).add(amount);
-			balances.replace(currency, amount);
-		} balances.put(currency, amount);
+			balances.remove(currency);
+		}
+		balances.put(currency, amount);
+		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		TransactionType finalType = type;
 		BigDecimal finalAmount = amount;
 		save();
@@ -566,8 +593,10 @@ public class CPUniqueAccount implements UniqueAccount {
 		if(balances.containsKey(currency)) {
 			if(amount.doubleValue() < 0) type = TransactionTypes.DEPOSIT.get();
 			amount = balances.get(currency).subtract(amount);
-			balances.replace(currency, amount);
-		} balances.put(currency, amount);
+			balances.remove(currency);
+		}
+		balances.put(currency, amount);
+		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		TransactionType finalType = type;
 		BigDecimal finalAmount = amount;
 		save();
@@ -611,8 +640,10 @@ public class CPUniqueAccount implements UniqueAccount {
 		if(balances.containsKey(currency)) {
 			if(amount.doubleValue() < 0) type = TransactionTypes.DEPOSIT.get();
 			amount = balances.get(currency).subtract(amount);
-			balances.replace(currency, amount);
-		} balances.put(currency, amount);
+			balances.remove(currency);
+		}
+		balances.put(currency, amount);
+		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		TransactionType finalType = type;
 		BigDecimal finalAmount = amount;
 		save();
@@ -661,7 +692,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public ResultType result() {
-				return ResultType.FAILED;
+				return ResultType.ACCOUNT_NO_FUNDS;
 			}
 			
 			@Override
@@ -689,7 +720,9 @@ public class CPUniqueAccount implements UniqueAccount {
 				return to;
 			}
 		};
-		balances.replace(currency, balances.get(currency).subtract(amount));
+		BigDecimal newValue = balances.get(currency).subtract(amount);
+		balances.remove(currency);
+		balances.put(currency, newValue);
 		to.deposit(currency, amount);
 		save();
 		return new TransferResult() {
@@ -742,7 +775,7 @@ public class CPUniqueAccount implements UniqueAccount {
 			
 			@Override
 			public ResultType result() {
-				return ResultType.FAILED;
+				return ResultType.ACCOUNT_NO_FUNDS;
 			}
 			
 			@Override
@@ -770,7 +803,9 @@ public class CPUniqueAccount implements UniqueAccount {
 				return to;
 			}
 		};
-		balances.replace(currency, balances.get(currency).subtract(amount));
+		BigDecimal newValue = balances.get(currency).subtract(amount);
+		balances.remove(currency);
+		balances.put(currency, newValue);
 		to.deposit(currency, amount);
 		save();
 		return new TransferResult() {
@@ -812,16 +847,6 @@ public class CPUniqueAccount implements UniqueAccount {
 		};
 	}
 
-	@Override
-	public String identifier() {
-		return displayName;
-	}
-
-	@Override
-	public UUID uniqueId() {
-		return userId;
-	}
-
 	private Component text(String string) {
 		if(isLegacyDecor(string)) {
 			return TextUtils.deserializeLegacy(string);
@@ -855,6 +880,18 @@ public class CPUniqueAccount implements UniqueAccount {
 	@Override
 	public String toString() {
 		return "CPUniqueAccount [userId=" + userId + ", displayName=" + displayName + ", balances=" + balances + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(userId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+		return Objects.equals(userId, ((CPUniqueAccount) obj).userId);
 	}
 
 }

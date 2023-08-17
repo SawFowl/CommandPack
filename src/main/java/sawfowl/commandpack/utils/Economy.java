@@ -32,11 +32,11 @@ public class Economy {
 
 	public Economy(CommandPack plugin) {
 		this.plugin = plugin;
-		economyService = Sponge.server().serviceProvider().economyService().orElse(null);
+		if(plugin.getMainConfig().getEconomy().isEnable()) economyServiceImpl = new EconomyServiceImpl(plugin);
+		economyService = Sponge.server().serviceProvider().economyService().orElse(economyServiceImpl);
 	}
 
 	public void createEconomy(ProvideServiceEvent<EconomyService> event) {
-		economyService = economyServiceImpl = new EconomyServiceImpl(plugin);
 		event.suggest(() -> economyService);
 	}
 
@@ -45,7 +45,14 @@ public class Economy {
 	}
 
 	public BigDecimal getPlayerBalance(UUID uuid, Currency currency) {
-		return economyService.findOrCreateAccount(uuid).map(account -> account.balance(currency)).orElse(BigDecimal.ZERO);
+		try {
+			Optional<UniqueAccount> uOpt = economyService.findOrCreateAccount(uuid);
+			if (uOpt.isPresent()) {
+				return uOpt.get().balance(currency).setScale(2);
+			}
+		} catch (Exception ignored) {
+		}
+		return BigDecimal.ZERO;
 	}
 
 	public boolean isPresent() {

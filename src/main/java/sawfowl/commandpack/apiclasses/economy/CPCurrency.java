@@ -2,11 +2,12 @@ package sawfowl.commandpack.apiclasses.economy;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 
 import org.spongepowered.api.service.economy.Currency;
-import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 
@@ -22,7 +23,6 @@ public class CPCurrency implements Currency {
 		setPluralName();
 	}
 
-	@Setting("Symbol")
 	private char symbol;
 
 	@Override
@@ -61,6 +61,18 @@ public class CPCurrency implements Currency {
 
 	private Component setPluralName() {
 		return pluralName = config.getCurrency(symbol).map(c -> c.pluralDisplayName()).orElse(symbol());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(symbol);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+		return symbol == ((CPCurrency) obj).symbol;
 	}
 
 }

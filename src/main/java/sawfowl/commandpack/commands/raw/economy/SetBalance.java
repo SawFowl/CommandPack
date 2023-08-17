@@ -38,7 +38,7 @@ public class SetBalance extends AbstractRawCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		Optional<String> accountName = getString(args, 0);
 		BigDecimal newValue = getBigDecimal(args, 1).get();
-		Currency currency = getCurrency(args, 0).get();
+		Currency currency = getCurrency(args, 0).orElse(plugin.getEconomy().getEconomyService().defaultCurrency());
 		if(accountName.isPresent()) {
 			Optional<UniqueAccount> account = plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(a -> a.identifier().equals(accountName.get())).findFirst();
 			if(account.isPresent()) {
@@ -73,7 +73,7 @@ public class SetBalance extends AbstractRawCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return null;
+		return text("&c/setbalance <User> <Amount> [Currency]");
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
@@ -42,7 +41,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	}
 
 	@Override
-	public Optional<?> getResultUnknownType(String[] args) throws CommandException {
+	public Optional<?> getResultUnknownType(String[] args) {
 		return result == null ? Optional.empty() : result.get(args);
 	}
 

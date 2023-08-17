@@ -25,9 +25,9 @@ public class Punishment {
 	private Announce announce = new Announce();
 	@Setting("WarnsBefore")
 	private WarnsBefore warnsBefore = new WarnsBefore();
-	@Setting("MySqlQueries")
+	@Setting("DBSettings")
 	@Comment("Configuring queries to work with the MySQL database.\nChanging the settings can help in creating compatibility with other plugins.\nDo not remove the `written` column from queries. It is used for automatic data synchronization.")
-	private Queries mySqlQueries = new Queries();
+	private DBSettings dbSettings = new DBSettings();
 	@Setting("DateTimeFormat")
 	@Comment("Don't change unnecessarily.")
 	private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
@@ -51,8 +51,8 @@ public class Punishment {
 		return warnsBefore;
 	}
 
-	public Queries getMySqlQueries() {
-		return mySqlQueries;
+	public DBSettings getDBSettings() {
+		return dbSettings;
 	}
 
 	public DateFormat createDateTimeFormat() {

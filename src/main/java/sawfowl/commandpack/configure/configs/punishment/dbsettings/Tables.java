@@ -1,4 +1,4 @@
-package sawfowl.commandpack.configure.configs.punishment.queries;
+package sawfowl.commandpack.configure.configs.punishment.dbsettings;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;

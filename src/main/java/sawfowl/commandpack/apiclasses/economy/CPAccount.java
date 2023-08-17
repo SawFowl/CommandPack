@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,8 +29,8 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class CPAccount implements Account, VirtualAccount {
 
-	private String identifier;
-	private Map<Currency, BigDecimal> balances;
+	String identifier = "n/a";
+	Map<Currency, BigDecimal> balances;
 	private EconomyConfig config = CommandPack.getInstance().getMainConfig().getEconomy();
 	private AbstractEconomyStorage storage;
 	public CPAccount(){}
@@ -51,7 +52,7 @@ public class CPAccount implements Account, VirtualAccount {
 	public static CPAccount deserealize(SerializedAccount serializedAccount, AbstractEconomyStorage storage) {
 		CPAccount account = new CPAccount();
 		account.identifier = serializedAccount.getName();
-		account.balances = serializedAccount.getBalances(storage.getEconomyService().getCurrenciesMap());
+		account.balances = serializedAccount.getBalances(storage.getCurrenciesMap());
 		account.storage = storage;
 		return account;
 	}
@@ -108,8 +109,9 @@ public class CPAccount implements Account, VirtualAccount {
 		BigDecimal finalAmount = amount;
 		if(balances.containsKey(currency)) {
 			if(balances.get(currency).doubleValue() > amount.doubleValue()) type = TransactionTypes.WITHDRAW.get();
-			balances.replace(currency, amount);
-		} balances.put(currency, amount);
+			balances.remove(currency);
+		} 
+		balances.put(currency, amount);
 		TransactionType finalType = type;
 		save();
 		return new TransactionResult() {
@@ -153,8 +155,9 @@ public class CPAccount implements Account, VirtualAccount {
 		BigDecimal finalAmount = amount;
 		if(balances.containsKey(currency)) {
 			if(balances.get(currency).doubleValue() > amount.doubleValue()) type = TransactionTypes.WITHDRAW.get();
-			balances.replace(currency, amount);
-		} balances.put(currency, amount);
+			balances.remove(currency);
+		} 
+		balances.put(currency, amount);
 		TransactionType finalType = type;
 		save();
 		return new TransactionResult() {
@@ -200,7 +203,8 @@ public class CPAccount implements Account, VirtualAccount {
 			if(optCurrency.isPresent()) {
 				TransactionType type = balances.get(optCurrency.get()).doubleValue() < cur.getStartingBalance() ? TransactionTypes.DEPOSIT.get() : TransactionTypes.WITHDRAW.get();
 				BigDecimal amount = BigDecimal.valueOf(cur.getStartingBalance());
-				balances.replace(optCurrency.get(), amount);
+				balances.remove(optCurrency.get());
+				balances.put(optCurrency.get(), amount);
 				transacrions.put(optCurrency.get(), new TransactionResult() {
 					
 					@Override
@@ -249,7 +253,8 @@ public class CPAccount implements Account, VirtualAccount {
 			if(optCurrency.isPresent()) {
 				TransactionType type = balances.get(optCurrency.get()).doubleValue() < cur.getStartingBalance() ? TransactionTypes.DEPOSIT.get() : TransactionTypes.WITHDRAW.get();
 				BigDecimal amount = BigDecimal.valueOf(cur.getStartingBalance());
-				balances.replace(optCurrency.get(), amount);
+				balances.remove(optCurrency.get());
+				balances.put(optCurrency.get(), amount);
 				transacrions.put(optCurrency.get(), new TransactionResult() {
 					
 					@Override
@@ -295,6 +300,7 @@ public class CPAccount implements Account, VirtualAccount {
 		boolean contains = balances.containsKey(currency);
 		if(!optConfig.isPresent() && contains) {
 			balances.remove(currency);
+			balances.put(currency, BigDecimal.valueOf(optConfig.map(config -> config.getStartingBalance()).orElse(0d)));
 			save();
 			return new TransactionResult() {
 				
@@ -333,8 +339,9 @@ public class CPAccount implements Account, VirtualAccount {
 		TransactionType type = (!contains || balances.get(currency).doubleValue() < config.getStartingBalance() ? TransactionTypes.DEPOSIT : TransactionTypes.WITHDRAW).get();
 		BigDecimal amount = BigDecimal.valueOf(config.getStartingBalance());
 		if(contains) {
-			balances.replace(currency, amount);
-		} else balances.put(currency, amount);
+			balances.remove(currency);
+		} 
+		balances.put(currency, amount);
 		save();
 		return new TransactionResult() {
 			
@@ -376,6 +383,7 @@ public class CPAccount implements Account, VirtualAccount {
 		boolean contains = balances.containsKey(currency);
 		if(!optConfig.isPresent() && contains) {
 			balances.remove(currency);
+			balances.put(currency, BigDecimal.valueOf(optConfig.map(config -> config.getStartingBalance()).orElse(0d)));
 			save();
 			return new TransactionResult() {
 				
@@ -414,8 +422,9 @@ public class CPAccount implements Account, VirtualAccount {
 		TransactionType type = (!contains || balances.get(currency).doubleValue() < config.getStartingBalance() ? TransactionTypes.DEPOSIT : TransactionTypes.WITHDRAW).get();
 		BigDecimal amount = BigDecimal.valueOf(config.getStartingBalance());
 		if(contains) {
-			balances.replace(currency, amount);
-		} else balances.put(currency, amount);
+			balances.remove(currency, amount);
+		}
+		balances.put(currency, amount);
 		save();
 		return new TransactionResult() {
 			
@@ -457,8 +466,9 @@ public class CPAccount implements Account, VirtualAccount {
 		if(balances.containsKey(currency)) {
 			if(amount.doubleValue() < 0) type = TransactionTypes.WITHDRAW.get();
 			amount = balances.get(currency).add(amount);
-			balances.replace(currency, amount);
-		} balances.put(currency, amount);
+			balances.remove(currency);
+		}
+		balances.put(currency, amount);
 		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		TransactionType finalType = type;
 		BigDecimal finalAmount = amount;
@@ -503,8 +513,9 @@ public class CPAccount implements Account, VirtualAccount {
 		if(balances.containsKey(currency)) {
 			if(amount.doubleValue() < 0) type = TransactionTypes.WITHDRAW.get();
 			amount = balances.get(currency).add(amount);
-			balances.replace(currency, amount);
-		} balances.put(currency, amount);
+			balances.remove(currency);
+		}
+		balances.put(currency, amount);
 		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		TransactionType finalType = type;
 		BigDecimal finalAmount = amount;
@@ -549,8 +560,9 @@ public class CPAccount implements Account, VirtualAccount {
 		if(balances.containsKey(currency)) {
 			if(amount.doubleValue() < 0) type = TransactionTypes.DEPOSIT.get();
 			amount = balances.get(currency).subtract(amount);
-			balances.replace(currency, amount);
-		} balances.put(currency, amount);
+			balances.remove(currency);
+		}
+		balances.put(currency, amount);
 		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		TransactionType finalType = type;
 		BigDecimal finalAmount = amount;
@@ -595,8 +607,9 @@ public class CPAccount implements Account, VirtualAccount {
 		if(balances.containsKey(currency)) {
 			if(amount.doubleValue() < 0) type = TransactionTypes.DEPOSIT.get();
 			amount = balances.get(currency).subtract(amount);
-			balances.replace(currency, amount);
-		} balances.put(currency, amount);
+			balances.remove(currency);
+		}
+		balances.put(currency, amount);
 		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		TransactionType finalType = type;
 		BigDecimal finalAmount = amount;
@@ -674,7 +687,9 @@ public class CPAccount implements Account, VirtualAccount {
 				return to;
 			}
 		};
-		balances.replace(currency, balances.get(currency).subtract(amount));
+		BigDecimal newValue = balances.get(currency).subtract(amount);
+		balances.remove(currency);
+		balances.put(currency, newValue);
 		to.deposit(currency, amount);
 		save();
 		return new TransferResult() {
@@ -755,7 +770,9 @@ public class CPAccount implements Account, VirtualAccount {
 				return to;
 			}
 		};
-		balances.replace(currency, balances.get(currency).subtract(amount));
+		BigDecimal newValue = balances.get(currency).subtract(amount);
+		balances.remove(currency);
+		balances.put(currency, newValue);
 		to.deposit(currency, amount);
 		save();
 		return new TransferResult() {
@@ -824,5 +841,22 @@ public class CPAccount implements Account, VirtualAccount {
 	public void save() {
 		if(storage != null) storage.saveAccount(this);
 	}
+
+	@Override
+	public String toString() {
+		return "CPAccount [identifier=" + identifier + ", balances=" + balances + "]";
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(identifier);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+		return Objects.equals(identifier, ((CPAccount) obj).identifier);
+	}
+
+	
 
 }
