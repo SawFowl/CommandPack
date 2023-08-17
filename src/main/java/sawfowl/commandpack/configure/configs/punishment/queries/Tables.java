@@ -33,4 +33,8 @@ public class Tables {
 		return warns;
 	}
 
+	public String[] values() {
+		return new String[] {bans, ipbans, mutes, warns};
+	}
+
 }
