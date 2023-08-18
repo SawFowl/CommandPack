@@ -459,5 +459,6 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_HIDE_BALANCE_OTHER_OPEN = {PATH_COMMANDS, COMMAND_HIDE_BALANCE, "Other", "Open"};
 	public static final Object[] COMMANDS_SET_BALANCE_SUCCESS_USER = {PATH_COMMANDS, COMMAND_SET_BALANCE, "Success", "User"};
 	public static final Object[] COMMANDS_SET_BALANCE_SUCCESS_CREATE = {PATH_COMMANDS, COMMAND_SET_BALANCE, "Success", "Create"};
+	public static final Object[] COMMANDS_SET_BALANCE_SUCCESS_TARGET = {PATH_COMMANDS, COMMAND_SET_BALANCE, "Success", "Target"};
 
 }

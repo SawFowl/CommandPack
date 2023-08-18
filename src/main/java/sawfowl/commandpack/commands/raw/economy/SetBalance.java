@@ -47,11 +47,17 @@ public class SetBalance extends AbstractRawCommand {
 			if(account.isPresent()) {
 				account.get().setBalance(currency, newValue);
 				audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {account.get().displayName(), currency.displayName(), text(newValue.doubleValue())}));
+				Sponge.server().player(account.get().uniqueId()).ifPresent(player -> {
+					player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_TARGET), new String[] {Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {currency.displayName(), text(newValue.doubleValue())}));
+				});
 			} else {
-				Sponge.server().userManager().load(accountName.get()).thenAcceptAsync(optUser -> {
+				Sponge.server().userManager().load(accountName.get()).thenAccept(optUser -> {
 					if(optUser.isPresent()) {
 						plugin.getEconomy().getEconomyService().findOrCreateAccount(optUser.get().uniqueId()).get().setBalance(currency, newValue);
 						audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {text(optUser.get().name()), currency.displayName(), text(newValue.doubleValue())}));
+						optUser.get().player().ifPresent(player -> {
+							player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_TARGET), new String[] {Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {currency.displayName(), text(newValue.doubleValue())}));
+						});
 					} else {
 						plugin.getEconomy().getEconomyService().findOrCreateAccount(accountName.get()).get().setBalance(currency, newValue);
 						audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_CREATE), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {text(accountName.get()), currency.displayName(), text(newValue.doubleValue())}));

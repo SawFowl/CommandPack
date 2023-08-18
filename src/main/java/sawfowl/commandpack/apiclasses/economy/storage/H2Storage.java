@@ -115,7 +115,7 @@ public class H2Storage extends SqlStorage {
 		StringWriter sink = new StringWriter();
 		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(options).sink(() -> new BufferedWriter(sink)).build();
 		ConfigurationNode node = loader.createNode();
-		node.node("Content").set(CPAccount.class, new SerializedAccount(account));
+		node.node("Content").set(SerializedAccount.class, new SerializedAccount(account));
 		loader.save(node);
 		return sink.toString();
 	}

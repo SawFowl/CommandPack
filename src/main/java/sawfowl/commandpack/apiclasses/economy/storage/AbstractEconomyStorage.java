@@ -56,12 +56,16 @@ public abstract class AbstractEconomyStorage extends Thread {
 
 	public abstract void saveAccount(CPAccount account);
 
-	public  UniqueAccount createUniqueAccount(UUID uuid) {
-		return uniqueAccounts.put(uuid, new CPUniqueAccount(uuid, defaultBalances, this));
+	public UniqueAccount createUniqueAccount(UUID uuid) {
+		CPUniqueAccount account = new CPUniqueAccount(uuid, defaultBalances, this);
+		uniqueAccounts.put(uuid, account);
+		return account;
 	}
 
 	public Account createAccount(String identifier) {
-		return accounts.put(identifier, new CPAccount(identifier, defaultBalances, this));
+		CPAccount account = new CPAccount(identifier, defaultBalances, this);
+		accounts.put(identifier, account);
+		return account;
 	}
 
 	public EconomyServiceImpl getEconomyService() {

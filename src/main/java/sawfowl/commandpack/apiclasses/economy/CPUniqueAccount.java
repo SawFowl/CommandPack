@@ -23,6 +23,7 @@ public class CPUniqueAccount extends CPAccount implements UniqueAccount {
 	private UUID userId;
 	private CPUniqueAccount(){}
 	public CPUniqueAccount(UUID userId, Map<Currency, BigDecimal> balances, AbstractEconomyStorage storage) {
+		super();
 		this.userId = userId;
 		super.balances = balances.entrySet().stream().filter(entry -> entry.getKey() instanceof CPCurrency).collect(Collectors.toMap(entry -> (CPCurrency) entry.getKey(), entry -> entry.getValue()));
 		super.storage = storage;
