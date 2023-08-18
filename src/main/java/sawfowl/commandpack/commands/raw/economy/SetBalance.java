@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
@@ -25,7 +26,9 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
+import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.TextUtils;
 
 public class SetBalance extends AbstractRawCommand {
 
@@ -38,15 +41,22 @@ public class SetBalance extends AbstractRawCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		Optional<String> accountName = getString(args, 0);
 		BigDecimal newValue = getBigDecimal(args, 1).get();
-		Currency currency = getCurrency(args, 0).orElse(plugin.getEconomy().getEconomyService().defaultCurrency());
+		Currency currency = getCurrency(args, 2).orElse(plugin.getEconomy().getEconomyService().defaultCurrency());
 		if(accountName.isPresent()) {
 			Optional<UniqueAccount> account = plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(a -> a.identifier().equals(accountName.get())).findFirst();
 			if(account.isPresent()) {
 				account.get().setBalance(currency, newValue);
-				// Добавить сообщение
+				audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {account.get().displayName(), currency.displayName(), text(newValue.doubleValue())}));
 			} else {
-				plugin.getEconomy().getEconomyService().findOrCreateAccount(accountName.get()).get().setBalance(currency, newValue);
-				// Добавить сообщение
+				Sponge.server().userManager().load(accountName.get()).thenAcceptAsync(optUser -> {
+					if(optUser.isPresent()) {
+						plugin.getEconomy().getEconomyService().findOrCreateAccount(optUser.get().uniqueId()).get().setBalance(currency, newValue);
+						audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {text(optUser.get().name()), currency.displayName(), text(newValue.doubleValue())}));
+					} else {
+						plugin.getEconomy().getEconomyService().findOrCreateAccount(accountName.get()).get().setBalance(currency, newValue);
+						audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_CREATE), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {text(accountName.get()), currency.displayName(), text(newValue.doubleValue())}));
+					}
+				});
 			}
 		} else exception(locale, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT);
 	}

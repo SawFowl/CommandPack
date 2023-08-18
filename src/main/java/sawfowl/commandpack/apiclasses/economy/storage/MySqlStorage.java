@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -44,6 +45,8 @@ public class MySqlStorage extends SqlStorage {
 	private String uniqueAccountsTable;
 	private String accountsTable;
 	private LinkedHashMap<CurrencyConfig, Currency> currenciesCollumns;
+	private Connection syncConnection;
+	private Statement syncStatement;
 	public MySqlStorage(CommandPack plugin, EconomyServiceImpl economyService) {
 		super(plugin, economyService);
 		Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(plugin.getMainConfig().getEconomy().getUpdateInterval(), TimeUnit.MILLISECONDS).execute(() -> {
@@ -189,8 +192,8 @@ public class MySqlStorage extends SqlStorage {
 
 	private void sync() {
 		try {
-			syncUniqueAccounts(resultSet(lastUpdateUniqueAccounts == null ? "SELECT * FROM " + uniqueAccountsTable + " ORDER BY written DESC LIMIT 1" : "SELECT * FROM " + uniqueAccountsTable + " WHERE written > '" + lastUpdateUniqueAccounts + "' ORDER BY written;"));
-			syncAccounts(resultSet(lastUpdateAccounts == null ? "SELECT * FROM " + accountsTable + " ORDER BY written DESC LIMIT 1" : "SELECT * FROM " + accountsTable + " WHERE written > '" + lastUpdateAccounts + "' ORDER BY written;"));
+			syncUniqueAccounts(syncResultSet(lastUpdateUniqueAccounts == null ? loadAllUniqueAccounts + " ORDER BY written DESC LIMIT 1" : loadAllUniqueAccounts + " WHERE written > '" + lastUpdateUniqueAccounts + "' ORDER BY written;"));
+			syncAccounts(syncResultSet(lastUpdateAccounts == null ? loadAllAccounts + " ORDER BY written DESC LIMIT 1" : loadAllAccounts + " WHERE written > '" + lastUpdateAccounts + "' ORDER BY written;"));
 		} catch (SQLException e) {
 			plugin.getLogger().error(e.getLocalizedMessage());
 		}
@@ -220,6 +223,16 @@ public class MySqlStorage extends SqlStorage {
 
 	private DBSettings getSettings() {
 		return plugin.getMainConfig().getEconomy().getDBSettings();
+	}
+
+	private ResultSet syncResultSet(String sql) throws SQLException {
+		checkSyncConnection();
+		if(syncStatement == null || syncStatement.isClosed()) syncStatement = syncConnection.createStatement();
+		return syncStatement.executeQuery(sql);
+	}
+
+	private void checkSyncConnection() throws SQLException {
+		if(syncConnection == null || syncConnection.isClosed()) syncConnection = plugin.getMariaDB().get().createNewConnection();
 	}
 
 }

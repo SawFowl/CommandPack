@@ -15,11 +15,14 @@ public class CurrencyConfig {
 	public CurrencyConfig(){}
 
 	@Setting("Name")
-	private String name = "Dollar";
+	private String name = "&2Dollar";
 	@Setting("PluralName")
-	private String pluralName = "Dollars";
+	private String pluralName = "&2Dollars";
+	@Setting("Key")
+	@Comment("Currency Registration Key.\nDo not use text decoration or special characters!")
+	private String key = "dollar";
 	@Setting("DBCollumn")
-	@Comment("This option is only used when selecting MySql to store the economy data.\nEach currency must have its own column name to record data correctly.\nCan be used to customize compatibility with Bukkit economy plugin databases.\nUse compatibility at your own risk.\nStable work is not guaranteed.")
+	@Comment("This option is only used when selecting MySql to store the economy data.\nEach currency must have its own column name to record data correctly.\nCan be used to customize compatibility with Bukkit economy plugin databases.\nUse compatibility at your own risk.\nStable work is not guaranteed.\nDo not use text decoration or special characters other than underscores!")
 	private String dbCollumn = "dollars";
 	@Setting("ID")
 	@Comment("This option is only used when selecting MySql to store the economy data.\nEach currency must have its own id.\nIt is not allowed to change it after creating tables.\nIt is also not allowed to insert new currencies by id between existing ones.")
@@ -44,6 +47,10 @@ public class CurrencyConfig {
 
 	public String getPluralName() {
 		return pluralName;
+	}
+
+	public String getKey() {
+		return "cpcurrency:" + key.toLowerCase();
 	}
 
 	public Component pluralDisplayName() {

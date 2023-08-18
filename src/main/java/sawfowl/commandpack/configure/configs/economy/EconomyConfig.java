@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
@@ -43,6 +44,10 @@ public class EconomyConfig {
 
 	public Optional<CurrencyConfig> getCurrency(char symbol) {
 		return currencies.stream().filter(c -> c.getSymbol() == symbol).findFirst();
+	}
+
+	public Optional<CurrencyConfig> getCurrency(ResourceKey key) {
+		return currencies.stream().filter(c -> key.asString().equals(c.getKey())).findFirst();
 	}
 
 	public Optional<CurrencyConfig> getCurrency(String name) {

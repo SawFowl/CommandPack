@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.service.economy.Currency;
 
 import net.kyori.adventure.text.Component;
@@ -14,16 +15,21 @@ import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 public class CPCurrency implements Currency {
 
 	private final EconomyConfig config = CommandPack.getInstance().getMainConfig().getEconomy();
+	private ResourceKey key;
 	private Component name;
 	private Component pluralName;
+	private char symbol;
 	public CPCurrency() {}
-	public CPCurrency(char symbol) {
-		this.symbol = symbol;
+	public CPCurrency(ResourceKey key) {
+		this.key = key;
+		setSymbol();
 		setName();
 		setPluralName();
 	}
 
-	private char symbol;
+	public ResourceKey getKey() {
+		return key;
+	}
 
 	@Override
 	public Component displayName() {
@@ -53,6 +59,10 @@ public class CPCurrency implements Currency {
 	@Override
 	public boolean isDefault() {
 		return config.getCurrency(symbol).map(c -> c.isDefault()).orElse(false);
+	}
+
+	private char setSymbol() {
+		return symbol = config.getCurrency(key).map(c -> c.getSymbol()).orElse('?');
 	}
 
 	private Component setName() {

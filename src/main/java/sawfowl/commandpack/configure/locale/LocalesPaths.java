@@ -76,6 +76,7 @@ public class LocalesPaths {
 	private static final Object COMMAND_MUTELIST = "MuteList";
 	private static final Object COMMAND_BALANCE = "Balance";
 	private static final Object COMMAND_HIDE_BALANCE = "HideBalance";
+	private static final Object COMMAND_SET_BALANCE = "SetBalance";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -456,5 +457,7 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_HIDE_BALANCE_SELF_OPEN = {PATH_COMMANDS, COMMAND_HIDE_BALANCE, "Self", "Open"};
 	public static final Object[] COMMANDS_HIDE_BALANCE_OTHER_HIDEN = {PATH_COMMANDS, COMMAND_HIDE_BALANCE, "Other", "Hiden"};
 	public static final Object[] COMMANDS_HIDE_BALANCE_OTHER_OPEN = {PATH_COMMANDS, COMMAND_HIDE_BALANCE, "Other", "Open"};
+	public static final Object[] COMMANDS_SET_BALANCE_SUCCESS_USER = {PATH_COMMANDS, COMMAND_SET_BALANCE, "Success", "User"};
+	public static final Object[] COMMANDS_SET_BALANCE_SUCCESS_CREATE = {PATH_COMMANDS, COMMAND_SET_BALANCE, "Success", "Create"};
 
 }

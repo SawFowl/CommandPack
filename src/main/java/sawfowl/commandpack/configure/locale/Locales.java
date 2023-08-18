@@ -452,6 +452,8 @@ public class Locales {
 		save = check(locale, toText("&aOther players can once again view your balance."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_OPEN) || save;
 		save = check(locale, toText("&aThe balance of the player &e" + Placeholders.PLAYER + "&a is hidden from other players."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN) || save;
 		save = check(locale, toText("&aPlayer balance &e" + Placeholders.PLAYER + "&a is once again available for other players to view."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN) || save;
+		save = check(locale, toText("&aYou have set player balance &e" + Placeholders.PLAYER + "&a in currency '&e" + Placeholders.CURRENCY_NAME + "&a' = &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER) || save;
+		save = check(locale, toText("&aUnknown player nickname&f: &e" + Placeholders.PLAYER + "&a. Created a temporary account with the specified name and changed the balance in currency '&e" + Placeholders.CURRENCY_NAME + "&a' = &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER) || save;
 		
 		if(save) save(locale);
 	}
@@ -846,7 +848,9 @@ public class Locales {
 		save = check(locale, toText("&aДругие игроки снова могут просматривать ваш баланс."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_OPEN) || save;
 		save = check(locale, toText("&aБаланс игрока &e" + Placeholders.PLAYER + "&a скрыт от других игроков."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN) || save;
 		save = check(locale, toText("&aБаланс игрока &e" + Placeholders.PLAYER + "&a снова доступен для просмотра другим игрокам."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN) || save;
-		
+		save = check(locale, toText("&aВы установили баланс игроку &e" + Placeholders.PLAYER + "&a в валюте '&e" + Placeholders.CURRENCY_NAME + "&a' = &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER) || save;
+		save = check(locale, toText("&aНе известный ник игрока&f: &e" + Placeholders.PLAYER + "&a. Создан временный аккаунт с указанным именем и изменен баланс в валюте '&e" + Placeholders.CURRENCY_NAME + "&a' = &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER) || save;
+			
 		if(save) save(locale);
 	}
 

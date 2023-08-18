@@ -68,6 +68,7 @@ import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
+import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.api.services.PunishmentService;
 import sawfowl.commandpack.apiclasses.KitServiceImpl;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
@@ -310,6 +311,11 @@ public class CommandPack {
 				return Optional.ofNullable(punishmentService);
 			}
 
+			@Override
+			public Optional<CPEconomyService> getEconomyService() {
+				return Optional.ofNullable(economy.getEconomyService());
+			}
+
 		};
 
 		Sponge.eventManager().post(new sawfowl.commandpack.api.CommandPack.PostAPI() {
@@ -365,7 +371,7 @@ public class CommandPack {
 
 	@Listener
 	public void onProvideEconomyService(ProvideServiceEvent<EconomyService> event) {
-		if(getMainConfig().getEconomy().isEnable()) new Economy(instance).createEconomy(event);
+		if(getMainConfig().getEconomy().isEnable()) economy = new Economy(instance).createEconomy(event);
 	}
 
 	@Listener

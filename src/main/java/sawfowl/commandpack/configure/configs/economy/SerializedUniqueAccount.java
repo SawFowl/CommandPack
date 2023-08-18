@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
-import org.spongepowered.api.service.economy.Currency;
 
 import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.localeapi.api.TextUtils;

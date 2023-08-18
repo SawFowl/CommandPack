@@ -19,14 +19,14 @@ import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.item.enchantment.EnchantmentTypes;
+import org.spongepowered.api.registry.Registry;
+import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.world.WorldType;
 import org.spongepowered.api.world.WorldTypes;
 import org.spongepowered.api.world.server.ServerWorld;
 
-import sawfowl.commandpack.CommandPack;
 import sawfowl.localeapi.api.EnumLocales;
-import sawfowl.localeapi.api.TextUtils;
 
 /**
  * This class is designed to quickly create some arguments for {@link Raw} commands.<br>
@@ -211,12 +211,14 @@ public class RawArguments {
 		return RawArgument.of(Currency.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
 			public Stream<String> get(String[] args) {
-				return CommandPack.getInstance().getEconomy().getCurrencies().stream().map(Currency::symbol).map(c -> TextUtils.clearDecorations(c));
+				Optional<Registry<Currency>> registry = Sponge.game().findRegistry(RegistryTypes.CURRENCY);
+				return registry.isPresent() ? registry.get().streamEntries().map(e -> e.key().asString()) : Stream.empty();
 			}
 		}, new RawResultSupplier<Currency>() {
 			@Override
 			public Optional<Currency> get(String[] args) {
-				return args.length >= cursor + 1 ? Optional.ofNullable(CommandPack.getInstance().getEconomy().checkCurrency(args[cursor])) : Optional.empty();
+				Optional<Registry<Currency>> registry = Sponge.game().findRegistry(RegistryTypes.CURRENCY);
+				return registry.isPresent() && args.length >= cursor + 1 ? registry.get().streamEntries().filter(e -> e.key().asString().equals(args[cursor])).findFirst().map(e -> e.value()) : Optional.empty();
 			}
 		}, optional, optionalForConsole, cursor, localesPath);
 	}

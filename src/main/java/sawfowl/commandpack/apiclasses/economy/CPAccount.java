@@ -2,7 +2,6 @@ package sawfowl.commandpack.apiclasses.economy;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,10 +28,10 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class CPAccount implements Account, VirtualAccount {
 
-	String identifier = "n/a";
-	Map<Currency, BigDecimal> balances;
+	protected String identifier = "n/a";
+	protected Map<Currency, BigDecimal> balances;
 	private EconomyConfig config = CommandPack.getInstance().getMainConfig().getEconomy();
-	private AbstractEconomyStorage storage;
+	protected AbstractEconomyStorage storage;
 	public CPAccount(){}
 	public CPAccount(String identifier, Map<Currency, BigDecimal> balances, AbstractEconomyStorage storage) {
 		this.identifier = identifier;
@@ -94,12 +93,12 @@ public class CPAccount implements Account, VirtualAccount {
 
 	@Override
 	public Map<Currency, BigDecimal> balances(Set<Context> contexts) {
-		return balances;
+		return new HashMap<Currency, BigDecimal>(balances);
 	}
 
 	@Override
 	public Map<Currency, BigDecimal> balances(Cause cause) {
-		return balances;
+		return new HashMap<Currency, BigDecimal>(balances);
 	}
 
 	@Override
@@ -110,42 +109,11 @@ public class CPAccount implements Account, VirtualAccount {
 		if(balances.containsKey(currency)) {
 			if(balances.get(currency).doubleValue() > amount.doubleValue()) type = TransactionTypes.WITHDRAW.get();
 			balances.remove(currency);
-		} 
+		}
 		balances.put(currency, amount);
 		TransactionType finalType = type;
 		save();
-		return new TransactionResult() {
-			
-			@Override
-			public TransactionType type() {
-				return finalType;
-			}
-			
-			@Override
-			public ResultType result() {
-				return ResultType.SUCCESS;
-			}
-			
-			@Override
-			public Currency currency() {
-				return currency;
-			}
-			
-			@Override
-			public Set<Context> contexts() {
-				return new HashSet<Context>();
-			}
-			
-			@Override
-			public BigDecimal amount() {
-				return finalAmount;
-			}
-			
-			@Override
-			public Account account() {
-				return CPAccount.this;
-			}
-		};
+		return new CPTransactionResult(this, currency, finalAmount, ResultType.SUCCESS, finalType);
 	}
 
 	@Override
@@ -156,42 +124,11 @@ public class CPAccount implements Account, VirtualAccount {
 		if(balances.containsKey(currency)) {
 			if(balances.get(currency).doubleValue() > amount.doubleValue()) type = TransactionTypes.WITHDRAW.get();
 			balances.remove(currency);
-		} 
+		}
 		balances.put(currency, amount);
 		TransactionType finalType = type;
 		save();
-		return new TransactionResult() {
-			
-			@Override
-			public TransactionType type() {
-				return finalType;
-			}
-			
-			@Override
-			public ResultType result() {
-				return ResultType.SUCCESS;
-			}
-			
-			@Override
-			public Currency currency() {
-				return currency;
-			}
-			
-			@Override
-			public Set<Context> contexts() {
-				return new HashSet<Context>();
-			}
-			
-			@Override
-			public BigDecimal amount() {
-				return finalAmount;
-			}
-			
-			@Override
-			public Account account() {
-				return CPAccount.this;
-			}
-		};
+		return new CPTransactionResult(this, currency, finalAmount, ResultType.SUCCESS, finalType);
 	}
 
 	@Override
@@ -205,39 +142,7 @@ public class CPAccount implements Account, VirtualAccount {
 				BigDecimal amount = BigDecimal.valueOf(cur.getStartingBalance());
 				balances.remove(optCurrency.get());
 				balances.put(optCurrency.get(), amount);
-				transacrions.put(optCurrency.get(), new TransactionResult() {
-					
-					@Override
-					public TransactionType type() {
-						return type;
-					}
-					
-					@Override
-					public ResultType result() {
-						return ResultType.SUCCESS;
-					}
-					
-					@Override
-					public Currency currency() {
-						return optCurrency.get();
-					}
-					
-					@Override
-					public Set<Context> contexts() {
-						return new HashSet<Context>();
-					}
-					
-					@Override
-					public BigDecimal amount() {
-						return amount;
-					}
-					
-					@Override
-					public Account account() {
-						return CPAccount.this;
-					}
-				}
-				);
+				transacrions.put(optCurrency.get(), new CPTransactionResult(this, optCurrency.get(), amount, ResultType.SUCCESS, type));
 			}
 		});
 		save();
@@ -255,39 +160,7 @@ public class CPAccount implements Account, VirtualAccount {
 				BigDecimal amount = BigDecimal.valueOf(cur.getStartingBalance());
 				balances.remove(optCurrency.get());
 				balances.put(optCurrency.get(), amount);
-				transacrions.put(optCurrency.get(), new TransactionResult() {
-					
-					@Override
-					public TransactionType type() {
-						return type;
-					}
-					
-					@Override
-					public ResultType result() {
-						return ResultType.SUCCESS;
-					}
-					
-					@Override
-					public Currency currency() {
-						return optCurrency.get();
-					}
-					
-					@Override
-					public Set<Context> contexts() {
-						return new HashSet<Context>();
-					}
-					
-					@Override
-					public BigDecimal amount() {
-						return amount;
-					}
-					
-					@Override
-					public Account account() {
-						return CPAccount.this;
-					}
-				}
-				);
+				transacrions.put(optCurrency.get(), new CPTransactionResult(this, optCurrency.get(), amount, ResultType.SUCCESS, type));
 			}
 		});
 		save();
@@ -299,82 +172,19 @@ public class CPAccount implements Account, VirtualAccount {
 		Optional<sawfowl.commandpack.configure.configs.economy.CurrencyConfig> optConfig = config.getCurrency(currency.displayName());
 		boolean contains = balances.containsKey(currency);
 		if(!optConfig.isPresent() && contains) {
-			balances.remove(currency);
-			balances.put(currency, BigDecimal.valueOf(optConfig.map(config -> config.getStartingBalance()).orElse(0d)));
+			double old = balances.remove(currency).doubleValue();
+			double newValue = balances.put(currency, BigDecimal.valueOf(optConfig.map(config -> config.getStartingBalance()).orElse(0d))).doubleValue();
+			TransactionType type = old > newValue ? TransactionTypes.WITHDRAW.get() : TransactionTypes.DEPOSIT.get();
 			save();
-			return new TransactionResult() {
-				
-				@Override
-				public TransactionType type() {
-					return TransactionTypes.WITHDRAW.get();
-				}
-				
-				@Override
-				public ResultType result() {
-					return ResultType.FAILED;
-				}
-				
-				@Override
-				public Currency currency() {
-					return currency;
-				}
-				
-				@Override
-				public Set<Context> contexts() {
-					return new HashSet<Context>();
-				}
-				
-				@Override
-				public BigDecimal amount() {
-					return BigDecimal.ZERO;
-				}
-				
-				@Override
-				public Account account() {
-					return CPAccount.this;
-				}
-			};
+			return new CPTransactionResult(this, currency, balances.get(currency), ResultType.SUCCESS, type);
 		}
 		sawfowl.commandpack.configure.configs.economy.CurrencyConfig config = optConfig.get();
 		TransactionType type = (!contains || balances.get(currency).doubleValue() < config.getStartingBalance() ? TransactionTypes.DEPOSIT : TransactionTypes.WITHDRAW).get();
 		BigDecimal amount = BigDecimal.valueOf(config.getStartingBalance());
-		if(contains) {
-			balances.remove(currency);
-		} 
+		if(contains) balances.remove(currency);
 		balances.put(currency, amount);
 		save();
-		return new TransactionResult() {
-			
-			@Override
-			public TransactionType type() {
-				return type;
-			}
-			
-			@Override
-			public ResultType result() {
-				return ResultType.SUCCESS;
-			}
-			
-			@Override
-			public Currency currency() {
-				return currency;
-			}
-			
-			@Override
-			public Set<Context> contexts() {
-				return new HashSet<Context>();
-			}
-			
-			@Override
-			public BigDecimal amount() {
-				return amount;
-			}
-			
-			@Override
-			public Account account() {
-				return CPAccount.this;
-			}
-		};
+		return new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type);
 	}
 
 	@Override
@@ -382,41 +192,11 @@ public class CPAccount implements Account, VirtualAccount {
 		Optional<sawfowl.commandpack.configure.configs.economy.CurrencyConfig> optConfig = config.getCurrency(currency.displayName());
 		boolean contains = balances.containsKey(currency);
 		if(!optConfig.isPresent() && contains) {
-			balances.remove(currency);
-			balances.put(currency, BigDecimal.valueOf(optConfig.map(config -> config.getStartingBalance()).orElse(0d)));
+			double old = balances.remove(currency).doubleValue();
+			double newValue = balances.put(currency, BigDecimal.valueOf(optConfig.map(config -> config.getStartingBalance()).orElse(0d))).doubleValue();
+			TransactionType type = old > newValue ? TransactionTypes.WITHDRAW.get() : TransactionTypes.DEPOSIT.get();
 			save();
-			return new TransactionResult() {
-				
-				@Override
-				public TransactionType type() {
-					return TransactionTypes.WITHDRAW.get();
-				}
-				
-				@Override
-				public ResultType result() {
-					return ResultType.FAILED;
-				}
-				
-				@Override
-				public Currency currency() {
-					return currency;
-				}
-				
-				@Override
-				public Set<Context> contexts() {
-					return new HashSet<Context>();
-				}
-				
-				@Override
-				public BigDecimal amount() {
-					return BigDecimal.ZERO;
-				}
-				
-				@Override
-				public Account account() {
-					return CPAccount.this;
-				}
-			};
+			return new CPTransactionResult(this, currency, balances.get(currency), ResultType.SUCCESS, type);
 		}
 		sawfowl.commandpack.configure.configs.economy.CurrencyConfig config = optConfig.get();
 		TransactionType type = (!contains || balances.get(currency).doubleValue() < config.getStartingBalance() ? TransactionTypes.DEPOSIT : TransactionTypes.WITHDRAW).get();
@@ -426,38 +206,7 @@ public class CPAccount implements Account, VirtualAccount {
 		}
 		balances.put(currency, amount);
 		save();
-		return new TransactionResult() {
-			
-			@Override
-			public TransactionType type() {
-				return type;
-			}
-			
-			@Override
-			public ResultType result() {
-				return ResultType.SUCCESS;
-			}
-			
-			@Override
-			public Currency currency() {
-				return currency;
-			}
-			
-			@Override
-			public Set<Context> contexts() {
-				return new HashSet<Context>();
-			}
-			
-			@Override
-			public BigDecimal amount() {
-				return amount;
-			}
-			
-			@Override
-			public Account account() {
-				return CPAccount.this;
-			}
-		};
+		return new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type);
 	}
 
 	@Override
@@ -470,41 +219,8 @@ public class CPAccount implements Account, VirtualAccount {
 		}
 		balances.put(currency, amount);
 		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
-		TransactionType finalType = type;
-		BigDecimal finalAmount = amount;
 		save();
-		return new TransactionResult() {
-			
-			@Override
-			public TransactionType type() {
-				return finalType;
-			}
-			
-			@Override
-			public ResultType result() {
-				return ResultType.SUCCESS;
-			}
-			
-			@Override
-			public Currency currency() {
-				return currency;
-			}
-			
-			@Override
-			public Set<Context> contexts() {
-				return new HashSet<Context>();
-			}
-			
-			@Override
-			public BigDecimal amount() {
-				return finalAmount;
-			}
-			
-			@Override
-			public Account account() {
-				return CPAccount.this;
-			}
-		};
+		return new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type);
 	}
 
 	@Override
@@ -517,41 +233,8 @@ public class CPAccount implements Account, VirtualAccount {
 		}
 		balances.put(currency, amount);
 		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
-		TransactionType finalType = type;
-		BigDecimal finalAmount = amount;
 		save();
-		return new TransactionResult() {
-			
-			@Override
-			public TransactionType type() {
-				return finalType;
-			}
-			
-			@Override
-			public ResultType result() {
-				return ResultType.SUCCESS;
-			}
-			
-			@Override
-			public Currency currency() {
-				return currency;
-			}
-			
-			@Override
-			public Set<Context> contexts() {
-				return new HashSet<Context>();
-			}
-			
-			@Override
-			public BigDecimal amount() {
-				return finalAmount;
-			}
-			
-			@Override
-			public Account account() {
-				return CPAccount.this;
-			}
-		};
+		return new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type);
 	}
 
 	@Override
@@ -564,41 +247,8 @@ public class CPAccount implements Account, VirtualAccount {
 		}
 		balances.put(currency, amount);
 		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
-		TransactionType finalType = type;
-		BigDecimal finalAmount = amount;
 		save();
-		return new TransactionResult() {
-			
-			@Override
-			public TransactionType type() {
-				return finalType;
-			}
-			
-			@Override
-			public ResultType result() {
-				return ResultType.SUCCESS;
-			}
-			
-			@Override
-			public Currency currency() {
-				return currency;
-			}
-			
-			@Override
-			public Set<Context> contexts() {
-				return new HashSet<Context>();
-			}
-			
-			@Override
-			public BigDecimal amount() {
-				return finalAmount;
-			}
-			
-			@Override
-			public Account account() {
-				return CPAccount.this;
-			}
-		};
+		return new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type);
 	}
 
 	@Override
@@ -611,210 +261,45 @@ public class CPAccount implements Account, VirtualAccount {
 		}
 		balances.put(currency, amount);
 		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
-		TransactionType finalType = type;
-		BigDecimal finalAmount = amount;
 		save();
-		return new TransactionResult() {
-			
-			@Override
-			public TransactionType type() {
-				return finalType;
-			}
-			
-			@Override
-			public ResultType result() {
-				return ResultType.SUCCESS;
-			}
-			
-			@Override
-			public Currency currency() {
-				return currency;
-			}
-			
-			@Override
-			public Set<Context> contexts() {
-				return new HashSet<Context>();
-			}
-			
-			@Override
-			public BigDecimal amount() {
-				return finalAmount;
-			}
-			
-			@Override
-			public Account account() {
-				return CPAccount.this;
-			}
-		};
+		return new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type);
 	}
 
 	@Override
 	public TransferResult transfer(Account to, Currency currency, BigDecimal amount, Set<Context> contexts) {
-		if(!balances.containsKey(currency) || balances.get(currency).doubleValue() < amount.doubleValue()) return new TransferResult() {
-			
-			@Override
-			public TransactionType type() {
-				return TransactionTypes.TRANSFER.get();
-			}
-			
-			@Override
-			public ResultType result() {
-				return ResultType.ACCOUNT_NO_FUNDS;
-			}
-			
-			@Override
-			public Currency currency() {
-				return currency;
-			}
-			
-			@Override
-			public Set<Context> contexts() {
-				return contexts;
-			}
-			
-			@Override
-			public BigDecimal amount() {
-				return amount;
-			}
-			
-			@Override
-			public Account account() {
-				return CPAccount.this;
-			}
-			
-			@Override
-			public Account accountTo() {
-				return to;
-			}
-		};
+		if(!balances.containsKey(currency) || balances.get(currency).doubleValue() < amount.doubleValue()) return new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get());
 		BigDecimal newValue = balances.get(currency).subtract(amount);
 		balances.remove(currency);
 		balances.put(currency, newValue);
 		to.deposit(currency, amount);
 		save();
-		return new TransferResult() {
-			
-			@Override
-			public TransactionType type() {
-				return TransactionTypes.TRANSFER.get();
-			}
-			
-			@Override
-			public ResultType result() {
-				return ResultType.SUCCESS;
-			}
-			
-			@Override
-			public Currency currency() {
-				return currency;
-			}
-			
-			@Override
-			public Set<Context> contexts() {
-				return contexts;
-			}
-			
-			@Override
-			public BigDecimal amount() {
-				return amount;
-			}
-			
-			@Override
-			public Account account() {
-				return CPAccount.this;
-			}
-			
-			@Override
-			public Account accountTo() {
-				return to;
-			}
-		};
+		return new CPTransferResult(this, to, currency, amount, ResultType.SUCCESS, TransactionTypes.TRANSFER.get());
 	}
 
 	@Override
 	public TransferResult transfer(Account to, Currency currency, BigDecimal amount, Cause cause) {
-		if(!balances.containsKey(currency) || balances.get(currency).doubleValue() < amount.doubleValue()) return new TransferResult() {
-			
-			@Override
-			public TransactionType type() {
-				return TransactionTypes.TRANSFER.get();
-			}
-			
-			@Override
-			public ResultType result() {
-				return ResultType.ACCOUNT_NO_FUNDS;
-			}
-			
-			@Override
-			public Currency currency() {
-				return currency;
-			}
-			
-			@Override
-			public Set<Context> contexts() {
-				return new HashSet<Context>();
-			}
-			
-			@Override
-			public BigDecimal amount() {
-				return amount;
-			}
-			
-			@Override
-			public Account account() {
-				return CPAccount.this;
-			}
-			
-			@Override
-			public Account accountTo() {
-				return to;
-			}
-		};
+		if(!balances.containsKey(currency) || balances.get(currency).doubleValue() < amount.doubleValue()) return new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get());
 		BigDecimal newValue = balances.get(currency).subtract(amount);
 		balances.remove(currency);
 		balances.put(currency, newValue);
 		to.deposit(currency, amount);
 		save();
-		return new TransferResult() {
-			
-			@Override
-			public TransactionType type() {
-				return TransactionTypes.TRANSFER.get();
-			}
-			
-			@Override
-			public ResultType result() {
-				return ResultType.SUCCESS;
-			}
-			
-			@Override
-			public Currency currency() {
-				return currency;
-			}
-			
-			@Override
-			public Set<Context> contexts() {
-				return new HashSet<Context>();
-			}
-			
-			@Override
-			public BigDecimal amount() {
-				return amount;
-			}
-			
-			@Override
-			public Account account() {
-				return CPAccount.this;
-			}
-			
-			@Override
-			public Account accountTo() {
-				return to;
-			}
-		};
+		return new CPTransferResult(this, to, currency, amount, ResultType.SUCCESS, TransactionTypes.TRANSFER.get());
 	}
 
-	private Component text(String string) {
+	public CPAccount setStorage(AbstractEconomyStorage storage) {
+		if(this.storage == null) {
+			this.storage = storage;
+			save();
+		}
+		return this;
+	}
+
+	public void save() {
+		if(storage != null) storage.saveAccount(this);
+	}
+
+	protected Component text(String string) {
 		if(isLegacyDecor(string)) {
 			return TextUtils.deserializeLegacy(string);
 		} else {
@@ -828,18 +313,6 @@ public class CPAccount implements Account, VirtualAccount {
 
 	private boolean isStyleChar(char ch) {
 		return "0123456789abcdefklmnor".indexOf(ch) != -1;
-	}
-
-	public CPAccount setStorage(AbstractEconomyStorage storage) {
-		if(this.storage == null) {
-			this.storage = storage;
-			save();
-		}
-		return this;
-	}
-
-	public void save() {
-		if(storage != null) storage.saveAccount(this);
 	}
 
 	@Override
@@ -856,7 +329,5 @@ public class CPAccount implements Account, VirtualAccount {
 		if (obj == null || getClass() != obj.getClass()) return false;
 		return Objects.equals(identifier, ((CPAccount) obj).identifier);
 	}
-
-	
 
 }

@@ -27,7 +27,6 @@ import sawfowl.commandpack.apiclasses.economy.storage.FileStorage;
 import sawfowl.commandpack.apiclasses.economy.storage.H2Storage;
 import sawfowl.commandpack.apiclasses.economy.storage.MySqlStorage;
 import sawfowl.commandpack.utils.MariaDB;
-import sawfowl.localeapi.api.TextUtils;
 
 public class EconomyServiceImpl implements CPEconomyService {
 
@@ -40,14 +39,15 @@ public class EconomyServiceImpl implements CPEconomyService {
 	private Set<UUID> hidenBalances = new HashSet<UUID>();
 	public EconomyServiceImpl(CommandPack plugin) {
 		this.plugin = plugin;
-		def = new CPCurrency(plugin.getMainConfig().getEconomy().getDefaultCurrency().getSymbol());
+		def = new CPCurrency(ResourceKey.resolve(plugin.getMainConfig().getEconomy().getDefaultCurrency().getKey()));
 		currenciesMap.put(plugin.getMainConfig().getEconomy().getDefaultCurrency().getSymbol(), def);
 		for(sawfowl.commandpack.configure.configs.economy.CurrencyConfig currencyConfig : plugin.getMainConfig().getEconomy().getCurrencies()) {
-			Currency currency = new CPCurrency(currencyConfig.getSymbol());
+			ResourceKey key = ResourceKey.resolve(currencyConfig.getKey());
+			Currency currency = new CPCurrency(key);
 			if(!currenciesMap.containsKey(currencyConfig.getSymbol())) {
 				currenciesMap.put(currencyConfig.getSymbol(), currency);
 				Sponge.game().findRegistry(RegistryTypes.CURRENCY).ifPresent(registry -> {
-					if(!registry.findValue(ResourceKey.resolve("cpcurrency:" + TextUtils.clearDecorations(currency.displayName()).toLowerCase())).isPresent()) registry.register(ResourceKey.resolve("cpcurrency:" + TextUtils.clearDecorations(currency.displayName()).toLowerCase()), currency);
+					if(!registry.findValue(key).isPresent()) registry.register(key, currency);
 				});
 			}
 		}
