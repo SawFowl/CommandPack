@@ -14,6 +14,7 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.service.economy.Currency;
+import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 
 import net.kyori.adventure.audience.Audience;
@@ -30,37 +31,38 @@ import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
-public class SetBalance extends AbstractRawCommand {
+public class RemoveFromBalance extends AbstractRawCommand {
 
-	private List<BigDecimal> empty = new ArrayList<BigDecimal>();
-	public SetBalance(CommandPack plugin) {
+	private List<BigDecimal> empty;
+	public RemoveFromBalance(CommandPack plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		Optional<String> accountName = getString(args, 0);
-		BigDecimal newValue = getBigDecimal(args, 1).get();
+		BigDecimal remove = getBigDecimal(args, 1).get();
 		Currency currency = getCurrency(args, 2).orElse(plugin.getEconomy().getEconomyService().defaultCurrency());
 		if(accountName.isPresent()) {
 			Optional<UniqueAccount> account = plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(a -> a.identifier().equals(accountName.get())).findFirst();
 			if(account.isPresent()) {
-				account.get().setBalance(currency, newValue);
-				audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {account.get().displayName(), currency.displayName(), text(newValue.doubleValue())}));
+				account.get().withdraw(currency, remove);
+				audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_REMOVE_BALANCE_SUCCESS_USER), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE, Placeholders.MONEY}, new Component[] {account.get().displayName(), currency.displayName(), text(remove.doubleValue()), text(account.get().balance(currency).doubleValue())}));
 				Sponge.server().player(account.get().uniqueId()).ifPresent(player -> {
-					player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_TARGET), new String[] {Placeholders.CURRENCY_NAME, Placeholders.MONEY}, new Component[] {currency.displayName(), text(newValue.doubleValue())}));
+					player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_REMOVE_BALANCE_SUCCESS_TARGET), new String[] {Placeholders.CURRENCY_NAME, Placeholders.VALUE, Placeholders.MONEY}, new Component[] {currency.displayName(), text(remove.doubleValue()), text(account.get().balance(currency).doubleValue())}));
 				});
 			} else {
 				Sponge.server().userManager().load(accountName.get()).thenAccept(optUser -> {
 					if(optUser.isPresent()) {
-						plugin.getEconomy().getEconomyService().findOrCreateAccount(optUser.get().uniqueId()).get().setBalance(currency, newValue);
-						audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {text(optUser.get().name()), currency.displayName(), text(newValue.doubleValue())}));
+						plugin.getEconomy().getEconomyService().findOrCreateAccount(optUser.get().uniqueId()).get().withdraw(currency, remove);
+						audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_REMOVE_BALANCE_SUCCESS_USER), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE, Placeholders.MONEY}, new Component[] {text(optUser.get().name()), currency.displayName(), text(remove.doubleValue()), text(account.get().balance(currency).doubleValue())}));
 						optUser.get().player().ifPresent(player -> {
-							player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_TARGET), new String[] {Placeholders.CURRENCY_NAME, Placeholders.MONEY}, new Component[] {currency.displayName(), text(newValue.doubleValue())}));
+							player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_REMOVE_BALANCE_SUCCESS_TARGET), new String[] {Placeholders.CURRENCY_NAME, Placeholders.VALUE, Placeholders.MONEY}, new Component[] {currency.displayName(), text(remove.doubleValue()), text(account.get().balance(currency).doubleValue())}));
 						});
 					} else {
-						plugin.getEconomy().getEconomyService().findOrCreateAccount(accountName.get()).get().setBalance(currency, newValue);
-						audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_CREATE), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {text(accountName.get()), currency.displayName(), text(newValue.doubleValue())}));
+						Account temp = plugin.getEconomy().getEconomyService().findOrCreateAccount(accountName.get()).get();
+						temp.withdraw(currency, remove);
+						audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_REMOVE_BALANCE_SUCCESS_CREATE), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE, Placeholders.MONEY}, new Component[] {text(accountName.get()), currency.displayName(), text(remove.doubleValue()), text(temp.balance(currency).doubleValue())}));
 					}
 				});
 			}
@@ -84,12 +86,12 @@ public class SetBalance extends AbstractRawCommand {
 
 	@Override
 	public String command() {
-		return "set";
+		return "remove";
 	}
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/eco set <User> <Amount> [Currency]");
+		return text("&c/eco remove <User> <Amount> [Currency]");
 	}
 
 	@Override

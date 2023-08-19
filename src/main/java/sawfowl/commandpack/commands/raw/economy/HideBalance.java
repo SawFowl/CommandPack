@@ -90,7 +90,7 @@ public class HideBalance extends AbstractRawCommand {
 			public Optional<UniqueAccount> get(String[] args) {
 				return args.length == 0 ? Optional.empty() : plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(account -> account.identifier().equals(args[0])).findFirst();
 			}
-		}, true, false, 0, Permissions.BALANCE_STAFF, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
+		}, true, false, 0, Permissions.ECONOMY_STAFF, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
 	}
 
 	@Override

@@ -76,7 +76,8 @@ public class LocalesPaths {
 	private static final Object COMMAND_MUTELIST = "MuteList";
 	private static final Object COMMAND_BALANCE = "Balance";
 	private static final Object COMMAND_HIDE_BALANCE = "HideBalance";
-	private static final Object COMMAND_SET_BALANCE = "SetBalance";
+	private static final Object COMMAND_ECONOMY = "Economy";
+	private static final Object COMMAND_PAY = "Pay";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -457,8 +458,18 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_HIDE_BALANCE_SELF_OPEN = {PATH_COMMANDS, COMMAND_HIDE_BALANCE, "Self", "Open"};
 	public static final Object[] COMMANDS_HIDE_BALANCE_OTHER_HIDEN = {PATH_COMMANDS, COMMAND_HIDE_BALANCE, "Other", "Hiden"};
 	public static final Object[] COMMANDS_HIDE_BALANCE_OTHER_OPEN = {PATH_COMMANDS, COMMAND_HIDE_BALANCE, "Other", "Open"};
-	public static final Object[] COMMANDS_SET_BALANCE_SUCCESS_USER = {PATH_COMMANDS, COMMAND_SET_BALANCE, "Success", "User"};
-	public static final Object[] COMMANDS_SET_BALANCE_SUCCESS_CREATE = {PATH_COMMANDS, COMMAND_SET_BALANCE, "Success", "Create"};
-	public static final Object[] COMMANDS_SET_BALANCE_SUCCESS_TARGET = {PATH_COMMANDS, COMMAND_SET_BALANCE, "Success", "Target"};
+	public static final Object[] COMMANDS_SET_BALANCE_SUCCESS_USER = {PATH_COMMANDS, COMMAND_ECONOMY, "Set", "Success", "User"};
+	public static final Object[] COMMANDS_SET_BALANCE_SUCCESS_CREATE = {PATH_COMMANDS, COMMAND_ECONOMY, "Set", "Success", "Create"};
+	public static final Object[] COMMANDS_SET_BALANCE_SUCCESS_TARGET = {PATH_COMMANDS, COMMAND_ECONOMY, "Set", "Success", "Target"};
+	public static final Object[] COMMANDS_ADD_BALANCE_SUCCESS_USER = {PATH_COMMANDS, COMMAND_ECONOMY, "Add", "Success", "User"};
+	public static final Object[] COMMANDS_ADD_BALANCE_SUCCESS_CREATE = {PATH_COMMANDS, COMMAND_ECONOMY, "Add", "Success", "Create"};
+	public static final Object[] COMMANDS_ADD_BALANCE_SUCCESS_TARGET = {PATH_COMMANDS, COMMAND_ECONOMY, "Add", "Success", "Target"};
+	public static final Object[] COMMANDS_REMOVE_BALANCE_SUCCESS_USER = {PATH_COMMANDS, COMMAND_ECONOMY, "Remove", "Success", "User"};
+	public static final Object[] COMMANDS_REMOVE_BALANCE_SUCCESS_CREATE = {PATH_COMMANDS, COMMAND_ECONOMY, "Remove", "Success", "Create"};
+	public static final Object[] COMMANDS_REMOVE_BALANCE_SUCCESS_TARGET = {PATH_COMMANDS, COMMAND_ECONOMY, "Remove", "Success", "Target"};
+	public static final Object[] COMMANDS_PAY_NO_PERM = {PATH_COMMANDS, COMMAND_PAY, "NoPerm"};
+	public static final Object[] COMMANDS_PAY_NOT_ENOUGH_MONEY = {PATH_COMMANDS, COMMAND_PAY, "NotEnoughMoney"};
+	public static final Object[] COMMANDS_PAY_SUCCESS = {PATH_COMMANDS, COMMAND_PAY, "Success"};
+	public static final Object[] COMMANDS_PAY_SUCCESS_TARGET = {PATH_COMMANDS, COMMAND_PAY, "SuccessTarget"};
 
 }

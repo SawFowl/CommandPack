@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.world.server.ServerWorld;
 
 import sawfowl.commandpack.api.data.kits.Kit;
@@ -69,6 +70,7 @@ public class Permissions {
 	public static final String BALANCE_OTHER = "commandpack.commands.user.balance.other";
 	public static final String BALANCE_HIDEN_VIEW = "commandpack.commands.user.balance.hiddenview";
 	public static final String HIDE_BALANCE = "commandpack.commands.user.balance.hide";
+	public static final String PAY = "commandpack.commands.user.balance.pay";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -131,7 +133,7 @@ public class Permissions {
 	public static final String UNMUTE_STAFF = "commandpack.commands.staff.unmute";
 	public static final String WARN_STAFF = "commandpack.commands.staff.warn";
 	public static final String WARNS_STAFF = "commandpack.commands.staff.warnings";
-	public static final String BALANCE_STAFF = "commandpack.commands.staff.balance";
+	public static final String ECONOMY_STAFF = "commandpack.commands.staff.economy";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_COOLDOWN = "commandpack.commands.ignore.cooldown";
@@ -218,8 +220,8 @@ public class Permissions {
 		return KIT_ACCESS + "." + TextUtils.clearDecorations(kit.id());
 	}
 
-	public static String getCurrencyAccess(String currency) {
-		return CURRENCY_ACCESS + currency;
+	public static String getCurrencyAccess(Currency currency) {
+		return CURRENCY_ACCESS + TextUtils.clearDecorations(currency.displayName());
 	}
 
 	public static int getHomeLimit(ServerPlayer player) {

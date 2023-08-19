@@ -108,20 +108,15 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	default String[] checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
-		Optional<RawArgument<?>> emptyArg = getArguments().values().stream().filter(arg -> !arg.getResultUnknownType(args).isPresent() && (!arg.isOptional() || !isPlayer && !arg.isOptionalForConsole())).findFirst();
-		if(emptyArg.isPresent()) exception(getText(locale, emptyArg.get().getLocalesPath()).append(Component.newline()).append(usage(cause)));
+		if(getArguments() != null) {
+			Optional<RawArgument<?>> emptyArg = getArguments().values().stream().filter(arg -> !arg.getResultUnknownType(args).isPresent() && (!arg.isOptional() || !isPlayer && !arg.isOptionalForConsole())).findFirst();
+			if(emptyArg.isPresent()) exceptionAppendUsage(cause, getText(locale, emptyArg.get().getLocalesPath()));
+		}
 		if(args.length != 0) {
 			int i = 0;
-			for(@SuppressWarnings("unused") String arg : args) {
-				if(getArguments().get(i).getResultUnknownType(args).isPresent() && !getArguments().get(i).hasPermission(cause)) return Arrays.copyOfRange(args, 0, i);
+			for(String arg : args) {
+				if(arg == null || (getArguments().containsKey(i) && getArguments().get(i).getResultUnknownType(args).isPresent() && !getArguments().get(i).hasPermission(cause))) return Arrays.copyOfRange(args, 0, i);
 				i++;
-			}
-		}
-		if(args.length != 0 && getArguments() != null && !getArguments().isEmpty()) {
-			if(getArguments().containsKey(args.length - 1) && !getArguments().get(args.length - 1).getResultUnknownType(args).isPresent() && (!getArguments().get(args.length - 1).isOptional() || (!isPlayer && !getArguments().get(args.length - 1).isOptionalForConsole()))) exceptionAppendUsage(cause, getText(locale, getArguments().get(args.length - 1).getLocalesPath()));
-		} else {
-			if(getArguments() != null) for(RawArgument<?> arg : getArguments().values()) {
-				if(!arg.getResultUnknownType(args).isPresent() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole()))) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
 			}
 		}
 		return args;

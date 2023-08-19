@@ -1,8 +1,10 @@
 package sawfowl.commandpack.apiclasses.economy.storage;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -94,6 +96,12 @@ public abstract class AbstractEconomyStorage extends Thread {
 
 	public Collection<UniqueAccount> uniqueAccounts() {
 		return uniqueAccounts.values();
+	}
+
+	public Collection<Account> allAccounts() {
+		List<Account> all = new ArrayList<Account>(uniqueAccounts.values());
+		all.addAll(accounts.values());
+		return all;
 	}
 
 	public AccountDeletionResultType deleteAccount(UUID uuid) {

@@ -45,4 +45,8 @@ public abstract class AbstractRawCommand extends PluginCommand implements RawCom
 		return plugin.getMainConfig().isAutoCompleteRawCommands();
 	}
 
+	public void addChildCommand(RawCommand command) {
+		childExecutors.put(command.command(), command);
+	}
+
 }

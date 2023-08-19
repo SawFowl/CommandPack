@@ -115,6 +115,10 @@ public class EconomyServiceImpl implements CPEconomyService {
 		return storage.uniqueAccounts();
 	}
 
+	public Collection<Account> allAccounts() {
+		return storage.allAccounts();
+	}
+
 	@Override
 	public Stream<VirtualAccount> streamVirtualAccounts() {
 		return virtualAccounts().stream();
