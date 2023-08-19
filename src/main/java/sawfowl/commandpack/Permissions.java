@@ -71,6 +71,8 @@ public class Permissions {
 	public static final String BALANCE_HIDEN_VIEW = "commandpack.commands.user.balance.hiddenview";
 	public static final String HIDE_BALANCE = "commandpack.commands.user.balance.hide";
 	public static final String PAY = "commandpack.commands.user.balance.pay";
+	public static final String TELL = "commandpack.commands.user.tell";
+	public static final String REPLY = "commandpack.commands.user.reply";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";

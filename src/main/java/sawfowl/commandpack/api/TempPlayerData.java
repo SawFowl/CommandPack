@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
 
+import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.api.data.command.Settings;
 
@@ -180,5 +181,20 @@ public interface TempPlayerData {
 	 * Removing the invisibility activation time.
 	 */
 	void removeVanishEnabledTime(ServerPlayer player);
+
+	/**
+	 * Adding Audience for the /reply command
+	 */
+	void addReply(ServerPlayer player, Audience audience);
+
+	/**
+	 * Removing Audience for the /reply command
+	 */
+	void removeReply(ServerPlayer player);
+
+	/**
+	 * Getting Audience for the /reply command
+	 */
+	Optional<Audience> getReply(ServerPlayer player);
 
 }

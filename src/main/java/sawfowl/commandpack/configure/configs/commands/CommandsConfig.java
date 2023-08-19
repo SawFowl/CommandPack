@@ -219,6 +219,10 @@ public class CommandsConfig {
 	private CommandSettings economy = new CommandSettings(new String[] {"eco"});
 	@Setting("Pay")
 	private CommandSettings pay = new CommandSettings();
+	@Setting("Tell")
+	private CommandSettings tell = new CommandSettings(new String[] {"say", "s", "m"});
+	@Setting("Reply")
+	private CommandSettings reply = new CommandSettings(new String[] {"r"});
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

@@ -18,6 +18,7 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Ticks;
 import org.spongepowered.api.world.server.ServerLocation;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
@@ -40,6 +41,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	private Set<UUID> afk = new HashSet<>();
 	private Set<UUID> commandSpy = new HashSet<>();
 	private Map<UUID, Long> vanishTime = new HashMap<>();
+	private Map<UUID, Audience> replyMap = new HashMap<>();
 	public TempPlayerDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
@@ -224,6 +226,22 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	public void onDisconnect(ServerSideConnectionEvent.Disconnect event) {
 		if(lastActivity.containsKey(event.player().uniqueId())) lastActivity.remove(event.player().uniqueId());
 		if(isAfk(event.player())) afk.remove(event.player().uniqueId());
+	}
+
+	@Override
+	public void addReply(ServerPlayer player, Audience audience) {
+		removeReply(player);;
+		replyMap.put(player.uniqueId(), audience);
+	}
+
+	@Override
+	public void removeReply(ServerPlayer player) {
+		if(replyMap.containsKey(player.uniqueId())) replyMap.remove(player.uniqueId());
+	}
+
+	@Override
+	public Optional<Audience> getReply(ServerPlayer player) {
+		return replyMap.containsKey(player.uniqueId()) ? (replyMap.get(player.uniqueId()) instanceof ServerPlayer ? Sponge.server().player(((ServerPlayer) replyMap.get(player.uniqueId())).uniqueId()).map(p -> (Audience) p) :  Optional.ofNullable(replyMap.get(player.uniqueId()))) : Optional.empty();
 	}
 
 }

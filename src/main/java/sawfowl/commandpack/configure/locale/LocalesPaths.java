@@ -78,6 +78,8 @@ public class LocalesPaths {
 	private static final Object COMMAND_HIDE_BALANCE = "HideBalance";
 	private static final Object COMMAND_ECONOMY = "Economy";
 	private static final Object COMMAND_PAY = "Pay";
+	private static final Object COMMAND_TELL = "Tell";
+	private static final Object COMMAND_REPLY = "Reply";
 
 	public static final Object[] TIME_DAYS = {PATH_TIME, "Days"};
 	public static final Object[] TIME_HOUR = {PATH_TIME, "Hour"};
@@ -471,5 +473,8 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_PAY_NOT_ENOUGH_MONEY = {PATH_COMMANDS, COMMAND_PAY, "NotEnoughMoney"};
 	public static final Object[] COMMANDS_PAY_SUCCESS = {PATH_COMMANDS, COMMAND_PAY, "Success"};
 	public static final Object[] COMMANDS_PAY_SUCCESS_TARGET = {PATH_COMMANDS, COMMAND_PAY, "SuccessTarget"};
+	public static final Object[] COMMANDS_TELL_SUCCESS = {PATH_COMMANDS, COMMAND_TELL, "Success"};
+	public static final Object[] COMMANDS_TELL_SUCCESS_TARGET = {PATH_COMMANDS, COMMAND_TELL, "SuccessTarget"};
+	public static final Object[] COMMANDS_REPLY_NOTHING = {PATH_COMMANDS, COMMAND_REPLY, "Nothing"};
 
 }
