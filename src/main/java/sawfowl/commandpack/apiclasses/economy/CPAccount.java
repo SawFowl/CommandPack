@@ -241,10 +241,15 @@ public class CPAccount implements Account, VirtualAccount {
 	public TransactionResult withdraw(Currency currency, BigDecimal amount, Set<Context> contexts) {
 		TransactionType type = TransactionTypes.WITHDRAW.get();
 		if(balances.containsKey(currency)) {
+			double check = checkDB(currency, balances.get(currency).doubleValue());
+			if(check != balances.get(currency).doubleValue()) {
+				balances.replace(currency, BigDecimal.valueOf(check));
+				return new CPTransactionResult(this, currency, amount, ResultType.ACCOUNT_NO_FUNDS, type);
+			}
 			if(amount.doubleValue() < 0) type = TransactionTypes.DEPOSIT.get();
 			amount = balances.get(currency).subtract(amount);
 			balances.remove(currency);
-		}
+		} else return new CPTransactionResult(this, currency, amount, ResultType.ACCOUNT_NO_FUNDS, type);
 		balances.put(currency, amount);
 		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		save();
@@ -255,10 +260,15 @@ public class CPAccount implements Account, VirtualAccount {
 	public TransactionResult withdraw(Currency currency, BigDecimal amount, Cause cause) {
 		TransactionType type = TransactionTypes.WITHDRAW.get();
 		if(balances.containsKey(currency)) {
+			double check = checkDB(currency, balances.get(currency).doubleValue());
+			if(check != balances.get(currency).doubleValue()) {
+				balances.replace(currency, BigDecimal.valueOf(check));
+				return new CPTransactionResult(this, currency, amount, ResultType.ACCOUNT_NO_FUNDS, type);
+			}
 			if(amount.doubleValue() < 0) type = TransactionTypes.DEPOSIT.get();
 			amount = balances.get(currency).subtract(amount);
 			balances.remove(currency);
-		}
+		} else return new CPTransactionResult(this, currency, amount, ResultType.ACCOUNT_NO_FUNDS, type);
 		balances.put(currency, amount);
 		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		save();
@@ -268,6 +278,11 @@ public class CPAccount implements Account, VirtualAccount {
 	@Override
 	public TransferResult transfer(Account to, Currency currency, BigDecimal amount, Set<Context> contexts) {
 		if(!balances.containsKey(currency) || balances.get(currency).doubleValue() < amount.doubleValue()) return new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get());
+		double check = checkDB(currency, balances.get(currency).doubleValue());
+		if(check != balances.get(currency).doubleValue()) {
+			balances.replace(currency, BigDecimal.valueOf(check));
+			return new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get());
+		}
 		BigDecimal newValue = balances.get(currency).subtract(amount);
 		balances.remove(currency);
 		balances.put(currency, newValue);
@@ -279,6 +294,11 @@ public class CPAccount implements Account, VirtualAccount {
 	@Override
 	public TransferResult transfer(Account to, Currency currency, BigDecimal amount, Cause cause) {
 		if(!balances.containsKey(currency) || balances.get(currency).doubleValue() < amount.doubleValue()) return new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get());
+		double check = checkDB(currency, balances.get(currency).doubleValue());
+		if(check != balances.get(currency).doubleValue()) {
+			balances.replace(currency, BigDecimal.valueOf(check));
+			return new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get());
+		}
 		BigDecimal newValue = balances.get(currency).subtract(amount);
 		balances.remove(currency);
 		balances.put(currency, newValue);
@@ -305,6 +325,10 @@ public class CPAccount implements Account, VirtualAccount {
 		} else {
 			return TextUtils.deserialize(string);
 		}
+	}
+
+	protected double checkDB(Currency currency, double cached) {
+		return cached;
 	}
 
 	private boolean isLegacyDecor(String string) {

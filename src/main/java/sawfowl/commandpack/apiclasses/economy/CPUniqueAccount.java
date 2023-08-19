@@ -90,6 +90,11 @@ public class CPUniqueAccount extends CPAccount implements UniqueAccount {
 	}
 
 	@Override
+	protected double checkDB(Currency currency, double cached) {
+		return storage.checkBalance(userId, currency, cached);
+	}
+
+	@Override
 	public String toString() {
 		return "CPUniqueAccount [userId=" + userId + ", displayName=" + identifier + ", balances=" + balances + "]";
 	}

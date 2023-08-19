@@ -140,4 +140,8 @@ public abstract class AbstractEconomyStorage extends Thread {
 		return currenciesMap;
 	}
 
+	public double checkBalance(UUID uuid, Currency currency, double cached) {
+		return cached;
+	}
+
 }

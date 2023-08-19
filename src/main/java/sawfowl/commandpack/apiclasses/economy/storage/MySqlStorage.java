@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -166,6 +167,22 @@ public class MySqlStorage extends SqlStorage {
 			createStatement(removeAccount, new Object[] {accounts.remove(identifier).identifier()}).execute();
 		} catch (SQLException e) {
 			plugin.getLogger().warn("Error when deleting Account " + identifier + "" + e.getLocalizedMessage());
+		}
+	}
+
+	@Override
+	public double checkBalance(UUID uuid, Currency currency, double cached) {
+		if(!plugin.getMainConfig().getEconomy().isAdditionalChecks()) return cached;
+		try {
+			ResultSet resultSet = resultSet("SELECT * FROM " + plugin.getMainConfig().getEconomy().getDBSettings().getTables().getUniqueAccounts() + " WHERE " + plugin.getMainConfig().getEconomy().getDBSettings().getCollumns().getUuid() + " = '" + uuid.toString() + "';");
+			if(resultSet.next()) {
+				Optional<CurrencyConfig> optConfig = plugin.getMainConfig().getEconomy().getCurrency(currency.displayName());
+				if(!optConfig.isPresent()) return cached;
+				return resultSet.getDouble(optConfig.get().getCollumn());
+			} else return cached;
+		} catch (SQLException e) {
+			plugin.getLogger().error(e.getLocalizedMessage());
+			return cached;
 		}
 	}
 

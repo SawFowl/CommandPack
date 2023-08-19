@@ -55,7 +55,7 @@ public class Balance extends AbstractRawCommand {
 				} else {
 					Component title = getText(source.locale(), LocalesPaths.COMMANDS_BALANCE_SELF_TITLE);
 					for(Currency currency : plugin.getEconomy().getEconomyService().getCurrencies()) {
-						double balance = optTarget.get().balance(currency).doubleValue();
+						double balance = plugin.getEconomy().getPlayerBalance(source.uniqueId(), currency).doubleValue();
 						Component message = TextUtils.replaceToComponents(getText(source.locale(), LocalesPaths.COMMANDS_BALANCE_SELF_LIST), new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)});
 						messages.add(message);
 					}

@@ -33,6 +33,9 @@ public class EconomyConfig {
 	@Setting("DBSettings")
 	@Comment("This options is only used when selecting MySql to store the economy data.\nCan be used to customize compatibility with Bukkit economy plugin databases.\nUse compatibility at your own risk.\nStable work is not guaranteed.")
 	private DBSettings dbSettings = new DBSettings();
+	@Setting("AadditionalChecks")
+	@Comment("Additional checks when performing transactions with player balance reduction when using MySql.")
+	private boolean additionalChecks = true;
 
 	public boolean isEnable() {
 		return enable;
@@ -73,6 +76,10 @@ public class EconomyConfig {
 
 	public DBSettings getDBSettings() {
 		return dbSettings;
+	}
+
+	public boolean isAdditionalChecks() {
+		return additionalChecks;
 	}
 
 }
