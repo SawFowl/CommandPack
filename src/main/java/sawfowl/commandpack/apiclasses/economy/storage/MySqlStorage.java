@@ -48,6 +48,8 @@ public class MySqlStorage extends SqlStorage {
 	private LinkedHashMap<CurrencyConfig, Currency> currenciesCollumns;
 	private Connection syncConnection;
 	private Statement syncStatement;
+	private Connection checkConnection;
+	private Statement checkStatement;
 	public MySqlStorage(CommandPack plugin, EconomyServiceImpl economyService) {
 		super(plugin, economyService);
 		Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(plugin.getMainConfig().getEconomy().getUpdateInterval(), TimeUnit.MILLISECONDS).execute(() -> {
@@ -174,7 +176,7 @@ public class MySqlStorage extends SqlStorage {
 	public double checkBalance(UUID uuid, Currency currency, double cached) {
 		if(!plugin.getMainConfig().getEconomy().isAdditionalChecks()) return cached;
 		try {
-			ResultSet resultSet = resultSet("SELECT * FROM " + plugin.getMainConfig().getEconomy().getDBSettings().getTables().getUniqueAccounts() + " WHERE " + plugin.getMainConfig().getEconomy().getDBSettings().getCollumns().getUuid() + " = '" + uuid.toString() + "';");
+			ResultSet resultSet = checkResultSet("SELECT * FROM " + plugin.getMainConfig().getEconomy().getDBSettings().getTables().getUniqueAccounts() + " WHERE " + plugin.getMainConfig().getEconomy().getDBSettings().getCollumns().getUuid() + " = '" + uuid.toString() + "';");
 			if(resultSet.next()) {
 				Optional<CurrencyConfig> optConfig = plugin.getMainConfig().getEconomy().getCurrency(currency.displayName());
 				if(!optConfig.isPresent()) return cached;
@@ -246,6 +248,12 @@ public class MySqlStorage extends SqlStorage {
 		checkSyncConnection();
 		if(syncStatement == null || syncStatement.isClosed()) syncStatement = syncConnection.createStatement();
 		return syncStatement.executeQuery(sql);
+	}
+
+	private ResultSet checkResultSet(String sql) throws SQLException {
+		if(checkConnection == null || checkConnection.isClosed()) checkConnection = plugin.getMariaDB().get().createNewConnection();
+		if(checkStatement == null || checkStatement.isClosed()) checkStatement = checkConnection.createStatement();
+		return checkStatement.executeQuery(sql);
 	}
 
 	private void checkSyncConnection() throws SQLException {
