@@ -115,7 +115,7 @@ public interface RawCommand extends PluginCommand, Raw {
 		if(args.length != 0) {
 			int i = 0;
 			for(String arg : args) {
-				if(arg == null || (getArguments().containsKey(i) && getArguments().get(i).getResultUnknownType(args).isPresent() && !getArguments().get(i).hasPermission(cause))) return Arrays.copyOfRange(args, 0, i);
+				if(arg == null || (getArguments().containsKey(i) && getArguments().get(i).getResultUnknownType(args).isPresent() && !getArguments().get(i).hasPermission(cause))) return Arrays.copyOfRange(args, 0, i - 1);
 				i++;
 			}
 		}
