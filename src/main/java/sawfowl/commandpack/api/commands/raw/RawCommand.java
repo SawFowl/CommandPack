@@ -94,6 +94,7 @@ public interface RawCommand extends PluginCommand, Raw {
 
 	@Override
 	default List<CommandCompletion> complete(CommandCause cause, Mutable arguments) throws CommandException {
+		if(!enableAutoComplete()) return getEmptyCompletion() == null ? new ArrayList<>() : getEmptyCompletion();
 		List<String> args = Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList());
 		String currentInput = arguments.input();
 		List<CommandCompletion> complete = completeChild(cause, args, arguments, currentInput);
@@ -111,12 +112,12 @@ public interface RawCommand extends PluginCommand, Raw {
 		if(getArguments() != null) {
 			Optional<RawArgument<?>> emptyArg = getArguments().values().stream().filter(arg -> !arg.getResultUnknownType(args).isPresent() && (!arg.isOptional() || !isPlayer && !arg.isOptionalForConsole())).findFirst();
 			if(emptyArg.isPresent()) exceptionAppendUsage(cause, getText(locale, emptyArg.get().getLocalesPath()));
-		}
-		if(args.length != 0) {
-			int i = 0;
-			for(String arg : args) {
-				if(arg == null || (getArguments().containsKey(i) && getArguments().get(i).getResultUnknownType(args).isPresent() && !getArguments().get(i).hasPermission(cause))) return Arrays.copyOfRange(args, 0, i - 1);
-				i++;
+			if(args.length != 0) {
+				int i = 0;
+				for(String arg : args) {
+					if(arg == null || (getArguments().containsKey(i) && getArguments().get(i).getResultUnknownType(args).isPresent() && !getArguments().get(i).hasPermission(cause))) return Arrays.copyOfRange(args, 0, i - 1);
+					i++;
+				}
 			}
 		}
 		return args;
