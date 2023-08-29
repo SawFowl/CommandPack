@@ -172,6 +172,7 @@ public class Permissions {
 	public  static final String PERMANENT_WARN_ACCESS = "commandpack.access.permanent.warn";
 	public  static final String PERMANENT_MUTE_ACCESS = "commandpack.access.permanent.mute";
 	public  static final String PERMANENT_BAN_ACCESS = "commandpack.access.permanent.ban";
+	public  static final String HIDE_CONNECT = "commandpack.access.hideconnect";
 	private  static final String CURRENCY_ACCESS = "commandpack.access.currency.";
 
 	public static String getIgnoreDelayTimer(String command) {

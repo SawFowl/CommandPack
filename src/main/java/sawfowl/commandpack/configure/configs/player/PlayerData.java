@@ -79,6 +79,8 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	private long lastJoin;
 	@Setting("LastExit")
 	private long lastExit;
+	@Setting("Vanished")
+	private boolean vanished = false;
 
 	@Override
 	public String getName() {
@@ -338,6 +340,15 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 				return player;
 			}
 		};
+	}
+
+	public boolean isVanished() {
+		return vanished;
+	}
+
+	public void setVanished(boolean vanished) {
+		this.vanished = vanished;
+		save();
 	}
 
 }

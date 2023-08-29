@@ -3,11 +3,13 @@ package sawfowl.commandpack.listeners;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.data.Keys;
+import org.spongepowered.api.effect.VanishState;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.event.EventContext;
@@ -62,11 +64,13 @@ public class PlayerConnectionListener {
 		}
 		if(plugin.getMainConfig().getEconomy().isEnable()) plugin.getEconomy().getEconomyService().checkAccounts(event.player());
 		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
-		((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get()).setLastJoin();
+		PlayerData playerData = ((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get());
+		playerData.setLastJoin();
+		if(playerData.isVanished()) event.player().offer(Keys.VANISH_STATE, VanishState.vanished());
 		sendMotd(event.player());
 		if(!event.isMessageCancelled() && plugin.getMainConfig().isChangeConnectionMessages()) {
 			event.setMessageCancelled(true);
-			if((!event.player().get(Keys.VANISH_STATE).isPresent() || !event.player().get(Keys.VANISH_STATE).get().invisible())) sendJoinMessage(event.player());
+			if(!playerData.isVanished() || !event.player().hasPermission(Permissions.HIDE_CONNECT)) sendJoinMessage(event.player());
 			Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.JOIN_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {getPrefix(event.player()), event.player().get(Keys.DISPLAY_NAME).orElse(text(event.player().name())), getSuffix(event.player())}));
 		}
 		if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterSpawn() && plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().isPresent()) {
@@ -88,10 +92,12 @@ public class PlayerConnectionListener {
 	@Listener
 	public void onDisconnect(ServerSideConnectionEvent.Disconnect event) {
 		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
-		((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get()).setLastExit();
+		PlayerData playerData = ((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get());
+		playerData.setLastExit();
+		playerData.setVanished(event.player().get(Keys.VANISH_STATE).isPresent() && event.player().get(Keys.VANISH_STATE).get().invisible());
 		if(plugin.getMainConfig().isChangeConnectionMessages()) {
 			if(TextUtils.serializeLegacy(event.message()).length() > 0) event.setMessage(Component.empty());
-			if((!event.player().get(Keys.VANISH_STATE).isPresent() || !event.player().get(Keys.VANISH_STATE).get().invisible())) sendLeaveMessage(event.player());
+			if(!playerData.isVanished() || !event.player().hasPermission(Permissions.HIDE_CONNECT)) sendLeaveMessage(event.player());
 			Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.LEAVE_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {getPrefix(event.player()), event.player().get(Keys.DISPLAY_NAME).orElse(text(event.player().name())), getSuffix(event.player())}));
 		}
 	}
@@ -273,8 +279,12 @@ public class PlayerConnectionListener {
 
 	private void sendMotd(ServerPlayer player) {
 		if(!plugin.getMainConfig().isEnableMotd()) return;
-		List<Component> motd = plugin.getLocales().getListTexts(player.locale(), LocalesPaths.MOTD);
-		if(!motd.isEmpty()) player.sendMessage(Component.join(JoinConfiguration.newlines(), motd.stream().map(c -> TextUtils.replace(c, Placeholders.PLAYER, player.get(Keys.DISPLAY_NAME).orElse(Component.text(player.name())))).collect(Collectors.toList())));
+		Sponge.server().scheduler().submit(Task.builder().delay(2, TimeUnit.SECONDS).plugin(plugin.getPluginContainer()).execute(() -> {
+			Sponge.server().player(player.uniqueId()).ifPresent(p -> {
+				List<Component> motd = plugin.getLocales().getListTexts(p.locale(), LocalesPaths.MOTD);
+				if(!motd.isEmpty()) p.sendMessage(Component.join(JoinConfiguration.newlines(), motd.stream().map(c -> TextUtils.replace(c, Placeholders.PLAYER, player.get(Keys.DISPLAY_NAME).orElse(Component.text(p.name())))).collect(Collectors.toList())));
+			});
+		}).build());
 	}
 
 	private void sendJoinMessage(ServerPlayer player) {
@@ -282,9 +292,11 @@ public class PlayerConnectionListener {
 		Component name = player.get(Keys.DISPLAY_NAME).orElse(text(player.name()));
 		Component suffix = getSuffix(player);
 		boolean before = player.hasPlayedBefore();
-		Sponge.server().onlinePlayers().forEach(p -> {
-			p.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(p.locale(), before ? LocalesPaths.JOIN_MESSAGE : LocalesPaths.FIRST_JOIN_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
-		});
+		Sponge.server().scheduler().submit(Task.builder().delay(2, TimeUnit.SECONDS).plugin(plugin.getPluginContainer()).execute(() -> {
+			Sponge.server().onlinePlayers().forEach(p -> {
+				p.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(p.locale(), before ? LocalesPaths.JOIN_MESSAGE : LocalesPaths.FIRST_JOIN_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
+			});
+		}).build());
 	}
 
 	private void sendLeaveMessage(ServerPlayer player) {
