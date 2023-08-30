@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
@@ -32,7 +34,9 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+
 import net.minecraftforge.fml.loading.FMLLoader;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.configure.Placeholders;
@@ -47,7 +51,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	protected final String javaHome;
 	protected final int linesPerPage = 15;
 	protected Collection<PluginContainer> containers = new ArrayList<>();
-	protected List<ModContainer> mods = new ArrayList<>();
+	protected Set<ModContainer> mods = new HashSet<>();
 	public AbstractInfoCommand(CommandPack plugin) {
 		super(plugin);
 		os = System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch");
@@ -170,13 +174,13 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected void fillLists() {
-		if(mods == null) mods = new ArrayList<>();
+		if(mods == null) mods = new HashSet<>();
 		if(containers == null) containers = new ArrayList<>();
 		if(plugin.isForgeServer()) {
 			FMLLoader.getLoadingModList().getMods().forEach(mod -> {
-				if(!mod.getOwningFile().getModLoader().equalsIgnoreCase("java_plain")) {
-					mods.add(new ModContainer(mod));
-				}
+				plugin.getLogger().warn(mod.getOwningFile().getModLoader());
+				plugin.getLogger().warn(mod.getOwningFile().getModLoader().length());
+				if(!mod.getOwningFile().getModLoader().equalsIgnoreCase("java_plain") && !mod.getOwningFile().getModLoader().equalsIgnoreCase("")) mods.add(new ModContainer(mod));
 			});
 			containers.addAll(Sponge.pluginManager().plugins().stream().filter(container -> (!mods.stream().filter(mod -> mod.getModId().equals(container.metadata().id())).findFirst().isPresent())).collect(Collectors.toList()));
 		} else containers.addAll(Sponge.pluginManager().plugins());
