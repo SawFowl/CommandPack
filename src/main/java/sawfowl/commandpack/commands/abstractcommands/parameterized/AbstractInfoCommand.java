@@ -178,8 +178,6 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 		if(containers == null) containers = new ArrayList<>();
 		if(plugin.isForgeServer()) {
 			FMLLoader.getLoadingModList().getMods().forEach(mod -> {
-				plugin.getLogger().warn(mod.getOwningFile().getModLoader());
-				plugin.getLogger().warn(mod.getOwningFile().getModLoader().length());
 				if(!mod.getOwningFile().getModLoader().equalsIgnoreCase("java_plain") && !mod.getOwningFile().getModLoader().equalsIgnoreCase("")) mods.add(new ModContainer(mod));
 			});
 			containers.addAll(Sponge.pluginManager().plugins().stream().filter(container -> (!mods.stream().filter(mod -> mod.getModId().equals(container.metadata().id())).findFirst().isPresent())).collect(Collectors.toList()));
