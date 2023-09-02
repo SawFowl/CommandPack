@@ -48,7 +48,7 @@ public class RawArguments {
 		}, new RawResultSupplier<String>() {
 			@Override
 			public Optional<String> get(String[] args) {
-				return args.length >= cursor + 1 ? (variants.isEmpty() ? Optional.ofNullable(args[cursor]) : variants.stream().filter(a -> a.equals(args[cursor])).findFirst()) : Optional.ofNullable(def);
+				return args.length >= cursor + 1 ? Optional.ofNullable((variants.isEmpty() ? Optional.ofNullable(args[cursor]) : variants.stream().filter(a -> a.equals(args[cursor])).findFirst()).orElse(def)) : Optional.ofNullable(def);
 			}
 		}, optional, optionalForConsole, cursor, localesPath);
 	}

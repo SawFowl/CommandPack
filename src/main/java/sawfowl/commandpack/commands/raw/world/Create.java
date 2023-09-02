@@ -49,10 +49,10 @@ public class Create extends AbstractWorldCommand {
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		WorldType worldType = getWorldType(args, 0).get();
-		String name = args[2];
+		String name = getString(args, 2).get();
 		WorldTemplate.Builder builder = (WorldTemplate.builder().displayName(text(name)).generator(chunkGenerators.get(args[1])).gameMode(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().gameMode().asDefaultedReference(RegistryTypes.GAME_MODE)).hardcore(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().hardcore()).difficulty(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().difficulty().asDefaultedReference(RegistryTypes.DIFFICULTY)).performsSpawnLogic(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().performsSpawnLogic()).pvp(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().pvp()).loadOnStartup(true).key(ResourceKey.sponge(TextUtils.clearDecorations(name).toLowerCase())).worldType(RegistryReference.referenced(Sponge.server(), RegistryTypes.WORLD_TYPE, worldType)));
 		if(args.length > 3) {
-			String seed = args[3];
+			String seed = getString(args, 3).get();
 			boolean features = getBoolean(args, 4).get();
 			boolean bonusChest = getBoolean(args, 5).get();
 			builder = builder.generationConfig(WorldGenerationConfig.Mutable.builder().seed(seed.hashCode()).generateFeatures(features).generateBonusChest(bonusChest).build());
@@ -99,7 +99,7 @@ public class Create extends AbstractWorldCommand {
 			RawArguments.createWorldTypeArgument(false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
 			RawArguments.createStringArgument(chunkGenerators.keySet(), false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
 			RawArguments.createStringArgument(new ArrayList<>(), false, false, 2, null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT),
-			RawArguments.createStringArgument(new ArrayList<>(), true, true, 3, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			RawArguments.createStringArgument(new ArrayList<>(), true, true, 3, "0", LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
 			RawArguments.createBooleanArgument(true, true, 4, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
 			RawArguments.createBooleanArgument(true, true, 5, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);

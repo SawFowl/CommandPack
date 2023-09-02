@@ -119,6 +119,7 @@ public class Warps extends AbstractParameterizedCommand {
 		plugin.getPlayersData().getAdminWarps().forEach((name, warp) -> {
 			Component delete = !player.hasPermission(Permissions.WARP_STAFF) ? Component.empty() : getText(player.locale(), LocalesPaths.REMOVE).clickEvent(SpongeComponents.executeCallback(cause -> {
 				plugin.getPlayersData().removeAdminWarp(name);
+				sendServerWarps(player, getServerWarps(player));
 			}));
 			Component teleport = player.hasPermission(Permissions.getWarpPermission(name)) || player.hasPermission(Permissions.WARP_STAFF) ? getText(player.locale(), LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback( cause -> {
 				plugin.getPlayersData().getTempData().setPreviousLocation(player);
@@ -135,6 +136,7 @@ public class Warps extends AbstractParameterizedCommand {
 		plugin.getPlayersData().getPlayersWarps(warp -> !warp.isPrivate() || player.hasPermission(Permissions.WARP_STAFF) || plugin.getPlayersData().getOrCreatePlayerData(player).containsWarp(warp.getPlainName())).forEach(warp -> {
 			Component delete = !player.hasPermission(Permissions.WARP_STAFF) || !plugin.getPlayersData().getOrCreatePlayerData(player).containsWarp(warp.getPlainName()) ? Component.empty() : getText(player.locale(), LocalesPaths.REMOVE).clickEvent(SpongeComponents.executeCallback(cause -> {
 				plugin.getPlayersData().getOrCreatePlayerData(player).removeWarp(warp.getPlainName());
+				sendPlayersWarps(player, getPlayersWarps(player));
 			}));
 			Component teleport = getText(player.locale(), LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback( cause -> {
 				plugin.getPlayersData().getTempData().setPreviousLocation(player);

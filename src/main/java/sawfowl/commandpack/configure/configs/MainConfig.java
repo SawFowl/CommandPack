@@ -66,6 +66,9 @@ public class MainConfig {
 	private Punishment punishment = new Punishment();
 	@Setting("Economy")
 	private EconomyConfig economy = new EconomyConfig();
+	@Setting("FixTopCommandInNether")
+	@Comment("If true, instead of teleporting to the very top of the lower world, an attempt will be made to find a suitable location under the bedrock.")
+	private boolean fixTopCommandInNether = true;
 
 	public boolean isAutoCompleteRawCommands() {
 		return autoCompleteRawCommands;
@@ -141,6 +144,10 @@ public class MainConfig {
 
 	public EconomyConfig getEconomy() {
 		return economy;
+	}
+
+	public boolean isFixTopCommandInNether() {
+		return fixTopCommandInNether;
 	}
 
 }
