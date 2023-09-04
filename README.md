@@ -25,11 +25,8 @@ Currently implemented:
 * Worlds Management(full).
 * Join/Leave messages
 * Join commands
-<<<<<<< HEAD
-=======
 * Flexible punishment system with support for h2 and MySQL databases (large customization).
 * Sponge Economy API Implementation.
->>>>>>> dev
 * And much more... For more information, see the list of commands at the link above.
 
 ##### For developers:
@@ -56,11 +53,7 @@ repositories {
 }
 dependencies {
 	...
-<<<<<<< HEAD
-	implementation 'com.github.SawFowl:CommandPack:1.3'
-=======
 	implementation 'com.github.SawFowl:CommandPack:1.4'
->>>>>>> dev
 }
 ```
 
