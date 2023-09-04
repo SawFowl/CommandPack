@@ -67,6 +67,11 @@ public class PlayerConnectionListener {
 		PlayerData playerData = ((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get());
 		playerData.setLastJoin();
 		if(playerData.isVanished()) event.player().offer(Keys.VANISH_STATE, VanishState.vanished());
+		if(playerData.isGodMode()) event.player().offer(Keys.INVULNERABLE, true);
+		if(playerData.isFly()) {
+			event.player().offer(Keys.CAN_FLY, true);
+			event.player().offer(Keys.IS_FLYING, true);
+		}
 		sendMotd(event.player());
 		if(!event.isMessageCancelled() && plugin.getMainConfig().isChangeConnectionMessages()) {
 			event.setMessageCancelled(true);
@@ -95,6 +100,8 @@ public class PlayerConnectionListener {
 		PlayerData playerData = ((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get());
 		playerData.setLastExit();
 		playerData.setVanished(event.player().get(Keys.VANISH_STATE).isPresent() && event.player().get(Keys.VANISH_STATE).get().invisible());
+		playerData.setGodMode(event.player().get(Keys.INVULNERABLE).orElse(false));
+		playerData.setFly(event.player().get(Keys.CAN_FLY).orElse(false));
 		if(plugin.getMainConfig().isChangeConnectionMessages()) {
 			if(TextUtils.serializeLegacy(event.message()).length() > 0) event.setMessage(Component.empty());
 			if(!playerData.isVanished() || !event.player().hasPermission(Permissions.HIDE_CONNECT)) sendLeaveMessage(event.player());

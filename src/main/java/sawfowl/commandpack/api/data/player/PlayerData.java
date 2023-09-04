@@ -147,6 +147,10 @@ public interface PlayerData {
 
 	long getKitGivedTime(Kit kit);
 
+	boolean isHideBalance();
+
+	void setHideBalance(boolean hideBalance);
+
 	/**
 	 * Forcing a player to use a command.
 	 */

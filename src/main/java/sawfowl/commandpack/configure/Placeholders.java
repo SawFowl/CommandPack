@@ -3,6 +3,7 @@ package sawfowl.commandpack.configure;
 public class Placeholders {
 
 	public static final String PREFIX = "%prefix%";
+	public static final String RANK = "%rank%";
 	public static final String PLAYER = "%player%";
 	public static final String SUFFIX = "%suffix%";
 	public static final String SERVER = "%server%";

@@ -81,6 +81,12 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	private long lastExit;
 	@Setting("Vanished")
 	private boolean vanished = false;
+	@Setting("GodMode")
+	private boolean godMode = false;
+	@Setting("Fly")
+	private boolean fly = false;
+	@Setting("HideBalance")
+	private boolean hideBalance = false;
 
 	@Override
 	public String getName() {
@@ -349,6 +355,32 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	public void setVanished(boolean vanished) {
 		this.vanished = vanished;
 		save();
+	}
+
+	public boolean isGodMode() {
+		return godMode;
+	}
+
+	public void setGodMode(boolean godMode) {
+		this.godMode = godMode;
+	}
+
+	public boolean isFly() {
+		return fly;
+	}
+
+	public void setFly(boolean fly) {
+		this.fly = fly;
+	}
+
+	@Override
+	public boolean isHideBalance() {
+		return hideBalance;
+	}
+
+	@Override
+	public void setHideBalance(boolean hideBalance) {
+		this.hideBalance = hideBalance;
 	}
 
 }

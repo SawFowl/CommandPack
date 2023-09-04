@@ -3,10 +3,8 @@ package sawfowl.commandpack.apiclasses.economy;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -21,6 +19,7 @@ import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.service.economy.account.VirtualAccount;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.apiclasses.economy.storage.AbstractEconomyStorage;
 import sawfowl.commandpack.apiclasses.economy.storage.FileStorage;
@@ -36,7 +35,6 @@ public class EconomyServiceImpl implements CPEconomyService {
 	private Currency[] currencies;
 	private Map<Character, Currency> currenciesMap = new HashMap<Character, Currency>();
 	private Map<String, VirtualAccount> virtualAccounts = new HashMap<String, VirtualAccount>();
-	private Set<UUID> hidenBalances = new HashSet<UUID>();
 	public EconomyServiceImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		def = new CPCurrency(ResourceKey.resolve(plugin.getMainConfig().getEconomy().getDefaultCurrency().getKey()));
@@ -151,19 +149,19 @@ public class EconomyServiceImpl implements CPEconomyService {
 
 	@Override
 	public void hide(UUID uuid) {
-		if(!isHiden(uuid)) {
-			hidenBalances.add(uuid);
-		} else hidenBalances.remove(uuid);
+		plugin.getPlayersData().getPlayerData(uuid).ifPresent(data -> {
+			data.setHideBalance(!isHiden(uuid));
+		});
 	}
 
 	@Override
 	public boolean isHiden(UniqueAccount account) {
-		return hidenBalances.contains(account.uniqueId());
+		return isHiden(account.uniqueId());
 	}
 
 	@Override
 	public boolean isHiden(UUID uuid) {
-		return hidenBalances.contains(uuid);
+		return plugin.getPlayersData().getPlayerData(uuid).map(PlayerData::isHideBalance).orElse(false);
 	}
 
 	public void checkAccounts(ServerPlayer player) {

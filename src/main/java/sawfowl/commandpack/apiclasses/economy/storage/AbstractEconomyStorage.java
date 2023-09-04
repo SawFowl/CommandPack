@@ -129,11 +129,26 @@ public abstract class AbstractEconomyStorage extends Thread {
 	}
 
 	public void checkAccounts(ServerPlayer player) {
+		fixUniqueAccount(player);
 		if(hasAccount(player.uniqueId()) || !hasAccount(player.name())) return;
 		CPUniqueAccount account = CPUniqueAccount.create(player.uniqueId(), player.name(), accounts.get(player.name()).balances(), this);
 		uniqueAccounts.put(player.uniqueId(), account);
 		removeAccount(player.name());
 		account.save();
+	}
+
+	public void fixUniqueAccount(ServerPlayer player) {
+		List<UUID> toRemove = new ArrayList<UUID>();
+		for(UniqueAccount account : uniqueAccounts()) {
+			if(account.identifier().equals(player.name()) && !account.uniqueId().equals(player.uniqueId())) toRemove.add(account.uniqueId());
+		}
+		if(!toRemove.isEmpty()) {
+			toRemove.forEach(uuid -> {
+				deleteAccount(uuid);
+			});
+			toRemove.clear();
+			toRemove = null;
+		}
 	}
 
 	public Map<Character, Currency> getCurrenciesMap() {

@@ -141,7 +141,8 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 
 	@Override
 	public Map<UUID, Long> getTrackingMap(String command) {
-		return !cooldowns.containsKey(command) ? cooldowns.put(command, new HashMap<>()) : cooldowns.get(command);
+		if(!cooldowns.containsKey(command)) cooldowns.put(command, new HashMap<>());
+		return cooldowns.get(command);
 	}
 
 	@Override

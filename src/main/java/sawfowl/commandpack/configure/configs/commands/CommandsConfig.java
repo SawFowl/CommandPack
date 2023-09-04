@@ -213,6 +213,8 @@ public class CommandsConfig {
 	private CommandSettings muteList = new CommandSettings(new String[] {"mutes"});
 	@Setting("Balance")
 	private CommandSettings balance = new CommandSettings(new String[] {"money"});
+	@Setting("BalanceTop")
+	private CommandSettings balanceTop = new CommandSettings(60, new String[] {"baltop"});
 	@Setting("HideBalance")
 	private CommandSettings hideBalance = new CommandSettings();
 	@Setting("Economy")

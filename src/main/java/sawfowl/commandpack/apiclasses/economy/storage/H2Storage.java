@@ -63,8 +63,9 @@ public class H2Storage extends SqlStorage {
 
 	@Override
 	public void removeUniqueAccount(UUID uuid) {
+		uniqueAccounts.remove(uuid);
 		try {
-			createStatement(removeUniqueAccount, new Object[] {uniqueAccounts.remove(uuid).uniqueId()}).execute();
+			createStatement(removeUniqueAccount, new Object[] {uuid}).execute();
 		} catch (SQLException e) {
 			plugin.getLogger().warn("Error when deleting UniqueAccount '" + uuid + "'" + e.getLocalizedMessage());
 		}
@@ -72,8 +73,9 @@ public class H2Storage extends SqlStorage {
 
 	@Override
 	public void removeAccount(String identifier) {
+		accounts.remove(identifier);
 		try {
-			createStatement(removeAccount, new Object[] {accounts.remove(identifier).identifier()}).execute();
+			createStatement(removeAccount, new Object[] {identifier}).execute();
 		} catch (SQLException e) {
 			plugin.getLogger().warn("Error when deleting Account '" + identifier + "'" + e.getLocalizedMessage());
 		}

@@ -67,6 +67,7 @@ public class Permissions {
 	public static final String MUTEINFO = "commandpack.commands.user.muteinfo";
 	public static final String MUTELIST = "commandpack.commands.user.mutelist";
 	public static final String BALANCE = "commandpack.commands.user.balance.self";
+	public static final String BALANCE_TOP = "commandpack.commands.user.balance.top";
 	public static final String BALANCE_OTHER = "commandpack.commands.user.balance.other";
 	public static final String BALANCE_HIDEN_VIEW = "commandpack.commands.user.balance.hiddenview";
 	public static final String HIDE_BALANCE = "commandpack.commands.user.balance.hide";
