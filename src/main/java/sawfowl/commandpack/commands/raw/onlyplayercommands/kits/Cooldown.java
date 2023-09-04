@@ -51,7 +51,7 @@ public class Cooldown extends AbstractKitsEditCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/kits addcommand <Kit> <Duration>");
+		return text("&c/kits cooldown <Kit> <Duration>");
 	}
 
 	@Override

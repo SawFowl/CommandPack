@@ -19,13 +19,12 @@ public class CooldownTimerTask implements Consumer<ScheduledTask> {
 	}
 
 	private final UUID uuid;
-	private final long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
 	final long cooldown;
 	final Map<UUID, Long> cooldowns;
 	@Override
 	public void accept(ScheduledTask task) {
 		if(cooldowns.containsKey(uuid)) {
-			if((cooldowns.get(uuid) + cooldown) - currentTime <= 0) cooldowns.remove(uuid);
+			if((cooldowns.get(uuid) + cooldown) - TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) <= 0) cooldowns.remove(uuid);
 		} else {
 			task.cancel();
 		}

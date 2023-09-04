@@ -23,12 +23,15 @@ import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.event.EventContext;
 import org.spongepowered.api.event.EventContextKeys;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.lifecycle.ProvideServiceEvent;
 import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
 import org.spongepowered.api.event.lifecycle.RegisterBuilderEvent;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.service.ban.BanService;
+import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.world.biome.Biomes;
 import org.spongepowered.api.world.generation.ChunkGenerator;
 import org.spongepowered.api.world.generation.config.FlatGeneratorConfig;
@@ -62,9 +65,15 @@ import sawfowl.commandpack.api.data.miscellaneous.Position;
 import sawfowl.commandpack.api.data.player.Home;
 import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.commandpack.api.data.player.Warp;
+import sawfowl.commandpack.api.data.punishment.Mute;
+import sawfowl.commandpack.api.data.punishment.Warn;
+import sawfowl.commandpack.api.data.punishment.Warns;
+import sawfowl.commandpack.api.services.CPEconomyService;
+import sawfowl.commandpack.api.services.PunishmentService;
 import sawfowl.commandpack.apiclasses.KitServiceImpl;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.apiclasses.RTPService;
+import sawfowl.commandpack.apiclasses.punishment.PunishmentServiceImpl;
 import sawfowl.commandpack.commands.settings.ParameterSettingsImpl;
 import sawfowl.commandpack.commands.settings.RawArgumentImpl;
 import sawfowl.commandpack.configure.ConfigManager;
@@ -84,6 +93,9 @@ import sawfowl.commandpack.configure.configs.miscellaneous.PointData;
 import sawfowl.commandpack.configure.configs.player.BackpackData;
 import sawfowl.commandpack.configure.configs.player.HomeData;
 import sawfowl.commandpack.configure.configs.player.WarpData;
+import sawfowl.commandpack.configure.configs.punishment.MuteData;
+import sawfowl.commandpack.configure.configs.punishment.WarnData;
+import sawfowl.commandpack.configure.configs.punishment.WarnsData;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.listeners.CommandLogListener;
@@ -98,6 +110,7 @@ import sawfowl.commandpack.listeners.PlayerMoveListener;
 import sawfowl.commandpack.listeners.PlayerDeathAndRespawnListener;
 import sawfowl.commandpack.utils.Economy;
 import sawfowl.commandpack.utils.Logger;
+import sawfowl.commandpack.utils.MariaDB;
 
 @Plugin("commandpack")
 public class CommandPack {
@@ -118,7 +131,9 @@ public class CommandPack {
 	private Map<Long, Double> tps10m = new HashMap<>();
 	private long serverStartedTime;
 	private sawfowl.commandpack.api.CommandPack api;
+	private PunishmentService punishmentService;
 	private Map<String, ChunkGenerator> generators = new HashMap<>();
+	private MariaDB mariaDB;
 
 	public static CommandPack getInstance() {
 		return instance;
@@ -192,6 +207,14 @@ public class CommandPack {
 		return api;
 	}
 
+	public PunishmentService getPunishmentService() {
+		return punishmentService;
+	}
+
+	public Optional<MariaDB> getMariaDB() {
+		return Optional.ofNullable(mariaDB);
+	}
+
 	@Inject
 	public CommandPack(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
 		instance = this;
@@ -209,12 +232,16 @@ public class CommandPack {
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
 		configManager.loadPlayersData();
 		isForge = checkForge();
+		if(getMainConfig().getMySqlConfig().isEnable()) {
+			mariaDB = new MariaDB(instance);
+			if(mariaDB.openConnection() == null) mariaDB = null;
+		}
 	}
 
 	@Listener
 	public void onServerStarted(StartedEngineEvent<Server> event) {
 		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getText(Sponge.server().locale(), LocalesPaths.ECONOMY_NOT_FOUND));
-		economy = new Economy(instance);
+		if(economy == null) economy = new Economy(instance);
 		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerChatListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerCommandListener(instance));
@@ -279,6 +306,16 @@ public class CommandPack {
 				return new HashSet<>(generators.keySet());
 			}
 
+			@Override
+			public Optional<PunishmentService> getPunishmentService() {
+				return Optional.ofNullable(punishmentService);
+			}
+
+			@Override
+			public Optional<CPEconomyService> getEconomyService() {
+				return Optional.ofNullable(economy.getEconomyService());
+			}
+
 		};
 
 		Sponge.eventManager().post(new sawfowl.commandpack.api.CommandPack.PostAPI() {
@@ -302,7 +339,7 @@ public class CommandPack {
 			tps1m.put(currentTime, Sponge.server().ticksPerSecond());
 			tps5m.put(currentTime, Sponge.server().ticksPerSecond());
 			tps10m.put(currentTime, Sponge.server().ticksPerSecond());
-			Sponge.server().onlinePlayers().forEach(player -> {
+			if(getMainConfig().getAfkConfig().isEnable()) Sponge.server().onlinePlayers().forEach(player -> {
 				if(getPlayersData().getTempData().getLastActivity(player) > 0) {
 					if(getPlayersData().getTempData().isAfk(player) && !player.hasPermission(Permissions.AFK_UNLIMIT)) {
 						if((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay()) - Duration.ofMillis(System.currentTimeMillis()).getSeconds() <= 0) {
@@ -325,6 +362,16 @@ public class CommandPack {
 			});
 		}).build());
 		serverStartedTime = System.currentTimeMillis();
+	}
+
+	@Listener
+	public void onProvideBanService(ProvideServiceEvent<BanService> event) {
+		if(getMainConfig().getPunishment().isEnable()) event.suggest(() -> punishmentService = new PunishmentServiceImpl(instance));
+	}
+
+	@Listener
+	public void onProvideEconomyService(ProvideServiceEvent<EconomyService> event) {
+		if(getMainConfig().getEconomy().isEnable()) economy = new Economy(instance).createEconomy(event);
 	}
 
 	@Listener
@@ -434,6 +481,24 @@ public class CommandPack {
 			@Override
 			public RawArgument.Builder get() {
 				return new RawArgumentImpl<Object>().builder();
+			}
+		});
+		event.register(Mute.Builder.class, new Supplier<Mute.Builder>() {
+			@Override
+			public Mute.Builder get() {
+				return new MuteData().builder();
+			}
+		});
+		event.register(Warn.Builder.class, new Supplier<Warn.Builder>() {
+			@Override
+			public Warn.Builder get() {
+				return new WarnData().builder();
+			}
+		});
+		event.register(Warns.Builder.class, new Supplier<Warns.Builder>() {
+			@Override
+			public Warns.Builder get() {
+				return new WarnsData().builder();
 			}
 		});
 	}

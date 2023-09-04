@@ -8,16 +8,20 @@ import java.util.Optional;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.registry.RegistryTypes;
+import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportConfig;
+import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.AfkConfig;
+import sawfowl.commandpack.configure.configs.miscellaneous.MySqlConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.RestrictEntitySpawn;
 import sawfowl.commandpack.configure.configs.miscellaneous.RestrictMods;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
+import sawfowl.commandpack.configure.configs.punishment.Punishment;
 
 @ConfigSerializable
 public class MainConfig {
@@ -56,6 +60,16 @@ public class MainConfig {
 	@Setting("RestrictEntitySpawn")
 	@Comment("Use this configuration section to control which entities can spawn on the server.\nSettings for worlds have a higher priority than global settings.\nAn entity with the id \"minecraft:player\" will always be able to spawn regardless of these settings.")
 	private RestrictEntitySpawn restrictEntitySpawn = new RestrictEntitySpawn();
+	@Setting("MySQL")
+	@Comment("Configure this if you need to store player punishment data in a MySQL database.")
+	private MySqlConfig mySqlConfig = new MySqlConfig();
+	@Setting("Punishment")
+	private Punishment punishment = new Punishment();
+	@Setting("Economy")
+	private EconomyConfig economy = new EconomyConfig();
+	@Setting("FixTopCommand")
+	@Comment("Instead of teleporting to the very top of the world, an attempt will be made to find a suitable location under the bedrock.")
+	private List<String> fixTop = Arrays.asList("minecraft:the_nether");
 
 	public boolean isAutoCompleteRawCommands() {
 		return autoCompleteRawCommands;
@@ -119,6 +133,22 @@ public class MainConfig {
 
 	public RestrictEntitySpawn getRestrictEntitySpawn() {
 		return restrictEntitySpawn;
+	}
+
+	public MySqlConfig getMySqlConfig() {
+		return mySqlConfig;
+	}
+
+	public Punishment getPunishment() {
+		return punishment;
+	}
+
+	public EconomyConfig getEconomy() {
+		return economy;
+	}
+
+	public boolean isFixTopCommand(ServerWorld world) {
+		return fixTop.contains(world.key().asString());
 	}
 
 }

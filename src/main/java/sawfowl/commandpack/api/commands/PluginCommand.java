@@ -30,6 +30,7 @@ import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.ThrowingConsumer;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
 import sawfowl.commandpack.utils.tasks.DelayTimerTask;
 import sawfowl.localeapi.api.TextUtils;
 
@@ -73,6 +74,23 @@ public interface PluginCommand {
 	 */
 	default String trackingName() {
 		return command();
+	}
+
+	default void checkCooldown(CommandCause cause, Locale locale, boolean isPlayer) throws CommandException {
+		if(isPlayer) {
+			ServerPlayer player = (ServerPlayer) cause.audience();
+			if(getCommandSettings() != null && getCooldowns() != null && !player.hasPermission(Permissions.getIgnoreCooldown(trackingName()))) {
+				Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+				if(!getCooldowns().containsKey(player.uniqueId())) {
+					getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
+					Sponge.asyncScheduler().submit(Task.builder().plugin(getContainer()).interval(1, TimeUnit.SECONDS).execute(new CooldownTimerTask(player, getCommandSettings(), getCooldowns())).build());
+				} else {
+					if((getCooldowns().get(player.uniqueId())) - currentTime > 0) exception(locale, Placeholders.DELAY, timeFormat((getCooldowns().get(player.uniqueId())) - currentTime, locale), LocalesPaths.COMMANDS_COOLDOWN);
+					getCooldowns().remove(player.uniqueId());
+					getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
+				}
+			}
+		}
 	}
 
 	default Map<UUID, Long> getCooldowns() {
@@ -182,9 +200,9 @@ public interface PluginCommand {
 	 * Automatically activates the command's execution fee if required by the command's settings.
 	 */
 	default void delay(ServerPlayer player, Locale locale, ThrowingConsumer<PluginCommand, CommandException> consumer) throws CommandException {
-		if(getCommandSettings().getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(command()))) {
-			CommandPack.getInstance().getPlayersData().getTempData().addCommandTracking(command(), player);
-			Sponge.asyncScheduler().submit(Task.builder().plugin(getContainer()).interval(1, TimeUnit.SECONDS).execute(new DelayTimerTask(consumer, player, 0, getContainer(), command(), getCommandSettings(), this)).build());
+		if(getCommandSettings() != null && getCommandSettings().getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(command()))) {
+			CommandPack.getInstance().getPlayersData().getTempData().addCommandTracking(trackingName(), player);
+			Sponge.server().scheduler().submit(Task.builder().plugin(getContainer()).interval(1, TimeUnit.SECONDS).execute(new DelayTimerTask(consumer, player, getContainer(), command(), this)).build());
 		} else {
 			economy(player, locale);
 			consumer.accept(this);
@@ -200,8 +218,7 @@ public interface PluginCommand {
 		if(price.getMoney() > 0) {
 			Currency currency = CommandPack.getInstance().getEconomy().checkCurrency(price.getCurrency());
 			BigDecimal money = createDecimal(price.getMoney());
-			if(!CommandPack.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exception(TextUtils.replaceToComponents(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY), new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command())}));
-			CommandPack.getInstance().getEconomy().removeFromPlayerBalance(player, currency, money);
+			if(!CommandPack.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money) || !CommandPack.getInstance().getEconomy().removeFromPlayerBalance(player, currency, money)) exception(TextUtils.replaceToComponents(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY), new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command())}));
 		}
 	}
 

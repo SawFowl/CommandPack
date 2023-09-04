@@ -6,6 +6,9 @@ import java.util.Set;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.world.generation.ChunkGenerator;
 
+import sawfowl.commandpack.api.services.CPEconomyService;
+import sawfowl.commandpack.api.services.PunishmentService;
+
 /**
  * Plugin API.
  * 
@@ -48,6 +51,16 @@ public interface CommandPack {
 	 * Get a {@link Set} of names of all registered custom chunk generators.
 	 */
 	Set<String> getAvailableGenerators();
+
+	/**
+	 * A system for punishing players.
+	 */
+	Optional<PunishmentService> getPunishmentService();
+
+	/**
+	 * Economy Service.
+	 */
+	Optional<CPEconomyService> getEconomyService();
 
 	public double getAverageTPS1m();
 

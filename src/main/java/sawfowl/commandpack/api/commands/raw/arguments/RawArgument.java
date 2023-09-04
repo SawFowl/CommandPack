@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.Command.Raw;
-import org.spongepowered.api.command.exception.CommandException;
+import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
@@ -36,6 +36,11 @@ public interface RawArgument<T> extends DataSerializable {
 		return (RawArgument<T>) builder().variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).localeTextPath(localesPath).build();
 	}
 
+	@SuppressWarnings("unchecked")
+	static <T> RawArgument<T> of(Class<T> clazz, RawCompleterSupplier<Stream<String>> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+		return (RawArgument<T>) builder().variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).localeTextPath(localesPath).build();
+	}
+
 	static <T> RawArgument<T> of(Class<T> clazz, Stream<String> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, Object[] localesPath) {
 		return of(clazz, new RawCompleterSupplier<Stream<String>>() {
 			@Override
@@ -43,6 +48,15 @@ public interface RawArgument<T> extends DataSerializable {
 				return variants;
 			}
 		}, result, optional, optionalForConsole, cursor, localesPath);
+	}
+
+	static <T> RawArgument<T> of(Class<T> clazz, Stream<String> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+		return of(clazz, new RawCompleterSupplier<Stream<String>>() {
+			@Override
+			public Stream<String> get(String[] args) {
+				return variants;
+			}
+		}, result, optional, optionalForConsole, cursor, permission, localesPath);
 	}
 
 	/**
@@ -58,7 +72,7 @@ public interface RawArgument<T> extends DataSerializable {
 	/**
 	 * Retrieves an object from the command's argument string without converting it to a specific type.
 	 */
-	Optional<?> getResultUnknownType(String[] args) throws CommandException;
+	Optional<?> getResultUnknownType(String[] args);
 
 	/**
 	 * Whether the argument is optional.
@@ -84,6 +98,10 @@ public interface RawArgument<T> extends DataSerializable {
 	 * Class of argument.
 	 */
 	Class<?> getClazz();
+
+	Optional<String> getPermision();
+
+	boolean hasPermission(CommandCause cause);
 
 	interface Builder<T> extends AbstractBuilder<RawArgument<T>>, org.spongepowered.api.util.Builder<RawArgument<T>, Builder<T>> {
 
@@ -116,6 +134,11 @@ public interface RawArgument<T> extends DataSerializable {
 		 * Path to find the message that there is no matching command argument in the localization configuration.
 		 */
 		Builder<T> localeTextPath(Object[] value);
+
+		/*
+		 * The required permission for this argument.
+		 */
+		Builder<T> permission(String value);
 
 	}
 

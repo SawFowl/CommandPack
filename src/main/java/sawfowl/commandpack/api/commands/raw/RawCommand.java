@@ -9,13 +9,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
@@ -25,7 +23,6 @@ import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
-import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.world.WorldType;
 import org.spongepowered.api.world.server.ServerWorld;
@@ -36,9 +33,7 @@ import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
-import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
 
 /**
  * This interface is designed to simplify the creation of Raw commands.
@@ -87,8 +82,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	default CommandResult process(CommandCause cause, Mutable arguments) throws CommandException {
 		boolean isPlayer = cause.audience() instanceof ServerPlayer;
 		Locale locale = getLocale(cause);
-		String[] args = Stream.of(arguments.input().split(" ")).map(String::toString).filter(string -> (!string.equals(""))).toArray(String[]::new);
-		checkChildAndArguments(cause, args, isPlayer, locale);
+		String[] args = checkChildAndArguments(cause, Stream.of(arguments.input().split(" ")).map(String::toString).filter(string -> (!string.equals(""))).toArray(String[]::new), isPlayer, locale);
 		checkCooldown(cause, locale, isPlayer);
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
 			getChildExecutors().get(args[0]).process(cause, cause.audience(), locale, isPlayer, (args.length > 1 ? Arrays.copyOfRange(args, 1, args.length + 1) : new String[] {}), arguments);
@@ -100,41 +94,33 @@ public interface RawCommand extends PluginCommand, Raw {
 
 	@Override
 	default List<CommandCompletion> complete(CommandCause cause, Mutable arguments) throws CommandException {
+		if(!enableAutoComplete()) return getEmptyCompletion() == null ? new ArrayList<>() : getEmptyCompletion();
 		List<String> args = Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList());
 		String currentInput = arguments.input();
 		List<CommandCompletion> complete = completeChild(cause, args, arguments, currentInput);
 		return complete == null || complete.size() == 0 ? (getEmptyCompletion() == null ? new ArrayList<>() : getEmptyCompletion()) : complete;
 	}
 
-	default void checkChildAndArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
+	default String[] checkChildAndArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
 			getChildExecutors().get(args[0]).checkChildAndArguments(cause, (args.length > 1 ? Arrays.copyOfRange(args, 1, args.length + 1) : new String[] {}), isPlayer, locale);
-		} else checkArguments(cause, args, isPlayer, locale);
+			return args;
+		} else return checkArguments(cause, args, isPlayer, locale);
 	}
 
-	default void checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
-		if(args.length != 0 && getArguments() != null && !getArguments().isEmpty()) {
-			if(getArguments().containsKey(args.length - 1) && !getArguments().get(args.length - 1).getResultUnknownType(args).isPresent() && (!getArguments().get(args.length - 1).isOptional() || (!isPlayer && !getArguments().get(args.length - 1).isOptionalForConsole()))) exceptionAppendUsage(cause, getText(locale, getArguments().get(args.length - 1).getLocalesPath()));
-		} else {
-			if(getArguments() != null) for(RawArgument<?> arg : getArguments().values()) {
-				if(!arg.getResultUnknownType(args).isPresent() && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole()))) exceptionAppendUsage(cause, getText(locale, arg.getLocalesPath()));
+	default String[] checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
+		if(getArguments() != null) {
+			Optional<RawArgument<?>> emptyArg = getArguments().values().stream().filter(arg -> !arg.getResultUnknownType(args).isPresent() && (!arg.isOptional() || !isPlayer && !arg.isOptionalForConsole())).findFirst();
+			if(emptyArg.isPresent()) exceptionAppendUsage(cause, getText(locale, emptyArg.get().getLocalesPath()));
+			if(args.length != 0) {
+				int i = 0;
+				for(String arg : args) {
+					if(arg == null || (getArguments().containsKey(i) && getArguments().get(i).getResultUnknownType(args).isPresent() && !getArguments().get(i).hasPermission(cause))) return Arrays.copyOfRange(args, 0, i - 1);
+					i++;
+				}
 			}
 		}
-	}
-
-	default void checkCooldown(CommandCause cause, Locale locale, boolean isPlayer) throws CommandException {
-		if(isPlayer) {
-			ServerPlayer player = (ServerPlayer) cause.audience();
-			Long currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-			if(!getCooldowns().containsKey(player.uniqueId())) {
-				getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
-				Sponge.asyncScheduler().submit(Task.builder().plugin(getContainer()).interval(1, TimeUnit.SECONDS).execute(new CooldownTimerTask(player, getCommandSettings(), getCooldowns())).build());
-			} else {
-				if((getCooldowns().get(player.uniqueId())) - currentTime > 0) exception(locale, Placeholders.DELAY, timeFormat((getCooldowns().get(player.uniqueId())) - currentTime, locale), LocalesPaths.COMMANDS_COOLDOWN);
-				getCooldowns().remove(player.uniqueId());
-				getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
-			}
-		}
+		return args;
 	}
 
 	default List<CommandCompletion> completeChild(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
@@ -157,7 +143,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * Auto-complete command arguments.
 	 */
 	default List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
-		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.size()) return getEmptyCompletion();
+		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.size() || !getArguments().get(args.size() > 0 ? args.size() - 1 : 0).hasPermission(cause)) return getEmptyCompletion();
 		if(currentInput.endsWith(" ") || args.size() == 0) {
 			if(getArguments().containsKey(args.size())) return getArguments().get(args.size()).getVariants(args.toArray(new String[] {})).map(CommandCompletion::of).collect(Collectors.toList());
 			return getEmptyCompletion();

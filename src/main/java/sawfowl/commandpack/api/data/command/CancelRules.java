@@ -20,8 +20,14 @@ public interface CancelRules extends DataSerializable {
 		return builder().values(allowMoving, allowOtherCommand).build();
 	}
 
+	/**
+	 * Whether the player is allowed to move while waiting for a command to be executed.
+	 */
 	boolean isAllowMoving();
 
+	/**
+	 * Whether the player is allowed to use other commands while waiting for the current command to execute.
+	 */
 	boolean isAllowOtherCommand();
 
 	interface Builder extends AbstractBuilder<CancelRules>, org.spongepowered.api.util.Builder<CancelRules, Builder> {

@@ -18,16 +18,34 @@ public interface Settings extends DataSerializable {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
+	/**
+	 * Command aliases.
+	 */
 	String[] getAliases();
 
+	/**
+	 * Command aliases.
+	 */
 	List<String> getAliasesList();
 
+	/**
+	 * The time between uses of the command.
+	 */
 	long getCooldown();
 
+	/**
+	 * Delayed command execution.
+	 */
 	Delay getDelay();
 
+	/**
+	 * Command price.
+	 */
 	Price getPrice();
 
+	/**
+	 * Whether the registration of the command is enabled.
+	 */
 	boolean isEnable();
 
 	interface Builder extends AbstractBuilder<Settings>, org.spongepowered.api.util.Builder<Settings, Builder> {

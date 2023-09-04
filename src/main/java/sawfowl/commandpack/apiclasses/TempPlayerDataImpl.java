@@ -3,8 +3,8 @@ package sawfowl.commandpack.apiclasses;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -18,19 +18,22 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Ticks;
 import org.spongepowered.api.world.server.ServerLocation;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.PluginCommand;
+import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerData {
 
 	private final CommandPack plugin;
-	private Map<String, List<UUID>> trackingCommandDelay = new HashMap<>();
+	private Map<String, Set<UUID>> trackingCommandDelay = new HashMap<>();
+	private Map<String, Settings> commandsSettings = new HashMap<>();
 	private Set<UUID> tptoggleSet = new HashSet<>();
 	private Map<UUID, ServerLocation> locations = new HashMap<>();
 	private Map<String, Map<UUID, Long>> cooldowns = new HashMap<>();
@@ -38,24 +41,22 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	private Set<UUID> afk = new HashSet<>();
 	private Set<UUID> commandSpy = new HashSet<>();
 	private Map<UUID, Long> vanishTime = new HashMap<>();
+	private Map<UUID, Audience> replyMap = new HashMap<>();
 	public TempPlayerDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
 	}
 
 	@Override
+	public void registerCommandTracking(PluginCommand command) {
+		trackingCommandDelay.put(command.trackingName(), new HashSet<UUID>());
+		commandsSettings.put(command.trackingName(), command.getCommandSettings());
+	}
+
+	@Override
 	public void addCommandTracking(String command, ServerPlayer player) {
-		if(!trackingCommandDelay.containsKey(command)) {
-			if(plugin.getCommandsConfig().getCommandConfig(command).getAliases().length == 0) {
-				plugin.getLogger().error(TextUtils.replace(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING), Placeholders.COMMAND, command));
-				return;
-			} else {
-				trackingCommandDelay.keySet().stream().filter(c -> (!plugin.getCommandsConfig().getCommandConfig(c).getAliasesList().contains(command))).findFirst().ifPresent(c -> {
-					trackingCommandDelay.get(c).add(player.uniqueId());
-					return;
-				});
-			}
-		} else trackingCommandDelay.get(command).add(player.uniqueId());
+		if(!trackingCommandDelay.containsKey(command)) plugin.getLogger().error(TextUtils.replace(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING), Placeholders.COMMAND, command));
+		if(!trackingCommandDelay.get(command).contains(player.uniqueId())) trackingCommandDelay.get(command).add(player.uniqueId());
 	}
 
 	@Override
@@ -83,18 +84,21 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	}
 
 	@Override
-	public Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(ServerPlayer player) {
+	public Optional<Map<String, Settings>> getTrackingPlayerCommands(ServerPlayer player) {
 		return getTrackingPlayerCommands(player.uniqueId());
 	}
 
 	@Override
-	public Optional<Map<String, CommandSettings>> getTrackingPlayerCommands(UUID uuid) {
-		Map<String, CommandSettings> commands = new HashMap<>();
-		trackingCommandDelay.entrySet().stream().filter(entry -> (entry.getValue().contains(uuid))).forEach(entry -> {
-			CommandSettings commandSettings = plugin.getCommandsConfig().getCommandConfig(entry.getKey());
-			commands.put(entry.getKey(), commandSettings);
-		});
-		return !isTrackingPlayer(uuid) || commands.isEmpty() ? Optional.empty() : Optional.ofNullable(commands);
+	public Optional<Map<String, Settings>> getTrackingPlayerCommands(UUID uuid) {
+		for(Entry<String, Set<UUID>> entry : trackingCommandDelay.entrySet()) {
+			if(entry.getValue().contains(uuid) && commandsSettings.containsKey(entry.getKey())) {
+				Settings commandSettings = commandsSettings.get(entry.getKey());
+				Map<String, Settings> commands = new HashMap<>();
+				commands.put(entry.getKey(), commandSettings);
+				return Optional.ofNullable(commands);
+			}
+		}
+		return Optional.empty();
 	}
 
 	@Override
@@ -137,8 +141,8 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 
 	@Override
 	public Map<UUID, Long> getTrackingMap(String command) {
-		if(Sponge.server().commandManager().knownAliases().contains(command)) return new HashMap<>();
-		return !cooldowns.containsKey(command) ? cooldowns.put(command, new HashMap<>()) : cooldowns.get(command);
+		if(!cooldowns.containsKey(command)) cooldowns.put(command, new HashMap<>());
+		return cooldowns.get(command);
 	}
 
 	@Override
@@ -185,12 +189,12 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	public void switchSpyCommand(ServerPlayer player) {
 		if(isSpyCommand(player)) {
 			commandSpy.remove(player.uniqueId());
-		} else if(player.hasPermission(Permissions.COMMANDSPY)) commandSpy.add(player.uniqueId());
+		} else if(player.hasPermission(Permissions.COMMANDSPY_STAFF)) commandSpy.add(player.uniqueId());
 	}
 
 	@Override
 	public boolean isSpyCommand(ServerPlayer player) {
-		if(!player.hasPermission(Permissions.COMMANDSPY)) {
+		if(!player.hasPermission(Permissions.COMMANDSPY_STAFF)) {
 			if(commandSpy.contains(player.uniqueId())) commandSpy.remove(player.uniqueId());
 			return false;
 		}
@@ -223,6 +227,22 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	public void onDisconnect(ServerSideConnectionEvent.Disconnect event) {
 		if(lastActivity.containsKey(event.player().uniqueId())) lastActivity.remove(event.player().uniqueId());
 		if(isAfk(event.player())) afk.remove(event.player().uniqueId());
+	}
+
+	@Override
+	public void addReply(ServerPlayer player, Audience audience) {
+		removeReply(player);;
+		replyMap.put(player.uniqueId(), audience);
+	}
+
+	@Override
+	public void removeReply(ServerPlayer player) {
+		if(replyMap.containsKey(player.uniqueId())) replyMap.remove(player.uniqueId());
+	}
+
+	@Override
+	public Optional<Audience> getReply(ServerPlayer player) {
+		return replyMap.containsKey(player.uniqueId()) ? (replyMap.get(player.uniqueId()) instanceof ServerPlayer ? Sponge.server().player(((ServerPlayer) replyMap.get(player.uniqueId())).uniqueId()).map(p -> (Audience) p) :  Optional.ofNullable(replyMap.get(player.uniqueId()))) : Optional.empty();
 	}
 
 }

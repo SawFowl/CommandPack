@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.event.lifecycle.ProvideServiceEvent;
 import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.EconomyService;
@@ -18,6 +19,7 @@ import org.spongepowered.api.service.economy.transaction.ResultType;
 import org.spongepowered.api.service.economy.transaction.TransactionResult;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
@@ -25,22 +27,25 @@ import sawfowl.localeapi.api.TextUtils;
 public class Economy {
 
 	private final CommandPack plugin;
-	private final EconomyService economyService;
+	private EconomyService economyService;
+	private EconomyServiceImpl economyServiceImpl;
 
 	public Economy(CommandPack plugin) {
 		this.plugin = plugin;
-		economyService = Sponge.server().serviceProvider().economyService().orElse(null);
+		economyService = Sponge.server().serviceProvider().economyService().orElse(economyServiceImpl);
+	}
+
+	public Economy createEconomy(ProvideServiceEvent<EconomyService> event) {
+		event.suggest(() -> economyService = economyServiceImpl = new EconomyServiceImpl(plugin));
+		return this;
+	}
+
+	public EconomyServiceImpl getEconomyService() {
+		return economyServiceImpl;
 	}
 
 	public BigDecimal getPlayerBalance(UUID uuid, Currency currency) {
-		try {
-			Optional<UniqueAccount> uOpt = economyService.findOrCreateAccount(uuid);
-			if (uOpt.isPresent()) {
-				return uOpt.get().balance(currency);
-			}
-		} catch (Exception ignored) {
-		}
-		return BigDecimal.ZERO;
+		return economyServiceImpl.findOrCreateAccount(uuid).map(a -> a.balance(currency)).orElse(BigDecimal.ZERO);
 	}
 
 	public boolean isPresent() {
@@ -65,7 +70,6 @@ public class Economy {
 				}
 				}
 			} catch (Exception ignored) {
-				ignored.printStackTrace();
 		}
 		return false;
 	}
@@ -84,7 +88,6 @@ public class Economy {
 				}
 				}
 			} catch (Exception ignored) {
-				ignored.printStackTrace();
 		}
 		return false;
 	}
@@ -97,6 +100,7 @@ public class Economy {
 	}
 
 	public List<Currency> getCurrencies() {
+		if(economyServiceImpl != null) return Arrays.asList(economyServiceImpl.getCurrencies());
 		List<Currency> currencies = new ArrayList<Currency>();
 		if(economyService == null) return currencies;
 		Sponge.game().findRegistry(RegistryTypes.CURRENCY).ifPresent(registry -> {

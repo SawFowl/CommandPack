@@ -29,7 +29,7 @@ public class PlayerCommandListener {
 			});
 		} else spyCommand(event, player, false);
 		if(plugin.getPlayersData().getTempData().isAfk(player) && event.command().equalsIgnoreCase("afk")) return;
-		plugin.getPlayersData().getTempData().updateLastActivity(player);
+		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(player);
 		if(!plugin.getPlayersData().getTempData().isTrackingPlayer(player)) return;
 		plugin.getPlayersData().getTempData().getTrackingPlayerCommands(player).ifPresent(map -> {
 			map.forEach((commandName, config) -> {

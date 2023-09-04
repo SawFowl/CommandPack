@@ -18,7 +18,9 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.TextUtils;
 
 public class Fly extends AbstractParameterizedCommand {
 
@@ -29,7 +31,7 @@ public class Fly extends AbstractParameterizedCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		Optional<ServerPlayer> optTarget = getPlayer(context);
-		if(optTarget.isPresent()) {
+		if(optTarget.isPresent() && isPlayer && !optTarget.get().uniqueId().equals(((ServerPlayer) src).uniqueId())) {
 			if(setFly(optTarget.get())) {
 				sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_FLY_ENABLE_STAFF, LocalesPaths.COMMANDS_FLY_ENABLE);
 			} else sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_FLY_DISABLE_STAFF, LocalesPaths.COMMANDS_FLY_DISABLE);
@@ -65,8 +67,8 @@ public class Fly extends AbstractParameterizedCommand {
 
 	private boolean setFly(ServerPlayer player) {
 		boolean newValue = !isFlying(player);
-		player.offer(Keys.CAN_FLY, !newValue);
-		if(!newValue) player.offer(Keys.IS_FLYING, !newValue);
+		player.offer(Keys.CAN_FLY, newValue);
+		if(!newValue) player.offer(Keys.IS_FLYING, newValue);
 		return isFlying(player);
 	}
 
@@ -75,7 +77,7 @@ public class Fly extends AbstractParameterizedCommand {
 	}
 
 	private void sendStaffMessage(Audience src, Locale staffLocale, ServerPlayer target, Object[] pathStaff, Object[] pathPlayer) {
-		src.sendMessage(getText(staffLocale, pathStaff));
+		src.sendMessage(TextUtils.replace(getText(staffLocale, pathPlayer), Placeholders.PLAYER, target.name()));
 		target.sendMessage(getText(staffLocale, pathPlayer));
 	}
 

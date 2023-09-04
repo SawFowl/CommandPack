@@ -16,12 +16,12 @@ public class PlayerInventoryListener {
 
 	@Listener
 	public void onInteract(ChangeInventoryEvent.SwapHand event, @First ServerPlayer player) {
-		plugin.getPlayersData().getTempData().updateLastActivity(player);
+		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(player);
 	}
 
 	@Listener
 	public void onInteract(ChangeInventoryEvent.Held event, @First ServerPlayer player) {
-		plugin.getPlayersData().getTempData().updateLastActivity(player);
+		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(player);
 	}
 
 }

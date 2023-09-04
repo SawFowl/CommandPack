@@ -78,7 +78,7 @@ public class CommandsConfig {
 	@Setting("TpToggle")
 	private CommandSettings tptoggle = new CommandSettings();
 	@Setting("Clearinventory")
-	private CommandSettings clearinventory = new CommandSettings(new String[] {"clear"});
+	private CommandSettings clearinventory = new CommandSettings(new String[] {"clear", "ci"});
 	@Setting("Repair")
 	private CommandSettings repair = new CommandSettings(new CommandPrice("$", 20), new String[] {"fix"});
 	@Setting("Enderchest")
@@ -154,7 +154,7 @@ public class CommandsConfig {
 	@Setting("ServerStat")
 	private CommandSettings serverStat = new CommandSettings(new String[] {"serverinfo", "gc"});
 	@Setting("Plugins")
-	private CommandSettings plugins = new CommandSettings();
+	private CommandSettings plugins = new CommandSettings(new String[] {"pl"});
 	@Setting("Mods")
 	private CommandSettings mods = new CommandSettings();
 	@Setting("Tps")
@@ -179,6 +179,52 @@ public class CommandsConfig {
 	private CommandSettings seen = new CommandSettings(new String[] {"playerinfo", "playerstat", "whois"});
 	@Setting("Help")
 	private CommandSettings help = new CommandSettings();
+	@Setting("Glow")
+	private CommandSettings glow = new CommandSettings();
+	@Setting("Flame")
+	private CommandSettings flame = new CommandSettings(new String[] {"burn", "fire"});
+	@Setting("Extinguish")
+	private CommandSettings extinguish = new CommandSettings(new String[] {"ext"});
+	@Setting("Ban")
+	private CommandSettings ban = new CommandSettings();
+	@Setting("Unban")
+	private CommandSettings unban = new CommandSettings(new String[] {"pardon"});
+	@Setting("Banip")
+	private CommandSettings banip = new CommandSettings();
+	@Setting("Unbanip")
+	private CommandSettings unbanip = new CommandSettings();
+	@Setting("Kick")
+	private CommandSettings kick = new CommandSettings();
+	@Setting("Mute")
+	private CommandSettings mute = new CommandSettings();
+	@Setting("Unmute")
+	private CommandSettings unmute = new CommandSettings();
+	@Setting("Warn")
+	private CommandSettings warn = new CommandSettings();
+	@Setting("Warnings")
+	private CommandSettings warns = new CommandSettings(new String[] {"warns"});
+	@Setting("BanList")
+	private CommandSettings banList = new CommandSettings(new String[] {"bans"});
+	@Setting("BanInfo")
+	private CommandSettings banInfo = new CommandSettings();
+	@Setting("MuteInfo")
+	private CommandSettings muteInfo = new CommandSettings();
+	@Setting("MuteList")
+	private CommandSettings muteList = new CommandSettings(new String[] {"mutes"});
+	@Setting("Balance")
+	private CommandSettings balance = new CommandSettings(new String[] {"money"});
+	@Setting("BalanceTop")
+	private CommandSettings balanceTop = new CommandSettings(60, new String[] {"baltop"});
+	@Setting("HideBalance")
+	private CommandSettings hideBalance = new CommandSettings();
+	@Setting("Economy")
+	private CommandSettings economy = new CommandSettings(new String[] {"eco"});
+	@Setting("Pay")
+	private CommandSettings pay = new CommandSettings();
+	@Setting("Tell")
+	private CommandSettings tell = new CommandSettings(new String[] {"say", "s", "m"});
+	@Setting("Reply")
+	private CommandSettings reply = new CommandSettings(new String[] {"r"});
 
 	public CommandSettings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));
@@ -212,7 +258,10 @@ public class CommandsConfig {
 				try {
 					AbstractRawCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
-						if(settings.isEnable()) command.register(event);
+						if(settings.isEnable()) {
+							command.register(event);
+							plugin.getPlayersData().getTempData().registerCommandTracking(command);
+						}
 					});
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					plugin.getLogger().error("Error when registering a command class '" + clazz.getName());
@@ -278,6 +327,7 @@ public class CommandsConfig {
 	private void registerParameterizedCommand(RegisterCommandEvent<Parameterized> event, CommandPack plugin, CommandSettings settings, AbstractParameterizedCommand command) {
 		if(!settings.isEnable() || (serverStat.isEnable() && (command.command().equalsIgnoreCase("mods") || command.command().equalsIgnoreCase("plugins") || command.command().equalsIgnoreCase("tps") || command.command().equalsIgnoreCase("servertime")))) return;
 		command.register(event);
+		plugin.getPlayersData().getTempData().registerCommandTracking(command);
 	}
 
 }

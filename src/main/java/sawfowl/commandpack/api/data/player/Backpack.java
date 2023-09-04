@@ -25,18 +25,39 @@ public interface Backpack extends DataSerializable {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
+	/**
+	 * Add an item to the backpack.
+	 */
 	boolean addItem(int slot, ItemStack item);
 
+	/**
+	 * Add an item to the backpack.
+	 */
 	boolean addItem(int slot, ItemStackSnapshot item);
 
+	/**
+	 * Remove an item from the backpack.
+	 */
 	void removeItem(int slot);
 
+	/**
+	 * The number of slots in the backpack that have items in them.
+	 */
 	int size();
 
+	/**
+	 * Get the numbers of the slots that contain the items.
+	 */
 	Collection<Integer> getSlots();
 
+	/**
+	 * Get a copy of all the items in the backpack.
+	 */
 	Collection<ItemStackSnapshot> getItems();
 
+	/**
+	 * Getting an item from a backpack.
+	 */
 	Optional<ItemStack> getItem(int slot);
 
 	/**

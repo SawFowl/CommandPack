@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.world.server.ServerWorld;
 
 import sawfowl.commandpack.api.data.kits.Kit;
@@ -35,6 +36,7 @@ public class Permissions {
 	public static final String JUMP = "commandpack.commands.user.jump";
 	public static final String FLY = "commandpack.commands.user.fly";
 	public static final String GODMODE = "commandpack.commands.user.godmode";
+	public static final String INVENTORYSEE = "commandpack.commands.user.inventorysee";
 	public static final String SPEED = "commandpack.commands.user.speed";
 	public static final String SPEED_FLY = "commandpack.commands.user.flyspeed";
 	public static final String DISPOSAL = "commandpack.commands.user.disposal";
@@ -55,6 +57,23 @@ public class Permissions {
 	public static final String LIST = "commandpack.commands.user.list";
 	public static final String SEEN = "commandpack.commands.user.seen";
 	public static final String HELP = "commandpack.commands.user.help";
+	public static final String GLOW = "commandpack.commands.user.glow";
+	public static final String FLAME = "commandpack.commands.user.flame";
+	public static final String EXTINGUISH = "commandpack.commands.user.extinguish";
+	public static final String WARNS = "commandpack.commands.user.warnings.self";
+	public static final String WARNS_OTHER = "commandpack.commands.user.warnings.other";
+	public static final String BANLIST = "commandpack.commands.user.banlist";
+	public static final String BANINFO = "commandpack.commands.user.baninfo";
+	public static final String MUTEINFO = "commandpack.commands.user.muteinfo";
+	public static final String MUTELIST = "commandpack.commands.user.mutelist";
+	public static final String BALANCE = "commandpack.commands.user.balance.self";
+	public static final String BALANCE_TOP = "commandpack.commands.user.balance.top";
+	public static final String BALANCE_OTHER = "commandpack.commands.user.balance.other";
+	public static final String BALANCE_HIDEN_VIEW = "commandpack.commands.user.balance.hiddenview";
+	public static final String HIDE_BALANCE = "commandpack.commands.user.balance.hide";
+	public static final String PAY = "commandpack.commands.user.balance.pay";
+	public static final String TELL = "commandpack.commands.user.tell";
+	public static final String REPLY = "commandpack.commands.user.reply";
 
 	// Staff
 	public static final String HAT_STAFF = "commandpack.commands.staff.hat";
@@ -100,16 +119,37 @@ public class Permissions {
 	public static final String SERVER_STAT_STAFF_MODS_INFO = "commandpack.commands.staff.serverstat.mods.info";
 	public static final String SERVER_STAT_STAFF_INFO_TPS = "commandpack.commands.staff.serverstat.tps";
 	public static final String KIT_STAFF = "commandpack.commands.staff.kit";
-	public static final String WORLD = "commandpack.commands.staff.world";
-	public static final String COMMANDSPY = "commandpack.commands.staff.commandspy";
+	public static final String WORLD_STAFF = "commandpack.commands.staff.world";
+	public static final String COMMANDSPY_STAFF = "commandpack.commands.staff.commandspy";
 	public static final String PING_STAFF = "commandpack.commands.staff.ping";
 	public static final String LIST_STAFF = "commandpack.commands.staff.list";
 	public static final String SEEN_STAFF = "commandpack.commands.staff.seen";
+	public static final String GLOW_STAFF = "commandpack.commands.staff.glow";
+	public static final String FLAME_STAFF = "commandpack.commands.staff.flame";
+	public static final String EXTINGUISH_STAFF = "commandpack.commands.staff.extinguish";
+	public static final String BAN_STAFF = "commandpack.commands.staff.ban";
+	public static final String BANIP_STAFF = "commandpack.commands.staff.banip";
+	public static final String UNBAN_STAFF = "commandpack.commands.staff.unban";
+	public static final String UNBANIP_STAFF = "commandpack.commands.staff.unbanip";
+	public static final String KICK_STAFF = "commandpack.commands.staff.kick";
+	public static final String MUTE_STAFF = "commandpack.commands.staff.mute";
+	public static final String UNMUTE_STAFF = "commandpack.commands.staff.unmute";
+	public static final String WARN_STAFF = "commandpack.commands.staff.warn";
+	public static final String WARNS_STAFF = "commandpack.commands.staff.warnings";
+	public static final String ECONOMY_STAFF = "commandpack.commands.staff.economy";
+	public static final String TELL_STAFF = "commandpack.commands.user.tell";
+	public static final String REPLY_STAFF = "commandpack.commands.user.reply";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
+	public static final String IGNORE_COOLDOWN = "commandpack.commands.ignore.cooldown";
 	public static final String IGNORE_DELAY_MOVING = "commandpack.commands.ignore.delay.moving";
 	public static final String IGNORE_DELAY_OTHER_COMMAND = "commandpack.commands.ignore.delay.othercommand";
 	public static final String IGNORE_PRICE = "commandpack.commands.ignore.price";
+	public static final String IGNORE_BAN = "commandpack.commands.ignore.ban";
+	public static final String IGNORE_BANIP = "commandpack.commands.ignore.banip";
+	public static final String IGNORE_KICK = "commandpack.commands.ignore.kick";
+	public static final String IGNORE_MUTE = "commandpack.commands.ignore.mute";
+	public static final String IGNORE_WARN = "commandpack.commands.ignore.ban";
 
 	// Limits
 	private static final String HOME_LIMIT = "commandpack.limits.home";
@@ -132,9 +172,18 @@ public class Permissions {
 	private static final String KIT_ACCESS = "commandpack.access.kit";
 	public  static final String MOTD_ACCESS = "commandpack.access.motd";
 	public  static final String ALL_MODS_ACCESS = "commandpack.access.allmods";
+	public  static final String PERMANENT_WARN_ACCESS = "commandpack.access.permanent.warn";
+	public  static final String PERMANENT_MUTE_ACCESS = "commandpack.access.permanent.mute";
+	public  static final String PERMANENT_BAN_ACCESS = "commandpack.access.permanent.ban";
+	public  static final String HIDE_CONNECT = "commandpack.access.hideconnect";
+	private  static final String CURRENCY_ACCESS = "commandpack.access.currency.";
 
 	public static String getIgnoreDelayTimer(String command) {
 		return IGNORE_DELAY_TIMER + "." + command;
+	}
+
+	public static String getIgnoreCooldown(String command) {
+		return IGNORE_COOLDOWN + "." + command;
 	}
 
 	public static String getIgnoreDelayMoving(String command) {
@@ -175,6 +224,10 @@ public class Permissions {
 
 	public static String getKitPermission(Kit kit) {
 		return KIT_ACCESS + "." + TextUtils.clearDecorations(kit.id());
+	}
+
+	public static String getCurrencyAccess(Currency currency) {
+		return CURRENCY_ACCESS + TextUtils.clearDecorations(currency.displayName()).toLowerCase();
 	}
 
 	public static int getHomeLimit(ServerPlayer player) {

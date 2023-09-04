@@ -16,7 +16,7 @@ public class PlayerInteractItemListener {
 
 	@Listener
 	public void onInteract(InteractItemEvent event, @First ServerPlayer player) {
-		plugin.getPlayersData().getTempData().updateLastActivity(player);
+		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(player);
 	}
 
 }

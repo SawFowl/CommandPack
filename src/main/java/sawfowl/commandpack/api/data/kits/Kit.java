@@ -24,32 +24,80 @@ public interface Kit extends DataSerializable {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
+	/**
+	 * kit id
+	 */
 	String id();
 
+	/**
+	 * Localized kit name
+	 */
 	Component getLocalizedName(Locale locale);
 
+	/**
+	 * Localized kit lore
+	 */
 	List<Component> getLocalizedLore(Locale locale);
 
+	/**
+	 * Getting a copy of the items in the kit.
+	 */
 	List<ItemStack> getContent();
 
+	/**
+	 * The rule for giving a kit to a player.
+	 */
 	GiveRule getGiveRule();
 
+	/**
+	 * Time until access to the kit is restored.
+	 */
 	long getCooldown();
 
+	/**
+	 * How many times a given set can be given to a player.
+	 */
 	int getGiveLimit();
 
+	/**
+	 * Should the kit be given to the player upon first entry.
+	 */
 	boolean isFirstTime();
 
+	/**
+	 * Should the kit be given to the player upon entering the game.<br>
+	 * The time of restoration of access to the kit is taken into account.
+	 */
 	boolean isGiveOnJoin();
 
+	/**
+	 * Whether to check if the player has permission to get a set.
+	 */
 	boolean isNeedPerm();
 
+	/**
+	 * Permission to getting a kit.
+	 */
 	String permission();
 
+	/**
+	 * A list of commands to be executed when a kit is giving.
+	 */
 	Optional<List<String>> getExecuteCommands();
 
+	/**
+	 * Adding a command to the kit.
+	 */
+	void addCommand(String command);
+
+	/**
+	 * Removing a command from the kit.
+	 */
 	void removeCommand(String command);
 
+	/**
+	 * Obtaining kit price data.
+	 */
 	Optional<KitPrice> getKitPrice();
 
 	default boolean isUnlimited() {

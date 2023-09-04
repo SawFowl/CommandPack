@@ -30,6 +30,7 @@ public class CreateLore extends AbstractKitsEditCommand {
 		Kit kit = getKit(args, 0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		kitData.setLore(Locales.DEFAULT, Arrays.asList("&dFirst line", "&eSecond line"));
+		kitData.setLore(Locales.RU_RU, Arrays.asList("&dСтрока 1", "&eСтрока 2"));
 		kitData.save();
 		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_CREATE_LORE));
 	}

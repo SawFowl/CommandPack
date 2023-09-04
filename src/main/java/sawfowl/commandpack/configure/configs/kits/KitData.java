@@ -156,6 +156,12 @@ public class KitData implements Kit {
 	}
 
 	@Override
+	public void addCommand(String command) {
+		if(executeCommands == null) executeCommands = new ArrayList<String>();
+		executeCommands.add(command);
+	}
+
+	@Override
 	public void removeCommand(String command) {
 		if(executeCommands != null) executeCommands.removeIf(c -> c.equalsIgnoreCase(command));
 	}
