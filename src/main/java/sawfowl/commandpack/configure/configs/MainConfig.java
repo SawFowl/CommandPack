@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.registry.RegistryTypes;
+import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
@@ -66,9 +67,9 @@ public class MainConfig {
 	private Punishment punishment = new Punishment();
 	@Setting("Economy")
 	private EconomyConfig economy = new EconomyConfig();
-	@Setting("FixTopCommandInNether")
-	@Comment("If true, instead of teleporting to the very top of the lower world, an attempt will be made to find a suitable location under the bedrock.")
-	private boolean fixTopCommandInNether = true;
+	@Setting("FixTopCommand")
+	@Comment("Instead of teleporting to the very top of the world, an attempt will be made to find a suitable location under the bedrock.")
+	private List<String> fixTop = Arrays.asList("minecraft:the_nether");
 
 	public boolean isAutoCompleteRawCommands() {
 		return autoCompleteRawCommands;
@@ -146,8 +147,8 @@ public class MainConfig {
 		return economy;
 	}
 
-	public boolean isFixTopCommandInNether() {
-		return fixTopCommandInNether;
+	public boolean isFixTopCommand(ServerWorld world) {
+		return fixTop.contains(world.key().asString());
 	}
 
 }

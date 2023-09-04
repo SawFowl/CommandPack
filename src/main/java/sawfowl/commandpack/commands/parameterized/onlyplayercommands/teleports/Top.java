@@ -29,7 +29,7 @@ public class Top extends AbstractPlayerCommand {
 		delay(src, locale, consumer -> {
 			plugin.getPlayersData().getTempData().setPreviousLocation(src);
 			Vector3d position = src.world().highestPositionAt(src.blockPosition()).toDouble();
-			if(src.world().key().equals(DefaultWorldKeys.THE_NETHER) && plugin.getMainConfig().isFixTopCommandInNether()) {
+			if(src.world().key().equals(DefaultWorldKeys.THE_NETHER) && plugin.getMainConfig().isFixTopCommand(src.world())) {
 				src.setPosition(findSafe(ServerLocation.of(src.world(), Vector3d.from(position.x(), position.y()-1, position.z()))).map(ServerLocation::position).orElse(position));
 			} else src.setPosition(position);
 		});

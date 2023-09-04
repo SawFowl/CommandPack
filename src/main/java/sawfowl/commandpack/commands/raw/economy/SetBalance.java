@@ -46,21 +46,21 @@ public class SetBalance extends AbstractRawCommand {
 			Optional<UniqueAccount> account = plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(a -> a.identifier().equals(accountName.get())).findFirst();
 			if(account.isPresent()) {
 				account.get().setBalance(currency, newValue);
-				audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {account.get().displayName(), currency.displayName(), text(newValue.doubleValue())}));
+				audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.VALUE}, new Component[] {account.get().displayName(), currency.displayName(), currency.pluralDisplayName(), currency.symbol(), currency.symbol().style(currency.pluralDisplayName().style()), text(newValue.doubleValue())}));
 				Sponge.server().player(account.get().uniqueId()).ifPresent(player -> {
-					player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_TARGET), new String[] {Placeholders.CURRENCY_NAME, Placeholders.MONEY}, new Component[] {currency.displayName(), text(newValue.doubleValue())}));
+					player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_TARGET), new String[] {Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.MONEY}, new Component[] {currency.displayName(), currency.pluralDisplayName(), currency.symbol(), currency.symbol().style(currency.pluralDisplayName().style()), text(newValue.doubleValue())}));
 				});
 			} else {
 				Sponge.server().userManager().load(accountName.get()).thenAccept(optUser -> {
 					if(optUser.isPresent()) {
 						plugin.getEconomy().getEconomyService().findOrCreateAccount(optUser.get().uniqueId()).get().setBalance(currency, newValue);
-						audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {text(optUser.get().name()), currency.displayName(), text(newValue.doubleValue())}));
+						audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.VALUE}, new Component[] {text(optUser.get().name()), currency.displayName(), currency.pluralDisplayName(), currency.symbol(), currency.symbol().style(currency.pluralDisplayName().style()), text(newValue.doubleValue())}));
 						optUser.get().player().ifPresent(player -> {
-							player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_TARGET), new String[] {Placeholders.CURRENCY_NAME, Placeholders.MONEY}, new Component[] {currency.displayName(), text(newValue.doubleValue())}));
+							player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_TARGET), new String[] {Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.MONEY}, new Component[] {currency.displayName(), currency.pluralDisplayName(), currency.symbol(), currency.symbol().style(currency.pluralDisplayName().style()), text(newValue.doubleValue())}));
 						});
 					} else {
 						plugin.getEconomy().getEconomyService().findOrCreateAccount(accountName.get()).get().setBalance(currency, newValue);
-						audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_CREATE), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.VALUE}, new Component[] {text(accountName.get()), currency.displayName(), text(newValue.doubleValue())}));
+						audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_CREATE), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.VALUE}, new Component[] {text(accountName.get()), currency.displayName(), currency.pluralDisplayName(), currency.symbol(), currency.symbol().style(currency.pluralDisplayName().style()), text(newValue.doubleValue())}));
 					}
 				});
 			}
