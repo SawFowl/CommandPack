@@ -137,6 +137,8 @@ public class Permissions {
 	public static final String WARN_STAFF = "commandpack.commands.staff.warn";
 	public static final String WARNS_STAFF = "commandpack.commands.staff.warnings";
 	public static final String ECONOMY_STAFF = "commandpack.commands.staff.economy";
+	public static final String TELL_STAFF = "commandpack.commands.user.tell";
+	public static final String REPLY_STAFF = "commandpack.commands.user.reply";
 
 	public static final String IGNORE_DELAY_TIMER = "commandpack.commands.ignore.delay.timer";
 	public static final String IGNORE_COOLDOWN = "commandpack.commands.ignore.cooldown";
@@ -225,7 +227,7 @@ public class Permissions {
 	}
 
 	public static String getCurrencyAccess(Currency currency) {
-		return CURRENCY_ACCESS + TextUtils.clearDecorations(currency.displayName());
+		return CURRENCY_ACCESS + TextUtils.clearDecorations(currency.displayName()).toLowerCase();
 	}
 
 	public static int getHomeLimit(ServerPlayer player) {

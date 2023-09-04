@@ -30,8 +30,8 @@ public class Item extends AbstractPlayerCommand {
 	public Parameterized build() {
 		return Command.builder()
 				.executionRequirements(cause -> cause.root() instanceof ServerPlayer && (cause.hasPermission(Permissions.ITEMNAME_STAFF) || cause.hasPermission(Permissions.ITEMLORE_STAFF)))
-				.addChild(new ItemName(plugin).build(), "itemname", "name")
-				.addChild(new ItemLore(plugin).build(), "itemlore", "lore")
+				.addChild(new ItemName(plugin).build(), "name")
+				.addChild(new ItemLore(plugin).build(), "lore")
 				.build();
 	}
 

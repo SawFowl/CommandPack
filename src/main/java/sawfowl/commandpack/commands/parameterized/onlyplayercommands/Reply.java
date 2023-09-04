@@ -40,6 +40,7 @@ public class Reply extends AbstractPlayerCommand {
 			Audience targetAudience = optTarget.get();
 			if(targetAudience instanceof ServerPlayer) {
 				ServerPlayer target = (ServerPlayer) targetAudience;
+				if(!src.hasPermission(Permissions.REPLY_STAFF) && target.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
 				src.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {target.get(Keys.CUSTOM_NAME).orElse(text(target.name())), message}));
 				target.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), message}));
 			} else {

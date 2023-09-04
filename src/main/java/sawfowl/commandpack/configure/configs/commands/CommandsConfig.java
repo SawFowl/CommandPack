@@ -179,7 +179,7 @@ public class CommandsConfig {
 	private CommandSettings seen = new CommandSettings(new String[] {"playerinfo", "playerstat", "whois"});
 	@Setting("Help")
 	private CommandSettings help = new CommandSettings();
-	@Setting("Glow") // Дополнить инфу по обнове
+	@Setting("Glow")
 	private CommandSettings glow = new CommandSettings();
 	@Setting("Flame")
 	private CommandSettings flame = new CommandSettings(new String[] {"burn", "fire"});

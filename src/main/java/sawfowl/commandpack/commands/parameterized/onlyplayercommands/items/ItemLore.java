@@ -28,9 +28,9 @@ public class ItemLore extends AbstractPlayerCommand {
 	public Parameterized build() {
 		return Command.builder()
 				.permission(permission())
-				.addChild(new SetLore(plugin).build(), "set", "setlore")
-				.addChild(new AddLore(plugin).build(), "add", "addlore")
-				.addChild(new ClearLore(plugin).build(), "clear", "clearlore")
+				.addChild(new SetLore(plugin).build(), "set")
+				.addChild(new AddLore(plugin).build(), "add")
+				.addChild(new ClearLore(plugin).build(), "clear")
 				.build();
 	}
 
