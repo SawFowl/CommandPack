@@ -26,6 +26,7 @@ Currently implemented:
 * Join/Leave messages
 * Join commands
 * Flexible punishment system with support for h2 and MySQL databases (large customization).
+* Sponge Economy API Implementation.
 * And much more... For more information, see the list of commands at the link above.
 
 ##### For developers:
