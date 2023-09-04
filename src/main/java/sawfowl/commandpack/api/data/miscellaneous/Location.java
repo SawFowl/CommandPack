@@ -12,8 +12,6 @@ import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
-import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
-
 /**
  * @author SawFowl
  */
@@ -24,25 +22,41 @@ public interface Location extends DataSerializable {
 	}
 
 	static Location of(Locatable locatable) {
-		return of(locatable.serverLocation());
+		return builder().setLocation(locatable.serverLocation()).build();
 	}
 
 	static Location of(ServerLocation location) {
-		return new LocationData(location);
+		return builder().setLocation(location).build();
 	}
 
 	static Location of(Entity entity) {
-		return new LocationData(entity.serverLocation(), entity.rotation());
+		return builder().setLocationAndRotation(entity.serverLocation(), Point.builder().setValue(entity.rotation())).build();
 	}
 
+	/**
+	 * The identifier of the world to which the location belongs.
+	 */
 	ResourceKey worldKey();
 
+	/**
+	 * Location coordinates.
+	 */
 	Position getPosition();
 
+	/**
+	 * Getting a {@link ServerLocation}
+	 */
 	Optional<ServerLocation> getServerLocation();
 
+	/**
+	 * Getting a {@link ServerWorld}
+	 */
 	Optional<ServerWorld> getWorld();
 
+	/**
+	 * Teleporting an entity to this location.
+	 * Returns false if teleportation is unsuccessful or impossible.
+	 */
 	boolean moveHere(Entity entity);
 
 	interface Builder extends AbstractBuilder<Location>, org.spongepowered.api.util.Builder<Location, Builder> {

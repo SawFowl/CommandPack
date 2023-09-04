@@ -20,8 +20,14 @@ public interface Delay extends DataSerializable {
 		return builder().setSeconds(seconds).setCancelRules(rules).build();
 	}
 
+	/**
+	 * Time in seconds until the command is executed.
+	 */
 	long getSeconds();
 
+	/**
+	 * Rules for canceling the execution of a command.
+	 */
 	CancelRules getCancelRules();
 
 	interface Builder extends AbstractBuilder<Delay>, org.spongepowered.api.util.Builder<Delay, Builder> {

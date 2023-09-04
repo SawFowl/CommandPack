@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.entity.living.player.User;
@@ -137,18 +139,39 @@ public interface PlayerData {
 	 */
 	void sendMessage(String string);
 
+	/**
+	 * Getting the time of the last login.
+	 */
 	public long getLastJoinTime();
 
+	/**
+	 * Getting the time of the last exit.
+	 */
 	public long getLastExitTime();
 
-	GivedKit getKitGivedData(Kit kit);
+	/**
+	 * Getting data on a previously issued kit to a player.
+	 */
+	@Nullable GivedKit getKitGivedData(Kit kit);
 
+	/**
+	 * Check if the kit has been issued to a player before.
+	 */
 	boolean isGivedKit(Kit kit);
 
+	/**
+	 * Get the time of the last time a set was issued to a player.
+	 */
 	long getKitGivedTime(Kit kit);
 
+	/**
+	 * Whether the player's balance is hidden at this time. Used only in the CommandPack economy.
+	 */
 	boolean isHideBalance();
 
+	/**
+	 * Hiding/displaying player balance.
+	 */
 	void setHideBalance(boolean hideBalance);
 
 	/**

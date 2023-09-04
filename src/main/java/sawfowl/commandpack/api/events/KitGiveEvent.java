@@ -16,10 +16,19 @@ import sawfowl.commandpack.api.data.kits.Kit;
  */
 public interface KitGiveEvent extends Event {
 
+	/**
+	 * The player to whom the kit is given.
+	 */
 	ServerPlayer getPlayer();
 
+	/**
+	 * A kit that is given to the player.
+	 */
 	Kit kit();
 
+	/**
+	 * The time when the kit will be available to the player again.
+	 */
 	long getNextAllowedAccess();
 
 	/**
@@ -27,10 +36,19 @@ public interface KitGiveEvent extends Event {
 	 */
 	interface Pre extends KitGiveEvent, Cancellable {
 
+		/**
+		 * Kit giving time.
+		 */
 		long getCurrentTime();
 
+		/**
+		 * The time when the current kit was given to the player last time.
+		 */
 		long getPreviousGiveTime();
 
+		/**
+		 * Kit giving rule.
+		 */
 		GiveRule getGiveRule();
 
 	}
@@ -40,8 +58,14 @@ public interface KitGiveEvent extends Event {
 	 */
 	interface Post extends KitGiveEvent {
 
+		/**
+		 * The result of placing items from the set into the player's inventory.
+		 */
 		InventoryTransactionResult getResult();
 
+		/**
+		 * Whether or not a kit has been given out.
+		 */
 		boolean isGived();
 
 	}

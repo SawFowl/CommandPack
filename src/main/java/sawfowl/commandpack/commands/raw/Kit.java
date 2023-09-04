@@ -380,6 +380,7 @@ public class Kit extends AbstractRawCommand {
 			public GiveRule getGiveRule() {
 				return kit.getGiveRule();
 			}
+
 		};
 	}
 

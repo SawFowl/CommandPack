@@ -23,7 +23,7 @@ public class KitServiceImpl implements KitService {
 	public boolean addKit(Kit kit) {
 		if(kits.containsKey(TextUtils.clearDecorations(kit.id()))) return false;
 		kits.put(TextUtils.clearDecorations(kit.id()), kit);
-		kit.save();
+		plugin.getConfigManager().saveKit(kit);
 		return true;
 	}
 

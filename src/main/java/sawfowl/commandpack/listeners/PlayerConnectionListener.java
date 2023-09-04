@@ -215,6 +215,7 @@ public class PlayerConnectionListener {
 			public GiveRule getGiveRule() {
 				return kit.getGiveRule();
 			}
+
 		};
 	}
 
