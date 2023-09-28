@@ -8,6 +8,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
+import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.plugin.PluginContainer;
 
@@ -16,13 +17,15 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
-import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class RefreshPlugin extends AbstractInfoCommand {
 
 	public RefreshPlugin(CommandPack plugin) {
 		super(plugin);
+		fillLists();
+		mods.clear();
+		mods = null;
 	}
 
 	@Override
@@ -56,7 +59,13 @@ public class RefreshPlugin extends AbstractInfoCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.PLUGINS, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
+		if(containers == null) fillLists();
+		Parameter.Value<String> CHOICES =  Parameter.choices(containers.stream().map(container -> container.metadata().id()).toArray(String[]::new)).key("Plugin").build();
+		mods.clear();
+		mods = null;
+		containers.clear();
+		containers = null;
+		return Arrays.asList(ParameterSettings.of(CHOICES, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
 	}
 
 }

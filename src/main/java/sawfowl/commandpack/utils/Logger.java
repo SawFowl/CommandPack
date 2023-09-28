@@ -19,7 +19,7 @@ public class Logger {
 	}
 
 	public void info(String string) {
-		logger.info(string);
+		logger.info(TextUtils.clearDecorations(string));
 	}
 
 	public void info(String string, Throwable throwable) {

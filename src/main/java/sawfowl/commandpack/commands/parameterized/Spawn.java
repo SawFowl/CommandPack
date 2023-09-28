@@ -41,8 +41,10 @@ public class Spawn extends AbstractParameterizedCommand {
 				});
 			} else teleport(player, spawn);
 		} else {
-			ServerPlayer player = getPlayer(context).orElse((ServerPlayer) src);
-			teleport(player, spawn);
+			Optional<ServerPlayer> player = getPlayer(context);
+			if(player.isPresent()) {
+				teleport(player.get(), spawn);
+			} else exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
 		}
 	}
 

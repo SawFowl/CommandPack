@@ -3,8 +3,6 @@ package sawfowl.commandpack.listeners;
 import java.util.Locale;
 import java.util.Optional;
 
-import org.spongepowered.api.SystemSubject;
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -17,7 +15,7 @@ import org.spongepowered.api.world.LocatableBlock;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
+import sawfowl.commandpack.utils.CommandExecutorTypes;
 
 public class CommandLogListener {
 
@@ -30,24 +28,34 @@ public class CommandLogListener {
 
 	@Listener(order = Order.PRE)
 	public void onExecute(ExecuteCommandEvent.Pre event) {
-		/*plugin.getLogger().error(isCommandBlock(event.commandCause()));
-		getLocatableBlock(event.commandCause()).ifPresent(block -> {
-			plugin.getLogger().error(block.blockPosition());
-		});*/
-		String name = event.commandCause().audience() instanceof SystemSubject ? getString(LocalesPaths.NAME_SYSTEM) :
-				isCommandBlock(event.commandCause()) ? getString(LocalesPaths.NAME_COMMANDBLOCK) + blockCords(event.commandCause()) :
-					isCommandBlockMinecart(event.commandCause()) ? getString(LocalesPaths.NAME_COMMANDBLOCK_MINECART) + entityCords(event.commandCause()) :
-						event.commandCause().audience() instanceof Nameable ? ((Nameable) event.commandCause().audience()).name() :
-							getString(LocalesPaths.NAME_UNKNOWN);
-		plugin.getLogger().info(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, TextUtils.clearDecorations(name)).replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+		switch (CommandExecutorTypes.findType(event.commandCause())) {
+		case SYSTEM:
+			log(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, getString(LocalesPaths.NAME_SYSTEM)).replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+			break;
+		case COMMAND_BLOCK:
+			log(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, (getString(LocalesPaths.NAME_COMMANDBLOCK) + blockCords(event.commandCause()))).replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+			break;
+		case COMMAND_BLOCK_MINECART:
+			log(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, (getString(LocalesPaths.NAME_COMMANDBLOCK_MINECART) + entityCords(event.commandCause()))).replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+			break;
+		case NAMEABLE:
+			log(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, ((Nameable) event.commandCause().audience()).name()).replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+			break;
+		case CUSTOM_NPC:
+			log(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, "CustomNPC").replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+			break;
+		default:
+			log(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, getString(LocalesPaths.NAME_UNKNOWN)).replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+			break;
+		}
+	}
+
+	private void log(String string) {
+		plugin.getLogger().info(string);
 	}
 
 	private String getString(Object[] path) {
 		return plugin.getLocales().getString(locale, path);
-	}
-
-	private boolean isCommandBlock(CommandCause cause) {
-		return getLocatableBlock(cause).filter(block -> (block.blockState().type().equals(BlockTypes.COMMAND_BLOCK.get()) || block.blockState().type().equals(BlockTypes.CHAIN_COMMAND_BLOCK.get()) || block.blockState().type().equals(BlockTypes.REPEATING_COMMAND_BLOCK.get()))).isPresent();
 	}
 
 	private Optional<LocatableBlock> getLocatableBlock(CommandCause cause) {
@@ -56,10 +64,6 @@ public class CommandLogListener {
 
 	private String blockCords(CommandCause cause) {
 		return getLocatableBlock(cause).map(LocatableBlock::serverLocation).map(location -> ("<" + location.worldKey().asString() + ">" + location.blockPosition())).orElse("");
-	}
-
-	private boolean isCommandBlockMinecart(CommandCause cause) {
-		return getEntity(cause).isPresent();
 	}
 
 	private Optional<Entity> getEntity(CommandCause cause) {
