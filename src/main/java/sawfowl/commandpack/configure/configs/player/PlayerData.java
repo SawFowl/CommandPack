@@ -137,12 +137,16 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 		if(!removeHome(home.getName()) && homes.size() >= limit) return false;
 		if(homes.size() == 0) ((HomeData) home).setDefault();
 		homes.add((HomeData) home);
+		save();
 		return true;
 	}
 
 	@Override
 	public boolean removeHome(String name) {
-		return homes.removeIf(home -> (home.getName().equals(name)));
+		if(homes.removeIf(home -> (home.getName().equals(name)))) {
+			save();
+			return true;
+		} else return false;
 	}
 
 	@Override
@@ -154,7 +158,11 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 
 	@Override
 	public boolean removeWarp(String name) {
-		return warps.removeIf(warp -> (warp.getName().equals(name)));
+		if(warps.removeIf(warp -> (warp.getName().equals(name)))) {
+			warps.removeIf(warp -> warp.getName() == null);
+			save();
+			return true;
+		} else return false;
 	}
 
 	@Override
@@ -268,9 +276,10 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	@Override
 	public sawfowl.commandpack.api.data.player.PlayerData save() {
 		if(getPlayer().isPresent() && !getPlayer().get().name().equals(name)) name = getPlayer().get().name();
-		((CommandPack) Sponge.pluginManager().plugin("commandpack").get().instance()).getConfigManager().savePlayerData(this);
+		CommandPack.getInstance().getConfigManager().savePlayerData(this);
 		return this;
 	}
+
 	@SuppressWarnings("hiding")
 	@Override
 	public <ServerPlayer> CommandResult runCommand(@NotNull Locale sourceLocale, @NotNull String command) throws CommandException {

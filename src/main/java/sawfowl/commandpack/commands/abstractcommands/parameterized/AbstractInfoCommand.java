@@ -57,7 +57,6 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 		os = System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch");
 		java = System.getProperty("java.vendor") + " " + System.getProperty("java.version");
 		javaHome = System.getProperty("java.home");
-		plugin.getLogger().debug(containers);
 	}
 
 	protected void sendSystemInfo(Audience target, Locale locale, boolean isPlayer) {

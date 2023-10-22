@@ -18,6 +18,7 @@ import sawfowl.commandpack.configure.configs.commands.RandomTeleportConfig;
 import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.AfkConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.MySqlConfig;
+import sawfowl.commandpack.configure.configs.miscellaneous.PreventDamage;
 import sawfowl.commandpack.configure.configs.miscellaneous.RestrictEntitySpawn;
 import sawfowl.commandpack.configure.configs.miscellaneous.RestrictMods;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
@@ -70,6 +71,9 @@ public class MainConfig {
 	@Setting("FixTopCommand")
 	@Comment("Instead of teleporting to the very top of the world, an attempt will be made to find a suitable location under the bedrock.")
 	private List<String> fixTop = Arrays.asList("minecraft:the_nether");
+	@Setting("PreventDamage")
+	@Comment("Prevent damage to other players if the player has invulnerability or invisibility.\nThese settings focus on the effects the player receives from the plugin commands.")
+	private PreventDamage preventDamage = new PreventDamage();
 
 	public boolean isAutoCompleteRawCommands() {
 		return autoCompleteRawCommands;
@@ -149,6 +153,10 @@ public class MainConfig {
 
 	public boolean isFixTopCommand(ServerWorld world) {
 		return fixTop.contains(world.key().asString());
+	}
+
+	public PreventDamage getPreventDamage() {
+		return preventDamage;
 	}
 
 }
