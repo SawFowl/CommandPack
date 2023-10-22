@@ -27,6 +27,7 @@ import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.ThrowingConsumer;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
 public class DelayTimerTask implements Consumer<ScheduledTask> {
@@ -81,16 +82,16 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 			if(getExpireHourFromNow(seconds) > 0) {
 				if(hour != getExpireHourFromNow(seconds)) {
 					hour = getExpireHourFromNow(seconds);
-					player.sendMessage(TextUtils.replace(CommandPack.getInstance().getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+					player.sendMessage(CommandPack.getInstance().getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT).replace(Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).get().hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
 				}
 			} else if(seconds > 60) {
 				if(minute != getExpireMinuteFromNow(seconds)) {
 					minute = getExpireMinuteFromNow(seconds);
-					player.sendMessage(TextUtils.replace(CommandPack.getInstance().getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+					player.sendMessage(CommandPack.getInstance().getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT).replace(Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).get().hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
 				}
 			} else if(seconds == 60 || seconds == 30 || seconds == 10 || seconds <= 5 || first) {
 				first = false;
-				player.sendMessage(TextUtils.replace(CommandPack.getInstance().getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT), Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+				player.sendMessage(CommandPack.getInstance().getLocales().getText(player.locale(), LocalesPaths.COMMANDS_WAIT).replace(Placeholders.DELAY, getExpireTimeFromNow(seconds, player.locale())).get().hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
 			}
 			seconds--;
 		}
@@ -107,7 +108,7 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 	}
 
 	private CommandException exceptionMoney(Locale locale, Currency currency, BigDecimal money) throws CommandException {
-		return new CommandException(TextUtils.replaceToComponents(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY), new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command)}));
+		return new CommandException(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY).replace(new String[] {Placeholders.MONEY, Placeholders.COMMAND}, currency.symbol().append(text(money.toString())), text("/" + command)).get());
 	}
 
 	private long getExpireHourFromNow(long second) {
@@ -135,10 +136,10 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 		long hour = TimeUnit.SECONDS.toHours(second);
 		if(hour == 0) {
 			if(minute == 0) {
-				return TextUtils.replace(Component.text(String.format((second > 9 ? "%02d" : "%01d"), second) + "%second%"), "%second%", CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_SECOND));
-			} else return TextUtils.replaceToComponents(Component.text(String.format((minute > 9 ? "%02d" : "%01d"), minute) + "%minute%" + (second - (minute * 60) > 0 ? " " + String.format((second - (minute * 60) > 9 ? "%02d" : "%01d"), second - (minute * 60)) + "%second%" : "")), new String[] {"%minute%", "%second%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_SECOND)});
+				return Text.of(String.format((second > 9 ? "%02d" : "%01d"), second) + "%second%").replace("%second%", CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.TIME_SECOND)).get();
+			} else return Text.of(String.format((minute > 9 ? "%02d" : "%01d"), minute) + "%minute%" + (second - (minute * 60) > 0 ? " " + String.format((second - (minute * 60) > 9 ? "%02d" : "%01d"), second - (minute * 60)) + "%second%" : "")).replace(new String[] {"%minute%", "%second%"}, CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.TIME_MINUTE), CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.TIME_SECOND)).get();
 		}
-		return TextUtils.replaceToComponents(Component.text(String.format((hour > 9 ? "%02d" : "%01d"), hour) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")), new String[] {"%hour%", "%minute%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_HOUR), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE)});
+		return Text.of(String.format((hour > 9 ? "%02d" : "%01d"), hour) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")).replace(new String[] {"%hour%", "%minute%"}, CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.TIME_HOUR), CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.TIME_MINUTE)).get();
 	}
 
 

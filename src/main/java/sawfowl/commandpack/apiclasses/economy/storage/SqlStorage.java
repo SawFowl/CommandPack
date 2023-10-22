@@ -18,6 +18,7 @@ import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
 import sawfowl.commandpack.configure.configs.economy.SerializedAccount;
 import sawfowl.commandpack.configure.configs.economy.SerializedUniqueAccount;
+import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
 public abstract class SqlStorage extends AbstractEconomyStorage {
 
@@ -75,7 +76,7 @@ public abstract class SqlStorage extends AbstractEconomyStorage {
 
 	protected CPUniqueAccount uniqueAccountFromString(String string) {
 		StringReader source = new StringReader(string);
-		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(plugin.getLocales().getLocaleService().getConfigurationOptions()).source(() -> new BufferedReader(source)).build();
+		HoconConfigurationLoader loader = SerializeOptions.createHoconConfigurationLoader(plugin.getMainConfig().getItemSerializer()).source(() -> new BufferedReader(source)).build();
 		try {
 			ConfigurationNode node = loader.load().node("Content");
 			return node.virtual() ? null : CPUniqueAccount.deserealize(node.get(SerializedUniqueAccount.class), this);
@@ -87,7 +88,7 @@ public abstract class SqlStorage extends AbstractEconomyStorage {
 
 	protected CPAccount accountFromString(String string) {
 		StringReader source = new StringReader(string);
-		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(plugin.getLocales().getLocaleService().getConfigurationOptions()).source(() -> new BufferedReader(source)).build();
+		HoconConfigurationLoader loader = SerializeOptions.createHoconConfigurationLoader(plugin.getMainConfig().getItemSerializer()).source(() -> new BufferedReader(source)).build();
 		try {
 			ConfigurationNode node = loader.load().node("Content");
 			return node.virtual() ? null : CPAccount.deserealize(node.get(SerializedAccount.class), this);

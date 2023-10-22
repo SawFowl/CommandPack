@@ -74,6 +74,9 @@ public class MainConfig {
 	@Setting("PreventDamage")
 	@Comment("Prevent damage to other players if the player has invulnerability or invisibility.\nThese settings focus on the effects the player receives from the plugin commands.")
 	private PreventDamage preventDamage = new PreventDamage();
+	@Setting("ItemSerializer")
+	@Comment("Selecting serialization variant for items.\n1 - All NBT tags will be written in 1 line. This option is the most reliable, but significantly complicates manual editing of NBT tags in config.\n2 - Advanced recording. Easier to make manual changes to the config. If you have problems with this type of serialization, you should report errors to the LocaleAPI plugin developer.\n3 - Using Sponge serializer. Some data will be written in 1 line. If you encounter problems with this type of serialization, you should report bugs to the Sponge developers.\nOptions 1 and 2 are fully interchangeable and can load data saved by option 3. Option 3 cannot load data stored by other options.")
+	private int itemSerializer = 1;
 
 	public boolean isAutoCompleteRawCommands() {
 		return autoCompleteRawCommands;
@@ -157,6 +160,10 @@ public class MainConfig {
 
 	public PreventDamage getPreventDamage() {
 		return preventDamage;
+	}
+
+	public int getItemSerializer() {
+		return itemSerializer;
 	}
 
 }

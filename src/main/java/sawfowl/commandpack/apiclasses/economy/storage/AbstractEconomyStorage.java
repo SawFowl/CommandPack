@@ -24,6 +24,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
 import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
+import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
 public abstract class AbstractEconomyStorage extends Thread {
 
@@ -38,7 +39,7 @@ public abstract class AbstractEconomyStorage extends Thread {
 	public AbstractEconomyStorage(CommandPack plugin, EconomyServiceImpl economyService) {
 		this.plugin = plugin;
 		this.economyService = economyService;
-		options = plugin.getLocales().getLocaleService().getConfigurationOptions();
+		options = SerializeOptions.selectOptions(plugin.getMainConfig().getItemSerializer());
 		defaultBalances = createDefaultBalances();
 		currenciesMap = economyService.getCurrenciesMap();
 		try {

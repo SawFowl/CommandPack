@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
+
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
@@ -31,6 +32,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.plugin.PluginContainer;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.kits.GiveRule;
@@ -40,7 +42,6 @@ import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.EnumLocales;
 import sawfowl.localeapi.api.TextUtils;
-import sawfowl.localeapi.serializetools.SerializedItemStack;
 
 @ConfigSerializable
 public class KitData implements Kit {
@@ -58,7 +59,7 @@ public class KitData implements Kit {
 	@Setting("LocalizedLores")
 	private Map<String, List<String>> localizedLores;
 	@Setting("Items")
-	private List<SerializedItemStack> items = new ArrayList<>();
+	private List<ItemStack> items = new ArrayList<>();
 	@Setting("GiveRule")
 	private String giveRule = GiveRule.DROP.getName();
 	@Setting("Cooldown")
@@ -112,7 +113,7 @@ public class KitData implements Kit {
 
 	@Override
 	public List<ItemStack> getContent() {
-		return items.stream().map(s -> s.getItemStack()).collect(Collectors.toList());
+		return new ArrayList<ItemStack>(items);
 	}
 
 	@Override
@@ -197,11 +198,11 @@ public class KitData implements Kit {
 			public void handle(Cause cause, Container container) {
 				items.clear();
 				menu.inventory().slots().stream().forEach(slot -> {
-					if(slot.totalQuantity() > 0) items.add(new SerializedItemStack(slot.peek()));
+					if(slot.totalQuantity() > 0) items.add(slot.peek());
 				});
 				save();
 				menu.inventory().clear();
-				carrier.sendMessage(TextUtils.replace(CommandPack.getInstance().getLocales().getText(carrier.locale(), LocalesPaths.COMMANDS_KITS_SAVED), Placeholders.VALUE, getLocalizedName(carrier.locale())));
+				carrier.sendMessage(CommandPack.getInstance().getLocales().getText(carrier.locale(), LocalesPaths.COMMANDS_KITS_SAVED).replace(Placeholders.VALUE, getLocalizedName(carrier.locale())).get());
 				menu.unregisterAll();
 			}
 		});
@@ -290,7 +291,7 @@ public class KitData implements Kit {
 			items = new ArrayList<>();
 			inventory.slots().forEach(slot -> {
 				slot.get(Keys.SLOT_INDEX).ifPresent(index -> {
-					if(index >= 0 && index <= 35 && slot.totalQuantity() > 0) items.add(new SerializedItemStack(slot.peek()));
+					if(index >= 0 && index <= 35 && slot.totalQuantity() > 0) items.add(slot.peek());
 				});
 			});
 			return this;
@@ -298,7 +299,7 @@ public class KitData implements Kit {
 
 		@Override
 		public Builder fromList(List<ItemStack> list) {
-			KitData.this.items = list.stream().filter(s -> s != null).map(SerializedItemStack::new).collect(Collectors.toList());
+			KitData.this.items = list;
 			return this;
 		}
 
@@ -323,7 +324,7 @@ public class KitData implements Kit {
 					if(kit.getLocalizedName(locale) != null && !TextUtils.serializeLegacy(kit.getLocalizedName(locale)).equals(id)) setName(locale, TextUtils.serializeLegacy(kit.getLocalizedName(locale)));
 					if(kit.getLocalizedLore(locale) != null && !kit.getLocalizedLore(locale).isEmpty()) setLore(locale, kit.getLocalizedLore(locale).stream().map(TextUtils::serializeLegacy).collect(Collectors.toList()));
 				});
-				KitData.this.items = kit.getContent().stream().map(SerializedItemStack::new).collect(Collectors.toList());
+				KitData.this.items = kit.getContent();
 				KitData.this.giveRule = kit.getGiveRule().getName();
 				KitData.this.cooldown = kit.getCooldown();
 				KitData.this.limit = kit.getGiveLimit();

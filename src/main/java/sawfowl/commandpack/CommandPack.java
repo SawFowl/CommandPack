@@ -34,9 +34,8 @@ import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.world.biome.Biomes;
 import org.spongepowered.api.world.generation.ChunkGenerator;
-import org.spongepowered.api.world.generation.config.FlatGeneratorConfig;
+import org.spongepowered.api.world.generation.config.flat.FlatGeneratorConfig;
 import org.spongepowered.api.world.generation.config.flat.LayerConfig;
-import org.spongepowered.api.world.generation.config.structure.StructureGenerationConfig;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
 
@@ -46,8 +45,9 @@ import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
+
 import sawfowl.localeapi.api.TextUtils;
-import sawfowl.localeapi.event.LocaleServiseEvent;
+import sawfowl.localeapi.api.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.KitService;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.RandomTeleportService;
@@ -229,7 +229,7 @@ public class CommandPack {
 		rtpService = new RTPService(instance);
 		kitService = new KitServiceImpl(instance);
 		playersData = new PlayersDataImpl(instance);
-		configManager = new ConfigManager(instance, event.getLocaleService().getConfigurationOptions());
+		configManager = new ConfigManager(instance);
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
 		configManager.loadPlayersData();
 		isForge = checkForge();
@@ -255,7 +255,7 @@ public class CommandPack {
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerDeathAndRespawnListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new EntityDamageListener(instance));
 		configManager.loadKits();
-		generators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureConfig(StructureGenerationConfig.none()).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
+		generators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureSets(null).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
 		api = new sawfowl.commandpack.api.CommandPack() {
 
 			@Override
@@ -345,7 +345,7 @@ public class CommandPack {
 				if(getPlayersData().getTempData().getLastActivity(player) > 0) {
 					if(getPlayersData().getTempData().isAfk(player) && !player.hasPermission(Permissions.AFK_UNLIMIT)) {
 						if((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay()) - Duration.ofMillis(System.currentTimeMillis()).getSeconds() <= 0) {
-							player.kick(getLocales().getText(player.locale(), LocalesPaths.COMMANDS_AFK_KICK));
+							player.kick(getLocales().getComponent(player.locale(), LocalesPaths.COMMANDS_AFK_KICK));
 							getPlayersData().getTempData().updateLastActivity(player);
 						}
 					} else if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - getMainConfig().getAfkConfig().getTurnOnDlay()) getPlayersData().getTempData().setAfkStatus(player);
@@ -356,9 +356,9 @@ public class CommandPack {
 			Sponge.server().onlinePlayers().forEach(player -> {
 				if(getPlayersData().getTempData().isAfk(player)) {
 					if(player.hasPermission(Permissions.AFK_UNLIMIT)) {
-						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isUnlimit()) player.sendTitlePart(TitlePart.TITLE, locales.getText(player.locale(), LocalesPaths.COMMANDS_AFK_TITLE));
+						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isUnlimit()) player.sendTitlePart(TitlePart.TITLE, locales.getComponent(player.locale(), LocalesPaths.COMMANDS_AFK_TITLE));
 					} else {
-						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isBeforeKick()) player.showTitle(Title.title(locales.getText(player.locale(), LocalesPaths.COMMANDS_AFK_TITLE), TextUtils.replace(locales.getText(player.locale(), LocalesPaths.COMMANDS_AFK_SUBTITLE), Placeholders.VALUE, timeFormat((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay() + 1) - Duration.ofMillis(System.currentTimeMillis()).getSeconds(), player.locale()))));
+						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isBeforeKick()) player.showTitle(Title.title(locales.getComponent(player.locale(), LocalesPaths.COMMANDS_AFK_TITLE), locales.getText(player.locale(), LocalesPaths.COMMANDS_AFK_SUBTITLE).replace(Placeholders.VALUE, timeFormat((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay() + 1) - Duration.ofMillis(System.currentTimeMillis()).getSeconds(), player.locale())).get()));
 					}
 				}
 			});
@@ -522,17 +522,7 @@ public class CommandPack {
 	}
 
 	private Component timeFormat(long second, Locale locale) {
-		long minute = TimeUnit.SECONDS.toMinutes(second);
-		long hour = TimeUnit.SECONDS.toHours(second);
-		long days = TimeUnit.SECONDS.toDays(second);
-		if(days == 0) {
-			if(hour == 0) {
-				if(minute == 0) {
-					return TextUtils.replace(Component.text(String.format((second > 9 ? "%02d" : "%01d"), second) + "%second%"), "%second%", CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_SECOND));
-				} else return TextUtils.replaceToComponents(Component.text(String.format((minute > 9 ? "%02d" : "%01d"), minute) + "%minute%" + (second - (minute * 60) > 0 ? " " + String.format((second - (minute * 60) > 9 ? "%02d" : "%01d"), second - (minute * 60)) + "%second%" : "")), new String[] {"%minute%", "%second%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_SECOND)});
-			} else return TextUtils.replaceToComponents(Component.text(String.format((hour > 9 ? "%02d" : "%01d"), hour) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")), new String[] {"%hour%", "%minute%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_HOUR), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE)});
-		}
-		return TextUtils.replaceToComponents(Component.text(String.format((days > 9 ? "%02d" : "%01d"), days) + "%days% " + String.format((hour - (days * 24) > 9 ? "%02d" : "%01d"), hour - (days * 24)) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")), new String[] {"%days%", "%hour%", "%minute%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_DAYS), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_HOUR), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE)});
+		return TextUtils.timeFormat(second, locale, getLocales().getComponent(locale, LocalesPaths.TIME_DAYS), getLocales().getComponent(locale, LocalesPaths.TIME_HOUR), getLocales().getComponent(locale, LocalesPaths.TIME_MINUTE), getLocales().getComponent(locale, LocalesPaths.TIME_SECOND));
 	}
 
 }

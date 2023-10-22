@@ -5,8 +5,6 @@ import java.nio.file.Path;
 
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.ConfigurationOptions;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.configurate.loader.ConfigurationLoader;
 import org.spongepowered.configurate.reference.ConfigurationReference;
 import org.spongepowered.configurate.reference.ValueReference;
@@ -21,12 +19,13 @@ import sawfowl.commandpack.configure.configs.kits.KitData;
 import sawfowl.commandpack.configure.configs.miscellaneous.JoinCommands;
 import sawfowl.commandpack.configure.configs.player.PlayerData;
 import sawfowl.commandpack.configure.configs.player.WarpData;
+
 import sawfowl.localeapi.api.TextUtils;
+import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
 public class ConfigManager {
 
 	private final CommandPack plugin;
-	private final ConfigurationOptions options;
 	private ConfigurationReference<CommentedConfigurationNode> mainConfigReference;
 	private ValueReference<MainConfig, CommentedConfigurationNode> mainConfig;
 	private ConfigurationReference<CommentedConfigurationNode> joinCommandsConfigReference;
@@ -37,9 +36,8 @@ public class ConfigManager {
 	private ConfigurationLoader<CommentedConfigurationNode> warpsConfigLoader;
 	private CommentedConfigurationNode warpsNode;
 	private final Path kitsPath;
-	public ConfigManager(CommandPack plugin, ConfigurationOptions options) {
+	public ConfigManager(CommandPack plugin) {
 		this.plugin = plugin;
-		this.options = options;
 		playerDataPath = plugin.getConfigDir().resolve("PlayerData");
 		kitsPath = plugin.getConfigDir().resolve("Kits");
 		saveMainConfig();
@@ -85,7 +83,7 @@ public class ConfigManager {
 	public void savePlayerData(PlayerData data) {
 		if(!playerDataPath.toFile().exists()) playerDataPath.toFile().mkdir();
 		try {
-			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(playerDataPath.resolve(data.getUniqueId().toString() + ".conf")).build().loadToReference();
+			ConfigurationReference<CommentedConfigurationNode> configReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(playerDataPath.resolve(data.getUniqueId().toString() + ".conf")).build().loadToReference();
 			ValueReference<PlayerData, CommentedConfigurationNode> config = configReference.referenceTo(PlayerData.class);
 			config.setAndSave(data);
 		} catch (ConfigurateException e) {
@@ -127,7 +125,7 @@ public class ConfigManager {
 		KitData data = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		if(!kitsPath.toFile().exists()) kitsPath.toFile().mkdir();
 		try {
-			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(kitsPath.resolve(TextUtils.clearDecorations(data.id()) + ".conf")).build().loadToReference();
+			ConfigurationReference<CommentedConfigurationNode> configReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(kitsPath.resolve(TextUtils.clearDecorations(data.id()) + ".conf")).build().loadToReference();
 			ValueReference<KitData, CommentedConfigurationNode> config = configReference.referenceTo(KitData.class);
 			config.setAndSave(data);
 		} catch (ConfigurateException e) {
@@ -137,7 +135,7 @@ public class ConfigManager {
 
 	private void loadPlayerData(File playerConfig) {
 		try {
-			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(playerConfig.toPath()).build().loadToReference();
+			ConfigurationReference<CommentedConfigurationNode> configReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(playerConfig.toPath()).build().loadToReference();
 			ValueReference<PlayerData, CommentedConfigurationNode> config = configReference.referenceTo(PlayerData.class);
 			((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(config.get());
 		} catch (ConfigurateException e) {
@@ -147,7 +145,7 @@ public class ConfigManager {
 
 	private void loadKit(File kitConfig) {
 		try {
-			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(kitConfig.toPath()).build().loadToReference();
+			ConfigurationReference<CommentedConfigurationNode> configReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(kitConfig.toPath()).build().loadToReference();
 			ValueReference<KitData, CommentedConfigurationNode> config = configReference.referenceTo(KitData.class);
 			plugin.getKitService().addKit(config.get());
 		} catch (ConfigurateException e) {
@@ -156,7 +154,7 @@ public class ConfigManager {
 	}
 
 	private void createWarpsConfig() {
-		warpsConfigLoader = HoconConfigurationLoader.builder().defaultOptions(options).path(plugin.getConfigDir().resolve("Warps.conf")).build();
+		warpsConfigLoader = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(plugin.getConfigDir().resolve("Warps.conf")).build();
 		try {
 			warpsNode = warpsConfigLoader.load();
 			if(!warpsNode.childrenMap().isEmpty()) for(CommentedConfigurationNode node : warpsNode.childrenMap().values()) plugin.getPlayersData().addAdminWarp(node.get(WarpData.class));
@@ -167,7 +165,7 @@ public class ConfigManager {
 
 	private void saveMainConfig() {
 		try {
-			mainConfigReference = HoconConfigurationLoader.builder().defaultOptions(options).path(plugin.getConfigDir().resolve("Config.conf")).build().loadToReference();
+			mainConfigReference = SerializeOptions.createHoconConfigurationLoader(1).path(plugin.getConfigDir().resolve("Config.conf")).build().loadToReference();
 			mainConfig = mainConfigReference.referenceTo(MainConfig.class);
 			mainConfigReference.save();
 		} catch (ConfigurateException e) {
@@ -177,7 +175,7 @@ public class ConfigManager {
 
 	private void saveJoinCommandsConfig() {
 		try {
-			joinCommandsConfigReference = HoconConfigurationLoader.builder().defaultOptions(options).path(plugin.getConfigDir().resolve("JoinCommands.conf")).build().loadToReference();
+			joinCommandsConfigReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(plugin.getConfigDir().resolve("JoinCommands.conf")).build().loadToReference();
 			joinCommandsConfig = joinCommandsConfigReference.referenceTo(JoinCommands.class);
 			joinCommandsConfigReference.save();
 		} catch (ConfigurateException e) {
@@ -187,7 +185,7 @@ public class ConfigManager {
 
 	private void saveMainCommandsConfig() {
 		try {
-			commandsConfigReference = HoconConfigurationLoader.builder().defaultOptions(options).path(plugin.getConfigDir().resolve("Commands.conf")).build().loadToReference();
+			commandsConfigReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(plugin.getConfigDir().resolve("Commands.conf")).build().loadToReference();
 			commandsConfig = commandsConfigReference.referenceTo(CommandsConfig.class);
 			commandsConfigReference.save();
 			commandsConfig.get().updateCommandMap(commandsConfig);

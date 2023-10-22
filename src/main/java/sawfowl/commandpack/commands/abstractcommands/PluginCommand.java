@@ -48,7 +48,7 @@ public abstract class PluginCommand implements sawfowl.commandpack.api.commands.
 	}
 
 	@Override
-	public Component getText(Object[] path) {
+	public Component getComponent(Object[] path) {
 		return null;
 	}
 

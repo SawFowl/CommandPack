@@ -27,6 +27,7 @@ import sawfowl.commandpack.configure.configs.punishment.BanData;
 import sawfowl.commandpack.configure.configs.punishment.MuteData;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
 import sawfowl.commandpack.utils.StorageType;
+import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
 public class H2Storage extends SqlStorage {
 
@@ -259,7 +260,7 @@ public class H2Storage extends SqlStorage {
 
 	protected Ban.Profile profileFromString(String banData) {
 		StringReader source = new StringReader(banData);
-		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(plugin.getLocales().getLocaleService().getConfigurationOptions()).source(() -> new BufferedReader(source)).build();
+		HoconConfigurationLoader loader = SerializeOptions.createHoconConfigurationLoader(plugin.getMainConfig().getItemSerializer()).source(() -> new BufferedReader(source)).build();
 		try {
 			ConfigurationNode node = loader.load().node("Content");
 			return node.virtual() ? null : (Profile) node.get(BanData.class).getBan();
@@ -271,7 +272,7 @@ public class H2Storage extends SqlStorage {
 
 	protected IP ipFromString(String banData) {
 		StringReader source = new StringReader(banData);
-		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(plugin.getLocales().getLocaleService().getConfigurationOptions()).source(() -> new BufferedReader(source)).build();
+		HoconConfigurationLoader loader = SerializeOptions.createHoconConfigurationLoader(plugin.getMainConfig().getItemSerializer()).source(() -> new BufferedReader(source)).build();
 		try {
 			ConfigurationNode node = loader.load().node("Content");
 			return node.virtual() ? null : (IP) node.get(BanData.class).getBan();
@@ -283,7 +284,7 @@ public class H2Storage extends SqlStorage {
 
 	protected Mute muteFromString(String muteData) {
 		StringReader source = new StringReader(muteData);
-		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(plugin.getLocales().getLocaleService().getConfigurationOptions()).source(() -> new BufferedReader(source)).build();
+		HoconConfigurationLoader loader = SerializeOptions.createHoconConfigurationLoader(plugin.getMainConfig().getItemSerializer()).source(() -> new BufferedReader(source)).build();
 		try {
 			ConfigurationNode node = loader.load().node("Content");
 			return node.virtual() ? null : node.get(MuteData.class);

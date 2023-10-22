@@ -26,14 +26,14 @@ public class PlayerChatListener {
 	}
 
 	@Listener(order = Order.LAST)
-	public void onSendMessage(PlayerChatEvent event, @First ServerPlayer player) {
+	public void onSendMessage(PlayerChatEvent.Submit event, @First ServerPlayer player) {
 		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(player);
 		if(!plugin.getMainConfig().getPunishment().isEnable()) return;
 		Optional<Mute> optMute = plugin.getPunishmentService().getMute(player);
 		if(!optMute.isPresent()) return;
 		Mute mute = optMute.get();
 		event.setCancelled(true);
-		player.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(player.locale(), mute.getExpiration().isPresent() ? LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET : LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.TIME, Placeholders.VALUE}, new Component[] {mute.getSource().orElse(text("&e-")), expire(player.locale(), mute), mute.getReason().orElse(text("&e-"))}));
+		player.sendMessage(plugin.getLocales().getText(player.locale(), mute.getExpiration().isPresent() ? LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET : LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT).replace(new String[] {Placeholders.SOURCE, Placeholders.TIME, Placeholders.VALUE}, mute.getSource().orElse(text("&e-")), expire(player.locale(), mute), mute.getReason().orElse(text("&e-"))).get());
 	}
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {

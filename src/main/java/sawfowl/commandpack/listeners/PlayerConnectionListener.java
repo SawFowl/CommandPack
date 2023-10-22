@@ -25,9 +25,10 @@ import org.spongepowered.api.util.Ticks;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraftforge.fml.network.FMLConnectionData;
-import net.minecraftforge.fml.network.NetworkHooks;
+
+import net.minecraftforge.network.ConnectionData;
+import net.minecraftforge.network.NetworkHooks;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.kits.GiveRule;
@@ -38,6 +39,7 @@ import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.player.GivedKitData;
 import sawfowl.commandpack.configure.configs.player.PlayerData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
 public class PlayerConnectionListener {
@@ -59,7 +61,7 @@ public class PlayerConnectionListener {
 					if(mods != null) mods.forEach(mod -> {
 						if(!plugin.getMainConfig().getRestrictMods().isAllowedPlayerMod(mod)) banedPlayerMods.add(mod);
 					});
-					if(!banedPlayerMods.isEmpty() && event.player().isOnline()) event.player().kick(TextUtils.replace(plugin.getLocales().getText(event.player().locale(), LocalesPaths.ILLEGAL_MODS_LIST), Placeholders.VALUE, String.join(", ", banedPlayerMods)));
+					if(!banedPlayerMods.isEmpty() && event.player().isOnline()) event.player().kick(plugin.getLocales().getText(event.player().locale(), LocalesPaths.ILLEGAL_MODS_LIST).replace(Placeholders.VALUE, String.join(", ", banedPlayerMods)).get());
 				}).build());
 			}
 		}
@@ -77,7 +79,7 @@ public class PlayerConnectionListener {
 		if(!event.isMessageCancelled() && plugin.getMainConfig().isChangeConnectionMessages()) {
 			event.setMessageCancelled(true);
 			if(!playerData.isVanished() || !event.player().hasPermission(Permissions.HIDE_CONNECT)) sendJoinMessage(event.player());
-			Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.JOIN_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {getPrefix(event.player()), event.player().get(Keys.DISPLAY_NAME).orElse(text(event.player().name())), getSuffix(event.player())}));
+			Sponge.systemSubject().sendMessage(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.JOIN_MESSAGE).replace(new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, getPrefix(event.player()), event.player().get(Keys.DISPLAY_NAME).orElse(text(event.player().name())), getSuffix(event.player())).get());
 		}
 		if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterSpawn() && plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().isPresent()) {
 			event.player().setLocation(plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().get());
@@ -105,7 +107,7 @@ public class PlayerConnectionListener {
 		if(plugin.getMainConfig().isChangeConnectionMessages()) {
 			if(TextUtils.serializeLegacy(event.message()).length() > 0) event.setMessage(Component.empty());
 			if(!playerData.isVanished() || !event.player().hasPermission(Permissions.HIDE_CONNECT)) sendLeaveMessage(event.player());
-			Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.LEAVE_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {getPrefix(event.player()), event.player().get(Keys.DISPLAY_NAME).orElse(text(event.player().name())), getSuffix(event.player())}));
+			Sponge.systemSubject().sendMessage(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.LEAVE_MESSAGE).replace(new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, getPrefix(event.player()), event.player().get(Keys.DISPLAY_NAME).orElse(text(event.player().name())), getSuffix(event.player())).get());
 		}
 	}
 
@@ -289,8 +291,8 @@ public class PlayerConnectionListener {
 		if(!plugin.getMainConfig().isEnableMotd()) return;
 		Sponge.server().scheduler().submit(Task.builder().delay(2, TimeUnit.SECONDS).plugin(plugin.getPluginContainer()).execute(() -> {
 			Sponge.server().player(player.uniqueId()).ifPresent(p -> {
-				List<Component> motd = plugin.getLocales().getListTexts(p.locale(), LocalesPaths.MOTD);
-				if(!motd.isEmpty()) p.sendMessage(Component.join(JoinConfiguration.newlines(), motd.stream().map(c -> TextUtils.replace(c, Placeholders.PLAYER, player.get(Keys.DISPLAY_NAME).orElse(Component.text(p.name())))).collect(Collectors.toList())));
+				List<Text> motd = plugin.getLocales().getListTexts(p.locale(), LocalesPaths.MOTD);
+				if(!motd.isEmpty()) p.sendMessage(Component.join(JoinConfiguration.newlines(), motd.stream().map(c -> c.replace(Placeholders.PLAYER, player.get(Keys.DISPLAY_NAME).orElse(Component.text(p.name()))).get()).collect(Collectors.toList())));
 			});
 		}).build());
 	}
@@ -302,7 +304,7 @@ public class PlayerConnectionListener {
 		boolean before = player.hasPlayedBefore();
 		Sponge.server().scheduler().submit(Task.builder().delay(2, TimeUnit.SECONDS).plugin(plugin.getPluginContainer()).execute(() -> {
 			Sponge.server().onlinePlayers().forEach(p -> {
-				p.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(p.locale(), before ? LocalesPaths.JOIN_MESSAGE : LocalesPaths.FIRST_JOIN_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
+				p.sendMessage(plugin.getLocales().getText(p.locale(), before ? LocalesPaths.JOIN_MESSAGE : LocalesPaths.FIRST_JOIN_MESSAGE).replace(new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, prefix, name, suffix).get());
 			});
 		}).build());
 	}
@@ -312,7 +314,7 @@ public class PlayerConnectionListener {
 		Component name = player.get(Keys.DISPLAY_NAME).orElse(text(player.name()));
 		Component suffix = getSuffix(player);
 		Sponge.server().onlinePlayers().forEach(p -> {
-			p.sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(p.locale(), LocalesPaths.LEAVE_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {prefix, name, suffix}));
+			p.sendMessage(plugin.getLocales().getText(p.locale(), LocalesPaths.LEAVE_MESSAGE).replace(new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, prefix, name, suffix).get());
 		});
 	}
 
@@ -341,8 +343,8 @@ public class PlayerConnectionListener {
 	}
 
 	private List<String> getModList(ServerPlayer player) {
-		FMLConnectionData data = NetworkHooks.getConnectionData(((ServerPlayerEntity) player).connection.connection);
-		return data == null ? null : NetworkHooks.getConnectionData(((ServerPlayerEntity) player).connection.connection).getModList();
+		ConnectionData data = NetworkHooks.getConnectionData(((net.minecraft.server.level.ServerPlayer) player).connection.connection);
+		return data == null ? null : NetworkHooks.getConnectionData(((net.minecraft.server.level.ServerPlayer) player).connection.connection).getModList();
 	}
 
 }

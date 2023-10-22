@@ -1,13 +1,14 @@
 package sawfowl.commandpack.configure.configs.player;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
+
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
@@ -32,7 +33,6 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.localeapi.api.TextUtils;
-import sawfowl.localeapi.serializetools.SerializedItemStack;
 
 @ConfigSerializable
 public class BackpackData implements Backpack {
@@ -40,7 +40,7 @@ public class BackpackData implements Backpack {
 	public BackpackData(){}
 
 	@Setting("Items")
-	private Map<Integer, SerializedItemStack> items = new HashMap<>();
+	private Map<Integer, ItemStack> items = new HashMap<>();
 	private Consumer<BackpackData> save;
 
 	void setSaveConsumer(Consumer<BackpackData> save) {
@@ -71,7 +71,7 @@ public class BackpackData implements Backpack {
 	public boolean addItem(int slot, ItemStack item) {
 		if(slot < 0 || slot > 53) return false;
 		if(items.containsKey(slot)) items.remove(slot);
-		items.put(slot, new SerializedItemStack(item));
+		items.put(slot, item);
 		return true;
 	}
 
@@ -96,13 +96,13 @@ public class BackpackData implements Backpack {
 	}
 
 	@Override
-	public Collection<ItemStackSnapshot> getItems() {
-		return items.values().stream().map(SerializedItemStack::getItemStack).map(ItemStack::createSnapshot).collect(Collectors.toList());
+	public Collection<ItemStack> getItems() {
+		return new ArrayList<ItemStack>(items.values());
 	}
 
 	@Override
 	public Optional<ItemStack> getItem(int slot) {
-		return Optional.ofNullable(items.getOrDefault(slot, null)).filter(s -> (s != null)).map(s -> (s.getItemStack()));
+		return Optional.ofNullable(items.getOrDefault(slot, null)).filter(s -> (s != null));
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public class BackpackData implements Backpack {
 			}
 		});
 		items.forEach((k, v) -> {
-			if(menu.inventory().slot(k).isPresent()) menu.inventory().offer(k, v.getItemStack());
+			if(menu.inventory().slot(k).isPresent()) menu.inventory().offer(k, v);
 		});
 		return menu;
 	}

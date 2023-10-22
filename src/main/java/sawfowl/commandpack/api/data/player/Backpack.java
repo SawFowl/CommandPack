@@ -53,7 +53,7 @@ public interface Backpack extends DataSerializable {
 	/**
 	 * Get a copy of all the items in the backpack.
 	 */
-	Collection<ItemStackSnapshot> getItems();
+	Collection<ItemStack> getItems();
 
 	/**
 	 * Getting an item from a backpack.

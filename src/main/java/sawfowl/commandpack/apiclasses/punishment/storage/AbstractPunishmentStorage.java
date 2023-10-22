@@ -19,6 +19,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.utils.StorageType;
+import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
 public abstract class AbstractPunishmentStorage extends Thread {
 
@@ -30,7 +31,7 @@ public abstract class AbstractPunishmentStorage extends Thread {
 	ConfigurationOptions options;
 	public AbstractPunishmentStorage(CommandPack plugin) {
 		this.plugin = plugin;
-		options = plugin.getLocales().getLocaleService().getConfigurationOptions();
+		options = SerializeOptions.selectOptions(plugin.getMainConfig().getItemSerializer());
 		load();
 		Sponge.asyncScheduler().submit(Task.builder().interval(Duration.ofMinutes(1)).plugin(plugin.getPluginContainer()).execute(() -> {
 			Map<UUID, Ban.Profile> bans = new HashMap<>(this.bans);

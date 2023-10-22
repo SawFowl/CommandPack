@@ -32,6 +32,7 @@ import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
 import sawfowl.commandpack.utils.tasks.DelayTimerTask;
+import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
 /**
@@ -50,7 +51,7 @@ public interface PluginCommand {
 	/**
 	 * Retrieving text from a specified location. You can return null, but in which case you need to create localized messages in LocaleAPI.
 	 */
-	Component getText(Object[] path);
+	Component getComponent(Object[] path);
 
 	/**
 	 * {@link PluginContainer} to which the command will be registered.
@@ -100,7 +101,14 @@ public interface PluginCommand {
 	/**
 	 * Getting a localized message for the player.
 	 */
-	default Component getText(ServerPlayer player, Object[] path) {
+	default Component getComponent(ServerPlayer player, Object[] path) {
+		return getText(player.locale(), path).get();
+	}
+
+	/**
+	 * Getting a localized message for the player.
+	 */
+	default Text getText(ServerPlayer player, Object[] path) {
 		return getText(player.locale(), path);
 	}
 
@@ -111,10 +119,19 @@ public interface PluginCommand {
 	/**
 	 * Getting a localized message.
 	 */
-	default Component getText(Locale locale, Object... path) {
-		Component text = getText(path);
+	default Component getComponent(Locale locale, Object... path) {
+		Component text = getComponent(path);
 		if(text != null) return text;
 		return text(CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getString(path));
+	}
+
+	/**
+	 * Getting a localized message.
+	 */
+	default Text getText(Locale locale, Object... path) {
+		Component text = getComponent(path);
+		if(text != null) return Text.of(text);
+		return CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getText(path);
 	}
 
 	default List<Component> getListTexts(Locale locale, Object... path) {
@@ -129,11 +146,7 @@ public interface PluginCommand {
 	 * Serialization of text.
 	 */
 	default Component text(String string) {
-		if(isLegacyDecor(string)) {
-			return TextUtils.deserializeLegacy(string);
-		} else {
-			return TextUtils.deserialize(string);
-		}
+		return TextUtils.deserialize(string);
 	}
 
 	default Component text(Object objectToString) {
@@ -145,6 +158,13 @@ public interface PluginCommand {
 	 */
 	default CommandException exception(Component text) throws CommandException {
 		throw new CommandException(text);
+	}
+
+	/**
+	 * Outputs an error message when the command is executed.
+	 */
+	default CommandException exception(Text text) throws CommandException {
+		throw new CommandException(text.get());
 	}
 
 	/**
@@ -162,37 +182,27 @@ public interface PluginCommand {
 		return exception(getText(locale, path));
 	}
 
-	default CommandException exception(Locale locale, String replaceKey, Component replaceValue, Object... path) throws CommandException {
-		return exception(TextUtils.replace(getText(locale, path), replaceKey, replaceValue));
+	default CommandException exception(Locale locale, Object[] path, String replaceKey, Component replaceValue) throws CommandException {
+		return exception(getText(locale, path).replace(replaceKey, replaceValue));
 	}
 
-	default CommandException exception(Locale locale, String key, String value, Object... path) throws CommandException {
-		return exception(TextUtils.replace(getText(locale, path), key, value));
+	default CommandException exception(Locale locale, Object[] path, String key, String value) throws CommandException {
+		return exception(getText(locale, path).replace(key, value));
 	}
 
-	default CommandException exception(Locale locale, String[] keys, String[] values, Object... path) throws CommandException {
-		return exception(TextUtils.replace(getText(locale, path), keys, values));
+	default CommandException exception(Locale locale, Object[] path, String[] keys, String... values) throws CommandException {
+		return exception(getText(locale, path).replace(keys, values));
 	}
 
-	default CommandException exception(Locale locale, String[] keys, Component[] values, Object... path) throws CommandException {
-		return exception(TextUtils.replaceToComponents(getText(locale, path), keys, values));
+	default CommandException exception(Locale locale, Object[] path, String[] keys, Component... values) throws CommandException {
+		return exception(getText(locale, path).replace(keys, values));
 	}
 
 	/**
 	 * Time formatting.
 	 */
 	default Component timeFormat(long second, Locale locale) {
-		long minute = TimeUnit.SECONDS.toMinutes(second);
-		long hour = TimeUnit.SECONDS.toHours(second);
-		long days = TimeUnit.SECONDS.toDays(second);
-		if(days == 0) {
-			if(hour == 0) {
-				if(minute == 0) {
-					return TextUtils.replace(Component.text(String.format((second > 9 ? "%02d" : "%01d"), second) + "%second%"), "%second%", CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_SECOND));
-				} else return TextUtils.replaceToComponents(Component.text(String.format((minute > 9 ? "%02d" : "%01d"), minute) + "%minute%" + (second - (minute * 60) > 0 ? " " + String.format((second - (minute * 60) > 9 ? "%02d" : "%01d"), second - (minute * 60)) + "%second%" : "")), new String[] {"%minute%", "%second%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_SECOND)});
-			} else return TextUtils.replaceToComponents(Component.text(String.format((hour > 9 ? "%02d" : "%01d"), hour) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")), new String[] {"%hour%", "%minute%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_HOUR), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE)});
-		}
-		return TextUtils.replaceToComponents(Component.text(String.format((days > 9 ? "%02d" : "%01d"), days) + "%days% " + String.format((hour - (days * 24) > 9 ? "%02d" : "%01d"), hour - (days * 24)) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")), new String[] {"%days%", "%hour%", "%minute%"}, new Component[] {CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_DAYS), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_HOUR), CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.TIME_MINUTE)});
+		return TextUtils.timeFormat(second, locale, CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.TIME_DAYS), CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.TIME_HOUR), CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.TIME_MINUTE), CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.TIME_SECOND));
 	}
 
 	/**
@@ -218,20 +228,12 @@ public interface PluginCommand {
 		if(price.getMoney() > 0) {
 			Currency currency = CommandPack.getInstance().getEconomy().checkCurrency(price.getCurrency());
 			BigDecimal money = createDecimal(price.getMoney());
-			if(!CommandPack.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money) || !CommandPack.getInstance().getEconomy().removeFromPlayerBalance(player, currency, money)) exception(TextUtils.replaceToComponents(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY), new String[] {Placeholders.MONEY, Placeholders.COMMAND}, new Component[] {currency.symbol().append(text(money.toString())), text("/" + command())}));
+			if(!CommandPack.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money) || !CommandPack.getInstance().getEconomy().removeFromPlayerBalance(player, currency, money)) exception(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY).replace(new String[] {Placeholders.MONEY, Placeholders.COMMAND}, currency.symbol().append(text(money.toString())), text("/" + command())));
 		}
 	}
 
 	static BigDecimal createDecimal(double value) {
 		return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
-	}
-
-	default boolean isLegacyDecor(String string) {
-		return string.indexOf('&') != -1 && !string.endsWith("&") && isStyleChar(string.charAt(string.indexOf("&") + 1));
-	}
-
-	default boolean isStyleChar(char ch) {
-		return "0123456789abcdefklmnor".indexOf(ch) != -1;
 	}
 
 	/**

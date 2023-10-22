@@ -3,16 +3,16 @@ package sawfowl.commandpack.configure.locale;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.localeapi.api.ConfigTypes;
 import sawfowl.localeapi.api.LocaleService;
-import sawfowl.localeapi.api.TextUtils;
-import sawfowl.localeapi.utils.AbstractLocaleUtil;
+import sawfowl.localeapi.api.PluginLocale;
+import sawfowl.localeapi.api.Text;
 
 public class Locales {
 
@@ -39,24 +39,24 @@ public class Locales {
 		return localesTags = localeService.getLocalesList().stream().map(Locale::toLanguageTag).collect(Collectors.toList()).stream().toArray(String[]::new);
 	}
 
-	public Component getText(Locale locale, Object... path) {
-		return getAbstractLocaleUtil(locale).getComponent(json, path);
+	public Text getText(Locale locale, Object... path) {
+		return getAbstractLocaleUtil(locale).getText(path);
 	}
 
-	public List<Component> getListTexts(Locale locale, Object... path) {
-		return getAbstractLocaleUtil(locale).getListComponents(json, path);
+	public Component getComponent(Locale locale, Object... path) {
+		return getAbstractLocaleUtil(locale).getComponent(path);
+	}
+
+	public List<Text> getListTexts(Locale locale, Object... path) {
+		return getAbstractLocaleUtil(locale).getTexts(path);
+	}
+
+	public List<Component> getListComponents(Locale locale, Object... path) {
+		return getAbstractLocaleUtil(locale).getListComponents(path);
 	}
 
 	public String getString(Locale locale, Object... path) {
-		return TextUtils.serializeLegacy(getText(locale, path));
-	}
-
-	public Component getTextWithReplaced(Locale locale, Map<String, String> map, Object... path) {
-		return replace(getText(locale, path), map);
-	}
-
-	public Component getTextReplaced(Locale locale, Map<String, Component> map, Object... path) {
-		return replaceComponent(getText(locale, path), map);
+		return getText(locale, path).toPlain();
 	}
 
 	public Component getTextFromDefault(Object... path) {
@@ -887,15 +887,7 @@ public class Locales {
 		if(save) save(locale);
 	}
 
-	private Component replace(Component component, Map<String, String> map) {
-		return TextUtils.replace(component, map);
-	}
-
-	private Component replaceComponent(Component component, Map<String, Component> map) {
-		return TextUtils.replaceToComponents(component, map);
-	}
-
-	private AbstractLocaleUtil getAbstractLocaleUtil(Locale locale) {
+	private PluginLocale getAbstractLocaleUtil(Locale locale) {
 		return localeService.getPluginLocales(pluginid).getOrDefault(locale, localeService.getPluginLocales(pluginid).get(org.spongepowered.api.util.locale.Locales.DEFAULT));
 	}
 

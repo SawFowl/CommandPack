@@ -15,6 +15,7 @@ import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
+import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
 public abstract class SqlStorage extends AbstractPunishmentStorage {
 
@@ -42,7 +43,7 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 
 	protected Warns warnsFromString(String warnsData) {
 		StringReader source = new StringReader(warnsData);
-		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(plugin.getLocales().getLocaleService().getConfigurationOptions()).source(() -> new BufferedReader(source)).build();
+		HoconConfigurationLoader loader = SerializeOptions.createHoconConfigurationLoader(plugin.getMainConfig().getItemSerializer()).source(() -> new BufferedReader(source)).build();
 		try {
 			ConfigurationNode node = loader.load().node("Content");
 			return node.virtual() ? null : node.get(WarnsData.class);

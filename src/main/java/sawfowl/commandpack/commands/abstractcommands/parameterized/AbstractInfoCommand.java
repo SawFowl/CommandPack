@@ -42,6 +42,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.ModContainer;
+import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
 public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
@@ -60,38 +61,38 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected void sendSystemInfo(Audience target, Locale locale, boolean isPlayer) {
-		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_OS_HEADER);
-		Component os = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_OS), Placeholders.VALUE, this.os);
-		Component jvm = isPlayer ? TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_JAVA), Placeholders.VALUE, this.java).hoverEvent(HoverEvent.showText(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_JAVAHOME), Placeholders.VALUE, this.javaHome))) : TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_OS), Placeholders.VALUE, (this.java + " " + this.javaHome));
+		Component header = getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_OS_HEADER);
+		Component os = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_OS).replace(Placeholders.VALUE, this.os).get();
+		Component jvm = isPlayer ? getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_JAVA).replace(Placeholders.VALUE, this.java).get().hoverEvent(HoverEvent.showText(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_JAVAHOME).replace(Placeholders.VALUE, this.javaHome).get())) : getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_OS).replace(Placeholders.VALUE, (this.java + " " + this.javaHome)).get();
 		sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, Arrays.asList(os, jvm));
 	}
 
 	protected void sendWorldsInfo(Audience target, Locale locale) {
-		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_WORLDS_INFO_HEADER);
-		List<Component> worldsInfo = Sponge.server().worldManager().worlds().stream().map(world -> (TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO), 
-				new String[] {Placeholders.WORLD, Placeholders.CHUNKS_SIZE, Placeholders.ENTITIES_SIZE, Placeholders.VALUE}, 
-				new Component[] {text(world.key().asString()), text(Iterables.size(world.loadedChunks())), text(world.entities().size()), tPStoText(BigDecimal.valueOf(world.engine().ticksPerSecond()).setScale(2, RoundingMode.HALF_UP).doubleValue())}))).collect(Collectors.toList());
+		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_WORLDS_INFO_HEADER).get();
+		List<Component> worldsInfo = Sponge.server().worldManager().worlds().stream().map(world -> getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO).replace(
+				new String[] {Placeholders.WORLD, Placeholders.CHUNKS_SIZE, Placeholders.ENTITIES_SIZE, Placeholders.VALUE},
+				text(world.key().asString()), text(Iterables.size(world.loadedChunks())), text(world.entities().size()), tPStoText(BigDecimal.valueOf(world.engine().ticksPerSecond()).setScale(2, RoundingMode.HALF_UP).doubleValue())).get()).toList();
 		sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, worldsInfo);
 	}
 
 	protected void sendPluginsInfo(Audience target, Locale locale, boolean isPlayer) {
-		Component header = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS), Placeholders.VALUE, String.valueOf(containers.size()));
+		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS).replace(Placeholders.VALUE, containers.size()).get();
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) target;
 			List<Component> content = new ArrayList<>();
 			boolean allowRefresh = player.hasPermission(Permissions.SERVER_STAT_STAFF_INFO_PLUGINS_REFRESH);
 			for(PluginContainer container : containers) {
 				if(allowRefresh) {
-					content.add(TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON), () -> {
+					content.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON).createCallBack(cause -> {
 						sendRefreshEvent(container);
-						player.sendMessage(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE));
+						player.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE));
 					}).append(player.hasPermission(Permissions.SERVER_STAT_STAFF_PLUGINS_INFO)
 							?
-							TextUtils.createCallBack(text("&a " + container.metadata().name().orElse(container.metadata().id())), () -> {
+							Text.of(text("&a " + container.metadata().name().orElse(container.metadata().id()))).createCallBack(() -> {
 								sendPluginInfo(player, locale, container.metadata());
-							})
+							}).get()
 							: 
-							text("&a " + container.metadata().name().orElse(container.metadata().id()))));
+							text("&a " + container.metadata().name().orElse(container.metadata().id()))).get());
 				} else {
 					content.add(text("&a" + container.metadata().name().orElse(container.metadata().id())));
 				}
@@ -109,16 +110,16 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected void sendModsInfo(Audience target, Locale locale, boolean isPlayer) {
-		Component header = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS), Placeholders.VALUE, String.valueOf(mods.size()));
+		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS).replace(Placeholders.VALUE, mods.size()).get();
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) target;
 			List<Component> content = new ArrayList<>();
 			for(ModContainer container : mods) {
 				content.add(player.hasPermission(Permissions.SERVER_STAT_STAFF_PLUGINS_INFO)
 						?
-						TextUtils.createCallBack(text("&a" + container.getDisplayName()), () -> {
+						Text.of(text("&a" + container.getDisplayName())).createCallBack(() -> {
 							sendModInfo(player, locale, container);
-						})
+						}).get()
 						: 
 						text("&a" + container.getDisplayName()));
 			}
@@ -143,21 +144,20 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected Component getTPS(Locale locale) {
-		return TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_TPS), Placeholders.VALUE, tPStoText(currentTPS())
+		return getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_TPS).replace(Placeholders.VALUE, tPStoText(currentTPS())
 				.append(text("&f, "))
 				.append(tPStoText(plugin.getAverageTPS1m()))
 				.append(text("&f, "))
 				.append(tPStoText(plugin.getAverageTPS5m()))
 				.append(text("&f, "))
-				.append(tPStoText(plugin.getAverageTPS10m()))
-				);
+				.append(tPStoText(plugin.getAverageTPS10m()))).get();
 	}
 
 	protected Component getServerTime(Locale locale) {
 		SimpleDateFormat format = new SimpleDateFormat(getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		return TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIME), Placeholders.VALUE, text(format.format(calendar.getTime())));
+		return getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIME).replace(Placeholders.VALUE, format.format(calendar.getTime())).get();
 	}
 
 	protected void sendRefreshEvent(PluginContainer container) {
@@ -169,7 +169,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected Component getUptime(Locale locale) {
-		return TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_UPTIME), Placeholders.VALUE, timeFormat(plugin.getServerUptime(), locale).append(Component.text(" / ")).append(timeFormat(ManagementFactory.getRuntimeMXBean().getUptime() / 1000, locale)));
+		return getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_UPTIME).replace(Placeholders.VALUE, timeFormat(plugin.getServerUptime(), locale).append(Component.text(" / ")).append(timeFormat(ManagementFactory.getRuntimeMXBean().getUptime() / 1000, locale))).get();
 	}
 
 	protected void fillLists() {
@@ -177,7 +177,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 		if(containers == null) containers = new ArrayList<>();
 		if(plugin.isForgeServer()) {
 			FMLLoader.getLoadingModList().getMods().forEach(mod -> {
-				if(!mod.getOwningFile().getModLoader().equalsIgnoreCase("java_plain") && !mod.getOwningFile().getModLoader().equalsIgnoreCase("")) mods.add(new ModContainer(mod));
+				if(!mod.getOwningFile().getFile().getLoaders().stream().filter(loader -> loader.name().equalsIgnoreCase("java_plain") || loader.name().equalsIgnoreCase("")).findFirst().isPresent()) mods.add(new ModContainer(mod));
 			});
 			containers.addAll(Sponge.pluginManager().plugins().stream().filter(container -> (!mods.stream().filter(mod -> mod.getModId().equals(container.metadata().id())).findFirst().isPresent())).collect(Collectors.toList()));
 		} else containers.addAll(Sponge.pluginManager().plugins());
@@ -185,28 +185,28 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 
 	protected void sendPluginInfo(Audience audience, Locale locale, PluginMetadata metadata) {
 		List<Component> info = new ArrayList<>();
-		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_HEADER);
-		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_ID), Placeholders.VALUE, metadata.id()));
-		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_NAME), Placeholders.VALUE, metadata.name().orElse("-")));
-		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_VERSION), Placeholders.VALUE, (metadata.version().getMajorVersion() + "." + metadata.version().getMinorVersion() + "." + metadata.version().getIncrementalVersion() + (metadata.version().getBuildNumber() == 0 ? "" : "-" + metadata.version().getBuildNumber()))));
-		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_ENTRYPOINT), Placeholders.VALUE, metadata.entrypoint()));
-		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_DESCRIPTION), Placeholders.VALUE, metadata.description().orElse("-")));
-		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_DEPENDENCIES), Placeholders.VALUE, getDependencies(metadata)));
-		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_CONTRIBUTORS), Placeholders.VALUE, getContributors(metadata)));
-		info.add(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_LINKS), new String[] {Placeholders.HOME_LINK, Placeholders.SOURCE_LINK, Placeholders.ISSUES_LINK}, new Component[] {createLinkText(metadata.links().homepage()), createLinkText(metadata.links().source()), createLinkText(metadata.links().issues())}));
+		Component header = getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_HEADER);
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_ID).replace(Placeholders.VALUE, metadata.id()).get());
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_NAME).replace(Placeholders.VALUE, metadata.name().orElse("-")).get());
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_VERSION).replace(Placeholders.VALUE, (metadata.version().getMajorVersion() + "." + metadata.version().getMinorVersion() + "." + metadata.version().getIncrementalVersion() + (metadata.version().getBuildNumber() == 0 ? "" : "-" + metadata.version().getBuildNumber()))).get());
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_ENTRYPOINT).replace(Placeholders.VALUE, metadata.entrypoint()).get());
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_DESCRIPTION).replace(Placeholders.VALUE, metadata.description().orElse("-")).get());
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_DEPENDENCIES).replace(Placeholders.VALUE, getDependencies(metadata)).get());
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_CONTRIBUTORS).replace(Placeholders.VALUE, getContributors(metadata)).get());
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_LINKS).replace(new String[] {Placeholders.HOME_LINK, Placeholders.SOURCE_LINK, Placeholders.ISSUES_LINK}, createLinkText(metadata.links().homepage()), createLinkText(metadata.links().source()), createLinkText(metadata.links().issues())).get());
 		sendPaginationList(audience, header, Component.text("=").color(header.color()), linesPerPage, info);
 	}
 
 	protected void sendModInfo(Audience audience, Locale locale, ModContainer container) {
 		if(container == null) return;
 		List<Component> info = new ArrayList<>();
-		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_HEADER);
-		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_ID), Placeholders.VALUE, container.getModId()));
-		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_NAME), Placeholders.VALUE, container.getDisplayName()));
-		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_VERSION), Placeholders.VALUE, container.getVersion()));
-		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_DESCRIPTION), Placeholders.VALUE, container.getDescription()));
-		info.add(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_DEPENDENCIES), Placeholders.VALUE, container.getDependencies()));
-		info.add(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_LINKS), new String[] {Placeholders.ISSUES_LINK, Placeholders.UPDATE_LINK}, new Component[] {createLinkText(container.getIssueURL()), createLinkText(container.getUpdateURL())}));
+		Component header = getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_HEADER);
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_ID).replace(Placeholders.VALUE, container.getModId()).get());
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_NAME).replace(Placeholders.VALUE, container.getDisplayName()).get());
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_VERSION).replace(Placeholders.VALUE, container.getVersion()).get());
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_DESCRIPTION).replace(Placeholders.VALUE, container.getDescription()).get());
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_DEPENDENCIES).replace(Placeholders.VALUE, container.getDependencies()).get());
+		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_LINKS).replace(new String[] {Placeholders.ISSUES_LINK, Placeholders.UPDATE_LINK}, createLinkText(container.getIssueURL()), createLinkText(container.getUpdateURL())).get());
 		sendPaginationList(audience, header, Component.text("=").color(header.color()), linesPerPage, info);
 	}
 

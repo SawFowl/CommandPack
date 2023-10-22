@@ -111,7 +111,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	default String[] checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
 		if(getArguments() != null) {
 			Optional<RawArgument<?>> emptyArg = getArguments().values().stream().filter(arg -> !arg.getResultUnknownType(args).isPresent() && (!arg.isOptional() || !isPlayer && !arg.isOptionalForConsole())).findFirst();
-			if(emptyArg.isPresent()) exceptionAppendUsage(cause, getText(locale, emptyArg.get().getLocalesPath()));
+			if(emptyArg.isPresent()) exceptionAppendUsage(cause, getComponent(locale, emptyArg.get().getLocalesPath()));
 			if(args.length != 0) {
 				int i = 0;
 				for(String arg : args) {
@@ -203,7 +203,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	default CommandException exceptionAppendUsage(CommandCause cause, Locale locale, Object[] localePath) throws CommandException {
-		throw new CommandException(getText(locale, localePath).append(Component.newline()).append(usage(cause)));
+		throw new CommandException(getComponent(locale, localePath).append(Component.newline()).append(usage(cause)));
 	}
 
 	default Optional<ServerWorld> getWorld(String[] args, int cursor) {

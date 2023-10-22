@@ -3,6 +3,7 @@ package sawfowl.commandpack.utils;
 import org.apache.logging.log4j.LogManager;
 
 import net.kyori.adventure.text.Component;
+import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Logger {
@@ -12,6 +13,10 @@ public class Logger {
 
 	public void info(Object object) {
 		logger.info(object);
+	}
+
+	public void info(Text text) {
+		logger.info(text.toPlain());
 	}
 
 	public void info(Object object, Throwable throwable) {
@@ -38,6 +43,10 @@ public class Logger {
 		logger.warn(object);
 	}
 
+	public void warn(Text text) {
+		logger.warn(text.toPlain());
+	}
+
 	public void warn(Object object, Throwable throwable) {
 		logger.warn(object, throwable);
 	}
@@ -62,6 +71,10 @@ public class Logger {
 		logger.error(object);
 	}
 
+	public void error(Text text) {
+		logger.error(text.toPlain());
+	}
+
 	public void error(Object object, Throwable throwable) {
 		logger.error(object, throwable);
 	}
@@ -84,6 +97,10 @@ public class Logger {
 
 	public void debug(Object object) {
 		logger.debug(object);
+	}
+
+	public void debug(Text text) {
+		logger.debug(text.toPlain());
 	}
 
 	public void debug(Object object, Throwable throwable) {

@@ -2,6 +2,8 @@ package sawfowl.commandpack.utils;
 
 import java.net.URL;
 import java.util.Objects;
+import java.util.Optional;
+
 import net.kyori.adventure.text.Component;
 
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
@@ -13,7 +15,7 @@ public class ModContainer {
 	private final String name;
 	private final String id;
 	private final String description;
-	private final URL updateURL;
+	private final Optional<URL> updateURL;
 	private final URL IssueURL;
 	private final String version;
 	private final Component dependencies;
@@ -49,7 +51,7 @@ public class ModContainer {
 		return description;
 	}
 
-	public URL getUpdateURL() {
+	public Optional<URL> getUpdateURL() {
 		return updateURL;
 	}
 

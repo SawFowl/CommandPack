@@ -39,6 +39,7 @@ import sawfowl.commandpack.configure.configs.punishment.WarnsData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.StorageType;
 import sawfowl.commandpack.utils.TimeConverter;
+import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
 public class MySqlStorage extends SqlStorage {
@@ -296,7 +297,7 @@ public class MySqlStorage extends SqlStorage {
 		Optional<ServerPlayer> optPlayer = Sponge.server().player(uuid);
 		if(!optPlayer.isPresent()) return;
 		ServerPlayer player = optPlayer.get();
-		kick(player, TextUtils.replaceToComponents(getText(player.locale(), ban.expirationDate().isPresent() ? LocalesPaths.COMMANDS_BAN_DISCONNECT : LocalesPaths.COMMANDS_BAN_DISCONNECT_PERMANENT), new String[] {Placeholders.TIME, Placeholders.SOURCE, Placeholders.VALUE}, new Component[] {(ban.expirationDate().isPresent() ? expire(player.locale(), ban) : text("")), ban.banSource().orElse(TextUtils.deserializeLegacy("&cServer")), ban.reason().orElse(TextUtils.deserializeLegacy("-"))}));
+		kick(player, getText(player.locale(), ban.expirationDate().isPresent() ? LocalesPaths.COMMANDS_BAN_DISCONNECT : LocalesPaths.COMMANDS_BAN_DISCONNECT_PERMANENT).replace(new String[] {Placeholders.TIME, Placeholders.SOURCE, Placeholders.VALUE}, (ban.expirationDate().isPresent() ? expire(player.locale(), ban) : text("")), ban.banSource().orElse(TextUtils.deserializeLegacy("&cServer")), ban.reason().orElse(TextUtils.deserializeLegacy("-"))).get());
 	}
 
 	public void loadBanIP(ResultSet results) throws SQLException {
@@ -318,7 +319,7 @@ public class MySqlStorage extends SqlStorage {
 		Optional<ServerPlayer> optPlayer = Sponge.server().onlinePlayers().stream().filter(player -> player.connection().address().getAddress().getHostAddress().equals(ip.getHostAddress())).findFirst();
 		if(!optPlayer.isPresent()) return;
 		ServerPlayer player = optPlayer.get();
-		kick(player, TextUtils.replaceToComponents(getText(player.locale(), ban.expirationDate().isPresent() ? LocalesPaths.COMMANDS_BAN_DISCONNECT : LocalesPaths.COMMANDS_BAN_DISCONNECT_PERMANENT), new String[] {Placeholders.TIME, Placeholders.SOURCE, Placeholders.VALUE}, new Component[] {(ban.expirationDate().isPresent() ? expire(player.locale(), ban) : text("")), ban.banSource().orElse(TextUtils.deserializeLegacy("&cServer")), ban.reason().orElse(TextUtils.deserializeLegacy("-"))}));
+		kick(player, getText(player.locale(), ban.expirationDate().isPresent() ? LocalesPaths.COMMANDS_BAN_DISCONNECT : LocalesPaths.COMMANDS_BAN_DISCONNECT_PERMANENT).replace(new String[] {Placeholders.TIME, Placeholders.SOURCE, Placeholders.VALUE}, (ban.expirationDate().isPresent() ? expire(player.locale(), ban) : text("")), ban.banSource().orElse(TextUtils.deserializeLegacy("&cServer")), ban.reason().orElse(TextUtils.deserializeLegacy("-"))).get());
 	}
 
 	private Ban.Builder loadTimes(Ban.Builder builder, ResultSet results) throws SQLException {
@@ -631,7 +632,7 @@ public class MySqlStorage extends SqlStorage {
 		return "0123456789abcdefklmnor".indexOf(ch) != -1;
 	}
 
-	private Component getText(Locale locale, Object... path) {
+	private Text getText(Locale locale, Object... path) {
 		return plugin.getLocales().getText(locale, path);
 	}
 
