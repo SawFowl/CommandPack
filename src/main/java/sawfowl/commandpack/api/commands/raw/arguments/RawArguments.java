@@ -62,7 +62,7 @@ public class RawArguments {
 		}, new RawResultSupplier<String>() {
 			@Override
 			public Optional<String> get(String[] args) {
-				return args.length >= cursor + 1 ?  Optional.ofNullable(String.join(" ", Arrays.copyOfRange(args, cursor, args.length))) : Optional.ofNullable(def);
+				return args.length >= cursor + 1 ?  Optional.ofNullable(String.join(" ", Stream.of(Arrays.copyOfRange(args, cursor, args.length)).filter(string -> string != null).toArray(String[]::new))) : Optional.ofNullable(def);
 			}
 		}, optional, optionalForConsole, cursor, localesPath);
 	}

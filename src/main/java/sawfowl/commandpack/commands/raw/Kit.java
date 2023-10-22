@@ -299,7 +299,11 @@ public class Kit extends AbstractRawCommand {
 		kit.getExecuteCommands().ifPresent(commands -> {
 		if(!commands.isEmpty()) commands.forEach(command -> {
 				try {
-					Sponge.server().commandManager().process(Sponge.systemSubject(), player, command.replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
+					try(StackFrame frame = Sponge.server().causeStackManager().pushCauseFrame()) {
+						frame.addContext(EventContextKeys.SUBJECT, Sponge.systemSubject());
+						frame.pushCause(Sponge.systemSubject());
+						Sponge.server().commandManager().process(Sponge.systemSubject(), command.replace(Placeholders.PLAYER, player.name()).replace("%uuid%", player.uniqueId().toString()));
+					}
 				} catch (CommandException e) {
 					Sponge.systemSubject().sendMessage(e.componentMessage());
 				}

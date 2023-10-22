@@ -34,8 +34,10 @@ public class PlayerDeathAndRespawnListener {
 
 	@Listener(order = Order.LAST)
 	public void onDeath(DestructEntityEvent.Death event) {
-		if(event.keepInventory() || !(event.entity() instanceof ServerPlayer)) return;
+		if(!(event.entity() instanceof ServerPlayer)) return;
 		ServerPlayer player = (ServerPlayer) event.entity();
+		plugin.getPlayersData().getTempData().setPreviousLocation(player);
+		if(event.keepInventory()) return;
 		double keepInventory = Permissions.getKeepInventoryLimit(player);
 		double keepExp = Permissions.getKeepInventoryLimit(player);
 		if(player.inventory().totalQuantity() > 0) {

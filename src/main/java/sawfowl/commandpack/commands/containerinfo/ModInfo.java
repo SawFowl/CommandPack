@@ -61,6 +61,10 @@ public class ModInfo extends AbstractInfoCommand {
 	public List<ParameterSettings> getParameterSettings() {
 		if(mods == null) fillLists();
 		Value<String> CHOICES = Parameter.choices(mods.stream().map(container -> container.getModId()).toArray(String[]::new)).key("Mod").build();
+		mods.clear();
+		mods = null;
+		containers.clear();
+		containers = null;
 		return CHOICES == null ? null : Arrays.asList(ParameterSettings.of(CHOICES, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
 	}
 

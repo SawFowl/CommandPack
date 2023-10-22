@@ -111,7 +111,7 @@ public class WarpData implements Warp {
 
 		@Override
 		public Builder setLocation(Location location) {
-			WarpData.this.locationData = location instanceof LocationData ? (LocationData) location : (LocationData) Location.builder().setPosition(location.getPosition()).build();
+			WarpData.this.locationData = location instanceof LocationData ? (LocationData) location : new LocationData(location);
 			return this;
 		}
 

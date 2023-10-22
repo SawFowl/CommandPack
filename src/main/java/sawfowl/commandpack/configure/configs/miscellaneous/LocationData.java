@@ -29,9 +29,19 @@ public class LocationData implements Location {
 
 	public LocationData() {}
 
+	public LocationData(Location location) {
+		world = location.worldKey().asString();
+		position = location.getPosition() instanceof PositionData ? (PositionData) location.getPosition() : (location.getPosition().getRotation().isPresent() ? new PositionData(location.getPosition().asVector3d(), location.getPosition().getRotation().get().asVector3d()) : new PositionData(location.getPosition().asVector3d()));
+	}
+
 	public LocationData(ResourceKey world, PositionData positionData) {
 		this.world = world.asString();
 		position = positionData;
+	}
+
+	public LocationData(ResourceKey world, Position position) {
+		this.world = world.asString();
+		this.position = (PositionData) (position instanceof PositionData ? position : (position.getRotation().isPresent() ? new PositionData(position.asVector3d(), position.getRotation().get().asVector3d()) : new PositionData(position.asVector3d())));
 	}
 
 	public LocationData(ServerLocation location) {
@@ -113,6 +123,7 @@ public class LocationData implements Location {
 
 		@Override
 		public Builder setLocationAndRotation(ServerLocation location, Point point) {
+			LocationData.this.world = location.world().key().asString();
 			LocationData.this.position = new PositionData(location.position(), new PointData(point.asVector3d()));
 			return this;
 		}

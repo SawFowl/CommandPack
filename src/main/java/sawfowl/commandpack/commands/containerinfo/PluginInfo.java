@@ -26,6 +26,8 @@ public class PluginInfo extends AbstractInfoCommand {
 	public PluginInfo(CommandPack plugin) {
 		super(plugin);
 		fillLists();
+		mods.clear();
+		mods = null;
 	}
 
 	@Override
@@ -62,6 +64,10 @@ public class PluginInfo extends AbstractInfoCommand {
 	public List<ParameterSettings> getParameterSettings() {
 		if(containers == null) fillLists();
 		Parameter.Value<String> CHOICES =  Parameter.choices(containers.stream().map(container -> container.metadata().id()).toArray(String[]::new)).key("Plugin").build();
+		mods.clear();
+		mods = null;
+		containers.clear();
+		containers = null;
 		return Arrays.asList(ParameterSettings.of(CHOICES, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
 	}
 

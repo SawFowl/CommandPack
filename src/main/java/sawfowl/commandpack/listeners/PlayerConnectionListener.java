@@ -49,6 +49,7 @@ public class PlayerConnectionListener {
 
 	@Listener
 	public void onConnect(ServerSideConnectionEvent.Join event) {
+		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(event.player());
 		if(plugin.isForgeServer()) {
 			List<String> mods = getModList(event.player());
 			if(plugin.getMainConfig().isPrintPlayerMods() && mods != null) plugin.getLogger().info(plugin.getLocales().getString(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.PLAYER_MODS_LIST).replace(Placeholders.PLAYER, event.player().name()).replace(Placeholders.VALUE, String.join(", ", mods)));
@@ -87,7 +88,6 @@ public class PlayerConnectionListener {
 		Sponge.server().scheduler().submit(Task.builder().delay(Ticks.of(10)).plugin(plugin.getPluginContainer()).execute(() -> {
 			runCommands(event.player());
 		}).build());
-		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(event.player());
 		if(plugin.getKitService().getKits().isEmpty()) return;
 		plugin.getKitService().getKits().stream().filter(kit -> kit.isFirstTime() || kit.isGiveOnJoin()).forEach(kit -> {
 			giveKit(event.player(), kit);
