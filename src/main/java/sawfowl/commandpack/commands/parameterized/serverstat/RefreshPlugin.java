@@ -13,6 +13,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.plugin.PluginContainer;
 
 import net.kyori.adventure.audience.Audience;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -34,11 +35,11 @@ public class RefreshPlugin extends AbstractInfoCommand {
 		if(isPlayer) {
 			delay((ServerPlayer) src, locale, consumer -> {
 				sendRefreshEvent(container);
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE));
+				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE));
 			});
 		} else {
 			sendRefreshEvent(container);
-			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE));
+			src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE));
 		}
 	}
 

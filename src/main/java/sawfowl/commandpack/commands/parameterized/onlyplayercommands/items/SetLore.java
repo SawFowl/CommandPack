@@ -14,6 +14,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -41,7 +42,7 @@ public class SetLore extends AbstractPlayerCommand {
 		} else newLore.add(text(input));
 		item.offer(Keys.LORE, newLore);
 		src.setItemInHand(HandTypes.MAIN_HAND, item);
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ITEM_SET_LORE));
+		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_ITEM_SET_LORE));
 	}
 
 	@Override

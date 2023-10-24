@@ -14,6 +14,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import net.kyori.adventure.audience.Audience;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -21,7 +22,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Repair extends AbstractParameterizedCommand {
 
@@ -39,19 +39,19 @@ public class Repair extends AbstractParameterizedCommand {
 				ServerPlayer target = optTarget.get();
 				repairItems(target, select);
 				if(!target.uniqueId().equals(player.uniqueId())) {
-					target.sendMessage(getText(target, LocalesPaths.COMMANDS_REPAIR_SUCCES_OTHER));
-					player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_REPAIR_SUCCES_STAFF), Placeholders.PLAYER, target.name()));
-				} else player.sendMessage(getText(locale, LocalesPaths.COMMANDS_REPAIR_SUCCES));
+					target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_REPAIR_SUCCES_OTHER));
+					player.sendMessage(getText(locale, LocalesPaths.COMMANDS_REPAIR_SUCCES_STAFF).replace(Placeholders.PLAYER, target.name()).get());
+				} else player.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_REPAIR_SUCCES));
 			} else {
 				repairItems(player, select);
-				player.sendMessage(getText(locale, LocalesPaths.COMMANDS_REPAIR_SUCCES));
+				player.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_REPAIR_SUCCES));
 			}
 		} else {
 			if(optTarget.isPresent()) {
 				ServerPlayer target = optTarget.get();
 				repairItems(target, select);
-				target.sendMessage(getText(target, LocalesPaths.COMMANDS_REPAIR_SUCCES_OTHER));
-				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_REPAIR_SUCCES_STAFF), Placeholders.PLAYER, target.name()));
+				target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_REPAIR_SUCCES_OTHER));
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_REPAIR_SUCCES_STAFF).replace(Placeholders.PLAYER, target.name()).get());
 			}
 		}
 	}

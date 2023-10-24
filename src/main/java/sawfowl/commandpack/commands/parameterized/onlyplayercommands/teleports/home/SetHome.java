@@ -20,7 +20,6 @@ import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
 import sawfowl.commandpack.configure.configs.player.HomeData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class SetHome extends AbstractPlayerCommand {
 
@@ -36,7 +35,7 @@ public class SetHome extends AbstractPlayerCommand {
 			if(name.equalsIgnoreCase("list")) name = "Home";
 			Home home = new HomeData(name, new LocationData(src.serverLocation(), src.rotation()), !playerData.getDefaultHome().isPresent());
 			if(playerData.addHome(home, Permissions.getHomeLimit(src))) {
-				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SETHOME_SUCCESS), Placeholders.HOME, home.asComponent()));
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_SETHOME_SUCCESS).replace(Placeholders.HOME, home.asComponent()).get());
 				playerData.save();
 			} else exception(locale, LocalesPaths.COMMANDS_SETHOME_LIMIT);
 		});

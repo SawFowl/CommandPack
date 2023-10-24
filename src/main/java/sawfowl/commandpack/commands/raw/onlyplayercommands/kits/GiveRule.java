@@ -34,7 +34,7 @@ public class GiveRule extends AbstractKitsEditCommand {
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		kitData.setRule(sawfowl.commandpack.api.data.kits.GiveRule.getRule(args[1]));
 		kitData.save();
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_GIVE_RULE));
+		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_GIVE_RULE));
 	}
 
 	@Override

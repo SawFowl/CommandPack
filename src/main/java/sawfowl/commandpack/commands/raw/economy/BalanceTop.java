@@ -105,11 +105,11 @@ public class BalanceTop extends AbstractRawCommand {
 			List<Component> top = new ArrayList<Component>();
 			balances.entrySet().stream().sorted(Map.Entry.<Component, Double>comparingByValue().reversed()).forEach(entry -> {
 				if(!nullableName && TextUtils.clearDecorations(entry.getKey()).equals(name)) {
-					top.add(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_BALANCE_TOP_LIST), new String[] {Placeholders.RANK, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text(top.size() + 1).decorate(TextDecoration.ITALIC), entry.getKey().decorate(TextDecoration.ITALIC), text(entry.getValue()).decorate(TextDecoration.ITALIC)}));
-				} else top.add(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_BALANCE_TOP_LIST), new String[] {Placeholders.RANK, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text(top.size() + 1), display(entry.getKey()), text(entry.getValue())}));
+					top.add(getText(locale, LocalesPaths.COMMANDS_BALANCE_TOP_LIST).replace(new String[] {Placeholders.RANK, Placeholders.PLAYER, Placeholders.VALUE}, text(top.size() + 1).decorate(TextDecoration.ITALIC), entry.getKey().decorate(TextDecoration.ITALIC), text(entry.getValue()).decorate(TextDecoration.ITALIC)).get());
+				} else top.add(getText(locale, LocalesPaths.COMMANDS_BALANCE_TOP_LIST).replace(new String[] {Placeholders.RANK, Placeholders.PLAYER, Placeholders.VALUE}, text(top.size() + 1), display(entry.getKey()), text(entry.getValue())).get());
 			});
-			Component title = TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_BALANCE_TOP_TITLE), new String[] {Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL}, new Component[] {currency.displayName(), currency.pluralDisplayName(), currency.symbol(), currency.symbol().style(currency.pluralDisplayName().style())});
-			sendPaginationList(audience, title, getText(locale, LocalesPaths.COMMANDS_BALANCE_TOP_PADDING), 10, top);
+			Component title = getText(locale, LocalesPaths.COMMANDS_BALANCE_TOP_TITLE).replace(new String[] {Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL}, currency.displayName(), currency.pluralDisplayName(), currency.symbol(), currency.symbol().style(currency.pluralDisplayName().style())).get();
+			sendPaginationList(audience, title, getComponent(locale, LocalesPaths.COMMANDS_BALANCE_TOP_PADDING), 10, top);
 			balances.clear();
 			top.clear();
 			title = null;

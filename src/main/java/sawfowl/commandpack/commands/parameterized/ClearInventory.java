@@ -11,6 +11,7 @@ import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -18,7 +19,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class ClearInventory extends AbstractParameterizedCommand {
 
@@ -36,18 +36,18 @@ public class ClearInventory extends AbstractParameterizedCommand {
 				ServerPlayer target = optTarget.get();
 				clear(target, invType);
 				if(!player.uniqueId().equals(target.uniqueId())) {
-					player.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_CLEAR_SUCCES_STAFF), Placeholders.PLAYER, target.name()));
-					target.sendMessage(getText(target, LocalesPaths.COMMANDS_CLEAR_SUCCES_OTHER));
-				} else player.sendMessage(getText(locale, LocalesPaths.COMMANDS_CLEAR_SUCCES));
+					player.sendMessage(getText(locale, LocalesPaths.COMMANDS_CLEAR_SUCCES_STAFF).replace(Placeholders.PLAYER, target.name()).get());
+					target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_CLEAR_SUCCES_OTHER));
+				} else player.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_CLEAR_SUCCES));
 			} else {
 				clear(player, invType);
-				player.sendMessage(getText(locale, LocalesPaths.COMMANDS_CLEAR_SUCCES));
+				player.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_CLEAR_SUCCES));
 			}
 		} else {
 			ServerPlayer target = optTarget.get();
 			clear(target, invType);
-			src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_CLEAR_SUCCES_STAFF), Placeholders.PLAYER, target.name()));
-			target.sendMessage(getText(target, LocalesPaths.COMMANDS_CLEAR_SUCCES_OTHER));
+			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_CLEAR_SUCCES_STAFF).replace(Placeholders.PLAYER, target.name()).get());
+			target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_CLEAR_SUCCES_OTHER));
 		}
 	}
 

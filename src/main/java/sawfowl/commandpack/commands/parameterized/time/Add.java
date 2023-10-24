@@ -14,6 +14,7 @@ import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.audience.Audience;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -22,7 +23,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Add extends AbstractParameterizedCommand {
 
@@ -76,7 +76,7 @@ public class Add extends AbstractParameterizedCommand {
 
 	private void setTime(Audience src, Locale locale, ServerWorld world, int time) {
 		world.properties().setDayTime(world.properties().dayTime().add(Ticks.of(time)));
-		src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_TIME_ADD), Placeholders.WORLD, world.key().asString()));
+		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TIME_ADD).replace(Placeholders.WORLD, world.key().asString()).get());
 	}
 
 }

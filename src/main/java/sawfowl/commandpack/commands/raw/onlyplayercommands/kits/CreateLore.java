@@ -32,7 +32,7 @@ public class CreateLore extends AbstractKitsEditCommand {
 		kitData.setLore(Locales.DEFAULT, Arrays.asList("&dFirst line", "&eSecond line"));
 		kitData.setLore(Locales.RU_RU, Arrays.asList("&dСтрока 1", "&eСтрока 2"));
 		kitData.save();
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_CREATE_LORE));
+		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_CREATE_LORE));
 	}
 
 	@Override

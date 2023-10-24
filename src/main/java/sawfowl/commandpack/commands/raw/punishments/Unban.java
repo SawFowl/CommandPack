@@ -28,7 +28,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Unban extends AbstractRawCommand {
 
@@ -40,12 +39,12 @@ public class Unban extends AbstractRawCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		GameProfile profile = getArgument(GameProfile.class, args, 0).get();
 		plugin.getPunishmentService().pardon(profile);
-		Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, new Component[] {(isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(profile.name().orElse(profile.examinableName()))}));
+		Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, (isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(profile.name().orElse(profile.examinableName()))).get());
 		if(plugin.getMainConfig().getPunishment().getAnnounce().isUnban()) {
 			Sponge.server().onlinePlayers().forEach(player -> {
-				player.sendMessage(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, new Component[] {(isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(profile.name().orElse(profile.examinableName()))}));
+				player.sendMessage(getText(player, LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, (isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(profile.name().orElse(profile.examinableName()))).get());
 			});
-		} else audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_UNBAN_SUCCESS), Placeholders.PLAYER, profile.name().orElse(profile.examinableName())));
+		} else audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_UNBAN_SUCCESS).replace(Placeholders.PLAYER, profile.name().orElse(profile.examinableName())).get());
 	}
 
 	@Override
@@ -77,12 +76,12 @@ public class Unban extends AbstractRawCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(RawArgument.of(GameProfile.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
-			public Stream<String> get(String[] args) {
+			public Stream<String> get(CommandCause cause, String[] args) {
 				return plugin.getPunishmentService().getAllProfileBans().stream().map(p -> p.profile().name().orElse(p.profile().examinableName()));
 			}
 		}, new RawResultSupplier<GameProfile>() {
 			@Override
-			public Optional<GameProfile> get(String[] args) {
+			public Optional<GameProfile> get(CommandCause cause, String[] args) {
 				Collection<Profile> variants = plugin.getPunishmentService().getAllProfileBans();
 				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(p -> p.profile().name().orElse(p.profile().examinableName()).equals(args[0])).findFirst().map(Profile::profile);
 			}

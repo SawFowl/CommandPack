@@ -13,6 +13,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -20,7 +21,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Survival extends AbstractParameterizedCommand {
 
@@ -35,15 +35,15 @@ public class Survival extends AbstractParameterizedCommand {
 			delay(player, locale, consumer -> {
 				player.offer(Keys.GAME_MODE, GameModes.SURVIVAL.get());
 				if(!player.uniqueId().equals(((ServerPlayer) src).uniqueId())) {
-					player.sendMessage(TextUtils.replace(getText(player, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS), Placeholders.VALUE, getText(locale, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL)));
-					src.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_OTHER), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {Component.text(player.name()), getText(locale, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL)}));
-				} else src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS), Placeholders.VALUE, getText(locale, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL)));
+					player.sendMessage(getText(player, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS).replace(Placeholders.VALUE, getComponent(locale, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL)).get());
+					src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_OTHER).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, Component.text(player.name()), getComponent(locale, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL)).get());
+				} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS).replace(Placeholders.VALUE, getComponent(locale, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL)).get());
 			});
 		} else {
 			ServerPlayer target = getPlayer(context).get();
 			target.offer(Keys.GAME_MODE, GameModes.SURVIVAL.get());
-			target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS), Placeholders.VALUE, getText(locale, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL)));
-			src.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_OTHER), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {Component.text(target.name()), getText(locale, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL)}));
+			target.sendMessage(getText(target, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS).replace(Placeholders.VALUE, getComponent(locale, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL)).get());
+			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_OTHER).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {Component.text(target.name()), getComponent(locale, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL)}).get());
 		}
 	}
 

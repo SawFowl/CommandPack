@@ -26,7 +26,6 @@ import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.TimeConverter;
-import sawfowl.localeapi.api.TextUtils;
 
 public class BanInfo extends AbstractRawCommand {
 
@@ -37,12 +36,12 @@ public class BanInfo extends AbstractRawCommand {
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		Profile ban = getArgument(Profile.class, args, 0).get();
-		Component title = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANINFO_TITLE), Placeholders.PLAYER, ban.profile().name().orElse(ban.profile().examinableName()));
+		Component title = getText(locale, LocalesPaths.COMMANDS_BANINFO_TITLE).replace(Placeholders.PLAYER, ban.profile().name().orElse(ban.profile().examinableName())).get();
 		if(isPlayer) {
 			delay((ServerPlayer) audience, locale, consumer -> {
-				sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANINFO_SUCCESS), new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT))), ban.reason().orElse(text("-"))})));
+				sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getText(locale, LocalesPaths.COMMANDS_BANINFO_SUCCESS).replace(new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT))), ban.reason().orElse(text("-"))).get()));
 			});
-		} else sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BANINFO_SUCCESS), new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT))), ban.reason().orElse(text("-"))})));
+		} else sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getText(locale, LocalesPaths.COMMANDS_BANINFO_SUCCESS).replace(new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT))), ban.reason().orElse(text("-"))).get()));
 	}
 
 	@Override
@@ -74,12 +73,12 @@ public class BanInfo extends AbstractRawCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(RawArgument.of(Profile.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
-			public Stream<String> get(String[] args) {
+			public Stream<String> get(CommandCause cause, String[] args) {
 				return plugin.getPunishmentService().getAllProfileBans().stream().map(p -> p.profile().name().orElse(p.profile().examinableName()));
 			}
 		}, new RawResultSupplier<Profile>() {
 			@Override
-			public Optional<Profile> get(String[] args) {
+			public Optional<Profile> get(CommandCause cause, String[] args) {
 				Collection<Profile> variants = plugin.getPunishmentService().getAllProfileBans();
 				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(p -> p.profile().name().orElse(p.profile().examinableName()).equals(args[0])).findFirst();
 			}

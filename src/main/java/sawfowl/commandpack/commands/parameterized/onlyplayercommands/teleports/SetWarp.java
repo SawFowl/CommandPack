@@ -3,7 +3,6 @@ package sawfowl.commandpack.commands.parameterized.onlyplayercommands.teleports;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import org.spongepowered.api.command.Command;
 import org.spongepowered.api.command.Command.Parameterized;
@@ -20,6 +19,7 @@ import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.TextUtils;
 
 public class SetWarp extends AbstractPlayerCommand {
 
@@ -32,16 +32,14 @@ public class SetWarp extends AbstractPlayerCommand {
 		delay(src, locale, consumer -> {
 			PlayerData playerData = plugin.getPlayersData().getOrCreatePlayerData(src);
 			String name = getString(context, "Warp", src.name());
-			Optional<sawfowl.commandpack.api.data.player.Warp> optWarp = plugin.getPlayersData().getAdminWarp(name);
-			Optional<sawfowl.commandpack.api.data.player.Warp> optPlayerWarp = plugin.getPlayersData().getWarp(name, warp -> (!warp.isPrivate() || src.hasPermission(Permissions.WARP_STAFF) || (plugin.getPlayersData().getOrCreatePlayerData(src).containsWarp(warp.getName()))));
-			if((optWarp.isPresent() && !src.hasPermission(Permissions.WARP_STAFF)) || (optPlayerWarp.isPresent() && !playerData.getWarp(name).isPresent())) exception(locale, LocalesPaths.COMMANDS_SETWARP_EXIST);
+			if(plugin.getPlayersData().streamAllWarps().filter(warp -> warp.getPlainName().equalsIgnoreCase(TextUtils.clearDecorations(name))).findFirst().isPresent()) exception(locale, LocalesPaths.COMMANDS_SETWARP_EXIST);
 			Warp warp = Warp.of(name, Location.of(src), getBoolean(context, "Private", false));
 			if(getBoolean(context, "Admin", false)) {
 				plugin.getPlayersData().addAndSaveAdminWarp(warp);
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_SETWARP_SUCCESS_ADMIN));
+				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_SETWARP_SUCCESS_ADMIN));
 			} else if(playerData.addWarp(warp, Permissions.getWarpsLimit(src))) {
 				playerData.save();
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_SETWARP_SUCCESS));
+				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_SETWARP_SUCCESS));
 			} else exception(locale, LocalesPaths.COMMANDS_SETWARP_LIMIT);
 		});
 	}

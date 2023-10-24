@@ -18,7 +18,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class TpaHereAll extends AbstractPlayerCommand {
 
@@ -32,16 +31,16 @@ public class TpaHereAll extends AbstractPlayerCommand {
 			UUID source = src.uniqueId();
 			Sponge.server().onlinePlayers().forEach(target -> {
 				TpaAccess access = new TpaAccess();
-				if(!target.uniqueId().equals(src.uniqueId())) target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE), Placeholders.PLAYER, src.get(Keys.CUSTOM_NAME).orElse(text(src.name()))).clickEvent(SpongeComponents.executeCallback(cause -> {
+				if(!target.uniqueId().equals(src.uniqueId())) target.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE).replace(Placeholders.PLAYER, src.get(Keys.CUSTOM_NAME).orElse(text(src.name()))).get().clickEvent(SpongeComponents.executeCallback(cause -> {
 					if(!access.access) return;
 					if(Sponge.server().player(source).isPresent()) {
 						plugin.getPlayersData().getTempData().setPreviousLocation(target);
 						target.setLocation(src.serverLocation());
-					} else target.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE));
+					} else target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE));
 					access.access = false;
 				})));
 			});
-			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TPA_SUCCESS));
+			src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_TPA_SUCCESS));
 		});
 	}
 

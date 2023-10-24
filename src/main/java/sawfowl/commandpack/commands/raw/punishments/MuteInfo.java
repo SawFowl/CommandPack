@@ -26,7 +26,6 @@ import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.TimeConverter;
-import sawfowl.localeapi.api.TextUtils;
 
 public class MuteInfo extends AbstractRawCommand {
 
@@ -37,12 +36,12 @@ public class MuteInfo extends AbstractRawCommand {
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		Mute mute = getArgument(Mute.class, args, 0).get();
-		Component title = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_TITLE), Placeholders.PLAYER, mute.getName());
+		Component title = getText(locale, LocalesPaths.COMMANDS_MUTEINFO_TITLE).replace(Placeholders.PLAYER, mute.getName()).get();
 		if(isPlayer) {
 			delay((ServerPlayer) audience, locale, consumer -> {
-				sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_SUCCESS), new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {mute.getSource().orElse(text("n/a")), text(TimeConverter.toString(mute.getCreated())), mute.getExpiration().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_PERMANENT))), mute.getReason().orElse(text("-"))})));
+				sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_SUCCESS).replace(new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, mute.getSource().orElse(text("n/a")), text(TimeConverter.toString(mute.getCreated())), mute.getExpiration().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_PERMANENT))), mute.getReason().orElse(text("-"))).get()));
 			});
-		} else sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_SUCCESS), new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {mute.getSource().orElse(text("n/a")), text(TimeConverter.toString(mute.getCreated())), mute.getExpiration().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_PERMANENT))), mute.getReason().orElse(text("-"))})));
+		} else sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_SUCCESS).replace(new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {mute.getSource().orElse(text("n/a")), text(TimeConverter.toString(mute.getCreated())), mute.getExpiration().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_PERMANENT))), mute.getReason().orElse(text("-"))}).get()));
 	}
 
 	@Override
@@ -74,12 +73,12 @@ public class MuteInfo extends AbstractRawCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(RawArgument.of(Mute.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
-			public Stream<String> get(String[] args) {
+			public Stream<String> get(CommandCause cause, String[] args) {
 				return plugin.getPunishmentService().getAllProfileBans().stream().map(p -> p.profile().name().orElse(p.profile().examinableName()));
 			}
 		}, new RawResultSupplier<Mute>() {
 			@Override
-			public Optional<Mute> get(String[] args) {
+			public Optional<Mute> get(CommandCause cause, String[] args) {
 				Collection<Mute> variants = plugin.getPunishmentService().getAllMutes();
 				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(p -> p.getName().equals(args[0])).findFirst();
 			}

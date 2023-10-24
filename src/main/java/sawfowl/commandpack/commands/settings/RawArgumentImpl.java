@@ -31,18 +31,18 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	private String permission;
 
 	@Override
-	public Stream<String> getVariants(String[] args) {
-		return variants == null ? new ArrayList<String>().stream() : variants.get(args);
+	public Stream<String> getVariants(CommandCause cause, String[] args) {
+		return variants == null ? new ArrayList<String>().stream() : variants.get(cause, args);
 	}
 
 	@Override
 	public Optional<T> getResult(Class<T> clazz, String[] args) {
-		return result == null ? Optional.empty() : result.get(args);
+		return result == null ? Optional.empty() : result.get(null, args);
 	}
 
 	@Override
-	public Optional<?> getResultUnknownType(String[] args) {
-		return result == null ? Optional.empty() : result.get(args);
+	public Optional<?> getResultUnknownType(CommandCause cause, String[] args) {
+		return result == null ? Optional.empty() : result.get(cause, args);
 	}
 
 	@Override

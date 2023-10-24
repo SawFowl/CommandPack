@@ -13,13 +13,13 @@ import org.spongepowered.api.world.server.ServerWorld;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class ViewDistance extends AbstractWorldCommand {
 
@@ -33,7 +33,7 @@ public class ViewDistance extends AbstractWorldCommand {
 		int distance = getInteger(args, 1).get();
 		if(distance < 1) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		world.properties().setViewDistance(distance);
-		audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_VIEWDISTANCE), new String[] {Placeholders.WORLD, Placeholders.VALUE}, new Object[] {world.key().asString(), distance}));
+		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_VIEWDISTANCE).replace(new String[] {Placeholders.WORLD, Placeholders.VALUE}, world.key().asString(), distance).get());
 	}
 
 	@Override

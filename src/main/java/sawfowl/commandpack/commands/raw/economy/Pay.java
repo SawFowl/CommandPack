@@ -29,7 +29,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Pay extends AbstractPlayerCommand {
 
@@ -47,20 +46,20 @@ public class Pay extends AbstractPlayerCommand {
 		delay(src, locale, consumer -> {
 			if(optCurrency.isPresent()) {
 				Currency currency = optCurrency.get();
-				if(!src.hasPermission(Permissions.getCurrencyAccess(currency))) exception(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_PAY_NO_PERM), new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName()}));
-				if(!plugin.getEconomy().checkPlayerBalance(src.uniqueId(), currency, amount)) exception(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_PAY_NOT_ENOUGH_MONEY), new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName()}));
+				if(!src.hasPermission(Permissions.getCurrencyAccess(currency))) exception(getText(locale, LocalesPaths.COMMANDS_PAY_NO_PERM).replace(new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME}, currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName()).get());
+				if(!plugin.getEconomy().checkPlayerBalance(src.uniqueId(), currency, amount)) exception(getText(locale, LocalesPaths.COMMANDS_PAY_NOT_ENOUGH_MONEY).replace(new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME}, currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName()).get());
 				plugin.getEconomy().getEconomyService().findOrCreateAccount(src.uniqueId()).get().transfer(account, currency, amount);
-				src.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_PAY_SUCCESS), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.MONEY}, new Component[] {account.displayName(), currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(amount.doubleValue())}));
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_PAY_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.MONEY}, account.displayName(), currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(amount.doubleValue())).get());
 				Sponge.server().player(account.uniqueId()).ifPresent(target -> {
-					target.sendMessage(TextUtils.replaceToComponents(getText(target.locale(), LocalesPaths.COMMANDS_PAY_SUCCESS_TARGET), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.MONEY}, new Component[] {src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(amount.doubleValue())}));
+					target.sendMessage(getText(target.locale(), LocalesPaths.COMMANDS_PAY_SUCCESS_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.MONEY}, src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(amount.doubleValue())).get());
 				});
 			} else {
 				Currency currency = plugin.getEconomy().getEconomyService().defaultCurrency();
-				if(!plugin.getEconomy().checkPlayerBalance(src.uniqueId(), currency, amount)) exception(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_PAY_NOT_ENOUGH_MONEY), new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName()}));
+				if(!plugin.getEconomy().checkPlayerBalance(src.uniqueId(), currency, amount)) exception(getText(locale, LocalesPaths.COMMANDS_PAY_NOT_ENOUGH_MONEY).replace(new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME}, currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName()).get());
 				plugin.getEconomy().getEconomyService().findOrCreateAccount(src.uniqueId()).get().transfer(account, currency, amount);
-				src.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_PAY_SUCCESS), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.MONEY}, new Component[] {account.displayName(), currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(amount.doubleValue())}));
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_PAY_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.MONEY}, account.displayName(), currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(amount.doubleValue())).get());
 				Sponge.server().player(account.uniqueId()).ifPresent(target -> {
-					target.sendMessage(TextUtils.replaceToComponents(getText(target.locale(), LocalesPaths.COMMANDS_PAY_SUCCESS_TARGET), new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.MONEY}, new Component[] {src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(amount.doubleValue())}));
+					target.sendMessage(getText(target.locale(), LocalesPaths.COMMANDS_PAY_SUCCESS_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.MONEY}, src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(amount.doubleValue())).get());
 				});
 			}
 		});
@@ -96,12 +95,12 @@ public class Pay extends AbstractPlayerCommand {
 		if(empty == null) empty = new ArrayList<BigDecimal>();
 		return Arrays.asList(RawArgument.of(UniqueAccount.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
-			public Stream<String> get(String[] args) {
+			public Stream<String> get(CommandCause cause, String[] args) {
 				return plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier);
 			}
 		}, new RawResultSupplier<UniqueAccount>() {
 			@Override
-			public Optional<UniqueAccount> get(String[] args) {
+			public Optional<UniqueAccount> get(CommandCause cause, String[] args) {
 				return args.length == 0 ? Optional.empty() : plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(account -> account.identifier().equals(args[0])).findFirst();
 			}
 		}, false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT),

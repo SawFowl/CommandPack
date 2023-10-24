@@ -27,7 +27,7 @@ public class SetSpawn extends AbstractPlayerCommand {
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		plugin.getMainConfig().setSpawnData(new SpawnData(src.serverLocation(), src.rotation(), getBoolean(context, "ForceSpawn", false), getBoolean(context, "ForceRespawn", false)));
 		plugin.getConfigManager().updateMainConfig();
-		src.sendMessage(getText(src.locale(), LocalesPaths.COMMANDS_SETSPAWN_SUCCESS));
+		src.sendMessage(getComponent(src.locale(), LocalesPaths.COMMANDS_SETSPAWN_SUCCESS));
 	}
 
 	@Override

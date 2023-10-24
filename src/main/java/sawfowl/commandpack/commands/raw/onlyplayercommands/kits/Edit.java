@@ -64,8 +64,8 @@ public class Edit extends AbstractKitsEditCommand {
 	}
 
 	private void sendKitsList(ServerPlayer src, Locale locale) {
-		Component title = getText(locale, LocalesPaths.COMMANDS_KITS_LIST_HEADER);
-		sendPaginationList(src, title, Component.text("=").color(title.color()), 15, plugin.getKitService().getKits().stream().map(k -> TextUtils.createCallBack(getText(locale, LocalesPaths.REMOVE), () -> {
+		Component title = getComponent(locale, LocalesPaths.COMMANDS_KITS_LIST_HEADER);
+		sendPaginationList(src, title, Component.text("=").color(title.color()), 15, plugin.getKitService().getKits().stream().map(k -> TextUtils.createCallBack(getComponent(locale, LocalesPaths.REMOVE), () -> {
 			plugin.getKitService().removeKit(k);
 			sendKitsList(src, locale);
 		}).append(Component.text(" ").append(k.getLocalizedName(locale).clickEvent(SpongeComponents.executeCallback(consumer -> {

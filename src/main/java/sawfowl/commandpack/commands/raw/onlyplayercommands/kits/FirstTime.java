@@ -32,7 +32,7 @@ public class FirstTime extends AbstractKitsEditCommand {
 		boolean value = getBoolean(args, 1).get();
 		kitData.setFirstTime(value);
 		kitData.save();
-		src.sendMessage(getText(locale, value ? LocalesPaths.COMMANDS_KITS_FIRST_TIME_ENABLE : LocalesPaths.COMMANDS_KITS_FIRST_TIME_DISABLE));
+		src.sendMessage(getComponent(locale, value ? LocalesPaths.COMMANDS_KITS_FIRST_TIME_ENABLE : LocalesPaths.COMMANDS_KITS_FIRST_TIME_DISABLE));
 	}
 
 	@Override

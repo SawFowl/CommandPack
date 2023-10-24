@@ -36,8 +36,8 @@ public class GodMode extends AbstractParameterizedCommand {
 			} else {
 				delay((ServerPlayer) src, locale, consumer -> {
 					if(setGodMode((ServerPlayer) src)) {
-						src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GODMODE_ENABLE));
-					} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GODMODE_DISABLE));
+						src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_GODMODE_ENABLE));
+					} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_GODMODE_DISABLE));
 				});
 			}
 		} else {
@@ -72,8 +72,8 @@ public class GodMode extends AbstractParameterizedCommand {
 	}
 
 	private void sendStaffMessage(Audience src, Locale staffLocale, ServerPlayer target, Object[] pathStaff, Object[] pathPlayer) {
-		src.sendMessage(getText(staffLocale, pathStaff));
-		target.sendMessage(getText(staffLocale, pathPlayer));
+		src.sendMessage(getComponent(staffLocale, pathStaff));
+		target.sendMessage(getComponent(staffLocale, pathPlayer));
 	}
 
 	@Override

@@ -29,7 +29,7 @@ public class ClearName extends AbstractPlayerCommand {
 		ItemStack item = src.itemInHand(HandTypes.MAIN_HAND.get());
 		item.remove(Keys.CUSTOM_NAME);
 		src.setItemInHand(HandTypes.MAIN_HAND.get(), item);
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ITEM_CLEAR_NAME));
+		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_ITEM_CLEAR_NAME));
 	}
 
 	@Override

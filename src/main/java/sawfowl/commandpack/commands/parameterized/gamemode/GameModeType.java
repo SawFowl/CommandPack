@@ -23,7 +23,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class GameModeType extends AbstractParameterizedCommand {
 
@@ -48,14 +47,14 @@ public class GameModeType extends AbstractParameterizedCommand {
 			ServerPlayer player = getPlayer(context).orElse((ServerPlayer) src);
 			player.offer(Keys.GAME_MODE, gameMode.get());
 			if(!player.uniqueId().equals(((ServerPlayer) src).uniqueId())) {
-				player.sendMessage(TextUtils.replace(getText(player, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS), Placeholders.VALUE, getText(locale, path)));
-				src.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_OTHER), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {Component.text(player.name()), getText(locale, path)}));
-			} else src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS), Placeholders.VALUE, getText(locale, path)));
+				player.sendMessage(getText(player, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS).replace(Placeholders.VALUE, getComponent(locale, path)).get());
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_OTHER).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, Component.text(player.name()), getComponent(locale, path)).get());
+			} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS).replace(Placeholders.VALUE, getText(locale, path)).get());
 		} else {
 			ServerPlayer target = getPlayer(context).get();
 			target.offer(Keys.GAME_MODE, gameMode.get());
-			target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS), Placeholders.VALUE, getText(locale, path)));
-			src.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_OTHER), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {Component.text(target.name()), getText(locale, path)}));
+			target.sendMessage(getText(target, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS).replace(Placeholders.VALUE, getComponent(locale, path)).get());
+			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_OTHER).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, Component.text(target.name()), getComponent(locale, path)).get());
 		}
 	}
 

@@ -26,7 +26,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlaye
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class InventorySee extends AbstractPlayerCommand {
 
@@ -85,7 +84,7 @@ public class InventorySee extends AbstractPlayerCommand {
 				.carrier(target)
 				.identity(UUID.randomUUID()).build());
 		if(!src.hasPermission(Permissions.INVENTORYSEE_STAFF)) menu = menu.setReadOnly(true);
-		menu.setTitle(TextUtils.replace(getText(src.locale(), LocalesPaths.COMMANDS_INVSEE_TITLE), Placeholders.PLAYER, target.name()));
+		menu.setTitle(getText(src.locale(), LocalesPaths.COMMANDS_INVSEE_TITLE).replace(Placeholders.PLAYER, target.name()).get());
 		menu.open(src);
 	}
 
@@ -99,7 +98,7 @@ public class InventorySee extends AbstractPlayerCommand {
 				.carrier(target)
 				.identity(UUID.randomUUID()).build());
 		if(!src.hasPermission(Permissions.INVENTORYSEE_STAFF)) menu = menu.setReadOnly(true);
-		menu.setTitle(TextUtils.replace(getText(src.locale(), LocalesPaths.COMMANDS_INVSEE_TITLE), Placeholders.PLAYER, target.name()));
+		menu.setTitle(getText(src.locale(), LocalesPaths.COMMANDS_INVSEE_TITLE).replace(Placeholders.PLAYER, target.name()).get());
 		menu.open(src);
 	}
 

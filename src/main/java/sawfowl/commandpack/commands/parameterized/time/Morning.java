@@ -14,6 +14,7 @@ import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.audience.Audience;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -21,7 +22,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Morning extends AbstractParameterizedCommand {
 
@@ -69,7 +69,7 @@ public class Morning extends AbstractParameterizedCommand {
 		if(world.properties().gameTime().hour() < 6) {
 			world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day(), 6, 0));
 		} else world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day() + 1, 6, 0));
-		src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_TIME_MORNING), Placeholders.WORLD, world.key().asString()));
+		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TIME_MORNING).replace(Placeholders.WORLD, world.key().asString()).get());
 	}
 
 }

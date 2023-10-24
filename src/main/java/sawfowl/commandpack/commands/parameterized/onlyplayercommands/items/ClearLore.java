@@ -29,7 +29,7 @@ public class ClearLore extends AbstractPlayerCommand {
 		ItemStack item = src.itemInHand(HandTypes.MAIN_HAND.get());
 		item.remove(Keys.LORE);
 		src.setItemInHand(HandTypes.MAIN_HAND.get(), item);
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ITEM_CLEAR_LORE));
+		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_ITEM_CLEAR_LORE));
 	}
 
 	@Override

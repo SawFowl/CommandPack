@@ -30,15 +30,15 @@ public class Broadcast extends AbstractParameterizedCommand {
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
 			delay((ServerPlayer) src, locale, consumer -> {
-				Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get())));
+				Sponge.systemSubject().sendMessage(getComponent(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get())));
 				Sponge.server().onlinePlayers().forEach(player -> {
-					player.sendMessage(getText(player, LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get().replace(Placeholders.PLAYER, player.name()))));
+					player.sendMessage(getComponent(player, LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get().replace(Placeholders.PLAYER, player.name()))));
 				});
 			});
 		} else {
-			Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get())));
+			Sponge.systemSubject().sendMessage(getComponent(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get())));
 			Sponge.server().onlinePlayers().forEach(player -> {
-				player.sendMessage(getText(player, LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get().replace(Placeholders.PLAYER, player.name()))));
+				player.sendMessage(getComponent(player, LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get().replace(Placeholders.PLAYER, player.name()))));
 			});
 		}
 	}

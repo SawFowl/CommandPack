@@ -29,8 +29,6 @@ import sawfowl.commandpack.api.RandomTeleportService.RandomTeleportOptions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.events.RandomTeleportEvent;
 
-import sawfowl.localeapi.api.TextUtils;
-
 public class RandomTeleport extends AbstractParameterizedCommand {
 
 	public RandomTeleport(CommandPack plugin) {
@@ -43,28 +41,28 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 			ServerPlayer player = getPlayer(context).orElse((ServerPlayer) src);
 			ServerWorld targetWorld = getArgument(context, ServerWorld.class, "World").orElse(plugin.getMainConfig().getRtpConfig().getTargetWorld(player.world()));
 			RandomTeleportOptions options = plugin.getRTPService().getOptions(targetWorld);
-			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_WAIT));
+			src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_WAIT));
 			CompletableFuture<Optional<ServerLocation>> futurePos = plugin.getRTPService().getLocationFuture(player.serverLocation(), options);
 			futurePos.thenAccept(optional -> {
 				if(!optional.isPresent()) {
 					if(!player.uniqueId().equals(((ServerPlayer) src).uniqueId()) || context.cause().hasPermission(Permissions.RTP_STAFF)) {
-						src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_POSITION_SEARCH_ERROR_STAFF), new String[] {Placeholders.WORLD, Placeholders.LIMIT}, new Object[] {targetWorld.key().asString(), options.getAttempts()}));
+						src.sendMessage(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_POSITION_SEARCH_ERROR_STAFF).replace(new String[] {Placeholders.WORLD, Placeholders.LIMIT}, targetWorld.key().asString(), options.getAttempts()).get());
 					} else {
-						src.sendMessage(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_POSITION_SEARCH_ERROR));
+						src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_POSITION_SEARCH_ERROR));
 					}
 				} else {
 					RandomTeleportEvent event = createEvent(context.contextCause().with(player), player, targetWorld, optional.get().position(), plugin.getRTPService().getOptions(player.world()));
 					Sponge.eventManager().post(event);
 					if(event.isCancelled()) {
-						src.sendMessage(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_CANCELLED));
+						src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_CANCELLED));
 						return;
 					}
 					if(context.cause().hasPermission(Permissions.RTP_STAFF)) {
 						teleport(player, optional.get());
 						if(player.uniqueId().equals(((ServerPlayer) src).uniqueId())) {
-							src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_SUCCES), new String[] {Placeholders.WORLD, Placeholders.LOCATION}, new Object[] {optional.get().world().key().asString(), optional.get().blockPosition()}));
+							src.sendMessage(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_SUCCES).replace(new String[] {Placeholders.WORLD, Placeholders.LOCATION}, optional.get().world().key().asString(), optional.get().blockPosition()).get());
 						} else {
-							src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_SUCCES_STAFF), new String[] {Placeholders.PLAYER, Placeholders.WORLD, Placeholders.LOCATION}, new Object[] {player.name(), optional.get().world().key().asString(), optional.get().blockPosition()}));
+							src.sendMessage(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_SUCCES_STAFF).replace(new String[] {Placeholders.PLAYER, Placeholders.WORLD, Placeholders.LOCATION}, new Object[] {player.name(), optional.get().world().key().asString(), optional.get().blockPosition()}).get());
 						}
 					} else {
 						try {
@@ -82,25 +80,25 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 			ServerWorld targetWorld = getArgument(context, ServerWorld.class, "World").orElse(plugin.getMainConfig().getRtpConfig().getTargetWorld(player.world()));
 			RandomTeleportOptions options = plugin.getRTPService().getOptions(targetWorld);
 			if(isCommandBlock(context.cause()) || isCommandBlockMinecart(context.cause())) {
-				player.sendMessage(getText(player.locale(), LocalesPaths.COMMANDS_RANDOM_TELEPORT_WAIT));
-			} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_WAIT));
+				player.sendMessage(getComponent(player.locale(), LocalesPaths.COMMANDS_RANDOM_TELEPORT_WAIT));
+			} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_WAIT));
 			CompletableFuture<Optional<ServerLocation>> futurePos = plugin.getRTPService().getLocationFuture(player.serverLocation(), options);
 			futurePos.thenAccept(optional -> {
 				if(!optional.isPresent()) {
-					src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_POSITION_SEARCH_ERROR_STAFF), new String[] {Placeholders.WORLD, Placeholders.LIMIT}, new Object[] {targetWorld.key().asString(), options.getAttempts()}));
-					if(isCommandBlock(context.cause()) || isCommandBlockMinecart(context.cause())) player.sendMessage(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_POSITION_SEARCH_ERROR));
+					src.sendMessage(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_POSITION_SEARCH_ERROR_STAFF).replace(new String[] {Placeholders.WORLD, Placeholders.LIMIT}, new Object[] {targetWorld.key().asString(), options.getAttempts()}).get());
+					if(isCommandBlock(context.cause()) || isCommandBlockMinecart(context.cause())) player.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_POSITION_SEARCH_ERROR));
 				} else {
 					RandomTeleportEvent event = createEvent(context.contextCause(), player, targetWorld, optional.get().position(), plugin.getRTPService().getOptions(player.world()));
 					Sponge.eventManager().post(event);
 					if(event.isCancelled()) {
-						(isCommandBlock(context.cause()) || isCommandBlockMinecart(context.cause()) ? player : src).sendMessage(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_CANCELLED));
+						(isCommandBlock(context.cause()) || isCommandBlockMinecart(context.cause()) ? player : src).sendMessage(getComponent(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_CANCELLED));
 						return;
 					}
 					if(isCommandBlock(context.cause()) || isCommandBlockMinecart(context.cause())) {
 						try {
 							delay(player, locale, consumer -> {
 								teleport(player, optional.get());
-								player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_RANDOM_TELEPORT_SUCCES), new String[] {Placeholders.WORLD, Placeholders.LOCATION}, new Object[] {optional.get().world().key().asString(), optional.get().blockPosition()}));
+								player.sendMessage(getText(player.locale(), LocalesPaths.COMMANDS_RANDOM_TELEPORT_SUCCES).replace(new String[] {Placeholders.WORLD, Placeholders.LOCATION}, new Object[] {optional.get().world().key().asString(), optional.get().blockPosition()}).get());
 							});
 						} catch (CommandException e) {
 							player.sendMessage(e.componentMessage());
@@ -108,7 +106,7 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 					} else {
 						Sponge.server().scheduler().executor(getContainer()).execute(() -> {
 							teleport(player, optional.get());
-							src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_SUCCES_STAFF), new String[] {Placeholders.PLAYER, Placeholders.WORLD, Placeholders.LOCATION}, new Object[] {player.name(), optional.get().world().key().asString(), optional.get().blockPosition()}));
+							src.sendMessage(getText(locale, LocalesPaths.COMMANDS_RANDOM_TELEPORT_SUCCES_STAFF).replace(new String[] {Placeholders.PLAYER, Placeholders.WORLD, Placeholders.LOCATION}, player.name(), optional.get().world().key().asString(), optional.get().blockPosition()).get());
 						});
 					}
 				}

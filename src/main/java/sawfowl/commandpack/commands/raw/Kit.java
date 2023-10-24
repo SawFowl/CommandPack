@@ -64,7 +64,7 @@ public class Kit extends AbstractRawCommand {
 		if(isPlayer) {
 			ServerPlayer src = (ServerPlayer) audience;
 			if(kit.isNeedPerm() && !src.hasPermission(kit.permission()) && !src.hasPermission(Permissions.KIT_STAFF)) {
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_NO_PERM));
+				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KIT_NO_PERM));
 				return;
 			}
 			ServerPlayer target = getPlayer(args, 1).orElse(src);
@@ -124,16 +124,16 @@ public class Kit extends AbstractRawCommand {
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) audience;
 			List<Component> kits = new ArrayList<>();
-			Component header = getText(locale, LocalesPaths.COMMANDS_KIT_LIST_HEADER);
+			Component header = getComponent(locale, LocalesPaths.COMMANDS_KIT_LIST_HEADER);
 			plugin.getKitService().getKits().forEach(kit -> {
 				Component access = !kit.isNeedPerm() || (player.hasPermission(kit.permission()) || player.hasPermission(Permissions.KIT_STAFF)) ? text(" &7[&a+&7] ") : text(" &7[&c-&7] ");
-				kits.add(TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_KIT_VIEW), () -> {
+				kits.add(TextUtils.createCallBack(getComponent(locale, LocalesPaths.COMMANDS_KIT_VIEW), c -> {
 							kit.asMenu(getContainer(), player, true).open(player);
 						}
 					)
 					.append(TextUtils.createCallBack(access, () -> {
 								if(kit.isNeedPerm() && !player.hasPermission(kit.permission()) && !player.hasPermission(Permissions.KIT_STAFF)) {
-									player.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_NO_PERM));
+									player.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KIT_NO_PERM));
 									return;
 								}
 								sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(player);
@@ -147,7 +147,7 @@ public class Kit extends AbstractRawCommand {
 			sendPaginationList(player, header, Component.text("=").color(header.color()), 15, kits);
 		} else {
 			int size = plugin.getKitService().getKits().size();
-			Component kits = getText(locale, LocalesPaths.COMMANDS_KIT_LIST_HEADER).append(text("&f: "));
+			Component kits = getComponent(locale, LocalesPaths.COMMANDS_KIT_LIST_HEADER).append(text("&f: "));
 			for(sawfowl.commandpack.api.data.kits.Kit kit : plugin.getKitService().getKits()) {
 				kits = kits.append(text("&e" + kit.id()));
 				if(size > 1) {
@@ -174,9 +174,9 @@ public class Kit extends AbstractRawCommand {
 			spawnItems(toSpawn, player);
 			runCommands(player, kit);
 			if(!equals) {
-				player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(player.locale())));
-				audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_KIT_SUCCESS_STAFF), new String[] {Placeholders.VALUE, Placeholders.PLAYER}, new Component[] {kit.getLocalizedName(locale), text(player.name())}));
-			} else player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(player.locale())));
+				player.sendMessage(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS).replace(Placeholders.VALUE, kit.getLocalizedName(player.locale())).get());
+				audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_SUCCESS_STAFF).replace(new String[] {Placeholders.VALUE, Placeholders.PLAYER}, kit.getLocalizedName(locale), text(player.name())).get());
+			} else player.sendMessage(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS).replace(Placeholders.VALUE, kit.getLocalizedName(player.locale())).get());
 			return;
 		}
 		ItemStack[] items = kit.getContent().toArray(new ItemStack[] {});
@@ -186,7 +186,7 @@ public class Kit extends AbstractRawCommand {
 				giveKit(cause, audience, locale, player, data, kit, equals, currentTime, items, null, null, null);
 				break;
 			case MESSAGE_IF_INVENTORY_FULL:
-				player.sendMessage(TextUtils.createCallBack(getText(locale, LocalesPaths.COMMANDS_KIT_INVENTORY_FULL), () -> {
+				player.sendMessage(TextUtils.createCallBack(getComponent(locale, LocalesPaths.COMMANDS_KIT_INVENTORY_FULL), c -> {
 					List<ItemStack> toGive = new ArrayList<>();
 					List<ItemStack> toSpawn = new ArrayList<>();
 					int emptySlots = player.inventory().primary().freeCapacity();
@@ -254,17 +254,17 @@ public class Kit extends AbstractRawCommand {
 		Sponge.eventManager().post(eventPre);
 		if(eventPre.isCancelled()) {
 			if(data.getKitGivedTime(kit) + kit.getCooldown() > currentTime) {
-				audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_WAIT), Placeholders.VALUE, timeFormat((data.getKitGivedTime(kit) + kit.getCooldown()) - currentTime, locale)));
+				audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_WAIT).replace(Placeholders.VALUE, timeFormat((data.getKitGivedTime(kit) + kit.getCooldown()) - currentTime, locale)).get());
 				Sponge.eventManager().post(createPostEvent(audience, kit, player, false, null, currentTime + kit.getCooldown()));
 				return;
 			}
 			if(!allowLimit) {
-				audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT));
+				audience.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KIT_GIVE_LIMIT));
 				Sponge.eventManager().post(createPostEvent(audience, kit, player, false, null, currentTime + kit.getCooldown()));
 				return;
 			}
 			if(economyCancelGive) {
-				audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KIT_NO_MONEY), Placeholders.VALUE, kit.getKitPrice().get().asComponent()));
+				audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_NO_MONEY).replace(Placeholders.VALUE, kit.getKitPrice().get().asComponent()).get());
 				Sponge.eventManager().post(createPostEvent(audience, kit, player, false, null, currentTime + kit.getCooldown()));
 				return;
 			}
@@ -289,9 +289,9 @@ public class Kit extends AbstractRawCommand {
 		runCommands(player, kit);
 		data.save();
 		if(!equals) {
-			player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(player.locale())));
-			audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_KIT_SUCCESS_STAFF), new String[] {Placeholders.VALUE, Placeholders.PLAYER}, new Component[] {kit.getLocalizedName(locale), text(player.name())}));
-		} else player.sendMessage(TextUtils.replace(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(player.locale())));
+			player.sendMessage(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS).replace(Placeholders.VALUE, kit.getLocalizedName(player.locale())).get());
+			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_KIT_SUCCESS_STAFF).replace(new String[] {Placeholders.VALUE, Placeholders.PLAYER}, kit.getLocalizedName(locale), text(player.name())).get());
+		} else player.sendMessage(getText(player.locale(), LocalesPaths.COMMANDS_KIT_SUCCESS).replace(Placeholders.VALUE, kit.getLocalizedName(player.locale())).get());
 		Sponge.eventManager().post(createPostEvent(audience, kit, player, true, result, currentTime + kit.getCooldown()));
 	}
 
@@ -435,12 +435,12 @@ public class Kit extends AbstractRawCommand {
 	private RawArgument<sawfowl.commandpack.api.data.kits.Kit> kitArgument() {
 		return RawArgument.of(sawfowl.commandpack.api.data.kits.Kit.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
-			public Stream<String> get(String[] args) {
+			public Stream<String> get(CommandCause cause, String[] args) {
 				return plugin.getKitService().getKits().stream().map(sawfowl.commandpack.api.data.kits.Kit::id);
 			}
 		}, new RawResultSupplier<sawfowl.commandpack.api.data.kits.Kit>() {
 			@Override
-			public Optional<sawfowl.commandpack.api.data.kits.Kit> get(String[] args) {
+			public Optional<sawfowl.commandpack.api.data.kits.Kit> get(CommandCause cause, String[] args) {
 				return args.length >= 1 ? plugin.getKitService().getKit(args[0]) : Optional.empty();
 			}
 		}, true, true, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);

@@ -17,6 +17,7 @@ import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -26,7 +27,6 @@ import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Unmute extends AbstractRawCommand {
 
@@ -38,14 +38,14 @@ public class Unmute extends AbstractRawCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		Mute mute = getArgument(Mute.class, args, 0).get();
 		plugin.getPunishmentService().removeMute(mute);
-		Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_UNMUTE_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, new Component[] {(isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(mute.getName())}));
+		Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_UNMUTE_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, new Component[] {(isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(mute.getName())}).get());
 		if(!plugin.getMainConfig().getPunishment().getAnnounce().isUnban()) {
-			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_UNMUTE_SUCCESS), Placeholders.PLAYER, mute.getName()));
+			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_UNMUTE_SUCCESS).replace(Placeholders.PLAYER, mute.getName()).get());
 			Sponge.server().player(mute.getUniqueId()).ifPresent(player -> {
-				player.sendMessage(getText(player, LocalesPaths.COMMANDS_UNMUTE_SUCCESS_TARGET));
+				player.sendMessage(getComponent(player, LocalesPaths.COMMANDS_UNMUTE_SUCCESS_TARGET));
 			});
 		} else Sponge.server().onlinePlayers().forEach(player -> {
-			player.sendMessage(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_UNMUTE_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, new Component[] {(isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(mute.getName())}));
+			player.sendMessage(getText(player, LocalesPaths.COMMANDS_UNMUTE_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, (isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(mute.getName())).get());
 		});
 	}
 
@@ -78,12 +78,12 @@ public class Unmute extends AbstractRawCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(RawArgument.of(Mute.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
-			public Stream<String> get(String[] args) {
+			public Stream<String> get(CommandCause cause, String[] args) {
 				return plugin.getPunishmentService().getAllMutes().stream().map(m -> m.getName());
 			}
 		}, new RawResultSupplier<Mute>() {
 			@Override
-			public Optional<Mute> get(String[] args) {
+			public Optional<Mute> get(CommandCause cause, String[] args) {
 				Collection<Mute> variants = plugin.getPunishmentService().getAllMutes();
 				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(m -> m.getName().equals(args[0])).findFirst();
 			}

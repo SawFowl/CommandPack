@@ -33,19 +33,19 @@ public class Commands extends AbstractKitsEditCommand {
 		Kit kit = getKit(args, 0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		if(kitData.getExecuteCommands().isPresent() && kitData.getExecuteCommands().get().size() > 0) {
-			Component header = getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_HEADER);
+			Component header = getComponent(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_HEADER);
 			List<Component> commands = new ArrayList<>();
 			kitData.getExecuteCommands().get().forEach(command -> {
-				commands.add(TextUtils.createCallBack(getText(locale, LocalesPaths.REMOVE), () -> {
+				commands.add(TextUtils.createCallBack(getComponent(locale, LocalesPaths.REMOVE), () -> {
 					if(kitData.getExecuteCommands().get().contains(command)) {
 						kitData.removeCommand(command);
 						kitData.save();
-						src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_SUCCESS));
-					} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_FAIL));
+						src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_SUCCESS));
+					} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_FAIL));
 				}).append(Component.text(" " + command)));
 			});
 			sendPaginationList(src, header, Component.text("=").color(header.color()), 15, commands);
-		} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_EMPTY));
+		} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_EMPTY));
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -19,7 +20,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Heal extends AbstractParameterizedCommand {
 
@@ -33,17 +33,17 @@ public class Heal extends AbstractParameterizedCommand {
 			Optional<ServerPlayer> target = getPlayer(context);
 			if(target.isPresent() && !target.get().uniqueId().equals(((ServerPlayer) src).uniqueId())) {
 				target.get().offer(Keys.HEALTH, target.get().getOrElse(Keys.MAX_HEALTH, 20d));
-				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_HEAL_OTHER), Placeholders.PLAYER, target.get().name()));
-				target.get().sendMessage(getText(target.get(), LocalesPaths.COMMANDS_HEAL_SELF));
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_HEAL_OTHER).replace(Placeholders.PLAYER, target.get().name()).get());
+				target.get().sendMessage(getComponent(target.get(), LocalesPaths.COMMANDS_HEAL_SELF));
 			} else {
 				((ServerPlayer) src).offer(Keys.HEALTH, ((ServerPlayer) src).getOrElse(Keys.MAX_HEALTH, 20d));
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_HEAL_SELF));
+				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_HEAL_SELF));
 			}
 		} else {
 			ServerPlayer player = getPlayer(context).get();
 			player.offer(Keys.HEALTH, player.getOrElse(Keys.MAX_HEALTH, 20d));
-			src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_HEAL_OTHER), Placeholders.PLAYER, player.name()));
-			player.sendMessage(getText(player, LocalesPaths.COMMANDS_HEAL_SELF));
+			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_HEAL_OTHER).replace(Placeholders.PLAYER, player.name()).get());
+			player.sendMessage(getComponent(player, LocalesPaths.COMMANDS_HEAL_SELF));
 		}
 	}
 

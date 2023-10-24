@@ -34,7 +34,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class EnchantmentTable extends AbstractParameterizedCommand {
 
@@ -66,7 +65,7 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 			if(target.isPresent()) {
 				levels.put(target.get().uniqueId(), level);
 				menu.open(target.get());
-				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_ENCHANTMENT_TABLE), Placeholders.PLAYER, target.get().name()));
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ENCHANTMENT_TABLE).replace(Placeholders.PLAYER, target.get().name()).get());
 			} else {
 				delay((ServerPlayer) src, locale, consumer -> {
 					levels.put(((ServerPlayer) src).uniqueId(), finalLevel);
@@ -80,7 +79,7 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 			InventoryMenu menu = ViewableInventory.builder().type(ContainerTypes.ENCHANTMENT).completeStructure().carrier(target).plugin(plugin.getPluginContainer()).build().asMenu();
 			menu.setTitle(ItemTypes.CRAFTING_TABLE.get().asComponent());
 			menu.open(target);
-			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ENCHANTMENT_TABLE));
+			src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_ENCHANTMENT_TABLE));
 		}
 	}
 

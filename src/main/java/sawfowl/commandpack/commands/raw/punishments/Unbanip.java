@@ -25,7 +25,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Unbanip extends AbstractRawCommand {
 
@@ -37,7 +36,7 @@ public class Unbanip extends AbstractRawCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		InetAddress address = getArgument(InetAddress.class, args, 0).get();
 		plugin.getPunishmentService().pardon(address);
-		audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_UNBANIP_SUCCESS), Placeholders.VALUE, address.getHostAddress()));
+		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_UNBANIP_SUCCESS).replace(Placeholders.VALUE, address.getHostAddress()).get());
 	}
 
 	@Override
@@ -69,12 +68,12 @@ public class Unbanip extends AbstractRawCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(RawArgument.of(InetAddress.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
-			public Stream<String> get(String[] args) {
+			public Stream<String> get(CommandCause cause, String[] args) {
 				return plugin.getPunishmentService().getAllIPBans().stream().map(i -> i.address().getHostAddress());
 			}
 		}, new RawResultSupplier<InetAddress>() {
 			@Override
-			public Optional<InetAddress> get(String[] args) {
+			public Optional<InetAddress> get(CommandCause cause, String[] args) {
 				Collection<IP> variants = plugin.getPunishmentService().getAllIPBans();
 				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(i -> i.address().getHostAddress().equals(args[0])).findFirst().map(IP::address);
 			}

@@ -16,13 +16,13 @@ import org.spongepowered.api.world.server.ServerWorld;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Difficulty extends AbstractWorldCommand {
 
@@ -36,7 +36,7 @@ public class Difficulty extends AbstractWorldCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		ServerWorld world = getWorld(args, 0).get();
 		world.properties().setDifficulty(difficulties.get(getString(args, 1).get()).get());
-		audience.sendMessage(TextUtils.replace(getText(locale, getLocalesPaths(args[1])), Placeholders.WORLD, world.key().asString()));
+		audience.sendMessage(getText(locale, getLocalesPaths(args[1])).replace(Placeholders.WORLD, world.key().asString()).get());
 	}
 
 	@Override

@@ -76,7 +76,7 @@ public class Spawn extends AbstractParameterizedCommand {
 				player.setRotation(rotation.asVector3d());
 			});
 		} else tpDefault(player);
-		player.sendMessage(getText(player.locale(), LocalesPaths.COMMANDS_SPAWN_SUCCESS));
+		player.sendMessage(getComponent(player.locale(), LocalesPaths.COMMANDS_SPAWN_SUCCESS));
 	}
 
 	private void tpDefault(ServerPlayer player) {

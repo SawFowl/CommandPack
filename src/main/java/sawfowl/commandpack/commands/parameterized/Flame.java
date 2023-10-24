@@ -18,6 +18,7 @@ import org.spongepowered.api.util.blockray.RayTrace;
 import org.spongepowered.api.util.blockray.RayTraceResult;
 
 import net.kyori.adventure.audience.Audience;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -25,7 +26,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Flame extends AbstractParameterizedCommand {
 
@@ -51,8 +51,8 @@ public class Flame extends AbstractParameterizedCommand {
 					if(damage) {
 						target.offer(Keys.FIRE_TICKS, randomTicks());
 					} else target.offer(Keys.IS_AFLAME, true);
-					src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_FLAME_SUCCESS_STAFF), Placeholders.PLAYER, target instanceof ServerPlayer ? ((ServerPlayer) target).name() : EntityTypes.registry().valueKey(target.type()).asString()));
-					if(target instanceof ServerPlayer) ((ServerPlayer) target).sendMessage(getText(((ServerPlayer) target).locale(), damage ? LocalesPaths.COMMANDS_FLAME_SUCCESS_DAMAGE : LocalesPaths.COMMANDS_FLAME_SUCCESS));
+					src.sendMessage(getText(locale, LocalesPaths.COMMANDS_FLAME_SUCCESS_STAFF).replace(Placeholders.PLAYER, target instanceof ServerPlayer ? ((ServerPlayer) target).name() : EntityTypes.registry().valueKey(target.type()).asString()).get());
+					if(target instanceof ServerPlayer) ((ServerPlayer) target).sendMessage(getComponent(((ServerPlayer) target).locale(), damage ? LocalesPaths.COMMANDS_FLAME_SUCCESS_DAMAGE : LocalesPaths.COMMANDS_FLAME_SUCCESS));
 					return;
 				}
 			}
@@ -60,7 +60,7 @@ public class Flame extends AbstractParameterizedCommand {
 				if(damage) {
 					((ServerPlayer) src).offer(Keys.FIRE_TICKS, randomTicks());
 				} else ((ServerPlayer) src).offer(Keys.IS_AFLAME, true);
-				src.sendMessage(getText(locale, damage ? LocalesPaths.COMMANDS_FLAME_SUCCESS_DAMAGE : LocalesPaths.COMMANDS_FLAME_SUCCESS));
+				src.sendMessage(getComponent(locale, damage ? LocalesPaths.COMMANDS_FLAME_SUCCESS_DAMAGE : LocalesPaths.COMMANDS_FLAME_SUCCESS));
 			});
 		}
 	}
@@ -93,8 +93,8 @@ public class Flame extends AbstractParameterizedCommand {
 	}
 
 	private void sendStaffMessage(Audience src, Locale staffLocale, ServerPlayer target, Object[] pathStaff, Object[] pathPlayer) {
-		src.sendMessage(TextUtils.replace(getText(staffLocale, pathPlayer), Placeholders.PLAYER, target.name()));
-		target.sendMessage(getText(staffLocale, pathPlayer));
+		src.sendMessage(getText(staffLocale, pathPlayer).replace(Placeholders.PLAYER, target.name()).get());
+		target.sendMessage(getComponent(staffLocale, pathPlayer));
 	}
 
 	private Optional<RayTraceResult<Entity>> targetEntity(ServerPlayer source) {

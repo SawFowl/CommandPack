@@ -24,7 +24,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class HideBalance extends AbstractRawCommand {
 
@@ -39,17 +38,17 @@ public class HideBalance extends AbstractRawCommand {
 			if(optAccount.isPresent()) {
 				UniqueAccount account = optAccount.get();
 				plugin.getEconomy().getEconomyService().hide(account.uniqueId());
-				audience.sendMessage(TextUtils.replace(getText(locale, plugin.getEconomy().getEconomyService().isHiden(account) ? LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN), Placeholders.PLAYER, account.displayName()));
+				audience.sendMessage(getText(locale, plugin.getEconomy().getEconomyService().isHiden(account) ? LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN).replace(Placeholders.PLAYER, account.displayName()).get());
 			} else {
 				delay((ServerPlayer) audience, locale, consumer -> {
 					plugin.getEconomy().getEconomyService().hide(((ServerPlayer) audience).uniqueId());
-					audience.sendMessage(getText(locale, plugin.getEconomy().getEconomyService().isHiden(((ServerPlayer) audience).uniqueId()) ? LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_OPEN));
+					audience.sendMessage(getComponent(locale, plugin.getEconomy().getEconomyService().isHiden(((ServerPlayer) audience).uniqueId()) ? LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_OPEN));
 				});
 			}
 		} else {
 			UniqueAccount account = getArgument(UniqueAccount.class, args, 0).get();
 			plugin.getEconomy().getEconomyService().hide(account.uniqueId());
-			audience.sendMessage(TextUtils.replace(getText(locale, plugin.getEconomy().getEconomyService().isHiden(account) ? LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN), Placeholders.PLAYER, account.displayName()));
+			audience.sendMessage(getText(locale, plugin.getEconomy().getEconomyService().isHiden(account) ? LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN).replace(Placeholders.PLAYER, account.displayName()).get());
 		}
 	}
 
@@ -82,12 +81,12 @@ public class HideBalance extends AbstractRawCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(RawArgument.of(UniqueAccount.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
-			public Stream<String> get(String[] args) {
+			public Stream<String> get(CommandCause cause, String[] args) {
 				return plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier);
 			}
 		}, new RawResultSupplier<UniqueAccount>() {
 			@Override
-			public Optional<UniqueAccount> get(String[] args) {
+			public Optional<UniqueAccount> get(CommandCause cause, String[] args) {
 				return args.length == 0 ? Optional.empty() : plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(account -> account.identifier().equals(args[0])).findFirst();
 			}
 		}, true, false, 0, Permissions.ECONOMY_STAFF, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));

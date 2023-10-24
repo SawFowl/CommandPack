@@ -29,7 +29,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Ban extends AbstractParameterizedCommand {
 
@@ -43,22 +42,22 @@ public class Ban extends AbstractParameterizedCommand {
 		if(isPlayer && userName.equals(((ServerPlayer) src).name())) exception(getText(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF));
 		Sponge.server().userManager().load(userName).thenAccept(optional -> {
 			if(!optional.isPresent()) {
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
+				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
 				return;
 			}
 			User user = optional.get();
 			if(user.hasPermission(Permissions.IGNORE_BAN) && isPlayer) {
-				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BAN_IGNORE), Placeholders.PLAYER, user.name()));
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_BAN_IGNORE).replace(Placeholders.PLAYER, user.name()).get());
 				return;
 			}
 			plugin.getPunishmentService().find(user.profile()).thenAccept(optBan -> {
 				if(optBan.isPresent()) {
-					src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED), Placeholders.PLAYER, user.name()));
+					src.sendMessage(getText(locale, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED).replace(Placeholders.PLAYER, user.name()).get());
 					return;
 				}
 				Optional<Duration> duration = getArgument(context, Duration.class, "Duration");
 				if(!duration.isPresent() && !context.cause().hasPermission(Permissions.PERMANENT_BAN_ACCESS)) {
-					src.sendMessage(getText(locale, LocalesPaths.COMMANDS_EXCEPTION_DURATION_NOT_PRESENT));
+					src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_EXCEPTION_DURATION_NOT_PRESENT));
 					return;
 				}
 				Component source = isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server");
@@ -68,21 +67,21 @@ public class Ban extends AbstractParameterizedCommand {
 				if(reason.isPresent()) banBuilder = banBuilder.reason(text(reason.get()));
 				org.spongepowered.api.service.ban.Ban ban = banBuilder.build();
 				plugin.getPunishmentService().add(ban);
-				if(user.player().isPresent() && user.isOnline()) user.player().get().kick(TextUtils.replaceToComponents(getText(user.player().get(), ban.expirationDate().isPresent() ? LocalesPaths.COMMANDS_BAN_DISCONNECT : LocalesPaths.COMMANDS_BAN_DISCONNECT_PERMANENT), new String[] {Placeholders.TIME, Placeholders.SOURCE, Placeholders.VALUE}, new Component[] {(ban.expirationDate().isPresent() ? expire(user.player().get().locale(), ban) : text("")), source, text(reason.orElse("-"))}));
+				if(user.player().isPresent() && user.isOnline()) user.player().get().kick(getText(user.player().get(), ban.expirationDate().isPresent() ? LocalesPaths.COMMANDS_BAN_DISCONNECT : LocalesPaths.COMMANDS_BAN_DISCONNECT_PERMANENT).replace(new String[] {Placeholders.TIME, Placeholders.SOURCE, Placeholders.VALUE}, (ban.expirationDate().isPresent() ? expire(user.player().get().locale(), ban) : text("")), source, text(reason.orElse("-"))).get());
 				if(ban.expirationDate().isPresent()) {
-					Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {source, text(user.name()), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), ban), ban.reason().orElse(text("&f-"))}));	
-				} else Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {source, text(user.name()), ban.reason().orElse(text("&f-"))}));
+					Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, source, text(user.name()), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), ban), ban.reason().orElse(text("&f-"))).get());	
+				} else Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, source, text(user.name()), ban.reason().orElse(text("&f-"))).get());
 				if(plugin.getMainConfig().getPunishment().getAnnounce().isBan()) {
 					if(ban.expirationDate().isPresent()) {
 						Sponge.server().onlinePlayers().forEach(player -> {
-							player.sendMessage(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {source, text(user.name()), expire(player.locale(), ban), ban.reason().orElse(text("&f-"))}));
+							player.sendMessage(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, new Component[] {source, text(user.name()), expire(player.locale(), ban), ban.reason().orElse(text("&f-"))}).get());
 						});
 					} else {
 						Sponge.server().onlinePlayers().forEach(player -> {
-							player.sendMessage(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {source, text(user.name()), ban.reason().orElse(text("&f-"))}));
+							player.sendMessage(getText(player, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, source, text(user.name()), ban.reason().orElse(text("&f-"))).get());
 						});
 					}
-				} else src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BAN_SUCCESS), Placeholders.PLAYER, user.name()));
+				} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_BAN_SUCCESS).replace(Placeholders.PLAYER, user.name()).get());
 			});
 		});
 	}

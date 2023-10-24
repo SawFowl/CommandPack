@@ -24,7 +24,7 @@ public class Help extends AbstractParameterizedCommand {
 
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
-		Component title = getText(locale, LocalesPaths.COMMANDS_HELP_TITLE);
+		Component title = getComponent(locale, LocalesPaths.COMMANDS_HELP_TITLE);
 		sendPaginationList(src, title, Component.text("=").color(title.color()), 10, getListTexts(locale, LocalesPaths.COMMANDS_HELP_LIST));
 	}
 

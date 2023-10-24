@@ -31,8 +31,8 @@ public class HomeList extends AbstractPlayerCommand {
 			PaginationList.builder()
 				.contents(playerData.homesListChatMenu(locale, true))
 				.linesPerPage(10)
-				.title(getText(locale, LocalesPaths.COMMANDS_HOME_LIST))
-				.padding(text("=").color(getText(locale, LocalesPaths.COMMANDS_HOME_LIST).color()))
+				.title(getComponent(locale, LocalesPaths.COMMANDS_HOME_LIST))
+				.padding(text("=").color(getComponent(locale, LocalesPaths.COMMANDS_HOME_LIST).color()))
 				.sendTo(src);
 		});
 	}

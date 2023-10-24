@@ -21,7 +21,6 @@ import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.kits.KitData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Cooldown extends AbstractKitsEditCommand {
 
@@ -36,7 +35,7 @@ public class Cooldown extends AbstractKitsEditCommand {
 		Duration duration = getDurationArg(args, 1, locale).get();
 		kitData.setCooldown(duration.getSeconds());
 		kit.save();
-		src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS), Placeholders.VALUE, kit.getLocalizedName(locale)));
+		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS).replace(Placeholders.VALUE, kit.getLocalizedName(locale)).get());
 	}
 
 	@Override

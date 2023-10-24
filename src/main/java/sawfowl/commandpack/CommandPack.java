@@ -36,6 +36,8 @@ import org.spongepowered.api.world.biome.Biomes;
 import org.spongepowered.api.world.generation.ChunkGenerator;
 import org.spongepowered.api.world.generation.config.flat.FlatGeneratorConfig;
 import org.spongepowered.api.world.generation.config.flat.LayerConfig;
+import org.spongepowered.api.world.server.ServerWorld;
+import org.spongepowered.common.bridge.server.level.ServerLevelBridge;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
 
@@ -70,6 +72,8 @@ import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.api.services.PunishmentService;
+import sawfowl.commandpack.api.tps.AverageTPS;
+import sawfowl.commandpack.api.tps.TPS;
 import sawfowl.commandpack.apiclasses.KitServiceImpl;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.apiclasses.RTPService;
@@ -255,6 +259,43 @@ public class CommandPack {
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerDeathAndRespawnListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new EntityDamageListener(instance));
 		configManager.loadKits();
+		AverageTPS averageTPS = new AverageTPS() {
+			
+			@Override
+			public double get1m() {
+				return instance.getAverageTPS1m();
+			}
+			
+			@Override
+			public double get5m() {
+				return instance.getAverageTPS5m();
+			}
+			
+			@Override
+			public double get10m() {
+				return instance.getAverageTPS10m();
+			}
+		};
+		TPS tps = new TPS() {
+			
+			@Override
+			public double getWorldTickTime(ServerWorld world) {
+				long[] tickTimes = ((ServerLevelBridge) world).bridge$recentTickTimes();
+				long $$1 = 0L;
+				for(long $$2 : tickTimes) $$1 += $$2;
+				return ((double)$$1 / (double)tickTimes.length) * 1.0E-6D;
+			}
+			
+			@Override
+			public double getWorldTPS(ServerWorld world) {
+				return Math.min(1000.0 / (getWorldTickTime(world)), 20.0);
+			}
+			
+			@Override
+			public AverageTPS getAverageTPS() {
+				return averageTPS;
+			}
+		};
 		generators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureSets(null).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
 		api = new sawfowl.commandpack.api.CommandPack() {
 
@@ -271,21 +312,6 @@ public class CommandPack {
 			@Override
 			public boolean isForgeServer() {
 				return isForge;
-			}
-
-			@Override
-			public double getAverageTPS1m() {
-				return instance.getAverageTPS1m();
-			}
-
-			@Override
-			public double getAverageTPS5m() {
-				return instance.getAverageTPS5m();
-			}
-
-			@Override
-			public double getAverageTPS10m() {
-				return instance.getAverageTPS10m();
 			}
 
 			@Override
@@ -316,6 +342,11 @@ public class CommandPack {
 			@Override
 			public Optional<CPEconomyService> getEconomyService() {
 				return Optional.ofNullable(economy.getEconomyService());
+			}
+
+			@Override
+			public TPS getTPS() {
+				return tps;
 			}
 
 		};

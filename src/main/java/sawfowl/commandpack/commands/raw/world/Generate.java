@@ -22,13 +22,13 @@ import org.spongepowered.math.vector.Vector3i;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Generate extends AbstractWorldCommand {
 
@@ -62,16 +62,16 @@ public class Generate extends AbstractWorldCommand {
 				Sponge.asyncScheduler().submit(Task.builder().interval(interval.orElse(5), TimeUnit.SECONDS).plugin(getContainer()).execute(fillTask).build());
 				tasks.put(world.key().asString(), fillTask);
 			}
-			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_START_GENERATE), Placeholders.WORLD, world.key().asString()));
+			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_START_GENERATE).replace(Placeholders.WORLD, world.key().asString()).get());
 		} else if(action.equals("pause")) {
-			if(!tasks.containsKey(world.key().asString())) exception(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_NOT_STARTED_GENERATE), Placeholders.WORLD, world.key().asString()));
+			if(!tasks.containsKey(world.key().asString())) exception(getText(locale, LocalesPaths.COMMANDS_WORLD_NOT_STARTED_GENERATE).replace(Placeholders.WORLD, world.key().asString()).get());
 			tasks.get(world.key().asString()).stop().sendDebugMessage();
-			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_PAUSE_GENERATE), Placeholders.WORLD, world.key().asString()));
+			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_PAUSE_GENERATE).replace(Placeholders.WORLD, world.key().asString()).get());
 		} else if(action.equals("stop")) {
-			if(!tasks.containsKey(world.key().asString())) exception(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_NOT_STARTED_GENERATE), Placeholders.WORLD, world.key().asString()));
+			if(!tasks.containsKey(world.key().asString())) exception(getText(locale, LocalesPaths.COMMANDS_WORLD_NOT_STARTED_GENERATE).replace(Placeholders.WORLD, world.key().asString()).get());
 			if(!tasks.get(world.key().asString()).isCancelled()) exception(locale, LocalesPaths.COMMANDS_WORLD_NOT_PAUSED_GENERATE);
 			tasks.remove(world.key().asString());
-			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_STOP_GENERATE), Placeholders.WORLD, world.key().asString()));
+			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_STOP_GENERATE).replace(Placeholders.WORLD, world.key().asString()).get());
 		}
 	}
 

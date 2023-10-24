@@ -8,6 +8,7 @@ import org.spongepowered.api.world.generation.ChunkGenerator;
 
 import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.api.services.PunishmentService;
+import sawfowl.commandpack.api.tps.TPS;
 
 /**
  * Plugin API.
@@ -62,11 +63,10 @@ public interface CommandPack {
 	 */
 	Optional<CPEconomyService> getEconomyService();
 
-	public double getAverageTPS1m();
-
-	public double getAverageTPS5m();
-
-	public double getAverageTPS10m();
+	/**
+	 * Getting information about server and worlds TPS.
+	 */
+	TPS getTPS();
 
 	/**
 	 * Event for getting the plugin API.

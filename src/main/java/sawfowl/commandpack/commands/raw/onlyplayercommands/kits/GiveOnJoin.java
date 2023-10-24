@@ -32,7 +32,7 @@ public class GiveOnJoin extends AbstractKitsEditCommand {
 		boolean value = getBoolean(args, 1).get();
 		kitData.setGiveOnJoin(value);
 		kitData.save();
-		src.sendMessage(getText(locale, value ? LocalesPaths.COMMANDS_KITS_GIVE_ON_JOIN_ENABLE : LocalesPaths.COMMANDS_KITS_GIVE_ON_JOIN_DISABLE));
+		src.sendMessage(getComponent(locale, value ? LocalesPaths.COMMANDS_KITS_GIVE_ON_JOIN_ENABLE : LocalesPaths.COMMANDS_KITS_GIVE_ON_JOIN_DISABLE));
 	}
 
 	@Override

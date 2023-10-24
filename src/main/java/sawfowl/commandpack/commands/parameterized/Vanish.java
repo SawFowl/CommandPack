@@ -13,6 +13,7 @@ import org.spongepowered.api.effect.VanishState;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -20,7 +21,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Vanish extends AbstractParameterizedCommand {
 
@@ -70,16 +70,16 @@ public class Vanish extends AbstractParameterizedCommand {
 			target.remove(Keys.VANISH_STATE);
 			target.offer(Keys.VANISH_STATE, VanishState.unvanished());
 			if(!equals) {
-				target.sendMessage(getText(target, LocalesPaths.COMMANDS_VANISH_UNVASHISHED));
-				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_VANISH_UNVASHISHED_STAFF), Placeholders.PLAYER, target.name()));
-			} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_VANISH_UNVASHISHED));
+				target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_VANISH_UNVASHISHED));
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_VANISH_UNVASHISHED_STAFF).replace(Placeholders.PLAYER, target.name()).get());
+			} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_VANISH_UNVASHISHED));
 			plugin.getPlayersData().getTempData().removeVanishEnabledTime(target);
 		} else {
 			target.offer(Keys.VANISH_STATE, VanishState.vanished().ignoreCollisions(isStaff).createParticles(false).createSounds(!isStaff));
 			if(!equals) {
-				target.sendMessage(getText(target, LocalesPaths.COMMANDS_VANISH_VASHISHED));
-				src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_VANISH_VASHISHED_STAFF), Placeholders.PLAYER, target.name()));
-			} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_VANISH_VASHISHED));
+				target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_VANISH_VASHISHED));
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_VANISH_VASHISHED_STAFF).replace(Placeholders.PLAYER, target.name()).get());
+			} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_VANISH_VASHISHED));
 			plugin.getPlayersData().getTempData().setVanishTime(target);
 		}
 	}

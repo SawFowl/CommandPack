@@ -16,6 +16,7 @@ import org.spongepowered.api.util.blockray.RayTrace;
 import org.spongepowered.api.util.blockray.RayTraceResult;
 
 import net.kyori.adventure.audience.Audience;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -23,7 +24,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Glow extends AbstractParameterizedCommand {
 
@@ -46,15 +46,15 @@ public class Glow extends AbstractParameterizedCommand {
 					Entity target = optEntity.get().selectedObject();
 					boolean glow = setGlow(target);
 					boolean ifPlayer = target instanceof ServerPlayer;
-					src.sendMessage(TextUtils.replace(getText(locale, glow ? LocalesPaths.COMMANDS_GLOW_ENABLE_STAFF : LocalesPaths.COMMANDS_GLOW_DISABLE_STAFF), Placeholders.PLAYER, ifPlayer ? ((ServerPlayer) target).name() : EntityTypes.registry().valueKey(target.type()).asString()));
-					if(ifPlayer) ((ServerPlayer) target).sendMessage(getText(((ServerPlayer) target).locale(), glow ? LocalesPaths.COMMANDS_GLOW_ENABLE : LocalesPaths.COMMANDS_GLOW_DISABLE));
+					src.sendMessage(getText(locale, glow ? LocalesPaths.COMMANDS_GLOW_ENABLE_STAFF : LocalesPaths.COMMANDS_GLOW_DISABLE_STAFF).replace(Placeholders.PLAYER, ifPlayer ? ((ServerPlayer) target).name() : EntityTypes.registry().valueKey(target.type()).asString()).get());
+					if(ifPlayer) ((ServerPlayer) target).sendMessage(getComponent(((ServerPlayer) target).locale(), glow ? LocalesPaths.COMMANDS_GLOW_ENABLE : LocalesPaths.COMMANDS_GLOW_DISABLE));
 					return;
 				}
 			}
 			delay((ServerPlayer) src, locale, consumer -> {
 				if(setGlow((ServerPlayer) src)) {
-					src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GLOW_ENABLE));
-				} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GLOW_DISABLE));
+					src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_GLOW_ENABLE));
+				} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_GLOW_DISABLE));
 			});
 		}
 	}
@@ -90,8 +90,8 @@ public class Glow extends AbstractParameterizedCommand {
 	}
 
 	private void sendStaffMessage(Audience src, Locale staffLocale, ServerPlayer target, Object[] pathStaff, Object[] pathPlayer) {
-		src.sendMessage(TextUtils.replace(getText(staffLocale, pathPlayer), Placeholders.PLAYER, target.name()));
-		target.sendMessage(getText(staffLocale, pathPlayer));
+		src.sendMessage(getText(staffLocale, pathPlayer).replace(Placeholders.PLAYER, target.name()).get());
+		target.sendMessage(getComponent(staffLocale, pathPlayer));
 	}
 
 	private Optional<RayTraceResult<Entity>> targetEntity(ServerPlayer source) {

@@ -12,13 +12,13 @@ import org.spongepowered.api.world.server.ServerWorld;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class PvP extends AbstractWorldCommand {
 
@@ -31,7 +31,7 @@ public class PvP extends AbstractWorldCommand {
 		ServerWorld world = getWorld(args, 0).get();
 		boolean pvp = getBoolean(args, 1).get();
 		world.properties().setPvp(pvp);
-		audience.sendMessage(TextUtils.replace(getText(locale, pvp ? LocalesPaths.COMMANDS_WORLD_ENABLE_PVP : LocalesPaths.COMMANDS_WORLD_DISABLE_PVP), Placeholders.WORLD, args[0]));
+		audience.sendMessage(getText(locale, pvp ? LocalesPaths.COMMANDS_WORLD_ENABLE_PVP : LocalesPaths.COMMANDS_WORLD_DISABLE_PVP).replace(Placeholders.WORLD, args[0]).get());
 	}
 
 	@Override

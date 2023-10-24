@@ -20,7 +20,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Fly extends AbstractParameterizedCommand {
 
@@ -39,8 +38,8 @@ public class Fly extends AbstractParameterizedCommand {
 			if(!isPlayer) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
 			delay((ServerPlayer) src, locale, consumer -> {
 				if(setFly((ServerPlayer) src)) {
-					src.sendMessage(getText(locale, LocalesPaths.COMMANDS_FLY_ENABLE));
-				} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_FLY_DISABLE));
+					src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_FLY_ENABLE));
+				} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_FLY_DISABLE));
 			});
 		}
 	}
@@ -77,8 +76,8 @@ public class Fly extends AbstractParameterizedCommand {
 	}
 
 	private void sendStaffMessage(Audience src, Locale staffLocale, ServerPlayer target, Object[] pathStaff, Object[] pathPlayer) {
-		src.sendMessage(TextUtils.replace(getText(staffLocale, pathPlayer), Placeholders.PLAYER, target.name()));
-		target.sendMessage(getText(staffLocale, pathPlayer));
+		src.sendMessage(getText(staffLocale, pathPlayer).replace(Placeholders.PLAYER, target.name()).get());
+		target.sendMessage(getComponent(staffLocale, pathPlayer));
 	}
 
 }

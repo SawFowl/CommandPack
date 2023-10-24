@@ -13,6 +13,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -20,7 +21,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlaye
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class SetName extends AbstractPlayerCommand {
 
@@ -35,7 +35,7 @@ public class SetName extends AbstractPlayerCommand {
 		ItemStack item = src.itemInHand(HandTypes.MAIN_HAND.get());
 		item.offer(Keys.CUSTOM_NAME, newName);
 		src.setItemInHand(HandTypes.MAIN_HAND.get(), item);
-		src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_ITEM_SET_NAME), Placeholders.VALUE, newName));
+		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ITEM_SET_NAME).replace(Placeholders.VALUE, newName).get());
 	}
 
 	@Override

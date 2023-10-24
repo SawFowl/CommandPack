@@ -13,6 +13,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -20,7 +21,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlaye
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Reply extends AbstractPlayerCommand {
 
@@ -41,11 +41,11 @@ public class Reply extends AbstractPlayerCommand {
 			if(targetAudience instanceof ServerPlayer) {
 				ServerPlayer target = (ServerPlayer) targetAudience;
 				if(!src.hasPermission(Permissions.REPLY_STAFF) && target.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
-				src.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {target.get(Keys.CUSTOM_NAME).orElse(text(target.name())), message}));
-				target.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), message}));
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, target.get(Keys.CUSTOM_NAME).orElse(text(target.name())), message).get());
+				target.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), message).get());
 			} else {
-				src.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text("&4Server"), message}));
-				targetAudience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text(src.name()), message}));
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, text("&4Server"), message).get());
+				targetAudience.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text(src.name()), message}).get());
 			}
 		});
 	}

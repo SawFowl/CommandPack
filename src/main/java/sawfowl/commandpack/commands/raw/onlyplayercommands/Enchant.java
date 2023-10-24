@@ -43,7 +43,7 @@ public class Enchant extends AbstractPlayerCommand {
 		delay(src, locale, consumer -> {
 			stack.offer(Keys.APPLIED_ENCHANTMENTS, enchantments);
 			src.setItemInHand(HandTypes.MAIN_HAND, stack);
-			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ENCHANT_SUCCES));
+			src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_ENCHANT_SUCCES));
 		});
 	}
 

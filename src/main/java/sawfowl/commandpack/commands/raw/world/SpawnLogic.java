@@ -19,7 +19,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class SpawnLogic extends AbstractWorldCommand {
 
@@ -32,7 +31,7 @@ public class SpawnLogic extends AbstractWorldCommand {
 		ServerWorld world = getWorld(args, 0).get();
 		boolean enable = getBoolean(args, 1).get();
 		world.properties().setPerformsSpawnLogic(enable);
-		audience.sendMessage(TextUtils.replace(getText(locale, enable ? LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_ENABLE : LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_DISABLE), Placeholders.WORLD, world.key().asString()));
+		audience.sendMessage(getText(locale, enable ? LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_ENABLE : LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_DISABLE).replace(Placeholders.WORLD, world.key().asString()).get());
 	}
 
 	@Override

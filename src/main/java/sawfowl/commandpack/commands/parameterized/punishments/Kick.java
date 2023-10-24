@@ -21,7 +21,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Kick extends AbstractParameterizedCommand {
 
@@ -33,17 +32,17 @@ public class Kick extends AbstractParameterizedCommand {
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		ServerPlayer target = getPlayer(context).get();
 		if(isPlayer && target.name().equals(((ServerPlayer) src).name())) exception(getText(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF));
-		if(target.hasPermission(Permissions.IGNORE_KICK) && isPlayer) exception(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KICK_IGNORE), Placeholders.PLAYER, target.name()));
+		if(target.hasPermission(Permissions.IGNORE_KICK) && isPlayer) exception(getText(locale, LocalesPaths.COMMANDS_KICK_IGNORE).replace(Placeholders.PLAYER, target.name()).get());
 		Component source = isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server");
 		Component reason = text(getString(context, "Reason").orElse("-"));
-		target.kick(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_KICK_DISCONNECT), new String[] {Placeholders.SOURCE, Placeholders.VALUE}, new Component[] {source, reason}));
-		Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(getText(plugin.getLocales().getLocaleService().getDefaultLocale(), LocalesPaths.COMMANDS_KICK_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {source, text(target.name()), reason}));
+		target.kick(getText(target, LocalesPaths.COMMANDS_KICK_DISCONNECT).replace(new String[] {Placeholders.SOURCE, Placeholders.VALUE}, source, reason).get());
+		Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getDefaultLocale(), LocalesPaths.COMMANDS_KICK_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, source, text(target.name()), reason).get());
 		if(plugin.getMainConfig().getPunishment().getAnnounce().isKick()) {
 			Component targetName = target.get(Keys.DISPLAY_NAME).orElse(text(target.name()));
 			Sponge.server().onlinePlayers().forEach(player -> {
-				player.sendMessage(TextUtils.replaceToComponents(getText(player, LocalesPaths.COMMANDS_KICK_ANNOUNCEMENT), new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {source, targetName, reason}));
+				player.sendMessage(getText(player, LocalesPaths.COMMANDS_KICK_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, source, targetName, reason).get());
 			});
-		} else src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_KICK_SUCCESS), Placeholders.PLAYER, target.name()));
+		} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KICK_SUCCESS).replace(Placeholders.PLAYER, target.name()).get());
 	}
 
 	@Override

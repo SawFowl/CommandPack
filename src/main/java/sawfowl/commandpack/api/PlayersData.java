@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
@@ -35,6 +36,11 @@ public interface PlayersData {
 	 * @return {@link PlayerData}
 	 */
 	PlayerData getOrCreatePlayerData(ServerPlayer player);
+
+	/**
+	 * Getting all registered warps.
+	 */
+	Stream<Warp> streamAllWarps();
 
 	/**
 	 * Getting a collection of all players' {@link Warp}s.

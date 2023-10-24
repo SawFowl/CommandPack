@@ -27,7 +27,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class BalanceAll extends AbstractRawCommand {
 
@@ -42,18 +41,18 @@ public class BalanceAll extends AbstractRawCommand {
 		if(isPlayer) {
 			ServerPlayer source = (ServerPlayer) audience;
 			List<Component> messages = new ArrayList<Component>();
-			Component title = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE), Placeholders.PLAYER, account.displayName());
+			Component title = getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE).replace(Placeholders.PLAYER, account.displayName()).get();
 			for(Currency currency : plugin.getEconomy().getEconomyService().getCurrencies()) {
 				double balance = account.balance(currency).doubleValue();
-				Component message = TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_LIST), new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)});
+				Component message = getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_LIST).replace(new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)}).get();
 				messages.add(message);
 			}
 			sendPaginationList(source, title, text("=").color(title.color()), 10, messages);
 		} else {
-			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE), Placeholders.PLAYER, account.displayName()).append(text(":")));
+			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE).replace(Placeholders.PLAYER, account.displayName()).get().append(text(":")));
 			for(Currency currency : plugin.getEconomy().getEconomyService().getCurrencies()) {
 				double balance = account.balance(currency).doubleValue();
-				Component message = TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_LIST), new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)});
+				Component message = getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_LIST).replace(new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)).get();
 				audience.sendMessage(message);
 			}
 		}
@@ -89,12 +88,12 @@ public class BalanceAll extends AbstractRawCommand {
 		if(empty == null) empty = new ArrayList<BigDecimal>();
 		return Arrays.asList(RawArgument.of(Account.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
-			public Stream<String> get(String[] args) {
+			public Stream<String> get(CommandCause cause, String[] args) {
 				return plugin.getEconomy().getEconomyService().allAccounts().stream().map(Account::identifier);
 			}
 		}, new RawResultSupplier<Account>() {
 			@Override
-			public Optional<Account> get(String[] args) {
+			public Optional<Account> get(CommandCause cause, String[] args) {
 				return args.length == 0 ? Optional.empty() : plugin.getEconomy().getEconomyService().allAccounts().stream().filter(account -> account.identifier().equals(args[0])).findFirst();
 			}
 		}, false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));

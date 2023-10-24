@@ -34,7 +34,7 @@ public class SetName extends AbstractKitsEditCommand  {
 		if(args.length < 3) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);
 		kitData.setName(localeForName, String.join(" ", Arrays.copyOfRange(args, 2, args.length)));
 		kitData.save();
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_SET_NAME));
+		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_SET_NAME));
 	}
 
 	@Override

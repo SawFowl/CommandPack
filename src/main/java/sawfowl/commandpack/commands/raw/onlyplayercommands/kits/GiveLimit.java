@@ -33,7 +33,7 @@ public class GiveLimit extends AbstractKitsEditCommand {
 		Integer limit = getInteger(args, 1).get();
 		kitData.setLimit(limit);
 		kitData.save();
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_GIVE_LIMIT));
+		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_GIVE_LIMIT));
 	}
 
 	@Override

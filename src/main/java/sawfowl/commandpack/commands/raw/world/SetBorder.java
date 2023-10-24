@@ -14,13 +14,13 @@ import org.spongepowered.api.world.server.ServerWorld;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class SetBorder extends AbstractWorldCommand {
 
@@ -33,7 +33,7 @@ public class SetBorder extends AbstractWorldCommand {
 		ServerWorld world = getWorld(args, 0).get();
 		int radius = getInteger(args, 1).get();
 		world.setBorder(WorldBorder.builder().center(world.properties().spawnPosition().x(), world.properties().spawnPosition().z()).targetDiameter(radius).damagePerBlock(world.border().damagePerBlock()).safeZone(world.border().safeZone()).build());
-		audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_SETBORDER), new String[] {Placeholders.WORLD, Placeholders.VALUE, Placeholders.LOCATION}, new Object[] {world.key().asString(), radius, world.properties().spawnPosition()}));
+		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_SETBORDER).replace(new String[] {Placeholders.WORLD, Placeholders.VALUE, Placeholders.LOCATION}, world.key().asString(), radius, world.properties().spawnPosition()).get());
 	}
 
 	@Override

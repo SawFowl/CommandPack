@@ -44,7 +44,7 @@ public interface RawArgument<T> extends DataSerializable {
 	static <T> RawArgument<T> of(Class<T> clazz, Stream<String> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, Object[] localesPath) {
 		return of(clazz, new RawCompleterSupplier<Stream<String>>() {
 			@Override
-			public Stream<String> get(String[] args) {
+			public Stream<String> get(CommandCause cause, String[] args) {
 				return variants;
 			}
 		}, result, optional, optionalForConsole, cursor, localesPath);
@@ -53,7 +53,7 @@ public interface RawArgument<T> extends DataSerializable {
 	static <T> RawArgument<T> of(Class<T> clazz, Stream<String> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
 		return of(clazz, new RawCompleterSupplier<Stream<String>>() {
 			@Override
-			public Stream<String> get(String[] args) {
+			public Stream<String> get(CommandCause cause, String[] args) {
 				return variants;
 			}
 		}, result, optional, optionalForConsole, cursor, permission, localesPath);
@@ -62,7 +62,7 @@ public interface RawArgument<T> extends DataSerializable {
 	/**
 	 * Autocomplete variants.
 	 */
-	Stream<String> getVariants(String[] args);
+	Stream<String> getVariants(CommandCause cause, String[] args);
 
 	/**
 	 * Converts a string argument to a specified class. If the specified class does not match the argument class, the return will be empty.
@@ -72,7 +72,7 @@ public interface RawArgument<T> extends DataSerializable {
 	/**
 	 * Retrieves an object from the command's argument string without converting it to a specific type.
 	 */
-	Optional<?> getResultUnknownType(String[] args);
+	Optional<?> getResultUnknownType(CommandCause cause, String[] args);
 
 	/**
 	 * Whether the argument is optional.

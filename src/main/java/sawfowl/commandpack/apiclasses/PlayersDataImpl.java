@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
@@ -51,6 +52,11 @@ public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 	public void reload() {
 		players.clear();
 		plugin.getConfigManager().loadPlayersData();
+	}
+
+	@Override
+	public Stream<Warp> streamAllWarps() {
+		return Stream.concat(adminWarps.values().stream(), players.values().stream().map(PlayerData::getWarps).flatMap(list -> (list.stream())));
 	}
 
 	@Override

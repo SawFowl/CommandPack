@@ -17,6 +17,7 @@ import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.api.world.weather.WeatherTypes;
 
 import net.kyori.adventure.audience.Audience;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -24,7 +25,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Sun extends AbstractParameterizedCommand {
 
@@ -77,7 +77,7 @@ public class Sun extends AbstractParameterizedCommand {
 		if(duration.isPresent()) {
 			world.setWeather(WeatherTypes.CLEAR.get(), Ticks.of(duration.get() * 20));
 		} else world.setWeather(WeatherTypes.CLEAR.get(), Ticks.of(random.nextInt(10000) * 20));
-		src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WEATHER_SUN), Placeholders.WORLD, world.key().asString()));
+		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_WEATHER_SUN).replace(Placeholders.WORLD, world.key().asString()).get());
 	}
 
 }

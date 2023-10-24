@@ -17,6 +17,7 @@ import org.spongepowered.api.world.server.ServerWorld;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
@@ -24,7 +25,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Enable extends AbstractWorldCommand {
 
@@ -36,7 +36,7 @@ public class Enable extends AbstractWorldCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		ServerWorld world = getWorld(args, 0).get();
 		world.properties().setLoadOnStartup(true);
-		audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WORLD_ENABLE), Placeholders.WORLD, args[0]));
+		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_ENABLE).replace(Placeholders.WORLD, args[0]).get());
 	}
 
 	@Override
@@ -67,13 +67,13 @@ public class Enable extends AbstractWorldCommand {
 	private RawArgument<ServerWorld> createWorldArgument() {
 		return RawArgument.of(ServerWorld.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
-			public Stream<String> get(String[] args) {
+			public Stream<String> get(CommandCause cause, String[] args) {
 				return Sponge.server().worldManager().worlds().stream().filter(w -> !w.key().asString().equals(DefaultWorldKeys.DEFAULT.asString())).map(w -> w.key().asString());
 			}
 		}, new RawResultSupplier<ServerWorld>() {
 
 			@Override
-			public Optional<ServerWorld> get(String[] args) {
+			public Optional<ServerWorld> get(CommandCause cause, String[] args) {
 				return args.length >= 1 ? Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).filter(w -> !w.key().asString().equals(DefaultWorldKeys.DEFAULT.asString())) : Optional.ofNullable(null);
 			}
 		}, false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);

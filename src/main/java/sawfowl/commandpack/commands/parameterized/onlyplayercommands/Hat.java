@@ -22,7 +22,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlaye
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Hat extends AbstractPlayerCommand {
 
@@ -49,11 +48,11 @@ public class Hat extends AbstractPlayerCommand {
 					player.inventory().primary().offer(headItem);
 				});
 				player.equipment().set(EquipmentTypes.HEAD.get(), handItem);
-				src.sendMessage(TextUtils.replace(getText(src, LocalesPaths.COMMANDS_HAT_SUCCESS_OTHER), Placeholders.PLAYER, player.name()));
+				src.sendMessage(getText(src, LocalesPaths.COMMANDS_HAT_SUCCESS_OTHER).replace(Placeholders.PLAYER, player.name()).get());
 			} else {
-				src.sendMessage(TextUtils.replace(getText(src, LocalesPaths.COMMANDS_HAT_FULL_INVENTORY), Placeholders.PLAYER, player.name()).clickEvent(SpongeComponents.executeCallback(cause -> {
+				src.sendMessage(getText(src, LocalesPaths.COMMANDS_HAT_FULL_INVENTORY).replace(Placeholders.PLAYER, player.name()).get().clickEvent(SpongeComponents.executeCallback(cause -> {
 					player.equipment().set(EquipmentTypes.HEAD.get(), handItem);
-					src.sendMessage(TextUtils.replace(getText(src, LocalesPaths.COMMANDS_HAT_SUCCESS_OTHER), Placeholders.PLAYER, player.name()));
+					src.sendMessage(getText(src, LocalesPaths.COMMANDS_HAT_SUCCESS_OTHER).replace(Placeholders.PLAYER, player.name()).get());
 				})));
 			}
 		}

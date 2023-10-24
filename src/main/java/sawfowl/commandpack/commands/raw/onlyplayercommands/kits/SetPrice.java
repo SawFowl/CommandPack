@@ -34,7 +34,7 @@ public class SetPrice extends AbstractKitsEditCommand {
 		if(args.length < 3) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		kitData.setPrice(KitPrice.of(getCurrency(args, 1).get(), getBigDecimal(args, 2).get()));
 		kitData.save();
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_SET_PRICE));
+		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_SET_PRICE));
 	}
 
 	@Override

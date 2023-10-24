@@ -33,7 +33,7 @@ public class AddCommand extends AbstractKitsEditCommand {
 		if(args.length < 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		kitData.addCommands(String.join(" ", Arrays.copyOfRange(args, 1, args.length - 1)));
 		kitData.save();
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_ADD_COMMAND));
+		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_ADD_COMMAND));
 	}
 
 	@Override

@@ -44,17 +44,17 @@ public class Warnings extends AbstractRawCommand {
 		Optional<Warns> optWarns = getArgument(Warns.class, args, 0);
 		if(!isPlayer) {
 			if(optWarns.isPresent()) {
-				audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Object[] {args[0], optWarns.get().inAllTime()}));
+				audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, args[0], optWarns.get().inAllTime()).get());
 				sendWarnsList(audience, locale, optWarns.get(), false, isPlayer);
-			} else audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Object[] {args[0], "0"}));
+			} else audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, args[0], 0).get());
 		} else if(optWarns.isPresent() && !optWarns.get().getUniqueId().equals(((ServerPlayer) audience).uniqueId())) {
-			audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Object[] {optWarns.get().getName(), optWarns.get().inAllTime()}));
+			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, optWarns.get().getName(), optWarns.get().inAllTime()).get());
 			sendWarnsList(audience, locale, optWarns.get(), cause.hasPermission(Permissions.WARNS_STAFF), isPlayer);
 		} else {
 			delay((ServerPlayer) audience, locale, consumer -> {
 				if(plugin.getPunishmentService().getWarns((ServerPlayer) audience).isPresent()) {
 					sendWarnsList(audience, locale, plugin.getPunishmentService().getWarns((ServerPlayer) audience).get(), cause.hasPermission(Permissions.WARNS_STAFF), isPlayer);
-				} else audience.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME), Placeholders.VALUE, "0"));
+				} else audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME).replace(Placeholders.VALUE, 0).get());
 			});
 		};
 	}
@@ -88,12 +88,12 @@ public class Warnings extends AbstractRawCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(RawArgument.of(Warns.class, new RawCompleterSupplier<Stream<String>>() {
 			@Override
-			public Stream<String> get(String[] args) {
+			public Stream<String> get(CommandCause cause, String[] args) {
 				return Stream.concat(Sponge.server().userManager().streamAll().map(u -> u.name().orElse(u.examinableName())), plugin.getPunishmentService().getAllWarns().stream().map(w -> w.getName()));
 			}
 		}, new RawResultSupplier<Warns>() {
 			@Override
-			public Optional<Warns> get(String[] args) {
+			public Optional<Warns> get(CommandCause cause, String[] args) {
 				Collection<Warns> variants = plugin.getPunishmentService().getAllWarns();
 				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(w -> w.getName().equals(args[0])).findFirst();
 			}
@@ -124,15 +124,15 @@ public class Warnings extends AbstractRawCommand {
 		if(warns.getWarns().isEmpty()) return;
 		List<Component> list = new ArrayList<>();
 		warns.getWarns().forEach(warn -> {
-			Component removeText = TextUtils.createCallBack(getText(locale, LocalesPaths.REMOVE), consumer -> {
+			Component removeText = TextUtils.createCallBack(getComponent(locale, LocalesPaths.REMOVE), consumer -> {
 				Optional<Warns> find = plugin.getPunishmentService().getWarns(warns.getUniqueId());
 				plugin.getPunishmentService().removeWarn(warns.getUniqueId(), warn);
 				sendWarnsList(audience, locale, find.get(), remove, isPlayer);
 			});
-			Component w = isPlayer ? TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_WARNS_TIMES), new String[] {Placeholders.TIME, Placeholders.LIMIT}, new Component[] {timeFormat(locale, warn.getCreated().toEpochMilli()), warn.getExpiration().map(i -> timeFormat(locale, i.toEpochMilli())).orElse(text("&c∞"))}).hoverEvent(HoverEvent.showText(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARNS_REASON), Placeholders.VALUE, warn.getReason().orElse(text("&e-"))))) : TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_WARNS_TIMES), new String[] {Placeholders.TIME, Placeholders.LIMIT}, new Component[] {timeFormat(locale, warn.getCreated().toEpochMilli()), warn.getExpiration().map(i -> timeFormat(locale, i.toEpochMilli())).orElse(text("&c∞"))}).append(text("  ")).append(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARNS_REASON), Placeholders.VALUE, warn.getReason().orElse(text("&e-"))));
+			Component w = isPlayer ? getText(locale, LocalesPaths.COMMANDS_WARNS_TIMES).replace(new String[] {Placeholders.TIME, Placeholders.LIMIT}, new Component[] {timeFormat(locale, warn.getCreated().toEpochMilli()), warn.getExpiration().map(i -> timeFormat(locale, i.toEpochMilli())).orElse(text("&c∞"))}).get().hoverEvent(HoverEvent.showText(getText(locale, LocalesPaths.COMMANDS_WARNS_REASON).replace(Placeholders.VALUE, warn.getReason().orElse(text("&e-"))).get())) : getText(locale, LocalesPaths.COMMANDS_WARNS_TIMES).replace(new String[] {Placeholders.TIME, Placeholders.LIMIT}, new Component[] {timeFormat(locale, warn.getCreated().toEpochMilli()), warn.getExpiration().map(i -> timeFormat(locale, i.toEpochMilli())).orElse(text("&c∞"))}).get().append(text("  ")).append(getText(locale, LocalesPaths.COMMANDS_WARNS_REASON).replace(Placeholders.VALUE, warn.getReason().orElse(text("&e-"))).get());
 			list.add(remove ? removeText.append(text("    ")).append(w) : w);
 		});
-		Component title = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WARNS_TITLE), Placeholders.PLAYER, warns.getName());
+		Component title = getText(locale, LocalesPaths.COMMANDS_WARNS_TITLE).replace(Placeholders.PLAYER, warns.getName()).get();
 		sendPaginationList(audience, title, text("=").color(title.color()), 10, list);
 	}
 

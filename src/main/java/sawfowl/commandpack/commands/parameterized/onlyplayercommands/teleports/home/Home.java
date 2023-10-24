@@ -18,7 +18,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlaye
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Home extends AbstractPlayerCommand {
 
@@ -35,12 +34,12 @@ public class Home extends AbstractPlayerCommand {
 			Optional<sawfowl.commandpack.api.data.player.Home> home = playerData.getHome(optName.get());
 			if(home.isPresent()) {
 				teleport(home.get(), src);
-			} else exception(TextUtils.replace(getText(src, LocalesPaths.COMMANDS_HOME_NOT_FOUND), Placeholders.HOME, optName.get()));
+			} else exception(getText(src, LocalesPaths.COMMANDS_HOME_NOT_FOUND).replace(Placeholders.HOME, optName.get()).get());
 		} else {
 			Optional<sawfowl.commandpack.api.data.player.Home> home = playerData.getDefaultHome();
 			if(home.isPresent()) {
 				teleport(home.get(), src);
-			} else exception(TextUtils.replace(getText(src, LocalesPaths.COMMANDS_HOME_NOT_FOUND), Placeholders.HOME, "Home"));
+			} else exception(getText(src, LocalesPaths.COMMANDS_HOME_NOT_FOUND).replace(Placeholders.HOME, "Home").get());
 		}
 	}
 

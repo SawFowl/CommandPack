@@ -12,7 +12,7 @@ import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -20,7 +20,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Nick extends AbstractParameterizedCommand {
 
@@ -78,17 +77,17 @@ public class Nick extends AbstractParameterizedCommand {
 	private void setName(Audience src, Locale locale, ServerPlayer target, String nick, boolean equals) {
 		target.offer(Keys.CUSTOM_NAME, text(nick));
 		if(!equals) {
-			target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_NICK_SET_SELF), Placeholders.VALUE, text(nick)));
-			src.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_NICK_SET_STAFF), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text(target.name()), text(nick)}));
-		} else target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_NICK_SET_SELF), Placeholders.VALUE, text(nick)));
+			target.sendMessage(getText(target, LocalesPaths.COMMANDS_NICK_SET_SELF).replace(Placeholders.VALUE, text(nick)).get());
+			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_NICK_SET_STAFF).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, text(target.name()), text(nick)).get());
+		} else target.sendMessage(getText(target, LocalesPaths.COMMANDS_NICK_SET_SELF).replace(Placeholders.VALUE, text(nick)).get());
 	}
 
 	private void clearName(Audience src, Locale locale, ServerPlayer target, boolean equals) {
 		target.remove(Keys.CUSTOM_NAME);
 		if(!equals) {
-			target.sendMessage(getText(target, LocalesPaths.COMMANDS_NICK_CLEAR_SELF));
-			target.sendMessage(TextUtils.replace(getText(target, LocalesPaths.COMMANDS_NICK_CLEAR_STAFF), Placeholders.PLAYER, text(target.name())));
-		} else target.sendMessage(getText(target, LocalesPaths.COMMANDS_NICK_CLEAR_SELF));
+			target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_NICK_CLEAR_SELF));
+			target.sendMessage(getText(target, LocalesPaths.COMMANDS_NICK_CLEAR_STAFF).replace(Placeholders.PLAYER, text(target.name())).get());
+		} else target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_NICK_CLEAR_SELF));
 	}
 
 }

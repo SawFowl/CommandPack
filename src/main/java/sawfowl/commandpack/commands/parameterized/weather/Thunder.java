@@ -24,7 +24,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Thunder extends AbstractParameterizedCommand {
 
@@ -77,7 +76,7 @@ public class Thunder extends AbstractParameterizedCommand {
 		if(duration.isPresent()) {
 			world.setWeather(WeatherTypes.THUNDER.get(), Ticks.of(duration.get() * 20));
 		} else world.setWeather(WeatherTypes.THUNDER.get(), Ticks.of(random.nextInt(10000) * 20));
-		src.sendMessage(TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_WEATHER_THUNDER), Placeholders.WORLD, world.key().asString()));
+		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_WEATHER_THUNDER).replace(Placeholders.WORLD, world.key().asString()).get());
 	}
 
 }

@@ -15,6 +15,7 @@ import org.spongepowered.api.item.inventory.menu.InventoryMenu;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 
 import net.kyori.adventure.audience.Audience;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -36,7 +37,7 @@ public class CraftingTable extends AbstractParameterizedCommand {
 			menu.setTitle(ItemTypes.CRAFTING_TABLE.get().asComponent());
 			if(target.isPresent()) {
 				menu.open(target.get());
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_CRAFTING_TABLE));
+				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_CRAFTING_TABLE));
 			} else delay((ServerPlayer) src, locale, consumer -> {
 				menu.open((ServerPlayer) src);
 			});
@@ -45,7 +46,7 @@ public class CraftingTable extends AbstractParameterizedCommand {
 			InventoryMenu menu = ViewableInventory.builder().type(ContainerTypes.CRAFTING).completeStructure().carrier(target).plugin(plugin.getPluginContainer()).build().asMenu();
 			menu.setTitle(ItemTypes.CRAFTING_TABLE.get().asComponent());
 			menu.open(target);
-			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_CRAFTING_TABLE));
+			src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_CRAFTING_TABLE));
 		}
 	}
 

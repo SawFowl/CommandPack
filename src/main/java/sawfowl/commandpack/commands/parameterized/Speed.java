@@ -14,6 +14,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -21,7 +22,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Speed extends AbstractParameterizedCommand {
 
@@ -39,11 +39,11 @@ public class Speed extends AbstractParameterizedCommand {
 				ServerPlayer target = optTarget.get();
 				boolean fly = isFlying(target);
 				setSpeed(target, multiplier, fly);
-				Component staff = TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SPEED_STAFF), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text(target.name()), multiplier == 1 ? getText(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier)});
-				Component other = TextUtils.replace(getText(target, LocalesPaths.COMMANDS_SPEED_OTHER), Placeholders.VALUE, multiplier == 1 ? getText(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier));
+				Component staff = getText(locale, LocalesPaths.COMMANDS_SPEED_STAFF).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, text(target.name()), multiplier == 1 ? getComponent(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier)).get();
+				Component other = getText(target, LocalesPaths.COMMANDS_SPEED_OTHER).replace(Placeholders.VALUE, multiplier == 1 ? getComponent(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier)).get();
 				if(fly) {
-					staff = staff.append(getText(locale, LocalesPaths.COMMANDS_SPEED_FLY));
-					other = other.append(getText(target, LocalesPaths.COMMANDS_SPEED_FLY));
+					staff = staff.append(getComponent(locale, LocalesPaths.COMMANDS_SPEED_FLY));
+					other = other.append(getComponent(target, LocalesPaths.COMMANDS_SPEED_FLY));
 				}
 				src.sendMessage(staff);
 				target.sendMessage(other);
@@ -56,8 +56,8 @@ public class Speed extends AbstractParameterizedCommand {
 				final double mult = multiplier;
 				delay(source, locale, consumer -> {
 					setSpeed(source, mult, fly);
-					Component text = TextUtils.replace(getText(locale, LocalesPaths.COMMANDS_SPEED_SELF), Placeholders.VALUE, mult == 1 ? getText(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) mult));
-					if(fly) text = text.append(getText(locale, LocalesPaths.COMMANDS_SPEED_FLY));
+					Component text = getText(locale, LocalesPaths.COMMANDS_SPEED_SELF).replace(Placeholders.VALUE, mult == 1 ? getComponent(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) mult)).get();
+					if(fly) text = text.append(getComponent(locale, LocalesPaths.COMMANDS_SPEED_FLY));
 					source.sendMessage(text);
 				});
 			}
@@ -65,11 +65,11 @@ public class Speed extends AbstractParameterizedCommand {
 			ServerPlayer target = optTarget.get();
 			boolean fly = isFlying(target);
 			setSpeed(target, multiplier, fly);
-			Component staff = TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_SPEED_STAFF), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text(target.name()), multiplier == 1 ? getText(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier)});
-			Component other = TextUtils.replace(getText(target, LocalesPaths.COMMANDS_SPEED_OTHER), Placeholders.VALUE, multiplier == 1 ? getText(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier));
+			Component staff = getText(locale, LocalesPaths.COMMANDS_SPEED_STAFF).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text(target.name()), multiplier == 1 ? getComponent(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier)}).get();
+			Component other = getText(target, LocalesPaths.COMMANDS_SPEED_OTHER).replace(Placeholders.VALUE, multiplier == 1 ? getComponent(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier)).get();
 			if(fly) {
-				staff = staff.append(getText(locale, LocalesPaths.COMMANDS_SPEED_FLY));
-				other = other.append(getText(target, LocalesPaths.COMMANDS_SPEED_FLY));
+				staff = staff.append(getComponent(locale, LocalesPaths.COMMANDS_SPEED_FLY));
+				other = other.append(getComponent(target, LocalesPaths.COMMANDS_SPEED_FLY));
 			}
 			src.sendMessage(staff);
 			target.sendMessage(other);

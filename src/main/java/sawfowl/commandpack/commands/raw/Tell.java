@@ -15,6 +15,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -24,7 +25,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 public class Tell extends AbstractRawCommand {
 
@@ -41,13 +41,13 @@ public class Tell extends AbstractRawCommand {
 			ServerPlayer player = (ServerPlayer) audience;
 			if(target.uniqueId().equals(player.uniqueId())) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF);
 			delay(player, locale, consumer -> {
-				player.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {target.get(Keys.CUSTOM_NAME).orElse(text(target.name())), message}));
-				target.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {player.get(Keys.CUSTOM_NAME).orElse(text(player.name())), message}));
+				player.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, target.get(Keys.CUSTOM_NAME).orElse(text(target.name())), message).get());
+				target.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, player.get(Keys.CUSTOM_NAME).orElse(text(player.name())), message).get());
 				plugin.getPlayersData().getTempData().addReply(target, player);
 			});
 		} else {
-			audience.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {target.get(Keys.CUSTOM_NAME).orElse(text(target.name())), message}));
-			target.sendMessage(TextUtils.replaceToComponents(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET), new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text("&4Server"), message}));
+			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {target.get(Keys.CUSTOM_NAME).orElse(text(target.name())), message}).get());
+			target.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text("&4Server"), message}).get());
 			plugin.getPlayersData().getTempData().addReply(target, audience);
 		}
 	}
@@ -83,7 +83,7 @@ public class Tell extends AbstractRawCommand {
 			new RawCompleterSupplier<Stream<String>>() {
 
 				@Override
-				public Stream<String> get(String[] args) {
+				public Stream<String> get(CommandCause cause, String[] args) {
 					return Sponge.server().onlinePlayers().stream().filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).map(ServerPlayer::name);
 				}
 
@@ -91,7 +91,7 @@ public class Tell extends AbstractRawCommand {
 			new RawResultSupplier<ServerPlayer>() {
 
 				@Override
-				public Optional<ServerPlayer> get(String[] args) {
+				public Optional<ServerPlayer> get(CommandCause cause, String[] args) {
 					return args.length >= 1 ? Sponge.server().onlinePlayers().stream().filter(player -> player.name().equals(args[0])).findFirst() : Optional.empty();
 				}
 
