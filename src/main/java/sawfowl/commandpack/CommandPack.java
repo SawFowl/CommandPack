@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,8 +15,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
@@ -52,8 +51,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
 
-import net.minecraftforge.fml.loading.FMLLoader;
-
 import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.api.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.KitService;
@@ -82,7 +79,6 @@ import sawfowl.commandpack.api.services.PunishmentService;
 import sawfowl.commandpack.api.tps.AverageTPS;
 import sawfowl.commandpack.api.tps.TPS;
 import sawfowl.commandpack.apiclasses.KitServiceImpl;
-import sawfowl.commandpack.apiclasses.ModContainerImpl;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.apiclasses.RTPService;
 import sawfowl.commandpack.apiclasses.punishment.PunishmentServiceImpl;
@@ -124,6 +120,7 @@ import sawfowl.commandpack.listeners.PlayerDeathAndRespawnListener;
 import sawfowl.commandpack.utils.Economy;
 import sawfowl.commandpack.utils.Logger;
 import sawfowl.commandpack.utils.MariaDB;
+import sawfowl.commandpack.utils.ModListGetter;
 
 @Plugin("commandpack")
 public class CommandPack {
@@ -247,28 +244,7 @@ public class CommandPack {
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
 		configManager.loadPlayersData();
 		isForge = checkForge();
-		if(getMainConfig().getMySqlConfig().isEnable()) {
-			mariaDB = new MariaDB(instance);
-			if(mariaDB.openConnection() == null) mariaDB = null;
-		}
-	}
-
-	@Listener
-	public void onServerStarted(StartedEngineEvent<Server> event) {
-		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getText(Sponge.server().locale(), LocalesPaths.ECONOMY_NOT_FOUND));
-		if(economy == null) economy = new Economy(instance);
-		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerChatListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerCommandListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerConnectionListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractBlockListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractEntityListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractItemListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInventoryListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerDeathAndRespawnListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new EntityDamageListener(instance));
-		configManager.loadKits();
+		fillLists();
 		AverageTPS averageTPS = new AverageTPS() {
 			
 			@Override
@@ -306,7 +282,6 @@ public class CommandPack {
 				return averageTPS;
 			}
 		};
-		generators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureSets(null).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
 		api = new sawfowl.commandpack.api.CommandPack() {
 
 			@Override
@@ -370,7 +345,32 @@ public class CommandPack {
 			}
 
 		};
+		if(getMainConfig().getMySqlConfig().isEnable()) {
+			mariaDB = new MariaDB(instance);
+			if(mariaDB.openConnection() == null) mariaDB = null;
+		}
+	}
 
+	@Listener
+	public void onServerStarted(StartedEngineEvent<Server> event) {
+		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getText(Sponge.server().locale(), LocalesPaths.ECONOMY_NOT_FOUND));
+		if(economy == null) economy = new Economy(instance);
+		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerChatListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerCommandListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerConnectionListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractBlockListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractEntityListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractItemListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInventoryListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerDeathAndRespawnListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new EntityDamageListener(instance));
+		configManager.loadKits();
+		generators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureSets(null).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
+		generators.put("overworld", ChunkGenerator.overworld());
+		generators.put("end", ChunkGenerator.theEnd());
+		generators.put("nether", ChunkGenerator.theNether());
 		Sponge.eventManager().post(new sawfowl.commandpack.api.CommandPack.PostAPI() {
 
 			@Override
@@ -565,14 +565,9 @@ public class CommandPack {
 
 	void fillLists() {
 		if(isForgeServer()) {
-			FMLLoader.getLoadingModList().getMods().forEach(mod -> {
-				if(!mod.getOwningFile().getFile().getLoaders().stream().filter(loader -> !loader.name().equalsIgnoreCase("java_plain") && !loader.name().equalsIgnoreCase("")).findFirst().isPresent()) mods.add(new ModContainerImpl(mod));
-			});
-			containers.addAll(Sponge.pluginManager().plugins().stream().filter(container -> (!mods.stream().filter(mod -> mod.getModId().equals(container.metadata().id())).findFirst().isPresent())).collect(Collectors.toList()));
-		} else containers.addAll(Sponge.pluginManager().plugins());
-		Stream.empty().toList();
-		mods = Collections.unmodifiableSet(new HashSet<>(mods));
-		containers = Collections.unmodifiableSet(new HashSet<>(containers));
+			mods = ModListGetter.getMods();
+			containers = ModListGetter.getPlugins(mods);
+		} else containers = Collections.unmodifiableCollection(new ArrayList<>(Sponge.pluginManager().plugins()));
 	}
 
 	private boolean checkForge() {

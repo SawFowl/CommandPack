@@ -2,10 +2,8 @@ package sawfowl.commandpack.commands.raw.world;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
@@ -17,7 +15,6 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.WorldType;
-import org.spongepowered.api.world.generation.ChunkGenerator;
 import org.spongepowered.api.world.generation.config.WorldGenerationConfig;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.api.world.server.WorldTemplate;
@@ -37,12 +34,8 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class Create extends AbstractWorldCommand {
 
-	private Map<String, ChunkGenerator> chunkGenerators = new HashMap<>();
 	public Create(CommandPack plugin) {
 		super(plugin);
-		chunkGenerators.put("overworld", ChunkGenerator.overworld());
-		chunkGenerators.put("end", ChunkGenerator.theEnd());
-		chunkGenerators.put("nether", ChunkGenerator.theNether());
 		Sponge.eventManager().registerListeners(getContainer(), this);
 	}
 
@@ -50,7 +43,7 @@ public class Create extends AbstractWorldCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		WorldType worldType = getWorldType(args, 0).get();
 		String name = getString(args, 2).get();
-		WorldTemplate.Builder builder = (WorldTemplate.builder().add(Keys.CUSTOM_NAME, text(name)).add(Keys.CHUNK_GENERATOR, chunkGenerators.get(args[1])).add(Keys.GAME_MODE, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().gameMode()).add(Keys.HARDCORE, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().hardcore()).add(Keys.WORLD_DIFFICULTY, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().difficulty()).add(Keys.PERFORM_SPAWN_LOGIC, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().performsSpawnLogic()).add(Keys.PVP, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().pvp()).add(Keys.IS_LOAD_ON_STARTUP, true).key(ResourceKey.sponge(TextUtils.clearDecorations(name).toLowerCase())).add(Keys.WORLD_TYPE, worldType));
+		WorldTemplate.Builder builder = (WorldTemplate.builder().add(Keys.CUSTOM_NAME, text(name)).add(Keys.CHUNK_GENERATOR, plugin.getAPI().getCustomGenerator(args[1]).get()).add(Keys.GAME_MODE, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().gameMode()).add(Keys.HARDCORE, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().hardcore()).add(Keys.WORLD_DIFFICULTY, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().difficulty()).add(Keys.PERFORM_SPAWN_LOGIC, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().performsSpawnLogic()).add(Keys.PVP, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().pvp()).add(Keys.IS_LOAD_ON_STARTUP, true).key(ResourceKey.sponge(TextUtils.clearDecorations(name).toLowerCase())).add(Keys.WORLD_TYPE, worldType));
 		if(args.length > 3) {
 			String seed = getString(args, 3).get();
 			boolean structures = getBoolean(args, 4).get();
@@ -87,9 +80,6 @@ public class Create extends AbstractWorldCommand {
 
 	@Listener(order = Order.LAST)
 	public void onServerStarted(sawfowl.commandpack.api.CommandPack.PostAPI event) {
-		event.getAPI().getAvailableGenerators().forEach(generator -> {
-			chunkGenerators.put(generator.toLowerCase(), plugin.getAPI().getCustomGenerator(generator).get());
-		});
 		Sponge.eventManager().unregisterListeners(this);
 	}
 
@@ -97,7 +87,7 @@ public class Create extends AbstractWorldCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			RawArguments.createWorldTypeArgument(false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
-			RawArguments.createStringArgument(chunkGenerators.keySet(), false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
+			RawArguments.createStringArgument(plugin.getAPI().getAvailableGenerators(), false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
 			RawArguments.createStringArgument(new ArrayList<>(), false, false, 2, null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT),
 			RawArguments.createStringArgument(new ArrayList<>(), true, true, 3, "0", LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
 			RawArguments.createBooleanArgument(true, true, 4, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),

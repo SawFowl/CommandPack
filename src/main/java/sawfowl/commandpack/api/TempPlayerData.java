@@ -44,7 +44,7 @@ public interface TempPlayerData {
 	/**
 	 * Tracking check.
 	 * 
-	 * @param player - The player {@link UUID}
+	 * @param uuid - The player uuid {@link UUID}
 	 * @return If true, then the plugin monitors the execution of any command by the player.
 	 */
 	boolean isTrackingPlayer(UUID uuid);
@@ -67,7 +67,7 @@ public interface TempPlayerData {
 	 * If you remove the tracking of a command to be executed by the player when the timer expires, it will not be executed.
 	 * 
 	 * @param command - PluginCommand or alias.
-	 * @param player - The player.
+	 * @param uuid - The player uuid.
 	 */
 	void removeCommandTracking(String command, UUID uuid);
 
@@ -75,7 +75,7 @@ public interface TempPlayerData {
 	 * Getting a tracking map of waiting execute player commands.<br>
 	 * Changing this map has no effect on the tracking.
 	 * 
-	 * @param player - Settings or alias.
+	 * @param player - The player.
 	 * @return - Empty {@link Optional} or tracking {@link Map}
 	 */
 	Optional<Map<String, Settings>> getTrackingPlayerCommands(ServerPlayer player);
@@ -84,7 +84,7 @@ public interface TempPlayerData {
 	 * Getting a tracking map of waiting execute player commands.<br>
 	 * Changing this map has no effect on the tracking.
 	 * 
-	 * @param player - Settings or alias.
+	 * @param uuid - The player uuid.
 	 * @return - Empty {@link Optional} or tracking {@link Map}
 	 */
 	Optional<Map<String, Settings>> getTrackingPlayerCommands(UUID uuid);
