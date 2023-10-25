@@ -43,7 +43,14 @@ public class Create extends AbstractWorldCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		WorldType worldType = getWorldType(args, 0).get();
 		String name = getString(args, 2).get();
-		WorldTemplate.Builder builder = (WorldTemplate.builder().add(Keys.CUSTOM_NAME, text(name)).add(Keys.CHUNK_GENERATOR, plugin.getAPI().getCustomGenerator(args[1]).get()).add(Keys.GAME_MODE, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().gameMode()).add(Keys.HARDCORE, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().hardcore()).add(Keys.WORLD_DIFFICULTY, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().difficulty()).add(Keys.PERFORM_SPAWN_LOGIC, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().performsSpawnLogic()).add(Keys.PVP, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().pvp()).add(Keys.IS_LOAD_ON_STARTUP, true).key(ResourceKey.sponge(TextUtils.clearDecorations(name).toLowerCase())).add(Keys.WORLD_TYPE, worldType));
+		WorldTemplate.Builder builder = (WorldTemplate.builder().key(ResourceKey.sponge(TextUtils.clearDecorations(name).toLowerCase()))
+				.add(Keys.CHUNK_GENERATOR, plugin.getAPI().getCustomGenerator(args[1]).get())
+				.add(Keys.GAME_MODE, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().gameMode())
+				.add(Keys.HARDCORE, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().hardcore())
+				.add(Keys.WORLD_DIFFICULTY, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().difficulty())
+				.add(Keys.PERFORM_SPAWN_LOGIC, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().performsSpawnLogic())
+				.add(Keys.PVP, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().pvp()).add(Keys.IS_LOAD_ON_STARTUP, true)
+				.add(Keys.WORLD_TYPE, worldType));
 		if(args.length > 3) {
 			String seed = getString(args, 3).get();
 			boolean structures = getBoolean(args, 4).get();

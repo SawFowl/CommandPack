@@ -63,7 +63,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_WORLDS_INFO_HEADER).get();
 		List<Component> worldsInfo = Sponge.server().worldManager().worlds().stream().map(world -> getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO).replace(
 				new String[] {Placeholders.WORLD, Placeholders.CHUNKS_SIZE, Placeholders.ENTITIES_SIZE, Placeholders.VALUE},
-				text(world.key().asString()), text(Iterables.size(world.loadedChunks())), text(world.entities().size()), tPStoText(BigDecimal.valueOf(world.engine().ticksPerSecond()).setScale(2, RoundingMode.HALF_UP).doubleValue())).get()).toList();
+				text(world.key().asString()), text(Iterables.size(world.loadedChunks())), text(world.entities().size()), tPStoText(BigDecimal.valueOf(plugin.getAPI().getTPS().getWorldTPS(world)).setScale(2, RoundingMode.HALF_UP).doubleValue()).append(text("(" + String.format("%.3f", plugin.getAPI().getTPS().getWorldTickTime(world)) + ")"))).get()).toList();
 		sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, worldsInfo);
 	}
 
