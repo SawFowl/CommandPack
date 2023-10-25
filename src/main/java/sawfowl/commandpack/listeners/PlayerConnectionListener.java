@@ -26,15 +26,13 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 
-import net.minecraftforge.network.ConnectionData;
-import net.minecraftforge.network.NetworkHooks;
-
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.events.KitGiveEvent;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
+import sawfowl.commandpack.apiclasses.TempPlayerDataImpl;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.player.GivedKitData;
 import sawfowl.commandpack.configure.configs.player.PlayerData;
@@ -53,12 +51,12 @@ public class PlayerConnectionListener {
 	public void onConnect(ServerSideConnectionEvent.Join event) {
 		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(event.player());
 		if(plugin.isForgeServer()) {
-			List<String> mods = getModList(event.player());
-			if(plugin.getMainConfig().isPrintPlayerMods() && mods != null) plugin.getLogger().info(plugin.getLocales().getString(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.PLAYER_MODS_LIST).replace(Placeholders.PLAYER, event.player().name()).replace(Placeholders.VALUE, String.join(", ", mods)));
+			((TempPlayerDataImpl) plugin.getPlayersData().getTempData()).generateModList(event.player());
+			if(plugin.getMainConfig().isPrintPlayerMods() && !plugin.getPlayersData().getTempData().getPlayerMods(event.player()).isEmpty()) plugin.getLogger().info(plugin.getLocales().getString(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.PLAYER_MODS_LIST).replace(Placeholders.PLAYER, event.player().name()).replace(Placeholders.VALUE, String.join(", ", plugin.getPlayersData().getTempData().getPlayerMods(event.player()))));
 			if(plugin.getMainConfig().getRestrictMods().isEnable() && !event.player().hasPermission(Permissions.ALL_MODS_ACCESS)) {
 				Sponge.server().scheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).delay(Ticks.of(10)).execute(() -> {
 					List<String> banedPlayerMods = new ArrayList<>();
-					if(mods != null) mods.forEach(mod -> {
+					plugin.getPlayersData().getTempData().getPlayerMods(event.player()).forEach(mod -> {
 						if(!plugin.getMainConfig().getRestrictMods().isAllowedPlayerMod(mod)) banedPlayerMods.add(mod);
 					});
 					if(!banedPlayerMods.isEmpty() && event.player().isOnline()) event.player().kick(plugin.getLocales().getText(event.player().locale(), LocalesPaths.ILLEGAL_MODS_LIST).replace(Placeholders.VALUE, String.join(", ", banedPlayerMods)).get());
@@ -340,11 +338,6 @@ public class PlayerConnectionListener {
 
 	private boolean isStyleChar(char ch) {
 		return "0123456789abcdefklmnor".indexOf(ch) != -1;
-	}
-
-	private List<String> getModList(ServerPlayer player) {
-		ConnectionData data = NetworkHooks.getConnectionData(((net.minecraft.server.level.ServerPlayer) player).connection.connection);
-		return data == null ? null : NetworkHooks.getConnectionData(((net.minecraft.server.level.ServerPlayer) player).connection.connection).getModList();
 	}
 
 }

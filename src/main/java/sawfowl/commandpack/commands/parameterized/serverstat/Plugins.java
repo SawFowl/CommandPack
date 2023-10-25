@@ -20,7 +20,6 @@ public class Plugins extends AbstractInfoCommand {
 
 	public Plugins(CommandPack plugin) {
 		super(plugin);
-		fillLists();
 	}
 
 	@Override

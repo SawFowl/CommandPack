@@ -39,7 +39,6 @@ public class ServerStat extends AbstractInfoCommand {
 	private final Parameterized timeCommand;
 	public ServerStat(CommandPack plugin) {
 		super(plugin);
-		fillLists();
 		plugins = new Plugins(plugin);
 		pluginsCommand = plugins.build();
 		if(plugin.isForgeServer()) {

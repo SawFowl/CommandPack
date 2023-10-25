@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -12,6 +14,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
@@ -48,6 +52,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
 
+import net.minecraftforge.fml.loading.FMLLoader;
+
 import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.api.event.LocaleServiseEvent;
 import sawfowl.commandpack.api.KitService;
@@ -62,6 +68,7 @@ import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.kits.KitPrice;
 import sawfowl.commandpack.api.data.miscellaneous.Location;
+import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
 import sawfowl.commandpack.api.data.miscellaneous.Point;
 import sawfowl.commandpack.api.data.miscellaneous.Position;
 import sawfowl.commandpack.api.data.player.Home;
@@ -75,6 +82,7 @@ import sawfowl.commandpack.api.services.PunishmentService;
 import sawfowl.commandpack.api.tps.AverageTPS;
 import sawfowl.commandpack.api.tps.TPS;
 import sawfowl.commandpack.apiclasses.KitServiceImpl;
+import sawfowl.commandpack.apiclasses.ModContainerImpl;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.apiclasses.RTPService;
 import sawfowl.commandpack.apiclasses.punishment.PunishmentServiceImpl;
@@ -137,8 +145,10 @@ public class CommandPack {
 	private long serverStartedTime;
 	private sawfowl.commandpack.api.CommandPack api;
 	private PunishmentService punishmentService;
-	private Map<String, ChunkGenerator> generators = new HashMap<>();
 	private MariaDB mariaDB;
+	private Map<String, ChunkGenerator> generators = new HashMap<>();
+	private Collection<PluginContainer> containers = new HashSet<>();
+	private Collection<ModContainer> mods = new HashSet<>();
 
 	public static CommandPack getInstance() {
 		return instance;
@@ -349,6 +359,16 @@ public class CommandPack {
 				return tps;
 			}
 
+			@Override
+			public Collection<PluginContainer> getPluginContainers() {
+				return containers;
+			}
+
+			@Override
+			public Collection<ModContainer> getModContainers() {
+				return mods;
+			}
+
 		};
 
 		Sponge.eventManager().post(new sawfowl.commandpack.api.CommandPack.PostAPI() {
@@ -541,6 +561,18 @@ public class CommandPack {
 		Sponge.asyncScheduler().tasks(pluginContainer).forEach(task -> {
 			task.cancel();
 		});
+	}
+
+	void fillLists() {
+		if(isForgeServer()) {
+			FMLLoader.getLoadingModList().getMods().forEach(mod -> {
+				if(!mod.getOwningFile().getFile().getLoaders().stream().filter(loader -> !loader.name().equalsIgnoreCase("java_plain") && !loader.name().equalsIgnoreCase("")).findFirst().isPresent()) mods.add(new ModContainerImpl(mod));
+			});
+			containers.addAll(Sponge.pluginManager().plugins().stream().filter(container -> (!mods.stream().filter(mod -> mod.getModId().equals(container.metadata().id())).findFirst().isPresent())).collect(Collectors.toList()));
+		} else containers.addAll(Sponge.pluginManager().plugins());
+		Stream.empty().toList();
+		mods = Collections.unmodifiableSet(new HashSet<>(mods));
+		containers = Collections.unmodifiableSet(new HashSet<>(containers));
 	}
 
 	private boolean checkForge() {

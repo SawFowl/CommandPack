@@ -8,13 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -35,13 +31,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 
-import net.minecraftforge.fml.loading.FMLLoader;
-
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.commandpack.utils.ModContainer;
 import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
@@ -51,8 +45,6 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	protected final String java;
 	protected final String javaHome;
 	protected final int linesPerPage = 15;
-	protected Collection<PluginContainer> containers = new ArrayList<>();
-	protected Set<ModContainer> mods = new HashSet<>();
 	public AbstractInfoCommand(CommandPack plugin) {
 		super(plugin);
 		os = System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch");
@@ -76,12 +68,12 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected void sendPluginsInfo(Audience target, Locale locale, boolean isPlayer) {
-		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS).replace(Placeholders.VALUE, containers.size()).get();
+		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS).replace(Placeholders.VALUE, plugin.getAPI().getPluginContainers().size()).get();
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) target;
 			List<Component> content = new ArrayList<>();
 			boolean allowRefresh = player.hasPermission(Permissions.SERVER_STAT_STAFF_INFO_PLUGINS_REFRESH);
-			for(PluginContainer container : containers) {
+			for(PluginContainer container : plugin.getAPI().getPluginContainers()) {
 				if(allowRefresh) {
 					content.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON).createCallBack(cause -> {
 						sendRefreshEvent(container);
@@ -100,8 +92,8 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 			sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, content);
 		} else {
 			header = header.append(text("&f: "));
-			int size = containers.size();
-			for(PluginContainer container : containers) {
+			int size = plugin.getAPI().getPluginContainers().size();
+			for(PluginContainer container : plugin.getAPI().getPluginContainers()) {
 				header = size > 1 ? header.append(text("&e" + container.metadata().name().orElse(container.metadata().id()) + "&f, ")) : header.append(text("&e" + container.metadata().name().orElse(container.metadata().id()) + "&f."));
 				size--;
 			}
@@ -110,11 +102,11 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected void sendModsInfo(Audience target, Locale locale, boolean isPlayer) {
-		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS).replace(Placeholders.VALUE, mods.size()).get();
+		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS).replace(Placeholders.VALUE, plugin.getAPI().getModContainers().size()).get();
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) target;
 			List<Component> content = new ArrayList<>();
-			for(ModContainer container : mods) {
+			for(ModContainer container : plugin.getAPI().getModContainers()) {
 				content.add(player.hasPermission(Permissions.SERVER_STAT_STAFF_PLUGINS_INFO)
 						?
 						Text.of(text("&a" + container.getDisplayName())).createCallBack(() -> {
@@ -126,8 +118,8 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 			sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, content);
 		} else {
 			header = header.append(text("&f: "));
-			int size = mods.size();
-			for(ModContainer container : mods) {
+			int size = plugin.getAPI().getModContainers().size();
+			for(ModContainer container : plugin.getAPI().getModContainers()) {
 				header = size > 1 ? header.append(text("&e" + container.getDisplayName() + "&f, ")) : header.append(text("&e" + container.getDisplayName() + "&f."));
 				size--;
 			}
@@ -170,17 +162,6 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 
 	protected Component getUptime(Locale locale) {
 		return getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_UPTIME).replace(Placeholders.VALUE, timeFormat(plugin.getServerUptime(), locale).append(Component.text(" / ")).append(timeFormat(ManagementFactory.getRuntimeMXBean().getUptime() / 1000, locale))).get();
-	}
-
-	protected void fillLists() {
-		if(mods == null) mods = new HashSet<>();
-		if(containers == null) containers = new ArrayList<>();
-		if(plugin.isForgeServer()) {
-			FMLLoader.getLoadingModList().getMods().forEach(mod -> {
-				if(!mod.getOwningFile().getFile().getLoaders().stream().filter(loader -> loader.name().equalsIgnoreCase("java_plain") || loader.name().equalsIgnoreCase("")).findFirst().isPresent()) mods.add(new ModContainer(mod));
-			});
-			containers.addAll(Sponge.pluginManager().plugins().stream().filter(container -> (!mods.stream().filter(mod -> mod.getModId().equals(container.metadata().id())).findFirst().isPresent())).collect(Collectors.toList()));
-		} else containers.addAll(Sponge.pluginManager().plugins());
 	}
 
 	protected void sendPluginInfo(Audience audience, Locale locale, PluginMetadata metadata) {

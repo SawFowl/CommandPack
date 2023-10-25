@@ -21,7 +21,6 @@ public class Mods extends AbstractInfoCommand {
 
 	public Mods(CommandPack plugin) {
 		super(plugin);
-		fillLists();
 	}
 
 	@Override

@@ -1,8 +1,12 @@
 package sawfowl.commandpack.apiclasses;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -20,6 +24,8 @@ import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+
+import net.minecraftforge.network.NetworkHooks;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
@@ -41,6 +47,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	private Set<UUID> commandSpy = new HashSet<>();
 	private Map<UUID, Long> vanishTime = new HashMap<>();
 	private Map<UUID, Audience> replyMap = new HashMap<>();
+	private Map<UUID, Set<String>> playerMods = new HashMap<UUID, Set<String>>();
 	public TempPlayerDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
@@ -242,6 +249,20 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	@Override
 	public Optional<Audience> getReply(ServerPlayer player) {
 		return replyMap.containsKey(player.uniqueId()) ? (replyMap.get(player.uniqueId()) instanceof ServerPlayer ? Sponge.server().player(((ServerPlayer) replyMap.get(player.uniqueId())).uniqueId()).map(p -> (Audience) p) :  Optional.ofNullable(replyMap.get(player.uniqueId()))) : Optional.empty();
+	}
+
+	@Override
+	public Collection<String> getPlayerMods(ServerPlayer player) {
+		return playerMods.containsKey(player.uniqueId()) ? playerMods.get(player.uniqueId()) : new ArrayList<>();
+	}
+
+	public void generateModList(ServerPlayer player) {
+		if(playerMods.containsKey(player.uniqueId())) playerMods.remove(player.uniqueId());
+		if(!plugin.isForgeServer()) return;
+		List<String> mods = NetworkHooks.getConnectionData(((net.minecraft.server.level.ServerPlayer) player).connection.connection).getModList();
+		if(!mods.isEmpty()) playerMods.put(player.uniqueId(), Collections.unmodifiableSet(new HashSet<>(mods)));
+		mods.clear();
+		mods = null;
 	}
 
 }

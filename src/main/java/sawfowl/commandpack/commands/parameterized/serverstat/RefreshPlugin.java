@@ -24,9 +24,6 @@ public class RefreshPlugin extends AbstractInfoCommand {
 
 	public RefreshPlugin(CommandPack plugin) {
 		super(plugin);
-		fillLists();
-		mods.clear();
-		mods = null;
 	}
 
 	@Override
@@ -60,12 +57,7 @@ public class RefreshPlugin extends AbstractInfoCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		if(containers == null) fillLists();
-		Parameter.Value<String> CHOICES =  Parameter.choices(containers.stream().map(container -> container.metadata().id()).toArray(String[]::new)).key("Plugin").build();
-		mods.clear();
-		mods = null;
-		containers.clear();
-		containers = null;
+		Parameter.Value<String> CHOICES =  Parameter.choices(plugin.getAPI().getPluginContainers().stream().map(container -> container.metadata().id()).toArray(String[]::new)).key("Plugin").build();
 		return Arrays.asList(ParameterSettings.of(CHOICES, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
 	}
 

@@ -1,11 +1,14 @@
 package sawfowl.commandpack.api;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.world.generation.ChunkGenerator;
+import org.spongepowered.plugin.PluginContainer;
 
+import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
 import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.api.services.PunishmentService;
 import sawfowl.commandpack.api.tps.TPS;
@@ -67,6 +70,16 @@ public interface CommandPack {
 	 * Getting information about server and worlds TPS.
 	 */
 	TPS getTPS();
+
+	/**
+	 * Getting a collection of {@link PluginContainer} on the server.
+	 */
+	Collection<PluginContainer> getPluginContainers();
+
+	/**
+	 * Getting a collection of {@link ModContainer} on the server.
+	 */
+	Collection<ModContainer> getModContainers();
 
 	/**
 	 * Event for getting the plugin API.

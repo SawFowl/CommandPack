@@ -1,5 +1,6 @@
 package sawfowl.commandpack.api;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -196,5 +197,7 @@ public interface TempPlayerData {
 	 * Getting Audience for the /reply command
 	 */
 	Optional<Audience> getReply(ServerPlayer player);
+
+	Collection<String> getPlayerMods(ServerPlayer player);
 
 }

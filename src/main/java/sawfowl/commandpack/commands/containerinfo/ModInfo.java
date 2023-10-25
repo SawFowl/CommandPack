@@ -23,7 +23,6 @@ public class ModInfo extends AbstractInfoCommand {
 
 	public ModInfo(CommandPack plugin) {
 		super(plugin);
-		fillLists();
 	}
 
 	@Override
@@ -31,10 +30,10 @@ public class ModInfo extends AbstractInfoCommand {
 		if(!getString(context, "Mod").isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		if(isPlayer) {
 			delay((ServerPlayer) src, locale, consumer -> {
-				sendModInfo(src, locale, mods.stream().filter(mod -> mod.getModId().equalsIgnoreCase(getString(context, "Mod").get())).findFirst().orElse(null));
+				sendModInfo(src, locale, plugin.getAPI().getModContainers().stream().filter(mod -> mod.getModId().equalsIgnoreCase(getString(context, "Mod").get())).findFirst().orElse(null));
 			});
 		} else {
-			sendModInfo(src, locale, mods.stream().filter(mod -> mod.getModId().equalsIgnoreCase(getString(context, "Mod").get())).findFirst().orElse(null));
+			sendModInfo(src, locale, plugin.getAPI().getModContainers().stream().filter(mod -> mod.getModId().equalsIgnoreCase(getString(context, "Mod").get())).findFirst().orElse(null));
 		}}
 
 	@Override
@@ -59,13 +58,8 @@ public class ModInfo extends AbstractInfoCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		if(mods == null) fillLists();
-		Value<String> CHOICES = Parameter.choices(mods.stream().map(container -> container.getModId()).toArray(String[]::new)).key("Mod").build();
-		mods.clear();
-		mods = null;
-		containers.clear();
-		containers = null;
-		return CHOICES == null ? null : Arrays.asList(ParameterSettings.of(CHOICES, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
+		Value<String> CHOICES = Parameter.choices(plugin.getAPI().getModContainers().stream().map(container -> container.getModId()).toArray(String[]::new)).key("Mod").build();
+		return plugin.getAPI().getModContainers().isEmpty() ? null : Arrays.asList(ParameterSettings.of(CHOICES, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
 	}
 
 }
