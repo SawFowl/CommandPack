@@ -8,6 +8,8 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
@@ -16,6 +18,7 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlaye
 
 public class Suicide extends AbstractPlayerCommand {
 
+	private DamageSource damageSource;
 	public Suicide(CommandPack plugin) {
 		super(plugin);
 	}
@@ -23,7 +26,8 @@ public class Suicide extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		delay(src, locale, consumer -> {
-			src.offer(Keys.HEALTH, 0.0);
+			src.offer(Keys.HEALTH, 1d);
+			src.damage(10000, damageSource == null ? damageSource = DamageSource.builder().type(DamageTypes.GENERIC).build() : damageSource);
 		});
 	}
 
