@@ -8,9 +8,13 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.lifecycle.ProvideServiceEvent;
+import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.EconomyService;
@@ -32,7 +36,6 @@ public class Economy {
 
 	public Economy(CommandPack plugin) {
 		this.plugin = plugin;
-		economyService = Sponge.server().serviceProvider().economyService().orElse(economyServiceImpl);
 	}
 
 	public Economy createEconomy(ProvideServiceEvent<EconomyService> event) {
@@ -107,6 +110,12 @@ public class Economy {
 			if(registry.stream().count() > 0) currencies.addAll(registry.stream().collect(Collectors.toList()));
 		});
 		return !currencies.isEmpty() ? currencies : Arrays.asList(economyService.defaultCurrency());
+	}
+
+	@Listener(order = Order.LAST)
+	public void onProvideEconomyService(StartedEngineEvent<Server> event) {
+		if(economyService == null) economyService = Sponge.server().serviceProvider().economyService().orElse(null);
+		Sponge.eventManager().unregisterListeners(this);
 	}
 
 }

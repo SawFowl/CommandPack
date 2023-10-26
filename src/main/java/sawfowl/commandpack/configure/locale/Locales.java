@@ -239,7 +239,7 @@ public class Locales {
 		save = check(locale, toText("&aJava&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_JAVA) || save;
 		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_JAVAHOME) || save;
 		save = check(locale, toText("&3&lWorlds information"), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDS_INFO_HEADER) || save;
-		save = check(locale, toText("&aWorld&f: &e" + Placeholders.WORLD + "&a. Chunks loaded&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Entities&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO) || save;
+		save = check(locale, toText("&aWorld&f: &e" + Placeholders.WORLD + "&a. Chunks loaded&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Entities&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: &e" + Placeholders.VALUE + "&7(" + Placeholders.TIME + "&3ms&7)&a."), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO) || save;
 		save = check(locale, toText("&ePlugins &7(&b" + Placeholders.VALUE + "&7)&e"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS) || save;
 		save = check(locale, toText("&eMods &7(&b" + Placeholders.VALUE + "&7)&e"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS) || save;
 		save = check(locale, toText("&7[&6Refresh&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON) || save;
@@ -651,7 +651,7 @@ public class Locales {
 		save = check(locale, toText("&aJava&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_JAVA) || save;
 		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_SERVERSTAT_JAVAHOME) || save;
 		save = check(locale, toText("&3&lДанные по мирам"), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDS_INFO_HEADER) || save;
-		save = check(locale, toText("&aМир&f: &e" + Placeholders.WORLD + "&a. Загружено чанков&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Сущностей&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO) || save;
+		save = check(locale, toText("&aМир&f: &e" + Placeholders.WORLD + "&a. Загружено чанков&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Сущностей&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: " + Placeholders.VALUE + "&7(" + Placeholders.TIME + "&3мс&7)&a."), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO) || save;
 		save = check(locale, toText("&eПлагины &7(&b" + Placeholders.VALUE + "&7)&e"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS) || save;
 		save = check(locale, toText("&eМоды &7(&b" + Placeholders.VALUE + "&7)&e"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS) || save;
 		save = check(locale, toText("&7[&6Перезагрузить&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON) || save;

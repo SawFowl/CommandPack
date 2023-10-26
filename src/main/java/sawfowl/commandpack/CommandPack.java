@@ -244,6 +244,8 @@ public class CommandPack {
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
 		configManager.loadPlayersData();
 		isForge = checkForge();
+		economy = new Economy(instance);
+		Sponge.eventManager().registerListeners(pluginContainer, economy);
 		fillLists();
 		AverageTPS averageTPS = new AverageTPS() {
 			
@@ -354,7 +356,6 @@ public class CommandPack {
 	@Listener
 	public void onServerStarted(StartedEngineEvent<Server> event) {
 		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getText(Sponge.server().locale(), LocalesPaths.ECONOMY_NOT_FOUND));
-		if(economy == null) economy = new Economy(instance);
 		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerChatListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerCommandListener(instance));
@@ -424,7 +425,7 @@ public class CommandPack {
 
 	@Listener
 	public void onProvideEconomyService(ProvideServiceEvent<EconomyService> event) {
-		if(getMainConfig().getEconomy().isEnable()) economy = new Economy(instance).createEconomy(event);
+		if(getMainConfig().getEconomy().isEnable()) economy.createEconomy(event);
 	}
 
 	@Listener

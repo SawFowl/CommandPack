@@ -122,16 +122,14 @@ public interface PluginCommand {
 	default Component getComponent(Locale locale, Object... path) {
 		Component text = getComponent(path);
 		if(text != null) return text;
-		return text(CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getString(path));
+		return CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getComponent(path);
 	}
 
 	/**
 	 * Getting a localized message.
 	 */
 	default Text getText(Locale locale, Object... path) {
-		Component text = getComponent(path);
-		if(text != null) return Text.of(text);
-		return CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getText(path);
+		return Text.of(getComponent(locale, path));
 	}
 
 	default List<Component> getListTexts(Locale locale, Object... path) {

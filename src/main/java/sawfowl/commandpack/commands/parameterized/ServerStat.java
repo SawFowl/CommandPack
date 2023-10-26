@@ -108,8 +108,8 @@ public class ServerStat extends AbstractInfoCommand {
 	private void sendStat(Audience src, Locale locale, boolean isPlayer) {
 		Component header = getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER);
 		List<Component> statList = new ArrayList<>();
-		Component buttons = getButtons(src, locale, isPlayer);
-		if(TextUtils.serializeLegacy(buttons).length() > 0) statList.add(buttons.append(Component.newline()));
+		Component buttons = isPlayer ? getButtons((ServerPlayer) src, locale) : null;
+		if(buttons != null) statList.add(buttons.append(Component.newline()));
 		statList.add(getTPS(locale));
 		statList.add(getUptime(locale));
 		statList.add(getServerTime(locale));
@@ -128,33 +128,33 @@ public class ServerStat extends AbstractInfoCommand {
 		sendPaginationList(src, header, Component.text("=").color(header.color()), linesPerPage, statList);
 	}
 
-	private Component getButtons(Audience src, Locale locale, boolean isPlayer) {
+	private Component getButtons(ServerPlayer src, Locale locale) {
 		Component buttons = Component.empty();
-		if(isPlayer && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_INFO_SYSTEM)) {
+		if(src.hasPermission(Permissions.SERVER_STAT_STAFF_INFO_SYSTEM)) {
 			Component system = TextUtils.createCallBack(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_SYSTEM), cause -> {
-				sendSystemInfo(src, locale, isPlayer);
+				sendSystemInfo(src, locale, true);
 			});
 			buttons = buttons.append(system).append(text("&r "));
 		}
-		if(isPlayer && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_INFO_WORLDS)) {
+		if(src.hasPermission(Permissions.SERVER_STAT_STAFF_INFO_WORLDS)) {
 			Component worlds = TextUtils.createCallBack(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_WORLDS), cause -> {
 				sendWorldsInfo(src, locale);
 			});
 			buttons = buttons.append(worlds).append(text("&r "));
 		}
-		if(isPlayer && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_PLUGINS_LIST)) {
+		if(src.hasPermission(Permissions.SERVER_STAT_STAFF_PLUGINS_LIST)) {
 			Component plugins = TextUtils.createCallBack(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_PLUGINS), cause -> {
-				sendPluginsInfo(src, locale, isPlayer);
+				sendPluginsInfo(src, locale, true);
 			});
 			buttons = buttons.append(plugins);
 		}
-		if(plugin.isForgeServer() && isPlayer && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_MODS_LIST)) {
+		if(plugin.isForgeServer() && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_MODS_LIST)) {
 			Component mods = TextUtils.createCallBack(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_MODS), cause -> {
-				sendModsInfo(src, locale, isPlayer);
+				sendModsInfo(src, locale, true);
 			});
 			buttons = buttons.append(text("&r ")).append(mods);
 		}
-		return buttons;
+		return TextUtils.clearDecorations(buttons).equals("") ? null : buttons;
 	}
 
 }

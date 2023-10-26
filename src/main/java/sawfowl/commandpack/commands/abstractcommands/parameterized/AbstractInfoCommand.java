@@ -62,8 +62,8 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	protected void sendWorldsInfo(Audience target, Locale locale) {
 		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_WORLDS_INFO_HEADER).get();
 		List<Component> worldsInfo = Sponge.server().worldManager().worlds().stream().map(world -> getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO).replace(
-				new String[] {Placeholders.WORLD, Placeholders.CHUNKS_SIZE, Placeholders.ENTITIES_SIZE, Placeholders.VALUE},
-				text(world.key().asString()), text(Iterables.size(world.loadedChunks())), text(world.entities().size()), tPStoText(BigDecimal.valueOf(plugin.getAPI().getTPS().getWorldTPS(world)).setScale(2, RoundingMode.HALF_UP).doubleValue()).append(text("(" + String.format("%.3f", plugin.getAPI().getTPS().getWorldTickTime(world)) + ")"))).get()).toList();
+				new String[] {Placeholders.WORLD, Placeholders.CHUNKS_SIZE, Placeholders.ENTITIES_SIZE, Placeholders.VALUE, Placeholders.TIME},
+				text(world.key().asString()), text(Iterables.size(world.loadedChunks())), text(world.entities().size()), tPStoText(BigDecimal.valueOf(plugin.getAPI().getTPS().getWorldTPS(world)).setScale(2, RoundingMode.HALF_UP).doubleValue()), tickToText(plugin.getAPI().getTPS().getWorldTickTime(world))).get()).toList();
 		sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, worldsInfo);
 	}
 
@@ -133,6 +133,15 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 		if(tps < 17) return text("&e" + tps);
 		if(tps < 20) return text("&a" + tps);
 		return text("&2" + tps);
+	}
+
+	protected Component tickToText(double tick) {
+		if(tick > 70) return text("&5" + String.format("%.3f", tick));
+		if(tick > 50) return text("&c" + String.format("%.3f", tick));
+		if(tick > 40) return text("&6" + String.format("%.3f", tick));
+		if(tick > 30) return text("&e" + String.format("%.3f", tick));
+		if(tick > 20) return text("&a" + String.format("%.3f", tick));
+		return text("&2" + String.format("%.3f", tick));
 	}
 
 	protected Component getTPS(Locale locale) {
