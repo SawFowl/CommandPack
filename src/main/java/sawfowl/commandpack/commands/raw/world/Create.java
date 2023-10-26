@@ -65,8 +65,7 @@ public class Create extends AbstractWorldCommand {
 			if(args.length > 3) {
 				boolean structures = getBoolean(args, 4).get();
 				boolean bonusChest = getBoolean(args, 5).get();
-				String seed = getString(args, 3).get();
-				world.properties().offer(Keys.WORLD_GEN_CONFIG, WorldGenerationConfig.builder().seed(NumberUtils.isCreatable(seed) ? NumberUtils.createLong(seed) : (long) seed.hashCode()).generateStructures(structures).generateBonusChest(bonusChest).build());
+				world.properties().offer(Keys.WORLD_GEN_CONFIG, WorldGenerationConfig.builder().from(world.properties().worldGenerationConfig()).generateStructures(structures).generateBonusChest(bonusChest).build());
 			}
 			world.setBorder(world.border().toBuilder().initialDiameter(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().border().diameter()).build());
 			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_CREATE).replace(Placeholders.WORLD, template.key().asString()).get());
