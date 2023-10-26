@@ -40,19 +40,19 @@ public class Locales {
 	}
 
 	public Text getText(Locale locale, Object... path) {
-		return getAbstractLocaleUtil(locale).getText(path);
+		return getPluginLocale(locale).getText(path);
 	}
 
 	public Component getComponent(Locale locale, Object... path) {
-		return getAbstractLocaleUtil(locale).getComponent(path);
+		return getPluginLocale(locale).getComponent(path);
 	}
 
 	public List<Text> getListTexts(Locale locale, Object... path) {
-		return getAbstractLocaleUtil(locale).getTexts(path);
+		return getPluginLocale(locale).getTexts(path);
 	}
 
 	public List<Component> getListComponents(Locale locale, Object... path) {
-		return getAbstractLocaleUtil(locale).getListComponents(path);
+		return getPluginLocale(locale).getListComponents(path);
 	}
 
 	public String getString(Locale locale, Object... path) {
@@ -60,7 +60,7 @@ public class Locales {
 	}
 
 	public Component getTextFromDefault(Object... path) {
-		return getAbstractLocaleUtil(org.spongepowered.api.util.locale.Locales.DEFAULT).getComponent(json, path);
+		return getPluginLocale(org.spongepowered.api.util.locale.Locales.DEFAULT).getComponent(json, path);
 	}
 
 	private void generateDefault() {
@@ -887,7 +887,7 @@ public class Locales {
 		if(save) save(locale);
 	}
 
-	private PluginLocale getAbstractLocaleUtil(Locale locale) {
+	private PluginLocale getPluginLocale(Locale locale) {
 		return localeService.getPluginLocales(pluginid).getOrDefault(locale, localeService.getPluginLocales(pluginid).get(org.spongepowered.api.util.locale.Locales.DEFAULT));
 	}
 
@@ -896,19 +896,19 @@ public class Locales {
 	}
 
 	private boolean check(Locale locale, Component value, String comment, Object... path) {
-		return getAbstractLocaleUtil(locale).checkComponent(json, value, comment, path);
+		return getPluginLocale(locale).checkComponent(json, value, comment, path);
 	}
 
 	private boolean check(Locale locale, String value, String comment, Object... path) {
-		return getAbstractLocaleUtil(locale).checkString(value, comment, path);
+		return getPluginLocale(locale).checkString(value, comment, path);
 	}
 
 	private boolean checkList(Locale locale, List<Component> value, String comment, Object... path) {
-		return getAbstractLocaleUtil(locale).checkListComponents(json, value, comment, path);
+		return getPluginLocale(locale).checkListComponents(json, value, comment, path);
 	}
 
 	private void save(Locale locale) {
-		getAbstractLocaleUtil(locale).saveLocaleNode();
+		getPluginLocale(locale).saveLocaleNode();
 	}
 
 }
