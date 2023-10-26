@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
@@ -53,13 +54,20 @@ public class Create extends AbstractWorldCommand {
 				.add(Keys.WORLD_TYPE, worldType));
 		if(args.length > 3) {
 			String seed = getString(args, 3).get();
-			boolean structures = getBoolean(args, 4).get();
-			boolean bonusChest = getBoolean(args, 5).get();
-			builder = builder.add(Keys.WORLD_GEN_CONFIG, WorldGenerationConfig.builder().seed(seed.hashCode()).generateStructures(structures).generateBonusChest(bonusChest).build());
+			builder = builder.add(Keys.SEED, NumberUtils.isCreatable(seed) ? NumberUtils.createLong(seed) : (long) seed.hashCode());
+			//boolean structures = getBoolean(args, 4).get();
+			//boolean bonusChest = getBoolean(args, 5).get();
+			//builder = builder.add(Keys.WORLD_GEN_CONFIG, WorldGenerationConfig.builder().seed(seed.hashCode()).generateStructures(structures).generateBonusChest(bonusChest).build());
 		}
 		WorldTemplate template = ((AbstractBuilder<WorldTemplate>) builder).build();
 		Sponge.server().worldManager().loadWorld(template).thenRunAsync(() -> {
 			ServerWorld world = Sponge.server().worldManager().world(template.key()).get();
+			if(args.length > 3) {
+				boolean structures = getBoolean(args, 4).get();
+				boolean bonusChest = getBoolean(args, 5).get();
+				String seed = getString(args, 3).get();
+				world.properties().offer(Keys.WORLD_GEN_CONFIG, WorldGenerationConfig.builder().seed(NumberUtils.isCreatable(seed) ? NumberUtils.createLong(seed) : (long) seed.hashCode()).generateStructures(structures).generateBonusChest(bonusChest).build());
+			}
 			world.setBorder(world.border().toBuilder().initialDiameter(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().border().diameter()).build());
 			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_CREATE).replace(Placeholders.WORLD, template.key().asString()).get());
 		});
