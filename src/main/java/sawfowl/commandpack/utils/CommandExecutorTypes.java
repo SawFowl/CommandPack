@@ -3,6 +3,7 @@ package sawfowl.commandpack.utils;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.spongepowered.api.Server;
 import org.spongepowered.api.SystemSubject;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandCause;
@@ -17,7 +18,7 @@ public enum CommandExecutorTypes {
 
 		@Override
 		protected boolean check(CommandCause cause) {
-			return cause.audience() instanceof SystemSubject;
+			return cause.audience() instanceof SystemSubject || cause.audience() instanceof Server;
 		}
 
 	},
