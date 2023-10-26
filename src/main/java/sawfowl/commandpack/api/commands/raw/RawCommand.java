@@ -20,8 +20,6 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
-import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
-import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
@@ -101,12 +99,6 @@ public interface RawCommand extends PluginCommand, Raw {
 		String currentInput = arguments.input();
 		List<CommandCompletion> complete = completeChild(cause, args, arguments, currentInput);
 		return complete == null || complete.size() == 0 ? (getEmptyCompletion() == null ? new ArrayList<>() : getEmptyCompletion()) : complete;
-	}
-
-	@Override
-	default CommandTreeNode.Root commandTree() {
-		return CommandTreeNode.root().executable().child("arguments",
-				CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions());
 	}
 
 	default String[] checkChildAndArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
