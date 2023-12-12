@@ -9,9 +9,9 @@ public class PreventDamage {
 	public PreventDamage(){}
 
 	@Setting("Vanish")
-	private final boolean vanish = true;
+	private final boolean vanish = false;
 	@Setting("GodMode")
-	private final boolean godMode = true;
+	private final boolean godMode = false;
 
 	public boolean isVanish() {
 		return vanish;

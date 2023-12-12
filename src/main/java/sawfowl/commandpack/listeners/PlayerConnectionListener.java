@@ -107,6 +107,7 @@ public class PlayerConnectionListener {
 			if(!playerData.isVanished() || !event.player().hasPermission(Permissions.HIDE_CONNECT)) sendLeaveMessage(event.player());
 			Sponge.systemSubject().sendMessage(TextUtils.replaceToComponents(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.LEAVE_MESSAGE), new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, new Component[] {getPrefix(event.player()), event.player().get(Keys.DISPLAY_NAME).orElse(text(event.player().name())), getSuffix(event.player())}));
 		}
+		playerData.save();
 	}
 
 	private void giveKit(ServerPlayer player, Kit kit) {
