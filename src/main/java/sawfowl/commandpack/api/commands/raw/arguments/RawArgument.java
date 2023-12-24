@@ -70,6 +70,11 @@ public interface RawArgument<T> extends DataSerializable {
 	Optional<T> getResult(Class<T> clazz, String[] args);
 
 	/**
+	 * Converts a string argument to a specified class. If the specified class does not match the argument class, the return will be empty.
+	 */
+	Optional<T> getResult(Class<T> clazz, CommandCause cause, String[] args);
+
+	/**
 	 * Retrieves an object from the command's argument string without converting it to a specific type.
 	 */
 	Optional<?> getResultUnknownType(CommandCause cause, String[] args);

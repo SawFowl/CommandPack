@@ -37,7 +37,12 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 
 	@Override
 	public Optional<T> getResult(Class<T> clazz, String[] args) {
-		return result == null ? Optional.empty() : result.get(null, args);
+		return getResult(clazz, CommandCause.create(), args);
+	}
+
+	@Override
+	public Optional<T> getResult(Class<T> clazz, CommandCause cause, String[] args) {
+		return result == null ? Optional.empty() : result.get(cause, args);
 	}
 
 	@Override
@@ -77,7 +82,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 
 	@Override
 	public boolean hasPermission(CommandCause cause) {
-		return getPermision().map(p -> cause.hasPermission(p)).orElse(true);
+		return cause == null || getPermision().map(p -> cause.hasPermission(p)).orElse(true);
 	}
 
 	@Override
