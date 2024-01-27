@@ -16,11 +16,13 @@ import sawfowl.commandpack.api.data.player.Home;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
 import sawfowl.commandpack.configure.configs.player.HomeData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
+@Register
 public class SetHome extends AbstractPlayerCommand {
 
 	public SetHome(CommandPack plugin) {

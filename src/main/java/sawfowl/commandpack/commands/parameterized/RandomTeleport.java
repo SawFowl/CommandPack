@@ -23,12 +23,14 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.api.RandomTeleportService.RandomTeleportOptions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.events.RandomTeleportEvent;
 
+@Register
 public class RandomTeleport extends AbstractParameterizedCommand {
 
 	public RandomTeleport(CommandPack plugin) {

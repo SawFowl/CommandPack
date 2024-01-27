@@ -15,7 +15,9 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.parameterized.onlyplayercommands.items.ItemLore;
 import sawfowl.commandpack.commands.parameterized.onlyplayercommands.items.ItemName;
+import sawfowl.commandpack.commands.settings.Register;
 
+@Register
 public class Item extends AbstractPlayerCommand {
 
 	public Item(CommandPack plugin) {

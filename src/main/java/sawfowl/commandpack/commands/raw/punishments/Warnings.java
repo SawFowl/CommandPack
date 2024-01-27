@@ -28,10 +28,12 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
+@Register
 public class Warnings extends AbstractRawCommand {
 
 	public Warnings(CommandPack plugin) {

@@ -15,7 +15,9 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
+import sawfowl.commandpack.commands.settings.Register;
 
+@Register
 public class Economy extends AbstractRawCommand {
 
 	public Economy(CommandPack plugin) {

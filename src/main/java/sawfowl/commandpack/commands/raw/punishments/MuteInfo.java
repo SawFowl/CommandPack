@@ -23,10 +23,12 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.TimeConverter;
 
+@Register
 public class MuteInfo extends AbstractRawCommand {
 
 	public MuteInfo(CommandPack plugin) {

@@ -18,11 +18,13 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.TimeConverter;
 import sawfowl.commandpack.api.data.punishment.Mute;
 
+@Register
 public class MuteList extends AbstractParameterizedCommand {
 
 	public MuteList(CommandPack plugin) {

@@ -8,6 +8,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.plugin.PluginContainer;
 
 import net.minecraftforge.fml.loading.FMLLoader;
+
 import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
 import sawfowl.commandpack.apiclasses.ModContainerImpl;
 
@@ -16,7 +17,7 @@ public class ModListGetter {
 	public static Collection<ModContainer> getMods() {
 		Collection<ModContainer> mods = new ArrayList<ModContainer>();
 		FMLLoader.getLoadingModList().getMods().forEach(mod -> {
-			if(!mod.getOwningFile().getFile().getLoaders().stream().filter(loader -> !loader.name().equalsIgnoreCase("java_plain") && !loader.name().equalsIgnoreCase("")).findFirst().isPresent()) mods.add(new ModContainerImpl(mod));
+			if(!mod.getOwningFile().getFile().getLoaders().stream().filter(loader -> loader.name().equalsIgnoreCase("java_plain")).findFirst().isPresent()) mods.add(new ModContainerImpl(mod));
 		});
 		return Collections.unmodifiableCollection(new ArrayList<>(mods));
 	}

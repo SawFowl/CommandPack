@@ -25,9 +25,11 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
+@Register
 public class Unmute extends AbstractRawCommand {
 
 	public Unmute(CommandPack plugin) {

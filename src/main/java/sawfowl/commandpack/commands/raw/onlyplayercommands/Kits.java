@@ -33,7 +33,9 @@ import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.GiveRule;
 import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.NeedPerm;
 import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.SetName;
 import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.SetPrice;
+import sawfowl.commandpack.commands.settings.Register;
 
+@Register
 public class Kits extends AbstractPlayerCommand {
 
 	public Kits(CommandPack plugin) {

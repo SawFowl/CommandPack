@@ -22,8 +22,10 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
+@Register
 public class Enchant extends AbstractPlayerCommand {
 
 	List<String> enchants;

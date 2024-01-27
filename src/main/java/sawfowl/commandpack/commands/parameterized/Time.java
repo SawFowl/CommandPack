@@ -18,7 +18,9 @@ import sawfowl.commandpack.commands.parameterized.time.Day;
 import sawfowl.commandpack.commands.parameterized.time.Evening;
 import sawfowl.commandpack.commands.parameterized.time.Morning;
 import sawfowl.commandpack.commands.parameterized.time.Night;
+import sawfowl.commandpack.commands.settings.Register;
 
+@Register
 public class Time extends AbstractParameterizedCommand {
 
 	public Time(CommandPack plugin) {

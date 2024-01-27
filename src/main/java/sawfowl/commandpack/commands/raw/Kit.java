@@ -40,12 +40,14 @@ import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.commandpack.api.events.KitGiveEvent;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.player.GivedKitData;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 import sawfowl.localeapi.api.TextUtils;
 
+@Register
 public class Kit extends AbstractRawCommand {
 
 	public Kit(CommandPack plugin) {

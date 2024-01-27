@@ -18,8 +18,10 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
+@Register
 public class Sudo extends AbstractRawCommand {
 
 	public Sudo(CommandPack plugin) {

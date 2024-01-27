@@ -14,8 +14,10 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
+@Register
 public class Help extends AbstractParameterizedCommand {
 
 	public Help(CommandPack plugin) {

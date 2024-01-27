@@ -22,9 +22,11 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
+@Register
 public class HideBalance extends AbstractRawCommand {
 
 	public HideBalance(CommandPack plugin) {
@@ -74,7 +76,7 @@ public class HideBalance extends AbstractRawCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/hidebalance [Player]");
+		return text(cause.hasPermission(Permissions.ECONOMY_STAFF) ?  "&c/hidebalance [Player]" : "&c/hidebalance");
 	}
 
 	@Override

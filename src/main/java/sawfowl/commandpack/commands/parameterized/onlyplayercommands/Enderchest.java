@@ -18,8 +18,10 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
+@Register
 public class Enderchest extends AbstractPlayerCommand {
 
 	public Enderchest(CommandPack plugin) {

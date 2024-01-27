@@ -27,12 +27,14 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.configurate.reference.ValueReference;
 import org.spongepowered.configurate.serialize.SerializationException;
 
-import net.minecraftforge.fml.javafmlmod.FMLModContainer;
-import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.IModFileInfo;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
+import sawfowl.commandpack.commands.settings.Register;
 
 @ConfigSerializable
 public class CommandsConfig {
@@ -293,9 +295,9 @@ public class CommandsConfig {
 	private <T> Set<Class<T>> findAllCommandsClasses(CommandPack plugin, String packageName, Class<T> clazz) throws IOException, URISyntaxException {
 		final String pkgPath = packageName.replace('.', '/');
 		URI pkg = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource(pkgPath)).toURI();
-		if(plugin.isForgeServer() && plugin.getPluginContainer() instanceof FMLModContainer) {
-			FMLModContainer container = (FMLModContainer) plugin.getPluginContainer();
-			ModFileInfo modFileInfo = (ModFileInfo) container.getModInfo().getOwningFile();
+		if(plugin.isForgeServer() && ModList.get().getModContainerByObject(CommandPack.getInstance()).isPresent()) {
+			ModContainer container = ModList.get().getModContainerByObject(CommandPack.getInstance()).get();
+			IModFileInfo modFileInfo = container.getModInfo().getOwningFile();
 			pkg = URI.create("jar:" + modFileInfo.getFile().getFilePath().toUri().toString()  + "!/" + pkgPath);
 		}
 		final Set<Class<T>> allClasses = new HashSet<Class<T>>();
@@ -316,7 +318,7 @@ public class CommandsConfig {
 					final String path = file.toString().replace('/', '.');
 					final String name = path.substring(path.indexOf(packageName), path.length() - extension.length());
 					Class<?> found = Class.forName(name);
-					if((found.getSuperclass() != null && found.getSuperclass() == clazz) || (found.getSuperclass().getSuperclass() != null && found.getSuperclass().getSuperclass() == clazz)) allClasses.add((Class<T>) found);
+					if(found.isAnnotationPresent(Register.class) && ((found.getSuperclass() != null && found.getSuperclass() == clazz) || (found.getSuperclass().getSuperclass() != null && found.getSuperclass().getSuperclass() == clazz))) allClasses.add((Class<T>) found);
 				} catch (final ClassNotFoundException | StringIndexOutOfBoundsException ignored) {
 				}
 			});

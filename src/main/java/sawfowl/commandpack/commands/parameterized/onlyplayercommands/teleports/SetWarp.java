@@ -18,9 +18,11 @@ import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
+@Register
 public class SetWarp extends AbstractPlayerCommand {
 
 	public SetWarp(CommandPack plugin) {

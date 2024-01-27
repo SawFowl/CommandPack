@@ -33,12 +33,14 @@ import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.api.services.PunishmentService;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.TimeConverter;
 import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
+@Register
 public class Seen extends AbstractParameterizedCommand {
 
 	public Seen(CommandPack plugin) {

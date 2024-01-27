@@ -16,7 +16,9 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
 import sawfowl.commandpack.commands.containerinfo.ModInfo;
+import sawfowl.commandpack.commands.settings.Register;
 
+@Register
 public class Mods extends AbstractInfoCommand {
 
 	public Mods(CommandPack plugin) {

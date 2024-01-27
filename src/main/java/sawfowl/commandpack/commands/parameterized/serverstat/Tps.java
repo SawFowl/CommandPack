@@ -13,7 +13,9 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
+import sawfowl.commandpack.commands.settings.Register;
 
+@Register
 public class Tps extends AbstractInfoCommand {
 
 	protected Parameterized command;

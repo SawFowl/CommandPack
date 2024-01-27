@@ -22,11 +22,13 @@ import sawfowl.commandpack.commands.parameterized.serverstat.Plugins;
 import sawfowl.commandpack.commands.parameterized.serverstat.ServerTime;
 import sawfowl.commandpack.commands.parameterized.serverstat.Tps;
 import sawfowl.commandpack.commands.parameterized.serverstat.Worlds;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 import sawfowl.localeapi.api.TextUtils;
 
+@Register
 public class ServerStat extends AbstractInfoCommand {
 
 	private final Plugins plugins;

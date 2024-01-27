@@ -15,7 +15,9 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
+import sawfowl.commandpack.commands.settings.Register;
 
+@Register
 public class Suicide extends AbstractPlayerCommand {
 
 	private DamageSource damageSource;

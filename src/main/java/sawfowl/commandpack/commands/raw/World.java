@@ -31,7 +31,9 @@ import sawfowl.commandpack.commands.raw.world.SpawnLogic;
 import sawfowl.commandpack.commands.raw.world.Teleport;
 import sawfowl.commandpack.commands.raw.world.Unload;
 import sawfowl.commandpack.commands.raw.world.ViewDistance;
+import sawfowl.commandpack.commands.settings.Register;
 
+@Register
 public class World extends AbstractWorldCommand {
 
 	public World(CommandPack plugin) {

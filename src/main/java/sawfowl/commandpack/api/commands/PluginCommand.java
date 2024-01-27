@@ -23,6 +23,7 @@ import org.spongepowered.plugin.PluginContainer;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.command.Price;
@@ -32,6 +33,7 @@ import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
 import sawfowl.commandpack.utils.tasks.DelayTimerTask;
+import sawfowl.localeapi.api.LocaleReference;
 import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
@@ -245,6 +247,10 @@ public interface PluginCommand {
 			.contents(components)
 			.padding(padding)
 			.sendTo(target);
+	}
+
+	default <T extends LocaleReference> T getPluginLocale(Class<T> localeClass, Locale locale) {
+		return CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer(), locale).asReference(localeClass);
 	}
 
 }

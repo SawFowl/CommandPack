@@ -27,9 +27,11 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
+import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
+@Register
 public class Pay extends AbstractPlayerCommand {
 
 	private List<BigDecimal> empty = new ArrayList<BigDecimal>();

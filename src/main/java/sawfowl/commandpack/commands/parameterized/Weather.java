@@ -15,7 +15,9 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.parameterized.weather.Rain;
 import sawfowl.commandpack.commands.parameterized.weather.Sun;
 import sawfowl.commandpack.commands.parameterized.weather.Thunder;
+import sawfowl.commandpack.commands.settings.Register;
 
+@Register
 public class Weather extends AbstractParameterizedCommand {
 
 	public Weather(CommandPack plugin) {
