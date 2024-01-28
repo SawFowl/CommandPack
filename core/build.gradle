@@ -1,0 +1,71 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		maven { url = 'https://maven.minecraftforge.net' }
+	}
+	dependencies {
+		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+		classpath 'org.spongepowered:mixingradle:0.7+'
+	}
+}
+
+plugins {
+	id("org.spongepowered.gradle.plugin") version "2.0.2"
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+
+minecraft {
+	mappings channel: 'official', version: '1.19.4'
+}
+
+dependencies {
+	minecraft 'net.minecraftforge:forge:1.19.4-45.2.0'
+	implementation "org.spongepowered:spongeapi:10.0.0"
+	implementation 'org.spongepowered:spongevanilla:1.19.4-10.0.0-RC1397:universal'
+	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
+}
+
+sponge {
+	apiVersion("${api}")
+	loader {
+		name("java_plain")
+		version("1.0")
+	}
+	license("GPL-3.0")
+	plugin(rootProject.name.toLowerCase()) {
+		displayName(rootProject.name)
+		version("${rootProject.version}")
+		entrypoint("${rootProject.group}.${rootProject.name}")
+		description("The Essentials plugin analog.")
+		links {
+			homepage("https://discord.gg/7xnZGSYJH9")
+			source("https://github.com/SawFowl/CommandPack")
+			issues("https://discord.gg/7xnZGSYJH9")
+		}
+		contributor("SawFowl") {
+			description("Lead Developer")
+		}
+		dependency("spongeapi") {
+			optional(false)
+			loadOrder("after")
+			version("${api}")
+		}
+		dependency("localeapi") {
+			optional(false)
+			loadOrder("after")
+			version("${localeapi}")
+		}
+		dependency("mysqldriver") {
+			optional(true)
+			loadOrder("after")
+			version("1.0.0")
+		}
+		dependency("h2driver") {
+			optional(true)
+			loadOrder("after")
+			version("1.0.0")
+		}
+	}
+}

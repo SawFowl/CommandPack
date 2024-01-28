@@ -1,0 +1,16 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "sawfowl.commandpack.mixins.forge",
+    "compatibilityLevel": "JAVA_17",
+    "verbose": true,
+    "mixins": [
+        "network.MixinForgeServerPlayerImpl",
+        "network.MixinForgePluginMessagesImpl",
+        "game.MixinForgeEntityItemImpl"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "refmap": "commandpack.refmap.json"
+}

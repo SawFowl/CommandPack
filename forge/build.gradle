@@ -1,0 +1,30 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		maven { url = 'https://maven.minecraftforge.net' }
+	}
+	dependencies {
+		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+		classpath 'org.spongepowered:mixingradle:0.7+'
+	}
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+
+minecraft {
+	mappings channel: 'official', version: '1.19.4'
+}
+
+dependencies {
+	minecraft 'net.minecraftforge:forge:1.19.4-45.2.0'
+	implementation 'org.spongepowered:mixin:0.8.5'
+	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
+	implementation project(':core')
+}
+
+mixin {
+	add sourceSets.main, "commandpack.refmap.json"
+	defaultObfuscationEnv "searge"
+}

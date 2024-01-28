@@ -1,113 +1,55 @@
-buildscript {
-	repositories {
-		mavenCentral()
-		maven { url = 'https://maven.minecraftforge.net' }
-		maven { url = 'https://maven.blamejared.com' }
-		maven {
-			name = "Sponge"
-			url = "https://repo.spongepowered.org/repository/maven-public"
-		}
-	}
-	dependencies {
-		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-	}
-}
-
 plugins {
 	id("java")
-	id("java-library")
-	id("maven-publish")
 	id("eclipse")
-	id("org.spongepowered.gradle.plugin") version "2.0.2"
 }
-
-apply plugin: 'net.minecraftforge.gradle'
 
 group = "sawfowl.commandpack"
 version = "${major}.${minor}.${patch}-${api}-${suffix}"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-compileJava.options.compilerArgs << "-Xmaxerrs" << "9999"
-
-minecraft {
-	mappings channel: 'official', version: '1.19.4'
-}
-
-repositories {
-	mavenCentral()
-
-	maven {
-		name = "Forge"
-		url = 'https://maven.minecraftforge.net'
+subprojects {
+	apply {
+		plugin 'java'
 	}
-	maven {
-		name = "Sponge"
-		url = "https://repo.spongepowered.org/repository/maven-public"
+	java {
+		sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 	}
-	maven {
-		name = "JitPack"
-		url 'https://jitpack.io'
-	}
-}
-
-tasks.withType(JavaCompile) {
-	options.encoding = 'UTF-8'
-}
-
-dependencies {
-	implementation "org.spongepowered:spongeapi:10.0.0"
-	implementation 'org.spongepowered:spongevanilla:1.19.4-10.0.0-RC1397:universal'
-	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
-	minecraft 'net.minecraftforge:forge:1.19.4-45.2.0'
-	//implementation fileTree(dir: 'libs', include: '*.jar')
-}
-
-sponge {
-	apiVersion("${api}")
-	loader {
-		name("java_plain")
-		version("1.0")
-	}
-	license("GPL-3.0")
-	plugin("commandpack") {
-		displayName(project.name.capitalize())
-		version("${project.version}")
-		entrypoint("${project.group}.${rootProject.name}")
-		description("The Essentials plugin analog.")
-		links {
-			homepage("https://discord.gg/7xnZGSYJH9")
-			source("https://github.com/SawFowl/CommandPack")
-			issues("https://discord.gg/7xnZGSYJH9")
+	repositories {
+		mavenCentral()
+		maven {
+			name = "Sponge"
+			url = "https://repo.spongepowered.org/repository/maven-public"
 		}
-		contributor("SawFowl") {
-			description("Lead Developer")
-		}
-		dependency("spongeapi") {
-			optional(false)
-			loadOrder("after")
-			version("${api}")
-		}
-		dependency("localeapi") {
-			optional(false)
-			loadOrder("after")
-			version("${localeapi}")
-		}
-		dependency("mysqldriver") {
-			optional(true)
-			loadOrder("after")
-			version("1.0.0")
-		}
-		dependency("h2driver") {
-			optional(true)
-			loadOrder("after")
-			version("1.0.0")
+		maven {
+			name = "JitPack"
+			url 'https://jitpack.io'
 		}
 	}
+	tasks.withType(JavaCompile) {
+		options.encoding = 'UTF-8'
+	}
 }
+
+subprojects.each { subproject -> evaluationDependsOn(subproject.path)}
+task allJar(type: Jar, dependsOn: subprojects.assemble) {
+	subprojects.each { subproject ->
+		from subproject.configurations.archives.allArtifacts.files.collect {
+			zipTree(it)
+		}
+	}
+	manifest {
+		attributes([
+			"MixinConnector": "${project.group}.mixins.MixinConnector"
+		])
+	}
+}
+
+build.dependsOn(allJar);
+
+jar.enabled(false)
 
 task sourcesJar(type: Jar, dependsOn: classes) {
 	archiveClassifier = 'sources'
-	from sourceSets.main.allSource
+	from subprojects.collect { it.sourceSets.main.allSource }
 	exclude('sawfowl/commandpack/apiclasses/**')
 	exclude('sawfowl/commandpack/commands/**')
 	exclude('sawfowl/commandpack/configure/**')
@@ -115,6 +57,9 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	exclude('sawfowl/commandpack/utils/**')
 	exclude('sawfowl/commandpack/CommandPack.java')
 	exclude('sawfowl/commandpack/Permissions.java')
+	exclude('sawfowl/commandpack/mixins/**')
+	exclude('META-INF/sponge_plugins.json')
+	exclude('*.json')
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -135,7 +80,9 @@ configurations {
 
 javadoc {
 	options.encoding = 'UTF-8'
-	source configurations.doc.collect { zipTree(it) }
+    source subprojects.collect { it.sourceSets.main.allJava }
+    classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
+    destinationDir = file("${buildDir}/docs/javadoc")
 	include 'sawfowl/commandpack/api/*.java'
 	include 'sawfowl/commandpack/api/commands/*.java'
 	include 'sawfowl/commandpack/api/commands/parameterized/*.java'
@@ -146,5 +93,7 @@ javadoc {
 	include 'sawfowl/commandpack/api/data/miscellaneous/*.java'
 	include 'sawfowl/commandpack/api/data/player/*.java'
 	include 'sawfowl/commandpack/api/events/*.java'
+	exclude('sawfowl/commandpack/mixins/**')
+	exclude('META-INF/sponge_plugins.json')
 	options.addStringOption('Xdoclint:none', '-quiet')
 }

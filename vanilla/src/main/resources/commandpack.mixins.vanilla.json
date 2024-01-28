@@ -1,0 +1,15 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "sawfowl.commandpack.mixins.vanilla",
+    "compatibilityLevel": "JAVA_17",
+    "verbose": true,
+    "mixins": [
+        "network.MixinVanillaServerPlayerImpl",
+        "network.MixinVanillaPluginMessagesImpl",
+        "game.MixinVanillaEntityItemImpl"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
