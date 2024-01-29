@@ -9,9 +9,6 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
-
 /**
  * This interface is designed to simplify the creation of commands and add additional functionality to them.<br>
  * Commands created using this interface can only be used by players.
@@ -24,7 +21,6 @@ public interface ParameterizedPlayerCommand extends ParameterizedCommand {
 
 	@Override
 	default void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
-		if(!(src instanceof ServerPlayer)) exception(CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.COMMANDS_EXCEPTION_ONLY_PLAYER));
 		execute(context, (ServerPlayer) src, locale);
 	}
 
@@ -33,13 +29,13 @@ public interface ParameterizedPlayerCommand extends ParameterizedCommand {
 		return getSettingsMap() != null && !getSettingsMap().values().isEmpty() ? 
 				Command.builder()
 					.executionRequirements(cause -> (
-						cause.audience() instanceof ServerPlayer && cause.hasPermission(permission())) //Not worked on SpongeForge 1.19.4
+						cause.first(ServerPlayer.class).isPresent() && cause.hasPermission(permission())) //Not worked on SpongeForge 1.19.4
 					)
 					.addParameters(getSettingsMap().values().stream().map(ParameterSettings::getParameterUnknownType).toArray(Value[]::new))
 					.executor(this) :
 				Command.builder()
 					.executionRequirements(cause -> (
-						cause.audience() instanceof ServerPlayer && cause.hasPermission(permission())) //Not worked on SpongeForge 1.19.4
+							cause.first(ServerPlayer.class).isPresent() && cause.hasPermission(permission())) //Not worked on SpongeForge 1.19.4
 					)
 					.executor(this);
 	}*/
@@ -54,6 +50,11 @@ public interface ParameterizedPlayerCommand extends ParameterizedCommand {
 
 	default CommandException exception(ServerPlayer player, String[] keys, Component[] values, Object... path) throws CommandException {
 		return exception(player.locale(), keys, values, path);
+	}
+
+	@Override
+	default boolean onlyPlayer() {
+		return true;
 	}
 
 }

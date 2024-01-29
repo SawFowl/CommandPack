@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -30,11 +29,6 @@ public class SetWorldSpawn extends AbstractWorldCommand {
 		ServerPlayer player = (ServerPlayer) audience;
 		player.world().properties().setSpawnPosition(player.blockPosition());
 		player.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_SETSPAWN).replace(new String[] {Placeholders.WORLD, Placeholders.LOCATION}, new Object[] {player.world().key().asString(), player.blockPosition().toString()}).get());
-	}
-
-	@Override
-	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
-		return getEmptyCompletion();
 	}
 
 	@Override

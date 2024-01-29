@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -47,14 +45,14 @@ public class Commands extends AbstractKitsEditCommand {
 			sendPaginationList(src, header, Component.text("=").color(header.color()), 15, commands);
 		} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_EMPTY));
 	}
-
+/*
 	@Override
-	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
+	public List<CommandCompletion> complete(CommandCause cause, List<String> args, String currentInput) throws CommandException {
 		if(args.size() == 0) return plugin.getKitService().getKits().stream().map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
 		if(args.size() == 1 && !currentInput.endsWith(" ")) return plugin.getKitService().getKits().stream().filter(kit -> (kit.id().startsWith(args.get(0)))).map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
 		return getEmptyCompletion();
 	}
-
+*/
 	@Override
 	public Component shortDescription(Locale locale) {
 		return text("&3View and delete commands in a kit.");

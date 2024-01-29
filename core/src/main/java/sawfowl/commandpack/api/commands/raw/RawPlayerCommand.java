@@ -29,7 +29,7 @@ public interface RawPlayerCommand extends RawCommand {
 
 	@Override
 	default boolean canExecute(CommandCause cause) {
-		return cause.hasPermission(permission()) && cause.audience() instanceof ServerPlayer;
+		return (permission() == null || cause.hasPermission(permission())) && cause.first(ServerPlayer.class).isPresent();
 	}
 
 }

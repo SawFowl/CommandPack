@@ -6,12 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.data.Keys;
@@ -82,9 +80,9 @@ public class Kit extends AbstractRawCommand {
 			prepare(cause, audience, locale, target, data, kit, false, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), true);
 		}
 	}
-
+/*
 	@Override
-	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
+	public List<CommandCompletion> complete(CommandCause cause, List<String> args, String currentInput) throws CommandException {
 		if(args.size() == 0) return plugin.getKitService().getKits().stream().filter(kit -> (!kit.isNeedPerm() || cause.hasPermission(Permissions.KIT_STAFF) || cause.hasPermission(kit.permission()))).map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
 		if(args.size() == 1 && !currentInput.endsWith(" ")) return plugin.getKitService().getKits().stream().filter(kit -> (kit.id().startsWith(args.get(0)) && (!kit.isNeedPerm() || cause.hasPermission(Permissions.KIT_STAFF) || cause.hasPermission(kit.permission())))).map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
 		if(!cause.hasPermission(Permissions.KIT_STAFF)) return getEmptyCompletion();
@@ -92,7 +90,7 @@ public class Kit extends AbstractRawCommand {
 		if(args.size() == 2 && !currentInput.endsWith(" ")) return Sponge.server().onlinePlayers().stream().filter(player -> (player.name().startsWith(args.get(1)))).map(player -> CommandCompletion.of(player.name())).collect(Collectors.toList());
 		return getEmptyCompletion();
 	}
-
+*/
 	@Override
 	public Component shortDescription(Locale locale) {
 		return text("&3The command for giving the kit.");

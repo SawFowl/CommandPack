@@ -19,6 +19,7 @@ import org.spongepowered.api.world.server.ServerLocation;
 import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.PluginCommand;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 /**
  * This interface is designed to simplify the creation of commands and add additional functionality to them.
@@ -48,12 +49,17 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 	 */
 	@Override
 	default CommandResult execute(CommandContext context) throws CommandException {
-		boolean isPlayer = context.cause().audience() instanceof ServerPlayer;
+		boolean isPlayer = context.cause().first(ServerPlayer.class).isPresent();
 		Locale locale = getLocale(context.cause());
+		if(!isPlayer && onlyPlayer()) exception(CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.COMMANDS_EXCEPTION_ONLY_PLAYER));
 		if(getSettingsMap() != null && !getSettingsMap().isEmpty()) for(ParameterSettings settings : getSettingsMap().values()) if(!settings.containsIn(context) && (!settings.isOptional() || (!isPlayer && !settings.isOptionalForConsole()))) exception(locale, settings.getPath());
 		checkCooldown(context.cause(), locale, isPlayer);
-		execute(context, context.cause().audience(), locale, isPlayer);
+		execute(context, context.cause().first(ServerPlayer.class).map(player -> (Audience) player).orElse(context.cause().audience()), locale, isPlayer);
 		return success();
+	}
+
+	default boolean onlyPlayer() {
+		return false;
 	}
 
 	/**
@@ -98,7 +104,6 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 	 * Automatically applies permission and arguments if available.
 	 */
 	default Command.Parameterized fastBuild() {
-		CommandPack.getInstance().getLogger().error(command() + " " + (permission() == null));
 		return (permission() == null ?  builderNoPerm() : builder()).build();
 	}
 

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 
@@ -62,11 +61,6 @@ public class World extends AbstractWorldCommand {
 		getChildExecutors().forEach((k, v) -> {
 			if(v.canExecute(cause)) audience.sendMessage(v.usage(cause).color(NamedTextColor.GREEN));
 		});
-	}
-
-	@Override
-	public List<CommandCompletion> complete(CommandCause cause, List<String> args, Mutable arguments, String currentInput) throws CommandException {
-		return getEmptyCompletion();
 	}
 
 	@Override
