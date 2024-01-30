@@ -1,5 +1,6 @@
 package sawfowl.commandpack.commands.raw.onlyplayercommands;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,7 +42,6 @@ public class Kits extends AbstractPlayerCommand {
 	public Kits(CommandPack plugin) {
 		super(plugin);
 		Sponge.eventManager().registerListeners(getContainer(), this);
-		addChilds();
 	}
 
 	@Override
@@ -80,21 +80,6 @@ public class Kits extends AbstractPlayerCommand {
 		return text("&c/kits " + String.join("|", getChildExecutors().keySet().toArray(new String[]{})));
 	}
 
-	private void addChilds() {
-		getChildExecutors().put("addcommand", new AddCommand(plugin));
-		getChildExecutors().put("commands", new Commands(plugin));
-		getChildExecutors().put("cooldown", new Cooldown(plugin));
-		getChildExecutors().put("create", new Create(plugin));
-		getChildExecutors().put("createlore", new CreateLore(plugin));
-		getChildExecutors().put("edit", new Edit(plugin));
-		getChildExecutors().put("firsttime", new FirstTime(plugin));
-		getChildExecutors().put("givelimit", new GiveLimit(plugin));
-		getChildExecutors().put("giveonjoin", new GiveOnJoin(plugin));
-		getChildExecutors().put("giverule", new GiveRule(plugin));
-		getChildExecutors().put("needperm", new NeedPerm(plugin));
-		getChildExecutors().put("setname", new SetName(plugin));
-	}
-
 	@Listener(order = Order.LAST)
 	public void onStarted(StartedEngineEvent<Server> event) {
 		if(plugin.getEconomy().isPresent()) getChildExecutors().put("setprice", new SetPrice(plugin));
@@ -104,6 +89,24 @@ public class Kits extends AbstractPlayerCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return null;
+	}
+
+	@Override
+	public List<RawCommand> childCommands() {
+		return Arrays.asList(
+			new AddCommand(plugin),
+			new Commands(plugin),
+			new Cooldown(plugin),
+			new Create(plugin),
+			new CreateLore(plugin),
+			new Edit(plugin),
+			new FirstTime(plugin),
+			new GiveLimit(plugin),
+			new GiveOnJoin(plugin),
+			new GiveRule(plugin),
+			new NeedPerm(plugin),
+			new SetName(plugin)
+		);
 	}
 
 }

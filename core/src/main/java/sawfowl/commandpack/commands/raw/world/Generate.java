@@ -24,6 +24,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
@@ -220,6 +221,11 @@ public class Generate extends AbstractWorldCommand {
 			return totalX * totalZ;
 		}
 		
+	}
+
+	@Override
+	public List<RawCommand> childCommands() {
+		return null;
 	}
 
 }

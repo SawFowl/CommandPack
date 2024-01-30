@@ -13,6 +13,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
@@ -76,6 +77,11 @@ public class Commands extends AbstractKitsEditCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(kitArgument(0, false, false));
+	}
+
+	@Override
+	public List<RawCommand> childCommands() {
+		return null;
 	}
 
 }

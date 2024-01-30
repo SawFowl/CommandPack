@@ -22,6 +22,7 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
@@ -121,6 +122,11 @@ public class Pay extends AbstractPlayerCommand {
 				event.register(getContainer(), this, command(), getCommandSettings().getAliases());
 			} else event.register(getContainer(), this, command());
 		}
+	}
+
+	@Override
+	public List<RawCommand> childCommands() {
+		return null;
 	}
 
 }

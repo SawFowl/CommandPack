@@ -52,7 +52,7 @@ public interface Settings extends DataSerializable {
 
 		Builder setAliases(List<String> aliases);
 
-		Builder setAliases(String[] aliases);
+		Builder setAliases(String... aliases);
 
 		Builder setCooldown(long cooldown);
 

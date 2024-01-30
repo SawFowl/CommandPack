@@ -12,6 +12,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.data.kits.Kit;
@@ -61,6 +62,11 @@ public class FirstTime extends AbstractKitsEditCommand {
 			kitArgument(0, false, false),
 			RawArguments.createBooleanArgument(false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
+	}
+
+	@Override
+	public List<RawCommand> childCommands() {
+		return null;
 	}
 
 }

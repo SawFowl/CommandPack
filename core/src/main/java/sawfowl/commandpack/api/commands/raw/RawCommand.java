@@ -7,24 +7,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.exception.CommandException;
-import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
-import org.spongepowered.api.command.registrar.tree.CommandCompletionProvider;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Basic;
-import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
@@ -78,48 +76,36 @@ public interface RawCommand extends PluginCommand, Raw {
 	// To tests
 	@Override
 	default CommandTreeNode.Root commandTree() {
-		return CommandTreeNode.root().executable().child("arguments", commandTree(0));
-	}
-
-	default CommandTreeNode<?> argsTree(int depth) {
-		if(!getArguments().containsKey(depth)) return CommandTreeNode.literal().executable();
-		if(getArguments().get(depth).getTreeNode() != null) {
-			CommandTreeNode<?> node = getArguments().get(depth).getTreeNode();
-			if(getArguments().size() > depth) node.child(getArguments().get(depth + 1).treeTooltip(), (Argument<@NonNull ?>) argsTree(depth + 1));
-			return node;
-		}
-		Basic node = CommandTreeNode.literal().executable().child(getArguments().get(depth).treeTooltip(), CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions());
-		node.completions(new CommandCompletionProvider() {
-			@Override
-			public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-				if(!enableAutoComplete()) return CommandsUtil.EMPTY_COMPLETIONS;
-				String[] args = Stream.of(currentInput.split(" ")).filter(string -> (!string.equals(""))).toArray(String[]::new);
-				if(args.length < depth) return CommandsUtil.EMPTY_COMPLETIONS;
-				return getArguments().get(depth).getVariants(context.cause(), args).filter(var -> args.length < depth && currentInput.endsWith(" ") || var.contains(args[depth])).map(var -> CommandCompletion.of(var, getArguments().get(depth).getTooltip())).toList();
-			}
-		});
-		return node;
-	}
-
-	default CommandTreeNode.Basic commandTree(int depth) {
-		Basic node = CommandTreeNode.literal().executable().child("arguments", CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions());
+		CommandTreeNode.Root root = CommandTreeNode.root().executable();
 		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
-			node = CommandTreeNode.literal().executable().child("commands and arguments", CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions());
-			for(RawCommand command : getChildExecutors().values()) {
-				node.child("commands and arguments", command.commandTree(depth + 1));
+			for(Entry<String, RawCommand> entry : getChildExecutors().entrySet()) {
+				root.child(entry.getKey(), entry.getValue().commandTree(0, entry.getValue()).requires(cause -> entry.getValue().canExecute(cause)));
 			}
-			node.completions(new CommandCompletionProvider() {
-				@Override
-				public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-					if(!enableAutoComplete()) return CommandsUtil.EMPTY_COMPLETIONS;
-					String[] args = Stream.of(currentInput.split(" ")).filter(string -> (!string.equals(""))).toArray(String[]::new);
-					if(args.length < depth) return CommandsUtil.EMPTY_COMPLETIONS;
-					return getChildExecutors().entrySet().stream().filter(entry -> (args.length < depth && currentInput.endsWith(" ") || entry.getKey().contains(args[depth])) && entry.getValue().canExecute(context.cause())).map(child -> CommandCompletion.of(child.getKey())).toList();
-				}
-			});
-		} 
-		if(getArguments() != null && !getArguments().isEmpty()) {
-			node.child(getArguments().get(depth).treeTooltip(), (Argument<@NonNull ?>) argsTree(depth));
+		}
+		if(enableAutoComplete() && getArguments() != null && !getArguments().isEmpty()) {
+			argsTree(0, getArguments().get(0).getArgumentType() == null ? CommandTreeNode.literal().executable() : getArguments().get(0).getArgumentType());
+		}
+		return root;
+	}
+
+	default void argsTree(int depth, Argument<?> parrent) {
+		if(!getArguments().containsKey(depth)) return;
+		Argument<?> node = getArguments().get(depth).getArgumentType() != null ? getArguments().get(depth).getArgumentType() : CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions();
+		getArguments().get(depth).getVariants().forEach(arg -> {
+			parrent.child(arg, node).requires(cause -> getArguments().get(depth).canUse(cause));
+		});
+		argsTree(depth + 1, parrent);
+	}
+
+	default CommandTreeNode.Basic commandTree(int depth, RawCommand child) {
+		Basic node = CommandTreeNode.literal().executable();
+		if(child.getChildExecutors() != null && !child.getChildExecutors().isEmpty()) {
+			for(Entry<String, RawCommand> entry : child.getChildExecutors().entrySet()) {
+				node.child(entry.getKey(), entry.getValue().commandTree(depth + 1, entry.getValue()));
+			}
+		}
+		if(child.enableAutoComplete() && child.getArguments() != null && !child.getArguments().isEmpty()) {
+			argsTree(0, child.getArguments().get(0).getArgumentType() == null ? CommandTreeNode.literal().executable() : getArguments().get(0).getArgumentType());
 		}
 		return node;
 	}

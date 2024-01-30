@@ -22,6 +22,7 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
@@ -113,6 +114,11 @@ public class AddToBalance extends AbstractRawCommand {
 
 	@Override
 	public void register(RegisterCommandEvent<Raw> event) {
+	}
+
+	@Override
+	public List<RawCommand> childCommands() {
+		return null;
 	}
 
 }

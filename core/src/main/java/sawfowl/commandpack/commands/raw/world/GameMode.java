@@ -18,6 +18,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
@@ -96,6 +97,11 @@ public class GameMode extends AbstractWorldCommand {
 		gamemodes.put("1", GameModes.CREATIVE);
 		gamemodes.put("2", GameModes.ADVENTURE);
 		gamemodes.put("3", GameModes.SPECTATOR);
+	}
+
+	@Override
+	public List<RawCommand> childCommands() {
+		return null;
 	}
 
 }

@@ -17,6 +17,7 @@ import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
@@ -153,6 +154,11 @@ public class Warp extends AbstractRawCommand {
 	private void teleport(sawfowl.commandpack.api.data.player.Warp warp, ServerPlayer player) {
 		plugin.getPlayersData().getTempData().setPreviousLocation(player);
 		warp.moveHere(player);
+	}
+
+	@Override
+	public List<RawCommand> childCommands() {
+		return null;
 	}
 
 }

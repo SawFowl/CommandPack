@@ -1,23 +1,21 @@
 package sawfowl.commandpack.commands.settings;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
+
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.CommandCompletion;
-import org.spongepowered.api.command.parameter.CommandContext;
-import org.spongepowered.api.command.registrar.tree.CommandCompletionProvider;
-import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 
-import net.kyori.adventure.text.Component;
-
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterPredicate;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.utils.CommandsUtil;
@@ -30,6 +28,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	}
 
 	private RawCompleterSupplier<Stream<String>> variants;
+	private Supplier<Stream<String>> collection;
 	private RawResultSupplier<T> result;
 	private boolean isOptional = false;
 	private boolean isOptionalForConsole = false;
@@ -37,28 +36,24 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	private Object[] localesPath;
 	private Class<?> clazz;
 	private String permission;
-	private String treeTooltip = "argument";
-	private Component tooltip = Component.text("argument");
-	private CommandTreeNode<?> node = null;
+	private Argument<?> node = null;
+	private RawCompleterPredicate<CommandCause, Stream<String>> canUse;
 
 	@Override
-	public String treeTooltip() {
-		return treeTooltip;
-	}
-
-	@Override
-	public Component getTooltip() {
-		return tooltip;
-	}
-
-	@Override
-	public CommandTreeNode<?> getTreeNode() {
+	public Argument<?> getArgumentType() {
 		return node;
 	}
 
 	@Override
 	public Stream<String> getVariants(CommandCause cause, String[] args) {
 		return variants == null ? new ArrayList<String>().stream() : variants.get(cause, args);
+	}
+
+	@Override
+	public Collection<String> getVariants() {
+		if(collection == null) return CommandsUtil.EMPTY_VARIANTS;
+		Stream<String> variants = collection.get();
+		return variants == null ? CommandsUtil.EMPTY_VARIANTS : variants.toList();
 	}
 
 	@Override
@@ -112,6 +107,11 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	}
 
 	@Override
+	public boolean canUse(CommandCause cause) {
+		return canUse == null && collection != null ? hasPermission(cause) : canUse.test(cause, collection.get());
+	}
+
+	@Override
 	public int contentVersion() {
 		return 1;
 	}
@@ -133,12 +133,18 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		@SuppressWarnings("unchecked")
 		@Override
 		public @NotNull RawArgument<T> build() {
-			return (sawfowl.commandpack.api.commands.raw.arguments.RawArgument<T>) RawArgumentImpl.this;
+			return (RawArgument<T>) RawArgumentImpl.this;
 		}
 
 		@Override
 		public Builder<T> variants(RawCompleterSupplier<Stream<String>> variants) {
 			RawArgumentImpl.this.variants = variants;
+			return this;
+		}
+
+		@Override
+		public Builder<T> variants(Supplier<Stream<String>> variants) {
+			if(variants != null && variants.get() != null) RawArgumentImpl.this.collection = variants;
 			return this;
 		}
 
@@ -181,30 +187,14 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		}
 
 		@Override
-		public Builder<T> setTreeTooltip(String tooltip) {
-			treeTooltip = tooltip;
-			return this;
-		}
-
-		@Override
-		public Builder<T> setTooltip(Component tooltip) {
-			RawArgumentImpl.this.tooltip = tooltip;
-			return this;
-		}
-
-		@Override
-		public Builder<T> setCommandTreeNode(CommandTreeNode<?> node) {
-			if(node != null) {
-				node.completions(new CommandCompletionProvider() {
-					@Override
-					public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-						String[] args = Stream.of(currentInput.split(" ")).filter(string -> (!string.equals(""))).toArray(String[]::new);
-						if(args.length -1 != cursor) return CommandsUtil.EMPTY_COMPLETIONS;
-						return getVariants(context.cause(), args).filter(var -> args.length < cursor && currentInput.endsWith(" ") || var.contains(args[cursor])).map(var -> CommandCompletion.of(var, getTooltip())).toList();
-					}
-				});
-			}
+		public Builder<T> setArgumentType(Argument<?> node) {
 			RawArgumentImpl.this.node = node;
+			return this;
+		}
+
+		@Override
+		public Builder<T> canUse(RawCompleterPredicate<CommandCause, Stream<String>> predicate) {
+			canUse = predicate;
 			return this;
 		}
 		

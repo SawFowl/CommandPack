@@ -192,7 +192,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 		}
 
 		@Override
-		public Builder setAliases(String[] aliases) {
+		public Builder setAliases(String... aliases) {
 			CommandSettings.this.aliases = aliases;
 			return this;
 		}

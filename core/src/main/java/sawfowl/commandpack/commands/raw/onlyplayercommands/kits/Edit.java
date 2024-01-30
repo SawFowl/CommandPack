@@ -15,6 +15,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
@@ -71,6 +72,11 @@ public class Edit extends AbstractKitsEditCommand {
 		}).append(Component.text(" ").append(k.getLocalizedName(locale).clickEvent(SpongeComponents.executeCallback(consumer -> {
 			if(plugin.getKitService().getKit(TextUtils.clearDecorations(k.id())).isPresent()) k.asMenu(getContainer(), src, false).open(src);
 		}))))).collect(Collectors.toList()));
+	}
+
+	@Override
+	public List<RawCommand> childCommands() {
+		return null;
 	}
 
 }

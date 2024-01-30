@@ -1,5 +1,6 @@
 package sawfowl.commandpack.commands.raw.economy;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,10 +23,6 @@ public class Economy extends AbstractRawCommand {
 
 	public Economy(CommandPack plugin) {
 		super(plugin);
-		addChildCommand(new SetBalance(plugin));
-		addChildCommand(new AddToBalance(plugin));
-		addChildCommand(new RemoveFromBalance(plugin));
-		addChildCommand(new BalanceAll(plugin));
 	}
 
 	@Override
@@ -67,6 +64,11 @@ public class Economy extends AbstractRawCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return null;
+	}
+
+	@Override
+	public List<RawCommand> childCommands() {
+		return Arrays.asList(new SetBalance(plugin), new AddToBalance(plugin), new RemoveFromBalance(plugin), new BalanceAll(plugin));
 	}
 
 }

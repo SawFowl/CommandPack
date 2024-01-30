@@ -23,6 +23,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
@@ -121,6 +122,11 @@ public class BalanceTop extends AbstractRawCommand {
 	private Component display(Component component) {
 		String name = TextUtils.clearDecorations(component);
 		return Sponge.server().player(name).isPresent() ? component.clickEvent(ClickEvent.suggestCommand("/tell " + name + " ")) : component;
+	}
+
+	@Override
+	public List<RawCommand> childCommands() {
+		return null;
 	}
 
 }

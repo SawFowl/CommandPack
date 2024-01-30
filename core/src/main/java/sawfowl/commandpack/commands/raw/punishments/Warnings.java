@@ -23,6 +23,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
@@ -136,6 +137,11 @@ public class Warnings extends AbstractRawCommand {
 		});
 		Component title = getText(locale, LocalesPaths.COMMANDS_WARNS_TITLE).replace(Placeholders.PLAYER, warns.getName()).get();
 		sendPaginationList(audience, title, text("=").color(title.color()), 10, list);
+	}
+
+	@Override
+	public List<RawCommand> childCommands() {
+		return null;
 	}
 
 }

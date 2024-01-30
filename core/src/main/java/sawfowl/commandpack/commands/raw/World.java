@@ -12,6 +12,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.commands.raw.world.Create;
@@ -85,6 +86,11 @@ public class World extends AbstractWorldCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
+		return null;
+	}
+
+	@Override
+	public List<RawCommand> childCommands() {
 		return null;
 	}
 }

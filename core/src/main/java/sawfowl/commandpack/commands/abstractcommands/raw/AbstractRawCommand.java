@@ -1,11 +1,9 @@
 package sawfowl.commandpack.commands.abstractcommands.raw;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.spongepowered.api.command.CommandCompletion;
+import java.util.stream.Collectors;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
@@ -14,7 +12,6 @@ import sawfowl.commandpack.commands.abstractcommands.PluginCommand;
 
 public abstract class AbstractRawCommand extends PluginCommand implements RawCommand {
 
-	private List<CommandCompletion> empty = new ArrayList<>();
 	private Map<String, RawCommand> childExecutors = new HashMap<String, RawCommand>();
 	private Map<Integer, RawArgument<?>> args = new HashMap<>();
 	public AbstractRawCommand(CommandPack plugin) {
@@ -23,21 +20,21 @@ public abstract class AbstractRawCommand extends PluginCommand implements RawCom
 
 	public abstract List<RawArgument<?>> arguments();
 
-	@Override
-	public List<CommandCompletion> getEmptyCompletion() {
-		return empty;
-	}
+	public abstract List<RawCommand> childCommands();
 
 	@Override
 	public Map<String, RawCommand> getChildExecutors() {
+		if(childExecutors.isEmpty()) {
+			List<RawCommand> childs = childCommands();
+			if(childs != null && !childs.isEmpty()) childs.forEach(this::addChildCommand);
+		}
 		return childExecutors;
 	}
 
 	@Override
 	public Map<Integer, RawArgument<?>> getArguments() {
 		if(arguments() == null) return null;
-		if(args.isEmpty()) for(RawArgument<?> arg : arguments()) args.put(arg.getCursor(), arg);
-		return args;
+		return args.isEmpty() ? args = arguments().stream().collect(Collectors.toMap(arg -> arg.getCursor(), arg -> arg)) : args;
 	}
 
 	@Override
@@ -46,7 +43,10 @@ public abstract class AbstractRawCommand extends PluginCommand implements RawCom
 	}
 
 	public void addChildCommand(RawCommand command) {
-		childExecutors.put(command.command(), command);
+		if(!childExecutors.containsKey(command.command())) childExecutors.put(command.command(), command);
+		for(String alias : command.getCommandSettings().getAliases()) {
+			if(!childExecutors.containsKey(alias)) childExecutors.put(alias, command);
+		}
 	}
 
 }

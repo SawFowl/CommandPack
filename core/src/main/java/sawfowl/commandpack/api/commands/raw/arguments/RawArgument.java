@@ -1,18 +1,20 @@
 package sawfowl.commandpack.api.commands.raw.arguments;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
-import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 
@@ -62,16 +64,14 @@ public interface RawArgument<T> extends DataSerializable {
 		}, result, optional, optionalForConsole, cursor, permission, localesPath);
 	}
 
-	String treeTooltip();
-
-	Component getTooltip();
-
-	CommandTreeNode<?> getTreeNode();
+	Argument<?> getArgumentType();
 
 	/**
 	 * Autocomplete variants.
 	 */
 	Stream<String> getVariants(CommandCause cause, String[] args);
+
+	Collection<String> getVariants();
 
 	/**
 	 * Converts a string argument to a specified class. If the specified class does not match the argument class, the return will be empty.
@@ -117,12 +117,16 @@ public interface RawArgument<T> extends DataSerializable {
 
 	boolean hasPermission(CommandCause cause);
 
+	boolean canUse(CommandCause cause);
+
 	interface Builder<T> extends AbstractBuilder<RawArgument<T>>, org.spongepowered.api.util.Builder<RawArgument<T>, Builder<T>> {
 
 		/**
 		 * Set variants for auto-complete commands.
 		 */
 		Builder<T> variants(@NotNull RawCompleterSupplier<Stream<String>> variants);
+
+		Builder<T> variants(Supplier<Stream<String>> variants);
 
 		/**
 		 * Setting parameters to get the target object from the command argument.
@@ -154,14 +158,9 @@ public interface RawArgument<T> extends DataSerializable {
 		 */
 		Builder<T> permission(String value);
 
-		Builder<T> setTreeTooltip(String tooltip);
+		Builder<T> canUse(RawCompleterPredicate<CommandCause, Stream<String>> predicate);
 
-		Builder<T> setTooltip(Component tooltip);
-
-		/**
-		 * Use this method after {@link #variants} Autocomplete will be set up automatically.
-		 */
-		Builder<T> setCommandTreeNode(CommandTreeNode<?> node);
+		Builder<T> setArgumentType(Argument<?> node);
 
 	}
 
