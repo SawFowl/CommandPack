@@ -8,9 +8,12 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.CommandCause;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
+import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 
 /**
@@ -58,6 +61,12 @@ public interface RawArgument<T> extends DataSerializable {
 			}
 		}, result, optional, optionalForConsole, cursor, permission, localesPath);
 	}
+
+	String treeTooltip();
+
+	Component getTooltip();
+
+	CommandTreeNode<?> getTreeNode();
 
 	/**
 	 * Autocomplete variants.
@@ -144,6 +153,15 @@ public interface RawArgument<T> extends DataSerializable {
 		 * The required permission for this argument.
 		 */
 		Builder<T> permission(String value);
+
+		Builder<T> setTreeTooltip(String tooltip);
+
+		Builder<T> setTooltip(Component tooltip);
+
+		/**
+		 * Use this method after {@link #variants} Autocomplete will be set up automatically.
+		 */
+		Builder<T> setCommandTreeNode(CommandTreeNode<?> node);
 
 	}
 

@@ -3,7 +3,6 @@ package sawfowl.commandpack.api.commands.raw;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -13,12 +12,19 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.exception.CommandException;
+import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
+import org.spongepowered.api.command.registrar.tree.CommandCompletionProvider;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Basic;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
@@ -33,6 +39,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.utils.CommandsUtil;
 
 /**
  * This interface is designed to simplify the creation of Raw commands.
@@ -49,12 +56,6 @@ public interface RawCommand extends PluginCommand, Raw {
 	Component shortDescription(Locale locale);
 
 	Component extendedDescription(Locale locale);
-
-	/**
-	 * The method is designed to define an empty autofill list.<br>
-	 * It is recommended to create a class variable to save resources.
-	 */
-	List<CommandCompletion> getEmptyCompletion();
 
 	/**
 	 * Subcommand map.<br>
@@ -74,21 +75,54 @@ public interface RawCommand extends PluginCommand, Raw {
 	 */
 	boolean enableAutoComplete();
 
-	/* To tests
+	// To tests
 	@Override
 	default CommandTreeNode.Root commandTree() {
-		Root root = CommandTreeNode.root().executable().child("arguments",
-				CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions());
-		root.completions(new CommandCompletionProvider() {
+		return CommandTreeNode.root().executable().child("arguments", commandTree(0));
+	}
+
+	default CommandTreeNode<?> argsTree(int depth) {
+		if(!getArguments().containsKey(depth)) return CommandTreeNode.literal().executable();
+		if(getArguments().get(depth).getTreeNode() != null) {
+			CommandTreeNode<?> node = getArguments().get(depth).getTreeNode();
+			if(getArguments().size() > depth) node.child(getArguments().get(depth + 1).treeTooltip(), (Argument<@NonNull ?>) argsTree(depth + 1));
+			return node;
+		}
+		Basic node = CommandTreeNode.literal().executable().child(getArguments().get(depth).treeTooltip(), CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions());
+		node.completions(new CommandCompletionProvider() {
 			@Override
 			public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-				if(!enableAutoComplete()) return getEmptyCompletion() == null ? new ArrayList<>() : getEmptyCompletion();
-				List<CommandCompletion> complete = completeChild(context.cause(), Stream.of(currentInput.split(" ")).filter(string -> (!string.equals(""))).toList(), currentInput);
-				return complete == null ? (CommandsUtil.EMPTY_COMPLETIONS) : complete;
+				if(!enableAutoComplete()) return CommandsUtil.EMPTY_COMPLETIONS;
+				String[] args = Stream.of(currentInput.split(" ")).filter(string -> (!string.equals(""))).toArray(String[]::new);
+				if(args.length < depth) return CommandsUtil.EMPTY_COMPLETIONS;
+				return getArguments().get(depth).getVariants(context.cause(), args).filter(var -> args.length < depth && currentInput.endsWith(" ") || var.contains(args[depth])).map(var -> CommandCompletion.of(var, getArguments().get(depth).getTooltip())).toList();
 			}
 		});
-		return root;
-	}*/
+		return node;
+	}
+
+	default CommandTreeNode.Basic commandTree(int depth) {
+		Basic node = CommandTreeNode.literal().executable().child("arguments", CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions());
+		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
+			node = CommandTreeNode.literal().executable().child("commands and arguments", CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions());
+			for(RawCommand command : getChildExecutors().values()) {
+				node.child("commands and arguments", command.commandTree(depth + 1));
+			}
+			node.completions(new CommandCompletionProvider() {
+				@Override
+				public List<CommandCompletion> complete(CommandContext context, String currentInput) {
+					if(!enableAutoComplete()) return CommandsUtil.EMPTY_COMPLETIONS;
+					String[] args = Stream.of(currentInput.split(" ")).filter(string -> (!string.equals(""))).toArray(String[]::new);
+					if(args.length < depth) return CommandsUtil.EMPTY_COMPLETIONS;
+					return getChildExecutors().entrySet().stream().filter(entry -> (args.length < depth && currentInput.endsWith(" ") || entry.getKey().contains(args[depth])) && entry.getValue().canExecute(context.cause())).map(child -> CommandCompletion.of(child.getKey())).toList();
+				}
+			});
+		} 
+		if(getArguments() != null && !getArguments().isEmpty()) {
+			node.child(getArguments().get(depth).treeTooltip(), (Argument<@NonNull ?>) argsTree(depth));
+		}
+		return node;
+	}
 
 	/**
 	 * Checks for child commands and who activated the command.
@@ -109,11 +143,11 @@ public interface RawCommand extends PluginCommand, Raw {
 
 	@Override
 	default List<CommandCompletion> complete(CommandCause cause, Mutable arguments) throws CommandException {
-		if(!enableAutoComplete()) return getEmptyCompletion() == null ? new ArrayList<>() : getEmptyCompletion();
+		if(!enableAutoComplete()) return CommandsUtil.EMPTY_COMPLETIONS;
 		List<String> args = Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList());
 		String currentInput = arguments.input();
 		List<CommandCompletion> complete = completeChild(cause, args, currentInput);
-		return complete == null || complete.size() == 0 ? (getEmptyCompletion() == null ? new ArrayList<>() : getEmptyCompletion()) : complete;
+		return complete == null ? CommandsUtil.EMPTY_COMPLETIONS : complete;
 	}
 
 	default String[] checkChildAndArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
@@ -158,10 +192,10 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * Auto-complete command arguments.
 	 */
 	default List<CommandCompletion> complete(CommandCause cause, List<String> args, String currentInput) {
-		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.size() || (!getArguments().isEmpty() && !getArguments().get(args.size() > 0 ? args.size() - 1 : 0).hasPermission(cause))) return getEmptyCompletion();
+		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.size() || (!getArguments().isEmpty() && !getArguments().get(args.size() > 0 ? args.size() - 1 : 0).hasPermission(cause))) return CommandsUtil.EMPTY_COMPLETIONS;
 		if(currentInput.endsWith(" ") || args.size() == 0) {
 			if(getArguments().containsKey(args.size())) return getArguments().get(args.size()).getVariants(cause, args.toArray(new String[] {})).map(CommandCompletion::of).collect(Collectors.toList());
-			return getEmptyCompletion();
+			return CommandsUtil.EMPTY_COMPLETIONS;
 		} else return getArguments().get(args.size() - 1).getVariants(cause, args.toArray(new String[] {})).filter(v -> ((v.contains(args.get(args.size() - 1)) && !currentInput.endsWith(" ")) || (args.get(args.size() - 1).contains(v) && !args.get(args.size() - 1).contains(v + " ")) || (v.contains(":") && (v.split(":")[0].contains(args.get(args.size() - 1)) || v.split(":")[1].contains(args.get(args.size() - 1)))))).map(CommandCompletion::of).collect(Collectors.toList());
 	}
 
@@ -386,6 +420,14 @@ public interface RawCommand extends PluginCommand, Raw {
 			return getChildExecutors().get(args[0]).getChildExecutor(cause, args.length > 1 ? Stream.of(Arrays.copyOfRange(args, 1, args.length + 1)).filter(arg -> arg != null).toArray(String[]::new) : new String[] {});
 		}
 		return new Object[] {this, args};
+	}
+
+	/**
+	 * No longer required.
+	 */
+	@Deprecated
+	default List<CommandCompletion> getEmptyCompletion() {
+		return CommandsUtil.EMPTY_COMPLETIONS;
 	}
 
 }

@@ -1,18 +1,26 @@
 package sawfowl.commandpack.commands.settings;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.command.CommandCause;
+import org.spongepowered.api.command.CommandCompletion;
+import org.spongepowered.api.command.parameter.CommandContext;
+import org.spongepowered.api.command.registrar.tree.CommandCompletionProvider;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 
+import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
+import sawfowl.commandpack.utils.CommandsUtil;
 
 public class RawArgumentImpl<T> implements RawArgument<T> {
 
@@ -29,6 +37,24 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	private Object[] localesPath;
 	private Class<?> clazz;
 	private String permission;
+	private String treeTooltip = "argument";
+	private Component tooltip = Component.text("argument");
+	private CommandTreeNode<?> node = null;
+
+	@Override
+	public String treeTooltip() {
+		return treeTooltip;
+	}
+
+	@Override
+	public Component getTooltip() {
+		return tooltip;
+	}
+
+	@Override
+	public CommandTreeNode<?> getTreeNode() {
+		return node;
+	}
 
 	@Override
 	public Stream<String> getVariants(CommandCause cause, String[] args) {
@@ -149,8 +175,36 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		}
 
 		@Override
-		public sawfowl.commandpack.api.commands.raw.arguments.RawArgument.Builder<T> permission(String value) {
+		public Builder<T> permission(String value) {
 			permission = value;
+			return this;
+		}
+
+		@Override
+		public Builder<T> setTreeTooltip(String tooltip) {
+			treeTooltip = tooltip;
+			return this;
+		}
+
+		@Override
+		public Builder<T> setTooltip(Component tooltip) {
+			RawArgumentImpl.this.tooltip = tooltip;
+			return this;
+		}
+
+		@Override
+		public Builder<T> setCommandTreeNode(CommandTreeNode<?> node) {
+			if(node != null) {
+				node.completions(new CommandCompletionProvider() {
+					@Override
+					public List<CommandCompletion> complete(CommandContext context, String currentInput) {
+						String[] args = Stream.of(currentInput.split(" ")).filter(string -> (!string.equals(""))).toArray(String[]::new);
+						if(args.length -1 != cursor) return CommandsUtil.EMPTY_COMPLETIONS;
+						return getVariants(context.cause(), args).filter(var -> args.length < cursor && currentInput.endsWith(" ") || var.contains(args[cursor])).map(var -> CommandCompletion.of(var, getTooltip())).toList();
+					}
+				});
+			}
+			RawArgumentImpl.this.node = node;
 			return this;
 		}
 		
