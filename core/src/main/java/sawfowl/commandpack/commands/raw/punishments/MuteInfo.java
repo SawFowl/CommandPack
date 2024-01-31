@@ -1,11 +1,8 @@
 package sawfowl.commandpack.commands.raw.punishments;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
@@ -20,8 +17,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
-import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
@@ -74,18 +70,7 @@ public class MuteInfo extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArgument.of(Mute.class, new RawCompleterSupplier<Stream<String>>() {
-			@Override
-			public Stream<String> get(CommandCause cause, String[] args) {
-				return plugin.getPunishmentService().getAllProfileBans().stream().map(p -> p.profile().name().orElse(p.profile().examinableName()));
-			}
-		}, new RawResultSupplier<Mute>() {
-			@Override
-			public Optional<Mute> get(CommandCause cause, String[] args) {
-				Collection<Mute> variants = plugin.getPunishmentService().getAllMutes();
-				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(p -> p.getName().equals(args[0])).findFirst();
-			}
-		}, false, false, 0, LocalesPaths.COMMANDS_MUTEINFO_NOT_PRESENT));
+		return Arrays.asList(RawArguments.createMuteArgument(false, false, 0, null, LocalesPaths.COMMANDS_MUTEINFO_NOT_PRESENT));
 	}
 
 	@Override

@@ -3,10 +3,7 @@ package sawfowl.commandpack.commands.raw;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Stream;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
@@ -21,8 +18,6 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
-import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
@@ -82,26 +77,7 @@ public class Tell extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArgument.of(ServerPlayer.class, 
-			new RawCompleterSupplier<Stream<String>>() {
-
-				@Override
-				public Stream<String> get(CommandCause cause, String[] args) {
-					return Sponge.server().onlinePlayers().stream().filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).map(ServerPlayer::name);
-				}
-
-			},
-			new RawResultSupplier<ServerPlayer>() {
-
-				@Override
-				public Optional<ServerPlayer> get(CommandCause cause, String[] args) {
-					return args.length >= 1 ? Sponge.server().onlinePlayers().stream().filter(player -> player.name().equals(args[0])).findFirst() : Optional.empty();
-				}
-
-			},
-			false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-			RawArguments.createRemainingJoinedStringsArgument(false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
-		);
+		return Arrays.asList(RawArguments.createPlayerArgument(false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
 	}
 
 	@Override

@@ -8,8 +8,10 @@ import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import sawfowl.commandpack.api.data.command.Delay;
+
 @ConfigSerializable
-public class DelayData implements sawfowl.commandpack.api.data.command.Delay {
+public class DelayData implements Delay {
 
 	public DelayData() {}
 	public DelayData(long seconds) {

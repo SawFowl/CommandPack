@@ -1,17 +1,14 @@
 package sawfowl.commandpack.commands.raw.punishments;
 
-import java.net.InetAddress;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
+import org.spongepowered.api.service.ban.Ban;
 import org.spongepowered.api.service.ban.Ban.IP;
 
 import net.kyori.adventure.audience.Audience;
@@ -21,8 +18,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
-import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
@@ -37,9 +33,9 @@ public class Unbanip extends AbstractRawCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		InetAddress address = getArgument(InetAddress.class, args, 0).get();
-		plugin.getPunishmentService().pardon(address);
-		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_UNBANIP_SUCCESS).replace(Placeholders.VALUE, address.getHostAddress()).get());
+		IP ban = getArgument(Ban.IP.class, args, 0).get();
+		plugin.getPunishmentService().pardon(ban.address());
+		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_UNBANIP_SUCCESS).replace(Placeholders.VALUE, ban.address().getHostAddress()).get());
 	}
 
 	@Override
@@ -69,18 +65,7 @@ public class Unbanip extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArgument.of(InetAddress.class, new RawCompleterSupplier<Stream<String>>() {
-			@Override
-			public Stream<String> get(CommandCause cause, String[] args) {
-				return plugin.getPunishmentService().getAllIPBans().stream().map(i -> i.address().getHostAddress());
-			}
-		}, new RawResultSupplier<InetAddress>() {
-			@Override
-			public Optional<InetAddress> get(CommandCause cause, String[] args) {
-				Collection<IP> variants = plugin.getPunishmentService().getAllIPBans();
-				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(i -> i.address().getHostAddress().equals(args[0])).findFirst().map(IP::address);
-			}
-		}, false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
+		return Arrays.asList(RawArguments.createBanIPArgument(false, false, 0, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
 	}
 
 	@Override

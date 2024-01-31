@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
@@ -33,8 +32,6 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
-import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.commandpack.api.events.KitGiveEvent;
@@ -434,17 +431,7 @@ public class Kit extends AbstractRawCommand {
 	}
 
 	private RawArgument<sawfowl.commandpack.api.data.kits.Kit> kitArgument() {
-		return RawArgument.of(sawfowl.commandpack.api.data.kits.Kit.class, new RawCompleterSupplier<Stream<String>>() {
-			@Override
-			public Stream<String> get(CommandCause cause, String[] args) {
-				return plugin.getKitService().getKits().stream().map(sawfowl.commandpack.api.data.kits.Kit::id);
-			}
-		}, new RawResultSupplier<sawfowl.commandpack.api.data.kits.Kit>() {
-			@Override
-			public Optional<sawfowl.commandpack.api.data.kits.Kit> get(CommandCause cause, String[] args) {
-				return args.length >= 1 ? plugin.getKitService().getKit(args[0]) : Optional.empty();
-			}
-		}, true, true, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+		return RawArguments.createKitArgument(true, true, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 	}
 
 	@Override

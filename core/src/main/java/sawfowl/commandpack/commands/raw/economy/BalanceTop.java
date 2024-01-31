@@ -41,7 +41,7 @@ public class BalanceTop extends AbstractRawCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		Currency currency = getCurrency(args, 0).orElse(plugin.getEconomy().getEconomyService().defaultCurrency());
+		Currency currency = getCurrency(args, 0).orElse(plugin.getEconomy().getEconomyServiceImpl().defaultCurrency());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) audience;
 			delay(player, locale, condumer -> {
@@ -102,8 +102,8 @@ public class BalanceTop extends AbstractRawCommand {
 		boolean nullableName = name == null;
 		Sponge.asyncScheduler().submit(Task.builder().plugin(getContainer()).execute(() -> {
 			Map<Component, Double> balances = new HashMap<Component, Double>();
-			plugin.getEconomy().getEconomyService().streamUniqueAccounts().forEach(account -> {
-				if(viewHide || !plugin.getEconomy().getEconomyService().isHiden(account) || (!nullableName && account.identifier().equals(name))) balances.put(account.displayName(), account.balance(currency).doubleValue());
+			plugin.getEconomy().getEconomyServiceImpl().streamUniqueAccounts().forEach(account -> {
+				if(viewHide || !plugin.getEconomy().getEconomyServiceImpl().isHiden(account) || (!nullableName && account.identifier().equals(name))) balances.put(account.displayName(), account.balance(currency).doubleValue());
 			});
 			List<Component> top = new ArrayList<Component>();
 			balances.entrySet().stream().sorted(Map.Entry.<Component, Double>comparingByValue().reversed()).forEach(entry -> {

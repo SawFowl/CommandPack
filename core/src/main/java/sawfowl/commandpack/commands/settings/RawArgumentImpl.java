@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 
 import org.spongepowered.api.command.CommandCause;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
@@ -36,8 +38,8 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	private Object[] localesPath;
 	private Class<?> clazz;
 	private String permission;
-	private Argument<?> node = null;
-	private RawCompleterPredicate<CommandCause, Stream<String>> canUse;
+	private Argument<?> node = CommandTreeNodeTypes.STRING.get().createNode();
+	private RawCompleterPredicate<CommandCause, Stream<String>> canUse = (cause, variants, input) -> variants.filter(var -> var.equals(input)).findFirst().isPresent();
 
 	@Override
 	public Argument<?> getArgumentType() {
@@ -107,8 +109,8 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	}
 
 	@Override
-	public boolean canUse(CommandCause cause) {
-		return canUse == null && collection != null ? hasPermission(cause) : canUse.test(cause, collection.get());
+	public boolean canUse(CommandCause cause, String input) {
+		return canUse == null && collection != null ? hasPermission(cause) : canUse.test(cause, collection.get(), input);
 	}
 
 	@Override
@@ -133,6 +135,8 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		@SuppressWarnings("unchecked")
 		@Override
 		public @NotNull RawArgument<T> build() {
+			if(canUse == null) canUse = (cause, variants, input) -> variants.filter(var -> var.equals(input)).findFirst().isPresent();
+			if(node == null) node = CommandTreeNodeTypes.STRING.get().createNode();
 			return (RawArgument<T>) RawArgumentImpl.this;
 		}
 
@@ -175,7 +179,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		}
 
 		@Override
-		public Builder<T> localeTextPath(Object[] value) {
+		public Builder<T> localeTextPath(Object... value) {
 			localesPath = value;
 			return this;
 		}
@@ -187,14 +191,14 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		}
 
 		@Override
-		public Builder<T> setArgumentType(Argument<?> node) {
-			RawArgumentImpl.this.node = node;
+		public <C extends CommandTreeNode<C>> Builder<T> setArgumentType(Argument<C> node) {
+			if(node != null) RawArgumentImpl.this.node = node;
 			return this;
 		}
 
 		@Override
 		public Builder<T> canUse(RawCompleterPredicate<CommandCause, Stream<String>> predicate) {
-			canUse = predicate;
+			if(predicate != null) canUse = predicate;
 			return this;
 		}
 		

@@ -1,11 +1,8 @@
 package sawfowl.commandpack.commands.raw.punishments;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
@@ -15,7 +12,6 @@ import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.profile.GameProfile;
-import org.spongepowered.api.service.ban.Ban.Profile;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -24,8 +20,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
-import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
@@ -77,18 +72,7 @@ public class Unban extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArgument.of(GameProfile.class, new RawCompleterSupplier<Stream<String>>() {
-			@Override
-			public Stream<String> get(CommandCause cause, String[] args) {
-				return plugin.getPunishmentService().getAllProfileBans().stream().map(p -> p.profile().name().orElse(p.profile().examinableName()));
-			}
-		}, new RawResultSupplier<GameProfile>() {
-			@Override
-			public Optional<GameProfile> get(CommandCause cause, String[] args) {
-				Collection<Profile> variants = plugin.getPunishmentService().getAllProfileBans();
-				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(p -> p.profile().name().orElse(p.profile().examinableName()).equals(args[0])).findFirst().map(Profile::profile);
-			}
-		}, false, false, 0, LocalesPaths.COMMANDS_BANINFO_NOT_PRESENT));
+		return Arrays.asList(RawArguments.createProfileArgument(false, false, 0, null, LocalesPaths.COMMANDS_BANINFO_NOT_PRESENT));
 	}
 
 	@Override

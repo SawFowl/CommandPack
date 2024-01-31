@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
@@ -22,8 +21,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
-import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
@@ -44,10 +42,10 @@ public class Balance extends AbstractRawCommand {
 			delay(source, locale, consumer -> {
 				List<Component> messages = new ArrayList<Component>();
 				if(optTarget.isPresent()) {
-					if(plugin.getEconomy().getEconomyService().isHiden(optTarget.get()) && !source.hasPermission(Permissions.BALANCE_HIDEN_VIEW) && !source.hasPermission(Permissions.ECONOMY_STAFF)) exception(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_HIDEN).replace(Placeholders.PLAYER, optTarget.get().displayName()).get());
+					if(plugin.getEconomy().getEconomyServiceImpl().isHiden(optTarget.get()) && !source.hasPermission(Permissions.BALANCE_HIDEN_VIEW) && !source.hasPermission(Permissions.ECONOMY_STAFF)) exception(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_HIDEN).replace(Placeholders.PLAYER, optTarget.get().displayName()).get());
 					Component title = getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE).replace(Placeholders.PLAYER, optTarget.get().displayName()).get();
-					for(Currency currency : plugin.getEconomy().getEconomyService().getCurrencies()) {
-						if(plugin.getEconomy().getEconomyService().defaultCurrency().equals(currency) || source.hasPermission(Permissions.getCurrencyAccess(currency))) {
+					for(Currency currency : plugin.getEconomy().getEconomyServiceImpl().getCurrencies()) {
+						if(plugin.getEconomy().getEconomyServiceImpl().defaultCurrency().equals(currency) || source.hasPermission(Permissions.getCurrencyAccess(currency))) {
 							double balance = optTarget.get().balance(currency).doubleValue();
 							Component message = getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_LIST).replace(new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)).get();
 							messages.add(message);
@@ -56,7 +54,7 @@ public class Balance extends AbstractRawCommand {
 					sendPaginationList(source, title, text("=").color(title.color()), 10, messages);
 				} else {
 					Component title = getComponent(source.locale(), LocalesPaths.COMMANDS_BALANCE_SELF_TITLE);
-					for(Currency currency : plugin.getEconomy().getEconomyService().getCurrencies()) {
+					for(Currency currency : plugin.getEconomy().getEconomyServiceImpl().getCurrencies()) {
 						double balance = plugin.getEconomy().getPlayerBalance(source.uniqueId(), currency).doubleValue();
 						Component message = getText(source.locale(), LocalesPaths.COMMANDS_BALANCE_SELF_LIST).replace(new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)).get();
 						messages.add(message);
@@ -67,7 +65,7 @@ public class Balance extends AbstractRawCommand {
 		} else {
 			UniqueAccount account = getArgument(UniqueAccount.class, args, 0).get();
 			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE).replace(Placeholders.PLAYER, account.displayName()).get().append(text(":")));
-			for(Currency currency : plugin.getEconomy().getEconomyService().getCurrencies()) {
+			for(Currency currency : plugin.getEconomy().getEconomyServiceImpl().getCurrencies()) {
 				double balance = account.balance(currency).doubleValue();
 				Component message = getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_LIST).replace(new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)).get();
 				audience.sendMessage(message);
@@ -102,17 +100,7 @@ public class Balance extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArgument.of(UniqueAccount.class, new RawCompleterSupplier<Stream<String>>() {
-			@Override
-			public Stream<String> get(CommandCause cause, String[] args) {
-				return plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier);
-			}
-		}, new RawResultSupplier<UniqueAccount>() {
-			@Override
-			public Optional<UniqueAccount> get(CommandCause cause, String[] args) {
-				return args.length == 0 ? Optional.empty() : plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(account -> account.identifier().equals(args[0])).findFirst();
-			}
-		}, true, false, 0, Permissions.BALANCE_OTHER, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
+		return Arrays.asList(RawArguments.createUniqueAccountArgument(true, false, 0, null, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
 	}
 
 	@Override

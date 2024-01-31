@@ -24,7 +24,7 @@ public abstract class PluginCommand implements sawfowl.commandpack.api.commands.
 
 	protected final CommandPack plugin;
 	protected final String[] aliases;
-	protected CommandSettings commandSettings;
+	protected Settings commandSettings;
 	public PluginCommand(CommandPack plugin) {
 		this.plugin = plugin;
 		if(command() != null) this.commandSettings = plugin.getCommandsConfig().getCommandConfig(command());

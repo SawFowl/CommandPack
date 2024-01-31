@@ -43,8 +43,12 @@ public class Economy {
 		return this;
 	}
 
-	public EconomyServiceImpl getEconomyService() {
+	public EconomyServiceImpl getEconomyServiceImpl() {
 		return economyServiceImpl;
+	}
+
+	public EconomyService getEconomyService() {
+		return economyService;
 	}
 
 	public BigDecimal getPlayerBalance(UUID uuid, Currency currency) {

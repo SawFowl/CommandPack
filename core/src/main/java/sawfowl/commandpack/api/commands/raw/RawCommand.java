@@ -71,41 +71,44 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * Regardless of the return value, the player will receive variants of the child commands.<br>
 	 * This parameter will be ignored when overriding the {@link #complete(CommandCause, Mutable)} method.
 	 */
-	boolean enableAutoComplete();
+	default boolean enableAutoComplete() {
+		return getCommandSettings() == null || getCommandSettings().isAutocomplete() == null || getCommandSettings().isAutocomplete();
+	}
 
 	// To tests
 	@Override
 	default CommandTreeNode.Root commandTree() {
+		if(getCommandSettings() != null && getCommandSettings().isGenerateRawTree() != null && !getCommandSettings().isGenerateRawTree()) return Raw.super.commandTree();
 		CommandTreeNode.Root root = CommandTreeNode.root().executable();
 		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
 			for(Entry<String, RawCommand> entry : getChildExecutors().entrySet()) {
 				root.child(entry.getKey(), entry.getValue().commandTree(0, entry.getValue()).requires(cause -> entry.getValue().canExecute(cause)));
 			}
 		}
-		if(enableAutoComplete() && getArguments() != null && !getArguments().isEmpty()) {
+		if(getArguments() != null && !getArguments().isEmpty()) {
 			argsTree(0, getArguments().get(0).getArgumentType() == null ? CommandTreeNode.literal().executable() : getArguments().get(0).getArgumentType());
 		}
 		return root;
 	}
 
-	default void argsTree(int depth, Argument<?> parrent) {
+	private void argsTree(int depth, Argument<?> parrent) {
 		if(!getArguments().containsKey(depth)) return;
 		Argument<?> node = getArguments().get(depth).getArgumentType() != null ? getArguments().get(depth).getArgumentType() : CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions();
 		getArguments().get(depth).getVariants().forEach(arg -> {
-			parrent.child(arg, node).requires(cause -> getArguments().get(depth).canUse(cause));
+			parrent.child(arg, node).requires(cause -> getArguments().get(depth).canUse(cause, arg));
 		});
 		argsTree(depth + 1, parrent);
 	}
 
-	default CommandTreeNode.Basic commandTree(int depth, RawCommand child) {
+	private CommandTreeNode.Basic commandTree(int depth, RawCommand child) {
 		Basic node = CommandTreeNode.literal().executable();
 		if(child.getChildExecutors() != null && !child.getChildExecutors().isEmpty()) {
 			for(Entry<String, RawCommand> entry : child.getChildExecutors().entrySet()) {
-				node.child(entry.getKey(), entry.getValue().commandTree(depth + 1, entry.getValue()));
+				node.child(entry.getKey(), entry.getValue().commandTree(depth + 1, entry.getValue())).requires(cause -> entry.getValue().canExecute(cause));
 			}
 		}
-		if(child.enableAutoComplete() && child.getArguments() != null && !child.getArguments().isEmpty()) {
-			argsTree(0, child.getArguments().get(0).getArgumentType() == null ? CommandTreeNode.literal().executable() : getArguments().get(0).getArgumentType());
+		if(child.getArguments() != null && !child.getArguments().isEmpty()) {
+			argsTree(0, child.getArguments().get(0).getArgumentType() == null ? CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions() : getArguments().get(0).getArgumentType());
 		}
 		return node;
 	}
@@ -357,6 +360,10 @@ public interface RawCommand extends PluginCommand, Raw {
 	@SuppressWarnings("unchecked")
 	default <T> Optional<T> getArgument(Class<T> clazz, String[] args, int cursor) {
 		return getArguments() == null || !getArguments().containsKey(cursor) || getArguments().get(cursor).getClazz() != clazz || !getArguments().get(cursor).getClazz().getName().equals(clazz.getName()) ? Optional.empty() : ((RawArgument<T>) getArguments().get(cursor)).getResult(clazz, args);
+	}
+	@SuppressWarnings("unchecked")
+	default <T> Optional<T> getArgument(Class<T> clazz, List<String> args, int cursor) {
+		return getArguments() == null || !getArguments().containsKey(cursor) || getArguments().get(cursor).getClazz() != clazz || !getArguments().get(cursor).getClazz().getName().equals(clazz.getName()) ? Optional.empty() : ((RawArgument<T>) getArguments().get(cursor)).getResult(clazz, args.toArray(new String[]{}));
 	}
 
 	/**

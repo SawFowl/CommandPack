@@ -31,8 +31,6 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
-import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -40,7 +38,6 @@ import sawfowl.commandpack.configure.locale.LocalesPaths;
 public class GameRule extends AbstractWorldCommand {
 
 	private Map<String, org.spongepowered.api.world.gamerule.GameRule<?>> gamerules = new HashMap<>();
-	private List<String> bools = Arrays.asList("true", "false");
 	public GameRule(CommandPack plugin) {
 		super(plugin);
 		Sponge.eventManager().registerListeners(getContainer(), this);
@@ -141,17 +138,19 @@ public class GameRule extends AbstractWorldCommand {
 	}
 
 	private RawArgument<String> createValueArg() {
-		return RawArgument.of(String.class, new RawCompleterSupplier<Stream<String>>() {
-			@Override
-			public Stream<String> get(CommandCause cause, String[] args) {
-				return args.length >= 2 && gamerules.containsKey(args[1]) && isBooleanType(gamerules.get(args[1])) ? bools.stream() : RawArguments.EMPTY.stream();
-			}
-		}, new RawResultSupplier<String>() {
-			@Override
-			public Optional<String> get(CommandCause cause, String[] args) {
-				return args.length > 2 && gamerules.containsKey(args[1]) ? Optional.ofNullable(args[2]) : Optional.empty();
-			}
-		}, true, true, 2, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+		return RawArgument.of(
+			String.class,
+			null,
+			(cause, args) -> args.length >= 2 && gamerules.containsKey(args[1]) && isBooleanType(gamerules.get(args[1])) ? Stream.of("true", "false") : RawArguments.EMPTY.stream(),
+			() -> Stream.of("true", "false"),
+			(cause, args) -> args.length > 2 && gamerules.containsKey(args[1]) ? Optional.ofNullable(args[2]) : Optional.empty(),
+			null,
+			true,
+			true,
+			2,
+			null,
+			LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT
+		);
 	}
 
 	@Override

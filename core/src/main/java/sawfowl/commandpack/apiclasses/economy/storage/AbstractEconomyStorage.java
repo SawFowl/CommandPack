@@ -100,9 +100,13 @@ public abstract class AbstractEconomyStorage extends Thread {
 	}
 
 	public Collection<Account> allAccounts() {
-		List<Account> all = new ArrayList<Account>(uniqueAccounts.values());
-		all.addAll(accounts.values());
-		return all;
+		return new ArrayList<Account>() {
+			private static final long serialVersionUID = 1L;
+			{
+				addAll(uniqueAccounts.values());
+				addAll(accounts.values());
+			}
+		};
 	}
 
 	public AccountDeletionResultType deleteAccount(UUID uuid) {

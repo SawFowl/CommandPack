@@ -4,13 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Stream;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
@@ -25,8 +22,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
-import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
@@ -89,18 +85,7 @@ public class Warnings extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArgument.of(Warns.class, new RawCompleterSupplier<Stream<String>>() {
-			@Override
-			public Stream<String> get(CommandCause cause, String[] args) {
-				return Stream.concat(Sponge.server().userManager().streamAll().map(u -> u.name().orElse(u.examinableName())), plugin.getPunishmentService().getAllWarns().stream().map(w -> w.getName()));
-			}
-		}, new RawResultSupplier<Warns>() {
-			@Override
-			public Optional<Warns> get(CommandCause cause, String[] args) {
-				Collection<Warns> variants = plugin.getPunishmentService().getAllWarns();
-				return args.length == 0 || variants.isEmpty() ? Optional.empty() : variants.stream().filter(w -> w.getName().equals(args[0])).findFirst();
-			}
-		}, true, true, 0, Permissions.WARNS_OTHER, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
+		return Arrays.asList(RawArguments.createWarnsArgument(true, true, 0, Permissions.WARNS_OTHER, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
 	}
 
 	@Override

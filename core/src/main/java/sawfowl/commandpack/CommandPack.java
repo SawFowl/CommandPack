@@ -330,7 +330,7 @@ public class CommandPack {
 
 			@Override
 			public Optional<CPEconomyService> getEconomyService() {
-				return Optional.ofNullable(economy.getEconomyService());
+				return Optional.ofNullable(economy.getEconomyServiceImpl());
 			}
 
 			@Override

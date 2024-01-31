@@ -52,7 +52,7 @@ public class GameMode extends AbstractWorldCommand {
 
 	@Override
 	public String command() {
-		return "worldgamemode";
+		return "gamemode";
 	}
 
 	@Override

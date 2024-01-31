@@ -17,6 +17,10 @@ public interface Price extends DataSerializable {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
+	static Price of(String currency, double money) {
+		return builder().currency(currency).money(money).build();
+	}
+
 	String getCurrency();
 
 	double getMoney();

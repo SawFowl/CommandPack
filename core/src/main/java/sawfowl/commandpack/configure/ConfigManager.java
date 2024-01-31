@@ -19,7 +19,6 @@ import sawfowl.commandpack.configure.configs.kits.KitData;
 import sawfowl.commandpack.configure.configs.miscellaneous.JoinCommands;
 import sawfowl.commandpack.configure.configs.player.PlayerData;
 import sawfowl.commandpack.configure.configs.player.WarpData;
-
 import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
@@ -185,7 +184,7 @@ public class ConfigManager {
 
 	private void saveMainCommandsConfig() {
 		try {
-			commandsConfigReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(plugin.getConfigDir().resolve("Commands.conf")).build().loadToReference();
+			commandsConfigReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(plugin.getConfigDir().resolve("Commands.conf")).defaultOptions(options -> options.serializers(serializers -> serializers.registerAll(sawfowl.commandpack.api.CommandPack.COMMAND_SETTINGS_SERIALIZERS))).build().loadToReference();
 			commandsConfig = commandsConfigReference.referenceTo(CommandsConfig.class);
 			commandsConfigReference.save();
 			commandsConfig.get().updateCommandMap(commandsConfig);

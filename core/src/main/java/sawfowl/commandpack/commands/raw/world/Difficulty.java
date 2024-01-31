@@ -52,7 +52,7 @@ public class Difficulty extends AbstractWorldCommand {
 
 	@Override
 	public String command() {
-		return null;
+		return "difficulty";
 	}
 
 	@Override

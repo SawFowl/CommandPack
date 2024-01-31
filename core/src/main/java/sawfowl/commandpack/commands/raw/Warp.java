@@ -4,9 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Stream;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
@@ -19,8 +17,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
-import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
@@ -125,29 +122,8 @@ public class Warp extends AbstractRawCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArgument.of(sawfowl.commandpack.api.data.player.Warp.class, new RawCompleterSupplier<Stream<String>>() {
-				@Override
-				public Stream<String> get(CommandCause cause, String[] args) {
-					if(!plugin.getMainConfig().isAutoCompleteRawCommands() || (plugin.getPlayersData().getAdminWarps().isEmpty() && plugin.getPlayersData().getPlayersWarps().isEmpty())) return Stream.empty();
-					return plugin.getPlayersData().streamAllWarps().filter(warp -> (args.length == 0 || warp.getName().startsWith(args[0]) && ((!warp.isPrivate() || (cause.first(ServerPlayer.class).isPresent() && plugin.getPlayersData().getPlayerData(cause.first(ServerPlayer.class).get().uniqueId()).get().containsWarp(warp.getPlainName()))) || cause.hasPermission(Permissions.WARP_STAFF) || cause.hasPermission(Permissions.getWarpPermission(warp.getPlainName()))))).map(sawfowl.commandpack.api.data.player.Warp::getPlainName);
-				}
-			}, new RawResultSupplier<sawfowl.commandpack.api.data.player.Warp>() {
-				@Override
-				public Optional<sawfowl.commandpack.api.data.player.Warp> get(CommandCause cause, String[] args) {
-					return args.length == 0 ? Optional.empty() : plugin.getPlayersData().streamAllWarps().filter(warp -> (args.length == 0 || warp.getName().startsWith(args[0]) && ((!warp.isPrivate() || (cause.first(ServerPlayer.class).isPresent() && plugin.getPlayersData().getPlayerData(cause.first(ServerPlayer.class).get().uniqueId()).get().containsWarp(warp.getPlainName()))) || cause.hasPermission(Permissions.WARP_STAFF) || cause.hasPermission(Permissions.getWarpPermission(warp.getPlainName()))))).findFirst();
-				}
-			}, false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			RawArgument.of(ServerPlayer.class, new RawCompleterSupplier<Stream<String>>() {
-				@Override
-				public Stream<String> get(CommandCause cause, String[] args) {
-					return cause.hasPermission(Permissions.WARP_STAFF) ? Sponge.server().onlinePlayers().stream().map(ServerPlayer::name) : Stream.empty();
-				}
-			}, new RawResultSupplier<ServerPlayer>() {
-				@Override
-				public Optional<ServerPlayer> get(CommandCause cause, String[] args) {
-					return args.length == 2 && cause.hasPermission(Permissions.WARP_STAFF) ? Sponge.server().player(args[1]) : Optional.empty();
-				}
-			}, true, false, 1, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
+			RawArguments.createWarpArgument(false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			RawArguments.createPlayerArgument(true, false, 1, Permissions.WARP_STAFF, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
 		);
 	}
 

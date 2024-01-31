@@ -4,14 +4,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
 import org.spongepowered.api.world.DefaultWorldKeys;
+import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -20,8 +21,6 @@ import net.kyori.adventure.text.event.ClickEvent;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
-import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -67,17 +66,19 @@ public class Load extends AbstractWorldCommand {
 	}
 
 	private RawArgument<ResourceKey> createWorldArgument() {
-		return RawArgument.of(ResourceKey.class, new RawCompleterSupplier<Stream<String>>() {
-			@Override
-			public Stream<String> get(CommandCause cause, String[] args) {
-				return Sponge.server().worldManager().offlineWorldKeys().stream().filter(w -> !w.asString().equals(DefaultWorldKeys.DEFAULT.asString())).map(ResourceKey::asString);
-			}
-		}, new RawResultSupplier<ResourceKey>() {
-			@Override
-			public Optional<ResourceKey> get(CommandCause cause, String[] args) {
-				return args.length >= 1 ? Sponge.server().worldManager().offlineWorldKeys().stream().filter(w -> args[0].equals(w.asString()) && !w.asString().equals(DefaultWorldKeys.DEFAULT.asString())).findFirst() : Optional.ofNullable(null);
-			}
-		}, false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
+		return RawArgument.of(
+			ResourceKey.class,
+			CommandTreeNodeTypes.DIMENSION.get().createNode(),
+			(cause, args) -> Sponge.server().worldManager().worlds().stream().filter(w -> !w.isLoaded() && !w.key().asString().equals(DefaultWorldKeys.DEFAULT.asString())).map(w -> w.key().asString()),
+			() -> Sponge.server().worldManager().worlds().stream().filter(w -> !w.isLoaded() && !w.key().asString().equals(DefaultWorldKeys.DEFAULT.asString())).map(w -> w.key().asString()),
+			(cause, args) -> args.length >= 1 ? Sponge.server().worldManager().worlds().stream().filter(w -> !w.isLoaded() && !w.key().asString().equals(DefaultWorldKeys.DEFAULT.asString()) && w.key().asString().equals(args[0])).findFirst().map(ServerWorld::key) : Optional.empty(),
+			null,
+			false,
+			false,
+			0,
+			null,
+			LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT
+		);
 	}
 
 	@Override

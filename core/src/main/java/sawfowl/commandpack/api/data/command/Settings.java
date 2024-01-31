@@ -2,6 +2,8 @@ package sawfowl.commandpack.api.data.command;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
@@ -48,6 +50,17 @@ public interface Settings extends DataSerializable {
 	 */
 	boolean isEnable();
 
+	/**
+	 * For `Raw` commands only.<br>
+	 * No effect if argument tree construction is enabled. See {@link #isGenerateRawTree()}
+	 */
+	@Nullable Boolean isAutocomplete();
+
+	/**
+	 * For `Raw` commands only.<br>
+	 */
+	@Nullable Boolean isGenerateRawTree();
+
 	interface Builder extends AbstractBuilder<Settings>, org.spongepowered.api.util.Builder<Settings, Builder> {
 
 		Builder setAliases(List<String> aliases);
@@ -61,7 +74,11 @@ public interface Settings extends DataSerializable {
 		Builder setEnable(boolean enable);
 
 		Builder setPrice(Price price);
-		
+
+		Builder setRawAutoComplete(boolean enable);
+
+		Builder generateRawCommandTree(boolean enable);
+
 	}
 
 }

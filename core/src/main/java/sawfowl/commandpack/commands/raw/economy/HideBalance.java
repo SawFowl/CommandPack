@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
@@ -20,8 +19,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
-import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
@@ -40,18 +38,18 @@ public class HideBalance extends AbstractRawCommand {
 			Optional<UniqueAccount> optAccount = getArgument(UniqueAccount.class, args, 0);
 			if(optAccount.isPresent()) {
 				UniqueAccount account = optAccount.get();
-				plugin.getEconomy().getEconomyService().hide(account.uniqueId());
-				audience.sendMessage(getText(locale, plugin.getEconomy().getEconomyService().isHiden(account) ? LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN).replace(Placeholders.PLAYER, account.displayName()).get());
+				plugin.getEconomy().getEconomyServiceImpl().hide(account.uniqueId());
+				audience.sendMessage(getText(locale, plugin.getEconomy().getEconomyServiceImpl().isHiden(account) ? LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN).replace(Placeholders.PLAYER, account.displayName()).get());
 			} else {
 				delay((ServerPlayer) audience, locale, consumer -> {
-					plugin.getEconomy().getEconomyService().hide(((ServerPlayer) audience).uniqueId());
-					audience.sendMessage(getComponent(locale, plugin.getEconomy().getEconomyService().isHiden(((ServerPlayer) audience).uniqueId()) ? LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_OPEN));
+					plugin.getEconomy().getEconomyServiceImpl().hide(((ServerPlayer) audience).uniqueId());
+					audience.sendMessage(getComponent(locale, plugin.getEconomy().getEconomyServiceImpl().isHiden(((ServerPlayer) audience).uniqueId()) ? LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_OPEN));
 				});
 			}
 		} else {
 			UniqueAccount account = getArgument(UniqueAccount.class, args, 0).get();
-			plugin.getEconomy().getEconomyService().hide(account.uniqueId());
-			audience.sendMessage(getText(locale, plugin.getEconomy().getEconomyService().isHiden(account) ? LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN).replace(Placeholders.PLAYER, account.displayName()).get());
+			plugin.getEconomy().getEconomyServiceImpl().hide(account.uniqueId());
+			audience.sendMessage(getText(locale, plugin.getEconomy().getEconomyServiceImpl().isHiden(account) ? LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN).replace(Placeholders.PLAYER, account.displayName()).get());
 		}
 	}
 
@@ -82,17 +80,7 @@ public class HideBalance extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArgument.of(UniqueAccount.class, new RawCompleterSupplier<Stream<String>>() {
-			@Override
-			public Stream<String> get(CommandCause cause, String[] args) {
-				return plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier);
-			}
-		}, new RawResultSupplier<UniqueAccount>() {
-			@Override
-			public Optional<UniqueAccount> get(CommandCause cause, String[] args) {
-				return args.length == 0 ? Optional.empty() : plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(account -> account.identifier().equals(args[0])).findFirst();
-			}
-		}, true, false, 0, Permissions.ECONOMY_STAFF, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
+		return Arrays.asList(RawArguments.createUniqueAccountArgument(true, false, 0, Permissions.ECONOMY_STAFF, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
 	}
 
 	@Override

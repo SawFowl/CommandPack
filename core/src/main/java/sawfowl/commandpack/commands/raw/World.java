@@ -1,5 +1,6 @@
 package sawfowl.commandpack.commands.raw;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,23 +39,6 @@ public class World extends AbstractWorldCommand {
 
 	public World(CommandPack plugin) {
 		super(plugin);
-		getChildExecutors().put("create", new Create(plugin));
-		getChildExecutors().put("delete", new Delete(plugin));
-		getChildExecutors().put("teleport", new Teleport(plugin));
-		getChildExecutors().put("tp", getChildExecutors().get("teleport"));
-		getChildExecutors().put("load", new Load(plugin));
-		getChildExecutors().put("unload", new Unload(plugin));
-		getChildExecutors().put("viewdistance", new ViewDistance(plugin));
-		getChildExecutors().put("enable", new Enable(plugin));
-		getChildExecutors().put("disable", new Disable(plugin));
-		getChildExecutors().put("setspawn", new SetWorldSpawn(plugin));
-		getChildExecutors().put("spawnlogic", new SpawnLogic(plugin));
-		getChildExecutors().put("setborder", new SetBorder(plugin));
-		getChildExecutors().put("pvp", new PvP(plugin));
-		getChildExecutors().put("difficulty", new Difficulty(plugin));
-		getChildExecutors().put("gamemode", new GameMode(plugin));
-		getChildExecutors().put("gamerule", new GameRule(plugin));
-		getChildExecutors().put("generate", new Generate(plugin));
 	}
 
 	@Override
@@ -91,6 +75,23 @@ public class World extends AbstractWorldCommand {
 
 	@Override
 	public List<RawCommand> childCommands() {
-		return null;
+		return Arrays.asList(
+			new Create(plugin),
+			new Delete(plugin),
+			new Teleport(plugin),
+			new Load(plugin),
+			new Unload(plugin),
+			new ViewDistance(plugin),
+			new Enable(plugin),
+			new Disable(plugin),
+			new SetWorldSpawn(plugin),
+			new SpawnLogic(plugin),
+			new SetBorder(plugin),
+			new PvP(plugin),
+			new Difficulty(plugin),
+			new GameMode(plugin),
+			new GameRule(plugin),
+			new Generate(plugin)
+		);
 	}
 }

@@ -90,6 +90,8 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 	private boolean enable = true;
 	@Setting("Price")
 	private CommandPrice price = new CommandPrice();
+	private Boolean autocomplete;
+	private Boolean generateRawTree;
 	private UUID uuid = UUID.randomUUID();
 
 	@Override
@@ -120,6 +122,16 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 	@Override
 	public boolean isEnable() {
 		return enable;
+	}
+
+	@Override
+	public Boolean isAutocomplete() {
+		return autocomplete;
+	}
+
+	@Override
+	public Boolean isGenerateRawTree() {
+		return generateRawTree;
 	}
 
 	public CommandSettings addAlias(String alias) {
@@ -165,6 +177,8 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 				.set(DataQuery.of("DelayData"), delayData)
 				.set(DataQuery.of("Enable"), enable)
 				.set(DataQuery.of("Price"), price)
+				.set(DataQuery.of("Autocomplete"), autocomplete)
+				.set(DataQuery.of("GenerateRawTree"), generateRawTree)
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
@@ -218,6 +232,16 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 		@Override
 		public Builder setPrice(sawfowl.commandpack.api.data.command.Price price) {
 			CommandSettings.this.price = price instanceof CommandPrice ? (CommandPrice) price : new CommandPrice(price.getCurrency(), price.getMoney());
+			return this;
+		}
+
+		@Override
+		public Builder setRawAutoComplete(boolean enable) {
+			return this;
+		}
+
+		@Override
+		public Builder generateRawCommandTree(boolean enable) {
 			return this;
 		}
 		

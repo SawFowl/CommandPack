@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
@@ -23,8 +21,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
-import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
-import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -43,7 +40,7 @@ public class BalanceAll extends AbstractRawCommand {
 			ServerPlayer source = (ServerPlayer) audience;
 			List<Component> messages = new ArrayList<Component>();
 			Component title = getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE).replace(Placeholders.PLAYER, account.displayName()).get();
-			for(Currency currency : plugin.getEconomy().getEconomyService().getCurrencies()) {
+			for(Currency currency : plugin.getEconomy().getEconomyServiceImpl().getCurrencies()) {
 				double balance = account.balance(currency).doubleValue();
 				Component message = getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_LIST).replace(new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, new Component[] {currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)}).get();
 				messages.add(message);
@@ -51,7 +48,7 @@ public class BalanceAll extends AbstractRawCommand {
 			sendPaginationList(source, title, text("=").color(title.color()), 10, messages);
 		} else {
 			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE).replace(Placeholders.PLAYER, account.displayName()).get().append(text(":")));
-			for(Currency currency : plugin.getEconomy().getEconomyService().getCurrencies()) {
+			for(Currency currency : plugin.getEconomy().getEconomyServiceImpl().getCurrencies()) {
 				double balance = account.balance(currency).doubleValue();
 				Component message = getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_LIST).replace(new String[] {Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL, Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.VALUE}, currency.symbol(), currency.symbol().style(currency.displayName().style()), currency.displayName(), currency.pluralDisplayName(), text(balance)).get();
 				audience.sendMessage(message);
@@ -87,17 +84,7 @@ public class BalanceAll extends AbstractRawCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		if(empty == null) empty = new ArrayList<BigDecimal>();
-		return Arrays.asList(RawArgument.of(Account.class, new RawCompleterSupplier<Stream<String>>() {
-			@Override
-			public Stream<String> get(CommandCause cause, String[] args) {
-				return plugin.getEconomy().getEconomyService().allAccounts().stream().map(Account::identifier);
-			}
-		}, new RawResultSupplier<Account>() {
-			@Override
-			public Optional<Account> get(CommandCause cause, String[] args) {
-				return args.length == 0 ? Optional.empty() : plugin.getEconomy().getEconomyService().allAccounts().stream().filter(account -> account.identifier().equals(args[0])).findFirst();
-			}
-		}, false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
+		return Arrays.asList(RawArguments.createAccountArgument(false, false, 0, null, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
 	}
 
 	@Override

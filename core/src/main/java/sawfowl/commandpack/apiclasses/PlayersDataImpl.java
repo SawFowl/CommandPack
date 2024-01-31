@@ -56,7 +56,7 @@ public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 
 	@Override
 	public Stream<Warp> streamAllWarps() {
-		return Stream.concat(adminWarps.values().stream(), players.values().stream().map(PlayerData::getWarps).flatMap(list -> (list.stream())));
+		return Stream.concat(adminWarps.values().stream(), players.values().stream().map(PlayerData::getWarps).flatMap(list -> (list.size() > 10000 ? list.parallelStream() : list.stream())));
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -78,7 +79,7 @@ public class Teleport extends AbstractWorldCommand {
 
 	@Override
 	public String command() {
-		return "tp";
+		return "teleport";
 	}
 
 	@Override
@@ -111,6 +112,11 @@ public class Teleport extends AbstractWorldCommand {
 			}
 		}
 		return location;
+	}
+
+	@Override
+	public Settings getCommandSettings() {
+		return Settings.builder().setAliases("tp").build();
 	}
 
 	@Override

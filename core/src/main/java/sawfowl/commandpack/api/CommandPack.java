@@ -6,12 +6,21 @@ import java.util.Set;
 
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.world.generation.ChunkGenerator;
+import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 import org.spongepowered.plugin.PluginContainer;
 
+import sawfowl.commandpack.api.data.command.CancelRules;
+import sawfowl.commandpack.api.data.command.Delay;
+import sawfowl.commandpack.api.data.command.Price;
+import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
 import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.api.services.PunishmentService;
 import sawfowl.commandpack.api.tps.TPS;
+import sawfowl.commandpack.configure.serializers.CancelRulesSerializer;
+import sawfowl.commandpack.configure.serializers.CommandPriceSerializer;
+import sawfowl.commandpack.configure.serializers.CommandSettingSerializer;
+import sawfowl.commandpack.configure.serializers.DelaySerializer;
 
 /**
  * Plugin API.
@@ -19,6 +28,8 @@ import sawfowl.commandpack.api.tps.TPS;
  * @author SawFowl
  */
 public interface CommandPack {
+
+	public static final TypeSerializerCollection COMMAND_SETTINGS_SERIALIZERS = TypeSerializerCollection.defaults().childBuilder().register(Settings.class, new CommandSettingSerializer()).register(Price.class, new CommandPriceSerializer()).register(Delay.class, new DelaySerializer()).register(CancelRules.class, new CancelRulesSerializer()).build();
 
 	/**
 	 * Viewing and changing player data.

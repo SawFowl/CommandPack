@@ -11,6 +11,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.CommandCause;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
@@ -37,31 +38,29 @@ public interface RawArgument<T> extends DataSerializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	static <T> RawArgument<T> of(Class<T> clazz, RawCompleterSupplier<Stream<String>> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, Object[] localesPath) {
+	@Deprecated
+	static <T> RawArgument<T> of(Class<T> clazz, RawCompleterSupplier<Stream<String>> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, Object... localesPath) {
 		return (RawArgument<T>) builder().variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).localeTextPath(localesPath).build();
 	}
 
 	@SuppressWarnings("unchecked")
-	static <T> RawArgument<T> of(Class<T> clazz, RawCompleterSupplier<Stream<String>> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	@Deprecated
+	static <T> RawArgument<T> of(Class<T> clazz, RawCompleterSupplier<Stream<String>> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, String permission, Object... localesPath) {
 		return (RawArgument<T>) builder().variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).localeTextPath(localesPath).build();
 	}
 
-	static <T> RawArgument<T> of(Class<T> clazz, Stream<String> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, Object[] localesPath) {
-		return of(clazz, new RawCompleterSupplier<Stream<String>>() {
-			@Override
-			public Stream<String> get(CommandCause cause, String[] args) {
-				return variants;
-			}
-		}, result, optional, optionalForConsole, cursor, localesPath);
+	@SuppressWarnings("unchecked")
+	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(Class<T> clazz, Argument<C> argumentNodeType, RawCompleterSupplier<Stream<String>> plainVariants, Supplier<Stream<String>> treeVariants, RawResultSupplier<T> result, RawCompleterPredicate<CommandCause, Stream<String>> canUse, boolean optional, boolean optionalForConsole, int cursor, String permission, Object... localesPath) {
+		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(plainVariants).variants(treeVariants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).canUse(canUse).localeTextPath(localesPath).build();
 	}
 
-	static <T> RawArgument<T> of(Class<T> clazz, Stream<String> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
-		return of(clazz, new RawCompleterSupplier<Stream<String>>() {
-			@Override
-			public Stream<String> get(CommandCause cause, String[] args) {
-				return variants;
-			}
-		}, result, optional, optionalForConsole, cursor, permission, localesPath);
+	static <T> RawArgument<T> of(Class<T> clazz, Stream<String> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, Object[] localesPath) {
+		return of(clazz, null, ((CommandCause cause, String[] args) -> args.length > cursor ? variants.filter(var -> var.startsWith(args[cursor])) : variants), () -> variants, result, null, optional, optionalForConsole, cursor, null, localesPath);
+	}
+
+	@Deprecated
+	static <T> RawArgument<T> of(Class<T> clazz, Stream<String> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, String permission, Object... localesPath) {
+		return of(clazz, null, ((CommandCause cause, String[] args) -> args.length > cursor ? variants.filter(var -> var.startsWith(args[cursor])) : variants), () -> variants, result, null, optional, optionalForConsole, cursor, permission, localesPath);
 	}
 
 	Argument<?> getArgumentType();
@@ -117,7 +116,7 @@ public interface RawArgument<T> extends DataSerializable {
 
 	boolean hasPermission(CommandCause cause);
 
-	boolean canUse(CommandCause cause);
+	boolean canUse(CommandCause cause, String input);
 
 	interface Builder<T> extends AbstractBuilder<RawArgument<T>>, org.spongepowered.api.util.Builder<RawArgument<T>, Builder<T>> {
 
@@ -151,7 +150,7 @@ public interface RawArgument<T> extends DataSerializable {
 		/**
 		 * Path to find the message that there is no matching command argument in the localization configuration.
 		 */
-		Builder<T> localeTextPath(Object[] value);
+		Builder<T> localeTextPath(Object... value);
 
 		/*
 		 * The required permission for this argument.
@@ -160,7 +159,7 @@ public interface RawArgument<T> extends DataSerializable {
 
 		Builder<T> canUse(RawCompleterPredicate<CommandCause, Stream<String>> predicate);
 
-		Builder<T> setArgumentType(Argument<?> node);
+		<C extends CommandTreeNode<C>> Builder<T> setArgumentType(Argument<C> node);
 
 	}
 
