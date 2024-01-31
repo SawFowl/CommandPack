@@ -29,7 +29,7 @@ public class AddCommand extends AbstractKitsEditCommand {
 
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		Kit kit = getKit(args, 0).get();
+		Kit kit = getKit(args, cause, 0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		if(args.length < 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		kitData.addCommands(String.join(" ", Arrays.copyOfRange(args, 1, args.length - 1)));

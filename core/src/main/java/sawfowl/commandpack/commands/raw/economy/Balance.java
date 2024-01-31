@@ -38,7 +38,7 @@ public class Balance extends AbstractRawCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		if(isPlayer) {
 			ServerPlayer source = (ServerPlayer) audience;
-			Optional<UniqueAccount> optTarget = getArgument(UniqueAccount.class, args, 0);
+			Optional<UniqueAccount> optTarget = getArgument(UniqueAccount.class, cause, args, 0);
 			delay(source, locale, consumer -> {
 				List<Component> messages = new ArrayList<Component>();
 				if(optTarget.isPresent()) {
@@ -63,7 +63,7 @@ public class Balance extends AbstractRawCommand {
 				};
 			});
 		} else {
-			UniqueAccount account = getArgument(UniqueAccount.class, args, 0).get();
+			UniqueAccount account = getArgument(UniqueAccount.class, cause, args, 0).get();
 			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE).replace(Placeholders.PLAYER, account.displayName()).get().append(text(":")));
 			for(Currency currency : plugin.getEconomy().getEconomyServiceImpl().getCurrencies()) {
 				double balance = account.balance(currency).doubleValue();

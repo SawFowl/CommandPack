@@ -75,9 +75,9 @@ public interface Settings extends DataSerializable {
 
 		Builder setPrice(Price price);
 
-		Builder setRawAutoComplete(boolean enable);
+		Builder setRawAutoComplete(Boolean enable);
 
-		Builder generateRawCommandTree(boolean enable);
+		Builder generateRawCommandTree(Boolean enable);
 
 	}
 

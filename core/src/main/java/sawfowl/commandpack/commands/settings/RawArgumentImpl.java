@@ -24,8 +24,7 @@ import sawfowl.commandpack.utils.CommandsUtil;
 
 public class RawArgumentImpl<T> implements RawArgument<T> {
 
-	@SuppressWarnings("hiding")
-	public <T> Builder<T> builder() {
+	public Builder<T> builder() {
 		return new Builder<T>();
 	}
 

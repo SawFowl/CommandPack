@@ -32,9 +32,6 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModFileInfo;
 
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.api.data.command.CancelRules;
-import sawfowl.commandpack.api.data.command.Delay;
-import sawfowl.commandpack.api.data.command.Price;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
@@ -48,189 +45,189 @@ public class CommandsConfig {
 	private Map<String, Settings> map = new HashMap<>();
 
 	@Setting("Suicide")
-	private Settings suicide = Settings.builder().build();
+	private Settings suicide = new CommandSettings().builder().build();
 	@Setting("Hat")
-	private Settings hat = Settings.builder().build();
+	private Settings hat = new CommandSettings().builder().build();
 	@Setting("Home")
-	private Settings home = Settings.builder().setDelay(Delay.of(0, CancelRules.of(false, false))).build();
+	private Settings home = new CommandSettings().builder().setDelay(DelayData.of(0, CancelRulesData.of(false, false))).build();
 	@Setting("SetHome")
-	private Settings setHome = Settings.builder().build();
+	private Settings setHome = new CommandSettings().builder().build();
 	@Setting("SetSpawn")
-	private Settings setSpawn = Settings.builder().build();
+	private Settings setSpawn = new CommandSettings().builder().build();
 	@Setting("Spawn")
-	private Settings spawn = Settings.builder().setDelay(Delay.of(3, CancelRules.of(false, false))).build();
+	private Settings spawn = new CommandSettings().builder().setDelay(DelayData.of(3, CancelRulesData.of(false, false))).build();
 	@Setting("SetWarp")
-	private Settings setWarp = Settings.builder().build();
+	private Settings setWarp = new CommandSettings().builder().build();
 	@Setting("Warp")
-	private Settings warp = Settings.builder().setCooldown(15).setDelay(Delay.of(3, CancelRules.of(false, false))).setRawAutoComplete(false).generateRawCommandTree(true).build();
+	private Settings warp = new CommandSettings().builder().setCooldown(15).setDelay(DelayData.of(3, CancelRulesData.of(false, false))).setRawAutoComplete(false).generateRawCommandTree(true).build();
 	@Setting("Warps")
-	private Settings warps = Settings.builder().setDelay(Delay.of(3, CancelRules.of(false, false))).build();
+	private Settings warps = new CommandSettings().builder().setDelay(DelayData.of(3, CancelRulesData.of(false, false))).build();
 	@Setting("Tpa")
-	private Settings tpa = Settings.builder().setDelay(Delay.of(3, CancelRules.of(false, false))).setPrice(Price.of("$", 5)).build();
+	private Settings tpa = new CommandSettings().builder().setDelay(DelayData.of(3, CancelRulesData.of(false, false))).setPrice(CommandPrice.of("$", 5)).build();
 	@Setting("Tpahere")
-	private Settings tpahere = Settings.builder().setDelay(Delay.of(3, CancelRules.of(false, false))).setPrice(Price.of("$", 10)).build();
+	private Settings tpahere = new CommandSettings().builder().setDelay(DelayData.of(3, CancelRulesData.of(false, false))).setPrice(CommandPrice.of("$", 10)).build();
 	@Setting("Tpahereall")
-	private Settings tpahereall = Settings.builder().setDelay(Delay.of(5, CancelRules.of(false, false))).build();
+	private Settings tpahereall = new CommandSettings().builder().setDelay(DelayData.of(5, CancelRulesData.of(false, false))).build();
 	@Setting("Teleport")
-	private Settings teleport = Settings.builder().setAliases("tp").build();
+	private Settings teleport = new CommandSettings().builder().setAliases("tp").build();
 	@Setting("TeleportHere")
-	private Settings teleporthere = Settings.builder().setAliases("tphere").build();
+	private Settings teleporthere = new CommandSettings().builder().setAliases("tphere").build();
 	@Setting("TeleportHereAll")
-	private Settings teleporthereall = Settings.builder().setAliases("tphereall").build();
+	private Settings teleporthereall = new CommandSettings().builder().setAliases("tphereall").build();
 	@Setting("RandomTeleport")
-	private Settings rtp = Settings.builder().setAliases("randomtp", "rtp").build();
+	private Settings rtp = new CommandSettings().builder().setAliases("randomtp", "rtp").build();
 	@Setting("Tppos")
-	private Settings tppos = Settings.builder().build();
+	private Settings tppos = new CommandSettings().builder().build();
 	@Setting("TpToggle")
-	private Settings tptoggle = Settings.builder().build();
+	private Settings tptoggle = new CommandSettings().builder().build();
 	@Setting("Clearinventory")
-	private Settings clearinventory = Settings.builder().setAliases("clear", "ci").build();
+	private Settings clearinventory = new CommandSettings().builder().setAliases("clear", "ci").build();
 	@Setting("Repair")
-	private Settings repair = Settings.builder().setPrice(Price.of("$", 20)).setAliases("fix").build();
+	private Settings repair = new CommandSettings().builder().setPrice(CommandPrice.of("$", 20)).setAliases("fix").build();
 	@Setting("Enderchest")
-	private Settings enderchest = Settings.builder().build();
+	private Settings enderchest = new CommandSettings().builder().build();
 	@Setting("InventorySee")
-	private Settings inventorysee = Settings.builder().setAliases("invsee").build();
+	private Settings inventorysee = new CommandSettings().builder().setAliases("invsee").build();
 	@Setting("Top")
-	private Settings top = Settings.builder().build();
+	private Settings top = new CommandSettings().builder().build();
 	@Setting("Jump")
-	private Settings jump = Settings.builder().build();
+	private Settings jump = new CommandSettings().builder().build();
 	@Setting("Back")
-	private Settings back = Settings.builder().setDelay(Delay.of(3, CancelRules.of(false, false))).build();
+	private Settings back = new CommandSettings().builder().setDelay(DelayData.of(3, CancelRulesData.of(false, false))).build();
 	@Setting("Fly")
-	private Settings fly = Settings.builder().setDelay(Delay.of(3, CancelRules.of(false, false))).build();
+	private Settings fly = new CommandSettings().builder().setDelay(DelayData.of(3, CancelRulesData.of(false, false))).build();
 	@Setting("GodMode")
-	private Settings godMode = Settings.builder().setDelay(Delay.of(5, CancelRules.of(false, false))).setAliases("god").build();
+	private Settings godMode = new CommandSettings().builder().setDelay(DelayData.of(5, CancelRulesData.of(false, false))).setAliases("god").build();
 	@Setting("Speed")
-	private Settings speed = Settings.builder().build();
+	private Settings speed = new CommandSettings().builder().build();
 	@Setting("Disposal")
-	private Settings disposal = Settings.builder().setAliases("trash").build();
+	private Settings disposal = new CommandSettings().builder().setAliases("trash").build();
 	@Setting("GameMode")
-	private Settings gamemode = Settings.builder().setAliases("gm").build();
+	private Settings gamemode = new CommandSettings().builder().setAliases("gm").build();
 	@Setting("Creative")
-	private Settings creative = Settings.builder().setAliases("gmc").build();
+	private Settings creative = new CommandSettings().builder().setAliases("gmc").build();
 	@Setting("Spectator")
-	private Settings spectator = Settings.builder().setAliases("gmsp").build();
+	private Settings spectator = new CommandSettings().builder().setAliases("gmsp").build();
 	@Setting("Survival")
-	private Settings survival = Settings.builder().setAliases("gms").build();
+	private Settings survival = new CommandSettings().builder().setAliases("gms").build();
 	@Setting("Adventure")
-	private Settings adventure = Settings.builder().setAliases("gma").build();
+	private Settings adventure = new CommandSettings().builder().setAliases("gma").build();
 	@Setting("Weather")
-	private Settings weather = Settings.builder().setCooldown(120).build();
+	private Settings weather = new CommandSettings().builder().setCooldown(120).build();
 	@Setting("Sun")
-	private Settings sun = Settings.builder().setCooldown(120).build();
+	private Settings sun = new CommandSettings().builder().setCooldown(120).build();
 	@Setting("Rain")
-	private Settings rain = Settings.builder().setCooldown(120).build();
+	private Settings rain = new CommandSettings().builder().setCooldown(120).build();
 	@Setting("Thunder")
-	private Settings thunder = Settings.builder().setCooldown(120).setAliases("storm").build();
+	private Settings thunder = new CommandSettings().builder().setCooldown(120).setAliases("storm").build();
 	@Setting("ServerTime")
-	private Settings time = Settings.builder().setCooldown(120).build();
+	private Settings time = new CommandSettings().builder().setCooldown(120).build();
 	@Setting("Morning")
-	private Settings morning = Settings.builder().setCooldown(120).build();
+	private Settings morning = new CommandSettings().builder().setCooldown(120).build();
 	@Setting("Day")
-	private Settings day = Settings.builder().setCooldown(120).build();
+	private Settings day = new CommandSettings().builder().setCooldown(120).build();
 	@Setting("Evening")
-	private Settings evening = Settings.builder().setCooldown(120).build();
+	private Settings evening = new CommandSettings().builder().setCooldown(120).build();
 	@Setting("Night")
-	private Settings night = Settings.builder().setCooldown(120).build();
+	private Settings night = new CommandSettings().builder().setCooldown(120).build();
 	@Setting("Enchant")
-	private Settings enchant = Settings.builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings enchant = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("Anvil")
-	private Settings anvil = Settings.builder().build();
+	private Settings anvil = new CommandSettings().builder().build();
 	@Setting("CraftingTable")
-	private Settings craftingTable = Settings.builder().setAliases("craft", "ct", "workbench").build();
+	private Settings craftingTable = new CommandSettings().builder().setAliases("craft", "ct", "workbench").build();
 	@Setting("EnchantmentTable")
-	private Settings enchantmenttable = Settings.builder().build();
+	private Settings enchantmenttable = new CommandSettings().builder().build();
 	@Setting("Backpack")
-	private Settings backpack = Settings.builder().build();
+	private Settings backpack = new CommandSettings().builder().build();
 	@Setting("Feed")
-	private Settings feed = Settings.builder().setAliases("food", "eat").build();
+	private Settings feed = new CommandSettings().builder().setAliases("food", "eat").build();
 	@Setting("Heal")
-	private Settings heal = Settings.builder().build();
+	private Settings heal = new CommandSettings().builder().build();
 	@Setting("Broadcast")
-	private Settings broadcast = Settings.builder().build();
+	private Settings broadcast = new CommandSettings().builder().build();
 	@Setting("Sudo")
-	private Settings sudo = Settings.builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings sudo = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("Vanish")
-	private Settings vanish = Settings.builder().build();
+	private Settings vanish = new CommandSettings().builder().build();
 	@Setting("Nick")
-	private Settings nick = Settings.builder().setAliases("name").build();
+	private Settings nick = new CommandSettings().builder().setAliases("name").build();
 	@Setting("Item")
-	private Settings item = Settings.builder().build();
+	private Settings item = new CommandSettings().builder().build();
 	@Setting("ServerStat")
-	private Settings serverStat = Settings.builder().setAliases("serverinfo", "gc").build();
+	private Settings serverStat = new CommandSettings().builder().setAliases("serverinfo", "gc").build();
 	@Setting("Plugins")
-	private Settings plugins = Settings.builder().setAliases("pl").build();
+	private Settings plugins = new CommandSettings().builder().setAliases("pl").build();
 	@Setting("Mods")
-	private Settings mods = Settings.builder().build();
+	private Settings mods = new CommandSettings().builder().build();
 	@Setting("Tps")
-	private Settings tps = Settings.builder().build();
+	private Settings tps = new CommandSettings().builder().build();
 	@Setting("ServerTime")
-	private Settings serverTime = Settings.builder().build();
+	private Settings serverTime = new CommandSettings().builder().build();
 	@Setting("Kits")
-	private Settings kits = Settings.builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings kits = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("Kit")
-	private Settings kit = Settings.builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings kit = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("Afk")
-	private Settings afk = Settings.builder().build();
+	private Settings afk = new CommandSettings().builder().build();
 	@Setting("World")
-	private Settings world = Settings.builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings world = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("CommandSpy")
-	private Settings commandspy = Settings.builder().build();
+	private Settings commandspy = new CommandSettings().builder().build();
 	@Setting("Ping")
-	private Settings ping = Settings.builder().build();
+	private Settings ping = new CommandSettings().builder().build();
 	@Setting("List")
-	private Settings list = Settings.builder().build();
+	private Settings list = new CommandSettings().builder().build();
 	@Setting("Seen")
-	private Settings seen = Settings.builder().setAliases("playerinfo", "playerstat", "whois").build();
+	private Settings seen = new CommandSettings().builder().setAliases("playerinfo", "playerstat", "whois").build();
 	@Setting("Help")
-	private Settings help = Settings.builder().build();
+	private Settings help = new CommandSettings().builder().build();
 	@Setting("Glow")
-	private Settings glow = Settings.builder().build();
+	private Settings glow = new CommandSettings().builder().build();
 	@Setting("Flame")
-	private Settings flame = Settings.builder().setAliases("burn", "fire").build();
+	private Settings flame = new CommandSettings().builder().setAliases("burn", "fire").build();
 	@Setting("Extinguish")
-	private Settings extinguish = Settings.builder().setAliases("ext").build();
+	private Settings extinguish = new CommandSettings().builder().setAliases("ext").build();
 	@Setting("Ban")
-	private Settings ban = Settings.builder().build();
+	private Settings ban = new CommandSettings().builder().build();
 	@Setting("Unban")
-	private Settings unban = Settings.builder().setAliases("pardon").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings unban = new CommandSettings().builder().setAliases("pardon").setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("Banip")
-	private Settings banip = Settings.builder().build();
+	private Settings banip = new CommandSettings().builder().build();
 	@Setting("Unbanip")
-	private Settings unbanip = Settings.builder().setAliases("pardonip").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings unbanip = new CommandSettings().builder().setAliases("pardonip").setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("Kick")
-	private Settings kick = Settings.builder().build();
+	private Settings kick = new CommandSettings().builder().build();
 	@Setting("Mute")
-	private Settings mute = Settings.builder().build();
+	private Settings mute = new CommandSettings().builder().build();
 	@Setting("Unmute")
-	private Settings unmute = Settings.builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings unmute = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("Warn")
-	private Settings warn = Settings.builder().build();
+	private Settings warn = new CommandSettings().builder().build();
 	@Setting("Warnings")
-	private Settings warns = Settings.builder().setAliases("warns").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings warns = new CommandSettings().builder().setAliases("warns").setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("BanList")
-	private Settings banList = Settings.builder().setAliases("bans").build();
+	private Settings banList = new CommandSettings().builder().setAliases("bans").build();
 	@Setting("BanInfo")
-	private Settings banInfo = Settings.builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings banInfo = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("MuteInfo")
-	private Settings muteInfo = Settings.builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings muteInfo = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("MuteList")
-	private Settings muteList = Settings.builder().setAliases("mutes").build();
+	private Settings muteList = new CommandSettings().builder().setAliases("mutes").build();
 	@Setting("Balance")
-	private Settings balance = Settings.builder().setAliases("money").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings balance = new CommandSettings().builder().setAliases("money").setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("BalanceTop")
-	private Settings balanceTop = Settings.builder().setAliases("baltop").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings balanceTop = new CommandSettings().builder().setAliases("baltop").setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("HideBalance")
-	private Settings hideBalance = Settings.builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings hideBalance = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("Economy")
-	private Settings economy = Settings.builder().setAliases("eco").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings economy = new CommandSettings().builder().setAliases("eco").setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("Pay")
-	private Settings pay = Settings.builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings pay = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("Tell")
-	private Settings tell = Settings.builder().setAliases("say", "s", "m").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings tell = new CommandSettings().builder().setAliases("say", "s", "m").setRawAutoComplete(true).generateRawCommandTree(true).build();
 	@Setting("Reply")
-	private Settings reply = Settings.builder().setAliases("r").build();
+	private Settings reply = new CommandSettings().builder().setAliases("r").build();
 
 	public Settings getCommandConfig(String command) {
 		return map.getOrDefault(command.toLowerCase(), map.values().stream().filter(config -> (config.getAliasesList().contains(command))).findFirst().orElse(CommandSettings.EMPTY));

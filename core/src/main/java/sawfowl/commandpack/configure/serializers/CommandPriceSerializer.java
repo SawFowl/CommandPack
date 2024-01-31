@@ -9,12 +9,13 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import sawfowl.commandpack.api.data.command.Price;
+import sawfowl.commandpack.configure.configs.commands.CommandPrice;
 
 public class CommandPriceSerializer implements TypeSerializer<Price> {
 
 	@Override
 	public Price deserialize(Type type, ConfigurationNode node) throws SerializationException {
-		return null;
+		return new CommandPrice().builder().currency(node.node("Currency").getString()).money(node.node("Money").getDouble()).build();
 	}
 
 	@Override

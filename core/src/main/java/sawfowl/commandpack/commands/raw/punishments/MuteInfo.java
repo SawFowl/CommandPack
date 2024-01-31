@@ -34,7 +34,7 @@ public class MuteInfo extends AbstractRawCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		Mute mute = getArgument(Mute.class, args, 0).get();
+		Mute mute = getArgument(Mute.class, cause, args, 0).get();
 		Component title = getText(locale, LocalesPaths.COMMANDS_MUTEINFO_TITLE).replace(Placeholders.PLAYER, mute.getName()).get();
 		if(isPlayer) {
 			delay((ServerPlayer) audience, locale, consumer -> {

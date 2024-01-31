@@ -31,7 +31,7 @@ public class Edit extends AbstractKitsEditCommand {
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
 		if(plugin.getKitService().getKits().isEmpty()) exception(locale, LocalesPaths.COMMANDS_KITS_NO_KITS);
-		Optional<Kit> optKit = getKit(args, 0);
+		Optional<Kit> optKit = getKit(args, cause, 0);
 		if(optKit.isPresent()) {
 			optKit.get().asMenu(getContainer(), src, false).open(src);
 		} else {

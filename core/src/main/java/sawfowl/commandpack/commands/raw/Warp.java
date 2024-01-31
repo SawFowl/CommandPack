@@ -37,7 +37,7 @@ public class Warp extends AbstractRawCommand {
 		if(optTarget.isPresent()) args = Arrays.copyOf(args, args.length - 1);
 		String find = "";
 		for(String string : args) find = find.isEmpty() ? string : find + " " + string;
-		Optional<sawfowl.commandpack.api.data.player.Warp> optWarp = getArgument(sawfowl.commandpack.api.data.player.Warp.class, args, 0);
+		Optional<sawfowl.commandpack.api.data.player.Warp> optWarp = getArgument(sawfowl.commandpack.api.data.player.Warp.class, cause, args, 0);
 		if(!optWarp.isPresent()) exception(locale, LocalesPaths.COMMANDS_WARP_NOT_FOUND);
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) audience;

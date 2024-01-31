@@ -29,7 +29,7 @@ public class SetName extends AbstractKitsEditCommand  {
 
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		Kit kit = getKit(args, 0).get();
+		Kit kit = getKit(args, cause, 0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		Locale localeForName = getLocale(args, 1).get();
 		if(args.length < 3) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);

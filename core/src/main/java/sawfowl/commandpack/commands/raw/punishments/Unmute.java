@@ -35,7 +35,7 @@ public class Unmute extends AbstractRawCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		Mute mute = getArgument(Mute.class, args, 0).get();
+		Mute mute = getArgument(Mute.class, cause, args, 0).get();
 		plugin.getPunishmentService().removeMute(mute);
 		Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_UNMUTE_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, new Component[] {(isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(mute.getName())}).get());
 		if(!plugin.getMainConfig().getPunishment().getAnnounce().isUnban()) {

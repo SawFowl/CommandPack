@@ -35,7 +35,7 @@ public class HideBalance extends AbstractRawCommand {
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		if(isPlayer) {
-			Optional<UniqueAccount> optAccount = getArgument(UniqueAccount.class, args, 0);
+			Optional<UniqueAccount> optAccount = getArgument(UniqueAccount.class, cause, args, 0);
 			if(optAccount.isPresent()) {
 				UniqueAccount account = optAccount.get();
 				plugin.getEconomy().getEconomyServiceImpl().hide(account.uniqueId());
@@ -47,7 +47,7 @@ public class HideBalance extends AbstractRawCommand {
 				});
 			}
 		} else {
-			UniqueAccount account = getArgument(UniqueAccount.class, args, 0).get();
+			UniqueAccount account = getArgument(UniqueAccount.class, cause, args, 0).get();
 			plugin.getEconomy().getEconomyServiceImpl().hide(account.uniqueId());
 			audience.sendMessage(getText(locale, plugin.getEconomy().getEconomyServiceImpl().isHiden(account) ? LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN).replace(Placeholders.PLAYER, account.displayName()).get());
 		}

@@ -9,12 +9,13 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import sawfowl.commandpack.api.data.command.CancelRules;
+import sawfowl.commandpack.configure.configs.commands.CancelRulesData;
 
 public class CancelRulesSerializer implements TypeSerializer<CancelRules> {
 
 	@Override
 	public CancelRules deserialize(Type type, ConfigurationNode node) throws SerializationException {
-		return CancelRules.of(node.node("AllowMoving").getBoolean(), node.node("AllowOtherCommand").getBoolean());
+		return new CancelRulesData().builder().allowMoving(node.node("AllowMoving").getBoolean()).allowOtherCommand(node.node("AllowOtherCommand").getBoolean()).build();
 	}
 
 	@Override

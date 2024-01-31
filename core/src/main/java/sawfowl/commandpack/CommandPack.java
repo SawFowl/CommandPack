@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -57,6 +58,7 @@ import sawfowl.commandpack.api.KitService;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.RandomTeleportService;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.data.command.CancelRules;
 import sawfowl.commandpack.api.data.command.Delay;
@@ -148,6 +150,7 @@ public class CommandPack {
 	private Map<String, ChunkGenerator> generators = new HashMap<>();
 	private Collection<PluginContainer> containers = new HashSet<>();
 	private Collection<ModContainer> mods = new HashSet<>();
+	private List<RawCommand> registeredCommands = new ArrayList<RawCommand>();
 
 	public static CommandPack getInstance() {
 		return instance;
@@ -229,6 +232,16 @@ public class CommandPack {
 		return Optional.ofNullable(mariaDB);
 	}
 
+	public void registerRawCommand(RawCommand raw) {
+		registeredCommands.add(raw);
+	}
+
+	public void reloadRawTrees() {
+		registeredCommands.forEach(raw -> {
+			raw.commandTree().redirect(raw.buildNewCommandTree());
+		});
+	}
+
 	@Inject
 	public CommandPack(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
 		instance = this;
@@ -253,17 +266,17 @@ public class CommandPack {
 			
 			@Override
 			public double get1m() {
-				return instance.getAverageTPS1m();
+				return getAverageTPS1m();
 			}
 			
 			@Override
 			public double get5m() {
-				return instance.getAverageTPS5m();
+				return getAverageTPS5m();
 			}
 			
 			@Override
 			public double get10m() {
-				return instance.getAverageTPS10m();
+				return getAverageTPS10m();
 			}
 		};
 		TPS tps = new TPS() {
@@ -418,6 +431,7 @@ public class CommandPack {
 			});
 		}).build());
 		serverStartedTime = System.currentTimeMillis();
+		reloadRawTrees();
 	}
 
 	@Listener

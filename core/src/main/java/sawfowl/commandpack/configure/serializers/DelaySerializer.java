@@ -9,12 +9,13 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import sawfowl.commandpack.api.data.command.CancelRules;
 import sawfowl.commandpack.api.data.command.Delay;
+import sawfowl.commandpack.configure.configs.commands.DelayData;
 
 public class DelaySerializer implements TypeSerializer<Delay> {
 
 	@Override
 	public Delay deserialize(Type type, ConfigurationNode node) throws SerializationException {
-		return Delay.builder().setSeconds(node.node("Seconds").getLong()).setCancelRules(node.node("CancelRules").get(CancelRules.class)).build();
+		return new DelayData().builder().setSeconds(node.node("Seconds").getLong()).setCancelRules(node.node("CancelRules").get(CancelRules.class)).build();
 	}
 
 	@Override

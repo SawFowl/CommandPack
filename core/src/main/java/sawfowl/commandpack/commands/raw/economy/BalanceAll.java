@@ -35,7 +35,7 @@ public class BalanceAll extends AbstractRawCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		Account account = getArgument(Account.class, args, 0).get();
+		Account account = getArgument(Account.class, cause, args, 0).get();
 		if(isPlayer) {
 			ServerPlayer source = (ServerPlayer) audience;
 			List<Component> messages = new ArrayList<Component>();

@@ -8,18 +8,16 @@ import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import sawfowl.commandpack.api.data.command.CancelRules;
 import sawfowl.commandpack.api.data.command.Delay;
 
 @ConfigSerializable
 public class DelayData implements Delay {
 
 	public DelayData() {}
-	public DelayData(long seconds) {
-		this.seconds = seconds;
-	}
-	public DelayData(long seconds, CancelRulesData cancelRulesData) {
-		this.seconds = seconds;
-		this.cancelRulesData = cancelRulesData;
+
+	public static DelayData of(long seconds, CancelRules cancelRulesData) {
+		return new DelayData().builder().setSeconds(seconds).setCancelRules(cancelRulesData).build();
 	}
 
 	public Builder builder() {
@@ -67,14 +65,14 @@ public class DelayData implements Delay {
 
 		@Override
 		public Builder setCancelRules(sawfowl.commandpack.api.data.command.CancelRules rules) {
-			DelayData.this.cancelRulesData = new CancelRulesData(rules.isAllowMoving(), rules.isAllowOtherCommand());;
+			DelayData.this.cancelRulesData = CancelRulesData.of(rules.isAllowMoving(), rules.isAllowOtherCommand());;
 			return this;
 		}
 
 		@Override
 		public Builder reset() {
 			seconds = 0;
-			cancelRulesData = new CancelRulesData(false, false);
+			cancelRulesData = CancelRulesData.of(false, false);
 			return this;
 		}
 

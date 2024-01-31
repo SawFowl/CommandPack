@@ -35,7 +35,7 @@ public class Unban extends AbstractRawCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		GameProfile profile = getArgument(GameProfile.class, args, 0).get();
+		GameProfile profile = getArgument(GameProfile.class, cause, args, 0).get();
 		plugin.getPunishmentService().pardon(profile);
 		Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, (isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(profile.name().orElse(profile.examinableName()))).get());
 		if(plugin.getMainConfig().getPunishment().getAnnounce().isUnban()) {

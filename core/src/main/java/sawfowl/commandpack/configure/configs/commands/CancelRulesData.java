@@ -9,13 +9,14 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import sawfowl.commandpack.api.data.command.CancelRules;
+
 @ConfigSerializable
-public class CancelRulesData implements sawfowl.commandpack.api.data.command.CancelRules {
+public class CancelRulesData implements CancelRules {
 
 	public CancelRulesData() {}
-	public CancelRulesData(boolean allowMoving, boolean allowOtherCommand) {
-		this.allowMoving = allowMoving;
-		this.allowOtherCommand = allowOtherCommand;
+	public static CancelRulesData of(boolean allowMoving, boolean allowOtherCommand) {
+		return new CancelRulesData().builder().allowMoving(allowMoving).allowOtherCommand(allowOtherCommand).build();
 	}
 
 	public Builder builder() {

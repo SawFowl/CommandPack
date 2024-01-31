@@ -2,6 +2,8 @@ package sawfowl.commandpack.commands.abstractcommands.raw;
 
 import java.util.Optional;
 
+import org.spongepowered.api.command.CommandCause;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -24,8 +26,8 @@ public abstract class AbstractKitsEditCommand extends AbstractPlayerCommand {
 		return RawArguments.createKitArgument(optional, optionalForConsole, cursor, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 	}
 
-	protected Optional<Kit> getKit(String[] args, int cursor) {
-		return getArgument(Kit.class, args, cursor);
+	protected Optional<Kit> getKit(String[] args, CommandCause cause, int cursor) {
+		return getArgument(Kit.class, cause, args, cursor);
 	}
 
 }

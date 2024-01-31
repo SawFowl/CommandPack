@@ -53,7 +53,7 @@ public class Kit extends AbstractRawCommand {
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		if(plugin.getKitService().getKits().isEmpty()) exception(locale, LocalesPaths.COMMANDS_KIT_NO_KITS);
-		Optional<sawfowl.commandpack.api.data.kits.Kit> optKit = getKit(args);
+		Optional<sawfowl.commandpack.api.data.kits.Kit> optKit = getKit(cause, args);
 		if(!optKit.isPresent()) {
 			sendKitsList(cause, audience, locale, isPlayer);
 			return;
@@ -114,8 +114,8 @@ public class Kit extends AbstractRawCommand {
 		return text("&c/kit <Kit> [Player]");
 	}
 
-	protected Optional<sawfowl.commandpack.api.data.kits.Kit> getKit(String[] args) {
-		return getArgument(sawfowl.commandpack.api.data.kits.Kit.class, args, 0);
+	protected Optional<sawfowl.commandpack.api.data.kits.Kit> getKit(CommandCause cause, String[] args) {
+		return getArgument(sawfowl.commandpack.api.data.kits.Kit.class, cause, args, 0);
 	}
 
 	private void sendKitsList(CommandCause cause, Audience audience, Locale locale, boolean isPlayer) {

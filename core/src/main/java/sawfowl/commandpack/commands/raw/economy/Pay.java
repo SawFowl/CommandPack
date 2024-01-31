@@ -41,7 +41,7 @@ public class Pay extends AbstractPlayerCommand {
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
 		BigDecimal amount = getBigDecimal(args, 1).get().abs();
-		UniqueAccount account = getArgument(UniqueAccount.class, args, 0).get();
+		UniqueAccount account = getArgument(UniqueAccount.class, cause, args, 0).get();
 		Optional<Currency> optCurrency = getCurrency(args, 2);
 		if(account.uniqueId().equals(src.uniqueId())) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF);
 		delay(src, locale, consumer -> {

@@ -13,68 +13,15 @@ import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import sawfowl.commandpack.api.data.command.Delay;
+import sawfowl.commandpack.api.data.command.Price;
+
 @ConfigSerializable
 public class CommandSettings implements sawfowl.commandpack.api.data.command.Settings {
 
 	public static final CommandSettings EMPTY = new CommandSettings();
 
 	public CommandSettings() {}
-
-	public CommandSettings(String[] aliases) {
-		this.aliases = aliases;
-	}
-
-	public CommandSettings(DelayData delayData) {
-		this.delayData = delayData;
-	}
-
-	public CommandSettings(long cooldown) {
-		this.cooldown = cooldown;
-	}
-
-	public CommandSettings(long cooldown, DelayData delayData) {
-		this.cooldown = cooldown;
-		this.delayData = delayData;
-	}
-
-	public CommandSettings(long cooldown, String[] aliases) {
-		this.cooldown = cooldown;
-		this.aliases = aliases;
-	}
-
-	public CommandSettings(DelayData delayData, String[] aliases) {
-		this.delayData = delayData;
-		this.aliases = aliases;
-	}
-
-	public CommandSettings(CommandPrice price, String[] aliases) {
-		this.price = price;
-		this.aliases = aliases;
-	}
-
-	public CommandSettings(DelayData delayData, CommandPrice price) {
-		this.delayData = delayData;
-		this.price = price;
-	}
-
-	public CommandSettings(long cooldown, DelayData delayData, CommandPrice price) {
-		this.cooldown = cooldown;
-		this.delayData = delayData;
-		this.price = price;
-	}
-
-	public CommandSettings(long cooldown, DelayData delayData, String[] aliases) {
-		this.cooldown = cooldown;
-		this.delayData = delayData;
-		this.aliases = aliases;
-	}
-
-	public CommandSettings(long cooldown, DelayData delayData, CommandPrice price, String[] aliases) {
-		this.cooldown = cooldown;
-		this.delayData = delayData;
-		this.price = price;
-		this.aliases = aliases;
-	}
 
 	public Builder builder() {
 		return new Builder();
@@ -201,7 +148,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 
 		@Override
 		public Builder setAliases(List<String> aliases) {
-			CommandSettings.this.aliases = Stream.of(aliases).toArray(String[]::new);
+			CommandSettings.this.aliases = aliases.stream().toArray(String[]::new);
 			return this;
 		}
 
@@ -218,8 +165,8 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 		}
 
 		@Override
-		public Builder setDelay(sawfowl.commandpack.api.data.command.Delay delay) {
-			CommandSettings.this.delayData = delay instanceof sawfowl.commandpack.configure.configs.commands.DelayData ? (sawfowl.commandpack.configure.configs.commands.DelayData) delay : new sawfowl.commandpack.configure.configs.commands.DelayData(delay.getSeconds(), new CancelRulesData(delay.getCancelRules().isAllowMoving(), delay.getCancelRules().isAllowOtherCommand()));
+		public Builder setDelay(Delay delay) {
+			CommandSettings.this.delayData = delay instanceof DelayData ? (DelayData) delay : DelayData.of(delay.getSeconds(), CancelRulesData.of(delay.getCancelRules().isAllowMoving(), delay.getCancelRules().isAllowOtherCommand()));
 			return this;
 		}
 
@@ -230,18 +177,18 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 		}
 
 		@Override
-		public Builder setPrice(sawfowl.commandpack.api.data.command.Price price) {
-			CommandSettings.this.price = price instanceof CommandPrice ? (CommandPrice) price : new CommandPrice(price.getCurrency(), price.getMoney());
+		public Builder setPrice(Price price) {
+			CommandSettings.this.price = price instanceof CommandPrice ? (CommandPrice) price : CommandPrice.of(price.getCurrency(), price.getMoney());
 			return this;
 		}
 
 		@Override
-		public Builder setRawAutoComplete(boolean enable) {
+		public Builder setRawAutoComplete(Boolean enable) {
 			return this;
 		}
 
 		@Override
-		public Builder generateRawCommandTree(boolean enable) {
+		public Builder generateRawCommandTree(Boolean enable) {
 			return this;
 		}
 		

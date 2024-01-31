@@ -28,7 +28,7 @@ public class GiveOnJoin extends AbstractKitsEditCommand {
 
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		Kit kit = getKit(args, 0).get();
+		Kit kit = getKit(args, cause, 0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		boolean value = getBoolean(args, 1).get();
 		kitData.setGiveOnJoin(value);

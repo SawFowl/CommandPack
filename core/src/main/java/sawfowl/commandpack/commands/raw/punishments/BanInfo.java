@@ -34,7 +34,7 @@ public class BanInfo extends AbstractRawCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		Profile ban = getArgument(Profile.class, args, 0).get();
+		Profile ban = getArgument(Profile.class, cause, args, 0).get();
 		Component title = getText(locale, LocalesPaths.COMMANDS_BANINFO_TITLE).replace(Placeholders.PLAYER, ban.profile().name().orElse(ban.profile().examinableName())).get();
 		if(isPlayer) {
 			delay((ServerPlayer) audience, locale, consumer -> {

@@ -33,7 +33,7 @@ public class Unbanip extends AbstractRawCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		IP ban = getArgument(Ban.IP.class, args, 0).get();
+		IP ban = getArgument(Ban.IP.class, cause, args, 0).get();
 		plugin.getPunishmentService().pardon(ban.address());
 		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_UNBANIP_SUCCESS).replace(Placeholders.VALUE, ban.address().getHostAddress()).get());
 	}

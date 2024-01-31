@@ -29,6 +29,7 @@ import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.world.WorldType;
 import org.spongepowered.api.world.server.ServerWorld;
+import org.spongepowered.common.command.registrar.tree.builder.BasicCommandTreeNode;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -76,27 +77,26 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	// To tests
-	@Override
-	default CommandTreeNode.Root commandTree() {
+	default CommandTreeNode.Root buildNewCommandTree() {
 		if(getCommandSettings() != null && getCommandSettings().isGenerateRawTree() != null && !getCommandSettings().isGenerateRawTree()) return Raw.super.commandTree();
-		CommandTreeNode.Root root = CommandTreeNode.root().executable();
+		CommandTreeNode.Root root = CommandTreeNode.root().customCompletions();
 		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
 			for(Entry<String, RawCommand> entry : getChildExecutors().entrySet()) {
 				root.child(entry.getKey(), entry.getValue().commandTree(0, entry.getValue()).requires(cause -> entry.getValue().canExecute(cause)));
 			}
 		}
 		if(getArguments() != null && !getArguments().isEmpty()) {
-			argsTree(0, getArguments().get(0).getArgumentType() == null ? CommandTreeNode.literal().executable() : getArguments().get(0).getArgumentType());
+			argsTree(0, getArguments().get(0).getArgumentType() == null ? CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions() : getArguments().get(0).getArgumentType());
 		}
 		return root;
 	}
 
 	private void argsTree(int depth, Argument<?> parrent) {
 		if(!getArguments().containsKey(depth)) return;
-		Argument<?> node = getArguments().get(depth).getArgumentType() != null ? getArguments().get(depth).getArgumentType() : CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions();
-		getArguments().get(depth).getVariants().forEach(arg -> {
-			parrent.child(arg, node).requires(cause -> getArguments().get(depth).canUse(cause, arg));
-		});
+		Argument<?> node = getArguments().get(depth).getArgumentType() != null ? getArguments().get(depth).getArgumentType() : CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions();
+		for(String arg : getArguments().get(depth).getVariants()) {
+			if(!(parrent instanceof BasicCommandTreeNode basic) || !basic.getChildren().containsKey(arg)) parrent.child(arg, node).requires(cause -> getArguments().get(depth).canUse(cause, arg));
+		}
 		argsTree(depth + 1, parrent);
 	}
 
@@ -104,11 +104,11 @@ public interface RawCommand extends PluginCommand, Raw {
 		Basic node = CommandTreeNode.literal().executable();
 		if(child.getChildExecutors() != null && !child.getChildExecutors().isEmpty()) {
 			for(Entry<String, RawCommand> entry : child.getChildExecutors().entrySet()) {
-				node.child(entry.getKey(), entry.getValue().commandTree(depth + 1, entry.getValue())).requires(cause -> entry.getValue().canExecute(cause));
+				if(!(node instanceof BasicCommandTreeNode basic) || !basic.getChildren().containsKey(entry.getKey())) node.child(entry.getKey(), entry.getValue().commandTree(depth + 1, entry.getValue())).requires(cause -> entry.getValue().canExecute(cause));
 			}
 		}
 		if(child.getArguments() != null && !child.getArguments().isEmpty()) {
-			argsTree(0, child.getArguments().get(0).getArgumentType() == null ? CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions() : getArguments().get(0).getArgumentType());
+			argsTree(0, child.getArguments().get(0).getArgumentType() == null ? CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions() : getArguments().get(0).getArgumentType());
 		}
 		return node;
 	}
@@ -218,6 +218,7 @@ public interface RawCommand extends PluginCommand, Raw {
 				event.register(getContainer(), this, command(), getCommandSettings().getAliases());
 			} else event.register(getContainer(), this, command());
 		}
+		CommandPack.getInstance().registerRawCommand(this);
 	}
 
 	/**
@@ -297,59 +298,60 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	default Optional<ServerWorld> getWorld(String[] args, CommandCause cause, int cursor) {
-		return getArgument(ServerWorld.class, args, cursor);
+		return getArgument(ServerWorld.class, cause, args, cursor);
 	}
 
 	default Optional<WorldType> getWorldType(String[] args, CommandCause cause, int cursor) {
-		return getArgument(WorldType.class, args, cursor);
+		return getArgument(WorldType.class, cause, args, cursor);
 	}
 	default Optional<ServerPlayer> getPlayer(String[] args, CommandCause cause, int cursor) {
-		return getArgument(ServerPlayer.class, args, cursor);
+		return getArgument(ServerPlayer.class, cause, args, cursor);
 	}
 
 	default Optional<EnchantmentType> getEnchantmentType(String[] args, CommandCause cause, int cursor) {
-		return getArgument(EnchantmentType.class, args, cursor);
+		return getArgument(EnchantmentType.class, cause, args, cursor);
 	}
 
 	default Optional<String> getString(String[] args, CommandCause cause, int cursor) {
-		return getArgument(String.class, args, cursor);
+		return getArgument(String.class, cause, args, cursor);
 	}
 
 	default Optional<Boolean> getBoolean(String[] args, CommandCause cause, int cursor) {
-		return getArgument(Boolean.class, args, cursor);
+		return getArgument(Boolean.class, cause, args, cursor);
 	}
 
 	default Optional<Integer> getInteger(String[] args, CommandCause cause, int cursor) {
-		return getArgument(Integer.class, args, cursor);
+		return getArgument(Integer.class, cause, args, cursor);
 	}
 
 	default Optional<Long> getLong(String[] args, CommandCause cause, int cursor) {
-		return getArgument(Long.class, args, cursor);
+		return getArgument(Long.class, cause, args, cursor);
 	}
 
 	default Optional<Double> getDouble(String[] args, CommandCause cause, int cursor) {
-		return getArgument(Double.class, args, cursor);
+		return getArgument(Double.class, cause, args, cursor);
 	}
 
 	default Optional<BigDecimal> getBigDecimal(String[] args, CommandCause cause, int cursor) {
-		return getArgument(BigDecimal.class, args, cursor);
+		return getArgument(BigDecimal.class, cause, args, cursor);
 	}
 
 	default Optional<Locale> getLocale(String[] args, CommandCause cause, int cursor) {
-		return getArgument(Locale.class, args, cursor);
+		return getArgument(Locale.class, cause, args, cursor);
 	}
 
 	default Optional<Currency> getCurrency(String[] args, CommandCause cause, int cursor) {
-		return getArgument(Currency.class, args, cursor);
+		return getArgument(Currency.class, cause, args, cursor);
 	}
 
 	default Optional<Duration> getDurationArg(String[] args, CommandCause cause, int cursor, Locale locale) throws CommandException {
-		Optional<String> arg = getArgument(String.class, args, cursor);
+		Optional<String> arg = getArgument(String.class, cause, args, cursor);
 		return arg.isPresent() ? parseDuration(arg.get(), locale) : Optional.empty();
 	}
 
 	/**
 	 * Getting an object from a command argument.
+	 * Use {@link #getArgument(Class, CommandCause, String[], int)}
 	 * 
 	 * @param <T> - The type of the returned object.
 	 * @param clazz - The class of the returned object.
@@ -358,10 +360,16 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * @return {@link Optional}
 	 */
 	@SuppressWarnings("unchecked")
+	@Deprecated
 	default <T> Optional<T> getArgument(Class<T> clazz, String[] args, int cursor) {
 		return getArguments() == null || !getArguments().containsKey(cursor) || getArguments().get(cursor).getClazz() != clazz || !getArguments().get(cursor).getClazz().getName().equals(clazz.getName()) ? Optional.empty() : ((RawArgument<T>) getArguments().get(cursor)).getResult(clazz, args);
 	}
+
+	/**
+	 * Use {@link #getArgument(Class, CommandCause, String[], int)}
+	 */
 	@SuppressWarnings("unchecked")
+	@Deprecated
 	default <T> Optional<T> getArgument(Class<T> clazz, List<String> args, int cursor) {
 		return getArguments() == null || !getArguments().containsKey(cursor) || getArguments().get(cursor).getClazz() != clazz || !getArguments().get(cursor).getClazz().getName().equals(clazz.getName()) ? Optional.empty() : ((RawArgument<T>) getArguments().get(cursor)).getResult(clazz, args.toArray(new String[]{}));
 	}

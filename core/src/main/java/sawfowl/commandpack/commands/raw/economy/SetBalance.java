@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
@@ -96,8 +97,8 @@ public class SetBalance extends AbstractRawCommand {
 				RawArgument.of(
 					String.class,
 					CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
-					(cause, args) -> plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier),
-					() -> plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier),
+					(cause, args) -> plugin.getEconomy().getEconomyService() == null ? Stream.empty() : plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier),
+					() -> plugin.getEconomy().getEconomyService() == null ? Stream.empty() : plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier),
 					(cause, args) -> args.length >= 1 ? Optional.ofNullable(plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier).filter(var -> var.equals(args[0])).findFirst().orElse(args[0])) : Optional.empty(),
 					null,
 					true,

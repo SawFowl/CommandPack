@@ -11,12 +11,13 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import sawfowl.commandpack.api.data.command.Delay;
 import sawfowl.commandpack.api.data.command.Price;
 import sawfowl.commandpack.api.data.command.Settings;
+import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 
 public class CommandSettingSerializer implements TypeSerializer<Settings> {
 
 	@Override
 	public Settings deserialize(Type type, ConfigurationNode node) throws SerializationException {
-		return Settings.builder()
+		return new CommandSettings().builder()
 			.setAliases(node.node("Aliases").getList(String.class, new ArrayList<String>()))
 			.setCooldown(node.node("Cooldown").getLong(0))
 			.setDelay(node.node("Delay").get(Delay.class))

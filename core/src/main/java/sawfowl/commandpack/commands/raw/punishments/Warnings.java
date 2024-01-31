@@ -40,7 +40,7 @@ public class Warnings extends AbstractRawCommand {
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
 		if(args.length == 0 && !isPlayer) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT);
-		Optional<Warns> optWarns = getArgument(Warns.class, args, 0);
+		Optional<Warns> optWarns = getArgument(Warns.class, cause, args, 0);
 		if(!isPlayer) {
 			if(optWarns.isPresent()) {
 				audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, args[0], optWarns.get().inAllTime()).get());

@@ -16,6 +16,10 @@ public class CommandPrice implements sawfowl.commandpack.api.data.command.Price 
 
 	public CommandPrice() {}
 
+	public static CommandPrice of(String currency, double money) {
+		return new CommandPrice().builder().currency(currency).money(money).build();
+	}
+
 	public CommandPrice(String currency, double money) {
 		this.currency = currency;
 		this.money = money;
