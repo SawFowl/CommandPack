@@ -91,6 +91,8 @@ public class PlayerConnectionListener {
 		plugin.getKitService().getKits().stream().filter(kit -> kit.isFirstTime() || kit.isGiveOnJoin()).forEach(kit -> {
 			giveKit(event.player(), kit);
 		});
+		if(!event.player().hasPlayedBefore()) plugin.getAPI().updateCommandsTree("balance", "pay");
+		plugin.getAPI().updateCommandsTree("tell", "kit", "warp", "sudo");
 	}
 
 	@Listener
@@ -107,6 +109,7 @@ public class PlayerConnectionListener {
 			Sponge.systemSubject().sendMessage(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.LEAVE_MESSAGE).replace(new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, getPrefix(event.player()), event.player().get(Keys.DISPLAY_NAME).orElse(text(event.player().name())), getSuffix(event.player())).get());
 		}
 		playerData.save();
+		plugin.getAPI().updateCommandsTree("tell", "kit", "warp", "sudo");
 	}
 
 	private void giveKit(ServerPlayer player, Kit kit) {

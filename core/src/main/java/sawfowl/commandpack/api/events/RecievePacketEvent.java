@@ -30,7 +30,7 @@ public interface RecievePacketEvent extends Event {
 	String getPacketName();
 
 	/**
-	 * Raw data.
+	 * RawSettings data.
 	 */
 	byte[] getData();
 

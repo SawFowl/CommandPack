@@ -1,6 +1,5 @@
 package sawfowl.commandpack.mixins.vanilla.network;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +12,8 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
+import sawfowl.commandpack.utils.CommandsUtil;
+
 import sawfowl.localeapi.api.Text;
 
 @Mixin(ServerPlayer.class)
@@ -20,16 +21,15 @@ public abstract class MixinVanillaServerPlayerImpl implements MixinServerPlayer 
 
 	@Shadow
 	public ServerGamePacketListenerImpl connection;
-	private List<String> mods = new ArrayList<String>();
 
 	@Override
 	public void sendPacket(CustomPacket packet) {
-		if(packet instanceof CustomPacketImpl) connection.send(((CustomPacketImpl) packet).getPacket());
+		if(packet instanceof CustomPacketImpl custom) connection.send(custom.getPacket());
 	}
 
 	@Override
 	public void sendMessage(Text message) {
-		((org.spongepowered.api.entity.living.player.server.ServerPlayer) this).sendMessage(message.applyPlaceholders(Component.empty(), (org.spongepowered.api.entity.living.player.server.ServerPlayer) this).get());
+		sendMessage(message.applyPlaceholders(Component.empty(), (MixinServerPlayer) this).get());
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public abstract class MixinVanillaServerPlayerImpl implements MixinServerPlayer 
 
 	@Override
 	public List<String> getModList() {
-		return mods;
+		return CommandsUtil.EMPTY_VARIANTS;
 	}
 
 }

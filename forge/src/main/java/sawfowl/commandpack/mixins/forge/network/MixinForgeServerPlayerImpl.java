@@ -26,12 +26,12 @@ public abstract class MixinForgeServerPlayerImpl implements MixinServerPlayer {
 
 	@Override
 	public void sendPacket(CustomPacket packet) {
-		if(packet instanceof CustomPacketImpl) connection.send(((CustomPacketImpl) packet).getPacket());
+		if(packet instanceof CustomPacketImpl custom) connection.send(custom.getPacket());
 	}
 
 	@Override
 	public void sendMessage(Text message) {
-		((org.spongepowered.api.entity.living.player.server.ServerPlayer) this).sendMessage(message.applyPlaceholders(Component.empty(), (org.spongepowered.api.entity.living.player.server.ServerPlayer) this).get());
+		sendMessage(message.applyPlaceholders(Component.empty(), (MixinServerPlayer) this).get());
 	}
 
 	@Override

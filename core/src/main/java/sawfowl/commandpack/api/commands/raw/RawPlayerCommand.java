@@ -10,7 +10,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import net.kyori.adventure.audience.Audience;
 
 /**
- * This interface is designed to simplify the creation of Raw commands.<br>
+ * This interface is designed to simplify the creation of RawSettings commands.<br>
  * Commands created using this interface can only be used by players.
  * 
  * @author SawFowl

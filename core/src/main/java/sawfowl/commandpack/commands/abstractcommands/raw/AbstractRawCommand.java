@@ -37,11 +37,6 @@ public abstract class AbstractRawCommand extends PluginCommand implements RawCom
 		return args.isEmpty() ? args = arguments().stream().collect(Collectors.toMap(arg -> arg.getCursor(), arg -> arg)) : args;
 	}
 
-	@Override
-	public boolean enableAutoComplete() {
-		return plugin.getMainConfig().isAutoCompleteRawCommands();
-	}
-
 	public void addChildCommand(RawCommand command) {
 		if(!childExecutors.containsKey(command.command())) childExecutors.put(command.command(), command);
 		for(String alias : command.getCommandSettings().getAliases()) {

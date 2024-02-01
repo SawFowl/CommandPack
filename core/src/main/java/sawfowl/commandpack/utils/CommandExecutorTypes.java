@@ -18,7 +18,7 @@ public enum CommandExecutorTypes {
 
 		@Override
 		protected boolean check(CommandCause cause) {
-			return cause.audience() instanceof SystemSubject || cause.audience() instanceof Server;
+			return !(cause.audience() instanceof Nameable) && (cause.audience() instanceof SystemSubject || cause.audience() instanceof Server);
 		}
 
 	},

@@ -70,6 +70,7 @@ public class Create extends AbstractWorldCommand {
 			}
 			world.setBorder(world.border().toBuilder().initialDiameter(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().border().diameter()).build());
 			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_CREATE).replace(Placeholders.WORLD, template.key().asString()).get());
+			plugin.getAPI().updateCommandTree("world");
 		});
 	}
 

@@ -35,6 +35,7 @@ public class Disable extends AbstractWorldCommand {
 		ServerWorld world = getWorld(args, 0).get();
 		world.properties().setLoadOnStartup(false);
 		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_DISABLE).replace(Placeholders.WORLD, args[0]).get());
+		plugin.getAPI().updateCommandTree("world");
 	}
 
 	@Override

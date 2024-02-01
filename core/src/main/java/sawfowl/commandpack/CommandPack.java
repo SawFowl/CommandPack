@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
@@ -33,6 +34,7 @@ import org.spongepowered.api.event.lifecycle.RegisterBuilderEvent;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
+import org.spongepowered.api.scheduler.ScheduledTask;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.service.economy.EconomyService;
@@ -63,7 +65,9 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.data.command.CancelRules;
 import sawfowl.commandpack.api.data.command.Delay;
 import sawfowl.commandpack.api.data.command.Price;
+import sawfowl.commandpack.api.data.command.RawSettings;
 import sawfowl.commandpack.api.data.command.Settings;
+import sawfowl.commandpack.api.data.command.UpdateTree;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.kits.KitPrice;
 import sawfowl.commandpack.api.data.miscellaneous.Location;
@@ -97,6 +101,8 @@ import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
 import sawfowl.commandpack.configure.configs.commands.DelayData;
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportWorldConfig;
+import sawfowl.commandpack.configure.configs.commands.RawSettingsImpl;
+import sawfowl.commandpack.configure.configs.commands.UpdateRawTree;
 import sawfowl.commandpack.configure.configs.kits.KitData;
 import sawfowl.commandpack.configure.configs.kits.KitPriceData;
 import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
@@ -150,7 +156,8 @@ public class CommandPack {
 	private Map<String, ChunkGenerator> generators = new HashMap<>();
 	private Collection<PluginContainer> containers = new HashSet<>();
 	private Collection<ModContainer> mods = new HashSet<>();
-	private List<RawCommand> registeredCommands = new ArrayList<RawCommand>();
+	private List<RawUpdater> registeredCommands = new ArrayList<RawUpdater>();
+	private ScheduledTask rawTask;
 
 	public static CommandPack getInstance() {
 		return instance;
@@ -233,13 +240,11 @@ public class CommandPack {
 	}
 
 	public void registerRawCommand(RawCommand raw) {
-		registeredCommands.add(raw);
+		registeredCommands.add(new RawUpdater(raw));
 	}
 
-	public void reloadRawTrees() {
-		registeredCommands.forEach(raw -> {
-			raw.commandTree().redirect(raw.buildNewCommandTree());
-		});
+	public void updateRawTrees() {
+		registeredCommands.forEach(RawUpdater::forceUpdate);
 	}
 
 	@Inject
@@ -361,6 +366,18 @@ public class CommandPack {
 				return mods;
 			}
 
+			@Override
+			public void updateCommandTree(String command) {
+				registeredCommands.stream().filter(updater -> updater.command.command().equals(command) || (updater.command.getCommandSettings() != null && updater.command.getCommandSettings().containsAlias(command))).findFirst().ifPresent(updater -> {
+					updater.forceUpdate();
+				});
+			}
+
+			@Override
+			public void updateCommandsTree(String... commands) {
+				if(commands != null && commands.length > 0) Stream.of(commands).forEach(this::updateCommandTree);
+			}
+
 		};
 		if(getMainConfig().getMySqlConfig().isEnable()) {
 			mariaDB = new MariaDB(instance);
@@ -431,7 +448,8 @@ public class CommandPack {
 			});
 		}).build());
 		serverStartedTime = System.currentTimeMillis();
-		reloadRawTrees();
+		updateRawTrees();
+		createRawTask();
 	}
 
 	@Listener
@@ -448,6 +466,7 @@ public class CommandPack {
 	public void onReload(RefreshGameEvent event) {
 		configManager.reloadConfigs();
 		((PlayersDataImpl) playersData).reload();
+		createRawTask();
 	}
 
 	@Listener(order = Order.FIRST)
@@ -482,6 +501,8 @@ public class CommandPack {
 		event.register(Warn.Builder.class, () -> new WarnData().builder());
 		event.register(Warns.Builder.class, () -> new WarnsData().builder());
 		event.register(CustomPacket.Builder.class, () -> new CustomPacketImpl().builder());
+		event.register(RawSettings.Builder.class, () -> new RawSettingsImpl().builder());
+		event.register(UpdateTree.Builder.class, () -> new UpdateRawTree().builder());
 	}
 
 	@Listener
@@ -509,6 +530,52 @@ public class CommandPack {
 
 	private Component timeFormat(long second, Locale locale) {
 		return TextUtils.timeFormat(second, locale, getLocales().getComponent(locale, LocalesPaths.TIME_DAYS), getLocales().getComponent(locale, LocalesPaths.TIME_HOUR), getLocales().getComponent(locale, LocalesPaths.TIME_MINUTE), getLocales().getComponent(locale, LocalesPaths.TIME_SECOND));
+	}
+
+	private void createRawTask() {
+		if(rawTask != null) {
+			rawTask.cancel();
+			rawTask = null;
+		}
+		rawTask = Sponge.asyncScheduler().submit(Task.builder()
+			.interval(20, TimeUnit.SECONDS)
+			.plugin(pluginContainer)
+			.execute(() -> {
+				registeredCommands.forEach(RawUpdater::updateRawTree);
+			})
+			.build()
+		);
+	}
+
+	class RawUpdater {
+
+		private RawCommand command;
+		private long lastUpdate;
+		RawUpdater(RawCommand command) {
+			this.command = command;
+			lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+		}
+
+		void forceUpdate() {
+			if(command.getCommandSettings() == null || command.getCommandSettings().getRawSettings() == null || !command.getCommandSettings().getRawSettings().isGenerateRawTree()) return;
+			Sponge.asyncScheduler().executor(pluginContainer).execute(() -> {
+				command.redirectTree();
+				lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+			});
+		}
+
+		void updateRawTree() {
+			if(
+				command.getCommandSettings() == null ||
+				command.getCommandSettings().getRawSettings() == null ||
+				command.getCommandSettings().getRawSettings().getUpdateTree() == null ||
+				!command.getCommandSettings().getRawSettings().getUpdateTree().isEnable() ||
+				lastUpdate + command.getCommandSettings().getRawSettings().getUpdateTree().getInterval() >= TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
+			) return;
+			command.redirectTree();
+			lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+		}
+
 	}
 
 }

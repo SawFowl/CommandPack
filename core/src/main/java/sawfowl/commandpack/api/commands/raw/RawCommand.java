@@ -3,6 +3,7 @@ package sawfowl.commandpack.api.commands.raw;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -41,7 +42,7 @@ import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.CommandsUtil;
 
 /**
- * This interface is designed to simplify the creation of Raw commands.
+ * This interface is designed to simplify the creation of RawSettings commands.
  *
  * @author SawFowl
  */
@@ -73,19 +74,21 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * This parameter will be ignored when overriding the {@link #complete(CommandCause, Mutable)} method.
 	 */
 	default boolean enableAutoComplete() {
-		return getCommandSettings() == null || getCommandSettings().isAutocomplete() == null || getCommandSettings().isAutocomplete();
+		return getCommandSettings() == null || getCommandSettings().getRawSettings() == null || getCommandSettings().getRawSettings().isAutoComplete();
 	}
 
-	// To tests
 	default CommandTreeNode.Root buildNewCommandTree() {
-		if(getCommandSettings() != null && getCommandSettings().isGenerateRawTree() != null && !getCommandSettings().isGenerateRawTree()) return Raw.super.commandTree();
 		CommandTreeNode.Root root = CommandTreeNode.root().customCompletions();
-		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
+		if(containsChild()) {
 			for(Entry<String, RawCommand> entry : getChildExecutors().entrySet()) {
-				root.child(entry.getKey(), entry.getValue().commandTree(0, entry.getValue()).requires(cause -> entry.getValue().canExecute(cause)));
+				if(entry.getValue().containsArgs() || entry.getValue().containsChild()) {
+					root.child(entry.getKey(), entry.getValue().commandTree(0, entry.getValue()).requires(cause -> entry.getValue().canExecute(cause)));
+				} else root.child(entry.getKey(), entry.getValue().commandTree(0, entry.getValue()).requires(cause -> entry.getValue().canExecute(cause)).executable());
 			}
+		} else if(!containsArgs()) {
+			root.executable();
 		}
-		if(getArguments() != null && !getArguments().isEmpty()) {
+		if(containsArgs()) {
 			argsTree(0, getArguments().get(0).getArgumentType() == null ? CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions() : getArguments().get(0).getArgumentType());
 		}
 		return root;
@@ -95,19 +98,31 @@ public interface RawCommand extends PluginCommand, Raw {
 		if(!getArguments().containsKey(depth)) return;
 		Argument<?> node = getArguments().get(depth).getArgumentType() != null ? getArguments().get(depth).getArgumentType() : CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions();
 		for(String arg : getArguments().get(depth).getVariants()) {
-			if(!(parrent instanceof BasicCommandTreeNode basic) || !basic.getChildren().containsKey(arg)) parrent.child(arg, node).requires(cause -> getArguments().get(depth).canUse(cause, arg));
+			if(!(parrent instanceof BasicCommandTreeNode basic) || !basic.getChildren().containsKey(arg)) {
+				parrent.child(arg, node).requires(cause -> getArguments().get(depth).canUse(cause, arg));
+			}
+		}
+		if(!getArguments().containsKey(depth + 1)) {
+			node.executable();
+			return;
 		}
 		argsTree(depth + 1, parrent);
 	}
 
 	private CommandTreeNode.Basic commandTree(int depth, RawCommand child) {
 		Basic node = CommandTreeNode.literal().executable();
-		if(child.getChildExecutors() != null && !child.getChildExecutors().isEmpty()) {
+		if(child.containsChild()) {
 			for(Entry<String, RawCommand> entry : child.getChildExecutors().entrySet()) {
-				if(!(node instanceof BasicCommandTreeNode basic) || !basic.getChildren().containsKey(entry.getKey())) node.child(entry.getKey(), entry.getValue().commandTree(depth + 1, entry.getValue())).requires(cause -> entry.getValue().canExecute(cause));
+				if(!(node instanceof BasicCommandTreeNode basic) || !basic.getChildren().containsKey(entry.getKey())) {
+					if(entry.getValue().containsArgs() || entry.getValue().containsChild()) {
+						node.child(entry.getKey(), entry.getValue().commandTree(depth + 1, entry.getValue())).requires(cause -> entry.getValue().canExecute(cause));
+					} node.child(entry.getKey(), entry.getValue().commandTree(depth + 1, entry.getValue()).executable()).requires(cause -> entry.getValue().canExecute(cause));
+				}
 			}
+		} else if(child.containsArgs()) {
+			node.executable();
 		}
-		if(child.getArguments() != null && !child.getArguments().isEmpty()) {
+		if(child.containsArgs()) {
 			argsTree(0, child.getArguments().get(0).getArgumentType() == null ? CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions() : getArguments().get(0).getArgumentType());
 		}
 		return node;
@@ -132,11 +147,7 @@ public interface RawCommand extends PluginCommand, Raw {
 
 	@Override
 	default List<CommandCompletion> complete(CommandCause cause, Mutable arguments) throws CommandException {
-		if(!enableAutoComplete()) return CommandsUtil.EMPTY_COMPLETIONS;
-		List<String> args = Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList());
-		String currentInput = arguments.input();
-		List<CommandCompletion> complete = completeChild(cause, args, currentInput);
-		return complete == null ? CommandsUtil.EMPTY_COMPLETIONS : complete;
+		return enableAutoComplete() ? completeChild(cause, Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList()), arguments.input()) : CommandsUtil.EMPTY_COMPLETIONS;
 	}
 
 	default String[] checkChildAndArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
@@ -163,15 +174,22 @@ public interface RawCommand extends PluginCommand, Raw {
 
 	default List<CommandCompletion> completeChild(CommandCause cause, List<String> args, String currentInput) {
 		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
-			List<CommandCompletion> completions;
 			if(args.size() == 0 || (args.size() == 1 && !currentInput.endsWith(" "))) {
-				completions = getChildExecutors().keySet().stream().filter(command -> (args.isEmpty() || ((command.equals(args.get(0)) || command.startsWith(args.get(0))) && getChildExecutors().get(command).canExecute(cause)))).map(CommandCompletion::of).collect(Collectors.toList());
-				completions.addAll(complete(cause, args, currentInput));
-				return completions;
+				return new ArrayList<CommandCompletion>() {
+					private static final long serialVersionUID = 1L;
+					{
+						addAll(getChildExecutors().keySet().stream().filter(command -> (args.isEmpty() || ((command.equals(args.get(0)) || command.startsWith(args.get(0))) && getChildExecutors().get(command).canExecute(cause)))).map(CommandCompletion::of).collect(Collectors.toList()));
+						addAll(complete(cause, args, currentInput));
+					}
+				};
 			} else if(getChildExecutors().containsKey(args.get(0))) {
-				completions = getChildExecutors().get(args.get(0)).completeChild(cause, args.subList(1, args.size()), currentInput.contains(args.get(0) + " ") ? currentInput.replace(args.get(0) + " ", "") : currentInput.replace(args.get(0), ""));
-				completions.addAll(complete(cause, args, currentInput));
-				return completions;
+				return new ArrayList<CommandCompletion>() {
+					private static final long serialVersionUID = 1L;
+					{
+						addAll(getChildExecutors().get(args.get(0)).completeChild(cause, args.subList(1, args.size()), currentInput.contains(args.get(0) + " ") ? currentInput.replace(args.get(0) + " ", "") : currentInput.replace(args.get(0), "")));
+						addAll(complete(cause, args, currentInput));
+					}
+				};
 			}
 		}
 		return complete(cause, args, currentInput);
@@ -424,11 +442,22 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	/**
-	 * No longer required.
+	 * No need to {@link Override} any more.
 	 */
-	@Deprecated
 	default List<CommandCompletion> getEmptyCompletion() {
 		return CommandsUtil.EMPTY_COMPLETIONS;
+	}
+
+	default void redirectTree() {
+		if(getCommandSettings() != null && getCommandSettings().getRawSettings().isGenerateRawTree()) Raw.super.commandTree().redirect(buildNewCommandTree());
+	}
+
+	default boolean containsChild() {
+		return getChildExecutors() != null && !getChildExecutors().isEmpty();
+	}
+
+	default boolean containsArgs() {
+		return getArguments() != null && !getArguments().isEmpty();
 	}
 
 }

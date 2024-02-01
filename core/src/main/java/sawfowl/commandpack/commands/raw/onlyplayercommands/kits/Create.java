@@ -31,6 +31,7 @@ public class Create extends AbstractKitsEditCommand {
 		Kit kit = Kit.builder().id(args[0]).build();
 		kit.asMenu(getContainer(), src, false).open(src);
 		plugin.getKitService().addKit(kit);
+		plugin.getAPI().updateCommandTree("kits");
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import sawfowl.commandpack.api.data.command.Delay;
 import sawfowl.commandpack.api.data.command.Price;
+import sawfowl.commandpack.api.data.command.RawSettings;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 
@@ -23,8 +24,7 @@ public class CommandSettingSerializer implements TypeSerializer<Settings> {
 			.setDelay(node.node("Delay").get(Delay.class))
 			.setEnable(node.node("Enable").getBoolean(true))
 			.setPrice(node.node("Price").get(Price.class))
-			.setRawAutoComplete(node.node("AutoComplete").virtual() ? null : node.node("AutoComplete").getBoolean())
-			.generateRawCommandTree(node.node("GenerateRawTree").virtual() ? null : node.node("GenerateRawTree").getBoolean())
+			.setRawSettings(node.node("RawSettings").virtual() ? null : node.node("RawSettings").get(RawSettings.class))
 			.build();
 	}
 
@@ -35,8 +35,7 @@ public class CommandSettingSerializer implements TypeSerializer<Settings> {
 		node.node("Delay").set(settings.getDelay());
 		node.node("Enable").set(settings.isEnable());
 		node.node("Price").set(settings.getPrice());
-		node.node("AutoComplete").set(settings.isAutocomplete());
-		node.node("GenerateRawTree").set(settings.isGenerateRawTree());
+		if(settings.getRawSettings() != null) node.node("RawSettings").set(settings.getRawSettings());
 	}
 
 }

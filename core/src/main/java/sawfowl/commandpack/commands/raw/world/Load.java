@@ -37,6 +37,7 @@ public class Load extends AbstractWorldCommand {
 		if(!Sponge.server().worldManager().offlineWorldKeys().stream().map(ResourceKey::asString).filter(k -> k.equals(world.asString())).findFirst().isPresent()) exceptionAppendUsage(cause, getText(locale, LocalesPaths.COMMANDS_WORLD_LOADED).replace(Placeholders.WORLD, args[0]).get());
 		Sponge.server().worldManager().loadWorld(ResourceKey.resolve(args[0])).thenRunAsync(() -> {
 			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_LOAD).replace(Placeholders.WORLD, args[0]).get());
+			plugin.getAPI().updateCommandTree("world");
 		});
 	}
 

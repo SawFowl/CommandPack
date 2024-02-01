@@ -15,6 +15,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.api.data.command.Delay;
 import sawfowl.commandpack.api.data.command.Price;
+import sawfowl.commandpack.api.data.command.RawSettings;
 
 @ConfigSerializable
 public class CommandSettings implements sawfowl.commandpack.api.data.command.Settings {
@@ -37,8 +38,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 	private boolean enable = true;
 	@Setting("Price")
 	private CommandPrice price = new CommandPrice();
-	private Boolean autocomplete;
-	private Boolean generateRawTree;
+	private RawSettings rawSettings = null;
 	private UUID uuid = UUID.randomUUID();
 
 	@Override
@@ -49,6 +49,11 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 	@Override
 	public List<String> getAliasesList() {
 		return aliases.length == 0 ? new ArrayList<>() : Stream.of(aliases).collect(Collectors.toList());
+	}
+
+	@Override
+	public boolean containsAlias(String value) {
+		return aliases != null && Stream.of(aliases).filter(alias -> alias.equals(value)).findFirst().isPresent();
 	}
 
 	@Override
@@ -71,16 +76,6 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 		return enable;
 	}
 
-	@Override
-	public Boolean isAutocomplete() {
-		return autocomplete;
-	}
-
-	@Override
-	public Boolean isGenerateRawTree() {
-		return generateRawTree;
-	}
-
 	public CommandSettings addAlias(String alias) {
 		List<String> newAliases = getAliasesList();
 		newAliases.add(alias);
@@ -93,6 +88,10 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 		newAliases.addAll(aliases);
 		this.aliases = newAliases.stream().toArray(String[]::new);
 		return this;
+	}
+
+	public RawSettings getRawSettings() {
+		return rawSettings;
 	}
 
 	@Override
@@ -124,8 +123,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 				.set(DataQuery.of("DelayData"), delayData)
 				.set(DataQuery.of("Enable"), enable)
 				.set(DataQuery.of("Price"), price)
-				.set(DataQuery.of("Autocomplete"), autocomplete)
-				.set(DataQuery.of("GenerateRawTree"), generateRawTree)
+				.set(DataQuery.of("RawSettings"), rawSettings)
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
@@ -183,12 +181,8 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 		}
 
 		@Override
-		public Builder setRawAutoComplete(Boolean enable) {
-			return this;
-		}
-
-		@Override
-		public Builder generateRawCommandTree(Boolean enable) {
+		public Builder setRawSettings(RawSettings rawSettings) {
+			CommandSettings.this.rawSettings = rawSettings;
 			return this;
 		}
 		

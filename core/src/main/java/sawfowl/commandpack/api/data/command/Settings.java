@@ -8,6 +8,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
+import sawfowl.commandpack.api.commands.raw.RawCommand;
 
 /**
  * Additional command settings.
@@ -31,6 +32,11 @@ public interface Settings extends DataSerializable {
 	List<String> getAliasesList();
 
 	/**
+	 * Whether the command contains the specified alias.
+	 */
+	public boolean containsAlias(String value);
+
+	/**
 	 * The time between uses of the command.
 	 */
 	long getCooldown();
@@ -51,15 +57,9 @@ public interface Settings extends DataSerializable {
 	boolean isEnable();
 
 	/**
-	 * For `Raw` commands only.<br>
-	 * No effect if argument tree construction is enabled. See {@link #isGenerateRawTree()}
+	 * Settings for {@link RawCommand} type commands.
 	 */
-	@Nullable Boolean isAutocomplete();
-
-	/**
-	 * For `Raw` commands only.<br>
-	 */
-	@Nullable Boolean isGenerateRawTree();
+	@Nullable RawSettings getRawSettings();
 
 	interface Builder extends AbstractBuilder<Settings>, org.spongepowered.api.util.Builder<Settings, Builder> {
 
@@ -75,9 +75,7 @@ public interface Settings extends DataSerializable {
 
 		Builder setPrice(Price price);
 
-		Builder setRawAutoComplete(Boolean enable);
-
-		Builder generateRawCommandTree(Boolean enable);
+		Builder setRawSettings(RawSettings rawSettings);
 
 	}
 

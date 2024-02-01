@@ -41,6 +41,7 @@ public class Delete extends AbstractWorldCommand {
 		}
 		Sponge.server().worldManager().deleteWorld(world.key()).thenRunAsync(() -> {
 			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_DELETE).replace(Placeholders.WORLD, args[0]).get());
+			plugin.getAPI().updateCommandTree("world");
 		});
 	}
 

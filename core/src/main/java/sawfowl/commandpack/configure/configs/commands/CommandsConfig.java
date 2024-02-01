@@ -32,7 +32,9 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModFileInfo;
 
 import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.api.data.command.RawSettings;
 import sawfowl.commandpack.api.data.command.Settings;
+import sawfowl.commandpack.api.data.command.UpdateTree;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
@@ -59,7 +61,7 @@ public class CommandsConfig {
 	@Setting("SetWarp")
 	private Settings setWarp = new CommandSettings().builder().build();
 	@Setting("Warp")
-	private Settings warp = new CommandSettings().builder().setCooldown(15).setDelay(DelayData.of(3, CancelRulesData.of(false, false))).setRawAutoComplete(false).generateRawCommandTree(true).build();
+	private Settings warp = new CommandSettings().builder().setCooldown(15).setDelay(DelayData.of(3, CancelRulesData.of(false, false))).setRawSettings(new RawSettingsImpl().builder().setUpdateTree(UpdateTree.defaultValues()).setAutoComplete(false).setGenerateRawTree(true).build()).build();
 	@Setting("Warps")
 	private Settings warps = new CommandSettings().builder().setDelay(DelayData.of(3, CancelRulesData.of(false, false))).build();
 	@Setting("Tpa")
@@ -131,7 +133,7 @@ public class CommandsConfig {
 	@Setting("Night")
 	private Settings night = new CommandSettings().builder().setCooldown(120).build();
 	@Setting("Enchant")
-	private Settings enchant = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings enchant = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(false).build(), false, true)).build();
 	@Setting("Anvil")
 	private Settings anvil = new CommandSettings().builder().build();
 	@Setting("CraftingTable")
@@ -147,7 +149,7 @@ public class CommandsConfig {
 	@Setting("Broadcast")
 	private Settings broadcast = new CommandSettings().builder().build();
 	@Setting("Sudo")
-	private Settings sudo = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings sudo = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(15).build(), false, true)).build();
 	@Setting("Vanish")
 	private Settings vanish = new CommandSettings().builder().build();
 	@Setting("Nick")
@@ -165,13 +167,13 @@ public class CommandsConfig {
 	@Setting("ServerTime")
 	private Settings serverTime = new CommandSettings().builder().build();
 	@Setting("Kits")
-	private Settings kits = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings kits = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(false).build(), false, true)).build();
 	@Setting("Kit")
-	private Settings kit = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings kit = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(300).build(), true, true)).build();
 	@Setting("Afk")
 	private Settings afk = new CommandSettings().builder().build();
 	@Setting("World")
-	private Settings world = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings world = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(300).build(), false, true)).build();
 	@Setting("CommandSpy")
 	private Settings commandspy = new CommandSettings().builder().build();
 	@Setting("Ping")
@@ -191,41 +193,41 @@ public class CommandsConfig {
 	@Setting("Ban")
 	private Settings ban = new CommandSettings().builder().build();
 	@Setting("Unban")
-	private Settings unban = new CommandSettings().builder().setAliases("pardon").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings unban = new CommandSettings().builder().setAliases("pardon").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(30).build(), true, true)).build();
 	@Setting("Banip")
 	private Settings banip = new CommandSettings().builder().build();
 	@Setting("Unbanip")
-	private Settings unbanip = new CommandSettings().builder().setAliases("pardonip").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings unbanip = new CommandSettings().builder().setAliases("pardonip").setRawSettings(RawSettings.defaultValues()).build();
 	@Setting("Kick")
 	private Settings kick = new CommandSettings().builder().build();
 	@Setting("Mute")
 	private Settings mute = new CommandSettings().builder().build();
 	@Setting("Unmute")
-	private Settings unmute = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings unmute = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(30).build(), true, true)).build();
 	@Setting("Warn")
 	private Settings warn = new CommandSettings().builder().build();
 	@Setting("Warnings")
-	private Settings warns = new CommandSettings().builder().setAliases("warns").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings warns = new CommandSettings().builder().setAliases("warns").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(30).build(), true, true)).build();
 	@Setting("BanList")
 	private Settings banList = new CommandSettings().builder().setAliases("bans").build();
 	@Setting("BanInfo")
-	private Settings banInfo = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings banInfo = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(30).build(), true, true)).build();
 	@Setting("MuteInfo")
-	private Settings muteInfo = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings muteInfo = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(30).build(), true, true)).build();
 	@Setting("MuteList")
 	private Settings muteList = new CommandSettings().builder().setAliases("mutes").build();
 	@Setting("Balance")
-	private Settings balance = new CommandSettings().builder().setAliases("money").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings balance = new CommandSettings().builder().setAliases("money").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(10).build(), true, true)).build();
 	@Setting("BalanceTop")
-	private Settings balanceTop = new CommandSettings().builder().setAliases("baltop").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings balanceTop = new CommandSettings().builder().setAliases("baltop").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(30).build(), true, true)).build();
 	@Setting("HideBalance")
-	private Settings hideBalance = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings hideBalance = new CommandSettings().builder().setRawSettings(RawSettings.defaultValues()).build();
 	@Setting("Economy")
-	private Settings economy = new CommandSettings().builder().setAliases("eco").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings economy = new CommandSettings().builder().setAliases("eco").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(30).build(), true, true)).build();
 	@Setting("Pay")
-	private Settings pay = new CommandSettings().builder().setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings pay = new CommandSettings().builder().setRawSettings(RawSettings.defaultValues()).build();
 	@Setting("Tell")
-	private Settings tell = new CommandSettings().builder().setAliases("say", "s", "m").setRawAutoComplete(true).generateRawCommandTree(true).build();
+	private Settings tell = new CommandSettings().builder().setAliases("say", "s", "m").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(10).build(), true, true)).build();
 	@Setting("Reply")
 	private Settings reply = new CommandSettings().builder().setAliases("r").build();
 

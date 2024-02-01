@@ -39,9 +39,11 @@ public class SetWarp extends AbstractPlayerCommand {
 			if(getBoolean(context, "Admin", false)) {
 				plugin.getPlayersData().addAndSaveAdminWarp(warp);
 				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_SETWARP_SUCCESS_ADMIN));
+				plugin.getAPI().updateCommandTree("warp");
 			} else if(playerData.addWarp(warp, Permissions.getWarpsLimit(src))) {
 				playerData.save();
 				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_SETWARP_SUCCESS));
+				plugin.getAPI().updateCommandTree("warp");
 			} else exception(locale, LocalesPaths.COMMANDS_SETWARP_LIMIT);
 		});
 	}

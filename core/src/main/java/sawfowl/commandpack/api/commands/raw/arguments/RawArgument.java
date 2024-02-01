@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
-import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
@@ -20,10 +19,10 @@ import net.kyori.adventure.builder.AbstractBuilder;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 
 /**
- * The interface is designed to simplify the creation of {@link Raw} type commands.<br>
+ * The interface is designed to simplify the creation of {@link RawSettings} type commands.<br>
  * You can use it to create arguments for this commands, just like you do for {@link Parameterized} commands.<br>
- * Unlike {@link Parameterized} commands, {@link Raw} commands have no problem with the availability of game objects, which are registered after the commands are registered.<br>
- * However, adding autocomplete to Raw commands and then checking the arguments is very time-consuming.<br>
+ * Unlike {@link Parameterized} commands, {@link RawSettings} commands have no problem with the availability of game objects, which are registered after the commands are registered.<br>
+ * However, adding autocomplete to RawSettings commands and then checking the arguments is very time-consuming.<br>
  * Using this interface together with the {@link RawCommand} interface saves you from having to do such time-consuming work.
  * 
  * @author SawFowl
