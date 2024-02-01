@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.math.NumberUtils;
+
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
@@ -152,7 +153,7 @@ public interface RawCommand extends PluginCommand, Raw {
 
 	default String[] checkChildAndArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
-			getChildExecutors().get(args[0]).checkChildAndArguments(cause, (args.length > 1 ? Arrays.copyOfRange(args, 1, args.length + 1) : new String[] {}), isPlayer, locale);
+			getChildExecutors().get(args[0]).checkChildAndArguments(cause, (args.length > 1 ? Stream.of(Arrays.copyOfRange(args, 1, args.length + 1)).filter(arg -> arg != null).toArray(String[]::new) : new String[] {}), isPlayer, locale);
 			return args;
 		} else return checkArguments(cause, args, isPlayer, locale);
 	}

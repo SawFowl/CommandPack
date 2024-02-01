@@ -73,7 +73,7 @@ public class RawArguments {
 			null,
 			(cause, args) -> variants.size() > 10000 ? variants.parallelStream() : variants.stream(),
 			() -> variants.size() > 10000 ? variants.parallelStream() : variants.stream(),
-			(cause, args) -> args.length >= cursor + 1 ? Optional.ofNullable(variants.stream().filter(var -> var.equals(args[cursor])).findFirst().orElse(def)) : Optional.ofNullable(def),
+			(cause, args) -> args.length >= cursor + 1 ? (variants.isEmpty() ? Optional.ofNullable(args[cursor]) : Optional.ofNullable(variants.stream().filter(var -> var.equals(args[cursor])).findFirst().orElse(def))) : Optional.ofNullable(def),
 			null,
 			optional,
 			optionalForConsole,
