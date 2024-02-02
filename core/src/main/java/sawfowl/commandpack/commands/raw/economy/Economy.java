@@ -21,6 +21,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Economy extends AbstractRawCommand {
 
+	private List<RawCommand> childs;
 	public Economy(CommandPack plugin) {
 		super(plugin);
 	}
@@ -68,7 +69,7 @@ public class Economy extends AbstractRawCommand {
 
 	@Override
 	public List<RawCommand> childCommands() {
-		return Arrays.asList(new SetBalance(plugin), new AddToBalance(plugin), new RemoveFromBalance(plugin), new BalanceAll(plugin));
+		return childs != null ? childs : (Arrays.asList(new SetBalance(plugin), new AddToBalance(plugin), new RemoveFromBalance(plugin), new BalanceAll(plugin)));
 	}
 
 }

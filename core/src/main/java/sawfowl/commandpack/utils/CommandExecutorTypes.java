@@ -14,14 +14,6 @@ import org.spongepowered.api.world.LocatableBlock;
 
 public enum CommandExecutorTypes {
 
-	SYSTEM {
-
-		@Override
-		protected boolean check(CommandCause cause) {
-			return !(cause.audience() instanceof Nameable) && (cause.audience() instanceof SystemSubject || cause.audience() instanceof Server);
-		}
-
-	},
 	COMMAND_BLOCK {
 
 		@Override
@@ -51,6 +43,14 @@ public enum CommandExecutorTypes {
 		@Override
 		protected boolean check(CommandCause cause) {
 			return cause.cause().root().getClass().getName().contains("noppes.npcs.NoppesUtilServer");
+		}
+
+	},
+	SYSTEM {
+
+		@Override
+		protected boolean check(CommandCause cause) {
+			return !cause.first(Nameable.class).isPresent() && (cause.first(SystemSubject.class).isPresent() || cause.first(Server.class).isPresent());
 		}
 
 	},

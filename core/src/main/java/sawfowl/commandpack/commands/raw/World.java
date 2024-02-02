@@ -37,6 +37,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class World extends AbstractWorldCommand {
 
+	private List<RawCommand> childs;
 	public World(CommandPack plugin) {
 		super(plugin);
 	}
@@ -75,7 +76,7 @@ public class World extends AbstractWorldCommand {
 
 	@Override
 	public List<RawCommand> childCommands() {
-		return Arrays.asList(
+		return childs != null ? childs : (childs = Arrays.asList(
 			new Create(plugin),
 			new Delete(plugin),
 			new Teleport(plugin),
@@ -92,6 +93,6 @@ public class World extends AbstractWorldCommand {
 			new GameMode(plugin),
 			new GameRule(plugin),
 			new Generate(plugin)
-		);
+		));
 	}
 }

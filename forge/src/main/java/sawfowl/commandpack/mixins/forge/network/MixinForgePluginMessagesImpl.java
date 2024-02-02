@@ -62,6 +62,17 @@ public abstract class MixinForgePluginMessagesImpl {
 			public MixinServerPlayer getMixinPlayer() {
 				return (MixinServerPlayer) getPlayer();
 			}
+
+			@Override
+			public int readableBytes() {
+				return packet.getData().readableBytes();
+			}
+
+			@Override
+			public boolean isReadable() {
+				return packet.getData().isReadable();
+			}
+
 		});
 	}
 	

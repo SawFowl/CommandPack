@@ -35,6 +35,11 @@ public interface RecievePacketEvent extends Event {
 	byte[] getData();
 
 	/**
+	 * Returns the number of readable bytes which is equal to (this.writerIndex - this.readerIndex).
+	 */
+	int readableBytes();
+
+	/**
 	 * Data converted to a string.<br>
 	 * The method should be safe (with standard Minecraft packages it is, WeCui package is also processed normally),<br>
 	 * but it is desirable to test it before full use.<br>
@@ -42,5 +47,11 @@ public interface RecievePacketEvent extends Event {
 	 * it will save you from working with unnecessary data and reduce the risk of failed decryption to a minimum.<br>
 	 */
 	String getDataAsString();
+
+	/**
+	 * Returns true if and only if (this.writerIndex - this.readerIndex) is greater than 0.
+	 * @return
+	 */
+	boolean isReadable();
 
 }
