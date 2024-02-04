@@ -31,50 +31,52 @@ public abstract class MixinForgePluginMessagesImpl {
 
 	@Inject(method = "handleCustomPayload", at = @At("HEAD"))
 	public void onPluginMessage(ServerboundCustomPayloadPacket packet, CallbackInfo ci) {
-		Sponge.eventManager().post(new RecievePacketEvent() {
-			
-			@Override
-			public Cause cause() {
-				return cause;
-			}
-			
-			@Override
-			public UUID getPlayerUniqueId() {
-				return getPlayer().getUUID();
-			}
-			
-			@Override
-			public String getPacketName() {
-				return packet.getIdentifier().toString();
-			}
-			
-			@Override
-			public String getDataAsString() {
-				return packet.getData().getCharSequence(0, packet.getData().readableBytes(), StandardCharsets.UTF_8).toString();
-			}
-			
-			@Override
-			public byte[] getData() {
-				return packet.getData().array();
-			}
+		Sponge.eventManager().post(
+			new RecievePacketEvent() {
 
-			@Override
-			public MixinServerPlayer getMixinPlayer() {
-				return (MixinServerPlayer) getPlayer();
-			}
+				@Override
+				public Cause cause() {
+					return cause;
+				}
 
-			@Override
-			public int readableBytes() {
-				return packet.getData().readableBytes();
-			}
+				@Override
+				public UUID getPlayerUniqueId() {
+					return getPlayer().getUUID();
+				}
 
-			@Override
-			public boolean isReadable() {
-				return packet.getData().isReadable();
-			}
+				@Override
+				public String getPacketName() {
+					return packet.getIdentifier().toString();
+				}
 
-		});
+				@Override
+				public String getDataAsString() {
+					return packet.getData().getCharSequence(0, packet.getData().readableBytes(), StandardCharsets.UTF_8).toString();
+				}
+
+				@Override
+				public byte[] getData() {
+					return packet.getData().array();
+				}
+
+				@Override
+				public MixinServerPlayer getMixinPlayer() {
+					return (MixinServerPlayer) getPlayer();
+				}
+
+				@Override
+				public int readableBytes() {
+					return packet.getData().readableBytes();
+				}
+
+				@Override
+				public boolean isReadable() {
+					return packet.getData().isReadable();
+				}
+
+			}
+		);
 	}
-	
+
 }
 

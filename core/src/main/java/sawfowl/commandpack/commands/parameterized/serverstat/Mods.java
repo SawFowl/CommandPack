@@ -1,5 +1,6 @@
 package sawfowl.commandpack.commands.parameterized.serverstat;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -10,13 +11,20 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 
 import net.kyori.adventure.audience.Audience;
-
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.format.NamedTextColor;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
 import sawfowl.commandpack.commands.containerinfo.ModInfo;
+import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
+import sawfowl.commandpack.configure.Placeholders;
+import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.TextUtils;
 
 @Register
 public class Mods extends AbstractInfoCommand {
@@ -27,13 +35,16 @@ public class Mods extends AbstractInfoCommand {
 
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
-		if(isPlayer) {
-			delay((ServerPlayer) src, locale, consumer -> {
-				sendModsInfo(src, locale, isPlayer);
-			});
-		} else {
-			sendModsInfo(src, locale, isPlayer);
-		}
+		if(getPlayer(context).isPresent()) {
+			ServerPlayer target = getPlayer(context).get();
+			List<Component> mods = MixinServerPlayer.cast(target).getModList().stream().map(TextUtils::deserialize).toList();
+			Component title = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLAYER_MODS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, target.name(), mods.size()).get();
+			if(isPlayer) {
+				delay((ServerPlayer) src, locale, consumer -> sendPaginationList(src, title, Component.text("=").color(NamedTextColor.DARK_AQUA), linesPerPage, mods));
+			} else src.sendMessage(title.append(Component.text(": ")).append(Component.join(JoinConfiguration.separators(Component.text(", "), Component.text(".")), mods)));
+		} else if(isPlayer) {
+			delay((ServerPlayer) src, locale, consumer -> sendModsInfo(src, locale, isPlayer));
+		} else sendModsInfo(src, locale, isPlayer);
 	}
 
 	@Override
@@ -60,7 +71,7 @@ public class Mods extends AbstractInfoCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return null;
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.SERVER_STAT_STAFF_PLAYER_MODS_LIST, true), true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
 	}
 
 	@Override

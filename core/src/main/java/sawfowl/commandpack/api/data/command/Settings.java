@@ -8,7 +8,9 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
+
 import sawfowl.commandpack.api.commands.raw.RawCommand;
+import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 
 /**
  * Additional command settings.
@@ -19,6 +21,14 @@ public interface Settings extends DataSerializable {
 
 	static Builder builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
+	}
+
+	/**
+	 * Builders register later than the commands.<br>
+	 * Use this method as needed.
+	 */
+	static Builder unregisteredBuilder() {
+		return new CommandSettings().builder();
 	}
 
 	/**

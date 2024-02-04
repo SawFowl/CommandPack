@@ -5,6 +5,8 @@ import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
+import sawfowl.commandpack.configure.configs.commands.DelayData;
+
 /**
  * Setting the command execution delay.
  * 
@@ -14,6 +16,10 @@ public interface Delay extends DataSerializable {
 
 	static Builder builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
+	}
+
+	static Builder unregisteredBuilder() {
+		return new DelayData().builder();
 	}
 
 	static Delay of(long seconds, CancelRules rules) {

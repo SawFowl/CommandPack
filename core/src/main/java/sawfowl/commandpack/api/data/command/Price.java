@@ -6,6 +6,8 @@ import org.spongepowered.api.service.economy.Currency;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
+import sawfowl.commandpack.configure.configs.commands.CommandPrice;
+
 /**
  * Setting the command execution price.
  * 
@@ -15,6 +17,10 @@ public interface Price extends DataSerializable {
 
 	static Builder builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
+	}
+
+	static Builder unregisteredBuilder() {
+		return new CommandPrice().builder();
 	}
 
 	static Price of(String currency, double money) {

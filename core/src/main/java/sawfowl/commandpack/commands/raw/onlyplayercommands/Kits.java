@@ -39,6 +39,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Kits extends AbstractPlayerCommand {
 
+	private List<RawCommand> childs;
 	public Kits(CommandPack plugin) {
 		super(plugin);
 		Sponge.eventManager().registerListeners(getContainer(), this);
@@ -93,7 +94,7 @@ public class Kits extends AbstractPlayerCommand {
 
 	@Override
 	public List<RawCommand> childCommands() {
-		return Arrays.asList(
+		return childs != null ? childs : (childs = Arrays.asList(
 			new AddCommand(plugin),
 			new Commands(plugin),
 			new Cooldown(plugin),
@@ -106,7 +107,7 @@ public class Kits extends AbstractPlayerCommand {
 			new GiveRule(plugin),
 			new NeedPerm(plugin),
 			new SetName(plugin)
-		);
+		));
 	}
 
 }

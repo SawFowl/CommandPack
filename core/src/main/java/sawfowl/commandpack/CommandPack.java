@@ -2,8 +2,11 @@ package sawfowl.commandpack;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
 import java.nio.file.Path;
+
 import java.time.Duration;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -158,6 +161,7 @@ public class CommandPack {
 	private Collection<ModContainer> mods = new HashSet<>();
 	private List<RawUpdater> registeredCommands = new ArrayList<RawUpdater>();
 	private ScheduledTask rawTask;
+	private boolean isStarted = false;
 
 	public static CommandPack getInstance() {
 		return instance;
@@ -245,6 +249,10 @@ public class CommandPack {
 
 	public void updateRawTrees() {
 		registeredCommands.forEach(RawUpdater::forceUpdate);
+	}
+
+	public boolean isStarted() {
+		return isStarted;
 	}
 
 	@Inject
@@ -387,6 +395,7 @@ public class CommandPack {
 
 	@Listener
 	public void onServerStarted(StartedEngineEvent<Server> event) {
+		isStarted = true;
 		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getText(Sponge.server().locale(), LocalesPaths.ECONOMY_NOT_FOUND));
 		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerChatListener(instance));
@@ -559,9 +568,9 @@ public class CommandPack {
 		void forceUpdate() {
 			if(command.getCommandSettings() == null || command.getCommandSettings().getRawSettings() == null || !command.getCommandSettings().getRawSettings().isGenerateRawTree()) return;
 			Sponge.asyncScheduler().executor(pluginContainer).execute(() -> {
-				command.redirectTree();
-				lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
 			});
+			command.redirectTree();
+			lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
 		}
 
 		void updateRawTree() {

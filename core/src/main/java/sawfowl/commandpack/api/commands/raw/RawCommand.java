@@ -79,7 +79,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	default CommandTreeNode.Root buildNewCommandTree() {
-		CommandTreeNode.Root root = CommandTreeNode.root().customCompletions();
+		CommandTreeNode.Root root = CommandTreeNode.root().executable().child("arguments", CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions());
 		if(containsChild()) {
 			for(Entry<String, RawCommand> entry : getChildExecutors().entrySet()) {
 				if(entry.getValue().containsArgs() || entry.getValue().containsChild()) {
@@ -117,7 +117,7 @@ public interface RawCommand extends PluginCommand, Raw {
 				if(!(node instanceof BasicCommandTreeNode basic) || !basic.getChildren().containsKey(entry.getKey())) {
 					if(entry.getValue().containsArgs() || entry.getValue().containsChild()) {
 						node.child(entry.getKey(), entry.getValue().commandTree(depth + 1, entry.getValue())).requires(cause -> entry.getValue().canExecute(cause));
-					} node.child(entry.getKey(), entry.getValue().commandTree(depth + 1, entry.getValue()).executable()).requires(cause -> entry.getValue().canExecute(cause));
+					} else node.child(entry.getKey(), entry.getValue().commandTree(depth + 1, entry.getValue()).executable()).requires(cause -> entry.getValue().canExecute(cause));
 				}
 			}
 		} else if(child.containsArgs()) {
@@ -450,7 +450,9 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	default void redirectTree() {
-		if(getCommandSettings() != null && getCommandSettings().getRawSettings().isGenerateRawTree()) Raw.super.commandTree().redirect(buildNewCommandTree());
+		if(getCommandSettings() == null || getCommandSettings().getRawSettings() == null || getCommandSettings().getRawSettings().isGenerateRawTree()) {
+			//Raw.super.commandTree().redirect(buildNewCommandTree());
+		}
 	}
 
 	default boolean containsChild() {

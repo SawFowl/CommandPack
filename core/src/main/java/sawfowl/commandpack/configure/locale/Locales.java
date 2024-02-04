@@ -242,6 +242,7 @@ public class Locales {
 		save = check(locale, toText("&aWorld&f: &e" + Placeholders.WORLD + "&a. Chunks loaded&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Entities&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: &e" + Placeholders.VALUE + "&7(" + Placeholders.TIME + "&3ms&7)&a."), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO) || save;
 		save = check(locale, toText("&ePlugins &7(&b" + Placeholders.VALUE + "&7)&e"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS) || save;
 		save = check(locale, toText("&eMods &7(&b" + Placeholders.VALUE + "&7)&e"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS) || save;
+		save = check(locale, toText("&eMods " + Placeholders.PLAYER + " &7(&b" + Placeholders.VALUE + "&7)&e"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLAYER_MODS) || save;
 		save = check(locale, toText("&7[&6Refresh&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON) || save;
 		save = check(locale, toText("&eAn attempt is made to reboot the plugin. If the plugin does not implement listening to the reboot event, there will be no effect."), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE) || save;
 		save = check(locale, "MM.dd.yyyy HH:mm:ss", null, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT) || save;
@@ -655,6 +656,7 @@ public class Locales {
 		save = check(locale, toText("&aМир&f: &e" + Placeholders.WORLD + "&a. Загружено чанков&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Сущностей&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: " + Placeholders.VALUE + "&7(" + Placeholders.TIME + "&3мс&7)&a."), null, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO) || save;
 		save = check(locale, toText("&eПлагины &7(&b" + Placeholders.VALUE + "&7)&e"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS) || save;
 		save = check(locale, toText("&eМоды &7(&b" + Placeholders.VALUE + "&7)&e"), null, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS) || save;
+		save = check(locale, toText("&eМоды " + Placeholders.PLAYER + " &7(&b" + Placeholders.VALUE + "&7)&e"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLAYER_MODS) || save;
 		save = check(locale, toText("&7[&6Перезагрузить&7]"), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON) || save;
 		save = check(locale, toText("&eВыполняется попытка перезагрузки плагина. Если в плагине не реализована прослушка события перезагрузки, то эффекта не будет."), null, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE) || save;
 		save = check(locale, "d.MM.yyyy HH:mm:ss", null, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT) || save;

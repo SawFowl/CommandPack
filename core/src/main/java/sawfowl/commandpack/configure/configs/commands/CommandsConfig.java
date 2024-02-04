@@ -149,7 +149,7 @@ public class CommandsConfig {
 	@Setting("Broadcast")
 	private Settings broadcast = new CommandSettings().builder().build();
 	@Setting("Sudo")
-	private Settings sudo = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(15).build(), false, true)).build();
+	private Settings sudo = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(false).setInterval(15).build(), true, false)).build();
 	@Setting("Vanish")
 	private Settings vanish = new CommandSettings().builder().build();
 	@Setting("Nick")
@@ -169,11 +169,11 @@ public class CommandsConfig {
 	@Setting("Kits")
 	private Settings kits = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(false).build(), false, true)).build();
 	@Setting("Kit")
-	private Settings kit = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(300).build(), true, true)).build();
+	private Settings kit = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(300).build(), false, true)).build();
 	@Setting("Afk")
 	private Settings afk = new CommandSettings().builder().build();
 	@Setting("World")
-	private Settings world = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(300).build(), false, true)).build();
+	private Settings world = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(false).setInterval(300).build(), true, false)).build();
 	@Setting("CommandSpy")
 	private Settings commandspy = new CommandSettings().builder().build();
 	@Setting("Ping")
@@ -193,7 +193,7 @@ public class CommandsConfig {
 	@Setting("Ban")
 	private Settings ban = new CommandSettings().builder().build();
 	@Setting("Unban")
-	private Settings unban = new CommandSettings().builder().setAliases("pardon").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(30).build(), true, true)).build();
+	private Settings unban = new CommandSettings().builder().setAliases("pardon").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(false).setInterval(30).build(), true, false)).build();
 	@Setting("Banip")
 	private Settings banip = new CommandSettings().builder().build();
 	@Setting("Unbanip")
@@ -203,7 +203,7 @@ public class CommandsConfig {
 	@Setting("Mute")
 	private Settings mute = new CommandSettings().builder().build();
 	@Setting("Unmute")
-	private Settings unmute = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(30).build(), true, true)).build();
+	private Settings unmute = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(false).setInterval(30).build(), true, false)).build();
 	@Setting("Warn")
 	private Settings warn = new CommandSettings().builder().build();
 	@Setting("Warnings")
@@ -211,23 +211,23 @@ public class CommandsConfig {
 	@Setting("BanList")
 	private Settings banList = new CommandSettings().builder().setAliases("bans").build();
 	@Setting("BanInfo")
-	private Settings banInfo = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(30).build(), true, true)).build();
+	private Settings banInfo = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(false).setInterval(30).build(), true, false)).build();
 	@Setting("MuteInfo")
-	private Settings muteInfo = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(30).build(), true, true)).build();
+	private Settings muteInfo = new CommandSettings().builder().setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(false).setInterval(30).build(), true, false)).build();
 	@Setting("MuteList")
 	private Settings muteList = new CommandSettings().builder().setAliases("mutes").build();
 	@Setting("Balance")
-	private Settings balance = new CommandSettings().builder().setAliases("money").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(10).build(), true, true)).build();
+	private Settings balance = new CommandSettings().builder().setAliases("money").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(false).setInterval(10).build(), true, false)).build();
 	@Setting("BalanceTop")
-	private Settings balanceTop = new CommandSettings().builder().setAliases("baltop").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(30).build(), true, true)).build();
+	private Settings balanceTop = new CommandSettings().builder().setAliases("baltop").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(false).setInterval(30).build(), true, false)).build();
 	@Setting("HideBalance")
 	private Settings hideBalance = new CommandSettings().builder().setRawSettings(RawSettings.defaultValues()).build();
 	@Setting("Economy")
-	private Settings economy = new CommandSettings().builder().setAliases("eco").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(30).build(), true, true)).build();
+	private Settings economy = new CommandSettings().builder().setAliases("eco").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(false).setInterval(30).build(), true, false)).build();
 	@Setting("Pay")
 	private Settings pay = new CommandSettings().builder().setRawSettings(RawSettings.defaultValues()).build();
 	@Setting("Tell")
-	private Settings tell = new CommandSettings().builder().setAliases("say", "s", "m").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(true).setInterval(10).build(), true, true)).build();
+	private Settings tell = new CommandSettings().builder().setAliases("say", "s", "m").setRawSettings(RawSettings.of(new UpdateRawTree().builder().setEnable(false).setInterval(10).build(), true, false)).build();
 	@Setting("Reply")
 	private Settings reply = new CommandSettings().builder().setAliases("r").build();
 

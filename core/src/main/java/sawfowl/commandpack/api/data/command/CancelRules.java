@@ -5,6 +5,8 @@ import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
+import sawfowl.commandpack.configure.configs.commands.CancelRulesData;
+
 /**
  * Rules for cancelling command code execution when using delayed execution.
  * 
@@ -14,6 +16,10 @@ public interface CancelRules extends DataSerializable {
 
 	static Builder builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
+	}
+
+	static Builder unregisteredBuilder() {
+		return new CancelRulesData().builder();
 	}
 
 	static CancelRules of(boolean allowMoving, boolean allowOtherCommand) {

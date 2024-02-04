@@ -4,6 +4,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
+
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.configure.configs.commands.RawSettingsImpl;
 
@@ -11,6 +12,10 @@ public interface RawSettings extends DataSerializable {
 
 	static Builder builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
+	}
+
+	static Builder unregisteredBuilder() {
+		return new RawSettingsImpl().builder();
 	}
 
 	static RawSettings defaultValues() {

@@ -4,6 +4,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
+
 import sawfowl.commandpack.configure.configs.commands.UpdateRawTree;
 
 public interface UpdateTree extends DataSerializable {
