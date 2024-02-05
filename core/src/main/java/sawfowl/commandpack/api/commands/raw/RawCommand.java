@@ -32,6 +32,7 @@ import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.world.WorldType;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.common.command.registrar.tree.builder.BasicCommandTreeNode;
+import org.spongepowered.common.command.registrar.tree.builder.RootCommandTreeNode;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -81,12 +82,7 @@ public interface RawCommand extends PluginCommand, Raw {
 
 	default CommandTreeNode.Root commandTree() {
 		return CommandPack.getInstance().getRootCommandNode(this).orElse(
-			CommandPack.getInstance().isStarted() ?
-				buildNewCommandTree() :
-				CommandTreeNode.root().executable().child(
-					"arguments",
-					CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions()
-				)
+			new RootCommandTreeNode()
 		);
 	}
 

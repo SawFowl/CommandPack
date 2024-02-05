@@ -600,6 +600,7 @@ public class CommandPack {
 				command.getCommandSettings().getRawSettings().getUpdateTree().getInterval() <= 0 ||
 				lastUpdate + command.getCommandSettings().getRawSettings().getUpdateTree().getInterval() >= TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
 			) return;
+			// Need to test this with reflection.
 			root.redirect(command.buildNewCommandTree());
 			lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
 		}
