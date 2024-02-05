@@ -1,6 +1,6 @@
 package sawfowl.commandpack.api.commands.raw.arguments;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -69,7 +69,7 @@ public interface RawArgument<T> extends DataSerializable {
 	 */
 	Stream<String> getVariants(CommandCause cause, String[] args);
 
-	Collection<String> getVariants();
+	List<String> getVariants();
 
 	/**
 	 * Converts a string argument to a specified class. If the specified class does not match the argument class, the return will be empty.

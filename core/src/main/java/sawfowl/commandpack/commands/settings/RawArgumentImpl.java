@@ -1,9 +1,10 @@
 package sawfowl.commandpack.commands.settings;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
@@ -51,10 +52,10 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	}
 
 	@Override
-	public Collection<String> getVariants() {
+	public List<String> getVariants() {
 		if(collection == null) return CommandsUtil.EMPTY_VARIANTS;
 		Stream<String> variants = collection.get();
-		return variants == null ? CommandsUtil.EMPTY_VARIANTS : variants.toList();
+		return variants == null ? CommandsUtil.EMPTY_VARIANTS : variants.collect(Collectors.toList());
 	}
 
 	@Override
