@@ -72,4 +72,9 @@ public class Economy extends AbstractRawCommand {
 		return childs != null ? childs : (Arrays.asList(new SetBalance(plugin), new AddToBalance(plugin), new RemoveFromBalance(plugin), new BalanceAll(plugin)));
 	}
 
+	@Override
+	public boolean isEnable() {
+		return plugin.getMainConfig().getEconomy().isEnable();
+	}
+
 }

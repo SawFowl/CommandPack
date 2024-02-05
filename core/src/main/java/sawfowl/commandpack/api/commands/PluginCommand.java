@@ -253,4 +253,8 @@ public interface PluginCommand {
 		return CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer(), locale).asReference(localeClass);
 	}
 
+	default boolean isEnable() {
+		return true;
+	}
+
 }

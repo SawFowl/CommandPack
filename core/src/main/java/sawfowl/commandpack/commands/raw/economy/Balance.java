@@ -10,7 +10,6 @@ import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
-import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 
@@ -104,21 +103,13 @@ public class Balance extends AbstractRawCommand {
 	}
 
 	@Override
-	public void register(RegisterCommandEvent<Raw> event) {
-		if(!plugin.getMainConfig().getEconomy().isEnable()) return;
-		if(getCommandSettings() == null) {
-			event.register(getContainer(), this, command());
-		} else {
-			if(!getCommandSettings().isEnable()) return;
-			if(getCommandSettings().getAliases() != null && getCommandSettings().getAliases().length > 0) {
-				event.register(getContainer(), this, command(), getCommandSettings().getAliases());
-			} else event.register(getContainer(), this, command());
-		}
+	public List<RawCommand> childCommands() {
+		return null;
 	}
 
 	@Override
-	public List<RawCommand> childCommands() {
-		return null;
+	public boolean isEnable() {
+		return plugin.getMainConfig().getEconomy().isEnable();
 	}
 
 }

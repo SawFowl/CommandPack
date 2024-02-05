@@ -78,8 +78,21 @@ public interface RawCommand extends PluginCommand, Raw {
 		return getCommandSettings() == null || getCommandSettings().getRawSettings() == null || getCommandSettings().getRawSettings().isAutoComplete();
 	}
 
+
+	default CommandTreeNode.Root commandTree() {
+		return CommandPack.getInstance().getRootCommandNode(this).orElse(
+			CommandPack.getInstance().isStarted() ?
+				buildNewCommandTree() :
+				CommandTreeNode.root().executable().child(
+					"arguments",
+					CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions()
+				)
+		);
+	}
+
 	default CommandTreeNode.Root buildNewCommandTree() {
-		CommandTreeNode.Root root = CommandTreeNode.root().executable().child("arguments", CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions());
+		//CommandTreeNode.Root root = CommandTreeNode.root().executable().child("arguments", CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions());
+		CommandTreeNode.Root root = CommandTreeNode.root().customCompletions();
 		if(containsChild()) {
 			for(Entry<String, RawCommand> entry : getChildExecutors().entrySet()) {
 				if(entry.getValue().containsArgs() || entry.getValue().containsChild()) {
@@ -229,15 +242,8 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * Command registration.
 	 */
 	default void register(RegisterCommandEvent<Raw> event) {
-		if(getCommandSettings() == null) {
-			event.register(getContainer(), this, command());
-		} else {
-			if(!getCommandSettings().isEnable()) return;
-			if(getCommandSettings().getAliases() != null && getCommandSettings().getAliases().length > 0) {
-				event.register(getContainer(), this, command(), getCommandSettings().getAliases());
-			} else event.register(getContainer(), this, command());
-		}
-		CommandPack.getInstance().registerRawCommand(this);
+		if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPack.getInstance().getAPI().registerRawCommand(this);
+		
 	}
 
 	/**
@@ -447,12 +453,6 @@ public interface RawCommand extends PluginCommand, Raw {
 	 */
 	default List<CommandCompletion> getEmptyCompletion() {
 		return CommandsUtil.EMPTY_COMPLETIONS;
-	}
-
-	default void redirectTree() {
-		if(getCommandSettings() == null || getCommandSettings().getRawSettings() == null || getCommandSettings().getRawSettings().isGenerateRawTree()) {
-			//Raw.super.commandTree().redirect(buildNewCommandTree());
-		}
 	}
 
 	default boolean containsChild() {

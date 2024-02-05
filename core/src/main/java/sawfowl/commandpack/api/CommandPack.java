@@ -105,6 +105,8 @@ public interface CommandPack {
 	 */
 	void updateCommandTree(String command);
 
+	void registerRawCommand(RawCommand raw) throws IllegalStateException;
+
 	/**
 	 * Updates the argument tree for a registered commands using the {@link RawCommand} interface.<br>
 	 * If argument tree building is not enabled in the command settings, there will be no effect.<br>
