@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -161,7 +160,7 @@ public class CommandPack {
 	private Map<String, ChunkGenerator> generators = new HashMap<>();
 	private Collection<PluginContainer> containers = new HashSet<>();
 	private Collection<ModContainer> mods = new HashSet<>();
-	private List<RawUpdater> registeredCommands = new ArrayList<RawUpdater>();
+	private Set<RawUpdater> registeredCommands = new HashSet<RawUpdater>();
 	private ScheduledTask rawTask;
 	private boolean isStarted = false;
 	private SpongeCommandManager manager;
@@ -387,7 +386,7 @@ public class CommandPack {
 			@Override
 			public void registerRawCommand(RawCommand raw) throws IllegalStateException {
 				if(manager == null && isStarted) throw new IllegalStateException("Registration of commands through CommandPack is no longer available. Perform registration as soon as you receive the API.");
-				if(raw.getContainer() != null && raw.isEnable()) registeredCommands.add(new RawUpdater(raw));
+				if(raw.getContainer() != null && raw.isEnable() && !registeredCommands.stream().filter(command -> command.command.command().equals(raw.command())).findFirst().isPresent()) registeredCommands.add(new RawUpdater(raw));
 			}
 
 			@Override
