@@ -569,12 +569,12 @@ public class CommandPack {
 	class RawUpdater {
 
 		private RawCommand command;
-		private long lastUpdate;
+		//private long lastUpdate;
 		private CommandTreeNode.Root root;
 		RawUpdater(RawCommand command) {
 			this.command = command;
-			root = command.commandTree();
-			lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+			root = command.buildNewCommandTree();
+			//lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
 		}
 
 		void register() {
@@ -584,15 +584,15 @@ public class CommandPack {
 		}
 
 		void forceUpdate() {
-			if(command.getCommandSettings() == null || command.getCommandSettings().getRawSettings() == null || !command.getCommandSettings().getRawSettings().isGenerateRawTree()) return;
+			/*if(command.getCommandSettings() == null || command.getCommandSettings().getRawSettings() == null || !command.getCommandSettings().getRawSettings().isGenerateRawTree()) return;
 			Sponge.asyncScheduler().executor(pluginContainer).execute(() -> {
 				root.redirect(command.buildNewCommandTree());
 				lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-			});
+			});*/
 		}
 
 		void updateRawTree() {
-			if(
+			/*if(
 				command.getCommandSettings() == null ||
 				command.getCommandSettings().getRawSettings() == null ||
 				command.getCommandSettings().getRawSettings().getUpdateTree() == null ||
@@ -601,7 +601,7 @@ public class CommandPack {
 				lastUpdate + command.getCommandSettings().getRawSettings().getUpdateTree().getInterval() >= TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
 			) return;
 			root.redirect(command.buildNewCommandTree());
-			lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+			lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());*/
 		}
 
 		CommandTreeNode.Root getCommandNodeRoot() {

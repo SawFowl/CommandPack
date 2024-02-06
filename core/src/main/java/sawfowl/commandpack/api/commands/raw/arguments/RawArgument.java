@@ -37,12 +37,12 @@ public interface RawArgument<T> extends DataSerializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(Class<T> clazz, Argument<C> argumentNodeType, RawCompleterSupplier<Stream<String>> plainVariants, Supplier<Stream<String>> treeVariants, RawResultSupplier<T> result, RawCompleterPredicate<CommandCause, Stream<String>> canUse, boolean optional, boolean optionalForConsole, int cursor, String permission, Object... localesPath) {
-		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(plainVariants).variants(treeVariants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).canUse(canUse).localeTextPath(localesPath).build();
+	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(Class<T> clazz, Argument<C> argumentNodeType, RawCompleterSupplier<Stream<String>> plainVariants, RawResultSupplier<T> result, String key, boolean optional, boolean optionalForConsole, int cursor, String permission, Object... localesPath) {
+		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(plainVariants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).treeKey(key).localeTextPath(localesPath).build();
 	}
 
 	static <T> RawArgument<T> of(Class<T> clazz, Stream<String> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, Object[] localesPath) {
-		return of(clazz, null, ((CommandCause cause, String[] args) -> args.length > cursor ? variants.filter(var -> var.startsWith(args[cursor])) : variants), () -> variants, result, null, optional, optionalForConsole, cursor, null, localesPath);
+		return of(clazz, null, ((CommandCause cause, String[] args) -> args.length > cursor ? variants.filter(var -> var.startsWith(args[cursor])) : variants), result, null, optional, optionalForConsole, cursor, null, localesPath);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -59,10 +59,12 @@ public interface RawArgument<T> extends DataSerializable {
 
 	@Deprecated
 	static <T> RawArgument<T> of(Class<T> clazz, Stream<String> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, String permission, Object... localesPath) {
-		return of(clazz, null, ((CommandCause cause, String[] args) -> args.length > cursor ? variants.filter(var -> var.startsWith(args[cursor])) : variants), () -> variants, result, null, optional, optionalForConsole, cursor, permission, localesPath);
+		return of(clazz, null, ((CommandCause cause, String[] args) -> args.length > cursor ? variants.filter(var -> var.startsWith(args[cursor])) : variants), result, null, optional, optionalForConsole, cursor, permission, localesPath);
 	}
 
 	Argument<?> getArgumentType();
+
+	String getTreeKey();
 
 	/**
 	 * Autocomplete variants.
@@ -115,8 +117,6 @@ public interface RawArgument<T> extends DataSerializable {
 
 	boolean hasPermission(CommandCause cause);
 
-	boolean canUse(CommandCause cause, String input);
-
 	interface Builder<T> extends AbstractBuilder<RawArgument<T>>, org.spongepowered.api.util.Builder<RawArgument<T>, Builder<T>> {
 
 		/**
@@ -156,7 +156,7 @@ public interface RawArgument<T> extends DataSerializable {
 		 */
 		Builder<T> permission(String value);
 
-		Builder<T> canUse(RawCompleterPredicate<CommandCause, Stream<String>> predicate);
+		Builder<T> treeKey(String value);
 
 		<C extends CommandTreeNode<C>> Builder<T> setArgumentType(Argument<C> node);
 

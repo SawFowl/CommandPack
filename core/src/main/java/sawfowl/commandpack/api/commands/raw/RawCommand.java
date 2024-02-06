@@ -20,7 +20,9 @@ import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.exception.CommandException;
+import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
+import org.spongepowered.api.command.registrar.tree.CommandCompletionProvider;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
@@ -31,8 +33,7 @@ import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.world.WorldType;
 import org.spongepowered.api.world.server.ServerWorld;
-import org.spongepowered.common.command.registrar.tree.builder.BasicCommandTreeNode;
-import org.spongepowered.common.command.registrar.tree.builder.RootCommandTreeNode;
+import org.spongepowered.common.command.registrar.tree.builder.AbstractCommandTreeNode;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -81,61 +82,59 @@ public interface RawCommand extends PluginCommand, Raw {
 
 
 	default CommandTreeNode.Root commandTree() {
-		return CommandPack.getInstance().getRootCommandNode(this).orElse(
-			new RootCommandTreeNode()
-		);
+		return CommandPack.getInstance().getRootCommandNode(this).get();
 	}
 
 	default CommandTreeNode.Root buildNewCommandTree() {
-		//CommandTreeNode.Root root = CommandTreeNode.root().executable().child("arguments", CommandTreeNodeTypes.STRING.get().createNode().greedy().executable().customCompletions());
-		CommandTreeNode.Root root = CommandTreeNode.root().customCompletions();
+		CommandTreeNode.Root root = containsChild() ?
+			CommandTreeNode.root().executable().child("subcommand", CommandTreeNode.literal().customCompletions()) :
+			CommandTreeNode.root().customCompletions();
 		if(containsChild()) {
+			root.completions(new CommandCompletionProvider() {
+				@Override
+				public List<CommandCompletion> complete(CommandContext context, String currentInput) {
+					return completeArgs(context.cause(), Stream.of(currentInput.split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList()), currentInput);
+				}
+			});
 			for(Entry<String, RawCommand> entry : getChildExecutors().entrySet()) {
-				if(entry.getValue().containsArgs() || entry.getValue().containsChild()) {
-					root.child(entry.getKey(), entry.getValue().commandTree(0, entry.getValue()).requires(cause -> entry.getValue().canExecute(cause)));
-				} else root.child(entry.getKey(), entry.getValue().commandTree(0, entry.getValue()).requires(cause -> entry.getValue().canExecute(cause)).executable());
+				if(!((AbstractCommandTreeNode<?, ?>) root).getChildren().containsKey(entry.getKey())) {
+					root.child(entry.getKey(), commandTree(0, entry.getValue()));
+				}
 			}
-		} else if(!containsArgs()) {
-			root.executable();
 		}
 		if(containsArgs()) {
-			argsTree(0, getArguments().get(0).getArgumentType() == null ? CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions() : getArguments().get(0).getArgumentType());
+			argsTree(0, (AbstractCommandTreeNode<?, ?>) root);
 		}
 		return root;
 	}
 
-	private void argsTree(int depth, Argument<?> parrent) {
-		if(!getArguments().containsKey(depth)) return;
-		Argument<?> node = getArguments().get(depth).getArgumentType() != null ? getArguments().get(depth).getArgumentType() : CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions();
-		for(String arg : getArguments().get(depth).getVariants()) {
-			if(!(parrent instanceof BasicCommandTreeNode basic) || !basic.getChildren().containsKey(arg)) {
-				parrent.child(arg, node).requires(cause -> getArguments().get(depth).canUse(cause, arg));
-			}
-		}
-		if(!getArguments().containsKey(depth + 1)) {
-			node.executable();
-			return;
-		}
-		argsTree(depth + 1, parrent);
-	}
-
 	private CommandTreeNode.Basic commandTree(int depth, RawCommand child) {
-		Basic node = CommandTreeNode.literal().executable();
+		Basic node = child.containsChild() ?
+				CommandTreeNode.literal().executable().child("subcommand", CommandTreeNode.literal().customCompletions()) :
+				CommandTreeNode.literal().customCompletions();
 		if(child.containsChild()) {
 			for(Entry<String, RawCommand> entry : child.getChildExecutors().entrySet()) {
-				if(!(node instanceof BasicCommandTreeNode basic) || !basic.getChildren().containsKey(entry.getKey())) {
+				if(!((AbstractCommandTreeNode<?, ?>) node).getChildren().containsKey(entry.getKey())) {
 					if(entry.getValue().containsArgs() || entry.getValue().containsChild()) {
 						node.child(entry.getKey(), entry.getValue().commandTree(depth + 1, entry.getValue())).requires(cause -> entry.getValue().canExecute(cause));
 					} else node.child(entry.getKey(), entry.getValue().commandTree(depth + 1, entry.getValue()).executable()).requires(cause -> entry.getValue().canExecute(cause));
 				}
 			}
-		} else if(child.containsArgs()) {
-			node.executable();
 		}
 		if(child.containsArgs()) {
-			argsTree(0, child.getArguments().get(0).getArgumentType() == null ? CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions() : getArguments().get(0).getArgumentType());
+			argsTree(0, (AbstractCommandTreeNode<?, ?>) node);
 		}
 		return node;
+	}
+
+	private void argsTree(int depth, AbstractCommandTreeNode<?, ?> parrent) {
+		if(getArguments() == null || !getArguments().containsKey(depth)) return;
+		Argument<?> node = getArguments().get(depth).getArgumentType() != null ? getArguments().get(depth).getArgumentType() : CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions();
+		String key = getArguments().get(depth).getTreeKey();
+		if(!parrent.getChildren().containsKey(key)) {
+			parrent.child(key, node);
+		}
+		argsTree(depth + 1, (AbstractCommandTreeNode<?, ?>) node);
 	}
 
 	/**
@@ -189,7 +188,7 @@ public interface RawCommand extends PluginCommand, Raw {
 					private static final long serialVersionUID = 1L;
 					{
 						addAll(getChildExecutors().keySet().stream().filter(command -> (args.isEmpty() || ((command.equals(args.get(0)) || command.startsWith(args.get(0))) && getChildExecutors().get(command).canExecute(cause)))).map(CommandCompletion::of).collect(Collectors.toList()));
-						addAll(complete(cause, args, currentInput));
+						addAll(completeArgs(cause, args, currentInput));
 					}
 				};
 			} else if(getChildExecutors().containsKey(args.get(0))) {
@@ -197,18 +196,18 @@ public interface RawCommand extends PluginCommand, Raw {
 					private static final long serialVersionUID = 1L;
 					{
 						addAll(getChildExecutors().get(args.get(0)).completeChild(cause, args.subList(1, args.size()), currentInput.contains(args.get(0) + " ") ? currentInput.replace(args.get(0) + " ", "") : currentInput.replace(args.get(0), "")));
-						addAll(complete(cause, args, currentInput));
+						addAll(completeArgs(cause, args, currentInput));
 					}
 				};
 			}
 		}
-		return complete(cause, args, currentInput);
+		return completeArgs(cause, args, currentInput);
 	}
 
 	/**
 	 * Auto-complete command arguments.
 	 */
-	default List<CommandCompletion> complete(CommandCause cause, List<String> args, String currentInput) {
+	default List<CommandCompletion> completeArgs(CommandCause cause, List<String> args, String currentInput) {
 		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.size() || (!getArguments().isEmpty() && !getArguments().get(args.size() > 0 ? args.size() - 1 : 0).hasPermission(cause))) return CommandsUtil.EMPTY_COMPLETIONS;
 		if(currentInput.endsWith(" ") || args.size() == 0) {
 			if(getArguments().containsKey(args.size())) return getArguments().get(args.size()).getVariants(cause, args.toArray(new String[] {})).map(CommandCompletion::of).collect(Collectors.toList());

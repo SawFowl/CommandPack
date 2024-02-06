@@ -18,7 +18,6 @@ import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
-import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterPredicate;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
 import sawfowl.commandpack.utils.CommandsUtil;
@@ -39,7 +38,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	private Class<?> clazz;
 	private String permission;
 	private Argument<?> node = CommandTreeNodeTypes.STRING.get().createNode();
-	private RawCompleterPredicate<CommandCause, Stream<String>> canUse = (cause, variants, input) -> variants.filter(var -> var.equals(input)).findFirst().isPresent();
+	private String treeKey;
 
 	@Override
 	public Argument<?> getArgumentType() {
@@ -104,13 +103,13 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	}
 
 	@Override
-	public boolean hasPermission(CommandCause cause) {
-		return cause == null || getPermision().map(p -> cause.hasPermission(p)).orElse(true);
+	public String getTreeKey() {
+		return treeKey;
 	}
 
 	@Override
-	public boolean canUse(CommandCause cause, String input) {
-		return canUse == null && collection != null ? hasPermission(cause) : canUse.test(cause, collection.get(), input);
+	public boolean hasPermission(CommandCause cause) {
+		return cause == null || getPermision().map(p -> cause.hasPermission(p)).orElse(true);
 	}
 
 	@Override
@@ -135,8 +134,8 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		@SuppressWarnings("unchecked")
 		@Override
 		public @NotNull RawArgument<T> build() {
-			if(canUse == null) canUse = (cause, variants, input) -> variants.filter(var -> var.equals(input)).findFirst().isPresent();
 			if(node == null) node = CommandTreeNodeTypes.STRING.get().createNode();
+			if(treeKey == null) treeKey = clazz.getSimpleName();
 			return (RawArgument<T>) RawArgumentImpl.this;
 		}
 
@@ -190,15 +189,16 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 			return this;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public <C extends CommandTreeNode<C>> Builder<T> setArgumentType(Argument<C> node) {
-			if(node != null) RawArgumentImpl.this.node = node;
+			if(node != null) RawArgumentImpl.this.node = (Argument<C>) node.customCompletions();
 			return this;
 		}
 
 		@Override
-		public Builder<T> canUse(RawCompleterPredicate<CommandCause, Stream<String>> predicate) {
-			if(predicate != null) canUse = predicate;
+		public Builder<T> treeKey(String value) {
+			treeKey = value;
 			return this;
 		}
 		

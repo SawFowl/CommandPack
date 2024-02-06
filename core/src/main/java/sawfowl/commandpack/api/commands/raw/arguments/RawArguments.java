@@ -56,7 +56,6 @@ public class RawArguments {
 			String.class,
 			null,
 			(cause, args) -> variants,
-			() -> variants,
 			(cause, args) -> args.length >= cursor + 1 ? Optional.ofNullable(variants.filter(var -> var.equals(args[cursor])).findFirst().orElse(def)) : Optional.ofNullable(def),
 			null,
 			optional,
@@ -72,7 +71,6 @@ public class RawArguments {
 			String.class,
 			null,
 			(cause, args) -> variants.size() > 10000 ? variants.parallelStream() : variants.stream(),
-			() -> variants.size() > 10000 ? variants.parallelStream() : variants.stream(),
 			(cause, args) -> args.length >= cursor + 1 ? (variants.isEmpty() ? Optional.ofNullable(args[cursor]) : Optional.ofNullable(variants.stream().filter(var -> var.equals(args[cursor])).findFirst().orElse(def))) : Optional.ofNullable(def),
 			null,
 			optional,
@@ -88,7 +86,6 @@ public class RawArguments {
 			String.class,
 			null,
 			(cause, args) -> variants.size() > 10000 ? variants.parallelStream() : variants.stream(),
-			() -> variants.size() > 10000 ? variants.parallelStream() : variants.stream(),
 			(cause, args) -> args.length >= cursor + 1 ? (variants.isEmpty() ? Optional.ofNullable(args[cursor]) : Optional.ofNullable(variants.stream().filter(var -> var.equals(args[cursor])).findFirst().orElse(def))) : Optional.ofNullable(def),
 			null,
 			optional,
@@ -104,7 +101,6 @@ public class RawArguments {
 			String.class,
 			null,
 			(cause, args) -> Stream.empty(),
-			() -> Stream.empty(),
 			(cause, args) -> args.length >= cursor + 1 ?  Optional.ofNullable(String.join(" ", Stream.of(Arrays.copyOfRange(args, cursor, args.length)).filter(string -> string != null).toArray(String[]::new))) : Optional.ofNullable(def),
 			null,
 			optional,
@@ -120,7 +116,6 @@ public class RawArguments {
 			Integer.class,
 			CommandTreeNodeTypes.INTEGER.get().createNode(),
 			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
-			() -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
 			(cause, args) -> args.length >= cursor + 1 && NumberUtils.isParsable(args[cursor]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createInteger(args[cursor])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createInteger(args[cursor])) : Optional.ofNullable(def),
 			null,
 			optional,
@@ -136,7 +131,6 @@ public class RawArguments {
 			Long.class,
 			CommandTreeNodeTypes.LONG.get().createNode(),
 			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
-			() -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
 			(cause, args) -> args.length >= cursor + 1 && NumberUtils.isParsable(args[cursor]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createLong(args[cursor])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createLong(args[cursor])) : Optional.ofNullable(def),
 			null,
 			optional,
@@ -152,7 +146,6 @@ public class RawArguments {
 			Double.class,
 			CommandTreeNodeTypes.DOUBLE.get().createNode(),
 			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
-			() -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
 			(cause, args) -> args.length >= cursor + 1 && NumberUtils.isParsable(args[cursor]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createDouble(args[cursor])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createDouble(args[cursor])) : Optional.ofNullable(def),
 			null,
 			optional,
@@ -168,7 +161,6 @@ public class RawArguments {
 			BigDecimal.class,
 			CommandTreeNodeTypes.DOUBLE.get().createNode(),
 			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
-			() -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
 			(cause, args) -> args.length >= cursor + 1 && NumberUtils.isParsable(args[cursor]) && (variants.isEmpty() || variants.stream().filter(a -> a.doubleValue() == NumberUtils.createDouble(args[cursor])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createBigDecimal(args[cursor])) : Optional.ofNullable(def),
 			null,
 			optional,
@@ -184,7 +176,6 @@ public class RawArguments {
 			Boolean.class,
 			CommandTreeNodeTypes.BOOL.get().createNode(),
 			(cause, args) -> Stream.of("true", "false"),
-			() -> Stream.of("true", "false"),
 			(cause, args) -> args.length >= cursor + 1 && BooleanUtils.toBooleanObject(args[cursor]) != null ? Optional.ofNullable(BooleanUtils.toBooleanObject(args[cursor])) : Optional.ofNullable(def),
 			null,
 			optional,
@@ -200,7 +191,6 @@ public class RawArguments {
 			ServerWorld.class,
 			CommandTreeNodeTypes.DIMENSION.get().createNode(),
 			(cause, args) -> Sponge.server().worldManager().worlds().stream().map(w -> w.key().asString()),
-			() -> CommandPack.getInstance().isStarted() ? Sponge.server().worldManager().worlds().stream().map(w -> w.key().asString()) : null,
 			(cause, args) -> args.length >= cursor + 1 ? Optional.ofNullable(Sponge.server().worldManager().worlds().stream().filter(w -> w.key().asString().equals(args[cursor])).findFirst().orElse(def)) : Optional.ofNullable(def),
 			null,
 			optional,
@@ -216,7 +206,6 @@ public class RawArguments {
 			ServerWorld.class,
 			CommandTreeNodeTypes.DIMENSION.get().createNode(),
 			(cause, args) -> Sponge.server().worldManager().worlds().stream().map(w -> w.key().asString()),
-			() -> CommandPack.getInstance().isStarted() ? Sponge.server().worldManager().worlds().stream().map(w -> w.key().asString()) : null,
 			(cause, args) -> args.length >= cursor + 1 ? Optional.ofNullable(Sponge.server().worldManager().worlds().stream().filter(w -> w.key().asString().equals(args[cursor])).findFirst().orElse(def)) : Optional.ofNullable(def),
 			null,
 			optional,
@@ -231,7 +220,6 @@ public class RawArguments {
 		return RawArgument.of(WorldType.class,
 			CommandTreeNodeTypes.DIMENSION.get().createNode(),
 			(cause, args) -> WorldTypes.registry().streamEntries().map(w -> w.key().asString()),
-			() -> CommandPack.getInstance().isStarted() ? WorldTypes.registry().streamEntries().map(w -> w.key().asString()) : null,
 			(cause, args) -> args.length >= cursor + 1 ? WorldTypes.registry().streamEntries().filter(e -> e.key().asString().equals(args[cursor])).map(e -> e.value()).findFirst() : Optional.empty(),
 			null,
 			optional,
@@ -246,7 +234,6 @@ public class RawArguments {
 		return RawArgument.of(ServerPlayer.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
 			(CommandCause cause, String[] args) -> Sponge.server().onlinePlayers().stream().filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).map(ServerPlayer::name),
-			() -> CommandPack.getInstance().isStarted() ? Sponge.server().onlinePlayers().stream().filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).map(ServerPlayer::name) : null,
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? Sponge.server().onlinePlayers().stream().filter(player -> player.name().equals(args[cursor])).findFirst() : Optional.empty(),
 			null,
 			optional,
@@ -257,28 +244,13 @@ public class RawArguments {
 		);
 	}
 
-	public static RawArgument<ServerPlayer> createPlayerArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
-		return RawArgument.of(ServerPlayer.class,
+	public static RawArgument<ServerPlayer> createPlayerArgument(boolean optional, boolean optionalForConsole, int cursor, String key, Object[] localesPath) {
+		return RawArgument.of(
+			ServerPlayer.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
 			(CommandCause cause, String[] args) -> Sponge.server().onlinePlayers().stream().filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).map(ServerPlayer::name),
-			() -> CommandPack.getInstance().isStarted() ? Sponge.server().onlinePlayers().stream().filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).map(ServerPlayer::name) : null,
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? Sponge.server().onlinePlayers().stream().filter(player -> player.name().equals(args[cursor])).findFirst() : Optional.empty(),
-			null,
-			optional,
-			optionalForConsole,
-			cursor,
-			permission,
-			localesPath
-		);
-	}
-
-	public static RawArgument<ServerPlayer> createPlayerArgument(boolean optional, boolean optionalForConsole, int cursor, RawCompleterPredicate<CommandCause, Stream<String>> canUse, Object[] localesPath) {
-		return RawArgument.of(ServerPlayer.class,
-			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
-			(CommandCause cause, String[] args) -> Sponge.server().onlinePlayers().stream().filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).map(ServerPlayer::name),
-			() -> CommandPack.getInstance().isStarted() ? Sponge.server().onlinePlayers().stream().filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).map(ServerPlayer::name) : null,
-			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? Sponge.server().onlinePlayers().stream().filter(player -> player.name().equals(args[cursor])).findFirst() : Optional.empty(),
-			canUse,
+			"Player",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -288,27 +260,12 @@ public class RawArguments {
 	}
 
 	public static RawArgument<UniqueAccount> createUniqueAccountArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
-		return RawArgument.of(UniqueAccount.class,
+		return RawArgument.of(
+			UniqueAccount.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
 			(CommandCause cause, String[] args) -> plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(account -> account.identifier()),
-			() -> CommandPack.getInstance().isStarted() ? plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier) : null,
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(account -> account.identifier().equals(args[cursor])).findFirst() : Optional.empty(),
-			null,
-			optional,
-			optionalForConsole,
-			cursor,
-			permission,
-			localesPath
-		);
-	}
-
-	public static RawArgument<UniqueAccount> createUniqueAccountArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, RawCompleterPredicate<CommandCause, Stream<String>> canUse, Object[] localesPath) {
-		return RawArgument.of(UniqueAccount.class,
-			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
-			(CommandCause cause, String[] args) -> plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(account -> account.identifier()),
-			() -> CommandPack.getInstance().isStarted() ? plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier) : null,
-			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(account -> account.identifier().equals(args[cursor])).findFirst() : Optional.empty(),
-			(CommandCause cause, Stream<String> variants, String input) -> variants.filter(var -> var.equals(input)).findFirst().isPresent() && canUse.test(cause, variants, input),
+			"Player",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -318,27 +275,12 @@ public class RawArguments {
 	}
 
 	public static RawArgument<Account> createAccountArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
-		return RawArgument.of(Account.class,
+		return RawArgument.of(
+			Account.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
 			(CommandCause cause, String[] args) -> getAllAccounts().map(account -> account.identifier()),
-			() -> CommandPack.getInstance().isStarted() ? getAllAccounts().map(Account::identifier) : null,
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? getAllAccounts().filter(account -> account.identifier().equals(args[cursor])).findFirst() : Optional.empty(),
-			null,
-			optional,
-			optionalForConsole,
-			cursor,
-			permission,
-			localesPath
-		);
-	}
-
-	public static RawArgument<Account> createAccountArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, RawCompleterPredicate<CommandCause, Stream<String>> canUse, Object[] localesPath) {
-		return RawArgument.of(Account.class,
-			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
-			(CommandCause cause, String[] args) -> getAllAccounts().map(account -> account.identifier()),
-			() -> CommandPack.getInstance().isStarted() ? getAllAccounts().map(Account::identifier) : null,
-			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? getAllAccounts().filter(account -> account.identifier().equals(args[cursor])).findFirst() : Optional.empty(),
-			(CommandCause cause, Stream<String> variants, String input) -> variants.filter(var -> var.equals(input)).findFirst().isPresent() && canUse.test(cause, variants, input),
+			"Player",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -348,27 +290,12 @@ public class RawArguments {
 	}
 
 	public static RawArgument<Profile> createProfileArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
-		return RawArgument.of(Profile.class,
+		return RawArgument.of(
+			Profile.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
 			(CommandCause cause, String[] args) -> plugin.getPunishmentService().getAllProfileBans().stream().map(ban -> ban.profile().name().orElse(ban.profile().examinableName())),
-			() -> CommandPack.getInstance().isStarted() ? plugin.getEconomy().getEconomyServiceImpl().allAccounts().stream().map(Account::identifier) : null,
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? plugin.getPunishmentService().getAllProfileBans().stream().filter(ban -> ban.profile().name().orElse(ban.profile().examinableName()).equals(args[cursor])).findFirst() : Optional.empty(),
-			null,
-			optional,
-			optionalForConsole,
-			cursor,
-			permission,
-			localesPath
-		);
-	}
-
-	public static RawArgument<Profile> createProfileArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, RawCompleterPredicate<CommandCause, Stream<String>> canUse, Object[] localesPath) {
-		return RawArgument.of(Profile.class,
-			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
-			(CommandCause cause, String[] args) -> plugin.getPunishmentService().getAllProfileBans().stream().map(ban -> ban.profile().name().orElse(ban.profile().examinableName())),
-			() -> CommandPack.getInstance().isStarted() ? plugin.getEconomy().getEconomyServiceImpl().allAccounts().stream().map(Account::identifier) : null,
-			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? plugin.getPunishmentService().getAllProfileBans().stream().filter(ban -> ban.profile().name().orElse(ban.profile().examinableName()).equals(args[cursor])).findFirst() : Optional.empty(),
-			(CommandCause cause, Stream<String> variants, String input) -> variants.filter(var -> var.equals(input)).findFirst().isPresent() && canUse.test(cause, variants, input),
+			"Player",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -378,27 +305,12 @@ public class RawArguments {
 	}
 
 	public static RawArgument<Ban.IP> createBanIPArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
-		return RawArgument.of(Ban.IP.class,
+		return RawArgument.of(
+			Ban.IP.class,
 			null,
 			(cause, args) -> plugin.getPunishmentService().getAllIPBans().stream().map(i -> i.address().getHostAddress()),
-			() -> CommandPack.getInstance().isStarted() ? plugin.getPunishmentService().getAllIPBans().stream().map(i -> i.address().getHostAddress()) : null,
 			(cause, args) -> args.length == 0 || plugin.getPunishmentService().getAllIPBans().isEmpty() ? Optional.empty() : plugin.getPunishmentService().getAllIPBans().stream().filter(i -> i.address().getHostAddress().equals(args[0])).findFirst(),
-			null,
-			false,
-			false,
-			cursor,
-			permission,
-			localesPath
-		);
-	}
-
-	public static RawArgument<Ban.IP> createBanIPArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, RawCompleterPredicate<CommandCause, Stream<String>> canUse, Object[] localesPath) {
-		return RawArgument.of(Ban.IP.class,
-			null,
-			(cause, args) -> plugin.getPunishmentService().getAllIPBans().stream().map(i -> i.address().getHostAddress()),
-			() -> CommandPack.getInstance().isStarted() ? plugin.getPunishmentService().getAllIPBans().stream().map(i -> i.address().getHostAddress()) : null,
-			(cause, args) -> args.length == 0 || plugin.getPunishmentService().getAllIPBans().isEmpty() ? Optional.empty() : plugin.getPunishmentService().getAllIPBans().stream().filter(i -> i.address().getHostAddress().equals(args[0])).findFirst(),
-			canUse,
+			"Address",
 			false,
 			false,
 			cursor,
@@ -411,24 +323,8 @@ public class RawArguments {
 		return RawArgument.of(Mute.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
 			(CommandCause cause, String[] args) -> plugin.getPunishmentService().getAllMutes().stream().map(mute -> mute.getName()),
-			() -> CommandPack.getInstance().isStarted() ? plugin.getPunishmentService().getAllMutes().stream().map(mute -> mute.getName()) : null,
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? plugin.getPunishmentService().getAllMutes().stream().filter(m -> m.getName().equals(args[cursor])).findFirst() : Optional.empty(),
-			null,
-			optional,
-			optionalForConsole,
-			cursor,
-			permission,
-			localesPath
-		);
-	}
-
-	public static RawArgument<Mute> createMuteArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, RawCompleterPredicate<CommandCause, Stream<String>> canUse, Object[] localesPath) {
-		return RawArgument.of(Mute.class,
-			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
-			(CommandCause cause, String[] args) -> plugin.getPunishmentService().getAllMutes().stream().map(mute -> mute.getName()),
-			() -> CommandPack.getInstance().isStarted() ? plugin.getPunishmentService().getAllMutes().stream().map(mute -> mute.getName()) : null,
-			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? plugin.getPunishmentService().getAllMutes().stream().filter(m -> m.getName().equals(args[cursor])).findFirst() : Optional.empty(),
-			canUse,
+			"Player",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -441,24 +337,8 @@ public class RawArguments {
 		return RawArgument.of(Warns.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
 			(CommandCause cause, String[] args) -> plugin.getPunishmentService().getAllWarns().stream().map(w -> w.getName()),
-			() -> CommandPack.getInstance().isStarted() ? plugin.getPunishmentService().getAllWarns().stream().map(mute -> mute.getName()) : null,
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? plugin.getPunishmentService().getAllWarns().stream().filter(w -> w.getName().equals(args[cursor])).findFirst() : Optional.empty(),
-			null,
-			optional,
-			optionalForConsole,
-			cursor,
-			permission,
-			localesPath
-		);
-	}
-
-	public static RawArgument<Warns> createWarnsArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, RawCompleterPredicate<CommandCause, Stream<String>> canUse, Object[] localesPath) {
-		return RawArgument.of(Warns.class,
-			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
-			(CommandCause cause, String[] args) -> plugin.getPunishmentService().getAllWarns().stream().map(w -> w.getName()),
-			() -> CommandPack.getInstance().isStarted() ? plugin.getPunishmentService().getAllWarns().stream().map(mute -> mute.getName()) : null,
-			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? plugin.getPunishmentService().getAllWarns().stream().filter(w -> w.getName().equals(args[cursor])).findFirst() : Optional.empty(),
-			canUse,
+			"Player",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -471,9 +351,8 @@ public class RawArguments {
 		return RawArgument.of(EnchantmentType.class,
 			CommandTreeNodeTypes.RESOURCE_LOCATION.get().createNode(),
 			(CommandCause cause, String[] args) -> EnchantmentTypes.registry().streamEntries().map(e -> e.key().asString()),
-			() -> CommandPack.getInstance().isStarted() ? EnchantmentTypes.registry().streamEntries().map(e -> e.key().asString()) : null,
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? EnchantmentTypes.registry().streamEntries().filter(e -> e.key().asString().equals(args[cursor])).map(e -> e.value()).findFirst() : Optional.empty(),
-			null,
+			"Enchant",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -486,9 +365,8 @@ public class RawArguments {
 		return RawArgument.of(Locale.class,
 			null,
 			(CommandCause cause, String[] args) -> Stream.of(EnumLocales.values()).map(EnumLocales::getTag),
-			() -> Stream.of(EnumLocales.values()).map(EnumLocales::getTag),
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? Stream.of(EnumLocales.values()).filter(l -> l.getTag().equalsIgnoreCase(args[cursor])).map(EnumLocales::get).findFirst() : Optional.empty(),
-			null,
+			"Locale",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -501,9 +379,8 @@ public class RawArguments {
 		return RawArgument.of(Currency.class,
 			null,
 			(CommandCause cause, String[] args) -> Sponge.game().findRegistry(RegistryTypes.CURRENCY).map(registry -> registry .streamEntries().map(e -> e.key().asString())).orElse(Stream.empty()),
-			() -> CommandPack.getInstance().isStarted() ? Sponge.game().findRegistry(RegistryTypes.CURRENCY).map(registry -> registry .streamEntries().map(e -> e.key().asString())).orElse(Stream.empty()) : null,
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? Sponge.game().findRegistry(RegistryTypes.CURRENCY).map(registry -> registry.streamEntries()).orElse(Stream.empty()).filter(e -> e.key().asString().equals(args[cursor])).findFirst().map(e -> e.value()) : Optional.empty(),
-			null,
+			"Currency",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -513,12 +390,12 @@ public class RawArguments {
 	}
 
 	public static RawArgument<Kit> createKitArgument(boolean optional, boolean optionalForConsole, int cursor, Object[] localesPath) {
-		return RawArgument.of(Kit.class,
+		return RawArgument.of(
+			Kit.class,
 			null,
 			(CommandCause cause, String[] args) -> plugin.getKitService().getKits().stream().map(Kit::id),
-			() -> plugin.getKitService().getKits().stream().map(Kit::id),
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? plugin.getKitService().getKit(args[cursor]) : Optional.empty(),
-			null,
+			"Kit",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -531,9 +408,8 @@ public class RawArguments {
 		return RawArgument.of(Warp.class,
 			null,
 			(CommandCause cause, String[] args) -> plugin.getPlayersData().streamAllWarps().filter(warp -> (args.length == 0 || warp.getName().startsWith(args[0]) && ((!warp.isPrivate() || (cause.first(ServerPlayer.class).isPresent() && plugin.getPlayersData().getPlayerData(cause.first(ServerPlayer.class).get().uniqueId()).get().containsWarp(warp.getPlainName()))) || cause.hasPermission(Permissions.WARP_STAFF) || cause.hasPermission(Permissions.getWarpPermission(warp.getPlainName()))))).map(Warp::getPlainName),
-			() -> plugin.getPlayersData().streamAllWarps().map(Warp::getPlainName),
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? plugin.getPlayersData().streamAllWarps().filter(warp -> (args.length == 0 || warp.getName().startsWith(args[0]) && ((!warp.isPrivate() || (cause.first(ServerPlayer.class).isPresent() && plugin.getPlayersData().getPlayerData(cause.first(ServerPlayer.class).get().uniqueId()).get().containsWarp(warp.getPlainName()))) || cause.hasPermission(Permissions.WARP_STAFF) || cause.hasPermission(Permissions.getWarpPermission(warp.getPlainName()))))).findFirst() : Optional.empty(),
-			(cause, args, input) -> plugin.getPlayersData().getAdminWarp(input).filter(warp -> cause.hasPermission(Permissions.getWarpPermission(warp.getPlainName()))).isPresent() || plugin.getPlayersData().getWarp(input).filter(warp -> !warp.isPrivate() || cause.hasPermission(Permissions.WARP_STAFF) || (cause.first(ServerPlayer.class).isPresent() && plugin.getPlayersData().getOrCreatePlayerData(cause.first(ServerPlayer.class).get()).containsWarp(input))).isPresent(),
+			"Warp",
 			optional,
 			optionalForConsole,
 			cursor,

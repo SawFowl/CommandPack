@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
@@ -95,7 +94,7 @@ public class Pay extends AbstractPlayerCommand {
 	public List<RawArgument<?>> arguments() {
 		if(empty == null) empty = new ArrayList<BigDecimal>();
 		return Arrays.asList(
-			RawArguments.createUniqueAccountArgument(false, false, 0, null, (CommandCause cause, Stream<String> variants, String input) -> cause.first(ServerPlayer.class).filter(player -> !player.name().equals(input)).isPresent(), LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT),
+			RawArguments.createUniqueAccountArgument(false, false, 0, null, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT),
 			RawArguments.createBigDecimalArgument(empty, false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
 			RawArguments.createCurrencyArgument(true, true, 2, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
