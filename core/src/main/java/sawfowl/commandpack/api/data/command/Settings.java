@@ -1,6 +1,7 @@
 package sawfowl.commandpack.api.data.command;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -9,7 +10,6 @@ import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
-import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 
 /**
@@ -66,10 +66,7 @@ public interface Settings extends DataSerializable {
 	 */
 	boolean isEnable();
 
-	/**
-	 * Settings for {@link RawCommand} type commands.
-	 */
-	@Nullable RawSettings getRawSettings();
+	@Nullable public Optional<Boolean> isAutoComplete();
 
 	interface Builder extends AbstractBuilder<Settings>, org.spongepowered.api.util.Builder<Settings, Builder> {
 
@@ -85,7 +82,7 @@ public interface Settings extends DataSerializable {
 
 		Builder setPrice(Price price);
 
-		Builder setRawSettings(RawSettings rawSettings);
+		Builder setAutoComplete(Boolean value);
 
 	}
 

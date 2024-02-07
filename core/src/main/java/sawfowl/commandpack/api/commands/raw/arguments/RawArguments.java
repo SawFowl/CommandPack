@@ -54,10 +54,10 @@ public class RawArguments {
 	public static RawArgument<String> createStringArgument(@NotNull Stream<String> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, Object[] localesPath) {
 		return RawArgument.of(
 			String.class,
-			null,
+			CommandTreeNodeTypes.STRING.get().createNode(),
 			(cause, args) -> variants,
 			(cause, args) -> args.length >= cursor + 1 ? Optional.ofNullable(variants.filter(var -> var.equals(args[cursor])).findFirst().orElse(def)) : Optional.ofNullable(def),
-			null,
+			"String",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -69,10 +69,10 @@ public class RawArguments {
 	public static RawArgument<String> createStringArgument(@NotNull Collection<String> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, Object[] localesPath) {
 		return RawArgument.of(
 			String.class,
-			null,
+			CommandTreeNodeTypes.STRING.get().createNode(),
 			(cause, args) -> variants.size() > 10000 ? variants.parallelStream() : variants.stream(),
 			(cause, args) -> args.length >= cursor + 1 ? (variants.isEmpty() ? Optional.ofNullable(args[cursor]) : Optional.ofNullable(variants.stream().filter(var -> var.equals(args[cursor])).findFirst().orElse(def))) : Optional.ofNullable(def),
-			null,
+			"String",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -84,10 +84,10 @@ public class RawArguments {
 	public static RawArgument<String> createStringArgument(@NotNull Collection<String> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, String permission, Object[] localesPath) {
 		return RawArgument.of(
 			String.class,
-			null,
+			CommandTreeNodeTypes.STRING.get().createNode(),
 			(cause, args) -> variants.size() > 10000 ? variants.parallelStream() : variants.stream(),
 			(cause, args) -> args.length >= cursor + 1 ? (variants.isEmpty() ? Optional.ofNullable(args[cursor]) : Optional.ofNullable(variants.stream().filter(var -> var.equals(args[cursor])).findFirst().orElse(def))) : Optional.ofNullable(def),
-			null,
+			"String",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -99,10 +99,10 @@ public class RawArguments {
 	public static RawArgument<String> createRemainingJoinedStringsArgument(boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, Object[] localesPath) {
 		return RawArgument.of(
 			String.class,
-			null,
+			CommandTreeNodeTypes.STRING.get().createNode(),
 			(cause, args) -> Stream.empty(),
 			(cause, args) -> args.length >= cursor + 1 ?  Optional.ofNullable(String.join(" ", Stream.of(Arrays.copyOfRange(args, cursor, args.length)).filter(string -> string != null).toArray(String[]::new))) : Optional.ofNullable(def),
-			null,
+			"Strings...",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -117,7 +117,7 @@ public class RawArguments {
 			CommandTreeNodeTypes.INTEGER.get().createNode(),
 			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
 			(cause, args) -> args.length >= cursor + 1 && NumberUtils.isParsable(args[cursor]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createInteger(args[cursor])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createInteger(args[cursor])) : Optional.ofNullable(def),
-			null,
+			"IntValue",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -132,7 +132,7 @@ public class RawArguments {
 			CommandTreeNodeTypes.LONG.get().createNode(),
 			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
 			(cause, args) -> args.length >= cursor + 1 && NumberUtils.isParsable(args[cursor]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createLong(args[cursor])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createLong(args[cursor])) : Optional.ofNullable(def),
-			null,
+			"LongValue",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -147,7 +147,7 @@ public class RawArguments {
 			CommandTreeNodeTypes.DOUBLE.get().createNode(),
 			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
 			(cause, args) -> args.length >= cursor + 1 && NumberUtils.isParsable(args[cursor]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createDouble(args[cursor])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createDouble(args[cursor])) : Optional.ofNullable(def),
-			null,
+			"DoubleValue",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -162,7 +162,7 @@ public class RawArguments {
 			CommandTreeNodeTypes.DOUBLE.get().createNode(),
 			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
 			(cause, args) -> args.length >= cursor + 1 && NumberUtils.isParsable(args[cursor]) && (variants.isEmpty() || variants.stream().filter(a -> a.doubleValue() == NumberUtils.createDouble(args[cursor])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createBigDecimal(args[cursor])) : Optional.ofNullable(def),
-			null,
+			"BigDecimalValue",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -177,7 +177,7 @@ public class RawArguments {
 			CommandTreeNodeTypes.BOOL.get().createNode(),
 			(cause, args) -> Stream.of("true", "false"),
 			(cause, args) -> args.length >= cursor + 1 && BooleanUtils.toBooleanObject(args[cursor]) != null ? Optional.ofNullable(BooleanUtils.toBooleanObject(args[cursor])) : Optional.ofNullable(def),
-			null,
+			"BooleanValue",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -192,7 +192,7 @@ public class RawArguments {
 			CommandTreeNodeTypes.DIMENSION.get().createNode(),
 			(cause, args) -> Sponge.server().worldManager().worlds().stream().map(w -> w.key().asString()),
 			(cause, args) -> args.length >= cursor + 1 ? Optional.ofNullable(Sponge.server().worldManager().worlds().stream().filter(w -> w.key().asString().equals(args[cursor])).findFirst().orElse(def)) : Optional.ofNullable(def),
-			null,
+			"World",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -207,7 +207,7 @@ public class RawArguments {
 			CommandTreeNodeTypes.DIMENSION.get().createNode(),
 			(cause, args) -> Sponge.server().worldManager().worlds().stream().map(w -> w.key().asString()),
 			(cause, args) -> args.length >= cursor + 1 ? Optional.ofNullable(Sponge.server().worldManager().worlds().stream().filter(w -> w.key().asString().equals(args[cursor])).findFirst().orElse(def)) : Optional.ofNullable(def),
-			null,
+			"World",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -217,11 +217,12 @@ public class RawArguments {
 	}
 
 	public static RawArgument<WorldType> createWorldTypeArgument(boolean optional, boolean optionalForConsole, int cursor, Object[] localesPath) {
-		return RawArgument.of(WorldType.class,
+		return RawArgument.of(
+			WorldType.class,
 			CommandTreeNodeTypes.DIMENSION.get().createNode(),
 			(cause, args) -> WorldTypes.registry().streamEntries().map(w -> w.key().asString()),
 			(cause, args) -> args.length >= cursor + 1 ? WorldTypes.registry().streamEntries().filter(e -> e.key().asString().equals(args[cursor])).map(e -> e.value()).findFirst() : Optional.empty(),
-			null,
+			"WorldType",
 			optional,
 			optionalForConsole,
 			cursor,
@@ -231,11 +232,12 @@ public class RawArguments {
 	}
 
 	public static RawArgument<ServerPlayer> createPlayerArgument(boolean optional, boolean optionalForConsole, int cursor, Object[] localesPath) {
-		return RawArgument.of(ServerPlayer.class,
+		return RawArgument.of(
+			ServerPlayer.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
 			(CommandCause cause, String[] args) -> Sponge.server().onlinePlayers().stream().filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).map(ServerPlayer::name),
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? Sponge.server().onlinePlayers().stream().filter(player -> player.name().equals(args[cursor])).findFirst() : Optional.empty(),
-			null,
+			"Player",
 			optional,
 			optionalForConsole,
 			cursor,

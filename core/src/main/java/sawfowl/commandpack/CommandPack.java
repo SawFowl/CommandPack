@@ -37,7 +37,6 @@ import org.spongepowered.api.event.lifecycle.RegisterBuilderEvent;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
-import org.spongepowered.api.scheduler.ScheduledTask;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.service.economy.EconomyService;
@@ -69,9 +68,7 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.data.command.CancelRules;
 import sawfowl.commandpack.api.data.command.Delay;
 import sawfowl.commandpack.api.data.command.Price;
-import sawfowl.commandpack.api.data.command.RawSettings;
 import sawfowl.commandpack.api.data.command.Settings;
-import sawfowl.commandpack.api.data.command.UpdateTree;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.kits.KitPrice;
 import sawfowl.commandpack.api.data.miscellaneous.Location;
@@ -105,8 +102,6 @@ import sawfowl.commandpack.configure.configs.commands.CommandSettings;
 import sawfowl.commandpack.configure.configs.commands.CommandsConfig;
 import sawfowl.commandpack.configure.configs.commands.DelayData;
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportWorldConfig;
-import sawfowl.commandpack.configure.configs.commands.RawSettingsImpl;
-import sawfowl.commandpack.configure.configs.commands.UpdateRawTree;
 import sawfowl.commandpack.configure.configs.kits.KitData;
 import sawfowl.commandpack.configure.configs.kits.KitPriceData;
 import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
@@ -161,7 +156,6 @@ public class CommandPack {
 	private Collection<PluginContainer> containers = new HashSet<>();
 	private Collection<ModContainer> mods = new HashSet<>();
 	private Set<RawUpdater> registeredCommands = new HashSet<RawUpdater>();
-	private ScheduledTask rawTask;
 	private boolean isStarted = false;
 	private SpongeCommandManager manager;
 
@@ -467,7 +461,6 @@ public class CommandPack {
 		}).build());
 		serverStartedTime = System.currentTimeMillis();
 		registeredCommands.forEach(RawUpdater::register);
-		createRawTask();
 		manager = null;
 	}
 
@@ -485,7 +478,6 @@ public class CommandPack {
 	public void onReload(RefreshGameEvent event) {
 		configManager.reloadConfigs();
 		((PlayersDataImpl) playersData).reload();
-		createRawTask();
 	}
 
 	@Listener(order = Order.FIRST)
@@ -520,8 +512,6 @@ public class CommandPack {
 		event.register(Warn.Builder.class, () -> new WarnData().builder());
 		event.register(Warns.Builder.class, () -> new WarnsData().builder());
 		event.register(CustomPacket.Builder.class, () -> new CustomPacketImpl().builder());
-		event.register(RawSettings.Builder.class, () -> new RawSettingsImpl().builder());
-		event.register(UpdateTree.Builder.class, () -> new UpdateRawTree().builder());
 	}
 
 	@Listener
@@ -551,21 +541,6 @@ public class CommandPack {
 		return TextUtils.timeFormat(second, locale, getLocales().getComponent(locale, LocalesPaths.TIME_DAYS), getLocales().getComponent(locale, LocalesPaths.TIME_HOUR), getLocales().getComponent(locale, LocalesPaths.TIME_MINUTE), getLocales().getComponent(locale, LocalesPaths.TIME_SECOND));
 	}
 
-	private void createRawTask() {
-		if(rawTask != null) {
-			rawTask.cancel();
-			rawTask = null;
-		}
-		rawTask = Sponge.asyncScheduler().submit(Task.builder()
-			.interval(20, TimeUnit.SECONDS)
-			.plugin(pluginContainer)
-			.execute(() -> {
-				registeredCommands.forEach(RawUpdater::updateRawTree);
-			})
-			.build()
-		);
-	}
-
 	class RawUpdater {
 
 		private RawCommand command;
@@ -573,11 +548,11 @@ public class CommandPack {
 		private CommandTreeNode.Root root;
 		RawUpdater(RawCommand command) {
 			this.command = command;
-			root = command.buildNewCommandTree();
 			//lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
 		}
 
 		void register() {
+			root = command.buildNewCommandTree();
 			if(command.getCommandSettings() != null && command.getCommandSettings().getAliases() != null && command.getCommandSettings().getAliases().length > 0) {
 				manager.registrar(Raw.class).get().register(command.getContainer(), command, command.command(), command.getCommandSettings().getAliases());
 			} else manager.registrar(Raw.class).get().register(command.getContainer(), command, command.command());

@@ -1,10 +1,7 @@
 package sawfowl.commandpack.commands.settings;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +17,6 @@ import org.spongepowered.api.data.persistence.Queries;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
-import sawfowl.commandpack.utils.CommandsUtil;
 
 public class RawArgumentImpl<T> implements RawArgument<T> {
 
@@ -29,7 +25,6 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	}
 
 	private RawCompleterSupplier<Stream<String>> variants;
-	private Supplier<Stream<String>> collection;
 	private RawResultSupplier<T> result;
 	private boolean isOptional = false;
 	private boolean isOptionalForConsole = false;
@@ -37,7 +32,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	private Object[] localesPath;
 	private Class<?> clazz;
 	private String permission;
-	private Argument<?> node = CommandTreeNodeTypes.STRING.get().createNode();
+	private Argument<?> node = CommandTreeNodeTypes.STRING.get().createNode().customCompletions();
 	private String treeKey;
 
 	@Override
@@ -48,13 +43,6 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	@Override
 	public Stream<String> getVariants(CommandCause cause, String[] args) {
 		return variants == null ? new ArrayList<String>().stream() : variants.get(cause, args);
-	}
-
-	@Override
-	public List<String> getVariants() {
-		if(collection == null) return CommandsUtil.EMPTY_VARIANTS;
-		Stream<String> variants = collection.get();
-		return variants == null ? CommandsUtil.EMPTY_VARIANTS : variants.collect(Collectors.toList());
 	}
 
 	@Override
@@ -142,12 +130,6 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		@Override
 		public Builder<T> variants(RawCompleterSupplier<Stream<String>> variants) {
 			RawArgumentImpl.this.variants = variants;
-			return this;
-		}
-
-		@Override
-		public Builder<T> variants(Supplier<Stream<String>> variants) {
-			if(variants != null && variants.get() != null) RawArgumentImpl.this.collection = variants;
 			return this;
 		}
 

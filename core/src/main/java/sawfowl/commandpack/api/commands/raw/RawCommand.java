@@ -77,7 +77,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * This parameter will be ignored when overriding the {@link #complete(CommandCause, Mutable)} method.
 	 */
 	default boolean enableAutoComplete() {
-		return getCommandSettings() == null || getCommandSettings().getRawSettings() == null || getCommandSettings().getRawSettings().isAutoComplete();
+		return getCommandSettings() == null || getCommandSettings().isAutoComplete().orElse(true);
 	}
 
 
@@ -98,7 +98,7 @@ public interface RawCommand extends PluginCommand, Raw {
 			});
 			for(Entry<String, RawCommand> entry : getChildExecutors().entrySet()) {
 				if(!((AbstractCommandTreeNode<?, ?>) root).getChildren().containsKey(entry.getKey())) {
-					root.child(entry.getKey(), commandTree(0, entry.getValue()));
+					root.child(entry.getKey(), commandTree(0, entry.getValue()).requires(cause -> entry.getValue().canExecute(cause)));
 				}
 			}
 		}

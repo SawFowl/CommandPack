@@ -1,8 +1,6 @@
 package sawfowl.commandpack.api.commands.raw.arguments;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,10 +39,6 @@ public interface RawArgument<T> extends DataSerializable {
 		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(plainVariants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).treeKey(key).localeTextPath(localesPath).build();
 	}
 
-	static <T> RawArgument<T> of(Class<T> clazz, Stream<String> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, Object[] localesPath) {
-		return of(clazz, null, ((CommandCause cause, String[] args) -> args.length > cursor ? variants.filter(var -> var.startsWith(args[cursor])) : variants), result, null, optional, optionalForConsole, cursor, null, localesPath);
-	}
-
 	@SuppressWarnings("unchecked")
 	@Deprecated
 	static <T> RawArgument<T> of(Class<T> clazz, RawCompleterSupplier<Stream<String>> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, Object... localesPath) {
@@ -70,8 +64,6 @@ public interface RawArgument<T> extends DataSerializable {
 	 * Autocomplete variants.
 	 */
 	Stream<String> getVariants(CommandCause cause, String[] args);
-
-	List<String> getVariants();
 
 	/**
 	 * Converts a string argument to a specified class. If the specified class does not match the argument class, the return will be empty.
@@ -123,8 +115,6 @@ public interface RawArgument<T> extends DataSerializable {
 		 * Set variants for auto-complete commands.
 		 */
 		Builder<T> variants(@NotNull RawCompleterSupplier<Stream<String>> variants);
-
-		Builder<T> variants(Supplier<Stream<String>> variants);
 
 		/**
 		 * Setting parameters to get the target object from the command argument.
