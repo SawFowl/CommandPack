@@ -48,7 +48,7 @@ public abstract class AbstractRawCommand extends AbstractPluginCommand<CommandPa
 
 	public void addChildCommand(RawCommand command) {
 		if(!childExecutors.containsKey(command.command())) childExecutors.put(command.command(), command);
-		for(String alias : command.getCommandSettings().getAliases()) {
+		if(command.getCommandSettings() != null) for(String alias : command.getCommandSettings().getAliases()) {
 			if(!childExecutors.containsKey(alias)) childExecutors.put(alias, command);
 		}
 	}

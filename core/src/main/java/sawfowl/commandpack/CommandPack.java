@@ -24,7 +24,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.Command.Raw;
-import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.event.EventContext;
@@ -247,9 +246,9 @@ public class CommandPack {
 		return isStarted;
 	}
 
-	public Optional<CommandTreeNode.Root> getRootCommandNode(RawCommand raw) {
+	/*public Optional<CommandTreeNode.Root> getRootCommandNode(RawCommand raw) {
 		return registeredCommands.stream().filter(command -> command.command == raw || command.command.command().equals(raw.command())).findFirst().filter(command -> command.root != null).map(command -> command.root);
-	}
+	}*/
 
 	@Inject
 	public CommandPack(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
@@ -545,14 +544,14 @@ public class CommandPack {
 
 		private RawCommand command;
 		//private long lastUpdate;
-		private CommandTreeNode.Root root;
+		//private CommandTreeNode.Root root;
 		RawUpdater(RawCommand command) {
 			this.command = command;
 			//lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
 		}
 
 		void register() {
-			root = command.buildNewCommandTree();
+			//root = command.buildNewCommandTree();
 			if(command.getCommandSettings() != null && command.getCommandSettings().getAliases() != null && command.getCommandSettings().getAliases().length > 0) {
 				manager.registrar(Raw.class).get().register(command.getContainer(), command, command.command(), command.getCommandSettings().getAliases());
 			} else manager.registrar(Raw.class).get().register(command.getContainer(), command, command.command());
@@ -579,9 +578,9 @@ public class CommandPack {
 			lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());*/
 		}
 
-		CommandTreeNode.Root getCommandNodeRoot() {
+		/*CommandTreeNode.Root getCommandNodeRoot() {
 			return root;
-		}
+		}*/
 
 	}
 
