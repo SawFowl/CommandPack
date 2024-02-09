@@ -13,12 +13,10 @@ dependencies {
 	implementation project(':core')
 }
 
-tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
-
-afterEvaluate {
-	tasks.withType(PublishToMavenRepository).all { publishTask ->
-		publishTask.onlyIf { task ->
-			return false  
-		}
-	}
+publishing {
+  publications {
+    myPublicationName(MavenPublication) {
+      // Configure the publication here
+    }
+  }
 }
