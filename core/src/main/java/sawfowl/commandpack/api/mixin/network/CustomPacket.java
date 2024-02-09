@@ -1,5 +1,6 @@
 package sawfowl.commandpack.api.mixin.network;
 
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -36,6 +37,27 @@ public interface CustomPacket extends DataSerializable {
 	 */
 	static CustomPacket of(String resourceLocation, JsonElement data) {
 		return of(resourceLocation, data.toString());
+	}
+
+	/**
+	 * Creating your data package.
+	 * 
+	 * @param resourceLocation - Packet ID. Usually has the form modid:chanel.
+	 * @param data - Package data provided as a {@link String}
+	 */
+	static CustomPacket of(ResourceKey resourceLocation, String data) {
+		return builder().create(resourceLocation.asString(), data);
+	}
+
+	/**
+	 * Creating your data package.
+	 * You can use {@link JsonParser#parseString} to reverse the conversion on the client.
+	 * 
+	 * @param resourceLocation - Packet ID. Usually has the form modid:chanel.
+	 * @param data - Package data provided as a {@link JsonElement}.
+	 */
+	static CustomPacket of(ResourceKey resourceLocation, JsonElement data) {
+		return of(resourceLocation.asString(), data.toString());
 	}
 
 	private static Builder builder() {
