@@ -35,7 +35,6 @@ public class Enable extends AbstractWorldCommand {
 		ServerWorld world = getWorld(args, 0).get();
 		world.properties().setLoadOnStartup(true);
 		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_ENABLE).replace(Placeholders.WORLD, args[0]).get());
-		plugin.getAPI().updateCommandTree("world");
 	}
 
 	@Override

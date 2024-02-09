@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -89,6 +90,7 @@ public interface RawCommand extends PluginCommand, Raw {
 		CommandTreeNode.Root root = containsChild() ?
 			CommandTreeNode.root().executable().child("subcommand", CommandTreeNode.literal().customCompletions()) :
 			CommandTreeNode.root().customCompletions();
+		if(!containsChild() && !containsArgs()) return root.executable();
 		if(containsChild()) {
 			root.completions(new CommandCompletionProvider() {
 				@Override
@@ -96,13 +98,17 @@ public interface RawCommand extends PluginCommand, Raw {
 					return completeArgs(context.cause(), Stream.of(currentInput.split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList()), currentInput);
 				}
 			});
-			List<String> finishedChilds = new ArrayList<String>();
+			Map<String, Basic> finishedChilds = new HashMap<>();
 			for(Entry<String, RawCommand> entry : getChildExecutors().entrySet()) {
-				if(!finishedChilds.contains(entry.getValue().command())) {
-					root.child(entry.getKey(), commandTree(0, entry.getValue()).requires(cause -> entry.getValue().canExecute(cause)));
-					finishedChilds.add(entry.getValue().command());
-				}
+				if(!finishedChilds.containsKey(entry.getValue().command())) {
+					Basic childNode = commandTree(entry.getValue()).requires(cause -> entry.getValue().canExecute(cause));
+					root.child(entry.getKey(), childNode);
+					finishedChilds.put(entry.getValue().command(), childNode);
+					childNode = null;
+				} else root.child(entry.getKey(), finishedChilds.get(entry.getValue().command()));
 			}
+			finishedChilds.clear();
+			finishedChilds = null;
 		}
 		if(containsArgs()) {
 			argsTree(0, (AbstractCommandTreeNode<?, ?>) root, this);
@@ -110,18 +116,23 @@ public interface RawCommand extends PluginCommand, Raw {
 		return root;
 	}
 
-	private CommandTreeNode.Basic commandTree(int depth, RawCommand child) {
+	private CommandTreeNode.Basic commandTree(RawCommand child) {
 		Basic node = child.containsChild() ?
 				CommandTreeNode.literal().executable().child("subcommand", CommandTreeNode.literal().customCompletions()) :
 				CommandTreeNode.literal().customCompletions();
+		if(!child.containsChild() && !child.containsArgs()) return node.executable();
 		if(child.containsChild()) {
-			List<String> finishedChilds = new ArrayList<String>();
+			Map<String, Basic> finishedChilds = new HashMap<>();
 			for(Entry<String, RawCommand> entry : child.getChildExecutors().entrySet()) {
-				if(!finishedChilds.contains(entry.getValue().command())) {
-					node.child(entry.getKey(), commandTree(0, entry.getValue()).requires(cause -> entry.getValue().canExecute(cause)));
-					finishedChilds.add(entry.getValue().command());
-				}
+				if(!finishedChilds.containsKey(entry.getValue().command())) {
+					Basic childNode = commandTree(entry.getValue()).requires(cause -> entry.getValue().canExecute(cause));
+					node.child(entry.getKey(), childNode);
+					finishedChilds.put(entry.getValue().command(), childNode);
+					childNode = null;
+				} else node.child(entry.getKey(), finishedChilds.get(entry.getValue().command()));
 			}
+			finishedChilds.clear();
+			finishedChilds = null;
 		}
 		if(child.containsArgs()) {
 			argsTree(0, (AbstractCommandTreeNode<?, ?>) node, child);
@@ -132,11 +143,12 @@ public interface RawCommand extends PluginCommand, Raw {
 	private void argsTree(int depth, AbstractCommandTreeNode<?, ?> parrent, RawCommand command) {
 		if(command.getArguments() == null || !command.getArguments().containsKey(depth)) return;
 		Argument<?> node = command.getArguments().get(depth).getArgumentType() != null ? command.getArguments().get(depth).getArgumentType() : CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions();
-		String key = command.getArguments().get(depth).getTreeKey();
-		if(!parrent.getChildren().containsKey(key)) {
-			parrent.child(key, node);
+		if(!command.getArguments().containsKey(depth + 1)) node.executable();
+		if(!parrent.getChildren().containsKey(command.getArguments().get(depth).getTreeKey())) {
+			parrent.child(command.getArguments().get(depth).getTreeKey(), node);
 		}
 		argsTree(depth + 1, (AbstractCommandTreeNode<?, ?>) node, command);
+		node = null;
 	}
 
 	/**
@@ -239,8 +251,13 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * Command registration.
 	 */
 	default void register(RegisterCommandEvent<Raw> event) {
-		if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPack.getInstance().getAPI().registerRawCommand(this);
-		
+		if(getCommandSettings() == null) {
+			if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPack.getInstance().getAPI().registerCommand(this);
+		} else {
+			if(!getCommandSettings().isEnable()) return;
+			if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPack.getInstance().getAPI().registerCommand(this);
+		}
+		CommandPack.getInstance().getPlayersData().getTempData().addTrackingCooldownCommand(this);
 	}
 
 	/**

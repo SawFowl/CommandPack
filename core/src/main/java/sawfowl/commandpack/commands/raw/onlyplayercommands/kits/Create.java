@@ -31,7 +31,6 @@ public class Create extends AbstractKitsEditCommand {
 		Kit kit = Kit.builder().id(args[0]).build();
 		kit.asMenu(getContainer(), src, false).open(src);
 		plugin.getKitService().addKit(kit);
-		plugin.getAPI().updateCommandTree("kits");
 	}
 
 	@Override
@@ -56,7 +55,7 @@ public class Create extends AbstractKitsEditCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createStringArgument(new ArrayList<>(), false, false, 0, null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT));
+		return Arrays.asList(RawArguments.createStringArgument("name", new ArrayList<>(), false, false, 0, null, null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT));
 	}
 
 	@Override

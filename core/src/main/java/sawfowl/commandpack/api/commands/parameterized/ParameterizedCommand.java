@@ -68,12 +68,10 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 	default void register(RegisterCommandEvent<Parameterized> event) {
 		if(build() == null) return;
 		if(getCommandSettings() == null) {
-			event.register(getContainer(), build(), command());
+			if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPack.getInstance().getAPI().registerCommand(this);
 		} else {
 			if(!getCommandSettings().isEnable()) return;
-			if(getCommandSettings().getAliases() != null && getCommandSettings().getAliases().length > 0) {
-				event.register(getContainer(), build(), command(), getCommandSettings().getAliases());
-			} else event.register(getContainer(), build(), command());
+			if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPack.getInstance().getAPI().registerCommand(this);
 		}
 		CommandPack.getInstance().getPlayersData().getTempData().addTrackingCooldownCommand(this);
 	}

@@ -6,6 +6,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public abstract class AbstractWorldCommand extends AbstractRawCommand {
@@ -25,7 +26,12 @@ public abstract class AbstractWorldCommand extends AbstractRawCommand {
 	}
 
 	protected RawArgument<ServerWorld> createWorldArg() {
-		return RawArguments.createWorldArgument(false, false, 0, null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
+		return RawArguments.createWorldArgument(false, false, 0, null, null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
+	}
+
+	@Override
+	public Settings applyCommandSettings() {
+		return null;
 	}
 
 }

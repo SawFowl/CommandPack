@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
@@ -62,6 +61,7 @@ import sawfowl.commandpack.api.KitService;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.RandomTeleportService;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.api.commands.parameterized.ParameterizedCommand;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.data.command.CancelRules;
@@ -154,7 +154,8 @@ public class CommandPack {
 	private Map<String, ChunkGenerator> generators = new HashMap<>();
 	private Collection<PluginContainer> containers = new HashSet<>();
 	private Collection<ModContainer> mods = new HashSet<>();
-	private Set<RawUpdater> registeredCommands = new HashSet<RawUpdater>();
+	private Set<RawCommand> registeredRawCommands = new HashSet<RawCommand>();
+	private Set<ParameterizedCommand> registeredParameterizedCommands = new HashSet<ParameterizedCommand>();
 	private boolean isStarted = false;
 	private SpongeCommandManager manager;
 
@@ -238,17 +239,9 @@ public class CommandPack {
 		return Optional.ofNullable(mariaDB);
 	}
 
-	public void updateRawTrees() {
-		registeredCommands.forEach(RawUpdater::forceUpdate);
-	}
-
 	public boolean isStarted() {
 		return isStarted;
 	}
-
-	/*public Optional<CommandTreeNode.Root> getRootCommandNode(RawCommand raw) {
-		return registeredCommands.stream().filter(command -> command.command == raw || command.command.command().equals(raw.command())).findFirst().filter(command -> command.root != null).map(command -> command.root);
-	}*/
 
 	@Inject
 	public CommandPack(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
@@ -370,21 +363,15 @@ public class CommandPack {
 			}
 
 			@Override
-			public void updateCommandTree(String command) {
-				registeredCommands.stream().filter(updater -> updater.command.command().equals(command) || (updater.command.getCommandSettings() != null && updater.command.getCommandSettings().containsAlias(command))).findFirst().ifPresent(updater -> {
-					updater.forceUpdate();
-				});
-			}
-
-			@Override
-			public void registerRawCommand(RawCommand raw) throws IllegalStateException {
+			public void registerCommand(RawCommand command) throws IllegalStateException {
 				if(manager == null && isStarted) throw new IllegalStateException("Registration of commands through CommandPack is no longer available. Perform registration as soon as you receive the API.");
-				if(raw.getContainer() != null && raw.isEnable() && !registeredCommands.stream().filter(command -> command.command.command().equals(raw.command())).findFirst().isPresent()) registeredCommands.add(new RawUpdater(raw));
+				if(command.getContainer() != null && command.isEnable() && !registeredRawCommands.stream().filter(raw -> raw.command().equals(command.command())).findFirst().isPresent()) registeredRawCommands.add(command);
 			}
 
 			@Override
-			public void updateCommandsTree(String... commands) {
-				if(commands != null && commands.length > 0) Stream.of(commands).forEach(this::updateCommandTree);
+			public void registerCommand(ParameterizedCommand command) throws IllegalStateException {
+				if(manager == null && isStarted) throw new IllegalStateException("Registration of commands through CommandPack is no longer available. Perform registration as soon as you receive the API.");
+				if(command.getContainer() != null && command.isEnable() && !registeredParameterizedCommands.stream().filter(parameterized -> parameterized.command().equals(command.command())).findFirst().isPresent()) registeredParameterizedCommands.add(command);
 			}
 
 		};
@@ -459,8 +446,13 @@ public class CommandPack {
 			});
 		}).build());
 		serverStartedTime = System.currentTimeMillis();
-		registeredCommands.forEach(RawUpdater::register);
+		registeredRawCommands.forEach(this::registerRaw);
+		registeredParameterizedCommands.forEach(this::registerParameterized);
 		manager = null;
+		registeredRawCommands.clear();
+		registeredParameterizedCommands.clear();
+		registeredRawCommands = null;
+		registeredParameterizedCommands = null;
 	}
 
 	@Listener
@@ -540,48 +532,16 @@ public class CommandPack {
 		return TextUtils.timeFormat(second, locale, getLocales().getComponent(locale, LocalesPaths.TIME_DAYS), getLocales().getComponent(locale, LocalesPaths.TIME_HOUR), getLocales().getComponent(locale, LocalesPaths.TIME_MINUTE), getLocales().getComponent(locale, LocalesPaths.TIME_SECOND));
 	}
 
-	class RawUpdater {
+	void registerRaw(RawCommand command) {
+		if(command.getCommandSettings() != null && command.getCommandSettings().getAliases() != null && command.getCommandSettings().getAliases().length > 0) {
+			manager.registrar(Raw.class).get().register(command.getContainer(), command, command.command(), command.getCommandSettings().getAliases());
+		} else manager.registrar(Raw.class).get().register(command.getContainer(), command, command.command());
+	}
 
-		private RawCommand command;
-		//private long lastUpdate;
-		//private CommandTreeNode.Root root;
-		RawUpdater(RawCommand command) {
-			this.command = command;
-			//lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-		}
-
-		void register() {
-			//root = command.buildNewCommandTree();
-			if(command.getCommandSettings() != null && command.getCommandSettings().getAliases() != null && command.getCommandSettings().getAliases().length > 0) {
-				manager.registrar(Raw.class).get().register(command.getContainer(), command, command.command(), command.getCommandSettings().getAliases());
-			} else manager.registrar(Raw.class).get().register(command.getContainer(), command, command.command());
-		}
-
-		void forceUpdate() {
-			/*if(command.getCommandSettings() == null || command.getCommandSettings().getRawSettings() == null || !command.getCommandSettings().getRawSettings().isGenerateRawTree()) return;
-			Sponge.asyncScheduler().executor(pluginContainer).execute(() -> {
-				root.redirect(command.buildNewCommandTree());
-				lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-			});*/
-		}
-
-		void updateRawTree() {
-			/*if(
-				command.getCommandSettings() == null ||
-				command.getCommandSettings().getRawSettings() == null ||
-				command.getCommandSettings().getRawSettings().getUpdateTree() == null ||
-				!command.getCommandSettings().getRawSettings().getUpdateTree().isEnable() ||
-				command.getCommandSettings().getRawSettings().getUpdateTree().getInterval() <= 0 ||
-				lastUpdate + command.getCommandSettings().getRawSettings().getUpdateTree().getInterval() >= TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
-			) return;
-			root.redirect(command.buildNewCommandTree());
-			lastUpdate = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());*/
-		}
-
-		/*CommandTreeNode.Root getCommandNodeRoot() {
-			return root;
-		}*/
-
+	void registerParameterized(ParameterizedCommand command) {
+		if(command.getCommandSettings() != null && command.getCommandSettings().getAliases() != null && command.getCommandSettings().getAliases().length > 0) {
+			manager.registrar(Parameterized.class).get().register(command.getContainer(), command.build(), command.command(), command.getCommandSettings().getAliases());
+		} else manager.registrar(Parameterized.class).get().register(command.getContainer(), command.build(), command.command());
 	}
 
 }

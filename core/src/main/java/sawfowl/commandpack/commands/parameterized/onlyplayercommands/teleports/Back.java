@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
@@ -28,7 +29,7 @@ public class Back extends AbstractPlayerCommand {
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		Optional<ServerLocation> location = plugin.getPlayersData().getTempData().getPreviousLocation(src);
 		if(!location.isPresent()) exception(locale, LocalesPaths.COMMANDS_BACK_EMPTY);
-		if(location.get().world() == null || !location.get().world().isLoaded()) exception(locale, LocalesPaths.COMMANDS_BACK_NOT_LOADED_WORLD);
+		if(location.get().world() == null || !Sponge.server().worldManager().worldExists(location.get().worldKey()) || !location.get().world().isLoaded()) exception(locale, LocalesPaths.COMMANDS_BACK_NOT_LOADED_WORLD);
 		delay(src, locale, consumer -> {
 			plugin.getPlayersData().getTempData().setPreviousLocation(src);
 			src.setLocation(location.get());

@@ -13,8 +13,6 @@ import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.data.Keys;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.Order;
 import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.WorldType;
 import org.spongepowered.api.world.generation.config.WorldGenerationConfig;
@@ -39,7 +37,6 @@ public class Create extends AbstractWorldCommand {
 
 	public Create(CommandPack plugin) {
 		super(plugin);
-		Sponge.eventManager().registerListeners(getContainer(), this);
 	}
 
 	@Override
@@ -71,7 +68,6 @@ public class Create extends AbstractWorldCommand {
 			}
 			world.setBorder(world.border().toBuilder().initialDiameter(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().border().diameter()).build());
 			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_CREATE).replace(Placeholders.WORLD, template.key().asString()).get());
-			plugin.getAPI().updateCommandTree("world");
 		});
 	}
 
@@ -92,23 +88,18 @@ public class Create extends AbstractWorldCommand {
 
 	@Override
 	public Component usage(CommandCause cause) {
-		return text("&c/world create <WorldType> <GeneratorType> <Name> [Seed] [GenerateFeatures] [BonusChest]").clickEvent(ClickEvent.suggestCommand("/world create"));
-	}
-
-	@Listener(order = Order.LAST)
-	public void onServerStarted(sawfowl.commandpack.api.CommandPack.PostAPI event) {
-		Sponge.eventManager().unregisterListeners(this);
+		return text("&c/world create <WorldType> <ChunkGenerator> <Name> [Seed] [Structures] [BonusChest]").clickEvent(ClickEvent.suggestCommand("/world create"));
 	}
 
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createWorldTypeArgument(false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
-			RawArguments.createStringArgument(plugin.getAPI().getAvailableGenerators(), false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
-			RawArguments.createStringArgument(new ArrayList<>(), false, false, 2, null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT),
-			RawArguments.createStringArgument(new ArrayList<>(), true, true, 3, "0", LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			RawArguments.createBooleanArgument(true, true, 4, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			RawArguments.createBooleanArgument(true, true, 5, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createWorldTypeArgument(false, false, 0, null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
+			RawArguments.createStringArgument("ChunkGenerator", plugin.getAPI().getAvailableGenerators(), false, false, 1, null, null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
+			RawArguments.createStringArgument("Name", new ArrayList<>(), false, false, 2, null, null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT),
+			RawArguments.createStringArgument("Seed", new ArrayList<>(), true, true, 3, "0", null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			RawArguments.createBooleanArgument("Structures", true, true, 4, false, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			RawArguments.createBooleanArgument("BonusChest", true, true, 5, false, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
 	}
 

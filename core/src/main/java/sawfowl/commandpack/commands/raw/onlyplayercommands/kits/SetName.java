@@ -1,6 +1,5 @@
 package sawfowl.commandpack.commands.raw.onlyplayercommands.kits;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -62,8 +61,8 @@ public class SetName extends AbstractKitsEditCommand  {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			kitArgument(0, false, false),
-			RawArguments.createLocaleArgument(false, false, 1, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			RawArguments.createStringArgument(new ArrayList<>(), false, false, 2, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createLocaleArgument(false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			RawArguments.createRemainingJoinedStringsArgument("Name", false, false, 2, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
 	}
 

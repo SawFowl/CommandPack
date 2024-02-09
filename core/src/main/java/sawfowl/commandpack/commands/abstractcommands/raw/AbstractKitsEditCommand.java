@@ -23,7 +23,7 @@ public abstract class AbstractKitsEditCommand extends AbstractPlayerCommand {
 	}
 
 	protected RawArgument<Kit> kitArgument(int cursor, boolean optional, boolean optionalForConsole) {
-		return RawArguments.createKitArgument(optional, optionalForConsole, cursor, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+		return RawArguments.createKitArgument(optional, optionalForConsole, cursor, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 	}
 
 	protected Optional<Kit> getKit(String[] args, CommandCause cause, int cursor) {

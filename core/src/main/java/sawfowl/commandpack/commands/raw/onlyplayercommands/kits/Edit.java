@@ -70,7 +70,6 @@ public class Edit extends AbstractKitsEditCommand {
 			if(!plugin.getKitService().kitExist(k.id())) return;
 			plugin.getKitService().removeKit(k);
 			sendKitsList(src, locale);
-			plugin.getAPI().updateCommandTree("kits");
 		}).append(Component.text(" ").append(k.getLocalizedName(locale).clickEvent(SpongeComponents.executeCallback(consumer -> {
 			if(plugin.getKitService().getKit(TextUtils.clearDecorations(k.id())).isPresent()) k.asMenu(getContainer(), src, false).open(src);
 		}))))).collect(Collectors.toList()));

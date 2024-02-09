@@ -9,6 +9,7 @@ import org.spongepowered.api.world.generation.ChunkGenerator;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 import org.spongepowered.plugin.PluginContainer;
 
+import sawfowl.commandpack.api.commands.parameterized.ParameterizedCommand;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.data.command.CancelRules;
 import sawfowl.commandpack.api.data.command.Delay;
@@ -94,22 +95,18 @@ public interface CommandPack {
 	Collection<ModContainer> getModContainers();
 
 	/**
-	 * Updates the argument tree for a registered command using the {@link RawCommand} interface.<br>
-	 * If argument tree building is not enabled in the command settings, there will be no effect.<br>
-	 * This operation can be useful, for example, when a player join/exits,<br>
-	 * if his nickname is used as a command argument and the command uses an argument tree.
+	 * Registering a command at the final stage of server loading, when all in-game data is available.<br>
+	 * The method will be available only when getting to CommandPack API.<br>
+	 * Registration of commands using this method will be blocked after server loading is completed.
 	 */
-	void updateCommandTree(String command);
-
-	void registerRawCommand(RawCommand raw) throws IllegalStateException;
+	void registerCommand(RawCommand command) throws IllegalStateException;
 
 	/**
-	 * Updates the argument tree for a registered commands using the {@link RawCommand} interface.<br>
-	 * If argument tree building is not enabled in the command settings, there will be no effect.<br>
-	 * This operation can be useful, for example, when a player join/exits,<br>
-	 * if his nickname is used as a command argument and the command uses an argument tree.
+	 * Registering a command at the final stage of server loading, when all in-game data is available.<br>
+	 * The method will be available only when getting to CommandPack API.<br>
+	 * Registration of commands using this method will be blocked after server loading is completed.
 	 */
-	void updateCommandsTree(String... commands);
+	void registerCommand(ParameterizedCommand command) throws IllegalStateException;
 
 	/**
 	 * Event for getting the plugin API.

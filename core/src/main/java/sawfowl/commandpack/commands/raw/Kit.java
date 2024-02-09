@@ -425,13 +425,9 @@ public class Kit extends AbstractRawCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			kitArgument(),
-			RawArguments.createPlayerArgument(true, false, 1, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
+			RawArguments.createKitArgument(true, true, 0, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			RawArguments.createPlayerArgument(true, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
 		);
-	}
-
-	private RawArgument<sawfowl.commandpack.api.data.kits.Kit> kitArgument() {
-		return RawArguments.createKitArgument(true, true, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 	}
 
 	@Override

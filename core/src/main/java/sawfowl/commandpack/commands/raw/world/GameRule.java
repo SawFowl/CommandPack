@@ -6,20 +6,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import org.spongepowered.api.ResourceKey;
-import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.Order;
-import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
 import org.spongepowered.api.world.gamerule.GameRules;
 import org.spongepowered.api.world.server.ServerWorld;
 
@@ -40,7 +38,6 @@ public class GameRule extends AbstractWorldCommand {
 	private Map<String, org.spongepowered.api.world.gamerule.GameRule<?>> gamerules = new HashMap<>();
 	public GameRule(CommandPack plugin) {
 		super(plugin);
-		Sponge.eventManager().registerListeners(getContainer(), this);
 	}
 
 	@Override
@@ -106,19 +103,17 @@ public class GameRule extends AbstractWorldCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			createWorldArg(),
-			RawArguments.createStringArgument(gamerules.keySet(), true, true, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			RawArguments.createStringArgument("GameRule", gamerules.keySet().isEmpty() ? fillMap() : gamerules.keySet(), true, true, 1, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
 			createValueArg()
 		);
 	}
 
-	@Listener(order = Order.LAST)
-	public void onServerStarted(StartedEngineEvent<Server> event) {
+	private Set<String> fillMap() {
 		GameRules.registry().streamEntries().forEach(gameRule -> {
 			gamerules.put(gameRule.key().asString(), gameRule.value());
 			gamerules.put(gameRule.value().name(), gameRule.value());
 		});
-		getArguments();
-		Sponge.eventManager().unregisterListeners(this);
+		return gamerules.keySet();
 	}
 
 	private boolean isBooleanType(org.spongepowered.api.world.gamerule.GameRule<?> gameRule) {
@@ -140,7 +135,7 @@ public class GameRule extends AbstractWorldCommand {
 	private RawArgument<String> createValueArg() {
 		return RawArgument.of(
 			String.class,
-			null,
+			CommandTreeNodeTypes.BOOL.get().createNode(),
 			(cause, args) -> args.length >= 2 && gamerules.containsKey(args[1]) && isBooleanType(gamerules.get(args[1])) ? Stream.of("true", "false") : RawArguments.EMPTY.stream(),
 			(cause, args) -> args.length > 2 && gamerules.containsKey(args[1]) ? Optional.ofNullable(args[2]) : Optional.empty(),
 			"Value",

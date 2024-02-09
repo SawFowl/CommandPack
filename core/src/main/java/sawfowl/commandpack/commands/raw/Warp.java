@@ -122,7 +122,7 @@ public class Warp extends AbstractRawCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createWarpArgument(false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			RawArguments.createWarpArgument(false, false, 0, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
 			RawArguments.createPlayerArgument(true, false, 1, Permissions.WARP_STAFF, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
 		);
 	}

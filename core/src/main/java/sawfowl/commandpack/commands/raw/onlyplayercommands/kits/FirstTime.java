@@ -60,7 +60,7 @@ public class FirstTime extends AbstractKitsEditCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			kitArgument(0, false, false),
-			RawArguments.createBooleanArgument(false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createBooleanArgument("Value", false, false, 1, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
 	}
 

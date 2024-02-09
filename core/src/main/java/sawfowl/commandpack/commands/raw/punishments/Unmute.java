@@ -46,7 +46,6 @@ public class Unmute extends AbstractRawCommand {
 		} else Sponge.server().onlinePlayers().forEach(player -> {
 			player.sendMessage(getText(player, LocalesPaths.COMMANDS_UNMUTE_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, (isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(mute.getName())).get());
 		});
-		plugin.getAPI().updateCommandTree(command());
 	}
 
 	@Override

@@ -42,7 +42,6 @@ public class Unload extends AbstractWorldCommand {
 		}
 		Sponge.server().worldManager().unloadWorld(world).thenRunAsync(() -> {
 			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_UNLOAD).replace(Placeholders.WORLD, args[0]).get());
-			plugin.getAPI().updateCommandTree("world");
 		});
 	}
 

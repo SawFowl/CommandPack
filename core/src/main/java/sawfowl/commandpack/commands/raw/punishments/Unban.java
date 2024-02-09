@@ -43,7 +43,6 @@ public class Unban extends AbstractRawCommand {
 				player.sendMessage(getText(player, LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER}, (isPlayer ? ((ServerPlayer) audience).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) audience).name())) : text("&cServer")), text(profile.name().orElse(profile.examinableName()))).get());
 			});
 		} else audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_UNBAN_SUCCESS).replace(Placeholders.PLAYER, profile.name().orElse(profile.examinableName())).get());
-		plugin.getAPI().updateCommandTree(command());
 	}
 
 	@Override

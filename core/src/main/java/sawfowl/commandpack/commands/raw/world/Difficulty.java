@@ -84,7 +84,7 @@ public class Difficulty extends AbstractWorldCommand {
 		if(difficulties.isEmpty()) generateMap();
 		return Arrays.asList(
 			createWorldArg(),
-			RawArguments.createStringArgument(difficulties.keySet(), false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createStringArgument("Difficulty", difficulties.keySet(), false, false, 1, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
 	}
 

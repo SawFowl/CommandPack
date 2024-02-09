@@ -64,8 +64,8 @@ public class Sudo extends AbstractRawCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createPlayerArgument(false, false, 0, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-			RawArguments.createRemainingJoinedStringsArgument(false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createPlayerArgument(false, false, 0, null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
+			RawArguments.createRemainingJoinedStringsArgument("Command", false, false, 1, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
 	}
 

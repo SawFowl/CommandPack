@@ -36,7 +36,6 @@ public class Unbanip extends AbstractRawCommand {
 		IP ban = getArgument(Ban.IP.class, cause, args, 0).get();
 		plugin.getPunishmentService().pardon(ban.address());
 		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_UNBANIP_SUCCESS).replace(Placeholders.VALUE, ban.address().getHostAddress()).get());
-		plugin.getAPI().updateCommandTree(command());
 	}
 
 	@Override

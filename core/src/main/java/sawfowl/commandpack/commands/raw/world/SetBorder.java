@@ -60,8 +60,8 @@ public class SetBorder extends AbstractWorldCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createWorldArgument(false, false, 0, null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT),
-			RawArguments.createIntegerArgument(new ArrayList<>(), false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createWorldArgument(false, false, 0, null, null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT),
+			RawArguments.createIntegerArgument("Radius", new ArrayList<>(), false, false, 1, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
 	}
 

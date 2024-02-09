@@ -99,11 +99,11 @@ public class Generate extends AbstractWorldCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createWorldArgument(false, false, 0, null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT),
-			RawArguments.createStringArgument(actions, false, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			RawArguments.createIntegerArgument(new ArrayList<>(), true, true, 2, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			RawArguments.createLongArgument(new ArrayList<>(), true, true, 3, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			RawArguments.createIntegerArgument(new ArrayList<>(), true, true, 4, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createWorldArgument(false, false, 0, null, null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT),
+			RawArguments.createStringArgument("Action", actions, false, false, 1, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			RawArguments.createIntegerArgument("Interval", new ArrayList<>(), true, true, 2, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			RawArguments.createLongArgument("MaxMemory", new ArrayList<>(), true, true, 3, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			RawArguments.createIntegerArgument("Chunks", new ArrayList<>(), true, true, 4, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
 	}
 

@@ -35,7 +35,7 @@ public interface RawArgument<T> extends DataSerializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(Class<T> clazz, Argument<C> argumentNodeType, RawCompleterSupplier<Stream<String>> plainVariants, RawResultSupplier<T> result, String key, boolean optional, boolean optionalForConsole, int cursor, String permission, Object... localesPath) {
+	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(@NotNull Class<T> clazz, Argument<C> argumentNodeType, @NotNull RawCompleterSupplier<Stream<String>> plainVariants, @NotNull RawResultSupplier<T> result, @NotNull String key, boolean optional, boolean optionalForConsole, int cursor, String permission, @NotNull Object... localesPath) {
 		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(plainVariants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).treeKey(key).localeTextPath(localesPath).build();
 	}
 
