@@ -9,6 +9,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
+import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
@@ -56,8 +57,19 @@ public interface RawArgument<T> extends DataSerializable {
 		return of(clazz, null, ((CommandCause cause, String[] args) -> args.length > cursor ? variants.filter(var -> var.startsWith(args[cursor])) : variants), result, null, optional, optionalForConsole, cursor, permission, localesPath);
 	}
 
+
+	/**
+	 * Specifies the argument type.<br>
+	 * See the {@link CommandTreeNodeTypes} class for available variants.<br>
+	 * The specified type defines what the player can enter as an argument.<br>
+	 * This is not controlled by the plugin, but the player will see an error message if the value type is not appropriate.
+	 */
 	Argument<?> getArgumentType();
 
+	/**
+	 * The identifier of the argument in the argument tree.<br>
+	 * It is also displayed to the player above the input line as a hint.
+	 */
 	String getTreeKey();
 
 	/**
@@ -146,8 +158,18 @@ public interface RawArgument<T> extends DataSerializable {
 		 */
 		Builder<T> permission(String value);
 
+		/**
+		 * The identifier of the argument in the argument tree.<br>
+		 * It is also displayed to the player above the input line as a hint.
+		 */
 		Builder<T> treeKey(String value);
 
+		/**
+		 * Specifies the argument type.<br>
+		 * See the {@link CommandTreeNodeTypes} class for available variants.<br>
+		 * The specified type defines what the player can enter as an argument.<br>
+		 * This is not controlled by the plugin, but the player will see an error message if the value type is not appropriate.
+		 */
 		<C extends CommandTreeNode<C>> Builder<T> setArgumentType(Argument<C> node);
 
 	}
