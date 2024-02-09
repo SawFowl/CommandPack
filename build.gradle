@@ -28,6 +28,20 @@ subprojects {
 	}
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'
+	} 
+	project.afterEvaluate {
+		publishing {
+			publications {
+				maven(MavenPublication) {
+					artifactId = "$project.name"
+					if (plugins.hasPlugin("eclipse")) {
+						from components.release
+					} else if (plugins.hasPlugin("eclipse")) {
+						from components.java
+					}
+				}
+			}
+		}
 	}
 }
 
