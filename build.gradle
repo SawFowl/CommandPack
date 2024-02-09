@@ -31,7 +31,7 @@ subprojects {
 	}
 }
 
-/*subprojects.each { subproject -> evaluationDependsOn(subproject.path)}
+subprojects.each { subproject -> evaluationDependsOn(subproject.path)}
 task allJar(type: Jar, dependsOn: subprojects.assemble) {
 	subprojects.each { subproject ->
 		from subproject.configurations.archives.allArtifacts.files.collect {
@@ -47,15 +47,24 @@ task allJar(type: Jar, dependsOn: subprojects.assemble) {
 
 build.dependsOn(allJar);
 
-jar.enabled(false)*/
+jar.enabled(false)
 
-jar {
+afterEvaluate {
+	publish.dependsOn allJar
+}
+
+/*jar {
 	subprojects.each { subproject ->
 		from {
 			subprojects.collect { it.sourceSets.main.output }
 		}
 	}
-}
+	manifest {
+		attributes([
+			"MixinConnector": "${project.group}.mixins.MixinConnector"
+		])
+	}
+}*/
 
 task sourcesJar(type: Jar, dependsOn: classes) {
 	archiveClassifier = 'sources'
