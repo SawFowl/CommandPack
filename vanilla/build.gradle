@@ -14,3 +14,11 @@ dependencies {
 }
 
 tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
+
+afterEvaluate {
+	tasks.withType(PublishToMavenRepository).all { publishTask ->
+		publishTask.onlyIf { task ->
+			return false  
+		}
+	}
+}
