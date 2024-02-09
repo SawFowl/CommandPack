@@ -28,3 +28,5 @@ mixin {
 	add sourceSets.main, "commandpack.refmap.json"
 	defaultObfuscationEnv "searge"
 }
+
+tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }

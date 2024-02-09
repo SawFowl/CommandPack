@@ -12,3 +12,5 @@ dependencies {
 	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
 	implementation project(':core')
 }
+
+tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
