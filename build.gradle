@@ -99,16 +99,3 @@ javadoc {
 	exclude('META-INF/sponge_plugins.json')
 	options.addStringOption('Xdoclint:none', '-quiet')
 }
-
-afterEvaluate {
-	tasks.withType(PublishToMavenRepository).all { publishTask ->
-		publishTask.onlyIf { task ->
-			if (task.publication.hasProperty('repo') && task.publication.repo != task.repository.name) {
-				task.enabled = false
-				task.group = null
-				return false
-			}
-			return true
-		}
-	}
-}
