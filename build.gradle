@@ -29,6 +29,11 @@ subprojects {
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'
 	}
+	configurations {
+		doc {
+			transitive false
+		}
+	}
 }
 
 subprojects.each { subproject -> evaluationDependsOn(subproject.path)}
@@ -57,12 +62,8 @@ publishing {
 	publications {
 		myLib(MavenPublication) {
 			from project(":core").components.java
-		}
-		myLib2(MavenPublication) {
-			javadoc.destinationDir
-		}
-		myLib3(MavenPublication) {
-			sourceSets.main.allSource
+			artifact project(":core").sourceJar
+			artifact project(":core").javadocJar
 		}
 	}
 }
@@ -79,54 +80,3 @@ publishing {
 		])
 	}
 }*/
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-	archiveClassifier = 'sources'
-	from subprojects.collect { it.sourceSets.main.allSource }
-	exclude('sawfowl/commandpack/apiclasses/**')
-	exclude('sawfowl/commandpack/commands/**')
-	exclude('sawfowl/commandpack/configure/**')
-	exclude('sawfowl/commandpack/listeners/**')
-	exclude('sawfowl/commandpack/utils/**')
-	exclude('sawfowl/commandpack/CommandPack.java')
-	exclude('sawfowl/commandpack/Permissions.java')
-	exclude('sawfowl/commandpack/mixins/**')
-	exclude('META-INF/sponge_plugins.json')
-	exclude('*.json')
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-	archiveClassifier = 'javadoc'
-	from javadoc.destinationDir
-}
-
-artifacts {
-	archives sourcesJar
-	archives javadocJar
-}
-
-configurations {
-	doc {
-		transitive false
-	}
-}
-
-javadoc {
-	options.encoding = 'UTF-8'
-	source subprojects.collect { it.sourceSets.main.allJava }
-	classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
-	destinationDir = file("${buildDir}/docs/javadoc")
-	include 'sawfowl/commandpack/api/*.java'
-	include 'sawfowl/commandpack/api/commands/*.java'
-	include 'sawfowl/commandpack/api/commands/parameterized/*.java'
-	include 'sawfowl/commandpack/api/commands/raw/*.java'
-	include 'sawfowl/commandpack/api/data/*.java'
-	include 'sawfowl/commandpack/api/data/command/*.java'
-	include 'sawfowl/commandpack/api/data/kits/*.java'
-	include 'sawfowl/commandpack/api/data/miscellaneous/*.java'
-	include 'sawfowl/commandpack/api/data/player/*.java'
-	include 'sawfowl/commandpack/api/events/*.java'
-	exclude('sawfowl/commandpack/mixins/**')
-	exclude('META-INF/sponge_plugins.json')
-	options.addStringOption('Xdoclint:none', '-quiet')
-}

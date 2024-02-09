@@ -69,3 +69,47 @@ sponge {
 		}
 	}
 }
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	archiveClassifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+task sourceJar(type: Jar, dependsOn: classes) {
+	archiveClassifier = 'sources'
+	from subprojects.collect { it.sourceSets.main.allSource }
+	exclude('sawfowl/commandpack/apiclasses/**')
+	exclude('sawfowl/commandpack/commands/**')
+	exclude('sawfowl/commandpack/configure/**')
+	exclude('sawfowl/commandpack/listeners/**')
+	exclude('sawfowl/commandpack/utils/**')
+	exclude('sawfowl/commandpack/CommandPack.java')
+	exclude('sawfowl/commandpack/Permissions.java')
+	exclude('sawfowl/commandpack/mixins/**')
+	exclude('META-INF/sponge_plugins.json')
+	exclude('*.json')
+}
+
+javadoc {
+	options.encoding = 'UTF-8'
+	source configurations.doc.collect { zipTree(it) }
+	destinationDir = file("${buildDir}/docs/javadoc")
+	include 'sawfowl/commandpack/api/*.java'
+	include 'sawfowl/commandpack/api/commands/*.java'
+	include 'sawfowl/commandpack/api/commands/parameterized/*.java'
+	include 'sawfowl/commandpack/api/commands/raw/*.java'
+	include 'sawfowl/commandpack/api/data/*.java'
+	include 'sawfowl/commandpack/api/data/command/*.java'
+	include 'sawfowl/commandpack/api/data/kits/*.java'
+	include 'sawfowl/commandpack/api/data/miscellaneous/*.java'
+	include 'sawfowl/commandpack/api/data/player/*.java'
+	include 'sawfowl/commandpack/api/events/*.java'
+	exclude('sawfowl/commandpack/mixins/**')
+	exclude('META-INF/sponge_plugins.json')
+	options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+artifacts {
+	archives sourceJar
+	archives javadocJar
+}
