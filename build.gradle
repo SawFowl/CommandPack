@@ -28,24 +28,10 @@ subprojects {
 	}
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'
-	} 
-	project.afterEvaluate {
-		publishing {
-			publications {
-				maven(MavenPublication) {
-					artifactId = "$project.name"
-					if (plugins.hasPlugin("eclipse")) {
-						from components.release
-					} else if (plugins.hasPlugin("eclipse")) {
-						from components.java
-					}
-				}
-			}
-		}
 	}
 }
 
-subprojects.each { subproject -> evaluationDependsOn(subproject.path)}
+/*subprojects.each { subproject -> evaluationDependsOn(subproject.path)}
 task allJar(type: Jar, dependsOn: subprojects.assemble) {
 	subprojects.each { subproject ->
 		from subproject.configurations.archives.allArtifacts.files.collect {
@@ -61,7 +47,15 @@ task allJar(type: Jar, dependsOn: subprojects.assemble) {
 
 build.dependsOn(allJar);
 
-jar.enabled(false)
+jar.enabled(false)*/
+
+jar {
+	subprojects.each { subproject ->
+		from {
+			subprojects.collect { it.sourceSets.main.output }
+		}
+	}
+}
 
 task sourcesJar(type: Jar, dependsOn: classes) {
 	archiveClassifier = 'sources'
