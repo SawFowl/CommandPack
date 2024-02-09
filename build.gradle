@@ -10,7 +10,6 @@ version = "${major}.${minor}.${patch}-${api}-${suffix}"
 subprojects {
 	apply {
 		plugin 'java'
-		plugin "maven-publish"
 	}
 	java {
 		sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
@@ -54,10 +53,6 @@ build.dependsOn(allJar);
 
 jar.enabled(false)
 
-afterEvaluate {
-	publish.dependsOn allJar
-}
-
 publishing {
 	publications {
 		myLib(MavenPublication) {
@@ -67,16 +62,3 @@ publishing {
 		}
 	}
 }
-
-/*jar {
-	subprojects.each { subproject ->
-		from {
-			subprojects.collect { it.sourceSets.main.output }
-		}
-	}
-	manifest {
-		attributes([
-			"MixinConnector": "${project.group}.mixins.MixinConnector"
-		])
-	}
-}*/
