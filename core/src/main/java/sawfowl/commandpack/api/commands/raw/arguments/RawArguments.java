@@ -84,7 +84,7 @@ public class RawArguments {
 	public static RawArgument<String> createRemainingJoinedStringsArgument(String key, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, String permission, Object[] localesPath) {
 		return RawArgument.of(
 			String.class,
-			CommandTreeNodeTypes.STRING.get().createNode(),
+			CommandTreeNodeTypes.STRING.get().createNode().greedy(),
 			(cause, args) -> Stream.empty(),
 			(cause, args) -> args.length >= cursor + 1 ?  Optional.ofNullable(String.join(" ", Stream.of(Arrays.copyOfRange(args, cursor, args.length)).filter(string -> string != null).toArray(String[]::new))) : Optional.ofNullable(def),
 			key,
