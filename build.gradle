@@ -10,6 +10,7 @@ version = "${major}.${minor}.${patch}-${api}-${suffix}"
 subprojects {
 	apply {
 		plugin 'java'
+		id("maven-publish")
 	}
 	java {
 		sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
