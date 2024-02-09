@@ -58,6 +58,12 @@ publishing {
 		myLib(MavenPublication) {
 			from project(":core").components.java
 		}
+		myLib2(MavenPublication) {
+			javadoc.destinationDir
+		}
+		myLib3(MavenPublication) {
+			sourceSets.main.allSource
+		}
 	}
 }
 
