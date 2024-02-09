@@ -9,6 +9,11 @@ import org.spongepowered.api.item.inventory.ItemStack;
 
 import net.minecraft.world.entity.item.ItemEntity;
 
+/**
+ * The interface is designed to retrieve the id of an item if it is an entity.
+ * 
+ * @author SawFowl
+ */
 public interface EntityItem extends Entity {
 
 	static Optional<EntityItem> tryCast(Entity entity) {
