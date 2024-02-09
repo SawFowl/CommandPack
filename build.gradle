@@ -53,6 +53,14 @@ afterEvaluate {
 	publish.dependsOn allJar
 }
 
+publishing {
+	publications {
+		myLib(MavenPublication) {
+			from project(":core").components.java
+		}
+	}
+}
+
 /*jar {
 	subprojects.each { subproject ->
 		from {
