@@ -81,10 +81,13 @@ public class RawArguments {
 		);
 	}
 
+	/**
+	 * This argument should be specified last in the queue.
+	 */
 	public static RawArgument<String> createRemainingJoinedStringsArgument(String key, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, String permission, Object[] localesPath) {
 		return RawArgument.of(
 			String.class,
-			CommandTreeNodeTypes.STRING.get().createNode().greedy(),
+			CommandTreeNodeTypes.STRING.get().createNode().greedy().executable(),
 			(cause, args) -> Stream.empty(),
 			(cause, args) -> args.length >= cursor + 1 ?  Optional.ofNullable(String.join(" ", Stream.of(Arrays.copyOfRange(args, cursor, args.length)).filter(string -> string != null).toArray(String[]::new))) : Optional.ofNullable(def),
 			key,
