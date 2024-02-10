@@ -63,7 +63,7 @@ publishing {
 	}
 }
 
-// For JitPack
+// For JitPack. Might need it in the future. I'm not sure if JitPack will publish artifacts properly without this part of the script.
 /*jar {
 	archiveClassifier = 'publish'
 	subprojects.each { subproject ->
