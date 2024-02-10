@@ -12,3 +12,7 @@ dependencies {
 	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
 	implementation project(':core')
 }
+
+jar {
+	archiveBaseName = 'part'
+}

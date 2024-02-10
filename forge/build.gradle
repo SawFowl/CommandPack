@@ -28,3 +28,7 @@ mixin {
 	add sourceSets.main, "commandpack.refmap.json"
 	defaultObfuscationEnv "searge"
 }
+
+jar {
+	archiveBaseName = 'part'
+}

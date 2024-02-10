@@ -75,7 +75,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 	from javadoc.destinationDir
 }
 
-task sourceJar(type: Jar, dependsOn: classes) {
+task sourcesJar(type: Jar, dependsOn: classes) {
 	archiveClassifier = 'sources'
 	from subprojects.collect { it.sourceSets.main.allSource }
 	exclude('sawfowl/commandpack/apiclasses/**')
@@ -110,6 +110,10 @@ javadoc {
 }
 
 artifacts {
-	archives sourceJar
+	archives sourcesJar
 	archives javadocJar
+}
+
+jar {
+	archiveBaseName = 'part'
 }
