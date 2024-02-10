@@ -38,7 +38,7 @@ subprojects {
 subprojects.each { subproject -> evaluationDependsOn(subproject.path)}
 
 //For use.
-/*task allJar(type: Jar, dependsOn: subprojects.assemble) {
+task allJar(type: Jar, dependsOn: subprojects.assemble) {
 	subprojects.each { subproject ->
 		from subproject.configurations.archives.allArtifacts.stream().filter {a -> a.file.name.contains("part")}.map {a -> a.file}.toList().collect{ zipTree(it) }
 	}
@@ -61,10 +61,11 @@ publishing {
 			artifact project(":core").javadocJar
 		}
 	}
-}*/
+}
 
 // For JitPack
-jar {
+/*jar {
+	archiveClassifier = 'publish'
 	subprojects.each { subproject ->
 		from {
 			subprojects.collect { it.sourceSets.main.output }
@@ -126,4 +127,4 @@ javadoc {
 	exclude('sawfowl/commandpack/mixins/**')
 	exclude('META-INF/sponge_plugins.json')
 	options.addStringOption('Xdoclint:none', '-quiet')
-}
+}*/
