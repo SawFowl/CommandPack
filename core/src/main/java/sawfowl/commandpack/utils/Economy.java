@@ -36,10 +36,11 @@ public class Economy {
 
 	public Economy(CommandPack plugin) {
 		this.plugin = plugin;
+		economyService = economyServiceImpl = new EconomyServiceImpl(plugin);
 	}
 
 	public Economy createEconomy(ProvideServiceEvent<EconomyService> event) {
-		event.suggest(() -> economyService = economyServiceImpl = new EconomyServiceImpl(plugin));
+		event.suggest(() -> economyService);
 		return this;
 	}
 

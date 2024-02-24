@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
@@ -33,8 +34,10 @@ import org.spongepowered.api.event.lifecycle.ProvideServiceEvent;
 import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
 import org.spongepowered.api.event.lifecycle.RegisterBuilderEvent;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
+import org.spongepowered.api.event.lifecycle.RegisterRegistryValueEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
+import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.service.economy.EconomyService;
@@ -463,6 +466,15 @@ public class CommandPack {
 	@Listener
 	public void onProvideEconomyService(ProvideServiceEvent<EconomyService> event) {
 		if(getMainConfig().getEconomy().isEnable()) economy.createEconomy(event);
+	}
+
+	@Listener
+	private void onRegisterRegistry(final RegisterRegistryValueEvent.GameScoped event) {
+		if(getMainConfig().getEconomy().isEnable()) economy.getEconomyServiceImpl().getCurrenciesMap().forEach((ch, currency) -> {
+			getMainConfig().getEconomy().getCurrency(ch).ifPresent(config -> {
+				event.registry(RegistryTypes.CURRENCY).register(ResourceKey.resolve(config.getKey()), currency);
+			});
+		});
 	}
 
 	@Listener

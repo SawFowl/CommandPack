@@ -9,9 +9,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.spongepowered.api.ResourceKey;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
-import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.AccountDeletionResultType;
@@ -44,9 +42,6 @@ public class EconomyServiceImpl implements CPEconomyService {
 			Currency currency = new CPCurrency(key);
 			if(!currenciesMap.containsKey(currencyConfig.getSymbol())) {
 				currenciesMap.put(currencyConfig.getSymbol(), currency);
-				Sponge.game().findRegistry(RegistryTypes.CURRENCY).ifPresent(registry -> {
-					if(!registry.findValue(key).isPresent()) registry.register(key, currency);
-				});
 			}
 		}
 		currencies = currenciesMap.values().toArray(new Currency[]{});
