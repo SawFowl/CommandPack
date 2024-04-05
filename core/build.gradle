@@ -17,13 +17,13 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
 minecraft {
-	mappings channel: 'official', version: '1.19.4'
+	mappings channel: 'official', version: "${minecraft}"
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:1.19.4-45.2.0'
-	implementation "org.spongepowered:spongeapi:10.0.0"
-	implementation 'org.spongepowered:spongevanilla:1.19.4-10.0.0-RC1397:universal'
+	minecraft "net.minecraftforge:forge:${minecraft}-${forge}"
+	implementation "org.spongepowered:spongeapi:${api}"
+	implementation "org.spongepowered:spongevanilla:1.20.4-11.0.0-RC1545:universal"
 	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
 }
 

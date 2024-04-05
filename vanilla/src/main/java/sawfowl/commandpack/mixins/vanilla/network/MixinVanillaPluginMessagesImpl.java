@@ -7,13 +7,14 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.event.EventContext;
 import org.spongepowered.api.event.EventContextKeys;
+import org.spongepowered.api.network.channel.ChannelBuf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.network.protocol.game.ServerboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
@@ -46,17 +47,17 @@ public abstract class MixinVanillaPluginMessagesImpl {
 
 				@Override
 				public String getPacketName() {
-					return packet.getIdentifier().toString();
+					return packet.payload().id().toString();
 				}
 
 				@Override
 				public String getDataAsString() {
-					return packet.getData().getCharSequence(0, packet.getData().readableBytes(), StandardCharsets.UTF_8).toString();
+					return ((ChannelBuf) packet.payload()).readString();
 				}
 
 				@Override
 				public byte[] getData() {
-					return packet.getData().array();
+					return ((ChannelBuf) packet.payload()).readByteArray();
 				}
 
 				@Override
@@ -66,12 +67,12 @@ public abstract class MixinVanillaPluginMessagesImpl {
 
 				@Override
 				public int readableBytes() {
-					return packet.getData().readableBytes();
+					return ((ChannelBuf) packet.payload()).available();
 				}
 
 				@Override
 				public boolean isReadable() {
-					return packet.getData().isReadable();
+					return ((ChannelBuf) packet.payload()).hasArray();
 				}
 
 			}

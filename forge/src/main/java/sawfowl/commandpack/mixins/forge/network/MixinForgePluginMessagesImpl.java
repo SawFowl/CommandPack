@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.network.protocol.game.ServerboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
@@ -46,17 +46,17 @@ public abstract class MixinForgePluginMessagesImpl {
 
 				@Override
 				public String getPacketName() {
-					return packet.getIdentifier().toString();
+					return packet.payload().id().toString();
 				}
 
 				@Override
 				public String getDataAsString() {
-					return packet.getData().getCharSequence(0, packet.getData().readableBytes(), StandardCharsets.UTF_8).toString();
+					return packet.getInternalData().getCharSequence(0, packet.getInternalData().readableBytes(), StandardCharsets.UTF_8).toString();
 				}
 
 				@Override
 				public byte[] getData() {
-					return packet.getData().array();
+					return packet.getInternalData().array();
 				}
 
 				@Override
@@ -66,12 +66,12 @@ public abstract class MixinForgePluginMessagesImpl {
 
 				@Override
 				public int readableBytes() {
-					return packet.getData().readableBytes();
+					return packet.getInternalData().readableBytes();
 				}
 
 				@Override
 				public boolean isReadable() {
-					return packet.getData().isReadable();
+					return packet.getInternalData().isReadable();
 				}
 
 			}

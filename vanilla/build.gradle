@@ -3,7 +3,7 @@ plugins {
 }
 
 minecraft {
-	version("1.19.4")
+	version("${minecraft}")
 }
 
 dependencies {
