@@ -1,28 +1,31 @@
 package sawfowl.commandpack.apiclasses;
 
-import java.nio.charset.Charset;
-
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
-import io.netty.buffer.Unpooled;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.network.protocol.common.custom.DiscardedPayload;
-import net.minecraft.resources.ResourceLocation;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 
 public class CustomPacketImpl implements CustomPacket {
 
-	private ClientboundCustomPayloadPacket packet;
+	private String loc;
+	private String data;
+
+	public String getLocation() {
+		return loc;
+	}
+
+	public String getData() {
+		return data;
+	}
 
 	public Builder builder() {
 		return new Builder() {
 			@Override
 			public CustomPacket create(String resourceLocation, String data) {
-				packet = new ClientboundCustomPayloadPacket(new DiscardedPayload(new ResourceLocation(resourceLocation), new FriendlyByteBuf(Unpooled.copiedBuffer(data.getBytes(Charset.forName("UTF-8"))))));
+				CustomPacketImpl.this.loc = resourceLocation;
+				CustomPacketImpl.this.data = data;
 				return build();
 			}
 			@Override
@@ -35,10 +38,6 @@ public class CustomPacketImpl implements CustomPacket {
 	@Override
 	public void sendTo(ServerPlayer player) {
 		MixinServerPlayer.cast(player).sendPacket(this);
-	}
-
-	public ClientboundCustomPayloadPacket getPacket() {
-		return packet;
 	}
 
 	@Override

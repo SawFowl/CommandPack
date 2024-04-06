@@ -1,9 +1,12 @@
 package sawfowl.commandpack.mixins.vanilla.network;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+
+import io.netty.buffer.Unpooled;
 
 import net.kyori.adventure.text.Component;
 import net.minecraft.network.FriendlyByteBuf;
@@ -28,7 +31,7 @@ public abstract class MixinVanillaServerPlayerImpl implements MixinServerPlayer 
 
 	@Override
 	public void sendPacket(CustomPacket packet) {
-		if(packet instanceof CustomPacketImpl custom) connection.send(custom.getPacket());
+		if(packet instanceof CustomPacketImpl custom) connection.send(createPacket(custom));
 	}
 
 	@Override
@@ -44,6 +47,31 @@ public abstract class MixinVanillaServerPlayerImpl implements MixinServerPlayer 
 	@Override
 	public List<String> getModList() {
 		return CommandsUtil.EMPTY_VARIANTS;
+	}
+
+	private FriendlyByteBuf createFriendlyByteBuf(byte[] data) {
+		return new FriendlyByteBuf(Unpooled.copiedBuffer(data));
+	}
+
+	private CustomPacketPayload createCustomPacketPayload(ResourceLocation id, FriendlyByteBuf buf) {
+		return new CustomPacketPayload() {
+			
+			@Override
+			public void write(FriendlyByteBuf arg0) {
+				if (arg0 != null) {
+					arg0.writeBytes(buf.slice());
+				}
+			}
+			
+			@Override
+			public ResourceLocation id() {
+				return id;
+			}
+		};
+	}
+
+	private ClientboundCustomPayloadPacket createPacket(CustomPacketImpl custom) {
+		return new ClientboundCustomPayloadPacket(createCustomPacketPayload(new ResourceLocation(custom.getLocation()), createFriendlyByteBuf(custom.getData().getBytes(StandardCharsets.UTF_8))));
 	}
 
 }
