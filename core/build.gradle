@@ -94,7 +94,7 @@ javadoc {
 	options.encoding = 'UTF-8'
 	source configurations.doc.collect { zipTree(it) }
 	destinationDir = file("${buildDir}/docs/javadoc")
-	title = "JavaDoc for ${rootProject.name}-${rootProject.major}.${rootProject.minor} <br> SpongeAPI-<a href=\"https://jd.spongepowered.org/spongeapi/10.0.0/\" target=\"${rootProject.api}\" rel=\"noopener noreferrer\">${rootProject.api}</a> is used."
+	title = "JavaDoc for ${rootProject.name}-${rootProject.major}.${rootProject.minor} <br> SpongeAPI-<a href=\"https://jd.spongepowered.org/spongeapi/${rootProject.api}/\" target=\"${rootProject.api}\" rel=\"noopener noreferrer\">${rootProject.api}</a> is used."
 	include 'sawfowl/commandpack/api/*.java'
 	include 'sawfowl/commandpack/api/commands/*.java'
 	include 'sawfowl/commandpack/api/commands/parameterized/*.java'
