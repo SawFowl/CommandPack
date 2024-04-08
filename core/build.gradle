@@ -99,15 +99,21 @@ javadoc {
 	include 'sawfowl/commandpack/api/commands/*.java'
 	include 'sawfowl/commandpack/api/commands/parameterized/*.java'
 	include 'sawfowl/commandpack/api/commands/raw/*.java'
+	include 'sawfowl/commandpack/api/commands/raw/arguments/*.java'
 	include 'sawfowl/commandpack/api/data/*.java'
 	include 'sawfowl/commandpack/api/data/command/*.java'
 	include 'sawfowl/commandpack/api/data/kits/*.java'
 	include 'sawfowl/commandpack/api/data/miscellaneous/*.java'
 	include 'sawfowl/commandpack/api/data/player/*.java'
 	include 'sawfowl/commandpack/api/events/*.java'
+	include 'sawfowl/commandpack/api/mixin/network/*.java'
+	include 'sawfowl/commandpack/api/mixin/game/*.java'
 	exclude('sawfowl/commandpack/mixins/**')
 	exclude('META-INF/sponge_plugins.json')
 	options.addStringOption('Xdoclint:none', '-quiet')
+	options.links("https://jd.spongepowered.org/spongeapi/${rootProject.api}")
+	options.links("https://jd.advntr.dev/api/4.16.0/")
+	options.links("https://sawfowl.github.io/LocaleAPI/")
 }
 
 artifacts {
