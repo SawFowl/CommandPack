@@ -18,6 +18,7 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.TextUtils;
 
 public class GodMode extends AbstractParameterizedCommand {
 
@@ -33,13 +34,7 @@ public class GodMode extends AbstractParameterizedCommand {
 				if(setGodMode(optTarget.get())) {
 					sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_GODMODE_ENABLE_STAFF, LocalesPaths.COMMANDS_GODMODE_ENABLE);
 				} else sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_GODMODE_DISABLE_STAFF, LocalesPaths.COMMANDS_GODMODE_DISABLE);
-			} else {
-				delay((ServerPlayer) src, locale, consumer -> {
-					if(setGodMode((ServerPlayer) src)) {
-						src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GODMODE_ENABLE));
-					} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GODMODE_DISABLE));
-				});
-			}
+			} else delay((ServerPlayer) src, locale, consumer -> src.sendMessage(getText(locale, (setGodMode((ServerPlayer) src) ? LocalesPaths.COMMANDS_GODMODE_ENABLE : LocalesPaths.COMMANDS_GODMODE_DISABLE))));
 		} else {
 			if(setGodMode(optTarget.get())) {
 				sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_GODMODE_ENABLE_STAFF, LocalesPaths.COMMANDS_GODMODE_ENABLE);
@@ -72,8 +67,8 @@ public class GodMode extends AbstractParameterizedCommand {
 	}
 
 	private void sendStaffMessage(Audience src, Locale staffLocale, ServerPlayer target, Object[] pathStaff, Object[] pathPlayer) {
-		src.sendMessage(getText(staffLocale, pathStaff));
-		target.sendMessage(getText(staffLocale, pathPlayer));
+		src.sendMessage(TextUtils.replace(getText(staffLocale, pathStaff), "%player%", target.name()));
+		target.sendMessage(getText(target.locale(), pathPlayer));
 	}
 
 	@Override
