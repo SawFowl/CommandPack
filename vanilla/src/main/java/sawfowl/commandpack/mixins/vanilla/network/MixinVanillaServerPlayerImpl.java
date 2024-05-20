@@ -12,6 +12,7 @@ import net.kyori.adventure.text.Component;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -19,6 +20,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
+import sawfowl.commandpack.apiclasses.CustomPacketPayloadImpl;
 import sawfowl.commandpack.utils.CommandsUtil;
 
 import sawfowl.localeapi.api.Text;
@@ -49,25 +51,17 @@ public abstract class MixinVanillaServerPlayerImpl implements MixinServerPlayer 
 		return CommandsUtil.EMPTY_VARIANTS;
 	}
 
+	@Override
+	public long getPing() {
+		return connection.latency();
+	}
+
 	private FriendlyByteBuf createFriendlyByteBuf(byte[] data) {
 		return new FriendlyByteBuf(Unpooled.copiedBuffer(data));
 	}
 
 	private CustomPacketPayload createCustomPacketPayload(ResourceLocation id, FriendlyByteBuf buf) {
-		return new CustomPacketPayload() {
-			
-			@Override
-			public void write(FriendlyByteBuf arg0) {
-				if (arg0 != null) {
-					arg0.writeBytes(buf.slice());
-				}
-			}
-			
-			@Override
-			public ResourceLocation id() {
-				return id;
-			}
-		};
+		return new CustomPacketPayloadImpl(new Type<CustomPacketPayload>(id), buf);
 	}
 
 	private ClientboundCustomPayloadPacket createPacket(CustomPacketImpl custom) {

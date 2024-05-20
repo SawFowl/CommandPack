@@ -226,7 +226,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	}
 
 	@Listener
-	public void onDisconnect(ServerSideConnectionEvent.Disconnect event) {
+	public void onDisconnect(ServerSideConnectionEvent.Leave event) {
 		if(lastActivity.containsKey(event.player().uniqueId())) lastActivity.remove(event.player().uniqueId());
 		if(isAfk(event.player())) afk.remove(event.player().uniqueId());
 	}

@@ -94,7 +94,7 @@ public class PlayerConnectionListener {
 	}
 
 	@Listener
-	public void onDisconnect(ServerSideConnectionEvent.Disconnect event) {
+	public void onDisconnect(ServerSideConnectionEvent.Leave event) {
 		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
 		PlayerData playerData = ((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get());
 		playerData.setLastExit();

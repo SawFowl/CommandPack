@@ -49,4 +49,6 @@ public interface MixinServerPlayer extends ServerPlayer {
 	 */
 	List<String> getModList();
 
+	long getPing();
+
 }

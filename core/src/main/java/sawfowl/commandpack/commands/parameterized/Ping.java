@@ -15,6 +15,7 @@ import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
@@ -33,10 +34,10 @@ public class Ping extends AbstractParameterizedCommand {
 		Optional<ServerPlayer> player = getPlayer(context);
 		if(isPlayer) {
 			if(player.isPresent() && !player.get().uniqueId().equals(((ServerPlayer) src).uniqueId())) {
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF).replace(Placeholders.VALUE, ((ServerPlayer) src).connection().latency()).get());
-			} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_PING_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, player.get().name(), ((ServerPlayer) src).connection().latency()).get());
+				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF).replace(Placeholders.VALUE, ((MixinServerPlayer) src).getPing()).get());
+			} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_PING_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, player.get().name(), ((MixinServerPlayer) src).getPing()).get());
 		} else {
-			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, player.get().name(), player.get().connection().latency()).get());
+			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, player.get().name(), MixinServerPlayer.cast(player.get()).getPing()).get());
 		}
 	}
 

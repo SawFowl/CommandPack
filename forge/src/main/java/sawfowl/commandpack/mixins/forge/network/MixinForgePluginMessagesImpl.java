@@ -13,11 +13,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mojang.authlib.GameProfile;
-
 import io.netty.buffer.Unpooled;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 import sawfowl.commandpack.CommandPack;
@@ -27,10 +27,10 @@ import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class MixinForgePluginMessagesImpl {
 
-	@Shadow protected abstract GameProfile playerProfile();
+	@Shadow public ServerPlayer player;
 
 	private MixinServerPlayer getPlayer() {
-		return Sponge.server().player(playerProfile().getId()).map(MixinServerPlayer::cast).orElse(null);
+		return (MixinServerPlayer) player;
 	}
 
 	private Cause createCause() {
@@ -40,7 +40,7 @@ public abstract class MixinForgePluginMessagesImpl {
 	@Inject(method = "handleCustomPayload", at = @At("HEAD"))
 	public void onPluginMessage(ServerboundCustomPayloadPacket packet, CallbackInfo ci) {
 		FriendlyByteBuf copy = new FriendlyByteBuf(Unpooled.buffer());
-		packet.write(copy);
+		ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
 		Sponge.eventManager().post(
 			new RecievePacketEvent() {
 
@@ -51,12 +51,12 @@ public abstract class MixinForgePluginMessagesImpl {
 
 				@Override
 				public UUID getPlayerUniqueId() {
-					return playerProfile() == null ? null : playerProfile().getId();
+					return player == null ? null : player.getUUID();
 				}
 
 				@Override
 				public String getPacketName() {
-					return packet.payload().id().toString();
+					return packet.payload().type().id().toString();
 				}
 
 				@Override

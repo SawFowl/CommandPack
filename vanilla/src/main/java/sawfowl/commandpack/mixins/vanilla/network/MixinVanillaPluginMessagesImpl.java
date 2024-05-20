@@ -27,10 +27,10 @@ import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 @Mixin(ServerCommonPacketListenerImpl.class)
 public abstract class MixinVanillaPluginMessagesImpl {
 
-	@Shadow protected abstract GameProfile playerProfile();
+	@Shadow protected abstract GameProfile getOwner();
 
 	private MixinServerPlayer getPlayer() {
-		return Sponge.server().player(playerProfile().getId()).map(MixinServerPlayer::cast).orElse(null);
+		return Sponge.server().player(getOwner().getId()).map(MixinServerPlayer::cast).orElse(null);
 	}
 
 	private Cause createCause() {
@@ -40,7 +40,7 @@ public abstract class MixinVanillaPluginMessagesImpl {
 	@Inject(method = "handleCustomPayload", at = @At("HEAD"))
 	public void onPluginMessage(ServerboundCustomPayloadPacket packet, CallbackInfo ci) {
 		FriendlyByteBuf copy = new FriendlyByteBuf(Unpooled.buffer());
-		packet.write(copy);
+		ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
 		Sponge.eventManager().post(
 			new RecievePacketEvent() {
 
@@ -51,12 +51,12 @@ public abstract class MixinVanillaPluginMessagesImpl {
 
 				@Override
 				public UUID getPlayerUniqueId() {
-					return playerProfile() == null ? null : playerProfile().getId();
+					return getOwner() == null ? null : getOwner().getId();
 				}
 
 				@Override
 				public String getPacketName() {
-					return packet.payload().id().toString();
+					return packet.payload().type().id().toString();
 				}
 
 				@Override
