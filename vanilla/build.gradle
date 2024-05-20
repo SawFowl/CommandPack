@@ -8,7 +8,7 @@ minecraft {
 
 dependencies {
 	implementation "org.spongepowered:spongeapi:${api}"
-	implementation 'org.spongepowered:mixin:0.8.5'
+	implementation 'org.spongepowered:mixin:0.8.6'
 	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
 	implementation project(':core')
 }

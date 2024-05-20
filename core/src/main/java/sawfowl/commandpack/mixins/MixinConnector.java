@@ -7,7 +7,7 @@ public class MixinConnector implements IMixinConnector {
 
 	@Override
 	public void connect() {
-		Mixins.addConfigurations(checkForge() ? "commandpack.mixins.forge.json" : "commandpack.mixins.vanilla.json");
+		Mixins.addConfiguration(checkForge() ? "commandpack.mixins.forge.json" : "commandpack.mixins.vanilla.json");
 	}
 
 	private boolean checkForge() {
