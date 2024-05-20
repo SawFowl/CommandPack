@@ -1,12 +1,14 @@
 package sawfowl.commandpack.mixins.forge.network;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.event.EventContext;
 import org.spongepowered.api.event.EventContextKeys;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,12 +31,12 @@ public abstract class MixinForgePluginMessagesImpl {
 
 	@Shadow public ServerPlayer player;
 
-	private MixinServerPlayer getPlayer() {
-		return (MixinServerPlayer) player;
+	private Optional<MixinServerPlayer> getPlayer() {
+		return Optional.ofNullable((MixinServerPlayer) player);
 	}
 
 	private Cause createCause() {
-		return getPlayer() == null ? Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, CommandPack.getInstance().getPluginContainer()).build(), CommandPack.getInstance().getPluginContainer()) : Cause.of(EventContext.builder().add(EventContextKeys.PLAYER, getPlayer()).add(EventContextKeys.PLUGIN, CommandPack.getInstance().getPluginContainer()).build(), CommandPack.getInstance().getPluginContainer());
+		return Cause.of(EventContext.builder().add(EventContextKeys.PLAYER, (MixinServerPlayer) player).add(EventContextKeys.PLUGIN, CommandPack.getInstance().getPluginContainer()).build(), CommandPack.getInstance().getPluginContainer());
 	}
 
 	@Inject(method = "handleCustomPayload", at = @At("HEAD"))
@@ -70,8 +72,13 @@ public abstract class MixinForgePluginMessagesImpl {
 				}
 
 				@Override
-				public MixinServerPlayer getMixinPlayer() {
+				public Optional<MixinServerPlayer> getMixinPlayer() {
 					return getPlayer();
+				}
+
+				@Override
+				public GameProfile getPlayerProfile() {
+					return player == null ? null : GameProfile.of(player.getUUID(), player.getName().getString());
 				}
 
 				@Override
