@@ -9,10 +9,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import io.netty.buffer.Unpooled;
 
 import net.kyori.adventure.text.Component;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -20,7 +19,6 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
-import sawfowl.commandpack.apiclasses.CustomPacketPayloadImpl;
 import sawfowl.commandpack.utils.CommandsUtil;
 
 import sawfowl.localeapi.api.Text;
@@ -56,16 +54,12 @@ public abstract class MixinVanillaServerPlayerImpl implements MixinServerPlayer 
 		return connection.latency();
 	}
 
-	private FriendlyByteBuf createFriendlyByteBuf(byte[] data) {
-		return new FriendlyByteBuf(Unpooled.copiedBuffer(data));
-	}
-
-	private CustomPacketPayload createCustomPacketPayload(ResourceLocation id, FriendlyByteBuf buf) {
-		return new CustomPacketPayloadImpl(new Type<CustomPacketPayload>(id), buf);
+	private FriendlyByteBuf createFriendlyByteBuf(CustomPacketImpl custom) {
+		return new FriendlyByteBuf(Unpooled.buffer()).writeResourceLocation(new ResourceLocation(custom.getLocation())).writeBytes(custom.getData().getBytes(StandardCharsets.UTF_8));
 	}
 
 	private ClientboundCustomPayloadPacket createPacket(CustomPacketImpl custom) {
-		return new ClientboundCustomPayloadPacket(createCustomPacketPayload(new ResourceLocation(custom.getLocation()), createFriendlyByteBuf(custom.getData().getBytes(StandardCharsets.UTF_8))));
+		return ClientboundCustomPayloadPacket.CONFIG_STREAM_CODEC.decode(createFriendlyByteBuf(custom));
 	}
 
 }
