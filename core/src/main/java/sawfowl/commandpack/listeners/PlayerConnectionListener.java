@@ -51,12 +51,12 @@ public class PlayerConnectionListener {
 	public void onConnect(ServerSideConnectionEvent.Join event) {
 		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(event.player());
 		if(plugin.isForgeServer()) {
-			if(plugin.getMainConfig().isPrintPlayerMods() && !MixinServerPlayer.cast(event.player()).getModList().isEmpty()) plugin.getLogger().info(plugin.getLocales().getString(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.PLAYER_MODS_LIST).replace(Placeholders.PLAYER, event.player().name()).replace(Placeholders.VALUE, String.join(", ", MixinServerPlayer.cast(event.player()).getModList())));
+			if(plugin.getMainConfig().isPrintPlayerMods() && !MixinServerPlayer.cast(event.player()).getModList().isEmpty()) plugin.getLogger().info(plugin.getLocales().getString(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.PLAYER_MODS_LIST).replace(Placeholders.PLAYER, event.player().name()).replace(Placeholders.VALUE, String.join(", ", MixinServerPlayer.cast(event.player()).getModList().stream().map(mod -> mod.getId()).toList())));
 			if(plugin.getMainConfig().getRestrictMods().isEnable() && !event.player().hasPermission(Permissions.ALL_MODS_ACCESS)) {
 				Sponge.server().scheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).delay(Ticks.of(10)).execute(() -> {
 					List<String> banedPlayerMods = new ArrayList<>();
 					MixinServerPlayer.cast(event.player()).getModList().forEach(mod -> {
-						if(!plugin.getMainConfig().getRestrictMods().isAllowedPlayerMod(mod)) banedPlayerMods.add(mod);
+						if(!plugin.getMainConfig().getRestrictMods().isAllowedPlayerMod(mod.getId())) banedPlayerMods.add(mod.getId());
 					});
 					if(!banedPlayerMods.isEmpty() && event.player().isOnline()) event.player().kick(plugin.getLocales().getText(event.player().locale(), LocalesPaths.ILLEGAL_MODS_LIST).replace(Placeholders.VALUE, String.join(", ", banedPlayerMods)).get());
 				}).build());

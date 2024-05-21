@@ -31,8 +31,8 @@ public class SetBorder extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, 0).get();
-		int radius = getInteger(args, 1).get();
+		ServerWorld world = getWorld(args, cause, 0).get();
+		int radius = getInteger(args, cause, 1).get();
 		world.setBorder(WorldBorder.builder().center(world.properties().spawnPosition().x(), world.properties().spawnPosition().z()).targetDiameter(radius).damagePerBlock(world.border().damagePerBlock()).safeZone(world.border().safeZone()).build());
 		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_SETBORDER).replace(new String[] {Placeholders.WORLD, Placeholders.VALUE, Placeholders.LOCATION}, world.key().asString(), radius, world.properties().spawnPosition()).get());
 	}

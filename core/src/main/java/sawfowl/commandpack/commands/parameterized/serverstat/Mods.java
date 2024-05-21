@@ -14,6 +14,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.format.NamedTextColor;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
@@ -24,7 +25,6 @@ import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.TextUtils;
 
 @Register
 public class Mods extends AbstractInfoCommand {
@@ -37,7 +37,7 @@ public class Mods extends AbstractInfoCommand {
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(getPlayer(context).isPresent()) {
 			ServerPlayer target = getPlayer(context).get();
-			List<Component> mods = MixinServerPlayer.cast(target).getModList().stream().map(TextUtils::deserialize).toList();
+			List<Component> mods = MixinServerPlayer.cast(target).getModList().stream().map(mod -> mod.asComponent()).toList();
 			Component title = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLAYER_MODS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, target.name(), mods.size()).get();
 			if(isPlayer) {
 				delay((ServerPlayer) src, locale, consumer -> sendPaginationList(src, title, Component.text("=").color(NamedTextColor.DARK_AQUA), linesPerPage, mods));

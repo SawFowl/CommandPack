@@ -33,7 +33,7 @@ public class SetPrice extends AbstractKitsEditCommand {
 		Kit kit = getKit(args, cause, 0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		if(args.length < 3) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		kitData.setPrice(KitPrice.of(getCurrency(args, 1).get(), getBigDecimal(args, 2).get()));
+		kitData.setPrice(KitPrice.of(getCurrency(args, cause, 1).get(), getBigDecimal(args, cause, 2).get()));
 		kitData.save();
 		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_SET_PRICE));
 	}

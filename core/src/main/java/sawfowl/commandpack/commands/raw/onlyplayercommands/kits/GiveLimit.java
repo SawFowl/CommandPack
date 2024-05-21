@@ -31,7 +31,7 @@ public class GiveLimit extends AbstractKitsEditCommand {
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
 		Kit kit = getKit(args, cause, 0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
-		Integer limit = getInteger(args, 1).get();
+		Integer limit = getInteger(args, cause, 1).get();
 		kitData.setLimit(limit);
 		kitData.save();
 		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_GIVE_LIMIT));

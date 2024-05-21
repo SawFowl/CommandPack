@@ -33,7 +33,7 @@ public class Unload extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, 0).get();
+		ServerWorld world = getWorld(args, cause, 0).get();
 		if(!world.isLoaded()) exceptionAppendUsage(cause, getText(locale, LocalesPaths.COMMANDS_WORLD_UNLOADED).replace(Placeholders.WORLD, args[0]).get());
 		for(ServerPlayer player : Sponge.server().onlinePlayers()) if(player.world().key().asString().equalsIgnoreCase(world.key().asString())) {
 			if(plugin.getMainConfig().getSpawnData().isPresent()) {

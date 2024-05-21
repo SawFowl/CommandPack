@@ -29,8 +29,8 @@ public class PvP extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, 0).get();
-		boolean pvp = getBoolean(args, 1).get();
+		ServerWorld world = getWorld(args, cause, 0).get();
+		boolean pvp = getBoolean(args, cause, 1).get();
 		world.properties().setPvp(pvp);
 		audience.sendMessage(getText(locale, pvp ? LocalesPaths.COMMANDS_WORLD_ENABLE_PVP : LocalesPaths.COMMANDS_WORLD_DISABLE_PVP).replace(Placeholders.WORLD, args[0]).get());
 	}

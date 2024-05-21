@@ -33,7 +33,7 @@ public class Cooldown extends AbstractKitsEditCommand {
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
 		Kit kit = getKit(args, cause, 0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
-		Duration duration = getDurationArg(args, 1, locale).get();
+		Duration duration = getDurationArg(args, cause, 1, locale).get();
 		kitData.setCooldown(duration.getSeconds());
 		kit.save();
 		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS).replace(Placeholders.VALUE, kit.getLocalizedName(locale)).get());

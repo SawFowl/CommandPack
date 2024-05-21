@@ -47,7 +47,7 @@ public interface MixinServerPlayer extends ServerPlayer {
 	 * If you have a vanilla server, the list will always be empty.<br>
 	 * The list will also be empty if the player has no mods.
 	 */
-	List<String> getModList();
+	List<PlayerModInfo> getModList();
 
 	long getPing();
 

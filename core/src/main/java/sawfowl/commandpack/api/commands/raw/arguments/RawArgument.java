@@ -40,23 +40,6 @@ public interface RawArgument<T> extends DataSerializable {
 		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(plainVariants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).treeKey(key).localeTextPath(localesPath).build();
 	}
 
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	static <T> RawArgument<T> of(Class<T> clazz, RawCompleterSupplier<Stream<String>> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, Object... localesPath) {
-		return (RawArgument<T>) builder().variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).localeTextPath(localesPath).build();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	static <T> RawArgument<T> of(Class<T> clazz, RawCompleterSupplier<Stream<String>> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, String permission, Object... localesPath) {
-		return (RawArgument<T>) builder().variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).localeTextPath(localesPath).build();
-	}
-
-	@Deprecated
-	static <T> RawArgument<T> of(Class<T> clazz, Stream<String> variants, RawResultSupplier<T> result, boolean optional, boolean optionalForConsole, int cursor, String permission, Object... localesPath) {
-		return of(clazz, null, ((CommandCause cause, String[] args) -> args.length > cursor ? variants.filter(var -> var.startsWith(args[cursor])) : variants), result, null, optional, optionalForConsole, cursor, permission, localesPath);
-	}
-
 
 	/**
 	 * Specifies the argument type.<br>
@@ -80,17 +63,12 @@ public interface RawArgument<T> extends DataSerializable {
 	/**
 	 * Converts a string argument to a specified class. If the specified class does not match the argument class, the return will be empty.
 	 */
-	Optional<T> getResult(Class<T> clazz, String[] args);
+	<V extends T> Optional<V> getResult(CommandCause cause, String[] args);
 
-	/**
-	 * Converts a string argument to a specified class. If the specified class does not match the argument class, the return will be empty.
-	 */
-	Optional<T> getResult(Class<T> clazz, CommandCause cause, String[] args);
-
-	/**
+	/*
 	 * Retrieves an object from the command's argument string without converting it to a specific type.
 	 */
-	Optional<?> getResultUnknownType(CommandCause cause, String[] args);
+	//Optional<?> getResultUnknownType(CommandCause cause, String[] args);
 
 	/**
 	 * Whether the argument is optional.
@@ -115,13 +93,13 @@ public interface RawArgument<T> extends DataSerializable {
 	/**
 	 * Class of argument.
 	 */
-	Class<?> getClazz();
+	Class<?> getAssociatedClass();
 
 	Optional<String> getPermision();
 
 	boolean hasPermission(CommandCause cause);
 
-	interface Builder<T> extends AbstractBuilder<RawArgument<T>>, org.spongepowered.api.util.Builder<RawArgument<T>, Builder<T>> {
+	interface Builder<T> extends AbstractBuilder<RawArgument<T>>, org.spongepowered.api.util.Builder<RawArgument<T>, Builder<T>>, RawArgument<T> {
 
 		/**
 		 * Set variants for auto-complete commands.

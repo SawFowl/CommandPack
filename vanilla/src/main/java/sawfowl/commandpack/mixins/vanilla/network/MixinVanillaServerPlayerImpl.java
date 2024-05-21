@@ -18,6 +18,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
+import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
 import sawfowl.commandpack.utils.CommandsUtil;
 
@@ -44,9 +45,10 @@ public abstract class MixinVanillaServerPlayerImpl implements MixinServerPlayer 
 		sendMessage(Text.of(message));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<String> getModList() {
-		return CommandsUtil.EMPTY_VARIANTS;
+	public List<PlayerModInfo> getModList() {
+		return (List<PlayerModInfo>) CommandsUtil.EMPTY_VARIANTS;
 	}
 
 	@Override

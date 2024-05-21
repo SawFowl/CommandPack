@@ -32,8 +32,8 @@ public class Tell extends AbstractRawCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerPlayer target = getPlayer(args, 0).get();
-		Component message = text(getString(args, 1).get());
+		ServerPlayer target = getPlayer(args, cause, 0).get();
+		Component message = text(getString(args, cause, 1).get());
 		if(isPlayer) {
 			if(!cause.hasPermission(Permissions.TELL_STAFF) && target.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
 			ServerPlayer player = (ServerPlayer) audience;

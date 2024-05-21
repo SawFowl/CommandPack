@@ -65,7 +65,7 @@ public class Kit extends AbstractRawCommand {
 				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KIT_NO_PERM));
 				return;
 			}
-			ServerPlayer target = getPlayer(args, 1).orElse(src);
+			ServerPlayer target = getPlayer(args, cause, 1).orElse(src);
 			sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(target);
 			if(target.uniqueId().equals(src.uniqueId())) {
 				delay(target, locale, consumer -> {
@@ -73,7 +73,7 @@ public class Kit extends AbstractRawCommand {
 				});
 			} else prepare(cause, audience, locale, target, data, kit, false, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), true);
 		} else {
-			ServerPlayer target = getPlayer(args, 1).get();
+			ServerPlayer target = getPlayer(args, cause, 1).get();
 			sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(target);
 			prepare(cause, audience, locale, target, data, kit, false, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), true);
 		}

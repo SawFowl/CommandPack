@@ -35,8 +35,8 @@ public class GameMode extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, 0).get();
-		world.properties().setGameMode(gamemodes.get(getString(args, 1).get()).get());
+		ServerWorld world = getWorld(args, cause, 0).get();
+		world.properties().setGameMode(gamemodes.get(getString(args, cause, 1).get()).get());
 		audience.sendMessage(getText(locale, getLocalesPaths(args[1])).replace(Placeholders.WORLD, world.key().asString()).get());
 	}
 

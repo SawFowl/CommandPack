@@ -34,8 +34,8 @@ public class Teleport extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, 0).get();
-		Optional<ServerPlayer> player = getPlayer(args, 1);
+		ServerWorld world = getWorld(args, cause, 0).get();
+		Optional<ServerPlayer> player = getPlayer(args, cause, 1);
 		ServerLocation location = findSafe(ServerLocation.of(world, world.properties().spawnPosition()));
 		if(isPlayer) {
 			if(player.isPresent()) {

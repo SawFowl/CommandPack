@@ -41,7 +41,7 @@ public class BalanceTop extends AbstractRawCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		Currency currency = getCurrency(args, 0).orElse(plugin.getEconomy().getEconomyServiceImpl().defaultCurrency());
+		Currency currency = getCurrency(args, cause, 0).orElse(plugin.getEconomy().getEconomyServiceImpl().defaultCurrency());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) audience;
 			delay(player, locale, condumer -> {

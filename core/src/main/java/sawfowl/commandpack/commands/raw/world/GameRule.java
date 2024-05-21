@@ -49,9 +49,9 @@ public class GameRule extends AbstractWorldCommand {
 			return;
 		}
 		if(args.length == 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		ServerWorld world = getWorld(args, 0).get();
-		org.spongepowered.api.world.gamerule.GameRule<?> rule = gamerules.get(getString(args, 1).get());
-		String stringValueArg = getString(args, 2).get();
+		ServerWorld world = getWorld(args, cause, 0).get();
+		org.spongepowered.api.world.gamerule.GameRule<?> rule = gamerules.get(getString(args, cause, 1).get());
+		String stringValueArg = getString(args, cause, 2).get();
 		if(isBooleanType(rule)) {
 			if(BooleanUtils.toBooleanObject(args[2]) == null) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 			org.spongepowered.api.world.gamerule.GameRule<Boolean> boolRule = (org.spongepowered.api.world.gamerule.GameRule<Boolean>) rule;

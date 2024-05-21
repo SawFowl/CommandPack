@@ -39,9 +39,9 @@ public class RemoveFromBalance extends AbstractRawCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		Optional<String> accountName = getString(args, 0);
-		BigDecimal remove = getBigDecimal(args, 1).get();
-		Currency currency = getCurrency(args, 2).orElse(plugin.getEconomy().getEconomyService().defaultCurrency());
+		Optional<String> accountName = getString(args, cause, 0);
+		BigDecimal remove = getBigDecimal(args, cause, 1).get();
+		Currency currency = getCurrency(args, cause, 2).orElse(plugin.getEconomy().getEconomyService().defaultCurrency());
 		if(accountName.isPresent()) {
 			Optional<UniqueAccount> account = plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(a -> a.identifier().equals(accountName.get())).findFirst();
 			if(account.isPresent()) {

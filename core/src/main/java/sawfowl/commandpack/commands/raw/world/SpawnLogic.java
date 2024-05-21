@@ -29,8 +29,8 @@ public class SpawnLogic extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, 0).get();
-		boolean enable = getBoolean(args, 1).get();
+		ServerWorld world = getWorld(args, cause, 0).get();
+		boolean enable = getBoolean(args, cause, 1).get();
 		world.properties().setPerformsSpawnLogic(enable);
 		audience.sendMessage(getText(locale, enable ? LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_ENABLE : LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_DISABLE).replace(Placeholders.WORLD, world.key().asString()).get());
 	}

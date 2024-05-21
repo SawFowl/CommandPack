@@ -19,6 +19,7 @@ import net.minecraftforge.network.NetworkContext;
 
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
+import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
 
 import sawfowl.localeapi.api.Text;
@@ -28,7 +29,7 @@ public abstract class MixinForgeServerPlayerImpl implements MixinServerPlayer {
 
 	@Shadow
 	public ServerGamePacketListenerImpl connection;
-	private List<String> mods = new ArrayList<String>();
+	private List<PlayerModInfo> mods = new ArrayList<PlayerModInfo>();
 
 	@Override
 	public void sendPacket(CustomPacket packet) {
@@ -46,9 +47,9 @@ public abstract class MixinForgeServerPlayerImpl implements MixinServerPlayer {
 	}
 
 	@Override
-	public List<String> getModList() {
+	public List<PlayerModInfo> getModList() {
 		if(!mods.isEmpty()) return mods;
-		mods = new ArrayList<String>(NetworkContext.get(connection.getConnection()).getModList().keySet());
+		mods = NetworkContext.get(connection.getConnection()).getModList().entrySet().stream().map(info -> ((ModIdInfo) (Object) info.getValue()).setId(info.getKey())).toList();
 		return mods;
 	}
 

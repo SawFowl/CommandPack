@@ -1,6 +1,7 @@
 package sawfowl.commandpack.commands.settings;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -42,24 +43,35 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 
 	@Override
 	public Stream<String> getVariants(CommandCause cause, String[] args) {
+		requireNonNull(cause, args);
 		return variants == null ? new ArrayList<String>().stream() : variants.get(cause, args);
 	}
 
+	/*@SuppressWarnings("unchecked")
 	@Override
-	public Optional<T> getResult(Class<T> clazz, String[] args) {
-		return getResult(clazz, CommandCause.create(), args);
-	}
+	public <V extends T> Optional<V> getResult(Class<V> clazz, CommandCause cause, String[] args) {
+		requireNonNull(clazz, cause, args);
+		return result == null ? Optional.empty() : result.get(cause, args).map(value -> (V) value);
+	}*/
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Optional<T> getResult(Class<T> clazz, CommandCause cause, String[] args) {
-		return result == null ? Optional.empty() : result.get(cause, args);
+	public <V extends T> Optional<V> getResult(CommandCause cause, String[] args) {
+		requireNonNull(cause, args);
+		if(result == null || clazz == null) return Optional.empty();
+		try {
+			return result.get(cause, args).map(value -> (V) value);
+		} catch (Exception e) {
+			return Optional.empty();
+		}
 	}
-
+/*
 	@Override
 	public Optional<?> getResultUnknownType(CommandCause cause, String[] args) {
-		return result == null ? Optional.empty() : result.get(cause, args);
+		requireNonNull(clazz, cause, args);
+		return result == null || clazz == null ? Optional.empty() : result.get(cause, args).filter(value -> value.getClass().isAssignableFrom(clazz));
 	}
-
+*/
 	@Override
 	public boolean isOptional() {
 		return isOptional;
@@ -81,7 +93,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	}
 
 	@Override
-	public Class<?> getClazz() {
+	public Class<?> getAssociatedClass() {
 		return clazz;
 	}
 
@@ -116,8 +128,12 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
+	private void requireNonNull(Object... objects) {
+		for(Object object : objects) Objects.requireNonNull(object);
+	}
+
 	@SuppressWarnings("hiding")
-	private class Builder<T> implements RawArgument.Builder<T> {
+	private class Builder<T> extends RawArgumentImpl<T> implements RawArgument.Builder<T> {
 
 		@SuppressWarnings("unchecked")
 		@Override

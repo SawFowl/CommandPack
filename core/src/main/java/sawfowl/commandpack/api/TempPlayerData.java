@@ -1,6 +1,5 @@
 package sawfowl.commandpack.api;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -9,9 +8,9 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.audience.Audience;
+
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.api.data.command.Settings;
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 
 /**
  * Used to store temporary data of players who used the functionality of the CommandPack plugin.
@@ -198,11 +197,5 @@ public interface TempPlayerData {
 	 * Getting Audience for the /reply command
 	 */
 	Optional<Audience> getReply(ServerPlayer player);
-
-	@Deprecated
-	/**
-	 * Use {@linkplain MixinServerPlayer#getModList()}
-	 */
-	Collection<String> getPlayerMods(ServerPlayer player);
 
 }

@@ -30,8 +30,8 @@ public class ViewDistance extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, 0).get();
-		int distance = getInteger(args, 1).get();
+		ServerWorld world = getWorld(args, cause, 0).get();
+		int distance = getInteger(args, cause, 1).get();
 		if(distance < 1) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		world.properties().setViewDistance(distance);
 		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_VIEWDISTANCE).replace(new String[] {Placeholders.WORLD, Placeholders.VALUE}, world.key().asString(), distance).get());

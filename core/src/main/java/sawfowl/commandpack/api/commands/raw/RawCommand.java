@@ -14,8 +14,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.math.NumberUtils;
-
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
@@ -182,12 +180,12 @@ public interface RawCommand extends PluginCommand, Raw {
 
 	default String[] checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
 		if(getArguments() != null) {
-			Optional<RawArgument<?>> emptyArg = getArguments().values().stream().filter(arg -> !arg.getResultUnknownType(cause, args).isPresent() && (!arg.isOptional() || !isPlayer && !arg.isOptionalForConsole())).findFirst();
+			Optional<RawArgument<?>> emptyArg = getArguments().values().stream().filter(arg -> !arg.getResult(cause, args).isPresent() && (!arg.isOptional() || !isPlayer && !arg.isOptionalForConsole())).findFirst();
 			if(emptyArg.isPresent()) exceptionAppendUsage(cause, getComponent(locale, emptyArg.get().getLocalesPath()));
 			if(args.length != 0) {
 				int i = 0;
 				for(String arg : args) {
-					if(arg == null || (getArguments().containsKey(i) && getArguments().get(i).getResultUnknownType(cause, args).isPresent() && !getArguments().get(i).hasPermission(cause))) return i - 1 < 0 ? args : Arrays.copyOfRange(args, 0, i - 1);
+					if(arg == null || (getArguments().containsKey(i) && getArguments().get(i).getResult(cause, args).isPresent() && !getArguments().get(i).hasPermission(cause))) return i - 1 < 0 ? args : Arrays.copyOfRange(args, 0, i - 1);
 					i++;
 				}
 			}
@@ -260,22 +258,6 @@ public interface RawCommand extends PluginCommand, Raw {
 		CommandPack.getInstance().getPlayersData().getTempData().addTrackingCooldownCommand(this);
 	}
 
-	/**
-	 * An attempt to convert a string to an integer.
-	 */
-	@Deprecated
-	default Optional<Integer> parseInt(String arg) {
-		return NumberUtils.isParsable(arg) ? Optional.ofNullable(NumberUtils.createInteger(arg)) : Optional.empty();
-	}
-
-	/**
-	 * An attempt to convert a string to a fractional number.
-	 */
-	@Deprecated
-	default Optional<Double> parseDouble(String arg) {
-		return NumberUtils.isParsable(arg) ? Optional.ofNullable(NumberUtils.createDouble(arg)) : Optional.empty();
-	}
-
 	default CommandException exceptionAppendUsage(CommandCause cause, Component text) throws CommandException {
 		throw new CommandException(usage(cause) == null ? text : text.append(Component.newline()).append(usage(cause)));
 	}
@@ -284,91 +266,39 @@ public interface RawCommand extends PluginCommand, Raw {
 		throw new CommandException(getComponent(locale, localePath).append(Component.newline()).append(usage(cause)));
 	}
 
-	default Optional<ServerWorld> getWorld(String[] args, int cursor) {
-		return getArgument(ServerWorld.class, args, cursor);
-	}
-
-	default Optional<WorldType> getWorldType(String[] args, int cursor) {
-		return getArgument(WorldType.class, args, cursor);
-	}
-	default Optional<ServerPlayer> getPlayer(String[] args, int cursor) {
-		return getArgument(ServerPlayer.class, args, cursor);
-	}
-
-	default Optional<EnchantmentType> getEnchantmentType(String[] args, int cursor) {
-		return getArgument(EnchantmentType.class, args, cursor);
-	}
-
-	default Optional<String> getString(String[] args, int cursor) {
-		return getArgument(String.class, args, cursor);
-	}
-
-	default Optional<Boolean> getBoolean(String[] args, int cursor) {
-		return getArgument(Boolean.class, args, cursor);
-	}
-
-	default Optional<Integer> getInteger(String[] args, int cursor) {
-		return getArgument(Integer.class, args, cursor);
-	}
-
-	default Optional<Long> getLong(String[] args, int cursor) {
-		return getArgument(Long.class, args, cursor);
-	}
-
-	default Optional<Double> getDouble(String[] args, int cursor) {
-		return getArgument(Double.class, args, cursor);
-	}
-
-	default Optional<BigDecimal> getBigDecimal(String[] args, int cursor) {
-		return getArgument(BigDecimal.class, args, cursor);
-	}
-
-	default Optional<Locale> getLocale(String[] args, int cursor) {
-		return getArgument(Locale.class, args, cursor);
-	}
-
-	default Optional<Currency> getCurrency(String[] args, int cursor) {
-		return getArgument(Currency.class, args, cursor);
-	}
-
-	default Optional<Duration> getDurationArg(String[] args, int cursor, Locale locale) throws CommandException {
-		Optional<String> arg = getArgument(String.class, args, cursor);
-		return arg.isPresent() ? parseDuration(arg.get(), locale) : Optional.empty();
-	}
-
 	default Optional<ServerWorld> getWorld(String[] args, CommandCause cause, int cursor) {
-		return getArgument(ServerWorld.class, cause, args, cursor);
+		return getArgument(cause, args, cursor);
 	}
 
 	default Optional<WorldType> getWorldType(String[] args, CommandCause cause, int cursor) {
-		return getArgument(WorldType.class, cause, args, cursor);
+		return getArgument(cause, args, cursor);
 	}
 	default Optional<ServerPlayer> getPlayer(String[] args, CommandCause cause, int cursor) {
-		return getArgument(ServerPlayer.class, cause, args, cursor);
+		return getArgument(cause, args, cursor);
 	}
 
 	default Optional<EnchantmentType> getEnchantmentType(String[] args, CommandCause cause, int cursor) {
-		return getArgument(EnchantmentType.class, cause, args, cursor);
+		return getArgument(cause, args, cursor);
 	}
 
 	default Optional<String> getString(String[] args, CommandCause cause, int cursor) {
-		return getArgument(String.class, cause, args, cursor);
+		return getArgument(cause, args, cursor);
 	}
 
 	default Optional<Boolean> getBoolean(String[] args, CommandCause cause, int cursor) {
-		return getArgument(Boolean.class, cause, args, cursor);
+		return getArgument(cause, args, cursor);
 	}
 
 	default Optional<Integer> getInteger(String[] args, CommandCause cause, int cursor) {
-		return getArgument(Integer.class, cause, args, cursor);
+		return getArgument(cause, args, cursor);
 	}
 
 	default Optional<Long> getLong(String[] args, CommandCause cause, int cursor) {
-		return getArgument(Long.class, cause, args, cursor);
+		return getArgument(cause, args, cursor);
 	}
 
 	default Optional<Double> getDouble(String[] args, CommandCause cause, int cursor) {
-		return getArgument(Double.class, cause, args, cursor);
+		return getArgument(cause, args, cursor);
 	}
 
 	default Optional<BigDecimal> getBigDecimal(String[] args, CommandCause cause, int cursor) {
@@ -376,41 +306,21 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	default Optional<Locale> getLocale(String[] args, CommandCause cause, int cursor) {
-		return getArgument(Locale.class, cause, args, cursor);
+		return getArgument(cause, args, cursor);
 	}
 
 	default Optional<Currency> getCurrency(String[] args, CommandCause cause, int cursor) {
-		return getArgument(Currency.class, cause, args, cursor);
+		return getArgument(cause, args, cursor);
 	}
 
 	default Optional<Duration> getDurationArg(String[] args, CommandCause cause, int cursor, Locale locale) throws CommandException {
-		Optional<String> arg = getArgument(String.class, cause, args, cursor);
-		return arg.isPresent() ? parseDuration(arg.get(), locale) : Optional.empty();
-	}
-
-	/**
-	 * Getting an object from a command argument.
-	 * Use {@link #getArgument(Class, CommandCause, String[], int)}
-	 * 
-	 * @param <T> - The type of the returned object.
-	 * @param clazz - The class of the returned object.
-	 * @param args - All command arguments.
-	 * @param cursor - The argument number of the command.
-	 * @return {@link Optional}
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	default <T> Optional<T> getArgument(Class<T> clazz, String[] args, int cursor) {
-		return getArguments() == null || !getArguments().containsKey(cursor) || getArguments().get(cursor).getClazz() != clazz || !getArguments().get(cursor).getClazz().getName().equals(clazz.getName()) ? Optional.empty() : ((RawArgument<T>) getArguments().get(cursor)).getResult(clazz, args);
-	}
-
-	/**
-	 * Use {@link #getArgument(Class, CommandCause, String[], int)}
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	default <T> Optional<T> getArgument(Class<T> clazz, List<String> args, int cursor) {
-		return getArguments() == null || !getArguments().containsKey(cursor) || getArguments().get(cursor).getClazz() != clazz || !getArguments().get(cursor).getClazz().getName().equals(clazz.getName()) ? Optional.empty() : ((RawArgument<T>) getArguments().get(cursor)).getResult(clazz, args.toArray(new String[]{}));
+		return getString(args, cause, cursor).map(value -> {
+			try {
+				return parseDuration(value, locale);
+			} catch (CommandException e) {
+				return null;
+			}
+		}).orElse(Optional.empty());
 	}
 
 	/**
@@ -418,13 +328,87 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * 
 	 * @param <T> - The type of the returned object.
 	 * @param clazz - The class of the returned object.
+	 * @param cause - {@link CommandCause}
 	 * @param args - All command arguments.
 	 * @param cursor - The argument number of the command.
 	 * @return {@link Optional}
 	 */
 	@SuppressWarnings("unchecked")
 	default <T> Optional<T> getArgument(Class<T> clazz, CommandCause cause, String[] args, int cursor) {
-		return getArguments() == null || !getArguments().containsKey(cursor) || getArguments().get(cursor).getClazz() != clazz || !getArguments().get(cursor).getClazz().getName().equals(clazz.getName()) ? Optional.empty() : ((RawArgument<T>) getArguments().get(cursor)).getResult(clazz, cause, args);
+		return getArguments() == null || !getArguments().containsKey(cursor) || !getArguments().get(cursor).getAssociatedClass().isAssignableFrom(clazz) ? Optional.empty() : getArguments().get(cursor).getResult(cause, args).map(value -> {
+				try {
+					return (T) value;
+				} catch (Exception e) {
+					return null;
+				}
+			}
+		);
+	}
+
+	/**
+	 * Getting an object from a command argument.
+	 * 
+	 * @param <T> - The type of the returned object.
+	 * @param cause - {@link CommandCause}
+	 * @param clazz - The class of the returned object.
+	 * @param args - All command arguments.
+	 * @param cursor - The argument number of the command.
+	 * @return {@link Optional}
+	 */
+	@SuppressWarnings("unchecked")
+	default <T> Optional<T> getArgument(CommandCause cause, String[] args, int cursor) {
+		return getArguments() == null || !getArguments().containsKey(cursor) ? Optional.empty() : getArguments().get(cursor).getResult(cause, args).map(value -> {
+				try {
+					return (T) value;
+				} catch (Exception e) {
+					return null;
+				}
+			}
+		);
+	}
+
+	/**
+	 * Getting an object from a command argument.
+	 * 
+	 * @param <T> - The type of the returned object.
+	 * @param cause - {@link CommandCause}
+	 * @param clazz - The class of the returned object.
+	 * @param args - All command arguments.
+	 * @return {@link Optional}
+	 */
+	@SuppressWarnings("unchecked")
+	default <T> Optional<T> getArgument(Class<T> clazz, CommandCause cause, String[] args) {
+		return getArguments() == null ? Optional.empty() : getArguments().values().stream().filter(arg -> arg.getAssociatedClass().isAssignableFrom(clazz)).findFirst().map(arg -> arg.getResult(cause, args).map(value -> {
+					try {
+						return (T) value;
+					} catch (Exception e) {
+						return null;
+					}
+				}
+			)
+		)
+		.filter(value -> value.isPresent())
+		.orElse(Optional.empty());
+	}
+
+	/**
+	 * Getting an object from a command argument.
+	 * 
+	 * @param <T> - The type of the returned object.
+	 * @param cause - {@link CommandCause}
+	 * @param args - All command arguments.
+	 * @return {@link Optional}
+	 */
+	@SuppressWarnings("unchecked")
+	default <T> Optional<T> getArgument(CommandCause cause, String[] args) {
+		return getArguments() == null ? Optional.empty() : getArguments().values().stream().map(arg -> arg.getResult(cause, args)).filter(value -> !value.isEmpty()).findFirst().map(value -> {
+				try {
+					return (T) value;
+				} catch (Exception e) {
+					return null;
+				}
+			}
+		);
 	}
 
 	/**

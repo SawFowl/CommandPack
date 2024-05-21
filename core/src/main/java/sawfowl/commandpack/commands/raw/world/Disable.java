@@ -32,7 +32,7 @@ public class Disable extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, 0).get();
+		ServerWorld world = getWorld(args, cause, 0).get();
 		world.properties().setLoadOnStartup(false);
 		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_DISABLE).replace(Placeholders.WORLD, args[0]).get());
 	}

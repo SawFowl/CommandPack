@@ -37,9 +37,9 @@ public class Enchant extends AbstractPlayerCommand {
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
 		if(src.itemInHand(HandTypes.MAIN_HAND).quantity() == 0) exception(locale, LocalesPaths.COMMANDS_ENCHANT_ITEM_IS_NOT_PRESENT);
-		EnchantmentType enchant = getEnchantmentType(args, 0).get();
+		EnchantmentType enchant = getEnchantmentType(args, cause, 0).get();
 		if(args.length == 1) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		int level = getInteger(args, 1).get();
+		int level = getInteger(args, cause, 1).get();
 		ItemStack stack = src.itemInHand(HandTypes.MAIN_HAND);
 		List<Enchantment> enchantments = stack.get(Keys.APPLIED_ENCHANTMENTS).orElse(new ArrayList<>());
 		enchantments.add(Enchantment.builder().type(enchant).level(level).build());

@@ -1,8 +1,6 @@
 package sawfowl.commandpack.apiclasses;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,7 +25,6 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.api.data.command.Settings;
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 
@@ -245,11 +242,6 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	@Override
 	public Optional<Audience> getReply(ServerPlayer player) {
 		return replyMap.containsKey(player.uniqueId()) ? (replyMap.get(player.uniqueId()) instanceof ServerPlayer ? Sponge.server().player(((ServerPlayer) replyMap.get(player.uniqueId())).uniqueId()).map(p -> (Audience) p) :  Optional.ofNullable(replyMap.get(player.uniqueId()))) : Optional.empty();
-	}
-
-	@Override
-	public Collection<String> getPlayerMods(ServerPlayer player) {
-		return plugin.isForgeServer() ? MixinServerPlayer.cast(player).getModList() : new ArrayList<>();
 	}
 
 }

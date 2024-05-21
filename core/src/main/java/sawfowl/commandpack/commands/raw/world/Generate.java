@@ -41,11 +41,11 @@ public class Generate extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, 0).get();
-		String action = getString(args, 1).get();
-		Optional<Integer> interval = getInteger(args, 2);
-		Optional<Long> maxMemory = getLong(args, 3);
-		Optional<Integer> chunks = getInteger(args, 4);
+		ServerWorld world = getWorld(args, cause, 0).get();
+		String action = getString(args, cause, 1).get();
+		Optional<Integer> interval = getInteger(args, cause, 2);
+		Optional<Long> maxMemory = getLong(args, cause, 3);
+		Optional<Integer> chunks = getInteger(args, cause, 4);
 		if(action.equals("start")) {
 			if(tasks.containsKey(world.key().asString())) {
 				FillChunksTask fillTask = tasks.get(world.key().asString());

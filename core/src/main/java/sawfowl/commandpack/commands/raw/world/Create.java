@@ -41,8 +41,8 @@ public class Create extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		WorldType worldType = getWorldType(args, 0).get();
-		String name = getString(args, 2).get();
+		WorldType worldType = getWorldType(args, cause, 0).get();
+		String name = getString(args, cause, 2).get();
 		WorldTemplate.Builder builder = (WorldTemplate.builder().key(ResourceKey.sponge(TextUtils.clearDecorations(name).toLowerCase()))
 				.add(Keys.CHUNK_GENERATOR, plugin.getAPI().getCustomGenerator(args[1]).get())
 				.add(Keys.GAME_MODE, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().gameMode())
@@ -52,7 +52,7 @@ public class Create extends AbstractWorldCommand {
 				.add(Keys.PVP, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().pvp()).add(Keys.IS_LOAD_ON_STARTUP, true)
 				.add(Keys.WORLD_TYPE, worldType));
 		if(args.length > 3) {
-			String seed = getString(args, 3).get();
+			String seed = getString(args, cause, 3).get();
 			builder = builder.add(Keys.SEED, NumberUtils.isCreatable(seed) ? NumberUtils.createLong(seed) : (long) seed.hashCode());
 			//boolean structures = getBoolean(args, 4).get();
 			//boolean bonusChest = getBoolean(args, 5).get();
@@ -62,8 +62,8 @@ public class Create extends AbstractWorldCommand {
 		Sponge.server().worldManager().loadWorld(template).thenRunAsync(() -> {
 			ServerWorld world = Sponge.server().worldManager().world(template.key()).get();
 			if(args.length > 3) {
-				boolean structures = getBoolean(args, 4).get();
-				boolean bonusChest = getBoolean(args, 5).get();
+				boolean structures = getBoolean(args, cause, 4).get();
+				boolean bonusChest = getBoolean(args, cause, 5).get();
 				world.properties().offer(Keys.WORLD_GEN_CONFIG, WorldGenerationConfig.builder().from(world.properties().worldGenerationConfig()).generateStructures(structures).generateBonusChest(bonusChest).build());
 			}
 			world.setBorder(world.border().toBuilder().initialDiameter(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().border().diameter()).build());
