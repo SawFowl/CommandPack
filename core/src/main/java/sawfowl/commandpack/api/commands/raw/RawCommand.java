@@ -350,7 +350,6 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * 
 	 * @param <T> - The type of the returned object.
 	 * @param cause - {@link CommandCause}
-	 * @param clazz - The class of the returned object.
 	 * @param args - All command arguments.
 	 * @param cursor - The argument number of the command.
 	 * @return {@link Optional}

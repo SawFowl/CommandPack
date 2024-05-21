@@ -7,13 +7,25 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 
 import net.minecraftforge.network.packets.ModVersions.Info;
+import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
 
 @Mixin(Info.class)
-public abstract class MixinModInfoImpl extends ModIdInfo {
+public abstract class MixinModInfoImpl implements ModIdInfo {
 
-	@Shadow abstract String name();
+	@Shadow public abstract String name();
+	@Shadow public abstract String version();
+	private String id;
 
-	@Shadow abstract String version();
+	@Override
+	public String getId() {
+		return id;
+	}
+
+	@Override
+	public PlayerModInfo setId(String string) {
+		id = string;
+		return this;
+	}
 
 	private Component asComponent = Component.text(name()).color(TextColor.color(255, 137, 0))
 		.append(Component.text(" - ").color(TextColor.color(255, 255, 255)))

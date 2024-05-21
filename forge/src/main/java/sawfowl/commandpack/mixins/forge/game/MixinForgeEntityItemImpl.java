@@ -10,8 +10,7 @@ import sawfowl.commandpack.api.mixin.game.EntityItem;
 @Mixin(ItemEntity.class)
 public abstract class MixinForgeEntityItemImpl implements EntityItem {
 
-	@Shadow
-	public abstract ItemStack getItem();
+	@Shadow public abstract ItemStack getItem();
 
 	@Override
 	public org.spongepowered.api.item.inventory.ItemStack getItemStack() {
