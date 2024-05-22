@@ -68,6 +68,7 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.commands.parameterized.ParameterizedCommand;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.command.CancelRules;
 import sawfowl.commandpack.api.data.command.Delay;
 import sawfowl.commandpack.api.data.command.Price;
@@ -96,6 +97,7 @@ import sawfowl.commandpack.apiclasses.RTPService;
 import sawfowl.commandpack.apiclasses.punishment.PunishmentServiceImpl;
 import sawfowl.commandpack.commands.settings.ParameterSettingsImpl;
 import sawfowl.commandpack.commands.settings.RawArgumentImpl;
+import sawfowl.commandpack.commands.settings.RawArgumentsMapImpl;
 import sawfowl.commandpack.configure.ConfigManager;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.MainConfig;
@@ -516,6 +518,7 @@ public class CommandPack {
 		event.register(Warn.Builder.class, () -> new WarnData().builder());
 		event.register(Warns.Builder.class, () -> new WarnsData().builder());
 		event.register(CustomPacket.Builder.class, () -> new CustomPacketImpl().builder());
+		event.register(RawArgumentsMap.Builder.class, () -> new RawArgumentsMapImpl().builder());
 	}
 
 	@Listener

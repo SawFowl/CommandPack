@@ -18,11 +18,10 @@ import net.kyori.adventure.builder.AbstractBuilder;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 
 /**
- * The interface is designed to simplify the creation of {@link RawSettings} type commands.<br>
- * You can use it to create arguments for this commands, just like you do for {@link Parameterized} commands.<br>
- * Unlike {@link Parameterized} commands, {@link RawSettings} commands have no problem with the availability of game objects, which are registered after the commands are registered.<br>
- * However, adding autocomplete to RawSettings commands and then checking the arguments is very time-consuming.<br>
- * Using this interface together with the {@link RawCommand} interface saves you from having to do such time-consuming work.
+ * You can use this interface to create arguments for commands implementing the {@link RawCommand} interface.<br>
+ * This is a bit like the way arguments work in {@link Parameterized} type commands.<br>
+ * All command arguments will be sequenced from 0 to the specified maximum of the last argument.<br>
+ * In addition, the arguments are assigned an identifier as a string value.
  * 
  * @author SawFowl
  *
@@ -35,9 +34,25 @@ public interface RawArgument<T> extends DataSerializable {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
+	/**
+	 *  
+	 * @param <T> - Argument type.
+	 * @param <C> - {@link CommandTreeNode} type
+	 * @param clazz - Argument type.
+	 * @param argumentNodeType - {@link CommandTreeNode} type
+	 * @param variants - See {@link RawCompleterSupplier}
+	 * @param result - See {@link RawResultSupplier}
+	 * @param key - Argument {@link String} key
+	 * @param optional - If true, the argument will be optional.
+	 * @param optionalForConsole - If true, the argument will be optional for the console. Parameter `optional` has a higher priority.
+	 * @param cursor - The number of the argument in the array of arguments input.
+	 * @param permission - The permission required to use the argument.
+	 * @param localesPath - Path to the text in the plugin localization. The text will be shown if the argument was not entered or was entered incorrectly and it is mandatory.
+	 * @return {@link RawArgument}
+	 */
 	@SuppressWarnings("unchecked")
-	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(@NotNull Class<T> clazz, Argument<C> argumentNodeType, @NotNull RawCompleterSupplier<Stream<String>> plainVariants, @NotNull RawResultSupplier<T> result, @NotNull String key, boolean optional, boolean optionalForConsole, int cursor, String permission, @NotNull Object... localesPath) {
-		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(plainVariants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).treeKey(key).localeTextPath(localesPath).build();
+	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(@NotNull Class<T> clazz, Argument<C> argumentNodeType, @NotNull RawCompleterSupplier<Stream<String>> variants, @NotNull RawResultSupplier<T> result, @NotNull String key, boolean optional, boolean optionalForConsole, int cursor, String permission, @NotNull Object... localesPath) {
+		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).treeKey(key).localeTextPath(localesPath).build();
 	}
 
 

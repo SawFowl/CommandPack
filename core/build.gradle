@@ -36,7 +36,7 @@ sponge {
 	license("GPL-3.0")
 	plugin(rootProject.name.toLowerCase()) {
 		displayName(rootProject.name)
-		version("${rootProject.version}")
+		version("${major}.${minor}.${patch}")
 		entrypoint("${rootProject.group}.${rootProject.name}")
 		description("The Essentials plugin analog.")
 		links {

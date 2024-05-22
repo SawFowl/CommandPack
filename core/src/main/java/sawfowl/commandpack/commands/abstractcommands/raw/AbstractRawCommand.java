@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -22,7 +21,7 @@ import sawfowl.commandpack.api.data.command.Settings;
 public abstract class AbstractRawCommand extends AbstractPluginCommand<CommandPack> implements RawCommand {
 
 	private Map<String, RawCommand> childExecutors = new HashMap<String, RawCommand>();
-	private Map<Integer, RawArgument<?>> args = new HashMap<>();
+	private Map<Integer, RawArgument<?>> args = null;
 	public AbstractRawCommand(CommandPack plugin) {
 		super(plugin);
 	}
@@ -42,8 +41,8 @@ public abstract class AbstractRawCommand extends AbstractPluginCommand<CommandPa
 
 	@Override
 	public Map<Integer, RawArgument<?>> getArguments() {
-		if(arguments() == null) return null;
-		return args.isEmpty() ? args = arguments().stream().collect(Collectors.toMap(arg -> arg.getCursor(), arg -> arg)) : args;
+		if(args != null) return args;
+		return args = createArgumentsMap(arguments());
 	}
 
 	public void addChildCommand(RawCommand command) {

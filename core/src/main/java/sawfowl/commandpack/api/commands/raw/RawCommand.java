@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -17,6 +18,7 @@ import java.util.stream.Stream;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
@@ -40,11 +42,12 @@ import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.CommandsUtil;
 
 /**
- * This interface is designed to simplify the creation of RawSettings commands.
+ * This interface is designed to simplify the creation of {@link Raw} commands.
  *
  * @author SawFowl
  */
@@ -78,11 +81,6 @@ public interface RawCommand extends PluginCommand, Raw {
 	default boolean enableAutoComplete() {
 		return getCommandSettings() == null || getCommandSettings().isAutoComplete().orElse(true);
 	}
-
-
-	/*default CommandTreeNode.Root commandTree() {
-		return CommandPack.getInstance().getRootCommandNode(this).get();
-	}*/
 
 	default CommandTreeNode.Root commandTree() {
 		CommandTreeNode.Root root = containsChild() ?
@@ -450,6 +448,24 @@ public interface RawCommand extends PluginCommand, Raw {
 	 */
 	default List<CommandCompletion> getEmptyCompletion() {
 		return CommandsUtil.EMPTY_COMPLETIONS;
+	}
+
+	/**
+	 * Creating a command argument map from a list.
+	 * 
+	 * @param args - A collection of arguments.
+	 * @return Arguments {@link Map}. Key {@link Integer} - argument number, Value {@link RawArgument} - raw argument.
+	 */
+	default Map<Integer, RawArgument<?>> createArgumentsMap(@Nullable Collection<RawArgument<?>> args) {
+		return args == null ? new HashMap<>() : args.stream().collect(Collectors.toUnmodifiableMap(arg -> arg.getCursor(), arg -> arg, (arg1, arg2) -> {
+			CommandPack.getInstance().getLogger().warn("A duplicate command argument key was detected. The duplicate will not be added to the argument map. Command: \"" + command() + "\". Command class: \"" + getClass().getName() + "\". Argument key: \"" + arg1.getTreeKey() + "\"");
+			return arg1;
+		}));
+	}
+
+	// Need tests
+	default RawArgumentsMap createResultCollection(CommandCause cause, String[] args) {
+		return RawArgumentsMap.create(this, cause, args);
 	}
 
 	default boolean containsChild() {

@@ -44,7 +44,6 @@ import sawfowl.localeapi.api.EnumLocales;
  * Some more variants may be added in the future.
  * 
  * @author SawFowl
- *
  */
 public class RawArguments {
 

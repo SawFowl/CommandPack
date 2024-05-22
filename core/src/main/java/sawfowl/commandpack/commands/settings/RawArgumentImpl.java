@@ -128,6 +128,19 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(treeKey);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) return false;
+		if(this == obj) return true;
+		if(getClass() != obj.getClass()) return false;
+		return Objects.equals(treeKey, ((RawArgumentImpl<?>) obj).treeKey);
+	}
+
 	private void requireNonNull(Object... objects) {
 		for(Object object : objects) Objects.requireNonNull(object);
 	}
