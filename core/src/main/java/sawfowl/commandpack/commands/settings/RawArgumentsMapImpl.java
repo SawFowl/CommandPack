@@ -1,11 +1,14 @@
 package sawfowl.commandpack.commands.settings;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,74 +21,90 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 
 public class RawArgumentsMapImpl implements RawArgumentsMap {
 
-	private Map<String, Object> mapByKey = new HashMap<>();
-	private Map<Integer, Object> mapById = new HashMap<>();
+	private Set<Integer> ids = new HashSet<>();
+	private Set<String> keys = new HashSet<>();
+	private List<Result<?>> results = new ArrayList<>();
+	private Collection<Object> values = new HashSet<>();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Optional<T> get(String key) {
-		if(mapByKey.containsKey(key)) {
+		return results.stream().filter(r -> r.key.equals(key)).findFirst().map(r -> {
 			try {
-				return Optional.ofNullable((T) mapByKey.get(key));
+				return (T) r.value;
 			} catch (Exception e) {
-				return Optional.empty();
+				return null;
 			}
-		} else return Optional.empty();
+		});
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Optional<T> get(int id) {
-		if(mapById.containsKey(id)) {
+		return results.stream().filter(r -> r.id == id).findFirst().map(r -> {
 			try {
-				return Optional.ofNullable((T) mapById.get(id));
+				return (T) r.value;
 			} catch (Exception e) {
-				return Optional.empty();
+				return null;
 			}
-		} else return Optional.empty();
+		});
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Optional<T> get(Class<T> valueType, String key) {
-		return mapByKey.containsKey(key) ? Optional.ofNullable(mapByKey.get(key).getClass().isAssignableFrom(valueType) ? (T) mapByKey.get(key) : null) : Optional.empty();
+		return results.stream().filter(r -> r.key.equals(key)).findFirst().map(r -> {
+			try {
+				return (T) r.value;
+			} catch (Exception e) {
+				return null;
+			}
+		});
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Optional<T> get(Class<T> valueType, int id) {
-		return mapById.containsKey(id) ? Optional.ofNullable(mapById.get(id).getClass().isAssignableFrom(valueType) ? (T) mapById.get(id) : null) : Optional.empty();
+		return results.stream().filter(r -> r.id == id).findFirst().map(r -> {
+			try {
+				return (T) r.value;
+			} catch (Exception e) {
+				return null;
+			}
+		});
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <K, V extends Object> void forEach(Class<K> key, BiConsumer<? super K, ? super V> action) {
 		if(key.isAssignableFrom(Integer.class)) {
-			mapById.forEach((BiConsumer<? super Integer, ? super Object>) action);
+			results.stream().collect(Collectors.toMap(r -> r.id, r -> r.value)).forEach((BiConsumer<? super Integer, ? super Object>) action);
 		} else if(key.isAssignableFrom(String.class)) {
-			mapByKey.forEach((BiConsumer<? super String, ? super Object>) action);
+			results.stream().collect(Collectors.toMap(r -> r.key, r -> r.value)).forEach((BiConsumer<? super String, ? super Object>) action);
 		} else throw new IllegalStateException("An invalid key type is specified. Only `String` and `Integer` are allowed.\n");
 	}
 
 	@Override
 	public Set<Integer> idSet() {
-		return mapById.keySet();
+		return ids;
 	}
 
 	@Override
 	public Set<String> keySet() {
-		return mapByKey.keySet();
+		return keys;
 	}
 
 	@Override
 	public Collection<Object> values() {
-		return mapByKey.values();
+		return values;
 	}
 
 	@Override
 	public void clear() {
-		mapById.clear();
-		mapByKey.clear();
+		ids = Collections.unmodifiableSet(new HashSet<>());
+		keys = Collections.unmodifiableSet(new HashSet<>());
+		results = Collections.unmodifiableList(new ArrayList<>());
+		values = Collections.unmodifiableSet(new HashSet<>());
 	}
 
 	@Override
@@ -96,8 +115,8 @@ public class RawArgumentsMapImpl implements RawArgumentsMap {
 	@Override
 	public DataContainer toContainer() {
 		return DataContainer.createNew()
-				.set(DataQuery.of("KeysMap"), mapByKey)
-				.set(DataQuery.of("IdsMap"), mapById);
+				.set(DataQuery.of("KeysMap"), results.stream().collect(Collectors.toMap(r -> r.key, r -> r.value)))
+				.set(DataQuery.of("IdsMap"), results.stream().collect(Collectors.toMap(r -> r.id, r -> r.value)));
 	}
 
 	public Builder builder() {
@@ -110,18 +129,28 @@ public class RawArgumentsMapImpl implements RawArgumentsMap {
 			
 			@Override
 			public RawArgumentsMap create(RawCommand command, CommandCause cause, String[] args) {
-				if(command != null && command.getArguments() != null && cause != null && args != null && args.length > 0) command.getArguments().forEach((k, v) -> {
-					if(!mapByKey.containsKey(v.getTreeKey()) && !mapById.containsKey(k)) v.getResult(cause, args).ifPresent(value -> {
-						if(!mapByKey.containsValue(value) && !mapById.containsValue(value)) {
-							mapByKey.put(v.getTreeKey(), value);
-							mapById.put(k, value);
-						}
-					});
-				});
+				if(command == null || command.getArguments() == null || cause == null || args == null || args.length == 0) return build();
+				results = command.getArguments().values().stream().map(arg -> arg.getResult(cause, args)
+						.map(value -> new Result<>(arg.getCursor(), arg.getTreeKey(), value)).orElse(null))
+						.filter(result -> result != null).collect(Collectors.toUnmodifiableList());
+				ids = results.stream().map(r -> r.id).collect(Collectors.toUnmodifiableSet());
+				keys = results.stream().map(r -> r.key).collect(Collectors.toUnmodifiableSet());
+				values = results.stream().map(r -> r.value).collect(Collectors.toUnmodifiableList());
 				return build();
 			}
 		};
 	}
 
+	private class Result<T> {
+		// transient ?
+		private final int id;
+		private final String key;
+		private final T value;
+		public Result(int id, String key, T value) {
+			this.id = id;
+			this.key = key;
+			this.value = value;
+		}
+	}
 
 }

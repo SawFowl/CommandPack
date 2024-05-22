@@ -40,7 +40,7 @@ import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.localeapi.api.EnumLocales;
 
 /**
- * This class is designed to quickly create some arguments for {@link RawSettings} commands.<br>
+ * This class is designed to quickly create some arguments for {@link Raw} commands.<br>
  * Some more variants may be added in the future.
  * 
  * @author SawFowl
