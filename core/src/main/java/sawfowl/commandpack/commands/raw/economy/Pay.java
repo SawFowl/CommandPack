@@ -24,6 +24,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
@@ -38,10 +39,10 @@ public class Pay extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		BigDecimal amount = getBigDecimal(args, cause, 1).get().abs();
-		UniqueAccount account = getArgument(UniqueAccount.class, cause, args, 0).get();
-		Optional<Currency> optCurrency = getCurrency(args, cause, 2);
+	public void process(CommandCause cause, ServerPlayer src, Locale locale, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		BigDecimal amount = args.getBigDecimal(1).get().abs();
+		UniqueAccount account = args.<UniqueAccount>get(0).get();
+		Optional<Currency> optCurrency = args.getCurrency(2);
 		if(account.uniqueId().equals(src.uniqueId())) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF);
 		delay(src, locale, consumer -> {
 			if(optCurrency.isPresent()) {

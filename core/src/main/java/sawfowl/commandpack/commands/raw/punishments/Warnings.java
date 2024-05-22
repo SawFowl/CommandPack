@@ -23,6 +23,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
@@ -38,14 +39,14 @@ public class Warnings extends AbstractRawCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		if(args.length == 0 && !isPlayer) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT);
-		Optional<Warns> optWarns = getArgument(Warns.class, cause, args, 0);
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		if(args.getInput().length == 0 && !isPlayer) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT);
+		Optional<Warns> optWarns = args.get(0);
 		if(!isPlayer) {
 			if(optWarns.isPresent()) {
-				audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, args[0], optWarns.get().inAllTime()).get());
+				audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, args.getInput()[0], optWarns.get().inAllTime()).get());
 				sendWarnsList(audience, locale, optWarns.get(), false, isPlayer);
-			} else audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, args[0], 0).get());
+			} else audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, args.getInput()[0], 0).get());
 		} else if(optWarns.isPresent() && !optWarns.get().getUniqueId().equals(((ServerPlayer) audience).uniqueId())) {
 			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, optWarns.get().getName(), optWarns.get().inAllTime()).get());
 			sendWarnsList(audience, locale, optWarns.get(), cause.hasPermission(Permissions.WARNS_STAFF), isPlayer);

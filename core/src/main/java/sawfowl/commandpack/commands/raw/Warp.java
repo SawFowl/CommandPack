@@ -18,6 +18,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
@@ -31,13 +32,14 @@ public class Warp extends AbstractRawCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		if(args.length == 0) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);
-		Optional<ServerPlayer> optTarget = cause.hasPermission(Permissions.WARP_STAFF) && args.length >= 2 ? getPlayer(args[args.length - 1]) : Optional.empty();
-		if(optTarget.isPresent()) args = Arrays.copyOf(args, args.length - 1);
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		if(args.getInput().length == 0) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);
+		Optional<ServerPlayer> optTarget = cause.hasPermission(Permissions.WARP_STAFF) && args.getInput().length >= 2 ? getPlayer(args.getInput()[args.getInput().length - 1]) : Optional.empty();
+		String[] input = args.getInput();
+		if(optTarget.isPresent()) input = Arrays.copyOf(input, input.length - 1);
 		String find = "";
-		for(String string : args) find = find.isEmpty() ? string : find + " " + string;
-		Optional<sawfowl.commandpack.api.data.player.Warp> optWarp = getArgument(sawfowl.commandpack.api.data.player.Warp.class, cause, args, 0);
+		for(String string : input) find = find.isEmpty() ? string : find + " " + string;
+		Optional<sawfowl.commandpack.api.data.player.Warp> optWarp = args.get(0);
 		if(!optWarp.isPresent()) exception(locale, LocalesPaths.COMMANDS_WARP_NOT_FOUND);
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) audience;
@@ -65,7 +67,7 @@ public class Warp extends AbstractRawCommand {
 				});
 			}
 		} else {
-			if(args.length == 1) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
+			if(args.getInput().length == 1) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
 			if(!optTarget.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
 			if(optWarp.isPresent()) {
 				teleport(optWarp.get(), optTarget.get());

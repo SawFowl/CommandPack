@@ -27,6 +27,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -40,12 +41,12 @@ public class Generate extends AbstractWorldCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, cause, 0).get();
-		String action = getString(args, cause, 1).get();
-		Optional<Integer> interval = getInteger(args, cause, 2);
-		Optional<Long> maxMemory = getLong(args, cause, 3);
-		Optional<Integer> chunks = getInteger(args, cause, 4);
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		ServerWorld world = args.getWorld(0).get();
+		String action = args.getString(1).get();
+		Optional<Integer> interval = args.getInteger(2);
+		Optional<Long> maxMemory = args.getLong(3);
+		Optional<Integer> chunks = args.getInteger(4);
 		if(action.equals("start")) {
 			if(tasks.containsKey(world.key().asString())) {
 				FillChunksTask fillTask = tasks.get(world.key().asString());

@@ -17,6 +17,7 @@ import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -29,9 +30,9 @@ public class Edit extends AbstractKitsEditCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
+	public void process(CommandCause cause, ServerPlayer src, Locale locale, Mutable arguments, RawArgumentsMap args) throws CommandException {
 		if(plugin.getKitService().getKits().isEmpty()) exception(locale, LocalesPaths.COMMANDS_KITS_NO_KITS);
-		Optional<Kit> optKit = getKit(args, cause, 0);
+		Optional<Kit> optKit = args.<Kit>get(0);
 		if(optKit.isPresent()) {
 			optKit.get().asMenu(getContainer(), src, false).open(src);
 		} else {

@@ -8,6 +8,7 @@ import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 
 /**
  * This interface is designed to simplify the creation of RawSettings commands.<br>
@@ -19,12 +20,13 @@ public interface RawPlayerCommand extends RawCommand {
 
 	/**
 	 * Command code execution.
+	 * @param args TODO
 	 */
-	void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException;
+	void process(CommandCause cause, ServerPlayer src, Locale locale, Mutable arguments, RawArgumentsMap args) throws CommandException;
 
 	@Override
-	default void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		process(cause, (ServerPlayer) cause.audience(), locale, args, arguments);
+	default void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		process(cause, (ServerPlayer) cause.audience(), locale, arguments, args);
 	}
 
 	@Override

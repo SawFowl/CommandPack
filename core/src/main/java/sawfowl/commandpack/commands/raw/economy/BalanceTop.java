@@ -26,6 +26,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
@@ -40,8 +41,8 @@ public class BalanceTop extends AbstractRawCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		Currency currency = getCurrency(args, cause, 0).orElse(plugin.getEconomy().getEconomyServiceImpl().defaultCurrency());
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		Currency currency = args.getCurrency(0).orElse(plugin.getEconomy().getEconomyServiceImpl().defaultCurrency());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) audience;
 			delay(player, locale, condumer -> {

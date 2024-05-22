@@ -1,9 +1,9 @@
 package sawfowl.commandpack.commands.raw.onlyplayercommands.kits;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
@@ -16,6 +16,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
@@ -28,11 +29,12 @@ public class AddCommand extends AbstractKitsEditCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		Kit kit = getKit(args, cause, 0).get();
+	public void process(CommandCause cause, ServerPlayer src, Locale locale, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		Kit kit = args.<Kit>get(0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
-		if(args.length < 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		kitData.addCommands(String.join(" ", Arrays.copyOfRange(args, 1, args.length - 1)));
+		Optional<String> command = args.get(1);
+		if(!command.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+		kitData.addCommands(command.get());
 		kitData.save();
 		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_ADD_COMMAND));
 	}
@@ -61,7 +63,7 @@ public class AddCommand extends AbstractKitsEditCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			kitArgument(0, false, false),
-			RawArguments.createStringArgument("Command", new ArrayList<>(), false, false, 1, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createRemainingJoinedStringsArgument("Command", false, false, 1, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
 	}
 

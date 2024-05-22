@@ -1,6 +1,5 @@
 package sawfowl.commandpack.api.commands.raw;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -30,10 +29,6 @@ import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Basic;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
-import org.spongepowered.api.item.enchantment.EnchantmentType;
-import org.spongepowered.api.service.economy.Currency;
-import org.spongepowered.api.world.WorldType;
-import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.common.command.registrar.tree.builder.AbstractCommandTreeNode;
 
 import net.kyori.adventure.audience.Audience;
@@ -56,7 +51,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	/**
 	 * Command code execution.
 	 */
-	void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException;
+	void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException;
 
 	Component shortDescription(Locale locale);
 
@@ -154,13 +149,20 @@ public interface RawCommand extends PluginCommand, Raw {
 	default CommandResult process(CommandCause cause, Mutable arguments) throws CommandException {
 		boolean isPlayer = cause.first(ServerPlayer.class).isPresent();
 		Locale locale = getLocale(cause);
+		RawArgumentsMap map = checkChildAndArguments(cause, createResultCollection(cause, Stream.of(arguments.input().split(" ")).map(String::toString).filter(string -> (string != null && !string.equals(""))).toArray(String[]::new)), isPlayer, locale);
+		Object[] child = getChildExecutor(cause, map);
+		if(child != null && child.length > 0) {
+			((RawCommand) child[0]).process(cause, cause.audience(), locale, isPlayer, arguments, ((RawArgumentsMap) child[1]));
+			child = null;
+		} else process(cause, cause.first(ServerPlayer.class).map(player -> (Audience) player).orElse(cause.audience()), locale, isPlayer, arguments, map);
+		/*
+		 * 
 		String[] args = checkChildAndArguments(cause, Stream.of(arguments.input().split(" ")).map(String::toString).filter(string -> (string != null && !string.equals(""))).toArray(String[]::new), isPlayer, locale);
-		checkCooldown(cause, locale, isPlayer);
 		Object[] child = getChildExecutor(cause, args);
 		if(child != null && child.length > 0) {
 			((RawCommand) child[0]).process(cause, cause.audience(), locale, isPlayer, (String[]) child[1], arguments);
 			child = null;
-		} else process(cause, cause.first(ServerPlayer.class).map(player -> (Audience) player).orElse(cause.audience()), locale, isPlayer, args, arguments);
+		} else process(cause, cause.first(ServerPlayer.class).map(player -> (Audience) player).orElse(cause.audience()), locale, isPlayer, args, arguments);*/
 		return success();
 	}
 
@@ -169,14 +171,31 @@ public interface RawCommand extends PluginCommand, Raw {
 		return enableAutoComplete() ? completeChild(cause, Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList()), arguments.input()) : CommandsUtil.EMPTY_COMPLETIONS;
 	}
 
-	default String[] checkChildAndArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
+	default RawArgumentsMap checkChildAndArguments(CommandCause cause, RawArgumentsMap args, boolean isPlayer, Locale locale) throws CommandException {
+		if(args.getInput().length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args.getInput()[0]) && getChildExecutors().get(args.getInput()[0]).canExecute(cause)) {
+			return getChildExecutors().get(args.getInput()[0]).checkChildAndArguments(cause, (args.getInput().length > 1 ? createResultCollection(cause, Stream.of(Arrays.copyOfRange(args.getInput(), 1, args.getInput().length + 1)).filter(arg -> arg != null).toArray(String[]::new)) : RawArgumentsMap.empty()), isPlayer, locale);
+		} else return checkArguments(cause, args, isPlayer, locale);
+	}
+
+	default RawArgumentsMap checkArguments(CommandCause cause, RawArgumentsMap args, boolean isPlayer, Locale locale) throws CommandException {
+		if(getArguments() != null && args != null && !args.isEmpty()) {
+			Optional<RawArgument<?>> emptyArg = getArguments().values().stream().filter(arg -> (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole())) && !args.idSet().contains(arg.getCursor())).findFirst();
+			if(emptyArg.isPresent()) exceptionAppendUsage(cause, getComponent(locale, emptyArg.get().getLocalesPath()));
+		}
+		return args;
+	}
+
+	@SuppressWarnings("unused")
+	@Deprecated
+	private String[] checkChildAndArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
 			getChildExecutors().get(args[0]).checkChildAndArguments(cause, (args.length > 1 ? Stream.of(Arrays.copyOfRange(args, 1, args.length + 1)).filter(arg -> arg != null).toArray(String[]::new) : new String[] {}), isPlayer, locale);
 			return args;
 		} else return checkArguments(cause, args, isPlayer, locale);
 	}
 
-	default String[] checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
+	@Deprecated
+	private String[] checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
 		if(getArguments() != null) {
 			Optional<RawArgument<?>> emptyArg = getArguments().values().stream().filter(arg -> !arg.getResult(cause, args).isPresent() && (!arg.isOptional() || !isPlayer && !arg.isOptionalForConsole())).findFirst();
 			if(emptyArg.isPresent()) exceptionAppendUsage(cause, getComponent(locale, emptyArg.get().getLocalesPath()));
@@ -263,7 +282,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	default CommandException exceptionAppendUsage(CommandCause cause, Locale locale, Object[] localePath) throws CommandException {
 		throw new CommandException(getComponent(locale, localePath).append(Component.newline()).append(usage(cause)));
 	}
-
+/*
 	default Optional<ServerWorld> getWorld(String[] args, CommandCause cause, int cursor) {
 		return getArgument(cause, args, cursor);
 	}
@@ -331,7 +350,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * @param cursor - The argument number of the command.
 	 * @return {@link Optional}
 	 */
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	default <T> Optional<T> getArgument(Class<T> clazz, CommandCause cause, String[] args, int cursor) {
 		return getArguments() == null || !getArguments().containsKey(cursor) || !getArguments().get(cursor).getAssociatedClass().isAssignableFrom(clazz) ? Optional.empty() : getArguments().get(cursor).getResult(cause, args).map(value -> {
 				try {
@@ -352,7 +371,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * @param cursor - The argument number of the command.
 	 * @return {@link Optional}
 	 */
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	default <T> Optional<T> getArgument(CommandCause cause, String[] args, int cursor) {
 		return getArguments() == null || !getArguments().containsKey(cursor) ? Optional.empty() : getArguments().get(cursor).getResult(cause, args).map(value -> {
 				try {
@@ -373,7 +392,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * @param args - All command arguments.
 	 * @return {@link Optional}
 	 */
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	default <T> Optional<T> getArgument(Class<T> clazz, CommandCause cause, String[] args) {
 		return getArguments() == null ? Optional.empty() : getArguments().values().stream().filter(arg -> arg.getAssociatedClass().isAssignableFrom(clazz)).findFirst().map(arg -> arg.getResult(cause, args).map(value -> {
 					try {
@@ -396,7 +415,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * @param args - All command arguments.
 	 * @return {@link Optional}
 	 */
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	default <T> Optional<T> getArgument(CommandCause cause, String[] args) {
 		return getArguments() == null ? Optional.empty() : getArguments().values().stream().map(arg -> arg.getResult(cause, args)).filter(value -> !value.isEmpty()).findFirst().map(value -> {
 				try {
@@ -436,9 +455,18 @@ public interface RawCommand extends PluginCommand, Raw {
 		}
 	}
 
+	@SuppressWarnings("unused")
+	@Deprecated
 	private Object[] getChildExecutor(CommandCause cause, String[] args) {
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
 			return getChildExecutors().get(args[0]).getChildExecutor(cause, args.length > 1 ? Stream.of(Arrays.copyOfRange(args, 1, args.length + 1)).filter(arg -> arg != null).toArray(String[]::new) : new String[] {});
+		}
+		return new Object[] {this, args};
+	}
+
+	private Object[] getChildExecutor(CommandCause cause, RawArgumentsMap args) {
+		if(args.getInput().length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args.getInput()[0]) && getChildExecutors().get(args.getInput()[0]).canExecute(cause)) {
+			return getChildExecutors().get(args.getInput()[0]).getChildExecutor(cause, args.getInput().length > 1 ? createResultCollection(cause, Stream.of(Arrays.copyOfRange(args.getInput(), 1, args.getInput().length + 1)).filter(arg -> arg != null).toArray(String[]::new)) : RawArgumentsMap.empty());
 		}
 		return new Object[] {this, args};
 	}

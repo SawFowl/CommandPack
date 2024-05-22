@@ -19,6 +19,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -30,9 +31,9 @@ public class SetBorder extends AbstractWorldCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, cause, 0).get();
-		int radius = getInteger(args, cause, 1).get();
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		ServerWorld world = args.getWorld(0).get();
+		int radius = args.getInteger(1).get();
 		world.setBorder(WorldBorder.builder().center(world.properties().spawnPosition().x(), world.properties().spawnPosition().z()).targetDiameter(radius).damagePerBlock(world.border().damagePerBlock()).safeZone(world.border().safeZone()).build());
 		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_SETBORDER).replace(new String[] {Placeholders.WORLD, Placeholders.VALUE, Placeholders.LOCATION}, world.key().asString(), radius, world.properties().spawnPosition()).get());
 	}

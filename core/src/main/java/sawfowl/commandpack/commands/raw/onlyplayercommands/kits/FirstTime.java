@@ -15,6 +15,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
@@ -27,10 +28,10 @@ public class FirstTime extends AbstractKitsEditCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		Kit kit = getKit(args, cause, 0).get();
+	public void process(CommandCause cause, ServerPlayer src, Locale locale, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		Kit kit = args.<Kit>get(0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
-		boolean value = getBoolean(args, cause, 1).get();
+		boolean value = args.getBoolean(1).get();
 		kitData.setFirstTime(value);
 		kitData.save();
 		src.sendMessage(getComponent(locale, value ? LocalesPaths.COMMANDS_KITS_FIRST_TIME_ENABLE : LocalesPaths.COMMANDS_KITS_FIRST_TIME_DISABLE));

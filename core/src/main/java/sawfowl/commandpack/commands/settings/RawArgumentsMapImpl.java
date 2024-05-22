@@ -21,10 +21,10 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 
 public class RawArgumentsMapImpl implements RawArgumentsMap {
 
-	private Set<Integer> ids = new HashSet<>();
-	private Set<String> keys = new HashSet<>();
-	private List<Result<?>> results = new ArrayList<>();
-	private Collection<Object> values = new HashSet<>();
+	private transient Set<Integer> ids = Collections.emptySet();
+	private transient Set<String> keys = Collections.emptySet();
+	private transient List<Result<?>> results = Collections.emptyList();
+	private transient String[] args = {};
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -96,7 +96,12 @@ public class RawArgumentsMapImpl implements RawArgumentsMap {
 
 	@Override
 	public Collection<Object> values() {
-		return values;
+		return results.stream().map(r -> r.value).collect(Collectors.toUnmodifiableList());
+	}
+
+	@Override
+	public String[] getInput() {
+		return args;
 	}
 
 	@Override
@@ -104,7 +109,16 @@ public class RawArgumentsMapImpl implements RawArgumentsMap {
 		ids = Collections.unmodifiableSet(new HashSet<>());
 		keys = Collections.unmodifiableSet(new HashSet<>());
 		results = Collections.unmodifiableList(new ArrayList<>());
-		values = Collections.unmodifiableSet(new HashSet<>());
+	}
+
+	@Override
+	public int size() {
+		return results.size();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return results.isEmpty();
 	}
 
 	@Override
@@ -128,14 +142,14 @@ public class RawArgumentsMapImpl implements RawArgumentsMap {
 			}
 			
 			@Override
-			public RawArgumentsMap create(RawCommand command, CommandCause cause, String[] args) {
-				if(command == null || command.getArguments() == null || cause == null || args == null || args.length == 0) return build();
-				results = command.getArguments().values().stream().map(arg -> arg.getResult(cause, args)
-						.map(value -> new Result<>(arg.getCursor(), arg.getTreeKey(), value)).orElse(null))
+			public RawArgumentsMap create(RawCommand command, CommandCause cause, String[] input) {
+				if(input != null) args = input;
+				if(command == null || command.getArguments() == null || cause == null || input == null || args.length == 0) return build();
+				results = command.getArguments().values().stream().map(arg -> arg.hasPermission(cause) ? arg.getResult(cause, args)
+						.map(value -> new Result<>(arg.getCursor(), arg.getTreeKey(), value)).orElse(null) : null)
 						.filter(result -> result != null).collect(Collectors.toUnmodifiableList());
 				ids = results.stream().map(r -> r.id).collect(Collectors.toUnmodifiableSet());
 				keys = results.stream().map(r -> r.key).collect(Collectors.toUnmodifiableSet());
-				values = results.stream().map(r -> r.value).collect(Collectors.toUnmodifiableList());
 				return build();
 			}
 		};
@@ -143,9 +157,9 @@ public class RawArgumentsMapImpl implements RawArgumentsMap {
 
 	private class Result<T> {
 		// transient ?
-		private final int id;
-		private final String key;
-		private final T value;
+		private transient final int id;
+		private transient final String key;
+		private transient final T value;
 		public Result(int id, String key, T value) {
 			this.id = id;
 			this.key = key;

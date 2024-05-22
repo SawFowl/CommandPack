@@ -19,6 +19,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.Placeholders;
@@ -33,8 +34,8 @@ public class BanInfo extends AbstractRawCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		Profile ban = getArgument(Profile.class, cause, args, 0).get();
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		Profile ban = args.<Profile>get(0).get();
 		Component title = getText(locale, LocalesPaths.COMMANDS_BANINFO_TITLE).replace(Placeholders.PLAYER, ban.profile().name().orElse(ban.profile().examinableName())).get();
 		if(isPlayer) {
 			delay((ServerPlayer) audience, locale, consumer -> {

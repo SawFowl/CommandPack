@@ -18,6 +18,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -29,9 +30,9 @@ public class ViewDistance extends AbstractWorldCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, cause, 0).get();
-		int distance = getInteger(args, cause, 1).get();
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		ServerWorld world = args.getWorld(0).get();
+		int distance = args.getInteger(1).get();
 		if(distance < 1) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 		world.properties().setViewDistance(distance);
 		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_VIEWDISTANCE).replace(new String[] {Placeholders.WORLD, Placeholders.VALUE}, world.key().asString(), distance).get());

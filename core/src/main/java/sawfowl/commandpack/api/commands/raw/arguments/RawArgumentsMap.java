@@ -1,6 +1,9 @@
 package sawfowl.commandpack.api.commands.raw.arguments;
 
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -9,6 +12,11 @@ import java.util.function.BiConsumer;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.data.persistence.DataSerializable;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.item.enchantment.EnchantmentType;
+import org.spongepowered.api.service.economy.Currency;
+import org.spongepowered.api.world.WorldType;
+import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
@@ -35,6 +43,10 @@ public interface RawArgumentsMap extends DataSerializable {
 	 */
 	public static RawArgumentsMap create(RawCommand command, CommandCause cause, String[] args) {
 		return builder().create(command, cause, args);
+	}
+
+	public static RawArgumentsMap empty() {
+		return builder().build();
 	}
 
 	/**
@@ -112,9 +124,127 @@ public interface RawArgumentsMap extends DataSerializable {
 	Collection<Object> values();
 
 	/**
+	 * An array of entered arguments. No conversion.
+	 */
+	String[] getInput();
+
+	/**
 	 * See {@link Map#clear()}
 	 */
 	void clear();
+
+	/**
+	 * See {@link Map#size()}
+	 */
+	int size();
+
+	/**
+	 * See {@link Map#isEmpty()}
+	 * The argument keys and their values may be empty even if the array contained in this map is not empty.
+	 */
+	boolean isEmpty();
+
+	default Optional<ServerWorld> getWorld(int cursor) {
+		return get(cursor);
+	}
+
+	default Optional<WorldType> getWorldType(int cursor) {
+		return get(cursor);
+	}
+	default Optional<ServerPlayer> getPlayer(int cursor) {
+		return get(cursor);
+	}
+
+	default Optional<EnchantmentType> getEnchantmentType(int cursor) {
+		return get(cursor);
+	}
+
+	default Optional<String> getString(int cursor) {
+		return get(cursor);
+	}
+
+	default Optional<Boolean> getBoolean(int cursor) {
+		return get(cursor);
+	}
+
+	default Optional<Integer> getInteger(int cursor) {
+		return get(cursor);
+	}
+
+	default Optional<Long> getLong(int cursor) {
+		return get(cursor);
+	}
+
+	default Optional<Double> getDouble(int cursor) {
+		return get(cursor);
+	}
+
+	default Optional<BigDecimal> getBigDecimal(int cursor) {
+		return get(cursor);
+	}
+
+	default Optional<Locale> getLocale(int cursor) {
+		return get(cursor);
+	}
+
+	default Optional<Currency> getCurrency(int cursor) {
+		return get(cursor);
+	}
+
+	default Optional<Duration> getDuration(int cursor) {
+		return get(cursor);
+	}
+
+	default Optional<ServerWorld> getWorld(String key) {
+		return get(key);
+	}
+
+	default Optional<WorldType> getWorldType(String key) {
+		return get(key);
+	}
+	default Optional<ServerPlayer> getPlayer(String key) {
+		return get(key);
+	}
+
+	default Optional<EnchantmentType> getEnchantmentType(String key) {
+		return get(key);
+	}
+
+	default Optional<String> getString(String key) {
+		return get(key);
+	}
+
+	default Optional<Boolean> getBoolean(String key) {
+		return get(key);
+	}
+
+	default Optional<Integer> getInteger(String key) {
+		return get(key);
+	}
+
+	default Optional<Long> getLong(String key) {
+		return get(key);
+	}
+
+	default Optional<Double> getDouble(String key) {
+		return get(key);
+	}
+
+	default Optional<BigDecimal> getBigDecimal(String key) {
+		return get(key);
+	}
+
+	default Optional<Locale> getLocale(String key) {
+		return get(key);
+	}
+
+	default Optional<Currency> getCurrency(String key) {
+		return get(key);
+	}
+
+	default Optional<Duration> getDuration(String key) {
+		return get(key);
+	}
 
 	interface Builder extends AbstractBuilder<RawArgumentsMap>, org.spongepowered.api.util.Builder<RawArgumentsMap, Builder> {
 

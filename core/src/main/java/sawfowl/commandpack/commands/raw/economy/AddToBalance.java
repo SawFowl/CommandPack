@@ -26,6 +26,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -38,10 +39,10 @@ public class AddToBalance extends AbstractRawCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		Optional<String> accountName = getString(args, cause, 0);
-		BigDecimal add = getBigDecimal(args, cause, 1).get();
-		Currency currency = getCurrency(args, cause, 2).orElse(plugin.getEconomy().getEconomyService().defaultCurrency());
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		Optional<String> accountName = args.getString(0);
+		BigDecimal add = args.getBigDecimal(1).get();
+		Currency currency = args.getCurrency(2).orElse(plugin.getEconomy().getEconomyService().defaultCurrency());
 		if(accountName.isPresent()) {
 			Optional<UniqueAccount> account = plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(a -> a.identifier().equals(accountName.get())).findFirst();
 			if(account.isPresent()) {
@@ -104,7 +105,7 @@ public class AddToBalance extends AbstractRawCommand {
 				(cause, args) -> args.length >= 1 ? Optional.ofNullable(plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier).filter(var -> var.equals(args[0])).findFirst().orElse(args[0])) : Optional.empty(),
 				"Player",
 				true,
-				true,
+				false,
 				0,
 				null,
 				LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT

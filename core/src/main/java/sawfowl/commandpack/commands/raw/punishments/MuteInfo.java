@@ -18,6 +18,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
@@ -33,8 +34,8 @@ public class MuteInfo extends AbstractRawCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		Mute mute = getArgument(Mute.class, cause, args, 0).get();
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		Mute mute = args.<Mute>get(0).get();
 		Component title = getText(locale, LocalesPaths.COMMANDS_MUTEINFO_TITLE).replace(Placeholders.PLAYER, mute.getName()).get();
 		if(isPlayer) {
 			delay((ServerPlayer) audience, locale, consumer -> {

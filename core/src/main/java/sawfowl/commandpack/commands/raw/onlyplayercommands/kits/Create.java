@@ -16,6 +16,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -27,8 +28,8 @@ public class Create extends AbstractKitsEditCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		Kit kit = Kit.builder().id(args[0]).build();
+	public void process(CommandCause cause, ServerPlayer src, Locale locale, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		Kit kit = Kit.builder().id(args.getInput()[0]).build();
 		kit.asMenu(getContainer(), src, false).open(src);
 		plugin.getKitService().addKit(kit);
 	}

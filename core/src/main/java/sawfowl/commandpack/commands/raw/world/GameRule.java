@@ -29,6 +29,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -42,20 +43,20 @@ public class GameRule extends AbstractWorldCommand {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		if(args.length == 0 || !Sponge.server().worldManager().world(ResourceKey.resolve(args[0])).isPresent()) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
-		if(args.length == 1 || !gamerules.containsKey(args[1])) {
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		if(args.getInput().length == 0 || !Sponge.server().worldManager().world(ResourceKey.resolve(args.getInput()[0])).isPresent()) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
+		if(args.getInput().length == 1 || !gamerules.containsKey(args.getInput()[1])) {
 			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULES).replace(Placeholders.VALUE, String.join(", ", gamerules.keySet().stream().filter(k -> !k.contains(":")).toArray(String[]::new))).get());
 			return;
 		}
-		if(args.length == 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
-		ServerWorld world = getWorld(args, cause, 0).get();
-		org.spongepowered.api.world.gamerule.GameRule<?> rule = gamerules.get(getString(args, cause, 1).get());
-		String stringValueArg = getString(args, cause, 2).get();
+		if(args.getInput().length == 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+		ServerWorld world = args.getWorld(0).get();
+		org.spongepowered.api.world.gamerule.GameRule<?> rule = gamerules.get(args.getString(1).get());
+		String stringValueArg = args.getString(2).get();
 		if(isBooleanType(rule)) {
-			if(BooleanUtils.toBooleanObject(args[2]) == null) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+			if(BooleanUtils.toBooleanObject(args.getInput()[2]) == null) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
 			org.spongepowered.api.world.gamerule.GameRule<Boolean> boolRule = (org.spongepowered.api.world.gamerule.GameRule<Boolean>) rule;
-			boolean value = BooleanUtils.toBooleanObject(args[2]);
+			boolean value = BooleanUtils.toBooleanObject(args.getInput()[2]);
 			world.properties().setGameRule(boolRule, value);
 			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULE_SUCCESS).replace(new String[] {Placeholders.RULE, Placeholders.WORLD, Placeholders.VALUE}, rule.name(), world.key().asString(), value).get());
 		} else if(isIntType(rule)) {

@@ -17,6 +17,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -28,9 +29,9 @@ public class SpawnLogic extends AbstractWorldCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, cause, 0).get();
-		boolean enable = getBoolean(args, cause, 1).get();
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		ServerWorld world = args.getWorld(0).get();
+		boolean enable = args.getBoolean(1).get();
 		world.properties().setPerformsSpawnLogic(enable);
 		audience.sendMessage(getText(locale, enable ? LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_ENABLE : LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_DISABLE).replace(Placeholders.WORLD, world.key().asString()).get());
 	}

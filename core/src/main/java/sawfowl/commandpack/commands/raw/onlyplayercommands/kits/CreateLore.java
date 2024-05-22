@@ -15,6 +15,7 @@ import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
@@ -27,8 +28,8 @@ public class CreateLore extends AbstractKitsEditCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		Kit kit = getKit(args, cause, 0).get();
+	public void process(CommandCause cause, ServerPlayer src, Locale locale, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		Kit kit = args.<Kit>get(0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		kitData.setLore(Locales.DEFAULT, Arrays.asList("&dFirst line", "&eSecond line"));
 		kitData.setLore(Locales.RU_RU, Arrays.asList("&dСтрока 1", "&eСтрока 2"));

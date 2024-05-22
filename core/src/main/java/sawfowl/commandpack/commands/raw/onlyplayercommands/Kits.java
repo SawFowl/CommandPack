@@ -20,6 +20,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.AddCommand;
 import sawfowl.commandpack.commands.raw.onlyplayercommands.kits.Commands;
@@ -56,7 +57,7 @@ public class Kits extends AbstractPlayerCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
+	public void process(CommandCause cause, ServerPlayer src, Locale locale, Mutable arguments, RawArgumentsMap args) throws CommandException {
 		Component message = null;
 		for(RawCommand command : getChildExecutors().values()) {
 			if(message == null) {

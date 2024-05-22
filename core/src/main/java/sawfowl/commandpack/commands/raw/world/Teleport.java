@@ -21,6 +21,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
@@ -33,9 +34,9 @@ public class Teleport extends AbstractWorldCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, cause, 0).get();
-		Optional<ServerPlayer> player = getPlayer(args, cause, 1);
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		ServerWorld world = args.getWorld(0).get();
+		Optional<ServerPlayer> player = args.getPlayer(1);
 		ServerLocation location = findSafe(ServerLocation.of(world, world.properties().spawnPosition()));
 		if(isPlayer) {
 			if(player.isPresent()) {

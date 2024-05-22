@@ -15,6 +15,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
@@ -27,12 +28,12 @@ public class SetName extends AbstractKitsEditCommand  {
 	}
 
 	@Override
-	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		Kit kit = getKit(args, cause, 0).get();
+	public void process(CommandCause cause, ServerPlayer src, Locale locale, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		Kit kit = args.<Kit>get(0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
-		Locale localeForName = getLocale(args, cause, 1).get();
-		if(args.length < 3) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);
-		kitData.setName(localeForName, String.join(" ", Arrays.copyOfRange(args, 2, args.length)));
+		Locale localeForName = args.getLocale(1).get();
+		if(args.getInput().length < 3) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);
+		kitData.setName(localeForName, String.join(" ", Arrays.copyOfRange(args.getInput(), 2, args.getInput().length)));
 		kitData.save();
 		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_SET_NAME));
 	}

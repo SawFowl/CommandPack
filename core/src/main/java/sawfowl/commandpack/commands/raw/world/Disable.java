@@ -20,6 +20,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -31,10 +32,10 @@ public class Disable extends AbstractWorldCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		ServerWorld world = getWorld(args, cause, 0).get();
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		ServerWorld world = args.getWorld(0).get();
 		world.properties().setLoadOnStartup(false);
-		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_DISABLE).replace(Placeholders.WORLD, args[0]).get());
+		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_DISABLE).replace(Placeholders.WORLD, args.getInput()[0]).get());
 	}
 
 	@Override

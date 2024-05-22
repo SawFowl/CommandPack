@@ -18,6 +18,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
@@ -30,9 +31,9 @@ public class Sudo extends AbstractRawCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
-		if(!Sponge.server().commandManager().commandMapping(args[1]).isPresent()) exception(getText(locale, LocalesPaths.COMMANDS_SUDO_COMMAND_NOT_FOUND));
-		CommandResult result = plugin.getAPI().playersData().getOrCreatePlayerData(getPlayer(args, cause, 0).get()).runCommand(locale, getString(args, cause, 1).get());
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		if(!Sponge.server().commandManager().commandMapping(args.getInput()[1]).isPresent()) exception(getText(locale, LocalesPaths.COMMANDS_SUDO_COMMAND_NOT_FOUND));
+		CommandResult result = plugin.getAPI().playersData().getOrCreatePlayerData(args.getPlayer(0).get()).runCommand(locale, args.getString(1).get());
 		if(!result.isSuccess() && result.errorMessage().isPresent()) exception(result.errorMessage().get());
 	}
 

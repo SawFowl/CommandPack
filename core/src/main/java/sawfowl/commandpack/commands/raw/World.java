@@ -15,6 +15,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 import sawfowl.commandpack.commands.raw.world.Create;
 import sawfowl.commandpack.commands.raw.world.Delete;
@@ -43,7 +44,7 @@ public class World extends AbstractWorldCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, String[] args, Mutable arguments) throws CommandException {
+	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
 		getChildExecutors().forEach((k, v) -> {
 			if(v.canExecute(cause)) audience.sendMessage(v.usage(cause).color(NamedTextColor.GREEN));
 		});

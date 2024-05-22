@@ -17,6 +17,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.Placeholders;
@@ -30,10 +31,11 @@ public class Cooldown extends AbstractKitsEditCommand {
 	}
 
 	@Override
-	public void process(CommandCause cause, ServerPlayer src, Locale locale, String[] args, Mutable arguments) throws CommandException {
-		Kit kit = getKit(args, cause, 0).get();
+	public void process(CommandCause cause, ServerPlayer src, Locale locale, Mutable arguments, RawArgumentsMap args) throws CommandException {
+		Kit kit = args.<Kit>get(0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
-		Duration duration = getDurationArg(args, cause, 1, locale).get();
+		String durationString = args.getString(1).get();
+		Duration duration = parseDuration(durationString, locale).get();
 		kitData.setCooldown(duration.getSeconds());
 		kit.save();
 		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS).replace(Placeholders.VALUE, kit.getLocalizedName(locale)).get());
