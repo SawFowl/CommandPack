@@ -52,8 +52,11 @@ public class RawArguments {
 
 	public static final List<String> EMPTY = new ArrayList<>();
 	private static final CommandPack plugin = CommandPack.getInstance();
+	/**
+	 * Can be used as a token.
+	*/
 	@SuppressWarnings("unchecked")
-	private static final Class<CompletableFuture<Optional<User>>> USER_LOAD_CLASS = (Class<CompletableFuture<Optional<User>>>) new CompletableFuture<Optional<User>>().getClass();
+	public static final Class<CompletableFuture<Optional<User>>> USER_LOAD_CLASS = (Class<CompletableFuture<Optional<User>>>) new CompletableFuture<Optional<User>>().getClass();
 
 	public static RawArgument<String> createStringArgument(String key, @NotNull Stream<String> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, String permission, Object[] localesPath) {
 		return RawArgument.of(
