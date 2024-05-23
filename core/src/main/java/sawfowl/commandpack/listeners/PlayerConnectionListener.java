@@ -33,6 +33,7 @@ import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.events.KitGiveEvent;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
+import sawfowl.commandpack.apiclasses.TempPlayerDataImpl;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.player.GivedKitData;
 import sawfowl.commandpack.configure.configs.player.PlayerData;
@@ -49,6 +50,7 @@ public class PlayerConnectionListener {
 
 	@Listener
 	public void onConnect(ServerSideConnectionEvent.Join event) {
+		((TempPlayerDataImpl) plugin.getPlayersData().getTempData()).registerPlayer(event.player());
 		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(event.player());
 		if(plugin.isForgeServer()) {
 			if(plugin.getMainConfig().isPrintPlayerMods() && !MixinServerPlayer.cast(event.player()).getModList().isEmpty()) plugin.getLogger().info(plugin.getLocales().getString(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.PLAYER_MODS_LIST).replace(Placeholders.PLAYER, event.player().name()).replace(Placeholders.VALUE, String.join(", ", MixinServerPlayer.cast(event.player()).getModList().stream().map(mod -> mod.getId()).toList())));
@@ -95,6 +97,7 @@ public class PlayerConnectionListener {
 
 	@Listener
 	public void onDisconnect(ServerSideConnectionEvent.Leave event) {
+		((TempPlayerDataImpl) plugin.getPlayersData().getTempData()).unregisterPlayer(event.player());
 		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
 		PlayerData playerData = ((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get());
 		playerData.setLastExit();

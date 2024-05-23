@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -19,6 +20,7 @@ import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.CommandCause;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.item.enchantment.EnchantmentTypes;
@@ -50,6 +52,8 @@ public class RawArguments {
 
 	public static final List<String> EMPTY = new ArrayList<>();
 	private static final CommandPack plugin = CommandPack.getInstance();
+	@SuppressWarnings("unchecked")
+	private static final Class<CompletableFuture<Optional<User>>> USER_LOAD_CLASS = (Class<CompletableFuture<Optional<User>>>) new CompletableFuture<Optional<User>>().getClass();
 
 	public static RawArgument<String> createStringArgument(String key, @NotNull Stream<String> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, String permission, Object[] localesPath) {
 		return RawArgument.of(
@@ -208,8 +212,23 @@ public class RawArguments {
 		return RawArgument.of(
 			ServerPlayer.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
-			(CommandCause cause, String[] args) -> Sponge.server().onlinePlayers().stream().filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).map(ServerPlayer::name),
+			(CommandCause cause, String[] args) -> CommandPack.getInstance().getPlayersData().getTempData().streamOnlinePlayers().filter(name -> Sponge.server().player(name).filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).isPresent()),
 			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? Sponge.server().onlinePlayers().stream().filter(player -> player.name().equals(args[cursor])).findFirst() : Optional.empty(),
+			"Player",
+			optional,
+			optionalForConsole,
+			cursor,
+			permission,
+			localesPath
+		);
+	}
+
+	public static RawArgument<CompletableFuture<Optional<User>>> createUserArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+		return RawArgument.of(
+			USER_LOAD_CLASS,
+			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
+			(CommandCause cause, String[] args) -> CommandPack.getInstance().getPlayersData().getTempData().streamOnlinePlayers().filter(name -> Sponge.server().player(name).filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).isPresent()),
+			(CommandCause cause, String[] args) -> args.length >= cursor + 1 ? plugin.getPlayersData().getTempData().getUser(args[cursor]) : Optional.empty(),
 			"Player",
 			optional,
 			optionalForConsole,

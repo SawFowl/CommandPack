@@ -3,7 +3,10 @@ package sawfowl.commandpack.api;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerLocation;
 
@@ -18,6 +21,21 @@ import sawfowl.commandpack.api.data.command.Settings;
  * @author SawFowl
  */
 public interface TempPlayerData {
+
+	/**
+	 * A stream of online player nicknames
+	 */
+	Stream<String> streamOnlinePlayers();
+
+	/**
+	 * Stream the nicknames of every player that has ever been on the server.
+	 */
+	Stream<String> streamUsers();
+
+	/**
+	 * Retrieve offline player data if they have ever been on the server.
+	 */
+	public Optional<CompletableFuture<Optional<User>>> getUser(String name);
 
 	/**
 	 * Registering to track a command.

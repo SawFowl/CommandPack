@@ -94,6 +94,7 @@ import sawfowl.commandpack.apiclasses.CustomPacketImpl;
 import sawfowl.commandpack.apiclasses.KitServiceImpl;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.apiclasses.RTPService;
+import sawfowl.commandpack.apiclasses.TempPlayerDataImpl;
 import sawfowl.commandpack.apiclasses.punishment.PunishmentServiceImpl;
 import sawfowl.commandpack.commands.settings.ParameterSettingsImpl;
 import sawfowl.commandpack.commands.settings.RawArgumentImpl;
@@ -459,6 +460,15 @@ public class CommandPack {
 		registeredParameterizedCommands.clear();
 		registeredRawCommands = null;
 		registeredParameterizedCommands = null;
+		Sponge.server().userManager().streamAll().forEach(profile -> {
+			if(!profile.name().isPresent()) {
+				Sponge.server().userManager().load(profile).thenAccept(optUser -> {
+					optUser.ifPresent(user -> ((TempPlayerDataImpl) playersData.getTempData()).registerUser(user.name()));
+				}).thenAccept(v -> {
+					Sponge.server().userManager().removeFromCache(profile.uuid());
+				});
+			} else ((TempPlayerDataImpl) playersData.getTempData()).registerUser(profile.name().get());
+		});
 	}
 
 	@Listener

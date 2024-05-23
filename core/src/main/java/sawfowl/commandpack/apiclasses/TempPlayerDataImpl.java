@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.Keys;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ServerSideConnectionEvent;
@@ -41,9 +44,39 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	private Set<UUID> commandSpy = new HashSet<>();
 	private Map<UUID, Long> vanishTime = new HashMap<>();
 	private Map<UUID, Audience> replyMap = new HashMap<>();
+	private Set<String> onlinePlayers = new HashSet<String>();
+	private Set<String> users = new HashSet<String>();
 	public TempPlayerDataImpl(CommandPack plugin) {
 		this.plugin = plugin;
 		Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
+	}
+
+	public void registerPlayer(ServerPlayer player) {
+		onlinePlayers.add(player.name());
+		users.add(player.name());
+	}
+
+	public void registerUser(String user) {
+		users.add(user);
+	}
+
+	public void unregisterPlayer(ServerPlayer player) {
+		onlinePlayers.removeIf(name -> name.equals(player.name()));
+	}
+
+	@Override
+	public Stream<String> streamOnlinePlayers() {
+		return onlinePlayers.stream();
+	}
+
+	@Override
+	public Stream<String> streamUsers() {
+		return users.stream();
+	}
+
+	@Override
+	public Optional<CompletableFuture<Optional<User>>> getUser(String name) {
+		return users.contains(name) ? Optional.ofNullable(Sponge.server().userManager().load(name)) : Optional.empty();
 	}
 
 	@Override
