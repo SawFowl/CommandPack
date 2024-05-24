@@ -40,6 +40,7 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.CommandsUtil;
+import sawfowl.localeapi.api.Text;
 
 /**
  * This interface is designed to simplify the creation of {@link Raw} commands.
@@ -149,20 +150,13 @@ public interface RawCommand extends PluginCommand, Raw {
 	default CommandResult process(CommandCause cause, Mutable arguments) throws CommandException {
 		boolean isPlayer = cause.first(ServerPlayer.class).isPresent();
 		Locale locale = getLocale(cause);
-		RawArgumentsMap map = checkChildAndArguments(cause, createResultCollection(cause, Stream.of(arguments.input().split(" ")).map(String::toString).filter(string -> (string != null && !string.equals(""))).toArray(String[]::new)), isPlayer, locale);
-		Object[] child = getChildExecutor(cause, map);
-		if(child != null && child.length > 0) {
-			((RawCommand) child[0]).process(cause, cause.audience(), locale, isPlayer, arguments, ((RawArgumentsMap) child[1]));
-			child = null;
-		} else process(cause, cause.first(ServerPlayer.class).map(player -> (Audience) player).orElse(cause.audience()), locale, isPlayer, arguments, map);
-		/*
-		 * 
-		String[] args = checkChildAndArguments(cause, Stream.of(arguments.input().split(" ")).map(String::toString).filter(string -> (string != null && !string.equals(""))).toArray(String[]::new), isPlayer, locale);
+		String[] args = Stream.of(arguments.input().split(" ")).map(String::toString).filter(string -> (string != null && !string.equals(""))).toArray(String[]::new);
 		Object[] child = getChildExecutor(cause, args);
 		if(child != null && child.length > 0) {
-			((RawCommand) child[0]).process(cause, cause.audience(), locale, isPlayer, (String[]) child[1], arguments);
+			((RawCommand) child[0]).process(cause, cause.audience(), locale, isPlayer, arguments, ((RawCommand) child[0]).checkArguments(cause, ((RawCommand) child[0]).createResultCollection(cause, (String[]) child[1]), isPlayer, locale));
+			args = null;
 			child = null;
-		} else process(cause, cause.first(ServerPlayer.class).map(player -> (Audience) player).orElse(cause.audience()), locale, isPlayer, args, arguments);*/
+		} else process(cause, cause.first(ServerPlayer.class).map(player -> (Audience) player).orElse(cause.audience()), locale, isPlayer, arguments, checkArguments(cause, createResultCollection(cause, args), isPlayer, locale));
 		return success();
 	}
 
@@ -178,13 +172,19 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	default RawArgumentsMap checkArguments(CommandCause cause, RawArgumentsMap args, boolean isPlayer, Locale locale) throws CommandException {
-		if(getArguments() != null && args != null && !args.isEmpty()) {
-			Optional<RawArgument<?>> emptyArg = getArguments().values().stream().filter(arg -> (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole())) && !args.idSet().contains(arg.getCursor())).findFirst();
-			if(emptyArg.isPresent()) exceptionAppendUsage(cause, getComponent(locale, emptyArg.get().getLocalesPath()));
+		if(getArguments() != null && args != null) {
+			int size = getArguments().size();
+			for(int current = 0; current<=size; current++) {
+				RawArgument<?> arg = getArguments().get(current);
+				if((!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole())) && !args.idSet().contains(arg.getCursor())) {
+					exceptionAppendUsage(cause, getComponent(locale, arg.getLocalesPath()), arg.getTreeKey());
+				}
+				arg = null;
+			}
 		}
 		return args;
 	}
-
+/*
 	@SuppressWarnings("unused")
 	@Deprecated
 	private String[] checkChildAndArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
@@ -209,7 +209,7 @@ public interface RawCommand extends PluginCommand, Raw {
 		}
 		return args;
 	}
-
+*/
 	default List<CommandCompletion> completeChild(CommandCause cause, List<String> args, String currentInput) {
 		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
 			if(args.size() == 0 || (args.size() == 1 && !currentInput.endsWith(" "))) {
@@ -277,6 +277,10 @@ public interface RawCommand extends PluginCommand, Raw {
 
 	default CommandException exceptionAppendUsage(CommandCause cause, Component text) throws CommandException {
 		throw new CommandException(usage(cause) == null ? text : text.append(Component.newline()).append(usage(cause)));
+	}
+
+	default CommandException exceptionAppendUsage(CommandCause cause, Component text, String markArg) throws CommandException {
+		throw new CommandException(usage(cause) == null ? text : text.append(Component.newline()).append(Text.of(usage(cause)).replace("<" + markArg + ">", "↳" + markArg + "↲").get()));
 	}
 
 	default CommandException exceptionAppendUsage(CommandCause cause, Locale locale, Object[] localePath) throws CommandException {
@@ -455,18 +459,9 @@ public interface RawCommand extends PluginCommand, Raw {
 		}
 	}
 
-	@SuppressWarnings("unused")
-	@Deprecated
 	private Object[] getChildExecutor(CommandCause cause, String[] args) {
 		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
 			return getChildExecutors().get(args[0]).getChildExecutor(cause, args.length > 1 ? Stream.of(Arrays.copyOfRange(args, 1, args.length + 1)).filter(arg -> arg != null).toArray(String[]::new) : new String[] {});
-		}
-		return new Object[] {this, args};
-	}
-
-	private Object[] getChildExecutor(CommandCause cause, RawArgumentsMap args) {
-		if(args.getInput().length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args.getInput()[0]) && getChildExecutors().get(args.getInput()[0]).canExecute(cause)) {
-			return getChildExecutors().get(args.getInput()[0]).getChildExecutor(cause, args.getInput().length > 1 ? createResultCollection(cause, Stream.of(Arrays.copyOfRange(args.getInput(), 1, args.getInput().length + 1)).filter(arg -> arg != null).toArray(String[]::new)) : RawArgumentsMap.empty());
 		}
 		return new Object[] {this, args};
 	}
