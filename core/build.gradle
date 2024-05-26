@@ -24,7 +24,8 @@ dependencies {
 	minecraft "net.minecraftforge:forge:${minecraft}-${forge}"
 	implementation "org.spongepowered:spongeapi:${api}"
 	implementation "org.spongepowered:spongevanilla:1.20.6-11.0.0-RC1607:universal"
-	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
+	//implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
+	implementation fileTree(dir: 'libs', include: '*.jar')
 }
 
 sponge {
