@@ -79,8 +79,8 @@ public class Enchant extends AbstractPlayerCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createEnchantmentArgument(false, false, 0, null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
-			RawArguments.createIntegerArgument("Level", new ArrayList<>(), true, true, 1, 1, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createEnchantmentArgument(false, false, 0, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
+			RawArguments.createIntegerArgument("Level", new ArrayList<>(), true, true, 1, 1, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
 	}
 

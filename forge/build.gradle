@@ -20,8 +20,9 @@ dependencies {
 	minecraft "net.minecraftforge:forge:${minecraft}-${forge}"
 	implementation 'org.spongepowered:mixin:0.8.6'
 	annotationProcessor 'org.spongepowered:mixin:0.8.6:processor'
-	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
+	//implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
 	implementation project(':core')
+	implementation fileTree(dir: 'libs', include: '*.jar')
 }
 
 mixin {

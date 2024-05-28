@@ -104,7 +104,7 @@ public class GameRule extends AbstractWorldCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			createWorldArg(),
-			RawArguments.createStringArgument("GameRule", gamerules.keySet().isEmpty() ? fillMap() : gamerules.keySet(), true, true, 1, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
+			RawArguments.createStringArgument("GameRule", gamerules.keySet().isEmpty() ? fillMap() : gamerules.keySet(), true, true, 1, null, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
 			createValueArg()
 		);
 	}
@@ -143,6 +143,8 @@ public class GameRule extends AbstractWorldCommand {
 			true,
 			true,
 			2,
+			null,
+			null,
 			null,
 			LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT
 		);

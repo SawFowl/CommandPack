@@ -71,7 +71,7 @@ public class BanInfo extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createProfileArgument(false, false, 0, null, LocalesPaths.COMMANDS_BANINFO_NOT_PRESENT));
+		return Arrays.asList(RawArguments.createProfileArgument(false, false, 0, null, null, null, LocalesPaths.COMMANDS_BANINFO_NOT_PRESENT));
 	}
 
 	@Override

@@ -85,7 +85,7 @@ public class GameMode extends AbstractWorldCommand {
 		if(gamemodes.isEmpty()) generateMap();
 		return Arrays.asList(
 			createWorldArg(),
-			RawArguments.createStringArgument("GameMode", gamemodes.keySet(), false, false, 1, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createStringArgument("GameMode", gamemodes.keySet(), false, false, 1, null, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
 		);
 	}
 

@@ -1,8 +1,10 @@
 package sawfowl.commandpack.commands.settings;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +37,8 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	private String permission;
 	private Argument<?> node = CommandTreeNodeTypes.STRING.get().createNode().customCompletions();
 	private String treeKey;
+	private Integer[] requiredIds = {};
+	private String[] requiredKeys = {};
 
 	@Override
 	public Argument<?> getArgumentType() {
@@ -47,13 +51,6 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		return variants == null ? new ArrayList<String>().stream() : variants.get(cause, args);
 	}
 
-	/*@SuppressWarnings("unchecked")
-	@Override
-	public <V extends T> Optional<V> getResult(Class<V> clazz, CommandCause cause, String[] args) {
-		requireNonNull(clazz, cause, args);
-		return result == null ? Optional.empty() : result.get(cause, args).map(value -> (V) value);
-	}*/
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public <V extends T> Optional<V> getResult(CommandCause cause, String[] args) {
@@ -65,13 +62,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 			return Optional.empty();
 		}
 	}
-/*
-	@Override
-	public Optional<?> getResultUnknownType(CommandCause cause, String[] args) {
-		requireNonNull(clazz, cause, args);
-		return result == null || clazz == null ? Optional.empty() : result.get(cause, args).filter(value -> value.getClass().isAssignableFrom(clazz));
-	}
-*/
+
 	@Override
 	public boolean isOptional() {
 		return isOptional;
@@ -118,12 +109,44 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	}
 
 	@Override
+	public Integer[] getRequiredArgumentsById() {
+		return requiredIds;
+	}
+
+	@Override
+	public String[] getRequiredArgumentsByKey() {
+		return requiredKeys;
+	}
+
+	@Override
+	public boolean checkRequiredOtherArguments(CommandCause cause, Map<Integer, RawArgument<?>> args, String[] inputArgs) {
+		if(args == null) return true;
+		if(requiredIds.length > 0) {
+			if(cursor <= inputArgs.length) return false;
+			for(int id : requiredIds) {
+				if(args.containsKey(id) && !args.get(id).getVariants(cause, inputArgs).filter(arg -> arg.equals(inputArgs[cursor])).findFirst().isPresent()) return false;
+			}
+		}
+		if(requiredKeys.length > 0) {
+			if(cursor <= inputArgs.length) return false;
+			Map<String, RawArgument<?>> byKeys = args.values().stream().collect(Collectors.toMap(arg -> arg.getTreeKey(), arg -> arg));
+			for(String key : requiredKeys) {
+				if(byKeys.containsKey(key) && !byKeys.get(key).getVariants(cause, inputArgs).filter(arg -> arg.equals(inputArgs[cursor])).findFirst().isPresent()) return false;
+			}
+			byKeys = null;
+		}
+		return true;
+	}
+
+	@Override
 	public DataContainer toContainer() {
 		return DataContainer.createNew()
 				.set(DataQuery.of("Variants"), variants)
 				.set(DataQuery.of("Optional"), isOptional)
 				.set(DataQuery.of("OptionalForConsole"), isOptionalForConsole)
 				.set(DataQuery.of("Cursor"), cursor)
+				.set(DataQuery.of("RequiredArguments", "ById"), requiredIds)
+				.set(DataQuery.of("RequiredArguments", "ByKey"), requiredKeys)
 				.set(DataQuery.of("LocalesPath"), localesPath)
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
@@ -210,6 +233,18 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		@Override
 		public Builder<T> treeKey(String value) {
 			treeKey = value;
+			return this;
+		}
+
+		@Override
+		public Builder<T> setRequiredArguments(Integer... ids) {
+			if(ids != null) requiredIds = ids;
+			return this;
+		}
+
+		@Override
+		public Builder<T> setRequiredArguments(String... keys) {
+			if(keys != null) requiredKeys = keys;
 			return this;
 		}
 		

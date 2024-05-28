@@ -50,15 +50,17 @@ import sawfowl.localeapi.api.EnumLocales;
  */
 public class RawArguments {
 
-	public static final List<String> EMPTY = new ArrayList<>();
 	private static final CommandPack plugin = CommandPack.getInstance();
+	public static final List<String> EMPTY = new ArrayList<>();
+	public static final Integer[] emptyIds = {};
+	public static final String[] emptyKeys = {};
 	/**
 	 * Can be used as a token.
 	*/
 	@SuppressWarnings("unchecked")
 	public static final Class<CompletableFuture<Optional<User>>> USER_LOAD_CLASS = (Class<CompletableFuture<Optional<User>>>) new CompletableFuture<Optional<User>>().getClass();
 
-	public static RawArgument<String> createStringArgument(String key, @NotNull Stream<String> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, String permission, Object[] localesPath) {
+	public static RawArgument<String> createStringArgument(String key, @NotNull Stream<String> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			String.class,
 			CommandTreeNodeTypes.STRING.get().createNode(),
@@ -69,11 +71,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<String> createStringArgument(String key, @NotNull Collection<String> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, String permission, Object[] localesPath) {
+	public static RawArgument<String> createStringArgument(String key, @NotNull Collection<String> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			String.class,
 			CommandTreeNodeTypes.STRING.get().createNode(),
@@ -84,6 +88,8 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
@@ -91,7 +97,7 @@ public class RawArguments {
 	/**
 	 * This argument should be specified last in the queue.
 	 */
-	public static RawArgument<String> createRemainingJoinedStringsArgument(String key, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, String permission, Object[] localesPath) {
+	public static RawArgument<String> createRemainingJoinedStringsArgument(String key, boolean optional, boolean optionalForConsole, int cursor, @Nullable String def, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			String.class,
 			CommandTreeNodeTypes.STRING.get().createNode().greedy().executable(),
@@ -102,11 +108,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<Integer> createIntegerArgument(String key, @NotNull Collection<Integer> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable Integer def, String permission, Object[] localesPath) {
+	public static RawArgument<Integer> createIntegerArgument(String key, @NotNull Collection<Integer> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable Integer def, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			Integer.class,
 			CommandTreeNodeTypes.INTEGER.get().createNode(),
@@ -117,11 +125,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<Long> createLongArgument(String key, @NotNull Collection<Long> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable Long def, String permission, Object[] localesPath) {
+	public static RawArgument<Long> createLongArgument(String key, @NotNull Collection<Long> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable Long def, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			Long.class,
 			CommandTreeNodeTypes.LONG.get().createNode(),
@@ -132,11 +142,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<Double> createDoubleArgument(String key, @NotNull Collection<Double> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable Double def, String permission, Object[] localesPath) {
+	public static RawArgument<Double> createDoubleArgument(String key, @NotNull Collection<Double> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable Double def, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			Double.class,
 			CommandTreeNodeTypes.DOUBLE.get().createNode(),
@@ -147,11 +159,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<BigDecimal> createBigDecimalArgument(String key, @NotNull Collection<BigDecimal> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable BigDecimal def, String permission, Object[] localesPath) {
+	public static RawArgument<BigDecimal> createBigDecimalArgument(String key, @NotNull Collection<BigDecimal> variants, boolean optional, boolean optionalForConsole, int cursor, @Nullable BigDecimal def, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			BigDecimal.class,
 			CommandTreeNodeTypes.DOUBLE.get().createNode(),
@@ -162,11 +176,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<Boolean> createBooleanArgument(String key, boolean optional, boolean optionalForConsole, int cursor, @Nullable Boolean def, String permission, Object[] localesPath) {
+	public static RawArgument<Boolean> createBooleanArgument(String key, boolean optional, boolean optionalForConsole, int cursor, @Nullable Boolean def, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			Boolean.class,
 			CommandTreeNodeTypes.BOOL.get().createNode(),
@@ -177,11 +193,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<ServerWorld> createWorldArgument(boolean optional, boolean optionalForConsole, int cursor, @Nullable ServerWorld def, String permission, Object[] localesPath) {
+	public static RawArgument<ServerWorld> createWorldArgument(boolean optional, boolean optionalForConsole, int cursor, @Nullable ServerWorld def, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			ServerWorld.class,
 			CommandTreeNodeTypes.DIMENSION.get().createNode(),
@@ -192,11 +210,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<WorldType> createWorldTypeArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<WorldType> createWorldTypeArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			WorldType.class,
 			CommandTreeNodeTypes.DIMENSION.get().createNode(),
@@ -207,11 +227,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<ServerPlayer> createPlayerArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<ServerPlayer> createPlayerArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			ServerPlayer.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
@@ -222,11 +244,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<CompletableFuture<Optional<User>>> createUserArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<CompletableFuture<Optional<User>>> createUserArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			USER_LOAD_CLASS,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
@@ -237,11 +261,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<UniqueAccount> createUniqueAccountArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<UniqueAccount> createUniqueAccountArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			UniqueAccount.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
@@ -252,11 +278,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<Account> createAccountArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<Account> createAccountArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			Account.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
@@ -267,11 +295,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<Profile> createProfileArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<Profile> createProfileArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			Profile.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
@@ -282,11 +312,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<Ban.IP> createBanIPArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<Ban.IP> createBanIPArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			Ban.IP.class,
 			null,
@@ -297,11 +329,13 @@ public class RawArguments {
 			false,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<Mute> createMuteArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<Mute> createMuteArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			Mute.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
@@ -312,11 +346,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<Warns> createWarnsArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<Warns> createWarnsArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			Warns.class,
 			CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
@@ -327,11 +363,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<EnchantmentType> createEnchantmentArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<EnchantmentType> createEnchantmentArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			EnchantmentType.class,
 			CommandTreeNodeTypes.RESOURCE_LOCATION.get().createNode(),
@@ -342,11 +380,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<Locale> createLocaleArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<Locale> createLocaleArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			Locale.class,
 			CommandTreeNodeTypes.STRING.get().createNode(),
@@ -357,11 +397,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<Currency> createCurrencyArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<Currency> createCurrencyArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			Currency.class,
 			CommandTreeNodeTypes.RESOURCE_LOCATION.get().createNode(),
@@ -372,11 +414,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<Kit> createKitArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<Kit> createKitArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			Kit.class,
 			CommandTreeNodeTypes.STRING.get().createNode(),
@@ -387,11 +431,13 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}
 
-	public static RawArgument<Warp> createWarpArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Object[] localesPath) {
+	public static RawArgument<Warp> createWarpArgument(boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, Object[] localesPath) {
 		return RawArgument.of(
 			Warp.class,
 			CommandTreeNodeTypes.STRING.get().createNode(),
@@ -402,6 +448,8 @@ public class RawArguments {
 			optionalForConsole,
 			cursor,
 			permission,
+			requiredArgumentsById,
+			requiredArgumentsByKey,
 			localesPath
 		);
 	}

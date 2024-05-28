@@ -77,6 +77,8 @@ public class Load extends AbstractWorldCommand {
 			false,
 			0,
 			null,
+			null,
+			null,
 			LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT
 		);
 	}

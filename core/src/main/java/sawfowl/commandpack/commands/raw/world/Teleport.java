@@ -92,7 +92,7 @@ public class Teleport extends AbstractWorldCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			createWorldArg(),
-			RawArguments.createPlayerArgument(true, false, 1, null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
+			RawArguments.createPlayerArgument(true, false, 1, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
 		);
 	}
 

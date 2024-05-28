@@ -145,7 +145,7 @@ public class RawArgumentsMapImpl implements RawArgumentsMap {
 			public RawArgumentsMap create(RawCommand command, CommandCause cause, String[] input) {
 				if(input != null) args = input;
 				if(command == null || command.getArguments() == null || cause == null || input == null || args.length == 0) return build();
-				results = command.getArguments().values().stream().map(arg -> arg.hasPermission(cause) ? arg.getResult(cause, args)
+				results = command.getArguments().values().stream().map(arg -> arg.hasPermission(cause) && arg.checkRequiredOtherArguments(cause, command.getArguments(), input) ? arg.getResult(cause, args)
 						.map(value -> new Result<>(arg.getCursor(), arg.getTreeKey(), value)).orElse(null) : null)
 						.filter(result -> result != null).collect(Collectors.toUnmodifiableList());
 				ids = results.stream().map(r -> r.id).collect(Collectors.toUnmodifiableSet());

@@ -108,41 +108,6 @@ public interface RawCommand extends PluginCommand, Raw {
 		return root;
 	}
 
-	private CommandTreeNode.Basic commandTree(RawCommand child) {
-		Basic node = child.containsChild() ?
-				CommandTreeNode.literal().executable().child("subcommand", CommandTreeNode.literal().customCompletions()) :
-				CommandTreeNode.literal().customCompletions();
-		if(!child.containsChild() && !child.containsArgs()) return node.executable();
-		if(child.containsChild()) {
-			Map<String, Basic> finishedChilds = new HashMap<>();
-			for(Entry<String, RawCommand> entry : child.getChildExecutors().entrySet()) {
-				if(!finishedChilds.containsKey(entry.getValue().command())) {
-					Basic childNode = commandTree(entry.getValue()).requires(cause -> entry.getValue().canExecute(cause));
-					node.child(entry.getKey(), childNode);
-					finishedChilds.put(entry.getValue().command(), childNode);
-					childNode = null;
-				} else node.child(entry.getKey(), finishedChilds.get(entry.getValue().command()));
-			}
-			finishedChilds.clear();
-			finishedChilds = null;
-		}
-		if(child.containsArgs()) {
-			argsTree(0, (AbstractCommandTreeNode<?, ?>) node, child);
-		}
-		return node;
-	}
-
-	private void argsTree(int depth, AbstractCommandTreeNode<?, ?> parrent, RawCommand command) {
-		if(command.getArguments() == null || !command.getArguments().containsKey(depth)) return;
-		Argument<?> node = command.getArguments().get(depth).getArgumentType() != null ? command.getArguments().get(depth).getArgumentType() : CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions();
-		if(!command.getArguments().containsKey(depth + 1)) node.executable();
-		if(!parrent.getChildren().containsKey(command.getArguments().get(depth).getTreeKey())) {
-			parrent.child(command.getArguments().get(depth).getTreeKey(), node);
-		}
-		argsTree(depth + 1, (AbstractCommandTreeNode<?, ?>) node, command);
-		node = null;
-	}
-
 	/**
 	 * Checks for child commands and who activated the command.
 	 */
@@ -184,32 +149,7 @@ public interface RawCommand extends PluginCommand, Raw {
 		}
 		return args;
 	}
-/*
-	@SuppressWarnings("unused")
-	@Deprecated
-	private String[] checkChildAndArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
-		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
-			getChildExecutors().get(args[0]).checkChildAndArguments(cause, (args.length > 1 ? Stream.of(Arrays.copyOfRange(args, 1, args.length + 1)).filter(arg -> arg != null).toArray(String[]::new) : new String[] {}), isPlayer, locale);
-			return args;
-		} else return checkArguments(cause, args, isPlayer, locale);
-	}
 
-	@Deprecated
-	private String[] checkArguments(CommandCause cause, String[] args, boolean isPlayer, Locale locale) throws CommandException {
-		if(getArguments() != null) {
-			Optional<RawArgument<?>> emptyArg = getArguments().values().stream().filter(arg -> !arg.getResult(cause, args).isPresent() && (!arg.isOptional() || !isPlayer && !arg.isOptionalForConsole())).findFirst();
-			if(emptyArg.isPresent()) exceptionAppendUsage(cause, getComponent(locale, emptyArg.get().getLocalesPath()));
-			if(args.length != 0) {
-				int i = 0;
-				for(String arg : args) {
-					if(arg == null || (getArguments().containsKey(i) && getArguments().get(i).getResult(cause, args).isPresent() && !getArguments().get(i).hasPermission(cause))) return i - 1 < 0 ? args : Arrays.copyOfRange(args, 0, i - 1);
-					i++;
-				}
-			}
-		}
-		return args;
-	}
-*/
 	default List<CommandCompletion> completeChild(CommandCause cause, List<String> args, String currentInput) {
 		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
 			if(args.size() == 0 || (args.size() == 1 && !currentInput.endsWith(" "))) {
@@ -237,7 +177,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * Auto-complete command arguments.
 	 */
 	default List<CommandCompletion> completeArgs(CommandCause cause, List<String> args, String currentInput) {
-		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.size() || (!getArguments().isEmpty() && !getArguments().get(args.size() > 0 ? args.size() - 1 : 0).hasPermission(cause))) return CommandsUtil.EMPTY_COMPLETIONS;
+		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.size() || (!getArguments().isEmpty() && !getArguments().get(args.size() > 0 ? args.size() - 1 : 0).hasPermission(cause)) || !getArguments().get(args.size() > 0 ? args.size() - 1 : 0).checkRequiredOtherArguments(cause, getArguments(), args.toArray(String[]::new))) return CommandsUtil.EMPTY_COMPLETIONS;
 		if(currentInput.endsWith(" ") || args.size() == 0) {
 			if(getArguments().containsKey(args.size())) return getArguments().get(args.size()).getVariants(cause, args.toArray(new String[] {})).map(CommandCompletion::of).collect(Collectors.toList());
 			return CommandsUtil.EMPTY_COMPLETIONS;
@@ -286,150 +226,6 @@ public interface RawCommand extends PluginCommand, Raw {
 	default CommandException exceptionAppendUsage(CommandCause cause, Locale locale, Object[] localePath) throws CommandException {
 		throw new CommandException(getComponent(locale, localePath).append(Component.newline()).append(usage(cause)));
 	}
-/*
-	default Optional<ServerWorld> getWorld(String[] args, CommandCause cause, int cursor) {
-		return getArgument(cause, args, cursor);
-	}
-
-	default Optional<WorldType> getWorldType(String[] args, CommandCause cause, int cursor) {
-		return getArgument(cause, args, cursor);
-	}
-	default Optional<ServerPlayer> getPlayer(String[] args, CommandCause cause, int cursor) {
-		return getArgument(cause, args, cursor);
-	}
-
-	default Optional<EnchantmentType> getEnchantmentType(String[] args, CommandCause cause, int cursor) {
-		return getArgument(cause, args, cursor);
-	}
-
-	default Optional<String> getString(String[] args, CommandCause cause, int cursor) {
-		return getArgument(cause, args, cursor);
-	}
-
-	default Optional<Boolean> getBoolean(String[] args, CommandCause cause, int cursor) {
-		return getArgument(cause, args, cursor);
-	}
-
-	default Optional<Integer> getInteger(String[] args, CommandCause cause, int cursor) {
-		return getArgument(cause, args, cursor);
-	}
-
-	default Optional<Long> getLong(String[] args, CommandCause cause, int cursor) {
-		return getArgument(cause, args, cursor);
-	}
-
-	default Optional<Double> getDouble(String[] args, CommandCause cause, int cursor) {
-		return getArgument(cause, args, cursor);
-	}
-
-	default Optional<BigDecimal> getBigDecimal(String[] args, CommandCause cause, int cursor) {
-		return getArgument(BigDecimal.class, cause, args, cursor);
-	}
-
-	default Optional<Locale> getLocale(String[] args, CommandCause cause, int cursor) {
-		return getArgument(cause, args, cursor);
-	}
-
-	default Optional<Currency> getCurrency(String[] args, CommandCause cause, int cursor) {
-		return getArgument(cause, args, cursor);
-	}
-
-	default Optional<Duration> getDurationArg(String[] args, CommandCause cause, int cursor, Locale locale) throws CommandException {
-		return getString(args, cause, cursor).map(value -> {
-			try {
-				return parseDuration(value, locale);
-			} catch (CommandException e) {
-				return null;
-			}
-		}).orElse(Optional.empty());
-	}
-
-	/**
-	 * Getting an object from a command argument.
-	 * 
-	 * @param <T> - The type of the returned object.
-	 * @param clazz - The class of the returned object.
-	 * @param cause - {@link CommandCause}
-	 * @param args - All command arguments.
-	 * @param cursor - The argument number of the command.
-	 * @return {@link Optional}
-	 */
-	/*@SuppressWarnings("unchecked")
-	default <T> Optional<T> getArgument(Class<T> clazz, CommandCause cause, String[] args, int cursor) {
-		return getArguments() == null || !getArguments().containsKey(cursor) || !getArguments().get(cursor).getAssociatedClass().isAssignableFrom(clazz) ? Optional.empty() : getArguments().get(cursor).getResult(cause, args).map(value -> {
-				try {
-					return (T) value;
-				} catch (Exception e) {
-					return null;
-				}
-			}
-		);
-	}
-
-	/**
-	 * Getting an object from a command argument.
-	 * 
-	 * @param <T> - The type of the returned object.
-	 * @param cause - {@link CommandCause}
-	 * @param args - All command arguments.
-	 * @param cursor - The argument number of the command.
-	 * @return {@link Optional}
-	 */
-	/*@SuppressWarnings("unchecked")
-	default <T> Optional<T> getArgument(CommandCause cause, String[] args, int cursor) {
-		return getArguments() == null || !getArguments().containsKey(cursor) ? Optional.empty() : getArguments().get(cursor).getResult(cause, args).map(value -> {
-				try {
-					return (T) value;
-				} catch (Exception e) {
-					return null;
-				}
-			}
-		);
-	}
-
-	/**
-	 * Getting an object from a command argument.
-	 * 
-	 * @param <T> - The type of the returned object.
-	 * @param cause - {@link CommandCause}
-	 * @param clazz - The class of the returned object.
-	 * @param args - All command arguments.
-	 * @return {@link Optional}
-	 */
-	/*@SuppressWarnings("unchecked")
-	default <T> Optional<T> getArgument(Class<T> clazz, CommandCause cause, String[] args) {
-		return getArguments() == null ? Optional.empty() : getArguments().values().stream().filter(arg -> arg.getAssociatedClass().isAssignableFrom(clazz)).findFirst().map(arg -> arg.getResult(cause, args).map(value -> {
-					try {
-						return (T) value;
-					} catch (Exception e) {
-						return null;
-					}
-				}
-			)
-		)
-		.filter(value -> value.isPresent())
-		.orElse(Optional.empty());
-	}
-
-	/**
-	 * Getting an object from a command argument.
-	 * 
-	 * @param <T> - The type of the returned object.
-	 * @param cause - {@link CommandCause}
-	 * @param args - All command arguments.
-	 * @return {@link Optional}
-	 */
-	/*@SuppressWarnings("unchecked")
-	default <T> Optional<T> getArgument(CommandCause cause, String[] args) {
-		return getArguments() == null ? Optional.empty() : getArguments().values().stream().map(arg -> arg.getResult(cause, args)).filter(value -> !value.isEmpty()).findFirst().map(value -> {
-				try {
-					return (T) value;
-				} catch (Exception e) {
-					return null;
-				}
-			}
-		);
-	}
 
 	/**
 	 * Convert string to object {@link Duration}
@@ -459,16 +255,6 @@ public interface RawCommand extends PluginCommand, Raw {
 		}
 	}
 
-	private Object[] getChildExecutor(CommandCause cause, String[] args) {
-		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
-			return getChildExecutors().get(args[0]).getChildExecutor(cause, args.length > 1 ? Stream.of(Arrays.copyOfRange(args, 1, args.length + 1)).filter(arg -> arg != null).toArray(String[]::new) : new String[] {});
-		}
-		return new Object[] {this, args};
-	}
-
-	/**
-	 * No need to {@link Override} any more.
-	 */
 	default List<CommandCompletion> getEmptyCompletion() {
 		return CommandsUtil.EMPTY_COMPLETIONS;
 	}
@@ -486,17 +272,58 @@ public interface RawCommand extends PluginCommand, Raw {
 		}));
 	}
 
-	// Need tests
-	default RawArgumentsMap createResultCollection(CommandCause cause, String[] args) {
-		return RawArgumentsMap.create(this, cause, args);
-	}
-
 	default boolean containsChild() {
 		return getChildExecutors() != null && !getChildExecutors().isEmpty();
 	}
 
 	default boolean containsArgs() {
 		return getArguments() != null && !getArguments().isEmpty();
+	}
+
+	private CommandTreeNode.Basic commandTree(RawCommand child) {
+		Basic node = child.containsChild() ?
+				CommandTreeNode.literal().executable().child("subcommand", CommandTreeNode.literal().customCompletions()) :
+				CommandTreeNode.literal().customCompletions();
+		if(!child.containsChild() && !child.containsArgs()) return node.executable();
+		if(child.containsChild()) {
+			Map<String, Basic> finishedChilds = new HashMap<>();
+			for(Entry<String, RawCommand> entry : child.getChildExecutors().entrySet()) {
+				if(!finishedChilds.containsKey(entry.getValue().command())) {
+					Basic childNode = commandTree(entry.getValue()).requires(cause -> entry.getValue().canExecute(cause));
+					node.child(entry.getKey(), childNode);
+					finishedChilds.put(entry.getValue().command(), childNode);
+					childNode = null;
+				} else node.child(entry.getKey(), finishedChilds.get(entry.getValue().command()));
+			}
+			finishedChilds.clear();
+			finishedChilds = null;
+		}
+		if(child.containsArgs()) {
+			argsTree(0, (AbstractCommandTreeNode<?, ?>) node, child);
+		}
+		return node;
+	}
+
+	private void argsTree(int depth, AbstractCommandTreeNode<?, ?> parrent, RawCommand command) {
+		if(command.getArguments() == null || !command.getArguments().containsKey(depth)) return;
+		Argument<?> node = command.getArguments().get(depth).getArgumentType() != null ? command.getArguments().get(depth).getArgumentType() : CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions();
+		if(!command.getArguments().containsKey(depth + 1)) node.executable();
+		if(!parrent.getChildren().containsKey(command.getArguments().get(depth).getTreeKey())) {
+			parrent.child(command.getArguments().get(depth).getTreeKey(), node);
+		}
+		argsTree(depth + 1, (AbstractCommandTreeNode<?, ?>) node, command);
+		node = null;
+	}
+
+	private Object[] getChildExecutor(CommandCause cause, String[] args) {
+		if(args.length != 0 && getChildExecutors() != null && !getChildExecutors().isEmpty() && getChildExecutors().containsKey(args[0]) && getChildExecutors().get(args[0]).canExecute(cause)) {
+			return getChildExecutors().get(args[0]).getChildExecutor(cause, args.length > 1 ? Stream.of(Arrays.copyOfRange(args, 1, args.length + 1)).filter(arg -> arg != null).toArray(String[]::new) : new String[] {});
+		}
+		return new Object[] {this, args};
+	}
+
+	private RawArgumentsMap createResultCollection(CommandCause cause, String[] args) {
+		return RawArgumentsMap.create(this, cause, args);
 	}
 
 }

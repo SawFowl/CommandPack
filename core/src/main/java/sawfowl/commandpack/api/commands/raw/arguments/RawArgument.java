@@ -1,5 +1,6 @@
 package sawfowl.commandpack.api.commands.raw.arguments;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -30,15 +31,12 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 public interface RawArgument<T> extends DataSerializable {
 
 	@SuppressWarnings("unchecked")
-	static <T> Builder<T> builder() {
+	private static <T> Builder<T> builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
 	/**
-	 *  
-	 * @param <T> - Argument type.
-	 * @param <C> - {@link CommandTreeNode} type
-	 * @param clazz - Argument type.
+	 * @param clazz - Argument object type.
 	 * @param argumentNodeType - {@link CommandTreeNode} type
 	 * @param variants - See {@link RawCompleterSupplier}
 	 * @param result - See {@link RawResultSupplier}
@@ -46,12 +44,14 @@ public interface RawArgument<T> extends DataSerializable {
 	 * @param optional - If true, the argument will be optional.
 	 * @param optionalForConsole - If true, the argument will be optional for the console. Parameter `optional` has a higher priority.
 	 * @param cursor - The number of the argument in the array of arguments input.
-	 * @param permission - The permission required to use the argument.
+	 * @param permission - The permission required to use the argument. Can be `null`.
 	 * @param localesPath - Path to the text in the plugin localization. The text will be shown if the argument was not entered or was entered incorrectly and it is mandatory.
+	 * @param requiredArgumentsById - Listing the required arguments by their id. Can be `null`.
+	 * @param requiredArgumentsByKey - Listing the required arguments by their keys. Can be `null`.
 	 * @return {@link RawArgument}
 	 */
 	@SuppressWarnings("unchecked")
-	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(@NotNull Class<T> clazz, Argument<C> argumentNodeType, @NotNull RawCompleterSupplier<Stream<String>> variants, @NotNull RawResultSupplier<T> result, @NotNull String key, boolean optional, boolean optionalForConsole, int cursor, String permission, @NotNull Object... localesPath) {
+	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(@NotNull Class<T> clazz, Argument<C> argumentNodeType, @NotNull RawCompleterSupplier<Stream<String>> variants, @NotNull RawResultSupplier<T> result, @NotNull String key, boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, @NotNull Object... localesPath) {
 		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).treeKey(key).localeTextPath(localesPath).build();
 	}
 
@@ -80,11 +80,6 @@ public interface RawArgument<T> extends DataSerializable {
 	 */
 	<V extends T> Optional<V> getResult(CommandCause cause, String[] args);
 
-	/*
-	 * Retrieves an object from the command's argument string without converting it to a specific type.
-	 */
-	//Optional<?> getResultUnknownType(CommandCause cause, String[] args);
-
 	/**
 	 * Whether the argument is optional.
 	 */
@@ -110,9 +105,33 @@ public interface RawArgument<T> extends DataSerializable {
 	 */
 	Class<?> getAssociatedClass();
 
+	/**
+	 * Getting the required permission for the argument, if available.
+	 */
 	Optional<String> getPermision();
 
+	/**
+	 * Checks for permission to use the argument, if permission is set.
+	 */
 	boolean hasPermission(CommandCause cause);
+
+	/**
+		 * Listing the required arguments by their id.
+	 */
+	Integer[] getRequiredArgumentsById();
+
+	/**
+	 * Listing the required arguments by their keys.
+	 */
+	String[] getRequiredArgumentsByKey();
+
+	/**
+	 * The method checks if the other arguments of the command are entered correctly.<br>
+	 * The method does not perform parsing of the argument. Only valid string values are checked.
+	 * 
+	 * @return `true` if there is no requirement to check other arguments or they are entered correctly.<br>`false`, if the required argument is not entered or is entered incorrectly.
+	 */
+	boolean checkRequiredOtherArguments(CommandCause cause, Map<Integer, RawArgument<?>> args, String[] inputArgs);
 
 	interface Builder<T> extends AbstractBuilder<RawArgument<T>>, org.spongepowered.api.util.Builder<RawArgument<T>, Builder<T>>, RawArgument<T> {
 
@@ -164,6 +183,16 @@ public interface RawArgument<T> extends DataSerializable {
 		 * This is not controlled by the plugin, but the player will see an error message if the value type is not appropriate.
 		 */
 		<C extends CommandTreeNode<C>> Builder<T> setArgumentType(Argument<C> node);
+
+		/**
+		 * Listing the required arguments by their id.
+		 */
+		Builder<T> setRequiredArguments(Integer... ids);
+
+		/**
+		 * Listing the required arguments by their keys.
+		 */
+		Builder<T> setRequiredArguments(String... keys);
 
 	}
 

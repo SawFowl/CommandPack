@@ -26,7 +26,7 @@ public abstract class AbstractWorldCommand extends AbstractRawCommand {
 	}
 
 	protected RawArgument<ServerWorld> createWorldArg() {
-		return RawArguments.createWorldArgument(false, false, 0, null, null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
+		return RawArguments.createWorldArgument(false, false, 0, null, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
 	}
 
 	@Override
