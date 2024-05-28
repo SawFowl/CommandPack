@@ -121,19 +121,17 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	@Override
 	public boolean checkRequiredOtherArguments(CommandCause cause, Map<Integer, RawArgument<?>> args, String[] inputArgs) {
 		if(args == null) return true;
-		if(requiredIds.length > 0) {
-			if(cursor <= inputArgs.length) return false;
+		if(requiredIds.length > 0 && inputArgs.length >= cursor) {
 			for(int id : requiredIds) {
-				if(args.containsKey(id) && !args.get(id).getVariants(cause, inputArgs).filter(arg -> arg.equals(inputArgs[cursor])).findFirst().isPresent()) return false;
+				if(args.containsKey(id) && !args.get(id).getVariants(cause, inputArgs).filter(arg -> arg.equals(inputArgs[args.get(id).getCursor()])).findFirst().isPresent()) return false;
 			}
 		}
-		if(requiredKeys.length > 0) {
-			if(cursor <= inputArgs.length) return false;
+		if(requiredKeys.length > 0 && inputArgs.length >= cursor) {
 			Map<String, RawArgument<?>> byKeys = args.values().stream().collect(Collectors.toMap(arg -> arg.getTreeKey(), arg -> arg));
 			for(String key : requiredKeys) {
-				if(byKeys.containsKey(key) && !byKeys.get(key).getVariants(cause, inputArgs).filter(arg -> arg.equals(inputArgs[cursor])).findFirst().isPresent()) return false;
+				if(byKeys.containsKey(key) && !byKeys.get(key).getVariants(cause, inputArgs).filter(arg -> arg.equals(inputArgs[byKeys.get(key).getCursor()])).findFirst().isPresent()) return false;
 			}
-			byKeys = null;
+			byKeys.clear();
 		}
 		return true;
 	}

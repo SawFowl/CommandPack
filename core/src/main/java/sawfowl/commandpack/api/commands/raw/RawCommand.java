@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.exception.CommandException;
@@ -87,7 +88,7 @@ public interface RawCommand extends PluginCommand, Raw {
 			root.completions(new CommandCompletionProvider() {
 				@Override
 				public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-					return completeArgs(context.cause(), Stream.of(currentInput.split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList()), currentInput);
+					return completeArgs(context.cause(), Stream.of(currentInput.split(" ")).filter(string -> (!string.equals(""))).toArray(String[]::new), currentInput);
 				}
 			});
 			Map<String, Basic> finishedChilds = new HashMap<>();
@@ -127,7 +128,7 @@ public interface RawCommand extends PluginCommand, Raw {
 
 	@Override
 	default List<CommandCompletion> complete(CommandCause cause, Mutable arguments) throws CommandException {
-		return enableAutoComplete() ? completeChild(cause, Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).collect(Collectors.toList()), arguments.input()) : CommandsUtil.EMPTY_COMPLETIONS;
+		return enableAutoComplete() ? completeChild(cause, Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).toArray(String[]::new), arguments.input()) : CommandsUtil.EMPTY_COMPLETIONS;
 	}
 
 	default RawArgumentsMap checkChildAndArguments(CommandCause cause, RawArgumentsMap args, boolean isPlayer, Locale locale) throws CommandException {
@@ -150,21 +151,22 @@ public interface RawCommand extends PluginCommand, Raw {
 		return args;
 	}
 
-	default List<CommandCompletion> completeChild(CommandCause cause, List<String> args, String currentInput) {
+	default List<CommandCompletion> completeChild(CommandCause cause, String[] args, String currentInput) {
+		
 		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
-			if(args.size() == 0 || (args.size() == 1 && !currentInput.endsWith(" "))) {
+			if(args.length == 0 || (args.length == 1 && !currentInput.endsWith(" "))) {
 				return new ArrayList<CommandCompletion>() {
 					private static final long serialVersionUID = 1L;
 					{
-						addAll(getChildExecutors().keySet().stream().filter(command -> (args.isEmpty() || ((command.equals(args.get(0)) || command.startsWith(args.get(0))) && getChildExecutors().get(command).canExecute(cause)))).map(CommandCompletion::of).collect(Collectors.toList()));
+						addAll(getChildExecutors().keySet().stream().filter(command -> (args.length == 0 || ((command.equals(args[0]) || command.startsWith(args[0])) && getChildExecutors().get(command).canExecute(cause)))).map(CommandCompletion::of).collect(Collectors.toList()));
 						addAll(completeArgs(cause, args, currentInput));
 					}
 				};
-			} else if(getChildExecutors().containsKey(args.get(0))) {
+			} else if(getChildExecutors().containsKey(args[0])) {
 				return new ArrayList<CommandCompletion>() {
 					private static final long serialVersionUID = 1L;
 					{
-						addAll(getChildExecutors().get(args.get(0)).completeChild(cause, args.subList(1, args.size()), currentInput.contains(args.get(0) + " ") ? currentInput.replace(args.get(0) + " ", "") : currentInput.replace(args.get(0), "")));
+						addAll(getChildExecutors().get(args[0]).completeChild(cause, ArrayUtils.remove(args, 0), currentInput.contains(args[0] + " ") ? currentInput.replace(args[0] + " ", "") : currentInput.replace(args[0], "")));
 						addAll(completeArgs(cause, args, currentInput));
 					}
 				};
@@ -176,12 +178,12 @@ public interface RawCommand extends PluginCommand, Raw {
 	/**
 	 * Auto-complete command arguments.
 	 */
-	default List<CommandCompletion> completeArgs(CommandCause cause, List<String> args, String currentInput) {
-		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.size() || (!getArguments().isEmpty() && !getArguments().get(args.size() > 0 ? args.size() - 1 : 0).hasPermission(cause)) || !getArguments().get(args.size() > 0 ? args.size() - 1 : 0).checkRequiredOtherArguments(cause, getArguments(), args.toArray(String[]::new))) return CommandsUtil.EMPTY_COMPLETIONS;
-		if(currentInput.endsWith(" ") || args.size() == 0) {
-			if(getArguments().containsKey(args.size())) return getArguments().get(args.size()).getVariants(cause, args.toArray(new String[] {})).map(CommandCompletion::of).collect(Collectors.toList());
+	default List<CommandCompletion> completeArgs(CommandCause cause, String[] args, String currentInput) {
+		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.length || (!getArguments().isEmpty() && !getArguments().get(args.length > 0 ? args.length - 1 : 0).hasPermission(cause)) || (getArguments().containsKey(args.length > 0 ? args.length : 0) && !getArguments().get(args.length > 0 ? args.length : 0).checkRequiredOtherArguments(cause, getArguments(), args))) return CommandsUtil.EMPTY_COMPLETIONS;
+		if(currentInput.endsWith(" ") || args.length == 0) {
+			if(getArguments().containsKey(args.length)) return getArguments().get(args.length).getVariants(cause, args).map(CommandCompletion::of).collect(Collectors.toList());
 			return CommandsUtil.EMPTY_COMPLETIONS;
-		} else return getArguments().get(args.size() - 1).getVariants(cause, args.toArray(new String[] {})).filter(v -> ((v.contains(args.get(args.size() - 1)) && !currentInput.endsWith(" ")) || (args.get(args.size() - 1).contains(v) && !args.get(args.size() - 1).contains(v + " ")) || (v.contains(":") && (v.split(":")[0].contains(args.get(args.size() - 1)) || v.split(":")[1].contains(args.get(args.size() - 1)))))).map(CommandCompletion::of).collect(Collectors.toList());
+		} else return getArguments().get(args.length - 1).getVariants(cause, args).filter(v -> ((v.contains(args[args.length - 1]) && !currentInput.endsWith(" ")) || (args[args.length - 1].contains(v) && !args[args.length - 1].contains(v + " ")) || (v.contains(":") && (v.split(":")[0].contains(args[args.length - 1]) || v.split(":")[1].contains(args[args.length - 1]))))).map(CommandCompletion::of).collect(Collectors.toList());
 	}
 
 	@Override

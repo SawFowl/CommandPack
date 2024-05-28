@@ -1,5 +1,6 @@
 package sawfowl.commandpack.api.commands.raw.arguments;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -17,6 +18,7 @@ import org.spongepowered.api.data.persistence.DataSerializable;
 import net.kyori.adventure.builder.AbstractBuilder;
 
 import sawfowl.commandpack.api.commands.raw.RawCommand;
+import sawfowl.localeapi.api.Text;
 
 /**
  * You can use this interface to create arguments for commands implementing the {@link RawCommand} interface.<br>
@@ -29,6 +31,14 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
  * @param <T> - The object type of the command argument.
  */
 public interface RawArgument<T> extends DataSerializable {
+
+	@FunctionalInterface
+	public interface ExceptionSupplier {
+
+		// TODO
+		Text getExceptionText(Locale locale);
+
+	}
 
 	@SuppressWarnings("unchecked")
 	private static <T> Builder<T> builder() {
@@ -52,7 +62,7 @@ public interface RawArgument<T> extends DataSerializable {
 	 */
 	@SuppressWarnings("unchecked")
 	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(@NotNull Class<T> clazz, Argument<C> argumentNodeType, @NotNull RawCompleterSupplier<Stream<String>> variants, @NotNull RawResultSupplier<T> result, @NotNull String key, boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, @NotNull Object... localesPath) {
-		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).treeKey(key).localeTextPath(localesPath).build();
+		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).treeKey(key).setRequiredArguments(requiredArgumentsById).setRequiredArguments(requiredArgumentsByKey).localeTextPath(localesPath).build();
 	}
 
 
