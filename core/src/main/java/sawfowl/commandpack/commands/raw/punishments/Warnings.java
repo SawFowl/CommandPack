@@ -86,7 +86,7 @@ public class Warnings extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createWarnsArgument(true, true, 0, Permissions.WARNS_OTHER, null, null, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
+		return Arrays.asList(RawArguments.createWarnsArgument(true, true, 0, Permissions.WARNS_OTHER, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT)));
 	}
 
 	@Override

@@ -100,11 +100,11 @@ public class Generate extends AbstractWorldCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createWorldArgument(false, false, 0, null, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT),
-			RawArguments.createStringArgument("Action", actions, false, false, 1, null, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			RawArguments.createIntegerArgument("Interval", new ArrayList<>(), true, true, 2, null, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			RawArguments.createLongArgument("MaxMemory", new ArrayList<>(), true, true, 3, null, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			RawArguments.createIntegerArgument("Chunks", new ArrayList<>(), true, true, 4, null, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createWorldArgument(false, false, 0, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT)),
+			RawArguments.createStringArgument("Action", actions, false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
+			RawArguments.createIntegerArgument("Interval", new ArrayList<>(), true, true, 2, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
+			RawArguments.createLongArgument("MaxMemory", new ArrayList<>(), true, true, 3, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
+			RawArguments.createIntegerArgument("Chunks", new ArrayList<>(), true, true, 4, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
 		);
 	}
 

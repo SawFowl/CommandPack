@@ -83,7 +83,7 @@ public class BalanceTop extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createCurrencyArgument(true, true, 0, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
+		return Arrays.asList(RawArguments.createCurrencyArgument(true, true, 0, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)));
 	}
 
 	@Override

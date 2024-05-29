@@ -110,10 +110,10 @@ public class AddToBalance extends AbstractRawCommand {
 				null,
 				null,
 				null,
-				LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT
+				createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT)
 			),
-			RawArguments.createBigDecimalArgument("Money", empty, false, false, 1, null, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			RawArguments.createCurrencyArgument(true, true, 2, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createBigDecimalArgument("Money", empty, false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
+			RawArguments.createCurrencyArgument(true, true, 2, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
 		);
 	}
 

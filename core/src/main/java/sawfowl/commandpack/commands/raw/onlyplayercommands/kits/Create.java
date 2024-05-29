@@ -56,7 +56,7 @@ public class Create extends AbstractKitsEditCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createStringArgument("name", new ArrayList<>(), false, false, 0, null, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT));
+		return Arrays.asList(RawArguments.createStringArgument("name", new ArrayList<>(), false, false, 0, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT)));
 	}
 
 	@Override

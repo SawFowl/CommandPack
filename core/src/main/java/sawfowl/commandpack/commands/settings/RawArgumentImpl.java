@@ -1,6 +1,7 @@
 package sawfowl.commandpack.commands.settings;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,9 +18,11 @@ import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 
+import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
+import sawfowl.localeapi.api.ComponentSupplier;
 
 public class RawArgumentImpl<T> implements RawArgument<T> {
 
@@ -32,7 +35,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	private boolean isOptional = false;
 	private boolean isOptionalForConsole = false;
 	private int cursor;
-	private Object[] localesPath;
+	private ComponentSupplier supplier;
 	private Class<?> clazz;
 	private String permission;
 	private Argument<?> node = CommandTreeNodeTypes.STRING.get().createNode().customCompletions();
@@ -76,11 +79,6 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	@Override
 	public int getCursor() {
 		return cursor;
-	}
-
-	@Override
-	public Object[] getLocalesPath() {
-		return localesPath;
 	}
 
 	@Override
@@ -137,6 +135,11 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 	}
 
 	@Override
+	public Component exception(Locale locale) {
+		return supplier == null ? Component.empty() : supplier.get(locale);
+	}
+
+	@Override
 	public DataContainer toContainer() {
 		return DataContainer.createNew()
 				.set(DataQuery.of("Variants"), variants)
@@ -145,7 +148,6 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 				.set(DataQuery.of("Cursor"), cursor)
 				.set(DataQuery.of("RequiredArguments", "ById"), requiredIds)
 				.set(DataQuery.of("RequiredArguments", "ByKey"), requiredKeys)
-				.set(DataQuery.of("LocalesPath"), localesPath)
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
@@ -210,8 +212,8 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 		}
 
 		@Override
-		public Builder<T> localeTextPath(Object... value) {
-			localesPath = value;
+		public Builder<T> setComponentSupplier(ComponentSupplier supplier) {
+			RawArgumentImpl.this.supplier = supplier;
 			return this;
 		}
 

@@ -96,12 +96,12 @@ public class Create extends AbstractWorldCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createWorldTypeArgument(false, false, 0, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
-			RawArguments.createStringArgument("ChunkGenerator", plugin.getAPI().getAvailableGenerators(), false, false, 1, null, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
-			RawArguments.createStringArgument("Name", new ArrayList<>(), false, false, 2, null, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT),
-			RawArguments.createStringArgument("Seed", new ArrayList<>(), true, true, 3, "0", null, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			RawArguments.createBooleanArgument("Structures", true, true, 4, false, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			RawArguments.createBooleanArgument("BonusChest", true, true, 5, false, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			RawArguments.createWorldTypeArgument(false, false, 0, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT)),
+			RawArguments.createStringArgument("ChunkGenerator", plugin.getAPI().getAvailableGenerators(), false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT)),
+			RawArguments.createStringArgument("Name", new ArrayList<>(), false, false, 2, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT)),
+			RawArguments.createStringArgument("Seed", new ArrayList<>(), true, true, 3, "0", null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
+			RawArguments.createBooleanArgument("Structures", true, true, 4, false, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
+			RawArguments.createBooleanArgument("BonusChest", true, true, 5, false, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
 		);
 	}
 

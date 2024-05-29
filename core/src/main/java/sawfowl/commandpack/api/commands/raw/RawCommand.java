@@ -143,7 +143,7 @@ public interface RawCommand extends PluginCommand, Raw {
 			for(int current = 0; current<=size; current++) {
 				RawArgument<?> arg = getArguments().get(current);
 				if(arg != null && (!arg.isOptional() || (!isPlayer && !arg.isOptionalForConsole())) && !args.idSet().contains(arg.getCursor())) {
-					exceptionAppendUsage(cause, getComponent(locale, arg.getLocalesPath()), arg.getTreeKey());
+					exceptionAppendUsage(cause, arg.exception(locale), arg.getTreeKey());
 				}
 				arg = null;
 			}

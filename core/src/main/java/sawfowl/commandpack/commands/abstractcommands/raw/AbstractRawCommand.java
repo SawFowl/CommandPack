@@ -17,6 +17,7 @@ import sawfowl.commandpack.api.commands.AbstractPluginCommand;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.data.command.Settings;
+import sawfowl.localeapi.api.ComponentSupplier;
 
 public abstract class AbstractRawCommand extends AbstractPluginCommand<CommandPack> implements RawCommand {
 
@@ -73,6 +74,10 @@ public abstract class AbstractRawCommand extends AbstractPluginCommand<CommandPa
 
 	protected String getString(Locale locale, Object[] path) {
 		return plugin.getLocales().getString(locale, path);
+	}
+
+	protected ComponentSupplier createComponentSupplier(Object... path) {
+		return locale -> plugin.getLocales().getComponent(locale, path);
 	}
 
 }

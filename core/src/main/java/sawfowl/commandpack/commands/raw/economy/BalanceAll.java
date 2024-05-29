@@ -85,7 +85,7 @@ public class BalanceAll extends AbstractRawCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		if(empty == null) empty = new ArrayList<BigDecimal>();
-		return Arrays.asList(RawArguments.createAccountArgument(false, false, 0, null, null, null, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT));
+		return Arrays.asList(RawArguments.createAccountArgument(false, false, 0, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT)));
 	}
 
 	@Override

@@ -16,9 +16,9 @@ import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
-
+import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
-import sawfowl.localeapi.api.Text;
+import sawfowl.localeapi.api.ComponentSupplier;
 
 /**
  * You can use this interface to create arguments for commands implementing the {@link RawCommand} interface.<br>
@@ -31,14 +31,6 @@ import sawfowl.localeapi.api.Text;
  * @param <T> - The object type of the command argument.
  */
 public interface RawArgument<T> extends DataSerializable {
-
-	@FunctionalInterface
-	public interface ExceptionSupplier {
-
-		// TODO
-		Text getExceptionText(Locale locale);
-
-	}
 
 	@SuppressWarnings("unchecked")
 	private static <T> Builder<T> builder() {
@@ -61,8 +53,8 @@ public interface RawArgument<T> extends DataSerializable {
 	 * @return {@link RawArgument}
 	 */
 	@SuppressWarnings("unchecked")
-	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(@NotNull Class<T> clazz, Argument<C> argumentNodeType, @NotNull RawCompleterSupplier<Stream<String>> variants, @NotNull RawResultSupplier<T> result, @NotNull String key, boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, @NotNull Object... localesPath) {
-		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).treeKey(key).setRequiredArguments(requiredArgumentsById).setRequiredArguments(requiredArgumentsByKey).localeTextPath(localesPath).build();
+	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(@NotNull Class<T> clazz, Argument<C> argumentNodeType, @NotNull RawCompleterSupplier<Stream<String>> variants, @NotNull RawResultSupplier<T> result, @NotNull String key, boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, @NotNull ComponentSupplier supplier) {
+		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).treeKey(key).setRequiredArguments(requiredArgumentsById).setRequiredArguments(requiredArgumentsByKey).setComponentSupplier(supplier).build();
 	}
 
 
@@ -106,11 +98,6 @@ public interface RawArgument<T> extends DataSerializable {
 	int getCursor();
 
 	/**
-	 * Path to find the message that there is no matching command argument in the localization configuration.
-	 */
-	Object[] getLocalesPath();
-
-	/**
 	 * Class of argument.
 	 */
 	Class<?> getAssociatedClass();
@@ -143,6 +130,13 @@ public interface RawArgument<T> extends DataSerializable {
 	 */
 	boolean checkRequiredOtherArguments(CommandCause cause, Map<Integer, RawArgument<?>> args, String[] inputArgs);
 
+	/**
+	 * The message to be output if the argument was not typed but was not optional.
+	 * 
+	 * @param locale - Localization to search for a localized message.
+	 */
+	Component exception(Locale locale);
+
 	interface Builder<T> extends AbstractBuilder<RawArgument<T>>, org.spongepowered.api.util.Builder<RawArgument<T>, Builder<T>>, RawArgument<T> {
 
 		/**
@@ -173,7 +167,7 @@ public interface RawArgument<T> extends DataSerializable {
 		/**
 		 * Path to find the message that there is no matching command argument in the localization configuration.
 		 */
-		Builder<T> localeTextPath(Object... value);
+		Builder<T> setComponentSupplier(ComponentSupplier value);
 
 		/*
 		 * The required permission for this argument.

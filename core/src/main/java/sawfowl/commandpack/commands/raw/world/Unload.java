@@ -84,7 +84,7 @@ public class Unload extends AbstractWorldCommand {
 			null,
 			null,
 			null,
-			LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT
+			createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT)
 		);
 	}
 
