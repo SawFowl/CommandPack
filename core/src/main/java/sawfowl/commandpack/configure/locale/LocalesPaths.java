@@ -151,12 +151,14 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_SETWARP_LIMIT = {PATH_COMMANDS, COMMAND_SETWARP, PATH_EXCEPTIONS, "Limit"};
 	public static final Object[] COMMANDS_SETWARP_SUCCESS = {PATH_COMMANDS, COMMAND_SETWARP, "Success"};
 	public static final Object[] COMMANDS_SETWARP_SUCCESS_ADMIN = {PATH_COMMANDS, COMMAND_SETWARP, "SuccessAdmin"};
+	
 	public static final Object[] COMMANDS_WARPS_EMPTY = {PATH_COMMANDS, COMMAND_WARPS, PATH_EXCEPTIONS, "Empty"};
 	public static final Object[] COMMANDS_WARPS_WAIT = {PATH_COMMANDS, COMMAND_WARPS, "Wait"};
 	public static final Object[] COMMANDS_WARPS_LIST = {PATH_COMMANDS, COMMAND_WARPS, "List"};
 	public static final Object[] COMMANDS_WARPS_HEADER = {PATH_COMMANDS, COMMAND_WARPS, "Header"};
 	public static final Object[] COMMANDS_WARPS_SERVER_GROUP = {PATH_COMMANDS, COMMAND_WARPS, "ServerGroup"};
 	public static final Object[] COMMANDS_WARPS_PLAYERS_GROUP = {PATH_COMMANDS, COMMAND_WARPS, "PlayersGroup"};
+	
 	public static final Object[] COMMANDS_TPTOGGLE_ENABLE = {PATH_COMMANDS, COMMAND_TPTOGGLE, "Enable"};
 	public static final Object[] COMMANDS_TPTOGGLE_DISABLE = {PATH_COMMANDS, COMMAND_TPTOGGLE, "Disable"};
 	public static final Object[] COMMANDS_TPA_DISABLE_TP_REQUESTS = {PATH_COMMANDS, COMMAND_TPA, PATH_EXCEPTIONS, "DisableTpRequests"};

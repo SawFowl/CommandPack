@@ -172,10 +172,12 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a can now fly."), null, LocalesPaths.COMMANDS_FLY_ENABLE_STAFF) || save;
 		save = check(locale, toText("&aFlight disabled."), null, LocalesPaths.COMMANDS_FLY_DISABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a can't fly anymore."), null, LocalesPaths.COMMANDS_FLY_DISABLE_STAFF) || save;
+		// =================================
 		save = check(locale, toText("&aNow you are invulnerable."), null, LocalesPaths.COMMANDS_GODMODE_ENABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a now has invulnerability."), null, LocalesPaths.COMMANDS_GODMODE_ENABLE_STAFF) || save;
 		save = check(locale, toText("&aInvulnerability is disabled."), null, LocalesPaths.COMMANDS_GODMODE_DISABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a no longer has invulnerability."), null, LocalesPaths.COMMANDS_GODMODE_DISABLE_STAFF) || save;
+		
 		save = check(locale, toText("&aYou have set your speed multiplier: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_SELF) || save;
 		save = check(locale, toText("&aYou have set a player speed multiplier &e" + Placeholders.PLAYER + "&a: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_STAFF) || save;
 		save = check(locale, toText("&aYou have been set a multiplier for your speed: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SPEED_OTHER) || save;
