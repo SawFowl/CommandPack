@@ -3,7 +3,7 @@ package sawfowl.commandpack.configure.locale.locales.ru;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import sawfowl.commandpack.configure.locale.locales.AbstractLocale;
-import sawfowl.commandpack.configure.locale.locales.abstractclasses.Commands;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.Commands;
 
 @ConfigSerializable
 public class ImplementPluginLocale extends AbstractLocale {

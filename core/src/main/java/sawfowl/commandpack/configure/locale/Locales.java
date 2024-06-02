@@ -67,6 +67,7 @@ public class Locales {
 		Locale locale = org.spongepowered.api.util.locale.Locales.DEFAULT;
 
 		boolean save = check(locale, toText("&eThere is no economy plugin on the server. Some of the functionality will not be available."), null, LocalesPaths.ECONOMY_NOT_FOUND);
+		save = check(locale, toText("&cThis command can only be executed by the player."), null, LocalesPaths.COMMANDS_EXCEPTION_ONLY_PLAYER) || save;
 		save = check(locale, toText("Failed to add game currency to player " + Placeholders.PLAYER + "."), null, LocalesPaths.ECONOMY_ERROR_GIVE_MONEY) || save;
 		save = check(locale, toText("Failed to take game currency from player " + Placeholders.PLAYER + "."), null, LocalesPaths.ECONOMY_ERROR_TAKE_MONEY) || save;
 
@@ -117,6 +118,9 @@ public class Locales {
 		save = check(locale, toText("&cExecution of command &e\"&5" + Placeholders.COMMAND + "&e\"&c is stopped because you have moved."), null, LocalesPaths.COMMANDS_STOP_TRACKING_MOVING) || save;;
 		save = check(locale, toText("&eThe amount of money written off is &2" + Placeholders.MONEY + "&e for command &e\"&5" + Placeholders.COMMAND + "&e\"&e."), null, LocalesPaths.COMMANDS_TAKE_MONEY) || save;
 		save = check(locale, toText("&cYou need to have a balance of &2" + Placeholders.MONEY + "&c to execute command &e\"&5" + Placeholders.COMMAND + "&e\"&c."), null, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY) || save;
+
+
+/////////////////////////////
 		save = check(locale, toText("&cYou have to hold an item in your main hand."), null, LocalesPaths.COMMANDS_HAT_NO_ITEM) || save;
 		save = check(locale, toText("&cThis item cannot be put on your head."), null, LocalesPaths.COMMANDS_HAT_BLACKLIST_ITEM) || save;
 		save = check(locale, toText("&cThe player's inventory &e" + Placeholders.PLAYER + "&c is full. Click on this message if you want to replace an item on a player's head. The item on the player's head will be lost!"), null, LocalesPaths.COMMANDS_HAT_BLACKLIST_ITEM) || save;
@@ -267,7 +271,6 @@ public class Locales {
 		save = check(locale, toText("&3Kits"), null, LocalesPaths.COMMANDS_KITS_LIST_HEADER) || save;
 		save = check(locale, toText("&cThere are no kits created."), null, LocalesPaths.COMMANDS_KITS_NO_KITS) || save;
 		save = check(locale, toText("&cThe time is not correct. Specify the duration in ISO time format."), null, LocalesPaths.COMMANDS_EXCEPTION_COOLDOWN_INCORRECT_TIME) || save;
-		save = check(locale, toText("&cThis command can only be executed by the player."), null, LocalesPaths.COMMANDS_EXCEPTION_ONLY_PLAYER) || save;
 		save = check(locale, toText("&aThe time to restore access to the kit &e" + Placeholders.VALUE + "&a is set."), null, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS) || save;
 		save = check(locale, toText("&aThe localized kit name is set."), null, LocalesPaths.COMMANDS_KITS_SET_NAME) || save;
 		save = check(locale, toText("&aA rule for the issuance of a kit has been set."), null, LocalesPaths.COMMANDS_KITS_GIVE_RULE) || save;
@@ -302,6 +305,7 @@ public class Locales {
 		save = check(locale, toText("&eYou have gone AFK, but you are currently vanished, so this has not been broadcasted."), null, LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eYou have returned from AFK, but you are currently vanished, so this has not been broadcasted."), null, LocalesPaths.COMMANDS_AFK_DISABLE_IN_VANISH) || save;
 		save = check(locale, toText("&eYou have been kicked for being AFK for too long."), null, LocalesPaths.COMMANDS_AFK_KICK) || save;
+
 		save = check(locale, toText("&aThe world &e\"" + Placeholders.WORLD + "\"&a is created.\n&eWorlds are created in asynchronous mode. Without server restart the world will be static."), null, LocalesPaths.COMMANDS_WORLD_CREATE) || save;
 		save = check(locale, toText("&aYou teleported into the world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_TELEPORT) || save;
 		save = check(locale, toText("&aYou teleported the player &e" + Placeholders.PLAYER + "&a to the world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_TELEPORT_OTHER) || save;
@@ -337,14 +341,19 @@ public class Locales {
 		save = check(locale, toText("&aThe generation of chunks in world&e\"" + Placeholders.WORLD + "\"&a has been stopped. The task is deleted."), null, LocalesPaths.COMMANDS_WORLD_STOP_GENERATE) || save;
 		save = check(locale, toText("&aEnabled the logic of spawn in the world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_ENABLE) || save;
 		save = check(locale, toText("&aDisabled the logic of spawn in the world &e\"" + Placeholders.WORLD + "\"&a."), null, LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_DISABLE) || save;
+
 		save = check(locale, toText("&aNow you will see what commands other players are using."), null, LocalesPaths.COMMANDS_COMMANDSPY_ENABLE) || save;
 		save = check(locale, toText("&aYou will no longer see what commands other players are using."), null, LocalesPaths.COMMANDS_COMMANDSPY_DISABLE) || save;
 		save = check(locale, toText("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 uses the command&f: &d" + Placeholders.COMMAND), null, LocalesPaths.COMMANDS_COMMANDSPY_SPY) || save;
+
 		save = check(locale, toText("&aPing&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS) || save;
 		save = check(locale, toText("&aPing of player &e" + Placeholders.PLAYER + "&f: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF) || save;
+
 		save = check(locale, toText("&2&lInventory&f&l: &e&l" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_INVSEE_TITLE) || save;
+
 		save = check(locale, toText("&aOnline(" + Placeholders.VALUE + ")&f: &e"), null, LocalesPaths.COMMANDS_LIST_SUCCESS) || save;
 		save = check(locale, toText("&7" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_LIST_VANISHED) || save;
+
 		save = check(locale, toText("&3Player Info&f: " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_SEEN_TITLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is currently &2online"), null, LocalesPaths.COMMANDS_SEEN_ONLINE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is currently &4offline"), null, LocalesPaths.COMMANDS_SEEN_OFFLINE) || save;
@@ -369,38 +378,48 @@ public class Locales {
 		save = check(locale, toText("&eYes"), null, LocalesPaths.COMMANDS_SEEN_YES) || save;
 		save = check(locale, toText("&eNo"), null, LocalesPaths.COMMANDS_SEEN_NO) || save;
 		save = check(locale, toText("&3="), null, LocalesPaths.COMMANDS_SEEN_PADDING) || save;
+
 		save = check(locale, toText("&3Help"), null, LocalesPaths.COMMANDS_HELP_TITLE) || save;
 		save = checkList(locale, Arrays.asList(
 				toText("&eThe commands will be available if you have permission for them."),
 				toText("&2/spawn &f- &eteleport to a spawnpoint"),
 				toText("&2/home &f- &eteleporting to your home")
 				), null, LocalesPaths.COMMANDS_HELP_LIST) || save;
+
 		save = check(locale, toText("&aNow you're glowing."), null, LocalesPaths.COMMANDS_GLOW_ENABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is now glowing."), null, LocalesPaths.COMMANDS_GLOW_ENABLE_STAFF) || save;
 		save = check(locale, toText("&aYou don't glow anymore."), null, LocalesPaths.COMMANDS_GLOW_DISABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is no longer glowing."), null, LocalesPaths.COMMANDS_GLOW_DISABLE_STAFF) || save;
+
 		save = check(locale, toText("&aYou are burning."), null, LocalesPaths.COMMANDS_FLAME_SUCCESS) || save;
 		save = check(locale, toText("&4You are burning!"), null, LocalesPaths.COMMANDS_FLAME_SUCCESS_DAMAGE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is now burning."), null, LocalesPaths.COMMANDS_FLAME_SUCCESS_STAFF) || save;
+
 		save = check(locale, toText("&aFire extinguished."), null, LocalesPaths.COMMANDS_EXTINGUISH_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is extinguished."), null, LocalesPaths.COMMANDS_EXTINGUISH_SUCCESS_STAFF) || save;
+
 		save = check(locale, toText("&aYou've banned &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_BAN_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a bans player &e" + Placeholders.PLAYER + "&a.\n&aEnd of ban &e" + Placeholders.TIME + "\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently bans player &e" + Placeholders.PLAYER + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&cIt's impossible to ban &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_BAN_IGNORE) || save;
 		save = check(locale, toText("&ePlayer &e" + Placeholders.PLAYER + "&e has already banned on this server."), null, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED) || save;
 		save = check(locale, toText("&bYou are banned on the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_DISCONNECT) || save;
+
 		save = check(locale, toText("&aYou unbanned &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a unbans &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT) || save;
+
 		save = check(locale, toText("&aYou unbanned &e" + Placeholders.PLAYER + "&a and his IP &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_BANIP_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a bans player &e" + Placeholders.PLAYER + "&a by IP.\n&aEnd of ban &e" + Placeholders.TIME + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently bans player &e" + Placeholders.PLAYER + "&a by IP.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&bYour IP is banned on the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANIP_DISCONNECT) || save;
+
 		save = check(locale, toText("&aYou unbanned IP &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_UNBANIP_SUCCESS) || save;
+
 		save = check(locale, toText("&aYou kicked &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_KICK_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&b kicked you from the server.\n&bReason: &e" + Placeholders.VALUE + "."), null, LocalesPaths.COMMANDS_KICK_DISCONNECT) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a kicks out from the server  " + Placeholders.PLAYER + ".\n&aReason: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_KICK_ANNOUNCEMENT) || save;
 		save = check(locale, toText("&cYou can't kick &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_KICK_SUCCESS) || save;
+
 		save = check(locale, toText("&aYou blocked the chat to the player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_MUTE_SUCCESS) || save;
 		save = check(locale, toText("&cYou are blocked from writing in chat blocked until &e" + Placeholders.TIME + "&c.\nReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET) || save;
 		save = check(locale, toText("&cYou are permanently blocked from writing in the chat.\nReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT) || save;
@@ -408,9 +427,11 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently mute player &e" + Placeholders.PLAYER + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&cUnable to block chat for player &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_MUTE_IGNORE) || save;
 		save = check(locale, toText("&ePlayer &e" + Placeholders.PLAYER + "&e already cannot write in chat."), null, LocalesPaths.COMMANDS_MUTE_ALREADY_MUTED) || save;
+
 		save = check(locale, toText("&aYou unmuted &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNMUTE_SUCCESS) || save;
 		save = check(locale, toText("&aYou can write in the chat again."), null, LocalesPaths.COMMANDS_UNMUTE_SUCCESS_TARGET) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a unmute &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNMUTE_ANNOUNCEMENT) || save;
+
 		save = check(locale, toText("&aYou warned the player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_WARN_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a warned you.\nReason: &e\"" + Placeholders.VALUE + "&e\"&a.\nValid until &e" + Placeholders.TIME), null, LocalesPaths.COMMANDS_WARN_SUCCESS_TARGET) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a has issued a permanent warning to you.\nReason:  &e\"" + Placeholders.VALUE + "&e\"&a."), null, LocalesPaths.COMMANDS_WARN_SUCCESS_TARGET_PERMANENT) || save;
@@ -421,11 +442,13 @@ public class Locales {
 		save = check(locale, toText("&cWarning limit reached before ban &e" + Placeholders.VALUE + "&c"), null, LocalesPaths.COMMANDS_WARN_BAN_LIMIT) || save;
 		save = check(locale, toText("&cWarning limit reached before mute &e" + Placeholders.VALUE + "&c"), null, LocalesPaths.COMMANDS_WARN_MUTE_LIMIT) || save;
 		save = check(locale, toText("&cWarning limit reached before kick &e" + Placeholders.VALUE + "&c"), null, LocalesPaths.COMMANDS_WARN_KICK_LIMIT) || save;
+
 		save = check(locale, toText("&aWarnings in all time &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WARNS_ALLTIME) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a warnings in all time &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET) || save;
 		save = check(locale, toText("&3" + Placeholders.PLAYER + " warnings"), null, LocalesPaths.COMMANDS_WARNS_TITLE) || save;
 		save = check(locale, toText("&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_WARNS_REASON) || save;
 		save = check(locale, toText("&e" + Placeholders.TIME + " &a➢ &e" + Placeholders.LIMIT), null, LocalesPaths.COMMANDS_WARNS_TIMES) || save;
+
 		save = check(locale, toText("&aThere are no bans to display."), null, LocalesPaths.COMMANDS_BANLIST_EMPTY) || save;
 		save = check(locale, toText("&3%profile% &3|| %ip%"), null, LocalesPaths.COMMANDS_BANLIST_TITLE) || save;
 		save = check(locale, toText("&7[&ePlayers&7]"), null, LocalesPaths.COMMANDS_BANLIST_PROFILE) || save;
@@ -433,11 +456,13 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANLIST_ELEMENT) || save;
 		save = check(locale, toText("&aPlayer&f: &e" + Placeholders.PLAYER + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANLIST_BANINFO_PLAYER) || save;
 		save = check(locale, toText("&aIP&f: &e" + Placeholders.VALUE + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANLIST_BANINFO_IP) || save;
+
 		save = check(locale, toText("&cPermanent"), null, LocalesPaths.COMMANDS_BANINFO_PERMANENT) || save;
 		save = check(locale, toText("&cYou need to specify the nickname of the banned player."), null, LocalesPaths.COMMANDS_BANINFO_NOT_PRESENT) || save;
 		save = check(locale, toText("&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANINFO_SUCCESS) || save;
 		save = check(locale, toText("&3Ban Info " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_BANINFO_TITLE) || save;
 		save = check(locale, toText("&cPermanent"), null, LocalesPaths.COMMANDS_MUTEINFO_PERMANENT) || save;
+
 		save = check(locale, toText("&cYou need to specify the nickname of the player with blocked chat."), null, LocalesPaths.COMMANDS_MUTEINFO_NOT_PRESENT) || save;
 		save = check(locale, toText("&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_MUTEINFO_SUCCESS) || save;
 		save = check(locale, toText("&3Mute Info " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_MUTEINFO_TITLE) || save;
@@ -445,24 +470,30 @@ public class Locales {
 		save = check(locale, toText("&3Mutes (" + Placeholders.VALUE + ")"), null, LocalesPaths.COMMANDS_MUTELIST_TITLE) || save;
 		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTELIST_ELEMENT) || save;
 		save = check(locale, toText("&aPlayer&f: &e" + Placeholders.PLAYER + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_MUTELIST_INFO) || save;
+
 		save = check(locale, toText("&3Your balance"), null, LocalesPaths.COMMANDS_BALANCE_SELF_TITLE) || save;
 		save = check(locale, toText("&a" + Placeholders.CURRENCY_NAME + "&f: &e" + Placeholders.VALUE), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_BALANCE_SELF_LIST) || save;
 		save = check(locale, toText("&3Balance: " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE) || save;
 		save = check(locale, toText("&a" + Placeholders.CURRENCY_NAME + "&f: &e" + Placeholders.VALUE), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_BALANCE_OTHER_LIST) || save;
+
 		save = check(locale, toText("&3<Top balances &e\"" + Placeholders.CURRENCY_STYLED_SYMBOL + "&e\"&3>"), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_BALANCE_TOP_TITLE) || save;
 		save = check(locale, toText("&3="), null, LocalesPaths.COMMANDS_BALANCE_TOP_PADDING) || save;
 		save = check(locale, toText("&2" + Placeholders.RANK + ". &b" + Placeholders.PLAYER + " &6" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BALANCE_TOP_LIST) || save;
+
 		save = check(locale, toText("&cThe balance of player &e" + Placeholders.PLAYER + "&c is hidden."), null, LocalesPaths.COMMANDS_BALANCE_OTHER_HIDEN) || save;
 		save = check(locale, toText("&aYour balance is hidden from other players.."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_HIDEN) || save;
 		save = check(locale, toText("&aOther players can once again view your balance."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_OPEN) || save;
 		save = check(locale, toText("&aThe balance of the player &e" + Placeholders.PLAYER + "&a is hidden from other players."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN) || save;
 		save = check(locale, toText("&aPlayer balance &e" + Placeholders.PLAYER + "&a is once again available for other players to view."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN) || save;
+
 		save = check(locale, toText("&aYou have set player balance &e" + Placeholders.PLAYER + "&a in currency '&e" + Placeholders.CURRENCY_NAME + "&a' = &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER) || save;
 		save = check(locale, toText("&aUnknown player nickname&f: &e" + Placeholders.PLAYER + "&a. Created/used a temporary account with the specified name and changed the balance in currency '&e" + Placeholders.CURRENCY_NAME + "&a' = &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_CREATE) || save;
 		save = check(locale, toText("&aYour balance in '&e" + Placeholders.CURRENCY_NAME + "&a' currency has been changed and is now &e" + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_TARGET) || save;
+
 		save = check(locale, toText("&aBalance of &e" + Placeholders.PLAYER + "&a has been increased in '&e" + Placeholders.CURRENCY_NAME + "&a' currency by &e" + Placeholders.VALUE + "&a and is now &e" + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_ADD_BALANCE_SUCCESS_USER) || save;
 		save = check(locale, toText("&aUnknown player nickname&f: &e" + Placeholders.PLAYER + "&a. Created/used a temporary account with the specified name and increased the balance in the '&e" + Placeholders.CURRENCY_NAME + "&a' currency by &e" + Placeholders.VALUE + "&a and is now &e" + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_ADD_BALANCE_SUCCESS_CREATE) || save;
 		save = check(locale, toText("&aYour balance in '&e" + Placeholders.CURRENCY_NAME + "&a' currency has been increased in &e" + Placeholders.VALUE + " &aand now equals " + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_ADD_BALANCE_SUCCESS_TARGET) || save;
+		
 		save = check(locale, toText("&aBalance of &e" + Placeholders.PLAYER + "&a has been decreased in '&e" + Placeholders.CURRENCY_NAME + "&a' currency by &e" + Placeholders.VALUE + "&a and is now &e" + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_REMOVE_BALANCE_SUCCESS_USER) || save;
 		save = check(locale, toText("&aUnknown player nickname&f: &e" + Placeholders.PLAYER + "&a. Created/used a temporary account with the specified name and decreased the balance in the '&e" + Placeholders.CURRENCY_NAME + "&a' currency by &e" + Placeholders.VALUE + "&a and is now &e" + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_REMOVE_BALANCE_SUCCESS_CREATE) || save;
 		save = check(locale, toText("&aYour balance in '&e" + Placeholders.CURRENCY_NAME + "&a' currency has been decreased in &e" + Placeholders.VALUE + " &aand now equals " + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_REMOVE_BALANCE_SUCCESS_TARGET) || save;
@@ -470,8 +501,10 @@ public class Locales {
 		save = check(locale, toText("&cYou don't have enough money in the " + Placeholders.CURRENCY_NAME + " currency."), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_PAY_NOT_ENOUGH_MONEY) || save;
 		save = check(locale, toText("&aYou have transferred &e" + Placeholders.CURRENCY_STYLED_SYMBOL + "&e" + Placeholders.MONEY + " &ato the player's account &e" + Placeholders.PLAYER + "&a."), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_PAY_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a transfers &e" + Placeholders.CURRENCY_STYLED_SYMBOL + "&e" + Placeholders.MONEY + "&a to your account."), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_PAY_SUCCESS_TARGET) || save;
+
 		save = check(locale, toText("&5You whisper &e" + Placeholders.PLAYER + "&f: &d" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_TELL_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &5whispers to you&f: &d" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET) || save;
+
 		save = check(locale, toText("&cNo one to answer to."), null, LocalesPaths.COMMANDS_REPLY_NOTHING) || save;
 		
 		if(save) save(locale);

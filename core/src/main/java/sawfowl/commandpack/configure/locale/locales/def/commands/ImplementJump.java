@@ -4,7 +4,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
-import sawfowl.commandpack.configure.locale.locales.abstractclasses.commands.Jump;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Jump;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable

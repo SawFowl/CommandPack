@@ -6,7 +6,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.locales.abstractclasses.commands.Fly;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Fly;
 import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
