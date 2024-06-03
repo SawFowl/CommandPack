@@ -348,7 +348,6 @@ public class Locales {
 		save = check(locale, toText("&2&lInventory&f&l: &e&l" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_INVSEE_TITLE) || save;
 		save = check(locale, toText("&aOnline(" + Placeholders.VALUE + ")&f: &e"), null, LocalesPaths.COMMANDS_LIST_SUCCESS) || save;
 		save = check(locale, toText("&7" + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_LIST_VANISHED) || save;
-
 		save = check(locale, toText("&3Player Info&f: " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_SEEN_TITLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is currently &2online"), null, LocalesPaths.COMMANDS_SEEN_ONLINE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is currently &4offline"), null, LocalesPaths.COMMANDS_SEEN_OFFLINE) || save;
