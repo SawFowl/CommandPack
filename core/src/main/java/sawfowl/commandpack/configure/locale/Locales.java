@@ -372,48 +372,38 @@ public class Locales {
 		save = check(locale, toText("&eYes"), null, LocalesPaths.COMMANDS_SEEN_YES) || save;
 		save = check(locale, toText("&eNo"), null, LocalesPaths.COMMANDS_SEEN_NO) || save;
 		save = check(locale, toText("&3="), null, LocalesPaths.COMMANDS_SEEN_PADDING) || save;
-
 		save = check(locale, toText("&3Help"), null, LocalesPaths.COMMANDS_HELP_TITLE) || save;
 		save = checkList(locale, Arrays.asList(
 				toText("&eThe commands will be available if you have permission for them."),
 				toText("&2/spawn &f- &eteleport to a spawnpoint"),
 				toText("&2/home &f- &eteleporting to your home")
 				), null, LocalesPaths.COMMANDS_HELP_LIST) || save;
-
 		save = check(locale, toText("&aNow you're glowing."), null, LocalesPaths.COMMANDS_GLOW_ENABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is now glowing."), null, LocalesPaths.COMMANDS_GLOW_ENABLE_STAFF) || save;
 		save = check(locale, toText("&aYou don't glow anymore."), null, LocalesPaths.COMMANDS_GLOW_DISABLE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is no longer glowing."), null, LocalesPaths.COMMANDS_GLOW_DISABLE_STAFF) || save;
-
 		save = check(locale, toText("&aYou are burning."), null, LocalesPaths.COMMANDS_FLAME_SUCCESS) || save;
 		save = check(locale, toText("&4You are burning!"), null, LocalesPaths.COMMANDS_FLAME_SUCCESS_DAMAGE) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is now burning."), null, LocalesPaths.COMMANDS_FLAME_SUCCESS_STAFF) || save;
-
 		save = check(locale, toText("&aFire extinguished."), null, LocalesPaths.COMMANDS_EXTINGUISH_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a is extinguished."), null, LocalesPaths.COMMANDS_EXTINGUISH_SUCCESS_STAFF) || save;
-
 		save = check(locale, toText("&aYou've banned &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_BAN_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a bans player &e" + Placeholders.PLAYER + "&a.\n&aEnd of ban &e" + Placeholders.TIME + "\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently bans player &e" + Placeholders.PLAYER + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&cIt's impossible to ban &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_BAN_IGNORE) || save;
 		save = check(locale, toText("&ePlayer &e" + Placeholders.PLAYER + "&e has already banned on this server."), null, LocalesPaths.COMMANDS_BAN_ALREADY_BANNED) || save;
 		save = check(locale, toText("&bYou are banned on the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BAN_DISCONNECT) || save;
-
 		save = check(locale, toText("&aYou unbanned &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a unbans &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNBAN_ANNOUNCEMENT) || save;
-
 		save = check(locale, toText("&aYou unbanned &e" + Placeholders.PLAYER + "&a and his IP &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_BANIP_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a bans player &e" + Placeholders.PLAYER + "&a by IP.\n&aEnd of ban &e" + Placeholders.TIME + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently bans player &e" + Placeholders.PLAYER + "&a by IP.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&bYour IP is banned on the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANIP_DISCONNECT) || save;
-
 		save = check(locale, toText("&aYou unbanned IP &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_UNBANIP_SUCCESS) || save;
-
 		save = check(locale, toText("&aYou kicked &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_KICK_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&b kicked you from the server.\n&bReason: &e" + Placeholders.VALUE + "."), null, LocalesPaths.COMMANDS_KICK_DISCONNECT) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a kicks out from the server  " + Placeholders.PLAYER + ".\n&aReason: &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_KICK_ANNOUNCEMENT) || save;
 		save = check(locale, toText("&cYou can't kick &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_KICK_SUCCESS) || save;
-
 		save = check(locale, toText("&aYou blocked the chat to the player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_MUTE_SUCCESS) || save;
 		save = check(locale, toText("&cYou are blocked from writing in chat blocked until &e" + Placeholders.TIME + "&c.\nReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET) || save;
 		save = check(locale, toText("&cYou are permanently blocked from writing in the chat.\nReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_SUCCESS_TARGET_PERMANENT) || save;
@@ -421,11 +411,9 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a permanently mute player &e" + Placeholders.PLAYER + "&a.\n&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTE_ANNOUNCEMENT_PERMANENT) || save;
 		save = check(locale, toText("&cUnable to block chat for player &e" + Placeholders.PLAYER + "&c."), null, LocalesPaths.COMMANDS_MUTE_IGNORE) || save;
 		save = check(locale, toText("&ePlayer &e" + Placeholders.PLAYER + "&e already cannot write in chat."), null, LocalesPaths.COMMANDS_MUTE_ALREADY_MUTED) || save;
-
 		save = check(locale, toText("&aYou unmuted &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNMUTE_SUCCESS) || save;
 		save = check(locale, toText("&aYou can write in the chat again."), null, LocalesPaths.COMMANDS_UNMUTE_SUCCESS_TARGET) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a unmute &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_UNMUTE_ANNOUNCEMENT) || save;
-
 		save = check(locale, toText("&aYou warned the player &e" + Placeholders.PLAYER + "&a."), null, LocalesPaths.COMMANDS_WARN_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a warned you.\nReason: &e\"" + Placeholders.VALUE + "&e\"&a.\nValid until &e" + Placeholders.TIME), null, LocalesPaths.COMMANDS_WARN_SUCCESS_TARGET) || save;
 		save = check(locale, toText("&e" + Placeholders.SOURCE + "&a has issued a permanent warning to you.\nReason:  &e\"" + Placeholders.VALUE + "&e\"&a."), null, LocalesPaths.COMMANDS_WARN_SUCCESS_TARGET_PERMANENT) || save;
@@ -436,13 +424,11 @@ public class Locales {
 		save = check(locale, toText("&cWarning limit reached before ban &e" + Placeholders.VALUE + "&c"), null, LocalesPaths.COMMANDS_WARN_BAN_LIMIT) || save;
 		save = check(locale, toText("&cWarning limit reached before mute &e" + Placeholders.VALUE + "&c"), null, LocalesPaths.COMMANDS_WARN_MUTE_LIMIT) || save;
 		save = check(locale, toText("&cWarning limit reached before kick &e" + Placeholders.VALUE + "&c"), null, LocalesPaths.COMMANDS_WARN_KICK_LIMIT) || save;
-
 		save = check(locale, toText("&aWarnings in all time &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WARNS_ALLTIME) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a warnings in all time &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET) || save;
 		save = check(locale, toText("&3" + Placeholders.PLAYER + " warnings"), null, LocalesPaths.COMMANDS_WARNS_TITLE) || save;
 		save = check(locale, toText("&aReason: " + Placeholders.VALUE), null, LocalesPaths.COMMANDS_WARNS_REASON) || save;
 		save = check(locale, toText("&e" + Placeholders.TIME + " &a➢ &e" + Placeholders.LIMIT), null, LocalesPaths.COMMANDS_WARNS_TIMES) || save;
-
 		save = check(locale, toText("&aThere are no bans to display."), null, LocalesPaths.COMMANDS_BANLIST_EMPTY) || save;
 		save = check(locale, toText("&3%profile% &3|| %ip%"), null, LocalesPaths.COMMANDS_BANLIST_TITLE) || save;
 		save = check(locale, toText("&7[&ePlayers&7]"), null, LocalesPaths.COMMANDS_BANLIST_PROFILE) || save;
@@ -450,13 +436,11 @@ public class Locales {
 		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BANLIST_ELEMENT) || save;
 		save = check(locale, toText("&aPlayer&f: &e" + Placeholders.PLAYER + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANLIST_BANINFO_PLAYER) || save;
 		save = check(locale, toText("&aIP&f: &e" + Placeholders.VALUE + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANLIST_BANINFO_IP) || save;
-
 		save = check(locale, toText("&cPermanent"), null, LocalesPaths.COMMANDS_BANINFO_PERMANENT) || save;
 		save = check(locale, toText("&cYou need to specify the nickname of the banned player."), null, LocalesPaths.COMMANDS_BANINFO_NOT_PRESENT) || save;
 		save = check(locale, toText("&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_BANINFO_SUCCESS) || save;
 		save = check(locale, toText("&3Ban Info " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_BANINFO_TITLE) || save;
 		save = check(locale, toText("&cPermanent"), null, LocalesPaths.COMMANDS_MUTEINFO_PERMANENT) || save;
-
 		save = check(locale, toText("&cYou need to specify the nickname of the player with blocked chat."), null, LocalesPaths.COMMANDS_MUTEINFO_NOT_PRESENT) || save;
 		save = check(locale, toText("&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_MUTEINFO_SUCCESS) || save;
 		save = check(locale, toText("&3Mute Info " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_MUTEINFO_TITLE) || save;
