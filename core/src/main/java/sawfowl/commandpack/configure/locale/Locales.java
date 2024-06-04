@@ -67,18 +67,10 @@ public class Locales {
 		Locale locale = org.spongepowered.api.util.locale.Locales.DEFAULT;
 
 		boolean save = check(locale, toText("&eThere is no economy plugin on the server. Some of the functionality will not be available."), null, LocalesPaths.ECONOMY_NOT_FOUND);
-		save = check(locale, toText("&cThis command can only be executed by the player."), null, LocalesPaths.COMMANDS_EXCEPTION_ONLY_PLAYER) || save;
+
 		save = check(locale, toText("Failed to add game currency to player " + Placeholders.PLAYER + "."), null, LocalesPaths.ECONOMY_ERROR_GIVE_MONEY) || save;
 		save = check(locale, toText("Failed to take game currency from player " + Placeholders.PLAYER + "."), null, LocalesPaths.ECONOMY_ERROR_TAKE_MONEY) || save;
 
-		save = check(locale, toText("d"), null, LocalesPaths.TIME_DAYS) || save;
-		save = check(locale, toText("h"), null, LocalesPaths.TIME_HOUR) || save;
-		save = check(locale, toText("m"), null, LocalesPaths.TIME_MINUTE) || save;
-		save = check(locale, toText("s"), null, LocalesPaths.TIME_SECOND) || save;
-
-		save = check(locale, toText("&7[&cRemove&7] "), null, LocalesPaths.REMOVE) || save;
-		save = check(locale, toText("&7[&aTeleport&7] "), null, LocalesPaths.TELEPORT) || save;
-		save = check(locale, toText("&7[&eTeleport&7] "), null, LocalesPaths.TELEPORTCLICKABLE) || save;
 		save = checkList(locale, Arrays.asList(
 				toText("&b================================"),
 				toText("&dGreetings &e" + Placeholders.PLAYER + "&d. Welcome to the server."),
@@ -99,10 +91,31 @@ public class Locales {
 		save = check(locale, toText("Unknown"), null, LocalesPaths.NAME_UNKNOWN) || save;
 		save = check(locale, toText("&6&lBackpack"), null, LocalesPaths.NAME_BACKPACK) || save;
 
+		save = check(locale, toText(Placeholders.SOURCE + " ran the command: /" + Placeholders.COMMAND + Placeholders.ARGS + ""), null, LocalesPaths.COMMANDS_LOG) || save;
+		save = check(locale, toText("Settings \"" + Placeholders.COMMAND + "\" is not registered for tracking."), null, LocalesPaths.COMMANDS_NOT_TRACKING) || save;
+		save = check(locale, toText("&cExecution of command &e\"&5" + Placeholders.COMMAND + "&e\"&c has stopped because you entered another command."), null, LocalesPaths.COMMANDS_STOP_TRACKING_COMMAND) || save;
+		save = check(locale, toText("&cExecution of command &e\"&5" + Placeholders.COMMAND + "&e\"&c is stopped because you have moved."), null, LocalesPaths.COMMANDS_STOP_TRACKING_MOVING) || save;;
+
+		save = check(locale, toText("&eThe amount of money written off is &2" + Placeholders.MONEY + "&e for command &e\"&5" + Placeholders.COMMAND + "&e\"&e."), null, LocalesPaths.COMMANDS_TAKE_MONEY) || save;
+		save = check(locale, toText("&cYou need to have a balance of &2" + Placeholders.MONEY + "&c to execute command &e\"&5" + Placeholders.COMMAND + "&e\"&c."), null, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY) || save;
+
+
+
+///////////////
+
+		save = check(locale, toText("d"), null, LocalesPaths.TIME_DAYS) || save;
+		save = check(locale, toText("h"), null, LocalesPaths.TIME_HOUR) || save;
+		save = check(locale, toText("m"), null, LocalesPaths.TIME_MINUTE) || save;
+		save = check(locale, toText("s"), null, LocalesPaths.TIME_SECOND) || save;
+
+		save = check(locale, toText("&7[&cRemove&7] "), null, LocalesPaths.REMOVE) || save;
+		save = check(locale, toText("&7[&aTeleport&7] "), null, LocalesPaths.TELEPORT) || save;
+		save = check(locale, toText("&7[&eTeleport&7] "), null, LocalesPaths.TELEPORTCLICKABLE) || save;
+
+		save = check(locale, toText("&cThis command can only be executed by the player."), null, LocalesPaths.COMMANDS_EXCEPTION_ONLY_PLAYER) || save;
 		save = check(locale, toText("&cPlayer " + Placeholders.PLAYER + "&c is offline."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE) || save;
 		save = check(locale, toText("&cYou need to specify the nickname of the player who is now online or was previously on the server."), null, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou need to specify the nickname of the player online."), null, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT) || save;
-		save = check(locale, toText("&cYou can't point to yourself."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
 		save = check(locale, toText("&cYou must specify a name."), null, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou must specify a type."), null, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou must specify a value."), null, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT) || save;
@@ -110,14 +123,9 @@ public class Locales {
 		save = check(locale, toText("&cIt is necessary to specify the command argument as boolean. More information about the arguments of the entered command can be found in the documentation of the plugin."), null, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou need to specify the coordinates."), null, LocalesPaths.COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT) || save;
 		save = check(locale, toText("&cYou have to specify the world."), null, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT) || save;
+		save = check(locale, toText("&cYou can't point to yourself."), null, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF) || save;
 		save = check(locale, toText("&cWait &e" + Placeholders.DELAY + "&c before using this command again."), null, LocalesPaths.COMMANDS_COOLDOWN) || save;
 		save = check(locale, toText("&aCommand activation via &e" + Placeholders.DELAY + "&a."), null, LocalesPaths.COMMANDS_WAIT) || save;
-		save = check(locale, toText(Placeholders.SOURCE + " ran the command: /" + Placeholders.COMMAND + Placeholders.ARGS + ""), null, LocalesPaths.COMMANDS_LOG) || save;
-		save = check(locale, toText("Settings \"" + Placeholders.COMMAND + "\" is not registered for tracking."), null, LocalesPaths.COMMANDS_NOT_TRACKING) || save;
-		save = check(locale, toText("&cExecution of command &e\"&5" + Placeholders.COMMAND + "&e\"&c has stopped because you entered another command."), null, LocalesPaths.COMMANDS_STOP_TRACKING_COMMAND) || save;
-		save = check(locale, toText("&cExecution of command &e\"&5" + Placeholders.COMMAND + "&e\"&c is stopped because you have moved."), null, LocalesPaths.COMMANDS_STOP_TRACKING_MOVING) || save;;
-		save = check(locale, toText("&eThe amount of money written off is &2" + Placeholders.MONEY + "&e for command &e\"&5" + Placeholders.COMMAND + "&e\"&e."), null, LocalesPaths.COMMANDS_TAKE_MONEY) || save;
-		save = check(locale, toText("&cYou need to have a balance of &2" + Placeholders.MONEY + "&c to execute command &e\"&5" + Placeholders.COMMAND + "&e\"&c."), null, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY) || save;
 
 
 /////////////////////////////
@@ -448,30 +456,24 @@ public class Locales {
 		save = check(locale, toText("&3Mutes (" + Placeholders.VALUE + ")"), null, LocalesPaths.COMMANDS_MUTELIST_TITLE) || save;
 		save = check(locale, toText("&e" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_MUTELIST_ELEMENT) || save;
 		save = check(locale, toText("&aPlayer&f: &e" + Placeholders.PLAYER + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON), null, LocalesPaths.COMMANDS_MUTELIST_INFO) || save;
-
 		save = check(locale, toText("&3Your balance"), null, LocalesPaths.COMMANDS_BALANCE_SELF_TITLE) || save;
 		save = check(locale, toText("&a" + Placeholders.CURRENCY_NAME + "&f: &e" + Placeholders.VALUE), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_BALANCE_SELF_LIST) || save;
 		save = check(locale, toText("&3Balance: " + Placeholders.PLAYER), null, LocalesPaths.COMMANDS_BALANCE_OTHER_TITLE) || save;
 		save = check(locale, toText("&a" + Placeholders.CURRENCY_NAME + "&f: &e" + Placeholders.VALUE), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_BALANCE_OTHER_LIST) || save;
-
+		save = check(locale, toText("&cThe balance of player &e" + Placeholders.PLAYER + "&c is hidden."), null, LocalesPaths.COMMANDS_BALANCE_OTHER_HIDEN) || save;
 		save = check(locale, toText("&3<Top balances &e\"" + Placeholders.CURRENCY_STYLED_SYMBOL + "&e\"&3>"), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_BALANCE_TOP_TITLE) || save;
 		save = check(locale, toText("&3="), null, LocalesPaths.COMMANDS_BALANCE_TOP_PADDING) || save;
 		save = check(locale, toText("&2" + Placeholders.RANK + ". &b" + Placeholders.PLAYER + " &6" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_BALANCE_TOP_LIST) || save;
-
-		save = check(locale, toText("&cThe balance of player &e" + Placeholders.PLAYER + "&c is hidden."), null, LocalesPaths.COMMANDS_BALANCE_OTHER_HIDEN) || save;
-		save = check(locale, toText("&aYour balance is hidden from other players.."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_HIDEN) || save;
+		save = check(locale, toText("&aYour balance is hidden from other players."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_HIDEN) || save;
 		save = check(locale, toText("&aOther players can once again view your balance."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_OPEN) || save;
 		save = check(locale, toText("&aThe balance of the player &e" + Placeholders.PLAYER + "&a is hidden from other players."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN) || save;
 		save = check(locale, toText("&aPlayer balance &e" + Placeholders.PLAYER + "&a is once again available for other players to view."), null, LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN) || save;
-
 		save = check(locale, toText("&aYou have set player balance &e" + Placeholders.PLAYER + "&a in currency '&e" + Placeholders.CURRENCY_NAME + "&a' = &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_USER) || save;
 		save = check(locale, toText("&aUnknown player nickname&f: &e" + Placeholders.PLAYER + "&a. Created/used a temporary account with the specified name and changed the balance in currency '&e" + Placeholders.CURRENCY_NAME + "&a' = &e" + Placeholders.VALUE + "&a."), null, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_CREATE) || save;
 		save = check(locale, toText("&aYour balance in '&e" + Placeholders.CURRENCY_NAME + "&a' currency has been changed and is now &e" + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_SET_BALANCE_SUCCESS_TARGET) || save;
-
 		save = check(locale, toText("&aBalance of &e" + Placeholders.PLAYER + "&a has been increased in '&e" + Placeholders.CURRENCY_NAME + "&a' currency by &e" + Placeholders.VALUE + "&a and is now &e" + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_ADD_BALANCE_SUCCESS_USER) || save;
 		save = check(locale, toText("&aUnknown player nickname&f: &e" + Placeholders.PLAYER + "&a. Created/used a temporary account with the specified name and increased the balance in the '&e" + Placeholders.CURRENCY_NAME + "&a' currency by &e" + Placeholders.VALUE + "&a and is now &e" + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_ADD_BALANCE_SUCCESS_CREATE) || save;
 		save = check(locale, toText("&aYour balance in '&e" + Placeholders.CURRENCY_NAME + "&a' currency has been increased in &e" + Placeholders.VALUE + " &aand now equals " + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_ADD_BALANCE_SUCCESS_TARGET) || save;
-		
 		save = check(locale, toText("&aBalance of &e" + Placeholders.PLAYER + "&a has been decreased in '&e" + Placeholders.CURRENCY_NAME + "&a' currency by &e" + Placeholders.VALUE + "&a and is now &e" + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_REMOVE_BALANCE_SUCCESS_USER) || save;
 		save = check(locale, toText("&aUnknown player nickname&f: &e" + Placeholders.PLAYER + "&a. Created/used a temporary account with the specified name and decreased the balance in the '&e" + Placeholders.CURRENCY_NAME + "&a' currency by &e" + Placeholders.VALUE + "&a and is now &e" + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_REMOVE_BALANCE_SUCCESS_CREATE) || save;
 		save = check(locale, toText("&aYour balance in '&e" + Placeholders.CURRENCY_NAME + "&a' currency has been decreased in &e" + Placeholders.VALUE + " &aand now equals " + Placeholders.MONEY + "&a."), null, LocalesPaths.COMMANDS_REMOVE_BALANCE_SUCCESS_TARGET) || save;
@@ -479,10 +481,8 @@ public class Locales {
 		save = check(locale, toText("&cYou don't have enough money in the " + Placeholders.CURRENCY_NAME + " currency."), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_PAY_NOT_ENOUGH_MONEY) || save;
 		save = check(locale, toText("&aYou have transferred &e" + Placeholders.CURRENCY_STYLED_SYMBOL + "&e" + Placeholders.MONEY + " &ato the player's account &e" + Placeholders.PLAYER + "&a."), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_PAY_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + "&a transfers &e" + Placeholders.CURRENCY_STYLED_SYMBOL + "&e" + Placeholders.MONEY + "&a to your account."), "You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.", LocalesPaths.COMMANDS_PAY_SUCCESS_TARGET) || save;
-
 		save = check(locale, toText("&5You whisper &e" + Placeholders.PLAYER + "&f: &d" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_TELL_SUCCESS) || save;
 		save = check(locale, toText("&e" + Placeholders.PLAYER + " &5whispers to you&f: &d" + Placeholders.VALUE), null, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET) || save;
-
 		save = check(locale, toText("&cNo one to answer to."), null, LocalesPaths.COMMANDS_REPLY_NOTHING) || save;
 		
 		if(save) save(locale);
