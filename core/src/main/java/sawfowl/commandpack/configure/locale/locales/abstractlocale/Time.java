@@ -1,13 +1,15 @@
 package sawfowl.commandpack.configure.locale.locales.abstractlocale;
 
+import net.kyori.adventure.text.Component;
+
 public interface Time {
 
-	String getSecond();
+	Component getSecond();
 
-	String getMinute();
+	Component getMinute();
 
-	String getHour();
+	Component getHour();
 
-	String getDay();
+	Component getDay();
 
 }

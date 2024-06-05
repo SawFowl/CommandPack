@@ -18,6 +18,6 @@ public interface Afk {
 
 	Component getDisableInVanish();
 
-	Component getKickBroadcast();
+	Component getKick();
 
 }

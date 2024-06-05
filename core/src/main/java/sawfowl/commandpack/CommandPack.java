@@ -100,7 +100,6 @@ import sawfowl.commandpack.commands.settings.ParameterSettingsImpl;
 import sawfowl.commandpack.commands.settings.RawArgumentImpl;
 import sawfowl.commandpack.commands.settings.RawArgumentsMapImpl;
 import sawfowl.commandpack.configure.ConfigManager;
-import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.MainConfig;
 import sawfowl.commandpack.configure.configs.commands.CancelRulesData;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;
@@ -120,7 +119,6 @@ import sawfowl.commandpack.configure.configs.punishment.MuteData;
 import sawfowl.commandpack.configure.configs.punishment.WarnData;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
 import sawfowl.commandpack.configure.locale.Locales;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.listeners.CommandLogListener;
 import sawfowl.commandpack.listeners.EntityDamageListener;
 import sawfowl.commandpack.listeners.PlayerChatListener;
@@ -392,7 +390,7 @@ public class CommandPack {
 	public void onServerStarted(StartedEngineEvent<Server> event) {
 		isStarted = true;
 		manager = (SpongeCommandManager) Sponge.server().commandManager();
-		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getText(Sponge.server().locale(), LocalesPaths.ECONOMY_NOT_FOUND));
+		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getSystemLocale().getDebug().getEconomy().getNotFound());
 		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerChatListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerCommandListener(instance));
@@ -434,7 +432,7 @@ public class CommandPack {
 				if(getPlayersData().getTempData().getLastActivity(player) > 0) {
 					if(getPlayersData().getTempData().isAfk(player) && !player.hasPermission(Permissions.AFK_UNLIMIT)) {
 						if((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay()) - Duration.ofMillis(System.currentTimeMillis()).getSeconds() <= 0) {
-							player.kick(getLocales().getComponent(player.locale(), LocalesPaths.COMMANDS_AFK_KICK));
+							player.kick(getLocales().getLocale(player.locale()).getCommands().getAfk().getKick());
 							getPlayersData().getTempData().updateLastActivity(player);
 						}
 					} else if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - getMainConfig().getAfkConfig().getTurnOnDlay()) getPlayersData().getTempData().setAfkStatus(player);
@@ -445,9 +443,9 @@ public class CommandPack {
 			Sponge.server().onlinePlayers().forEach(player -> {
 				if(getPlayersData().getTempData().isAfk(player)) {
 					if(player.hasPermission(Permissions.AFK_UNLIMIT)) {
-						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isUnlimit()) player.sendTitlePart(TitlePart.TITLE, locales.getComponent(player.locale(), LocalesPaths.COMMANDS_AFK_TITLE));
+						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isUnlimit()) player.sendTitlePart(TitlePart.TITLE, locales.getLocale(player.locale()).getCommands().getAfk().getTitle());
 					} else {
-						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isBeforeKick()) player.showTitle(Title.title(locales.getComponent(player.locale(), LocalesPaths.COMMANDS_AFK_TITLE), locales.getText(player.locale(), LocalesPaths.COMMANDS_AFK_SUBTITLE).replace(Placeholders.VALUE, timeFormat((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay() + 1) - Duration.ofMillis(System.currentTimeMillis()).getSeconds(), player.locale())).get()));
+						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isBeforeKick()) player.showTitle(Title.title(locales.getLocale(player.locale()).getCommands().getAfk().getTitle(), locales.getLocale(player.locale()).getCommands().getAfk().getSubtitle(timeFormat((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay() + 1) - Duration.ofMillis(System.currentTimeMillis()).getSeconds(), player.locale()))));
 					}
 				}
 			});
@@ -555,7 +553,7 @@ public class CommandPack {
 	}
 
 	private Component timeFormat(long second, Locale locale) {
-		return TextUtils.timeFormat(second, locale, getLocales().getComponent(locale, LocalesPaths.TIME_DAYS), getLocales().getComponent(locale, LocalesPaths.TIME_HOUR), getLocales().getComponent(locale, LocalesPaths.TIME_MINUTE), getLocales().getComponent(locale, LocalesPaths.TIME_SECOND));
+		return TextUtils.timeFormat(second, locale, getLocales().getLocale(locale).getTime().getDay(), getLocales().getLocale(locale).getTime().getHour(), getLocales().getLocale(locale).getTime().getMinute(), getLocales().getLocale(locale).getTime().getSecond());
 	}
 
 	void registerRaw(RawCommand command) {

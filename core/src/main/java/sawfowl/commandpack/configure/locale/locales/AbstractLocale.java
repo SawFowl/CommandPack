@@ -1,15 +1,25 @@
 package sawfowl.commandpack.configure.locale.locales;
 
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.Buttons;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.CommandExceptions;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.Commands;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.Debug;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.Other;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.Time;
 import sawfowl.localeapi.api.LocaleReference;
 
-@ConfigSerializable
-public abstract class AbstractLocale implements LocaleReference {
+public interface AbstractLocale extends LocaleReference {
 
-	public AbstractLocale(){}
+	Buttons getButtons();
 
-	public abstract Commands getCommands();
+	CommandExceptions getCommandExceptions();
+
+	Commands getCommands();
+
+	Debug getDebug();
+
+	Other getOther();
+
+	Time getTime();
 
 }

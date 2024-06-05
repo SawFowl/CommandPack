@@ -42,9 +42,7 @@ import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.commandpack.api.data.player.GivedKit;
 import sawfowl.commandpack.api.data.player.Warp;
-import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.Locales;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
@@ -206,17 +204,17 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 		Locales locales = ((CommandPack) Sponge.pluginManager().plugin("commandpack").get().instance()).getLocales();
 		List<Component> list = new ArrayList<>();
 		homes.forEach(home -> {
-			Component remove = allowRemove ? locales.getComponent(locale, LocalesPaths.REMOVE).clickEvent(SpongeComponents.executeCallback(cause -> {
+			Component remove = allowRemove ? locales.getLocale(locale).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(cause -> {
 				removeHome(home.getName());
 				if(!homes.stream().filter(HomeData::isDefault).findFirst().isPresent()) {
 					if(!homes.isEmpty()) homes.iterator().next().setDefault();
 				}
 				save();
 			})) : Component.empty();
-			Component teleport = home.getLocation().getServerLocation().isPresent() ? locales.getComponent(locale, LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback(cause -> {
+			Component teleport = home.getLocation().getServerLocation().isPresent() ? locales.getLocale(locale).getButtons().getTeleportClickable().clickEvent(SpongeComponents.executeCallback(cause -> {
 				CommandPack.getInstance().getPlayersData().getTempData().setPreviousLocation((ServerPlayer) cause.root());
 				home.getLocation().moveHere((ServerPlayer) cause.root());
-			})) : locales.getComponent(locale, LocalesPaths.TELEPORT);
+			})) : locales.getLocale(locale).getButtons().getTeleport();
 			Component homeName = home.asComponent();
 			list.add(remove.append(teleport).append(homeName));
 		});
@@ -228,14 +226,14 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 		Locales locales = ((CommandPack) Sponge.pluginManager().plugin("commandpack").get().instance()).getLocales();
 		List<Component> list = new ArrayList<>();
 		warps.forEach(warp -> {
-			Component remove = allowRemove.test(warp) ? locales.getComponent(locale, LocalesPaths.REMOVE).clickEvent(SpongeComponents.executeCallback(cause -> {
+			Component remove = allowRemove.test(warp) ? locales.getLocale(locale).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(cause -> {
 				removeWarp(warp.getName());
 				save();
 			})) : Component.empty();
-			Component teleport =  warp.getLocation().getServerLocation().isPresent() && allowTeleport.test(warp) ? locales.getComponent(locale, LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback(cause -> {
+			Component teleport =  warp.getLocation().getServerLocation().isPresent() && allowTeleport.test(warp) ? locales.getLocale(locale).getButtons().getTeleportClickable().clickEvent(SpongeComponents.executeCallback(cause -> {
 				CommandPack.getInstance().getPlayersData().getTempData().setPreviousLocation((ServerPlayer) cause.root());
 				warp.moveHere((ServerPlayer) cause.root());
-			})) : locales.getComponent(locale, LocalesPaths.TELEPORT);
+			})) : locales.getLocale(locale).getButtons().getTeleport();
 			Component homeName = warp.asComponent();
 			list.add(remove.append(teleport).append(homeName));
 		});
@@ -283,12 +281,12 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	@SuppressWarnings("hiding")
 	@Override
 	public <ServerPlayer> CommandResult runCommand(@NotNull Locale sourceLocale, @NotNull String command) throws CommandException {
-		if(!getPlayer().isPresent() || !getPlayer().get().isOnline()) return CommandResult.error(CommandPack.getInstance().getLocales().getText(sourceLocale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_IS_OFFLINE).replace(Placeholders.PLAYER, name).get());
+		if(!getPlayer().isPresent() || !getPlayer().get().isOnline()) return CommandResult.error(CommandPack.getInstance().getLocales().getLocale(sourceLocale).getCommandExceptions().getPlayerIsOffline(name));
 		CommandMapping mapping = Sponge.server().commandManager().commandMapping(command.contains(" ") ? command.split(" ")[0] : command).get();
 		try(StackFrame frame = Sponge.server().causeStackManager().pushCauseFrame()) {
 			frame.addContext(EventContextKeys.SUBJECT, getPlayer().get());
 			frame.pushCause(getPlayer().get());
-			return mapping.registrar().canExecute(createPlayerCause(getPlayer().get(), command), mapping) ? Sponge.server().commandManager().process(getPlayer().get(), getPlayer().get(), command) : CommandResult.error(CommandPack.getInstance().getLocales().getComponent(sourceLocale, LocalesPaths.COMMANDS_SUDO_EXECUTE_NOT_ALLOWED));
+			return mapping.registrar().canExecute(createPlayerCause(getPlayer().get(), command), mapping) ? Sponge.server().commandManager().process(getPlayer().get(), getPlayer().get(), command) : CommandResult.error(CommandPack.getInstance().getLocales().getLocale(sourceLocale).getCommands().getSudo().getCommandNotAllowed());
 		}
 	}
 

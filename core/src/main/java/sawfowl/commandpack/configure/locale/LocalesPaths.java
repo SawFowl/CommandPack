@@ -1,7 +1,7 @@
 package sawfowl.commandpack.configure.locale;
 
 public class LocalesPaths {
-
+/*
 	private static final String PATH_ECONOMY = "Economy";
 
 	private static final String PATH_COMMANDS = "CommandsConfig";
@@ -484,5 +484,5 @@ public class LocalesPaths {
 	public static final Object[] COMMANDS_TELL_SUCCESS = {PATH_COMMANDS, COMMAND_TELL, "Success"};
 	public static final Object[] COMMANDS_TELL_SUCCESS_TARGET = {PATH_COMMANDS, COMMAND_TELL, "SuccessTarget"};
 	public static final Object[] COMMANDS_REPLY_NOTHING = {PATH_COMMANDS, COMMAND_REPLY, "Nothing"};
-
+*/
 }

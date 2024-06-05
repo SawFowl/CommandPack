@@ -105,12 +105,12 @@ public class ImplementCommandExceptions implements CommandExceptions {
 	}
 
 	@Override
-	public Component getCooldown(long delay) {
+	public Component getCooldown(Component delay) {
 		return Text.of(cooldown).replace(Placeholders.DELAY, delay).get();
 	}
 
 	@Override
-	public Component getWait(long delay) {
+	public Component getWait(Component delay) {
 		return Text.of(wait).replace(Placeholders.DELAY, delay).get();
 	}
 

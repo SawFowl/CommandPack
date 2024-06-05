@@ -24,8 +24,6 @@ import org.spongepowered.api.service.economy.transaction.TransactionResult;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Economy {
@@ -73,7 +71,7 @@ public class Economy {
 				if (result.result() == ResultType.SUCCESS) {
 					return true;
 				} else if ((result.result() == ResultType.FAILED || result.result() == ResultType.ACCOUNT_NO_FUNDS) && plugin.getMainConfig().isDebugEconomy()) {
-					plugin.getLogger().error(plugin.getLocales().getText(player.locale(), LocalesPaths.ECONOMY_ERROR_GIVE_MONEY).replace(Placeholders.PLAYER, player.name()));
+					plugin.getLogger().error(plugin.getLocales().getLocale(player).getDebug().getEconomy().getErrorGiveMoney(player.name()));
 				} else {
 				}
 				}
@@ -91,7 +89,7 @@ public class Economy {
 				if (result.result() == ResultType.SUCCESS) {
 					return true;
 				} else if ((result.result() == ResultType.FAILED || result.result() == ResultType.ACCOUNT_NO_FUNDS) && plugin.getMainConfig().isDebugEconomy()) {
-					plugin.getLogger().error(plugin.getLocales().getText(player.locale(), LocalesPaths.ECONOMY_ERROR_TAKE_MONEY).replace(Placeholders.PLAYER, player.name()));
+					plugin.getLogger().error(plugin.getLocales().getLocale(player).getDebug().getEconomy().getErrorTakeMoney(player.name()));
 				} else {
 				}
 				}

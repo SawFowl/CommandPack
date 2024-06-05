@@ -38,8 +38,6 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.kits.KitPrice;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.EnumLocales;
 import sawfowl.localeapi.api.TextUtils;
 
@@ -202,7 +200,7 @@ public class KitData implements Kit {
 				});
 				save();
 				menu.inventory().clear();
-				carrier.sendMessage(CommandPack.getInstance().getLocales().getText(carrier.locale(), LocalesPaths.COMMANDS_KITS_SAVED).replace(Placeholders.VALUE, getLocalizedName(carrier.locale())).get());
+				carrier.sendMessage(CommandPack.getInstance().getLocales().getLocale(carrier.locale()).getCommands().getKits().getSaved(getLocalizedName(carrier.locale())));
 				menu.unregisterAll();
 			}
 		});

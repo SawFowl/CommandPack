@@ -13,8 +13,7 @@ import org.spongepowered.api.util.Nameable;
 import org.spongepowered.api.world.LocatableBlock;
 
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.Debug.Commands;
 import sawfowl.commandpack.utils.CommandExecutorTypes;
 
 public class CommandLogListener {
@@ -30,22 +29,22 @@ public class CommandLogListener {
 	public void onExecute(ExecuteCommandEvent.Post event) {
 		switch (CommandExecutorTypes.findType(event.commandCause())) {
 		case SYSTEM:
-			log(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, getString(LocalesPaths.NAME_SYSTEM)).replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+			log(getCommands().getLog(getCommands().getExecutors().getServer(), event.command(), event.arguments()));
 			break;
 		case COMMAND_BLOCK:
-			log(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, (getString(LocalesPaths.NAME_COMMANDBLOCK) + blockCords(event.commandCause()))).replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+			log(getCommands().getLog(getCommands().getExecutors().getCommandBlock(blockCords(event.commandCause())), event.command(), event.arguments()));
 			break;
 		case COMMAND_BLOCK_MINECART:
-			log(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, (getString(LocalesPaths.NAME_COMMANDBLOCK_MINECART) + entityCords(event.commandCause()))).replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+			log(getCommands().getLog(getCommands().getExecutors().getCommandBlockMinecart(entityCords(event.commandCause())), event.command(), event.arguments()));
 			break;
 		case NAMEABLE:
-			log(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, ((Nameable) event.commandCause().audience()).name()).replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+			log(getCommands().getLog(((Nameable) event.commandCause().audience()).name(), event.command(), event.arguments()));
 			break;
 		case CUSTOM_NPC:
-			log(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, "CustomNPC").replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+			log(getCommands().getLog("CustomNPC", event.command(), event.arguments()));
 			break;
 		default:
-			log(getString(LocalesPaths.COMMANDS_LOG).replace(Placeholders.SOURCE, getString(LocalesPaths.NAME_UNKNOWN)).replace(Placeholders.COMMAND, event.command()).replace(Placeholders.ARGS, " " + event.arguments()));
+			log(getCommands().getLog(getCommands().getExecutors().getUnknown(), event.command(), event.arguments()));
 			break;
 		}
 	}
@@ -54,8 +53,8 @@ public class CommandLogListener {
 		plugin.getLogger().info(string);
 	}
 
-	private String getString(Object[] path) {
-		return plugin.getLocales().getString(locale, path);
+	private Commands getCommands() {
+		return plugin.getLocales().getLocale(locale).getDebug().getCommands();
 	}
 
 	private Optional<LocatableBlock> getLocatableBlock(CommandCause cause) {

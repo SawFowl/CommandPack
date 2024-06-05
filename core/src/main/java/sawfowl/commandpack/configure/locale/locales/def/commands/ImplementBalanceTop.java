@@ -10,14 +10,14 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.BalanceHop;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.BalanceTop;
 import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
-public class ImplementBalanceHop implements BalanceHop {
+public class ImplementBalanceTop implements BalanceTop {
 
-	public ImplementBalanceHop() {}
+	public ImplementBalanceTop() {}
 
 	@Setting("Title")
 	@Comment("You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.")

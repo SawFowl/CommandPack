@@ -3,7 +3,9 @@ package sawfowl.commandpack.configure.locale.locales.def;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.Time;
+import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
 public class ImplementTime implements Time {
@@ -11,31 +13,31 @@ public class ImplementTime implements Time {
 	public ImplementTime() {}
 
 	@Setting("Second")
-	private String second = "s";
+	private Component second = TextUtils.deserializeLegacy("s");
 	@Setting("Minute")
-	private String minute = "m";
+	private Component minute = TextUtils.deserializeLegacy("m");
 	@Setting("Hour")
-	private String hour = "h";
+	private Component hour = TextUtils.deserializeLegacy("h");
 	@Setting("Day")
-	private String day = "d";
+	private Component day = TextUtils.deserializeLegacy("d");
 
 	@Override
-	public String getSecond() {
+	public Component getSecond() {
 		return second;
 	}
 
 	@Override
-	public String getMinute() {
+	public Component getMinute() {
 		return minute;
 	}
 
 	@Override
-	public String getHour() {
+	public Component getHour() {
 		return hour;
 	}
 
 	@Override
-	public String getDay() {
+	public Component getDay() {
 		return day;
 	}
 

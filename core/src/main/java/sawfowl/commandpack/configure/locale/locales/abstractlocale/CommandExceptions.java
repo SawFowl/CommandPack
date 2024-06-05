@@ -28,8 +28,8 @@ public interface CommandExceptions {
 
 	Component getTargetSelf();
 
-	Component getCooldown(long delay);
+	Component getCooldown(Component delay);
 
-	Component getWait(long delay);
+	Component getWait(Component delay);
 
 }

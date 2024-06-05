@@ -6,7 +6,7 @@ import org.spongepowered.api.service.economy.Currency;
 
 import net.kyori.adventure.text.Component;
 
-public interface BalanceHop {
+public interface BalanceTop {
 
 	Component getTitle(Currency currency);
 

@@ -61,7 +61,7 @@ public class ImplementAfk implements Afk {
 	}
 
 	@Override
-	public Component getKickBroadcast() {
+	public Component getKick() {
 		return kickBroadcast;
 	}
 
