@@ -15,7 +15,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Home;
 
 public class HomeList extends AbstractPlayerCommand {
 
@@ -26,13 +26,13 @@ public class HomeList extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		PlayerData playerData = plugin.getPlayersData().getOrCreatePlayerData(src);
-		if(playerData.getHomes().size() == 0) exception(locale, LocalesPaths.COMMANDS_HOME_NOT_SET);
+		if(playerData.getHomes().size() == 0) exception(getHome(locale).getNotSet());
 		delay(src, locale, consumer -> {
 			PaginationList.builder()
 				.contents(playerData.homesListChatMenu(locale, true))
 				.linesPerPage(10)
-				.title(getComponent(locale, LocalesPaths.COMMANDS_HOME_LIST))
-				.padding(text("=").color(getComponent(locale, LocalesPaths.COMMANDS_HOME_LIST).color()))
+				.title(getHome(locale).getListTitle())
+				.padding(text("=").color(getHome(locale).getListTitle().color()))
 				.sendTo(src);
 		});
 	}
@@ -58,6 +58,10 @@ public class HomeList extends AbstractPlayerCommand {
 	@Override
 	public String command() {
 		return "list";
+	}
+
+	private Home getHome(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getHome();
 	}
 
 }

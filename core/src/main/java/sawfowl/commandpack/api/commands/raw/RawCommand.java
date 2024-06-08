@@ -39,7 +39,6 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.CommandsUtil;
 import sawfowl.localeapi.api.Text;
 
@@ -253,7 +252,7 @@ public interface RawCommand extends PluginCommand, Raw {
 		try {
 			return Optional.ofNullable(Duration.parse(s));
 		} catch (final DateTimeParseException ex) {
-			throw exception(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_EXCEPTION_COOLDOWN_INCORRECT_TIME));
+			throw exception(CommandPack.getInstance().getLocales().getLocale(locale).getCommandExceptions().getDurationNotPresent());
 		}
 	}
 

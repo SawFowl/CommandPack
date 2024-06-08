@@ -8,8 +8,8 @@ public interface MuteList {
 
 	Component getTitle(int size);
 
-	Component getElement(Component value);
+	Component getElement(String value);
 
-	Component getInfo(String player, Component source, String created, String expire, Component reason);
+	Component getInfo(String player, Component source, String created, Component expire, Component reason);
 
 }

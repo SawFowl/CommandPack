@@ -16,7 +16,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Tppos extends AbstractPlayerCommand {
@@ -29,7 +28,7 @@ public class Tppos extends AbstractPlayerCommand {
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		ServerLocation location = getLocation(context).get();
 		delay(src, locale, consumer -> {
-			if(!location.isValid()) exception(locale, LocalesPaths.COMMANDS_TPPOS_INVALID_LOCATION);
+			if(!location.isValid()) exception(plugin.getLocales().getLocale(locale).getCommands().getTpPos().getInvalidLocation());
 			plugin.getPlayersData().getTempData().setPreviousLocation(src);
 			src.setLocation(location);
 		});
@@ -42,7 +41,7 @@ public class Tppos extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createLocation(false), false, LocalesPaths.COMMANDS_EXCEPTION_LOCATION_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createLocation(false), false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getLocationNotPresent()));
 	}
 
 	@Override

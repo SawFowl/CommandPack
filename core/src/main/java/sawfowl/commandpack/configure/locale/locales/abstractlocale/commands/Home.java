@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 
 public interface Home {
 
-	Component getNotFound(Component home);
+	Component getNotFound(String home);
 
 	Component getNotSet();
 
@@ -12,6 +12,6 @@ public interface Home {
 
 	Component getSuccess(Component home);
 
-	Component getList();
+	Component getListTitle();
 
 }

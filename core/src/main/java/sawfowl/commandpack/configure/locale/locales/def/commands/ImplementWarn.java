@@ -41,7 +41,7 @@ public class ImplementWarn implements Warn {
 	}
 
 	@Override
-	public Component getSuccessTarget(Component source, Component reason, String time) {
+	public Component getSuccessTarget(Component source, Component reason, Component time) {
 		return Text.of(successTarget).replace(Placeholders.SOURCE, source).replace(Placeholders.VALUE, reason).replace(Placeholders.TIME, time).get();
 	}
 
@@ -51,7 +51,7 @@ public class ImplementWarn implements Warn {
 	}
 
 	@Override
-	public Component getAnnouncement(Component source, String player, Component reason, String time) {
+	public Component getAnnouncement(Component source, String player, Component reason, Component time) {
 		return Text.of(announcement).replace(Placeholders.SOURCE, source).replace(Placeholders.PLAYER, player).replace(Placeholders.VALUE, reason).replace(Placeholders.TIME, time).get();
 	}
 

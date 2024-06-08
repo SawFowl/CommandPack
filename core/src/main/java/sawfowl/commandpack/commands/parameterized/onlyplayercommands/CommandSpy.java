@@ -13,7 +13,6 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class CommandSpy extends AbstractPlayerCommand {
@@ -25,7 +24,7 @@ public class CommandSpy extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		plugin.getPlayersData().getTempData().switchSpyCommand(src);
-		src.sendMessage(getComponent(locale, plugin.getPlayersData().getTempData().isSpyCommand(src) ? LocalesPaths.COMMANDS_COMMANDSPY_ENABLE : LocalesPaths.COMMANDS_COMMANDSPY_DISABLE));
+		src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getCommandSpy().getValue(plugin.getPlayersData().getTempData().isSpyCommand(src)));
 	}
 
 	@Override

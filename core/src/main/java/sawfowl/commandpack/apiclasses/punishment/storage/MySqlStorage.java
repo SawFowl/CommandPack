@@ -34,12 +34,9 @@ import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warns;
-import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.commandpack.utils.StorageType;
 import sawfowl.commandpack.utils.TimeConverter;
-import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
 public class MySqlStorage extends SqlStorage {
@@ -297,7 +294,7 @@ public class MySqlStorage extends SqlStorage {
 		Optional<ServerPlayer> optPlayer = Sponge.server().player(uuid);
 		if(!optPlayer.isPresent()) return;
 		ServerPlayer player = optPlayer.get();
-		kick(player, getText(player.locale(), ban.expirationDate().isPresent() ? LocalesPaths.COMMANDS_BAN_DISCONNECT : LocalesPaths.COMMANDS_BAN_DISCONNECT_PERMANENT).replace(new String[] {Placeholders.TIME, Placeholders.SOURCE, Placeholders.VALUE}, (ban.expirationDate().isPresent() ? expire(player.locale(), ban) : text("")), ban.banSource().orElse(TextUtils.deserializeLegacy("&cServer")), ban.reason().orElse(TextUtils.deserializeLegacy("-"))).get());
+		kick(player, plugin.getLocales().getLocale(player).getCommands().getBan().getDisconnect(!ban.expirationDate().isPresent(), (ban.expirationDate().isPresent() ? expire(player.locale(), ban) : text("")), ban.banSource().orElse(TextUtils.deserializeLegacy("&cServer")), ban.reason().orElse(TextUtils.deserializeLegacy("-"))));
 	}
 
 	public void loadBanIP(ResultSet results) throws SQLException {
@@ -319,7 +316,7 @@ public class MySqlStorage extends SqlStorage {
 		Optional<ServerPlayer> optPlayer = Sponge.server().onlinePlayers().stream().filter(player -> player.connection().address().getAddress().getHostAddress().equals(ip.getHostAddress())).findFirst();
 		if(!optPlayer.isPresent()) return;
 		ServerPlayer player = optPlayer.get();
-		kick(player, getText(player.locale(), ban.expirationDate().isPresent() ? LocalesPaths.COMMANDS_BAN_DISCONNECT : LocalesPaths.COMMANDS_BAN_DISCONNECT_PERMANENT).replace(new String[] {Placeholders.TIME, Placeholders.SOURCE, Placeholders.VALUE}, (ban.expirationDate().isPresent() ? expire(player.locale(), ban) : text("")), ban.banSource().orElse(TextUtils.deserializeLegacy("&cServer")), ban.reason().orElse(TextUtils.deserializeLegacy("-"))).get());
+		kick(player, plugin.getLocales().getLocale(player).getCommands().getBanIP().getDisconnect(!ban.expirationDate().isPresent(), (ban.expirationDate().isPresent() ? expire(player.locale(), ban) : text("")), ban.banSource().orElse(TextUtils.deserializeLegacy("&cServer")), ban.reason().orElse(TextUtils.deserializeLegacy("-"))));
 	}
 
 	private Ban.Builder loadTimes(Ban.Builder builder, ResultSet results) throws SQLException {
@@ -606,14 +603,10 @@ public class MySqlStorage extends SqlStorage {
 
 	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
 		if(!ban.expirationDate().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
-	}
-
-	protected String getString(Locale locale, Object[] path) {
-		return plugin.getLocales().getString(locale, path);
 	}
 
 	private Component text(String string) {
@@ -630,10 +623,6 @@ public class MySqlStorage extends SqlStorage {
 
 	private boolean isStyleChar(char ch) {
 		return "0123456789abcdefklmnor".indexOf(ch) != -1;
-	}
-
-	private Text getText(Locale locale, Object... path) {
-		return plugin.getLocales().getText(locale, path);
 	}
 
 	private void kick(ServerPlayer player, Component message) {

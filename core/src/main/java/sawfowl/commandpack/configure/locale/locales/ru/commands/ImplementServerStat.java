@@ -54,7 +54,7 @@ public class ImplementServerStat implements ServerStat {
 	@Setting("Plugins")
 	private Component plugins = TextUtils.deserializeLegacy("&ePlugins &7(&b" + Placeholders.VALUE + "&7)&e");
 	@Setting("RefreshPlugin")
-	private Component refreshPlugin = TextUtils.deserializeLegacy(null);
+	private Component refreshPlugin = TextUtils.deserializeLegacy("&eAn attempt is made to reboot the plugin. If the plugin does not implement listening to the reboot event, there will be no effect.");
 	@Setting("Mods")
 	private Component mods = TextUtils.deserializeLegacy("&eMods &7(&b" + Placeholders.VALUE + "&7)&e");
 	@Setting("PlayerMods")
@@ -101,7 +101,7 @@ public class ImplementServerStat implements ServerStat {
 	}
 
 	@Override
-	public Component getServerTime(Component value) {
+	public Component getServerTime(String value) {
 		return Text.of(serverTime).replace(Placeholders.VALUE, value).get();
 	}
 
@@ -111,37 +111,37 @@ public class ImplementServerStat implements ServerStat {
 	}
 
 	@Override
-	public Component getSystem(Component value) {
+	public Component getSystem(String value) {
 		return Text.of(system).replace(Placeholders.VALUE, value).get();
 	}
 
 	@Override
-	public Component getJava(Component value) {
+	public Component getJava(String value) {
 		return Text.of(java).replace(Placeholders.VALUE, value).get();
 	}
 
 	@Override
-	public Component getJavaHome(Component value) {
+	public Component getJavaHome(String value) {
 		return Text.of(javaHome).replace(Placeholders.VALUE, value).get();
 	}
 
 	@Override
-	public Component getPlugins(Component value) {
+	public Component getPlugins(int value) {
 		return Text.of(plugins).replace(Placeholders.VALUE, value).get();
 	}
 
 	@Override
 	public Component getRefreshPlugin() {
-		return javaHome;
+		return refreshPlugin;
 	}
 
 	@Override
-	public Component getMods(Component value) {
+	public Component getMods(int value) {
 		return Text.of(mods).replace(Placeholders.VALUE, value).get();
 	}
 
 	@Override
-	public Component getPlayerMods(ServerPlayer player, Component value) {
+	public Component getPlayerMods(ServerPlayer player, int value) {
 		return Text.of(playerMods).replace(Placeholders.PLAYER, player.name()).replace(Placeholders.VALUE, value).get();
 	}
 

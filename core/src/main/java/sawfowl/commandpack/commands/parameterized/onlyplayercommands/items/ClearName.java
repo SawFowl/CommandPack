@@ -15,7 +15,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Item;
 
 public class ClearName extends AbstractPlayerCommand {
 
@@ -25,11 +25,11 @@ public class ClearName extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		if(src.itemInHand(HandTypes.MAIN_HAND.get()).quantity() == 0) exception(locale, LocalesPaths.COMMANDS_ITEM_EMPTY_HAND);
+		if(src.itemInHand(HandTypes.MAIN_HAND.get()).quantity() == 0) exception(getItem(locale).getEmptyHand());
 		ItemStack item = src.itemInHand(HandTypes.MAIN_HAND.get());
 		item.remove(Keys.CUSTOM_NAME);
 		src.setItemInHand(HandTypes.MAIN_HAND.get(), item);
-		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_ITEM_CLEAR_NAME));
+		src.sendMessage(getItem(locale).getClearName());
 	}
 
 	@Override
@@ -50,6 +50,10 @@ public class ClearName extends AbstractPlayerCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return null;
+	}
+
+	private Item getItem(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getItem();
 	}
 
 }

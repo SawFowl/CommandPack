@@ -19,7 +19,6 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Disposal extends AbstractPlayerCommand {
@@ -31,7 +30,7 @@ public class Disposal extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		InventoryMenu trash = ViewableInventory.builder().type(ContainerTypes.GENERIC_9X6).completeStructure().carrier(src).plugin(plugin.getPluginContainer()).build().asMenu();
-		trash.setTitle(getComponent(locale, LocalesPaths.COMMANDS_DISPOSAL_TITLE));
+		trash.setTitle(plugin.getLocales().getLocale(locale).getCommands().getDisposal().getTitle());
 		trash.registerClose(new CloseHandler() {
 			@Override
 			public void handle(Cause cause, Container container) {

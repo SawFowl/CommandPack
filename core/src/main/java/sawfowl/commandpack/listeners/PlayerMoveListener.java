@@ -9,8 +9,6 @@ import org.spongepowered.api.event.filter.cause.First;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class PlayerMoveListener {
 
@@ -31,7 +29,7 @@ public class PlayerMoveListener {
 			map.forEach((commandName, config) -> {
 				if(!config.getDelay().getCancelRules().isAllowMoving() && !player.hasPermission(Permissions.getIgnoreDelayMoving(commandName))) {
 					plugin.getPlayersData().getTempData().removeCommandTracking(commandName, player);
-					player.sendMessage(plugin.getLocales().getText(player.locale(), LocalesPaths.COMMANDS_STOP_TRACKING_MOVING).replace(Placeholders.COMMAND, "/" + commandName).get());
+					player.sendMessage(plugin.getLocales().getLocale(player).getOther().getExecuteCommand().getMoving("/" + commandName));
 				}
 			});
 		});

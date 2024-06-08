@@ -13,7 +13,6 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.registry.DefaultedRegistryReference;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
@@ -22,25 +21,24 @@ import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.localeapi.api.ComponentSupplier;
 
 @Register
 public class GameModeType extends AbstractParameterizedCommand {
 
 	private DefaultedRegistryReference<GameMode> gameMode;
 	private String name;
-	private Object[] path;
+	private ComponentSupplier supplier;
 
 	public GameModeType(CommandPack plugin) {
 		super(plugin);
 	}
 
-	public GameModeType(CommandPack plugin, DefaultedRegistryReference<GameMode> gameMode, Object[] path) {
+	public GameModeType(CommandPack plugin, DefaultedRegistryReference<GameMode> gameMode, ComponentSupplier supplier) {
 		super(plugin);
 		this.gameMode = gameMode;
 		name = gameMode.location().value();
-		this.path = path;
+		this.supplier = supplier;
 	}
 
 	@Override
@@ -49,14 +47,14 @@ public class GameModeType extends AbstractParameterizedCommand {
 			ServerPlayer player = getPlayer(context).orElse((ServerPlayer) src);
 			player.offer(Keys.GAME_MODE, gameMode.get());
 			if(!player.uniqueId().equals(((ServerPlayer) src).uniqueId())) {
-				player.sendMessage(getText(player, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS).replace(Placeholders.VALUE, getComponent(locale, path)).get());
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_OTHER).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, Component.text(player.name()), getComponent(locale, path)).get());
-			} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS).replace(Placeholders.VALUE, getText(locale, path)).get());
+				player.sendMessage(getGameMode(player).getSuccess(supplier.get(player.locale())));
+				src.sendMessage(getGameMode(locale).getSuccessStaff(player, supplier.get(locale)));
+			} else src.sendMessage(getGameMode(locale).getSuccess(supplier.get(locale)));
 		} else {
 			ServerPlayer target = getPlayer(context).get();
 			target.offer(Keys.GAME_MODE, gameMode.get());
-			target.sendMessage(getText(target, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS).replace(Placeholders.VALUE, getComponent(locale, path)).get());
-			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_OTHER).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, Component.text(target.name()), getComponent(locale, path)).get());
+			target.sendMessage(getGameMode(target).getSuccess(supplier.get(target.locale())));
+			src.sendMessage(getGameMode(locale).getSuccessStaff(target, supplier.get(locale)));
 		}
 	}
 
@@ -77,12 +75,20 @@ public class GameModeType extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.GAMEMODE_OTHER_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.GAMEMODE_OTHER_STAFF, true), false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getPlayerNotPresent()));
 	}
 
 	@Override
 	public Settings getCommandSettings() {
 		return Settings.builder().setEnable(false).build();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.GameMode getGameMode(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getGameMode();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.GameMode getGameMode(ServerPlayer player) {
+		return getGameMode(player.locale());
 	}
 
 }

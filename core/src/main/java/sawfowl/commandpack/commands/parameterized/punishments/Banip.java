@@ -29,8 +29,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Banip extends AbstractParameterizedCommand {
@@ -42,8 +40,8 @@ public class Banip extends AbstractParameterizedCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		ServerPlayer target = getPlayer(context).get();
-		if(isPlayer && target.name().equals(((ServerPlayer) src).name())) exception(getText(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF));
-		if(target.hasPermission(Permissions.IGNORE_BANIP) && isPlayer) exception(getText(locale, LocalesPaths.COMMANDS_BAN_IGNORE).replace(Placeholders.PLAYER, target.name()).get());
+		if(isPlayer && target.name().equals(((ServerPlayer) src).name())) exception(getExceptions(locale).getTargetSelf());
+		if(target.hasPermission(Permissions.IGNORE_BANIP) && isPlayer) exception(getBan(locale).getIgnore(target.user()));
 		Component source = isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server");
 		Builder banBuilder = org.spongepowered.api.service.ban.Ban.builder().type(BanTypes.PROFILE).profile(target.profile()).startDate(Instant.now()).source(source);
 		Builder banIPBuilder = org.spongepowered.api.service.ban.Ban.builder().type(BanTypes.IP).address(target.connection().address().getAddress()).startDate(Instant.now()).source(source);
@@ -59,21 +57,19 @@ public class Banip extends AbstractParameterizedCommand {
 		}
 		org.spongepowered.api.service.ban.Ban.IP ban = (IP) banIPBuilder.build();
 		plugin.getPunishmentService().saveBans((Profile) banBuilder.build(), ban);
-		if(target.isOnline()) target.kick(getText(target, ban.expirationDate().isPresent() ? LocalesPaths.COMMANDS_BAN_DISCONNECT : LocalesPaths.COMMANDS_BAN_DISCONNECT_PERMANENT).replace(new String[] {Placeholders.TIME, Placeholders.SOURCE, Placeholders.VALUE}, new Component[] {(ban.expirationDate().isPresent() ? expire(target.locale(), ban) : text("")), source, text(reason.orElse("-"))}).get());
-		if(ban.expirationDate().isPresent()) {
-			Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, (isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(target.name()), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), ban), ban.reason().orElse(text("&f-"))).get());	
-		} else Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT_PERMANENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, (isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server")), text(target.name()), ban.reason().orElse(text("&f-"))).get());
+		if(target.isOnline()) target.kick(getBan(target).getDisconnect(!ban.expirationDate().isPresent(), source, text(reason.orElse("-")), expire(target.locale(), ban)));
+		Sponge.systemSubject().sendMessage(getBanIP().getAnnouncement(!ban.expirationDate().isPresent(), source, expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), ban), ban, target));	
 		if(plugin.getMainConfig().getPunishment().getAnnounce().isBan()) {
 			if(ban.expirationDate().isPresent()) {
 				Sponge.server().onlinePlayers().forEach(player -> {
-					player.sendMessage(getText(player, LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.TIME, Placeholders.VALUE}, source, text(player.name()), expire(player.locale(), ban), ban.reason().orElse(text("&f-"))).get());
+					player.sendMessage(getBanIP(player).getAnnouncement(source, expire(player.locale(), ban), ban, player));
 				});
 			} else {
 				Sponge.server().onlinePlayers().forEach(player -> {
-					player.sendMessage(getText(player, LocalesPaths.COMMANDS_BANIP_ANNOUNCEMENT_PERMANENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {source, text(player.name()), ban.reason().orElse(text("&f-"))}).get());
+					player.sendMessage(getBanIP(player).getAnnouncementPermanent(source, ban, player));
 				});
 			}
-		} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_BANIP_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new String[] {target.name(), ban.address().getHostAddress()}).get());
+		} else src.sendMessage(getBanIP(locale).getSuccess(target));
 	}
 
 	@Override
@@ -95,18 +91,38 @@ public class Banip extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createPlayer(false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createDuration(true), true, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createStrings("Reason", true), true, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			ParameterSettings.of(CommandParameters.createPlayer(false), false, locale -> getExceptions(locale).getPlayerNotPresent()),
+			ParameterSettings.of(CommandParameters.createDuration(true), true, locale -> getExceptions(locale).getDurationNotPresent()),
+			ParameterSettings.of(CommandParameters.createStrings("Reason", true), true, locale -> getExceptions(locale).getReasonNotPresent())
 		);
 	}
 
 	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
 		if(!ban.expirationDate().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Ban getBan(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getBan();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Ban getBan(ServerPlayer player) {
+		return getBan(player.locale());
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.BanIP getBanIP(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getBanIP();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.BanIP getBanIP(ServerPlayer player) {
+		return getBanIP(player.locale());
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.BanIP getBanIP() {
+		return plugin.getLocales().getSystemLocale().getCommands().getBanIP();
 	}
 
 }

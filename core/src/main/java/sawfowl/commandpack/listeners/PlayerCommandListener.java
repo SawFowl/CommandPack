@@ -7,11 +7,7 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.command.ExecuteCommandEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
 import sawfowl.commandpack.CommandPack;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class PlayerCommandListener {
 
@@ -34,7 +30,7 @@ public class PlayerCommandListener {
 			map.forEach((commandName, config) -> {
 				if(!config.getDelay().getCancelRules().isAllowOtherCommand()) {
 					plugin.getPlayersData().getTempData().removeCommandTracking(commandName, player);
-					player.sendMessage(plugin.getLocales().getText(player.locale(), LocalesPaths.COMMANDS_STOP_TRACKING_COMMAND).replace(Placeholders.COMMAND, "/" + commandName).get());
+					player.sendMessage(plugin.getLocales().getLocale(player.locale()).getOther().getExecuteCommand().getOtherCommand("/" + commandName));
 				}
 			});
 		});
@@ -42,7 +38,7 @@ public class PlayerCommandListener {
 
 	private void spyCommand(ExecuteCommandEvent.Pre event, ServerPlayer player, boolean parallel) {
 		(parallel ? Sponge.server().onlinePlayers().parallelStream() : Sponge.server().onlinePlayers().stream()).filter(p -> !p.uniqueId().equals(player.uniqueId()) && plugin.getPlayersData().getTempData().isSpyCommand(p)).forEach(p -> {
-			p.sendMessage(plugin.getLocales().getText(p.locale(), LocalesPaths.COMMANDS_COMMANDSPY_SPY).replace(new String[] {Placeholders.PLAYER, Placeholders.COMMAND}, Component.text(player.name()).clickEvent(ClickEvent.suggestCommand("/tell " + player.name())), Component.text("/" + event.command() + " " + event.arguments())).get());
+			p.sendMessage(plugin.getLocales().getLocale(p).getCommands().getCommandSpy().getSpy(player, "/" + event.command() + " " + event.arguments()));
 		});
 	}
 }

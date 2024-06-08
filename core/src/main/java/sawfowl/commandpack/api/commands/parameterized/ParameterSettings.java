@@ -9,6 +9,7 @@ import org.spongepowered.api.command.parameter.Parameter.Value;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
+import sawfowl.localeapi.api.ComponentSupplier;
 
 /**
  * Interface for additional customization of command arguments.
@@ -21,12 +22,12 @@ public interface ParameterSettings extends DataSerializable {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
 
-	static ParameterSettings of(Value<?> value, boolean optionalforConsole, Object... localeTextPath) {
-		return builder().value(value).optionalforConsole(optionalforConsole).localeTextPath(localeTextPath).build();
+	static ParameterSettings of(Value<?> value, boolean optionalforConsole, ComponentSupplier supplier) {
+		return builder().value(value).optionalforConsole(optionalforConsole).componentSupplier(supplier).build();
 	}
 
-	static ParameterSettings of(Value<?> value, boolean optional, boolean optionalforConsole, Object... localeTextPath) {
-		return builder().value(value).setOptional(optional).optionalforConsole(optionalforConsole).localeTextPath(localeTextPath).build();
+	static ParameterSettings of(Value<?> value, boolean optional, boolean optionalforConsole, ComponentSupplier supplier) {
+		return builder().value(value).setOptional(optional).optionalforConsole(optionalforConsole).componentSupplier(supplier).build();
 	}
 
 	boolean containsIn(CommandContext context);
@@ -41,7 +42,7 @@ public interface ParameterSettings extends DataSerializable {
 
 	boolean isOptionalForConsole();
 
-	Object[] getPath();
+	ComponentSupplier getComponentSupplier();
 
 	int getPosition();
 
@@ -53,7 +54,7 @@ public interface ParameterSettings extends DataSerializable {
 
 		Builder setOptional(boolean optional);
 
-		Builder localeTextPath(Object[] path);
+		Builder componentSupplier(ComponentSupplier supplier);
 
 		Builder position(int position);
 

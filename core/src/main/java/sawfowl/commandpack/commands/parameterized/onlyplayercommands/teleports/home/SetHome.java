@@ -17,10 +17,8 @@ import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
 import sawfowl.commandpack.configure.configs.player.HomeData;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class SetHome extends AbstractPlayerCommand {
@@ -37,9 +35,9 @@ public class SetHome extends AbstractPlayerCommand {
 			if(name.equalsIgnoreCase("list")) name = "Home";
 			Home home = new HomeData(name, new LocationData(src.serverLocation(), src.rotation()), !playerData.getDefaultHome().isPresent());
 			if(playerData.addHome(home, Permissions.getHomeLimit(src))) {
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_SETHOME_SUCCESS).replace(Placeholders.HOME, home.asComponent()).get());
+				src.sendMessage(getSetHome(locale).getSuccess(home.asComponent()));
 				playerData.save();
-			} else exception(locale, LocalesPaths.COMMANDS_SETHOME_LIMIT);
+			} else exception(getSetHome(locale).getLimit(Permissions.getHomeLimit(src)));
 		});
 	}
 
@@ -55,12 +53,16 @@ public class SetHome extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createString("Home", true), true, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createString("Home", true), true, locale -> getExceptions(locale).getNameNotPresent()));
 	}
 
 	@Override
 	public String command() {
 		return "sethome";
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.SetHome getSetHome(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getSetHome();
 	}
 
 }

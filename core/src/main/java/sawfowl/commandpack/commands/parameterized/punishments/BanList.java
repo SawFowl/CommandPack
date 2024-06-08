@@ -1,7 +1,9 @@
 package sawfowl.commandpack.commands.parameterized.punishments;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -21,9 +23,8 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.commandpack.utils.TimeConverter;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Banlist;
+import sawfowl.localeapi.api.Text;
 
 @Register
 public class BanList extends AbstractParameterizedCommand {
@@ -42,15 +43,15 @@ public class BanList extends AbstractParameterizedCommand {
 	}
 
 	private void sendIpBans(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
-		if(plugin.getPunishmentService().getAllIPBans().isEmpty()) exception(locale, LocalesPaths.COMMANDS_BANLIST_EMPTY);
+		if(plugin.getPunishmentService().getAllIPBans().isEmpty()) exception(getBanlist(locale).getEmpty());
 		boolean unban = isPlayer && context.hasPermission(Permissions.UNBANIP_STAFF);
 		List<Component> bans = new ArrayList<Component>();
 		plugin.getPunishmentService().getAllIPBans().forEach(ban -> {
-			Component banInfo = getText(locale, LocalesPaths.COMMANDS_BANLIST_ELEMENT).replace(Placeholders.VALUE, ban.address().getHostAddress()).get();
-			if(isPlayer && context.hasPermission(Permissions.BANINFO)) banInfo = banInfo.hoverEvent(HoverEvent.showText(getText(locale, LocalesPaths.COMMANDS_BANLIST_BANINFO_IP).replace(new String[] {Placeholders.VALUE, Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {text(ban.address().getHostAddress()), ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(getComponent(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT)), ban.reason().orElse(text("-"))}).get()));
-			bans.add(unban ? getText(locale, LocalesPaths.REMOVE).createCallBack(cause -> {
+			Component banInfo = getBanlist(locale).getElement(ban.address().getHostAddress());
+			if(isPlayer && context.hasPermission(Permissions.BANINFO)) banInfo = banInfo.hoverEvent(HoverEvent.showText(getBanlist(locale).getInfo().getIP(ban.address().getHostAddress(), ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-")))));
+			bans.add(unban ? Text.of(plugin.getLocales().getLocale(locale).getButtons().getRemove()).createCallBack(cause -> {
 				plugin.getPunishmentService().remove(ban);
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_UNBANIP_SUCCESS).replace(Placeholders.VALUE, ban.address().getHostAddress()).get());
+				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getUnbanIP().getSuccess(ban.address().getHostAddress()));
 			}).append(banInfo).get() : banInfo);
 		});
 		if(!isPlayer) {
@@ -61,13 +62,13 @@ public class BanList extends AbstractParameterizedCommand {
 				i++;
 			}
 		} else {
-			Component title = getText(locale, LocalesPaths.COMMANDS_BANLIST_TITLE).replace(new String[] {"%profile%", "%ip%"}, new Component[] {getText(locale, LocalesPaths.COMMANDS_BANLIST_PROFILE).createCallBack(cause -> {
+			Component title = getBanlist(locale).getTitle().replace(new String[] {"%profile%", "%ip%"}, new Component[] {Text.of(getBanlist(locale).getProfile()).createCallBack(cause -> {
 				try {
 					sendProfileBans(context, src, locale, isPlayer);
 				} catch (CommandException e) {
 					src.sendMessage(e.componentMessage());
 				}
-			}).get(), getComponent(locale, LocalesPaths.COMMANDS_BANLIST_IP)}).get();
+			}).get(), getBanlist(locale).getIP()}).get();
 			delay((ServerPlayer) src, locale, consumer -> {
 				sendPaginationList(src, title, text("=").color(title.color()), 10, bans);
 			});
@@ -75,17 +76,17 @@ public class BanList extends AbstractParameterizedCommand {
 	}
 
 	private void sendProfileBans(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
-		if(plugin.getPunishmentService().getAllProfileBans().isEmpty()) exception(locale, LocalesPaths.COMMANDS_BANLIST_EMPTY);
+		if(plugin.getPunishmentService().getAllProfileBans().isEmpty()) exception(getBanlist(locale).getEmpty());
 		boolean unban = isPlayer && context.hasPermission(Permissions.UNBAN_STAFF);
 		List<Component> bans = new ArrayList<Component>();
 		plugin.getPunishmentService().getAllProfileBans().forEach(ban -> {
-			Component banInfo = getText(locale, LocalesPaths.COMMANDS_BANLIST_ELEMENT).replace(Placeholders.VALUE, ban.profile().name().orElse(ban.profile().examinableName())).get();
+			Component banInfo = getBanlist(locale).getElement(ban.profile().name().orElse(ban.profile().examinableName()));
 			if(isPlayer) banInfo = banInfo.hoverEvent(
-					HoverEvent.showText(getText(locale, LocalesPaths.COMMANDS_BANLIST_BANINFO_PLAYER).replace(new String[] {Placeholders.PLAYER, Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {text(ban.profile().name().orElse(ban.profile().examinableName())), ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT))), ban.reason().orElse(text("-"))}).get())
+					HoverEvent.showText(getBanlist(locale).getInfo().getPlayer(ban.profile().name().orElse(ban.profile().examinableName()), ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-"))))
 					);
-			bans.add(unban ? getText(locale, LocalesPaths.REMOVE).createCallBack(cause -> {
+			bans.add(unban ? Text.of(plugin.getLocales().getLocale(locale).getButtons().getRemove()).createCallBack(cause -> {
 				plugin.getPunishmentService().remove(ban);
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_UNBAN_SUCCESS).replace(Placeholders.PLAYER, ban.profile().name().orElse(ban.profile().examinableName())).get());
+				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getUnban().getSuccess(ban.profile()));
 			}).append(banInfo).get() : banInfo);
 		});
 		if(!isPlayer) {
@@ -96,7 +97,7 @@ public class BanList extends AbstractParameterizedCommand {
 				i++;
 			}
 		} else {
-			Component title = getText(locale, LocalesPaths.COMMANDS_BANLIST_TITLE).replace(new String[] {"%profile%", "%ip%"}, getComponent(locale, LocalesPaths.COMMANDS_BANLIST_PROFILE), getText(locale, LocalesPaths.COMMANDS_BANLIST_IP).createCallBack(cause -> {
+			Component title = getBanlist(locale).getTitle().replace(new String[] {"%profile%", "%ip%"}, getBanlist(locale).getProfile(), Text.of(getBanlist(locale).getIP()).createCallBack(cause -> {
 				try {
 					sendIpBans(context, src, locale, isPlayer);
 				} catch (CommandException e) {
@@ -127,7 +128,26 @@ public class BanList extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		arg = Parameter.choices("ip").key("IP").optional().build();
-		return Arrays.asList(ParameterSettings.of(arg, true, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(arg, true, locale -> getExceptions(locale).getValueNotPresent()));
+	}
+
+	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
+		if(!ban.expirationDate().isPresent()) return plugin.getLocales().getLocale(locale).getCommands().getBanInfo().getPermanent();
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
+		return text(format.format(calendar.getTime()));
+	}
+
+	private String created(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(ban.creationDate().toEpochMilli());
+		return format.format(calendar.getTime());
+	}
+
+	private Banlist getBanlist(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getBanlist();
 	}
 
 }

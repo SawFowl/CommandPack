@@ -3,9 +3,7 @@ package sawfowl.commandpack.commands.parameterized.onlyplayercommands;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
@@ -25,8 +23,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class InventorySee extends AbstractPlayerCommand {
@@ -37,23 +33,25 @@ public class InventorySee extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
+		if(!getUser(context).isPresent()) exception(getExceptions(locale).getPlayerNotPresent());
 		if(Sponge.server().player(getUser(context).get()).isPresent()) {
-			if(src.uniqueId().equals(Sponge.server().player(getUser(context).get()).get().uniqueId())) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF);
+			if(src.uniqueId().equals(Sponge.server().player(getUser(context).get()).get().uniqueId())) exception(getExceptions(locale).getTargetSelf());
 			delay(src, locale, consumer -> {
 				open(src, Sponge.server().player(getUser(context).get()).get());
 			});
 			return;
 		}
-		try {
-			Optional<User> optUser = getUser(context).isPresent() ? Sponge.server().userManager().load(getUser(context).get()).get() : Optional.empty();
+		Sponge.server().userManager().load(getUser(context).get()).thenAccept(optUser -> {
 			if(optUser.isPresent()) {
-				delay(src, locale, consumer -> {
-					open(src, optUser.get());
-				});
-			} else exception(locale, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT);
-		} catch (InterruptedException | ExecutionException e) {
-			// ignore
-		}
+				try {
+					delay(src, locale, consumer -> {
+						open(src, optUser.get());
+					});
+				} catch (CommandException e) {
+					src.sendMessage(e.componentMessage());
+				}
+			} else src.sendMessage(getExceptions(locale).getPlayerNotPresent());
+		});
 	}
 
 	@Override
@@ -63,7 +61,7 @@ public class InventorySee extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createUser(false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createUser(false), false, locale -> getExceptions(locale).getUserNotPresent()));
 	}
 
 	@Override
@@ -86,7 +84,7 @@ public class InventorySee extends AbstractPlayerCommand {
 				.carrier(target)
 				.identity(UUID.randomUUID()).build());
 		if(!src.hasPermission(Permissions.INVENTORYSEE_STAFF)) menu = menu.setReadOnly(true);
-		menu.setTitle(getText(src.locale(), LocalesPaths.COMMANDS_INVSEE_TITLE).replace(Placeholders.PLAYER, target.name()).get());
+		menu.setTitle(plugin.getLocales().getLocale(src).getCommands().getInventorySee().getTitle(target));
 		menu.open(src);
 	}
 
@@ -100,7 +98,7 @@ public class InventorySee extends AbstractPlayerCommand {
 				.carrier(target)
 				.identity(UUID.randomUUID()).build());
 		if(!src.hasPermission(Permissions.INVENTORYSEE_STAFF)) menu = menu.setReadOnly(true);
-		menu.setTitle(getText(src.locale(), LocalesPaths.COMMANDS_INVSEE_TITLE).replace(Placeholders.PLAYER, target.name()).get());
+		menu.setTitle(plugin.getLocales().getLocale(src).getCommands().getInventorySee().getTitle(target));
 		menu.open(src);
 	}
 

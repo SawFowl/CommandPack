@@ -8,7 +8,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
-import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 
@@ -19,7 +18,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.commands.settings.CommandParameters;
 
 public class PluginInfo extends AbstractInfoCommand {
 
@@ -59,8 +58,7 @@ public class PluginInfo extends AbstractInfoCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		Parameter.Value<String> CHOICES =  Parameter.choices(plugin.getAPI().getPluginContainers().stream().map(container -> container.metadata().id()).toArray(String[]::new)).key("Plugin").build();
-		return Arrays.asList(ParameterSettings.of(CHOICES, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.PLUGIN, false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getPluginNotPresent()));
 	}
 
 	@Override

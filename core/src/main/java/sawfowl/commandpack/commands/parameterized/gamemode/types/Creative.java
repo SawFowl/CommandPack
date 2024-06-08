@@ -12,7 +12,6 @@ import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
@@ -20,8 +19,7 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.GameMode;
 
 @Register
 public class Creative extends AbstractParameterizedCommand {
@@ -37,15 +35,15 @@ public class Creative extends AbstractParameterizedCommand {
 			delay(player, locale, consumer -> {
 				player.offer(Keys.GAME_MODE, GameModes.CREATIVE.get());
 				if(!player.uniqueId().equals(((ServerPlayer) src).uniqueId())) {
-					player.sendMessage(getText(player, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS).replace(Placeholders.VALUE, getComponent(locale, LocalesPaths.COMMANDS_GAMEMODE_CREATIVE)).get());
-					src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_OTHER).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, Component.text(player.name()), getComponent(locale, LocalesPaths.COMMANDS_GAMEMODE_CREATIVE)).get());
-				} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS).replace(Placeholders.VALUE, getComponent(locale, LocalesPaths.COMMANDS_GAMEMODE_CREATIVE)).get());
+					player.sendMessage(getGameMode(player).getSuccess(getGameMode(player).getCreative()));
+					src.sendMessage(getGameMode(locale).getSuccessStaff(player, getGameMode(locale).getCreative()));
+				} else src.sendMessage(getGameMode(locale).getSuccess(getGameMode(locale).getCreative()));
 			});
 		} else {
 			ServerPlayer target = getPlayer(context).get();
 			target.offer(Keys.GAME_MODE, GameModes.CREATIVE.get());
-			target.sendMessage(getText(target, LocalesPaths.COMMANDS_GAMEMODE_SUCCESS).replace(Placeholders.VALUE, getComponent(locale, LocalesPaths.COMMANDS_GAMEMODE_CREATIVE)).get());
-			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_GAMEMODE_OTHER).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, Component.text(target.name()), getComponent(locale, LocalesPaths.COMMANDS_GAMEMODE_CREATIVE)).get());
+			target.sendMessage(getGameMode(target).getSuccess(getGameMode(target).getCreative()));
+			src.sendMessage(getGameMode(locale).getSuccessStaff(target, getGameMode(locale).getCreative()));
 		}
 	}
 
@@ -66,7 +64,15 @@ public class Creative extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.GAMEMODE_OTHER_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.GAMEMODE_OTHER_STAFF, true), false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getPlayerNotPresent()));
+	}
+
+	private GameMode getGameMode(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getGameMode();
+	}
+
+	private GameMode getGameMode(ServerPlayer player) {
+		return getGameMode(player.locale());
 	}
 
 }

@@ -20,7 +20,6 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Jump extends AbstractPlayerCommand {
@@ -52,7 +51,7 @@ public class Jump extends AbstractPlayerCommand {
 				targetLocation = block.serverLocation().add(0, 1, 0);
 			} else {
 				Optional<ServerLocation> find = Sponge.server().teleportHelper().findSafeLocation(block.serverLocation());
-				if(!find.isPresent()) exception(locale, LocalesPaths.COMMANDS_JUMP_EXCEPTION);
+				if(!find.isPresent()) exception(plugin.getLocales().getLocale(locale).getCommands().getJump().getException());
 				targetLocation = find.get();
 			}
 			delay(src, locale, consumer -> {

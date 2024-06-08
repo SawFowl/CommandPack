@@ -19,6 +19,10 @@ public interface Other {
 
 		Component getMotd(ServerPlayer player);
 
+		default Component getJoin(boolean first, ServerPlayer player) {
+			return first ? getFirstJoin(player) : getJoin(player);
+		}
+
 	}
 
 	interface Keep {

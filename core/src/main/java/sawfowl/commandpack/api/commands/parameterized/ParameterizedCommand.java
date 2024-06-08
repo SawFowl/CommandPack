@@ -19,7 +19,6 @@ import org.spongepowered.api.world.server.ServerLocation;
 import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.PluginCommand;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 /**
  * This interface is designed to simplify the creation of commands and add additional functionality to them.
@@ -51,8 +50,8 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 	default CommandResult execute(CommandContext context) throws CommandException {
 		boolean isPlayer = context.cause().first(ServerPlayer.class).isPresent();
 		Locale locale = getLocale(context.cause());
-		if(!isPlayer && onlyPlayer()) exception(CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.COMMANDS_EXCEPTION_ONLY_PLAYER));
-		if(getSettingsMap() != null && !getSettingsMap().isEmpty()) for(ParameterSettings settings : getSettingsMap().values()) if(!settings.containsIn(context) && (!settings.isOptional() || (!isPlayer && !settings.isOptionalForConsole()))) exception(locale, settings.getPath());
+		if(!isPlayer && onlyPlayer()) exception(CommandPack.getInstance().getLocales().getLocale(locale).getCommandExceptions().getOnlyPlayer());
+		if(getSettingsMap() != null && !getSettingsMap().isEmpty()) for(ParameterSettings settings : getSettingsMap().values()) if(!settings.containsIn(context) && (!settings.isOptional() || (!isPlayer && !settings.isOptionalForConsole()))) exception(settings.getComponentSupplier().get(locale));
 		checkCooldown(context.cause(), locale, isPlayer);
 		execute(context, context.cause().first(ServerPlayer.class).map(player -> (Audience) player).orElse(context.cause().audience()), locale, isPlayer);
 		return success();

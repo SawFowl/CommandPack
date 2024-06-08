@@ -13,7 +13,6 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class TpToggle extends AbstractPlayerCommand {
@@ -27,8 +26,8 @@ public class TpToggle extends AbstractPlayerCommand {
 		delay(src, locale, consumer -> {
 			plugin.getPlayersData().getTempData().tpToggle(src);
 			if(plugin.getPlayersData().getTempData().isDisableTpRequests(src)) {
-				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_TPTOGGLE_DISABLE));
-			} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_TPTOGGLE_ENABLE));
+				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getTpToggle().getDisable());
+			} else src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getTpToggle().getEnable());
 		});
 	}
 

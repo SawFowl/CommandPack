@@ -16,6 +16,6 @@ public interface AboutMod {
 
 	Component getDependencies(Component value);
 
-	Component getLinks(Component home, Component source, Component issues);
+	Component getLinks(Component source, Component issues);
 
 }

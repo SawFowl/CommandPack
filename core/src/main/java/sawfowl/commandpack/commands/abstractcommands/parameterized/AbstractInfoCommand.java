@@ -24,8 +24,6 @@ import org.spongepowered.plugin.metadata.PluginMetadata;
 import org.spongepowered.plugin.metadata.model.PluginContributor;
 import org.spongepowered.plugin.metadata.model.PluginDependency;
 
-import com.google.common.collect.Iterables;
-
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -34,8 +32,9 @@ import net.kyori.adventure.text.event.HoverEvent;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.ServerStat;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.serverstat.AboutMod;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.serverstat.AboutPlugin;
 import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
@@ -53,31 +52,29 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected void sendSystemInfo(Audience target, Locale locale, boolean isPlayer) {
-		Component header = getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_OS_HEADER);
-		Component os = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_OS).replace(Placeholders.VALUE, this.os).get();
-		Component jvm = isPlayer ? getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_JAVA).replace(Placeholders.VALUE, this.java).get().hoverEvent(HoverEvent.showText(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_JAVAHOME).replace(Placeholders.VALUE, this.javaHome).get())) : getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_OS).replace(Placeholders.VALUE, (this.java + " " + this.javaHome)).get();
+		Component header = getServerStat(locale).getTitle();
+		Component os = getServerStat(locale).getSystem(this.os);
+		Component jvm = isPlayer ? getServerStat(locale).getJava(this.java).hoverEvent(HoverEvent.showText(getServerStat(locale).getJavaHome(this.javaHome))) : getServerStat(locale).getJava(this.java).append(Component.text(" ")).append(getServerStat(locale).getJavaHome(this.javaHome));
 		sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, Arrays.asList(os, jvm));
 	}
 
 	protected void sendWorldsInfo(Audience target, Locale locale) {
-		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_WORLDS_INFO_HEADER).get();
-		List<Component> worldsInfo = Sponge.server().worldManager().worlds().stream().map(world -> getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_WORLDINFO).replace(
-				new String[] {Placeholders.WORLD, Placeholders.CHUNKS_SIZE, Placeholders.ENTITIES_SIZE, Placeholders.VALUE, Placeholders.TIME},
-				text(world.key().asString()), text(Iterables.size(world.loadedChunks())), text(world.entities().size()), tPStoText(BigDecimal.valueOf(plugin.getAPI().getTPS().getWorldTPS(world)).setScale(2, RoundingMode.HALF_UP).doubleValue()), tickToText(plugin.getAPI().getTPS().getWorldTickTime(world))).get()).toList();
+		Component header = getServerStat(locale).getWorlds().getTitle();
+		List<Component> worldsInfo = Sponge.server().worldManager().worlds().stream().map(world -> getServerStat(locale).getWorlds().getWorldInfo(world, BigDecimal.valueOf(plugin.getAPI().getTPS().getWorldTPS(world)).setScale(2, RoundingMode.HALF_UP).doubleValue(), plugin.getAPI().getTPS().getWorldTickTime(world))).toList();
 		sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, worldsInfo);
 	}
 
 	protected void sendPluginsInfo(Audience target, Locale locale, boolean isPlayer) {
-		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_PLUGINS).replace(Placeholders.VALUE, plugin.getAPI().getPluginContainers().size()).get();
+		Component header = getServerStat(locale).getPlugins(plugin.getAPI().getPluginContainers().size());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) target;
 			List<Component> content = new ArrayList<>();
 			boolean allowRefresh = player.hasPermission(Permissions.SERVER_STAT_STAFF_INFO_PLUGINS_REFRESH);
 			for(PluginContainer container : plugin.getAPI().getPluginContainers()) {
 				if(allowRefresh) {
-					content.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_BUTTON).createCallBack(cause -> {
+					content.add(getServerStat(locale).getButtons().getRefreshPlugin().createCallBack(cause -> {
 						sendRefreshEvent(container);
-						player.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE));
+						player.sendMessage(getServerStat(locale).getRefreshPlugin());
 					}).append(player.hasPermission(Permissions.SERVER_STAT_STAFF_PLUGINS_INFO)
 							?
 							Text.of(text("&a " + container.metadata().name().orElse(container.metadata().id()))).createCallBack(() -> {
@@ -102,7 +99,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected void sendModsInfo(Audience target, Locale locale, boolean isPlayer) {
-		Component header = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER_MODS).replace(Placeholders.VALUE, plugin.getAPI().getModContainers().size()).get();
+		Component header = getServerStat(locale).getMods(plugin.getAPI().getModContainers().size());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) target;
 			List<Component> content = new ArrayList<>();
@@ -145,20 +142,22 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected Component getTPS(Locale locale) {
-		return getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_TPS).replace(Placeholders.VALUE, tPStoText(currentTPS())
+		return getServerStat(locale).getTPS(tPStoText(currentTPS())
+				.append(text("&f-"))
+				.append(tickToText(Sponge.server().averageTickTime()))
 				.append(text("&f, "))
 				.append(tPStoText(plugin.getAverageTPS1m()))
 				.append(text("&f, "))
 				.append(tPStoText(plugin.getAverageTPS5m()))
 				.append(text("&f, "))
-				.append(tPStoText(plugin.getAverageTPS10m()))).get();
+				.append(tPStoText(plugin.getAverageTPS10m())));
 	}
 
 	protected Component getServerTime(Locale locale) {
-		SimpleDateFormat format = new SimpleDateFormat(getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		return getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIME).replace(Placeholders.VALUE, format.format(calendar.getTime())).get();
+		return getServerStat(locale).getServerTime(format.format(calendar.getTime()));
 	}
 
 	protected void sendRefreshEvent(PluginContainer container) {
@@ -170,34 +169,45 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected Component getUptime(Locale locale) {
-		return getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_UPTIME).replace(Placeholders.VALUE, timeFormat(plugin.getServerUptime(), locale).append(Component.text(" / ")).append(timeFormat(ManagementFactory.getRuntimeMXBean().getUptime() / 1000, locale))).get();
+		return getServerStat(locale).getUptime(timeFormat(plugin.getServerUptime(), locale).append(Component.text(" / ")).append(timeFormat(ManagementFactory.getRuntimeMXBean().getUptime() / 1000, locale)));
 	}
 
 	protected void sendPluginInfo(Audience audience, Locale locale, PluginMetadata metadata) {
 		List<Component> info = new ArrayList<>();
-		Component header = getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_HEADER);
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_ID).replace(Placeholders.VALUE, metadata.id()).get());
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_NAME).replace(Placeholders.VALUE, metadata.name().orElse("-")).get());
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_VERSION).replace(Placeholders.VALUE, (metadata.version().getMajorVersion() + "." + metadata.version().getMinorVersion() + "." + metadata.version().getIncrementalVersion() + (metadata.version().getBuildNumber() == 0 ? "" : "-" + metadata.version().getBuildNumber()))).get());
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_ENTRYPOINT).replace(Placeholders.VALUE, metadata.entrypoint()).get());
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_DESCRIPTION).replace(Placeholders.VALUE, metadata.description().orElse("-")).get());
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_DEPENDENCIES).replace(Placeholders.VALUE, getDependencies(metadata)).get());
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_CONTRIBUTORS).replace(Placeholders.VALUE, getContributors(metadata)).get());
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_INFO_LINKS).replace(new String[] {Placeholders.HOME_LINK, Placeholders.SOURCE_LINK, Placeholders.ISSUES_LINK}, createLinkText(metadata.links().homepage()), createLinkText(metadata.links().source()), createLinkText(metadata.links().issues())).get());
-		sendPaginationList(audience, header, Component.text("=").color(header.color()), linesPerPage, info);
+		info.add(getAboutPlugin(locale).getId(metadata.id()));
+		info.add(getAboutPlugin(locale).getName(metadata.name().orElse("-")));
+		info.add(getAboutPlugin(locale).getVersion(metadata.version().getMajorVersion() + "." + metadata.version().getMinorVersion() + "." + metadata.version().getIncrementalVersion() + (metadata.version().getBuildNumber() == 0 ? "" : "-" + metadata.version().getBuildNumber())));
+		info.add(getAboutPlugin(locale).getEntrypoint(metadata.entrypoint()));
+		info.add(getAboutPlugin(locale).getDescription(metadata.description().orElse("-")));
+		info.add(getAboutPlugin(locale).getDependencies(getDependencies(metadata)));
+		info.add(getAboutPlugin(locale).getContributors(getContributors(metadata)));
+		info.add(getAboutPlugin(locale).getLinks(createLinkText(metadata.links().homepage()), createLinkText(metadata.links().source()), createLinkText(metadata.links().issues())));
+		sendPaginationList(audience, getAboutPlugin(locale).getTitle(), Component.text("=").color(getAboutPlugin(locale).getTitle().color()), linesPerPage, info);
 	}
 
 	protected void sendModInfo(Audience audience, Locale locale, ModContainer container) {
 		if(container == null) return;
 		List<Component> info = new ArrayList<>();
-		Component header = getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_HEADER);
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_ID).replace(Placeholders.VALUE, container.getModId()).get());
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_NAME).replace(Placeholders.VALUE, container.getDisplayName()).get());
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_VERSION).replace(Placeholders.VALUE, container.getVersion()).get());
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_DESCRIPTION).replace(Placeholders.VALUE, container.getDescription()).get());
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_DEPENDENCIES).replace(Placeholders.VALUE, container.getDependencies()).get());
-		info.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MOD_INFO_LINKS).replace(new String[] {Placeholders.ISSUES_LINK, Placeholders.UPDATE_LINK}, createLinkText(container.getIssueURL()), createLinkText(container.getUpdateURL())).get());
+		Component header = getAboutMod(locale).getTitle();
+		info.add(getAboutMod(locale).getId(container.getModId()));
+		info.add(getAboutMod(locale).getName(container.getDisplayName()));
+		info.add(getAboutMod(locale).getVersion(container.getVersion()));
+		info.add(getAboutMod(locale).getDescription(container.getDescription()));
+		info.add(getAboutMod(locale).getDependencies(container.getDependencies()));
+		info.add(getAboutMod(locale).getLinks(createLinkText(container.getIssueURL()), createLinkText(container.getUpdateURL())));
 		sendPaginationList(audience, header, Component.text("=").color(header.color()), linesPerPage, info);
+	}
+
+	protected ServerStat getServerStat(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getServerStat();
+	}
+
+	protected AboutPlugin getAboutPlugin(Locale locale) {
+		return getServerStat(locale).getAboutPlugin();
+	}
+
+	protected AboutMod getAboutMod(Locale locale) {
+		return getServerStat(locale).getAboutMod();
 	}
 
 	private Component getContributors(PluginMetadata metadata) {

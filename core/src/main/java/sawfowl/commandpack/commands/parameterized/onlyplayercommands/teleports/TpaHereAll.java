@@ -9,7 +9,6 @@ import org.spongepowered.api.adventure.SpongeComponents;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
-import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPack;
@@ -17,8 +16,6 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class TpaHereAll extends AbstractPlayerCommand {
@@ -33,16 +30,16 @@ public class TpaHereAll extends AbstractPlayerCommand {
 			UUID source = src.uniqueId();
 			Sponge.server().onlinePlayers().forEach(target -> {
 				TpaAccess access = new TpaAccess();
-				if(!target.uniqueId().equals(src.uniqueId())) target.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_REQUEST_HERE_MESSAGE).replace(Placeholders.PLAYER, src.get(Keys.CUSTOM_NAME).orElse(text(src.name()))).get().clickEvent(SpongeComponents.executeCallback(cause -> {
+				if(!target.uniqueId().equals(src.uniqueId())) target.sendMessage(getTpa(target).getRequestHere(src).clickEvent(SpongeComponents.executeCallback(cause -> {
 					if(!access.access) return;
 					if(Sponge.server().player(source).isPresent()) {
 						plugin.getPlayersData().getTempData().setPreviousLocation(target);
 						target.setLocation(src.serverLocation());
-					} else target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE));
+					} else target.sendMessage(getTpa(target).getOffline());
 					access.access = false;
 				})));
 			});
-			src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_TPA_SUCCESS));
+			src.sendMessage(getTpa(locale).getSuccess());
 		});
 	}
 
@@ -68,6 +65,14 @@ public class TpaHereAll extends AbstractPlayerCommand {
 
 	private class TpaAccess {
 		public boolean access = true;
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Tpa getTpa(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getTpa();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Tpa getTpa(ServerPlayer player) {
+		return getTpa(player.locale());
 	}
 
 }

@@ -20,8 +20,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Reply extends AbstractPlayerCommand {
@@ -37,17 +35,17 @@ public class Reply extends AbstractPlayerCommand {
 			Optional<Audience> optTarget = plugin.getPlayersData().getTempData().getReply(src);
 			if(!optTarget.isPresent()) {
 				plugin.getPlayersData().getTempData().removeReply(src);
-				exception(locale, LocalesPaths.COMMANDS_REPLY_NOTHING);
+				exception(plugin.getLocales().getLocale(locale).getCommands().getReply().getNothing());
 			}
 			Audience targetAudience = optTarget.get();
 			if(targetAudience instanceof ServerPlayer) {
 				ServerPlayer target = (ServerPlayer) targetAudience;
-				if(!src.hasPermission(Permissions.REPLY_STAFF) && target.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, target.get(Keys.CUSTOM_NAME).orElse(text(target.name())), message).get());
-				target.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), message).get());
+				if(!src.hasPermission(Permissions.REPLY_STAFF) && target.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)) exception(getExceptions(locale).getPlayerIsOffline(target.name()));
+				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getTell().getSuccess(target.get(Keys.CUSTOM_NAME).orElse(text(target.name())), message));
+				target.sendMessage(plugin.getLocales().getLocale(target).getCommands().getTell().getSuccessTarget(src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), message));
 			} else {
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, text("&4Server"), message).get());
-				targetAudience.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text(src.name()), message}).get());
+				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getTell().getSuccess(text("&4Server"), message));
+				targetAudience.sendMessage(plugin.getLocales().getSystemLocale().getCommands().getTell().getSuccessTarget(src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), message));
 			}
 		});
 	}
@@ -69,7 +67,7 @@ public class Reply extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createStrings("Message", false), false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createStrings("Message", false), false, locale -> getExceptions(locale).getMessageNotPresent()));
 	}
 
 }

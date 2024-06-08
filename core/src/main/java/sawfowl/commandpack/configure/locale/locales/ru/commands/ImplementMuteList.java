@@ -35,12 +35,12 @@ public class ImplementMuteList implements MuteList {
 	}
 
 	@Override
-	public Component getElement(Component value) {
+	public Component getElement(String value) {
 		return Text.of(element).replace(Placeholders.VALUE, value).get();
 	}
 
 	@Override
-	public Component getInfo(String player, Component source, String created, String expire, Component reason) {
+	public Component getInfo(String player, Component source, String created, Component expire, Component reason) {
 		return Text.of(info).replace(Placeholders.PLAYER, player).replace(Placeholders.SOURCE, source).replace(Placeholders.CREATED, created).replace(Placeholders.EXPIRE, expire).replace(Placeholders.REASON, reason).get();
 	}
 

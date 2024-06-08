@@ -22,14 +22,11 @@ import org.spongepowered.api.util.Ticks;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.api.data.command.Settings;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerData {
 
@@ -87,7 +84,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 
 	@Override
 	public void addCommandTracking(String command, ServerPlayer player) {
-		if(!trackingCommandDelay.containsKey(command)) plugin.getLogger().error(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING).replace(Placeholders.COMMAND, command));
+		if(!trackingCommandDelay.containsKey(command)) plugin.getLogger().error(plugin.getLocales().getSystemLocale().getDebug().getCommands().getNotTracking(command));
 		if(!trackingCommandDelay.get(command).contains(player.uniqueId())) trackingCommandDelay.get(command).add(player.uniqueId());
 	}
 
@@ -109,7 +106,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	@Override
 	public void removeCommandTracking(String command, UUID uuid) {
 		if(!trackingCommandDelay.containsKey(command)) {
-			plugin.getLogger().error(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_NOT_TRACKING).replace(Placeholders.COMMAND, command));
+			plugin.getLogger().error(plugin.getLocales().getSystemLocale().getDebug().getCommands().getNotTracking(command));
 			return;
 		}
 		trackingCommandDelay.get(command).removeIf(u -> (u.equals(uuid)));
@@ -186,11 +183,11 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 			if(isAfk(player) && Sponge.server().player(uuid).isPresent()) {
 				afk.remove(player.uniqueId());
 				if(!player.get(Keys.VANISH_STATE).isPresent() || !player.get(Keys.VANISH_STATE).get().invisible()) {
-					Sponge.systemSubject().sendMessage(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_AFK_DISABLE).replace(Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))).get());
+					Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemLocale().getCommands().getAfk().getDisableBroadcast(player));
 					Sponge.server().onlinePlayers().forEach(p -> {
-						p.sendMessage(plugin.getLocales().getText(p.locale(), LocalesPaths.COMMANDS_AFK_DISABLE).replace(Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))).get());
+						p.sendMessage(plugin.getLocales().getLocale(p).getCommands().getAfk().getDisableBroadcast(player));
 					});
-				} else player.sendMessage(plugin.getLocales().getComponent(player.locale(), LocalesPaths.COMMANDS_AFK_DISABLE_IN_VANISH));
+				} else player.sendMessage(plugin.getLocales().getLocale(player).getCommands().getAfk().getDisableInVanish());
 			}
 		}).build());
 	}
@@ -210,11 +207,11 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 		if(isAfk(player)) return;
 		afk.add(player.uniqueId());
 		if(!player.get(Keys.VANISH_STATE).isPresent() || !player.get(Keys.VANISH_STATE).get().invisible()) {
-			Sponge.systemSubject().sendMessage(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_AFK_ENABLE).replace(Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))).get());
+			Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemLocale().getCommands().getAfk().getEnableBroadcast(player));
 			Sponge.server().onlinePlayers().forEach(p -> {
-				p.sendMessage(plugin.getLocales().getText(p.locale(), LocalesPaths.COMMANDS_AFK_ENABLE).replace(Placeholders.PLAYER, player.get(Keys.CUSTOM_NAME).orElse(Component.text(player.name()))).get());
+				p.sendMessage(plugin.getLocales().getLocale(p).getCommands().getAfk().getEnableBroadcast(player));
 			});
-		} else player.sendMessage(plugin.getLocales().getComponent(player.locale(), LocalesPaths.COMMANDS_AFK_ENABLE_IN_VANISH));
+		} else player.sendMessage(plugin.getLocales().getLocale(player).getCommands().getAfk().getEnableInVanish());
 	}
 
 	@Override

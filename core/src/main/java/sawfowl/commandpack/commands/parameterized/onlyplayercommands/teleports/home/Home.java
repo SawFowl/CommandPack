@@ -17,8 +17,6 @@ import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Home extends AbstractPlayerCommand {
@@ -30,18 +28,18 @@ public class Home extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		PlayerData playerData = plugin.getPlayersData().getOrCreatePlayerData(src);
-		if(playerData.getHomes().size() == 0) exception(locale, LocalesPaths.COMMANDS_HOME_NOT_SET);
+		if(playerData.getHomes().size() == 0) exception(getHome(locale).getNotSet());
 		Optional<String> optName = getString(context, "Home");
 		if(optName.isPresent()) {
 			Optional<sawfowl.commandpack.api.data.player.Home> home = playerData.getHome(optName.get());
 			if(home.isPresent()) {
 				teleport(home.get(), src);
-			} else exception(getText(src, LocalesPaths.COMMANDS_HOME_NOT_FOUND).replace(Placeholders.HOME, optName.get()).get());
+			} else exception(getHome(locale).getNotFound(optName.get()));
 		} else {
 			Optional<sawfowl.commandpack.api.data.player.Home> home = playerData.getDefaultHome();
 			if(home.isPresent()) {
 				teleport(home.get(), src);
-			} else exception(getText(src, LocalesPaths.COMMANDS_HOME_NOT_FOUND).replace(Placeholders.HOME, "Home").get());
+			} else exception(getHome(locale).getNotFound("Home"));
 		}
 	}
 
@@ -57,7 +55,7 @@ public class Home extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createString("Home", true), true, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createStringHome(), true, locale -> getExceptions(locale).getNameNotPresent()));
 	}
 
 	@Override
@@ -71,7 +69,15 @@ public class Home extends AbstractPlayerCommand {
 				plugin.getPlayersData().getTempData().setPreviousLocation(player);
 				home.getLocation().moveHere(player);
 			});
-		} else exception(player, LocalesPaths.COMMANDS_HOME_TELEPORT_ERROR);
+		} else exception(getHome(player).getError());
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Home getHome(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getHome();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Home getHome(ServerPlayer player) {
+		return getHome(player.locale());
 	}
 
 }

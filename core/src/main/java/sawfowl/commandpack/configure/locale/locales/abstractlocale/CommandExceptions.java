@@ -26,6 +26,18 @@ public interface CommandExceptions {
 
 	Component getWorldNotPresent();
 
+	Component getKitNotPresent();
+
+	Component getWarpNotPresent();
+
+	Component getPluginNotPresent();
+
+	Component getModNotPresent();
+
+	Component getMessageNotPresent();
+
+	Component getReasonNotPresent();
+
 	Component getTargetSelf();
 
 	Component getCooldown(Component delay);

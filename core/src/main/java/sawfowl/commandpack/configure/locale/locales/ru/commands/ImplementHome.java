@@ -27,7 +27,7 @@ public class ImplementHome implements Home {
 	private Component list = TextUtils.deserializeLegacy("&bHomes");
 
 	@Override
-	public Component getNotFound(Component home) {
+	public Component getNotFound(String home) {
 		return Text.of(notFound).replace(Placeholders.HOME, home).get();
 	}
 
@@ -47,7 +47,7 @@ public class ImplementHome implements Home {
 	}
 
 	@Override
-	public Component getList() {
+	public Component getListTitle() {
 		return list;
 	}
 

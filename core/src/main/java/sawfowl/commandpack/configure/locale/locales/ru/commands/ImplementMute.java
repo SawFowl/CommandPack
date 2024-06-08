@@ -1,6 +1,7 @@
 package sawfowl.commandpack.configure.locale.locales.ru.commands;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
@@ -18,6 +19,7 @@ public class ImplementMute implements Mute {
 	@Setting("Success")
 	private Component success = TextUtils.deserializeLegacy("&aYou blocked the chat to the player &e" + Placeholders.PLAYER + "&a.");
 	@Setting("SuccessTarget")
+	@Comment("Можно добавить плейсхолдер: " + Placeholders.SOURCE)
 	private Component successTarget = TextUtils.deserializeLegacy("&cYou are blocked from writing in chat blocked until &e" + Placeholders.TIME + "&c.\nReason: " + Placeholders.VALUE);
 	@Setting("SuccessTargetPermanent")
 	private Component successTargetPermanent = TextUtils.deserializeLegacy("&cYou are permanently blocked from writing in the chat.\nReason: " + Placeholders.VALUE);
@@ -36,13 +38,13 @@ public class ImplementMute implements Mute {
 	}
 
 	@Override
-	public Component getSuccessTarget(Component time, Component reason) {
-		return Text.of(successTarget).replace(Placeholders.TIME, time).replace(Placeholders.VALUE, reason).get();
+	public Component getSuccessTarget(Component source, Component time, Component reason) {
+		return Text.of(successTarget).replace(Placeholders.SOURCE, source).replace(Placeholders.TIME, time).replace(Placeholders.VALUE, reason).get();
 	}
 
 	@Override
-	public Component getSuccessTargetPermanent(Component reason) {
-		return Text.of(successTargetPermanent).replace(Placeholders.VALUE, reason).get();
+	public Component getSuccessTargetPermanent(Component source, Component reason) {
+		return Text.of(successTargetPermanent).replace(Placeholders.SOURCE, source).replace(Placeholders.VALUE, reason).get();
 	}
 
 	@Override

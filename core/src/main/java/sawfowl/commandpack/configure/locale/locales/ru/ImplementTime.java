@@ -20,6 +20,8 @@ public class ImplementTime implements Time {
 	private Component hour = TextUtils.deserializeLegacy("ч");
 	@Setting("Day")
 	private Component day = TextUtils.deserializeLegacy("д");
+	@Setting("Format")
+	private String format = "d.MM.yyyy HH:mm:ss";
 
 	@Override
 	public Component getSecond() {
@@ -39,6 +41,11 @@ public class ImplementTime implements Time {
 	@Override
 	public Component getDay() {
 		return day;
+	}
+
+	@Override
+	public String getFormat() {
+		return format;
 	}
 
 }

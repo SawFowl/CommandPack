@@ -10,7 +10,6 @@ import org.spongepowered.api.adventure.SpongeComponents;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
-import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPack;
@@ -19,8 +18,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Tpa extends AbstractPlayerCommand {
@@ -32,21 +29,21 @@ public class Tpa extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		ServerPlayer target = getPlayer(context).get();
-		if(target.uniqueId().equals(src.uniqueId())) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF);
-		if(plugin.getPlayersData().getTempData().isDisableTpRequests(target)) exception(locale, LocalesPaths.COMMANDS_TPA_DISABLE_TP_REQUESTS);
+		if(target.uniqueId().equals(src.uniqueId())) exception(plugin.getLocales().getLocale(locale).getCommandExceptions().getTargetSelf());
+		if(plugin.getPlayersData().getTempData().isDisableTpRequests(target)) exception(getTpa(locale).getDisabledRequest());
 		delay(src, locale, consumer -> {
 			UUID source = src.uniqueId();
 			TpaAccess access = new TpaAccess();
-			target.sendMessage(getText(target, LocalesPaths.COMMANDS_TPA_REQUEST_MESSAGE).replace(Placeholders.PLAYER, src.get(Keys.CUSTOM_NAME).orElse(text(src.name()))).get().clickEvent(SpongeComponents.executeCallback(cause -> {
+			target.sendMessage(getTpa(target).getRequest(src).clickEvent(SpongeComponents.executeCallback(cause -> {
 				if(!access.access) return;
 				if(Sponge.server().player(source).isPresent()) {
 					plugin.getPlayersData().getTempData().setPreviousLocation(src);
 					src.setLocation(target.serverLocation());
-					src.sendMessage(getComponent(target, LocalesPaths.COMMANDS_TPA_ACCEPTED));
-				} else target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_TPA_SOURCE_OFFLINE));
+					src.sendMessage(getTpa(locale).getAccepted());
+				} else target.sendMessage(getTpa(target).getOffline());
 				access.access = false;
 			})));
-			src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_TPA_SUCCESS));
+			src.sendMessage(getTpa(locale).getSuccess());
 		});
 	}
 
@@ -57,7 +54,7 @@ public class Tpa extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(false), false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getPlayerNotPresent()));
 	}
 
 	@Override
@@ -72,6 +69,14 @@ public class Tpa extends AbstractPlayerCommand {
 
 	private class TpaAccess {
 		public boolean access = true;
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Tpa getTpa(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getTpa();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Tpa getTpa(ServerPlayer player) {
+		return getTpa(player.locale());
 	}
 
 }

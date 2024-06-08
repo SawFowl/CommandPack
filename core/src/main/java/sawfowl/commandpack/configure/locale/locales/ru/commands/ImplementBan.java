@@ -27,7 +27,9 @@ public class ImplementBan implements Ban {
 	@Setting("AlreadyBanned")
 	private Component alreadyBanned = TextUtils.deserializeLegacy("&ePlayer &e" + Placeholders.PLAYER + "&e has already banned on this server.");
 	@Setting("Disconnect")
-	private Component disconnect = TextUtils.deserializeLegacy("&bYou are banned on the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE);
+	private Component disconnect = TextUtils.deserializeLegacy("&bYou are banned on the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE + "&a.\n&bEnd of ban &e" + Placeholders.TIME);
+	@Setting("DisconnectPermanent")
+	private Component disconnectPermanent = TextUtils.deserializeLegacy("&bYou are permanently banned from the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE);
 
 	@Override
 	public Component getSuccess(User player) {
@@ -56,7 +58,12 @@ public class ImplementBan implements Ban {
 
 	@Override
 	public Component getDisconnect(Component source, Component reason) {
-		return Text.of(disconnect).replace(Placeholders.SOURCE, source).replace(Placeholders.VALUE, reason).get();
+		return Text.of(disconnectPermanent).replace(Placeholders.SOURCE, source).replace(Placeholders.VALUE, reason).get();
+	}
+
+	@Override
+	public Component getDisconnect(Component source, Component reason, Component expire) {
+		return Text.of(disconnect).replace(Placeholders.SOURCE, source).replace(Placeholders.VALUE, reason).replace(Placeholders.TIME, expire).get();
 	}
 
 }

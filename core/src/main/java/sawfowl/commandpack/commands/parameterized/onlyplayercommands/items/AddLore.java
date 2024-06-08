@@ -20,7 +20,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Item;
 
 public class AddLore extends AbstractPlayerCommand {
 
@@ -30,7 +30,7 @@ public class AddLore extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		if(src.itemInHand(HandTypes.MAIN_HAND.get()).quantity() == 0) exception(locale, LocalesPaths.COMMANDS_ITEM_EMPTY_HAND);
+		if(src.itemInHand(HandTypes.MAIN_HAND.get()).quantity() == 0) exception(getItem(locale).getEmptyHand());
 		ItemStack item = src.itemInHand(HandTypes.MAIN_HAND.get());
 		String input = getString(context, "Value").get();
 		List<Component> newLore = item.get(Keys.LORE).orElse(new ArrayList<>());
@@ -42,7 +42,7 @@ public class AddLore extends AbstractPlayerCommand {
 		} else newLore.add(text(input));
 		item.offer(Keys.LORE, newLore);
 		src.setItemInHand(HandTypes.MAIN_HAND, item);
-		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_ITEM_SET_LORE));
+		src.sendMessage(getItem(locale).getSetLore());
 	}
 
 	@Override
@@ -62,7 +62,11 @@ public class AddLore extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createStrings("Value", false), false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createStrings("Value", false), false, locale -> getExceptions(locale).getValueNotPresent()));
+	}
+
+	private Item getItem(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getItem();
 	}
 
 }

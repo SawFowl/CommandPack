@@ -21,8 +21,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Night extends AbstractParameterizedCommand {
@@ -54,7 +52,7 @@ public class Night extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createWorld(Permissions.TIME_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createWorld(Permissions.TIME_STAFF, true), true, locale -> getExceptions(locale).getWorldNotPresent()));
 	}
 
 	@Override
@@ -69,7 +67,7 @@ public class Night extends AbstractParameterizedCommand {
 
 	private void setTime(Audience src, Locale locale, ServerWorld world) {
 		world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day() + 1, 0, 0));
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TIME_NIGHT).replace(Placeholders.WORLD, world.key().asString()).get());
+		src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getTime().getNight(world));
 	}
 
 }

@@ -4,12 +4,12 @@ import net.kyori.adventure.text.Component;
 
 public interface Memory {
 
-	public Component getMax(long value);
+	Component getMax(long value);
 
-	public Component getAllocated(long value);
+	Component getAllocated(long value);
 
-	public Component getUtilised(long value, long allocated, long max);
+	Component getUtilised(long value, long allocated, long max);
 
-	public Component getFree(long value);
+	Component getFree(long value);
 
 }

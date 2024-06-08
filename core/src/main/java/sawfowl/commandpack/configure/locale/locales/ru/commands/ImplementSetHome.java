@@ -16,7 +16,7 @@ public class ImplementSetHome implements SetHome {
 	public ImplementSetHome() {}
 
 	@Setting("Limit")
-	private Component limit = TextUtils.deserializeLegacy("&cYour limit&7(" + Placeholders.LIMIT + "&7)&c does not allow you to set a new home point.");
+	private Component limit = TextUtils.deserializeLegacy("&cYour limit&7(&4" + Placeholders.LIMIT + "&7)&c does not allow you to set a new home point.");
 	@Setting("Success")
 	private Component success = TextUtils.deserializeLegacy("&aYou have set the home point &e" + Placeholders.HOME + "&a.");
 

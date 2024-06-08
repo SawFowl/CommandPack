@@ -5,7 +5,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
-
+import net.kyori.adventure.text.event.ClickEvent;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.CommandSpy;
 import sawfowl.localeapi.api.Text;
@@ -21,7 +21,7 @@ public class ImplementCommandSpy implements CommandSpy {
 	@Setting("Disable")
 	private Component disable = TextUtils.deserializeLegacy("&aYou will no longer see what commands other players are using.");
 	@Setting("Spy")
-	private Component spy = TextUtils.deserializeLegacy("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 uses the command&f: &d" + Placeholders.COMMAND);
+	private Component spy = TextUtils.deserializeLegacy("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 uses the command&f: &d" + Placeholders.COMMAND).clickEvent(ClickEvent.suggestCommand("/tell " + Placeholders.PLAYER));
 
 	@Override
 	public Component getEnable() {

@@ -24,8 +24,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Sun extends AbstractParameterizedCommand {
@@ -70,8 +68,8 @@ public class Sun extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createWorld(Permissions.WEATHER_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createInteger("Duration", true), true, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			ParameterSettings.of(CommandParameters.createWorld(Permissions.WEATHER_STAFF, true), true, locale -> getExceptions(locale).getWorldNotPresent()),
+			ParameterSettings.of(CommandParameters.createInteger("Duration", true), true, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 
@@ -79,7 +77,7 @@ public class Sun extends AbstractParameterizedCommand {
 		if(duration.isPresent()) {
 			world.setWeather(WeatherTypes.CLEAR.get(), Ticks.of(duration.get() * 20));
 		} else world.setWeather(WeatherTypes.CLEAR.get(), Ticks.of(random.nextInt(10000) * 20));
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_WEATHER_SUN).replace(Placeholders.WORLD, world.key().asString()).get());
+		src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getWeather().getSun(world));
 	}
 
 }

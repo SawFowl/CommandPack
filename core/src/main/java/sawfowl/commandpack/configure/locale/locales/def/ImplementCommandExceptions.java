@@ -36,7 +36,19 @@ public class ImplementCommandExceptions implements CommandExceptions {
 	@Setting("LocationNotPresent")
 	private Component locationNotPresent = TextUtils.deserializeLegacy("&cYou need to specify the coordinates.");
 	@Setting("WorldNotPresent")
-	private Component worldNotPresent = TextUtils.deserializeLegacy("&cYou have to specify the world.");
+	private Component worldNotPresent = TextUtils.deserializeLegacy("&cYou must to specify the world.");
+	@Setting("KitNotPresent")
+	private Component kitNotPresent = TextUtils.deserializeLegacy("&cYou must to specify a kit.");
+	@Setting("WarpNotPresent")
+	private Component warpNotPresent = TextUtils.deserializeLegacy("&cYou must to specify warp.");
+	@Setting("PluginNotPresent")
+	private Component pluginNotPresent = TextUtils.deserializeLegacy("&cYou must specify the plugin.");
+	@Setting("ModNotPresent")
+	private Component modNotPresent = TextUtils.deserializeLegacy("&cYou must to specify the mod.");
+	@Setting("MessageNotPresent")
+	private Component messageNotPresent = TextUtils.deserializeLegacy("&cYou didn't enter a message.");
+	@Setting("ReasonNotPresent")
+	private Component reasonNotPresent = TextUtils.deserializeLegacy("&cYou need to specify a reason.");
 	@Setting("TargetSelf")
 	private Component targetSelf = TextUtils.deserializeLegacy("&cYou can't point to yourself.");
 	@Setting("Cooldown")
@@ -102,6 +114,36 @@ public class ImplementCommandExceptions implements CommandExceptions {
 	@Override
 	public Component getTargetSelf() {
 		return targetSelf;
+	}
+
+	@Override
+	public Component getKitNotPresent() {
+		return kitNotPresent;
+	}
+
+	@Override
+	public Component getWarpNotPresent() {
+		return warpNotPresent;
+	}
+
+	@Override
+	public Component getPluginNotPresent() {
+		return pluginNotPresent;
+	}
+
+	@Override
+	public Component getModNotPresent() {
+		return modNotPresent;
+	}
+
+	@Override
+	public Component getMessageNotPresent() {
+		return messageNotPresent;
+	}
+
+	@Override
+	public Component getReasonNotPresent() {
+		return reasonNotPresent;
 	}
 
 	@Override

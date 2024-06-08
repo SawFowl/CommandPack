@@ -12,4 +12,6 @@ public interface Time {
 
 	Component getDay();
 
+	String getFormat();
+
 }

@@ -19,4 +19,14 @@ public interface Ban {
 
 	Component getDisconnect(Component source, Component reason);
 
+	Component getDisconnect(Component source, Component reason, Component expire);
+
+	default Component getDisconnect(boolean permanent, Component source, Component reason, Component expire) {
+		return permanent ? getDisconnect(source, reason) : getDisconnect(source, reason, expire);
+	}
+
+	default Component getAnnouncement(boolean permanent, Component source, Component expire, Profile ban) {
+		return permanent ? getAnnouncementPermanent(source, ban) : getAnnouncement(source, expire, ban);
+	}
+
 }

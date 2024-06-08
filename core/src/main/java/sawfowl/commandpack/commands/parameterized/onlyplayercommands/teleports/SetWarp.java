@@ -19,7 +19,6 @@ import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 @Register
@@ -34,15 +33,15 @@ public class SetWarp extends AbstractPlayerCommand {
 		delay(src, locale, consumer -> {
 			PlayerData playerData = plugin.getPlayersData().getOrCreatePlayerData(src);
 			String name = getString(context, "Warp", src.name());
-			if(plugin.getPlayersData().streamAllWarps().filter(warp -> warp.getPlainName().equalsIgnoreCase(TextUtils.clearDecorations(name))).findFirst().isPresent()) exception(locale, LocalesPaths.COMMANDS_SETWARP_EXIST);
+			if(plugin.getPlayersData().streamAllWarps().filter(warp -> warp.getPlainName().equalsIgnoreCase(TextUtils.clearDecorations(name))).findFirst().isPresent()) exception(plugin.getLocales().getLocale(locale).getCommands().getSetWarp().getAllreadyExist());
 			Warp warp = Warp.of(name, Location.of(src), getBoolean(context, "Private", false));
 			if(getBoolean(context, "Admin", false)) {
 				plugin.getPlayersData().addAndSaveAdminWarp(warp);
-				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_SETWARP_SUCCESS_ADMIN));
+				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getSetWarp().getSuccessAdmin());
 			} else if(playerData.addWarp(warp, Permissions.getWarpsLimit(src))) {
 				playerData.save();
-				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_SETWARP_SUCCESS));
-			} else exception(locale, LocalesPaths.COMMANDS_SETWARP_LIMIT);
+				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getSetWarp().getSuccess());
+			} else exception(plugin.getLocales().getLocale(locale).getCommands().getSetWarp().getLimit(Permissions.getWarpsLimit(src)));
 		});
 	}
 
@@ -67,9 +66,9 @@ public class SetWarp extends AbstractPlayerCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createString("Warp", false), false, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createBoolean("Private", false), false, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createBoolean("Admin", Permissions.WARP_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_BOOLEAN_NOT_PRESENT)
+			ParameterSettings.of(CommandParameters.createString("Warp", false), false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getNameNotPresent()),
+			ParameterSettings.of(CommandParameters.createBoolean("Private", false), false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getBooleanNotPresent()),
+			ParameterSettings.of(CommandParameters.createBoolean("Admin", Permissions.WARP_STAFF, true), true, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getBooleanNotPresent())
 		);
 	}
 

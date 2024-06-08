@@ -12,7 +12,7 @@ public interface Hat {
 
 	Component getFullInventory(ServerPlayer player);
 
-	Component getSuccessOther(ServerPlayer player);
+	Component getSuccessStaff(ServerPlayer player);
 
 	Component getSuccessSelf();
 

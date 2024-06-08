@@ -23,11 +23,11 @@ public class ImplementHome implements Home {
 	private Component error = TextUtils.deserializeLegacy("&cHome point is not available. Perhaps the world is not loaded.");
 	@Setting("Success")
 	private Component success = TextUtils.deserializeLegacy("&aYou teleported to home &e" + Placeholders.HOME + "&a.");
-	@Setting("List")
+	@Setting("ListTitle")
 	private Component list = TextUtils.deserializeLegacy("&bHomes");
 
 	@Override
-	public Component getNotFound(Component home) {
+	public Component getNotFound(String home) {
 		return Text.of(notFound).replace(Placeholders.HOME, home).get();
 	}
 
@@ -47,7 +47,7 @@ public class ImplementHome implements Home {
 	}
 
 	@Override
-	public Component getList() {
+	public Component getListTitle() {
 		return list;
 	}
 

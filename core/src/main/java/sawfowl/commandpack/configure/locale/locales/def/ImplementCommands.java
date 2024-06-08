@@ -10,6 +10,8 @@ import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Back
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Balance;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.BalanceTop;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Ban;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.BanIP;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.BanInfo;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Banlist;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Broadcast;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.ClearInventory;
@@ -305,6 +307,16 @@ public class ImplementCommands implements Commands {
 	@Override
 	public Ban getBan() {
 		return ban;
+	}
+
+	@Override
+	public BanInfo getBanInfo() {
+		return banInfo;
+	}
+
+	@Override
+	public BanIP getBanIP() {
+		return banIP;
 	}
 
 	@Override

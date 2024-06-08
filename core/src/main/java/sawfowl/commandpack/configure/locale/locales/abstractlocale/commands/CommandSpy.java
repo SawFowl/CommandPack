@@ -12,4 +12,8 @@ public interface CommandSpy {
 
 	Component getSpy(ServerPlayer player, String command);
 
+	default Component getValue(boolean isEnable) {
+		return isEnable ? getEnable() : getDisable();
+	}
+
 }

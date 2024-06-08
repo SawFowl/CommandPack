@@ -6,7 +6,7 @@ public interface SetWarp {
 
 	Component getAllreadyExist();
 
-	Component getLimit();
+	Component getLimit(int limit);
 
 	Component getSuccess();
 

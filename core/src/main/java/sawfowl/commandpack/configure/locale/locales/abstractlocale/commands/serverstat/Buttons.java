@@ -2,6 +2,8 @@ package sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.ser
 
 import net.kyori.adventure.text.Component;
 
+import sawfowl.localeapi.api.Text;
+
 public interface Buttons {
 
 	Component getSystem();
@@ -11,5 +13,7 @@ public interface Buttons {
 	Component getPlugins();
 
 	Component getMods();
+
+	Text getRefreshPlugin();
 
 }

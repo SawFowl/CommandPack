@@ -28,22 +28,22 @@ public interface ServerStat {
 
 	Component getUptime(Component value);
 
-	Component getServerTime(Component value);
+	Component getServerTime(String value);
 
 	Component getSystemInfo();
 
-	Component getSystem(Component value);
+	Component getSystem(String value);
 
-	Component getJava(Component value);
+	Component getJava(String value);
 
-	Component getJavaHome(Component value);
+	Component getJavaHome(String value);
 
-	Component getPlugins(Component value);
+	Component getPlugins(int value);
 
 	Component getRefreshPlugin();
 
-	Component getMods(Component value);
+	Component getMods(int value);
 
-	Component getPlayerMods(ServerPlayer player, Component value);
+	Component getPlayerMods(ServerPlayer player, int value);
 
 }

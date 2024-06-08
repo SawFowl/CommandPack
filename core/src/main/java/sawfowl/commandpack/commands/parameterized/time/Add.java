@@ -21,8 +21,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Add extends AbstractParameterizedCommand {
 
@@ -54,8 +52,8 @@ public class Add extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 	return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createInteger("Value", false), false, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createWorld(Permissions.TIME_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT)
+			ParameterSettings.of(CommandParameters.createInteger("Value", false), false, false, locale -> getExceptions(locale).getValueNotPresent()),
+			ParameterSettings.of(CommandParameters.createWorld(Permissions.TIME_STAFF, true), false, locale -> getExceptions(locale).getWorldNotPresent())
 		);
 	}
 
@@ -76,7 +74,7 @@ public class Add extends AbstractParameterizedCommand {
 
 	private void setTime(Audience src, Locale locale, ServerWorld world, int time) {
 		world.properties().setDayTime(world.properties().dayTime().add(Ticks.of(time)));
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_TIME_ADD).replace(Placeholders.WORLD, world.key().asString()).get());
+		src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getTime().getAdd(world));
 	}
 
 }

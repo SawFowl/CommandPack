@@ -4,11 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
-import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.plugin.PluginContainer;
 
@@ -18,7 +16,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.commands.settings.CommandParameters;
 
 public class RefreshPlugin extends AbstractInfoCommand {
 
@@ -28,15 +26,15 @@ public class RefreshPlugin extends AbstractInfoCommand {
 
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
-		PluginContainer container = Sponge.pluginManager().plugin(getString(context, "Plugin").get()).get();
+		PluginContainer container = context.one(CommandParameters.PLUGIN).get();
 		if(isPlayer) {
 			delay((ServerPlayer) src, locale, consumer -> {
 				sendRefreshEvent(container);
-				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE));
+				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getServerStat().getRefreshPlugin());
 			});
 		} else {
 			sendRefreshEvent(container);
-			src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLUGIN_REFRESH_MESSAGE));
+			src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getServerStat().getRefreshPlugin());
 		}
 	}
 
@@ -57,8 +55,7 @@ public class RefreshPlugin extends AbstractInfoCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		Parameter.Value<String> CHOICES =  Parameter.choices(plugin.getAPI().getPluginContainers().stream().map(container -> container.metadata().id()).toArray(String[]::new)).key("Plugin").build();
-		return Arrays.asList(ParameterSettings.of(CHOICES, false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.PLUGIN, false, locale -> getExceptions(locale).getPluginNotPresent()));
 	}
 
 }

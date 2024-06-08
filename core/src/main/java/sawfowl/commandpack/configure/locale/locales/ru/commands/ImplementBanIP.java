@@ -1,7 +1,7 @@
 package sawfowl.commandpack.configure.locale.locales.ru.commands;
 
-import org.spongepowered.api.entity.living.player.User;
-import org.spongepowered.api.service.ban.Ban.Profile;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.service.ban.Ban.IP;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
@@ -23,26 +23,33 @@ public class ImplementBanIP implements BanIP {
 	@Setting("AnnouncementPermanent")
 	private Component announcementPermanent = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a permanently bans player &e" + Placeholders.PLAYER + "&a by IP.\n&aReason: " + Placeholders.VALUE);
 	@Setting("Disconnect")
-	private Component disconnect = TextUtils.deserializeLegacy("&bYour IP is banned on the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE);
+	private Component disconnect = TextUtils.deserializeLegacy("&bYour IP is banned on the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE + "&a.\n&bEnd of ban &e" + Placeholders.TIME);
+	@Setting("DisconnectPermanent")
+	private Component disconnectPermanent = TextUtils.deserializeLegacy("&bYour IP address has been permanently banned from the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE);
 
 	@Override
-	public Component getSuccess(User player) {
+	public Component getSuccess(ServerPlayer player) {
 		return Text.of(success).replace(Placeholders.PLAYER, player.name()).get();
 	}
 
 	@Override
-	public Component getAnnouncement(Component source, Component expire, Profile ban) {
-		return Text.of(announcement).replace(Placeholders.SOURCE, source).replace(Placeholders.PLAYER, ban.profile().name().orElse(ban.profile().examinableName())).replace(Placeholders.TIME, expire).replace(Placeholders.VALUE, ban.reason().orElse(Component.empty())).get();
+	public Component getAnnouncement(Component source, Component expire, IP ban, ServerPlayer player) {
+		return Text.of(announcement).replace(Placeholders.SOURCE, source).replace(Placeholders.PLAYER, player.name()).replace(Placeholders.TIME, expire).replace(Placeholders.VALUE, ban.reason().orElse(Component.empty())).get();
 	}
 
 	@Override
-	public Component getAnnouncementPermanent(Component source, Profile ban) {
-		return Text.of(announcement).replace(Placeholders.SOURCE, source).replace(Placeholders.PLAYER, ban.profile().name().orElse(ban.profile().examinableName())).replace(Placeholders.VALUE, ban.reason().orElse(Component.empty())).get();
+	public Component getAnnouncementPermanent(Component source, IP ban, ServerPlayer player) {
+		return Text.of(announcement).replace(Placeholders.SOURCE, source).replace(Placeholders.PLAYER, player.name()).replace(Placeholders.VALUE, ban.reason().orElse(Component.empty())).get();
 	}
 
 	@Override
 	public Component getDisconnect(Component source, Component reason) {
-		return Text.of(disconnect).replace(Placeholders.SOURCE, source).replace(Placeholders.VALUE, reason).get();
+		return Text.of(disconnectPermanent).replace(Placeholders.SOURCE, source).replace(Placeholders.VALUE, reason).get();
+	}
+
+	@Override
+	public Component getDisconnect(Component source, Component reason, Component expire) {
+		return Text.of(disconnect).replace(Placeholders.SOURCE, source).replace(Placeholders.VALUE, reason).replace(Placeholders.TIME, expire).get();
 	}
 
 }

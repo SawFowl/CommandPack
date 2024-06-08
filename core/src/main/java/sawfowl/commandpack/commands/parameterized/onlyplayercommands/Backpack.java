@@ -15,7 +15,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Backpack extends AbstractPlayerCommand {
@@ -26,7 +25,7 @@ public class Backpack extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		plugin.getPlayersData().getOrCreatePlayerData(getPlayer(context).orElse(src)).getBackpack().asMenu(getContainer(), src, Permissions.getBackpackLimit(src), getComponent(locale, LocalesPaths.NAME_BACKPACK)).open(src);
+		plugin.getPlayersData().getOrCreatePlayerData(getPlayer(context).orElse(src)).getBackpack().asMenu(getContainer(), src, Permissions.getBackpackLimit(src), plugin.getLocales().getLocale(locale).getOther().getBackPack(getPlayer(context).orElse(src).name())).open(src);
 	}
 
 	@Override
@@ -41,7 +40,7 @@ public class Backpack extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.BACKPACK_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.BACKPACK_STAFF, true), true, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getPlayerNotPresent()));
 	}
 
 	@Override

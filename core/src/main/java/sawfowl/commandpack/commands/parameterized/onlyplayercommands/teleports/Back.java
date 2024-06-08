@@ -16,7 +16,6 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Back extends AbstractPlayerCommand {
@@ -28,8 +27,8 @@ public class Back extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		Optional<ServerLocation> location = plugin.getPlayersData().getTempData().getPreviousLocation(src);
-		if(!location.isPresent()) exception(locale, LocalesPaths.COMMANDS_BACK_EMPTY);
-		if(location.get().world() == null || !Sponge.server().worldManager().worldExists(location.get().worldKey()) || !location.get().world().isLoaded()) exception(locale, LocalesPaths.COMMANDS_BACK_NOT_LOADED_WORLD);
+		if(!location.isPresent()) exception(getBack(locale).getNotFound());
+		if(location.get().world() == null || !Sponge.server().worldManager().worldExists(location.get().worldKey()) || !location.get().world().isLoaded()) exception(getBack(locale).getNotLoadedWorld());
 		delay(src, locale, consumer -> {
 			plugin.getPlayersData().getTempData().setPreviousLocation(src);
 			src.setLocation(location.get());
@@ -54,6 +53,10 @@ public class Back extends AbstractPlayerCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return null;
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Back getBack(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getBack();
 	}
 
 }

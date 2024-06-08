@@ -15,7 +15,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class TeleportHere extends AbstractPlayerCommand {
@@ -27,7 +26,7 @@ public class TeleportHere extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		ServerPlayer target = getPlayer(context).get();
-		if(target.uniqueId().equals(src.uniqueId())) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF);
+		if(target.uniqueId().equals(src.uniqueId())) exception(plugin.getLocales().getLocale(locale).getCommandExceptions().getTargetSelf());
 		delay(target, locale, consumer -> {
 			plugin.getPlayersData().getTempData().setPreviousLocation(target);
 			target.setLocation(src.serverLocation());
@@ -41,7 +40,7 @@ public class TeleportHere extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(false), false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getPlayerNotPresent()));
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package sawfowl.commandpack.commands.parameterized.punishments;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -19,9 +21,6 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.commandpack.utils.TimeConverter;
 import sawfowl.commandpack.api.data.punishment.Mute;
 
 @Register
@@ -34,7 +33,7 @@ public class MuteList extends AbstractParameterizedCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		Collection<Mute> allMutes = plugin.getPunishmentService().getAllMutes();
-		if(allMutes.isEmpty()) exception(locale, LocalesPaths.COMMANDS_MUTELIST_EMPTY);
+		if(allMutes.isEmpty()) exception(getMuteList(locale).getEmpty());
 		if(!isPlayer) {
 			int i = 1;
 			for(Mute mute : plugin.getPunishmentService().getAllMutes()) {
@@ -43,12 +42,12 @@ public class MuteList extends AbstractParameterizedCommand {
 				i++;
 			}
 		} else {
-			Component title = getText(locale, LocalesPaths.COMMANDS_MUTELIST_TITLE).replace(Placeholders.VALUE, allMutes.size()).get();
+			Component title = getMuteList(locale).getTitle(allMutes.size());
 			List<Component> mutes = new ArrayList<Component>();
 			for(Mute mute : allMutes) {
-				Component element = getText(locale, LocalesPaths.COMMANDS_MUTELIST_ELEMENT).replace(Placeholders.VALUE, mute.getName()).get();
-				if(isPlayer && context.hasPermission(Permissions.MUTEINFO)) element = element.hoverEvent(HoverEvent.showText(getText(locale, LocalesPaths.COMMANDS_MUTELIST_INFO).replace(new String[] {Placeholders.VALUE, Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, text(mute.getName()), mute.getSource().orElse(text("n/a")), text(TimeConverter.toString(mute.getCreated())), mute.getExpirationTimeString().map(s -> text(s)).orElse(getComponent(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT)), mute.getReason().orElse(text("-"))).get()));
-				mutes.add(context.hasPermission(Permissions.UNMUTE_STAFF) ? getComponent(locale, LocalesPaths.REMOVE).append(element) : element);
+				Component element = getMuteList(locale).getElement(mute.getName());
+				if(isPlayer && context.hasPermission(Permissions.MUTEINFO)) element = element.hoverEvent(HoverEvent.showText(getMuteList(locale).getInfo(mute.getName(), mute.getSource().orElse(text("&4Server")), created(locale, mute), expire(locale, mute), mute.getReason().orElse(text("-")))));
+				mutes.add(context.hasPermission(Permissions.UNMUTE_STAFF) ? plugin.getLocales().getLocale(locale).getButtons().getRemove().append(element) : element);
 			}
 			delay((ServerPlayer) src, locale, consumer -> {
 				sendPaginationList(src, title, text("=").color(title.color()), 10, mutes);
@@ -74,6 +73,25 @@ public class MuteList extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return null;
+	}
+
+	private String created(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(mute.getCreated().toEpochMilli());
+		return format.format(calendar.getTime());
+	}
+
+	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
+		if(!mute.getExpiration().isPresent()) return plugin.getLocales().getLocale(locale).getCommands().getMuteInfo().getPermanent();
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
+		return text(format.format(calendar.getTime()));
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.MuteList getMuteList(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getMuteList();
 	}
 
 }

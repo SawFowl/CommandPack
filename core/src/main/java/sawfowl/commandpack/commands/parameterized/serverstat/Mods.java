@@ -23,8 +23,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoC
 import sawfowl.commandpack.commands.containerinfo.ModInfo;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Mods extends AbstractInfoCommand {
@@ -38,7 +36,7 @@ public class Mods extends AbstractInfoCommand {
 		if(getPlayer(context).isPresent()) {
 			ServerPlayer target = getPlayer(context).get();
 			List<Component> mods = MixinServerPlayer.cast(target).getModList().stream().map(mod -> mod.asComponent()).toList();
-			Component title = getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_PLAYER_MODS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, target.name(), mods.size()).get();
+			Component title = plugin.getLocales().getLocale(locale).getCommands().getServerStat().getPlayerMods(target, mods.size());
 			if(isPlayer) {
 				delay((ServerPlayer) src, locale, consumer -> sendPaginationList(src, title, Component.text("=").color(NamedTextColor.DARK_AQUA), linesPerPage, mods));
 			} else src.sendMessage(title.append(Component.text(": ")).append(Component.join(JoinConfiguration.separators(Component.text(", "), Component.text(".")), mods)));
@@ -71,7 +69,7 @@ public class Mods extends AbstractInfoCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.SERVER_STAT_STAFF_PLAYER_MODS_LIST, true), true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.SERVER_STAT_STAFF_PLAYER_MODS_LIST, true), true, locale -> getExceptions(locale).getPlayerNotPresent()));
 	}
 
 	@Override

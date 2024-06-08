@@ -21,8 +21,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Hat extends AbstractPlayerCommand {
@@ -35,8 +33,8 @@ public class Hat extends AbstractPlayerCommand {
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		ServerPlayer player = getPlayer(context).orElse(src);
 		ItemStack handItem = src.itemInHand(HandTypes.MAIN_HAND.get()).copy();
-		if(handItem.type().equals(getAir())) exception(src, LocalesPaths.COMMANDS_HAT_NO_ITEM);
-		if(plugin.getMainConfig().isBlackListHat(handItem)) exception(src, LocalesPaths.COMMANDS_HAT_BLACKLIST_ITEM);
+		if(handItem.type().equals(getAir())) exception(getHat(locale).getNotPresent());
+		if(plugin.getMainConfig().isBlackListHat(handItem)) exception(getHat(locale).getBlackListItem());
 		if(player.uniqueId().equals(src.uniqueId())) {
 			delay(player, locale, consumer -> {
 				player.equipment().peek(EquipmentTypes.HEAD.get()).ifPresent(headItem -> {
@@ -50,11 +48,11 @@ public class Hat extends AbstractPlayerCommand {
 					player.inventory().primary().offer(headItem);
 				});
 				player.equipment().set(EquipmentTypes.HEAD.get(), handItem);
-				src.sendMessage(getText(src, LocalesPaths.COMMANDS_HAT_SUCCESS_OTHER).replace(Placeholders.PLAYER, player.name()).get());
+				src.sendMessage(getHat(locale).getSuccessStaff(player));
 			} else {
-				src.sendMessage(getText(src, LocalesPaths.COMMANDS_HAT_FULL_INVENTORY).replace(Placeholders.PLAYER, player.name()).get().clickEvent(SpongeComponents.executeCallback(cause -> {
+				src.sendMessage(getHat(locale).getFullInventory(player).clickEvent(SpongeComponents.executeCallback(cause -> {
 					player.equipment().set(EquipmentTypes.HEAD.get(), handItem);
-					src.sendMessage(getText(src, LocalesPaths.COMMANDS_HAT_SUCCESS_OTHER).replace(Placeholders.PLAYER, player.name()).get());
+					src.sendMessage(getHat(locale).getSuccessStaff(player));
 				})));
 			}
 		}
@@ -76,12 +74,16 @@ public class Hat extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.HAT_STAFF, true), true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.HAT_STAFF, true), true, locale -> getExceptions(locale).getPlayerNotPresent()));
 	}
 
 	@Override
 	public String command() {
 		return "hat";
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Hat getHat(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getHat();
 	}
 
 }

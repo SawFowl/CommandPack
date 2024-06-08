@@ -10,6 +10,7 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.plugin.PluginContainer;
 
@@ -20,6 +21,7 @@ import sawfowl.commandpack.api.commands.AbstractPluginCommand;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.commands.parameterized.ParameterizedCommand;
 import sawfowl.commandpack.api.data.command.Settings;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.CommandExceptions;
 
 public abstract class AbstractParameterizedCommand extends AbstractPluginCommand<CommandPack> implements ParameterizedCommand {
 
@@ -73,8 +75,12 @@ public abstract class AbstractParameterizedCommand extends AbstractPluginCommand
 		return cause.first(Entity.class).filter(entity -> (entity.type().equals(EntityTypes.COMMAND_BLOCK_MINECART.get())));
 	}
 
-	protected String getString(Locale locale, Object[] path) {
-		return plugin.getLocales().getString(locale, path);
+	protected CommandExceptions getExceptions(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommandExceptions();
+	}
+
+	protected CommandExceptions getExceptions(ServerPlayer player) {
+		return getExceptions(player.locale());
 	}
 
 }

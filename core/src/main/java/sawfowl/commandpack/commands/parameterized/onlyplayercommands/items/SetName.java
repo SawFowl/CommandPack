@@ -19,8 +19,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Item;
 
 public class SetName extends AbstractPlayerCommand {
 
@@ -30,12 +29,12 @@ public class SetName extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		if(src.itemInHand(HandTypes.MAIN_HAND.get()).quantity() == 0) exception(locale, LocalesPaths.COMMANDS_ITEM_EMPTY_HAND);
+		if(src.itemInHand(HandTypes.MAIN_HAND.get()).quantity() == 0) exception(getItem(locale).getEmptyHand());
 		Component newName = text(getString(context, "Value").get());
 		ItemStack item = src.itemInHand(HandTypes.MAIN_HAND.get());
 		item.offer(Keys.CUSTOM_NAME, newName);
 		src.setItemInHand(HandTypes.MAIN_HAND.get(), item);
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ITEM_SET_NAME).replace(Placeholders.VALUE, newName).get());
+		src.sendMessage(getItem(locale).getSetName(newName));
 	}
 
 	@Override
@@ -55,7 +54,11 @@ public class SetName extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createStrings("Value", false), false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createStrings("Value", false), false, locale -> getExceptions(locale).getValueNotPresent()));
+	}
+
+	private Item getItem(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getItem();
 	}
 
 }

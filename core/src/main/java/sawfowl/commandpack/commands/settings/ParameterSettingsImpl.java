@@ -13,20 +13,22 @@ import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 
+import sawfowl.localeapi.api.ComponentSupplier;
+
 public class ParameterSettingsImpl implements sawfowl.commandpack.api.commands.parameterized.ParameterSettings {
 
 	private Parameter.Value<?> parameter;
 	private Boolean optional;
 	private Boolean optionalForConsole = false;
-	private Object[] path = {"NaN"};
+	private ComponentSupplier supplier;
 	private String key;
 	private int position = 0;
 	public ParameterSettingsImpl() {}
-	public ParameterSettingsImpl(Parameter.Value<?> parameter, boolean optional, boolean optionalForConsole, Object... pathException) {
+	public ParameterSettingsImpl(Parameter.Value<?> parameter, boolean optional, boolean optionalForConsole, ComponentSupplier supplier) {
 		this.key = parameter.key().key();
 		this.parameter = parameter;
 		this.optionalForConsole = optional && optionalForConsole;
-		this.path = pathException;
+		this.supplier = supplier;
 	}
 
 	@Override
@@ -65,8 +67,8 @@ public class ParameterSettingsImpl implements sawfowl.commandpack.api.commands.p
 	}
 
 	@Override
-	public Object[] getPath() {
-		return path;
+	public ComponentSupplier getComponentSupplier() {
+		return supplier;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -95,7 +97,6 @@ public class ParameterSettingsImpl implements sawfowl.commandpack.api.commands.p
 				.set(DataQuery.of("parameter"), parameter)
 				.set(DataQuery.of("optional"), optional)
 				.set(DataQuery.of("optionalForConsole"), optionalForConsole)
-				.set(DataQuery.of("path"), path)
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
@@ -127,8 +128,8 @@ public class ParameterSettingsImpl implements sawfowl.commandpack.api.commands.p
 		}
 
 		@Override
-		public ParameterSettingsImpl.Builder localeTextPath(Object[] path) {
-			ParameterSettingsImpl.this.path = path;
+		public ParameterSettingsImpl.Builder componentSupplier(ComponentSupplier supplier) {
+			ParameterSettingsImpl.this.supplier = supplier;
 			return this;
 		}
 

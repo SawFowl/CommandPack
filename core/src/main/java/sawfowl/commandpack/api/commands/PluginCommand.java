@@ -29,8 +29,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.command.Price;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.ThrowingConsumer;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
+import sawfowl.commandpack.configure.locale.locales.AbstractLocale;
 import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
 import sawfowl.commandpack.utils.tasks.DelayTimerTask;
 import sawfowl.localeapi.api.LocaleReference;
@@ -88,7 +87,7 @@ public interface PluginCommand {
 					getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
 					Sponge.asyncScheduler().submit(Task.builder().plugin(getContainer()).interval(1, TimeUnit.SECONDS).execute(new CooldownTimerTask(player, getCommandSettings(), getCooldowns())).build());
 				} else {
-					if((getCooldowns().get(player.uniqueId())) - currentTime > 0) exception(locale, Placeholders.DELAY, timeFormat((getCooldowns().get(player.uniqueId())) - currentTime, locale), LocalesPaths.COMMANDS_COOLDOWN);
+					if((getCooldowns().get(player.uniqueId())) - currentTime > 0) exception(getLocale(locale).getCommandExceptions().getCooldown(timeFormat((getCooldowns().get(player.uniqueId())) - currentTime, locale)));
 					getCooldowns().remove(player.uniqueId());
 					getCooldowns().put(player.uniqueId(), currentTime + getCommandSettings().getCooldown());
 				}
@@ -202,7 +201,7 @@ public interface PluginCommand {
 	 * Time formatting.
 	 */
 	default Component timeFormat(long second, Locale locale) {
-		return TextUtils.timeFormat(second, locale, CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.TIME_DAYS), CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.TIME_HOUR), CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.TIME_MINUTE), CommandPack.getInstance().getLocales().getComponent(locale, LocalesPaths.TIME_SECOND));
+		return TextUtils.timeFormat(second, locale, getLocale(locale).getTime().getDay(), getLocale(locale).getTime().getHour(), getLocale(locale).getTime().getMinute(), getLocale(locale).getTime().getSecond());
 	}
 
 	/**
@@ -228,7 +227,7 @@ public interface PluginCommand {
 		if(price.getMoney() > 0) {
 			Currency currency = CommandPack.getInstance().getEconomy().checkCurrency(price.getCurrency());
 			BigDecimal money = createDecimal(price.getMoney());
-			if(!CommandPack.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money) || !CommandPack.getInstance().getEconomy().removeFromPlayerBalance(player, currency, money)) exception(CommandPack.getInstance().getLocales().getText(locale, LocalesPaths.COMMANDS_ERROR_TAKE_MONEY).replace(new String[] {Placeholders.MONEY, Placeholders.COMMAND}, currency.symbol().append(text(money.toString())), text("/" + command())));
+			if(!CommandPack.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money) || !CommandPack.getInstance().getEconomy().removeFromPlayerBalance(player, currency, money)) exception(getLocale(player.locale()).getOther().getExecuteCommand().getNoMoney(currency, money, "/" + command()));
 		}
 	}
 
@@ -255,6 +254,10 @@ public interface PluginCommand {
 
 	default boolean isEnable() {
 		return true;
+	}
+
+	private AbstractLocale getLocale(Locale locale) {
+		return CommandPack.getInstance().getLocales().getLocale(locale);
 	}
 
 }

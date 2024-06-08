@@ -60,8 +60,8 @@ public class ImplementAboutMod implements AboutMod {
 	}
 
 	@Override
-	public Component getLinks(Component home, Component source, Component issues) {
-		return Text.of(links).replace(Placeholders.HOME_LINK, home).replace(Placeholders.SOURCE_LINK, source).replace(Placeholders.ISSUES_LINK, issues).get();
+	public Component getLinks(Component issues, Component update) {
+		return Text.of(links).replace(Placeholders.ISSUES_LINK, issues).replace(Placeholders.UPDATE_LINK, update).get();
 	}
 
 }

@@ -20,8 +20,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Kick extends AbstractParameterizedCommand {
@@ -33,18 +31,17 @@ public class Kick extends AbstractParameterizedCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		ServerPlayer target = getPlayer(context).get();
-		if(isPlayer && target.name().equals(((ServerPlayer) src).name())) exception(getText(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF));
-		if(target.hasPermission(Permissions.IGNORE_KICK) && isPlayer) exception(getText(locale, LocalesPaths.COMMANDS_KICK_IGNORE).replace(Placeholders.PLAYER, target.name()).get());
+		if(isPlayer && target.name().equals(((ServerPlayer) src).name())) exception(getExceptions(locale).getTargetSelf());
+		if(target.hasPermission(Permissions.IGNORE_KICK) && isPlayer) exception(getKick(locale).getIgnore(target.name()));
 		Component source = isPlayer ? ((ServerPlayer) src).get(Keys.DISPLAY_NAME).orElse(text(((ServerPlayer) src).name())) : text("&4Server");
 		Component reason = text(getString(context, "Reason").orElse("-"));
-		target.kick(getText(target, LocalesPaths.COMMANDS_KICK_DISCONNECT).replace(new String[] {Placeholders.SOURCE, Placeholders.VALUE}, source, reason).get());
-		Sponge.systemSubject().sendMessage(getText(plugin.getLocales().getLocaleService().getDefaultLocale(), LocalesPaths.COMMANDS_KICK_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, source, text(target.name()), reason).get());
+		target.kick(getKick(target).getDisconnect(source, reason));
+		Sponge.systemSubject().sendMessage(getKick().getAnnouncement(source, target.name(), reason));
 		if(plugin.getMainConfig().getPunishment().getAnnounce().isKick()) {
-			Component targetName = target.get(Keys.DISPLAY_NAME).orElse(text(target.name()));
 			Sponge.server().onlinePlayers().forEach(player -> {
-				player.sendMessage(getText(player, LocalesPaths.COMMANDS_KICK_ANNOUNCEMENT).replace(new String[] {Placeholders.SOURCE, Placeholders.PLAYER, Placeholders.VALUE}, source, targetName, reason).get());
+				player.sendMessage(getKick(player).getAnnouncement(source, target.name(), reason));
 			});
-		} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KICK_SUCCESS).replace(Placeholders.PLAYER, target.name()).get());
+		} else src.sendMessage(getKick(locale).getSuccess(target.name()));
 	}
 
 	@Override
@@ -66,9 +63,21 @@ public class Kick extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-				ParameterSettings.of(CommandParameters.createPlayer(false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-				ParameterSettings.of(CommandParameters.createStrings("Reason", true), true, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
-			);
-		}
+			ParameterSettings.of(CommandParameters.createPlayer(false), false, locale -> getExceptions(locale).getPlayerNotPresent()),
+			ParameterSettings.of(CommandParameters.createStrings("Reason", true), true, locale -> getExceptions(locale).getReasonNotPresent())
+		);
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Kick getKick(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getKick();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Kick getKick(ServerPlayer player) {
+		return getKick(player.locale());
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Kick getKick() {
+		return plugin.getLocales().getSystemLocale().getCommands().getKick();
+	}
 
 }

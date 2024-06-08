@@ -19,8 +19,6 @@ import org.spongepowered.api.util.Ticks;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class PlayerDeathAndRespawnListener {
 
@@ -50,7 +48,7 @@ public class PlayerDeathAndRespawnListener {
 				});
 				if(!map.isEmpty()) {
 					inventories.put(player.uniqueId(), map);
-					player.sendMessage(plugin.getLocales().getText(player.locale(), LocalesPaths.KEEP_INVENTORY).replace(Placeholders.VALUE, String.valueOf(keepInventory)).get());
+					player.sendMessage(plugin.getLocales().getLocale(player).getOther().getKeep().getInventory(100d));
 				}
 			} else if(keepInventory > 0) {
 				Map<Integer, ItemStack> map = new HashMap<Integer, ItemStack>();
@@ -62,7 +60,7 @@ public class PlayerDeathAndRespawnListener {
 				});
 				if(!map.isEmpty()) {
 					inventories.put(player.uniqueId(), map);
-					player.sendMessage(plugin.getLocales().getText(player.locale(), LocalesPaths.KEEP_INVENTORY).replace(Placeholders.VALUE, String.valueOf(keepInventory)).get());
+					player.sendMessage(plugin.getLocales().getLocale(player).getOther().getKeep().getInventory(keepInventory));
 				}
 			}
 		}
@@ -70,12 +68,12 @@ public class PlayerDeathAndRespawnListener {
 		if(keepExp >= 100) {
 			exps.put(player.uniqueId(), player.get(Keys.EXPERIENCE).get());
 			player.offer(Keys.EXPERIENCE, 0);
-			player.sendMessage(plugin.getLocales().getText(player.locale(), LocalesPaths.KEEP_EXP).replace(Placeholders.VALUE, String.valueOf(keepExp)).get());
+			player.sendMessage(plugin.getLocales().getLocale(player).getOther().getKeep().getExp(100d));
 		} else if(keepExp > 0) {
 			int keepSize = (int) ((player.get(Keys.EXPERIENCE).get() / 100) * keepExp);
 			exps.put(player.uniqueId(), (int) ((player.get(Keys.EXPERIENCE).get() / 100) * keepExp));
 			player.offer(Keys.EXPERIENCE, player.get(Keys.EXPERIENCE).get() - keepSize);
-			player.sendMessage(plugin.getLocales().getText(player.locale(), LocalesPaths.KEEP_EXP).replace(Placeholders.VALUE, String.valueOf(keepExp)).get());
+			player.sendMessage(plugin.getLocales().getLocale(player).getOther().getKeep().getExp(keepExp));
 		}
 	}
 

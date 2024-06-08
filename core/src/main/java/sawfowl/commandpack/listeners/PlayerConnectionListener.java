@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.exception.CommandException;
@@ -24,7 +23,6 @@ import org.spongepowered.api.util.Ticks;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.JoinConfiguration;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
@@ -37,8 +35,6 @@ import sawfowl.commandpack.apiclasses.TempPlayerDataImpl;
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.player.GivedKitData;
 import sawfowl.commandpack.configure.configs.player.PlayerData;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
 public class PlayerConnectionListener {
@@ -53,14 +49,14 @@ public class PlayerConnectionListener {
 		((TempPlayerDataImpl) plugin.getPlayersData().getTempData()).registerPlayer(event.player());
 		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(event.player());
 		if(plugin.isForgeServer()) {
-			if(plugin.getMainConfig().isPrintPlayerMods() && !MixinServerPlayer.cast(event.player()).getModList().isEmpty()) plugin.getLogger().info(plugin.getLocales().getString(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.PLAYER_MODS_LIST).replace(Placeholders.PLAYER, event.player().name()).replace(Placeholders.VALUE, String.join(", ", MixinServerPlayer.cast(event.player()).getModList().stream().map(mod -> mod.getId()).toList())));
+			if(plugin.getMainConfig().isPrintPlayerMods() && !MixinServerPlayer.cast(event.player()).getModList().isEmpty()) plugin.getLogger().info(plugin.getLocales().getSystemLocale().getDebug().getModsList(event.player().name(), String.join(", ", MixinServerPlayer.cast(event.player()).getModList().stream().map(mod -> mod.getId()).toList())));
 			if(plugin.getMainConfig().getRestrictMods().isEnable() && !event.player().hasPermission(Permissions.ALL_MODS_ACCESS)) {
 				Sponge.server().scheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).delay(Ticks.of(10)).execute(() -> {
 					List<String> banedPlayerMods = new ArrayList<>();
 					MixinServerPlayer.cast(event.player()).getModList().forEach(mod -> {
 						if(!plugin.getMainConfig().getRestrictMods().isAllowedPlayerMod(mod.getId())) banedPlayerMods.add(mod.getId());
 					});
-					if(!banedPlayerMods.isEmpty() && event.player().isOnline()) event.player().kick(plugin.getLocales().getText(event.player().locale(), LocalesPaths.ILLEGAL_MODS_LIST).replace(Placeholders.VALUE, String.join(", ", banedPlayerMods)).get());
+					if(!banedPlayerMods.isEmpty() && event.player().isOnline()) event.player().kick(plugin.getLocales().getLocale(event.player()).getOther().getIllegalMods(String.join(", ", banedPlayerMods)));
 				}).build());
 			}
 		}
@@ -78,7 +74,7 @@ public class PlayerConnectionListener {
 		if(!event.isMessageCancelled() && plugin.getMainConfig().isChangeConnectionMessages()) {
 			event.setMessageCancelled(true);
 			if(!playerData.isVanished() || !event.player().hasPermission(Permissions.HIDE_CONNECT)) sendJoinMessage(event.player());
-			Sponge.systemSubject().sendMessage(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.JOIN_MESSAGE).replace(new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, getPrefix(event.player()), event.player().get(Keys.DISPLAY_NAME).orElse(text(event.player().name())), getSuffix(event.player())).get());
+			Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemLocale().getOther().getConnectionMessages().getJoin(event.player()));
 		}
 		if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterSpawn() && plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().isPresent()) {
 			event.player().setLocation(plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().get());
@@ -107,7 +103,7 @@ public class PlayerConnectionListener {
 		if(plugin.getMainConfig().isChangeConnectionMessages()) {
 			if(TextUtils.serializeLegacy(event.message()).length() > 0) event.setMessage(Component.empty());
 			if(!playerData.isVanished() || !event.player().hasPermission(Permissions.HIDE_CONNECT)) sendLeaveMessage(event.player());
-			Sponge.systemSubject().sendMessage(plugin.getLocales().getText(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.LEAVE_MESSAGE).replace(new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, getPrefix(event.player()), event.player().get(Keys.DISPLAY_NAME).orElse(text(event.player().name())), getSuffix(event.player())).get());
+			Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemLocale().getOther().getConnectionMessages().getLeave(event.player()));
 		}
 		playerData.save();
 	}
@@ -292,55 +288,22 @@ public class PlayerConnectionListener {
 		if(!plugin.getMainConfig().isEnableMotd()) return;
 		Sponge.server().scheduler().submit(Task.builder().delay(2, TimeUnit.SECONDS).plugin(plugin.getPluginContainer()).execute(() -> {
 			Sponge.server().player(player.uniqueId()).ifPresent(p -> {
-				List<Text> motd = plugin.getLocales().getListTexts(p.locale(), LocalesPaths.MOTD);
-				if(!motd.isEmpty()) p.sendMessage(Component.join(JoinConfiguration.newlines(), motd.stream().map(c -> c.replace(Placeholders.PLAYER, player.get(Keys.DISPLAY_NAME).orElse(Component.text(p.name()))).get()).collect(Collectors.toList())));
+				p.sendMessage(plugin.getLocales().getLocale(p).getOther().getConnectionMessages().getMotd(p));
 			});
 		}).build());
 	}
 
 	private void sendJoinMessage(ServerPlayer player) {
-		Component prefix = getPrefix(player);
-		Component name = player.get(Keys.DISPLAY_NAME).orElse(text(player.name()));
-		Component suffix = getSuffix(player);
 		boolean before = player.hasPlayedBefore();
-		Sponge.server().scheduler().submit(Task.builder().delay(2, TimeUnit.SECONDS).plugin(plugin.getPluginContainer()).execute(() -> {
-			Sponge.server().onlinePlayers().forEach(p -> {
-				p.sendMessage(plugin.getLocales().getText(p.locale(), before ? LocalesPaths.JOIN_MESSAGE : LocalesPaths.FIRST_JOIN_MESSAGE).replace(new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, prefix, name, suffix).get());
-			});
-		}).build());
+		Sponge.server().scheduler().submit(Task.builder().delay(2, TimeUnit.SECONDS).plugin(plugin.getPluginContainer()).execute(() -> 
+			Sponge.server().onlinePlayers().forEach(p -> p.sendMessage(plugin.getLocales().getLocale(p).getOther().getConnectionMessages().getJoin(!before, player)))
+		).build());
 	}
 
 	private void sendLeaveMessage(ServerPlayer player) {
-		Component prefix = getPrefix(player);
-		Component name = player.get(Keys.DISPLAY_NAME).orElse(text(player.name()));
-		Component suffix = getSuffix(player);
 		Sponge.server().onlinePlayers().forEach(p -> {
-			p.sendMessage(plugin.getLocales().getText(p.locale(), LocalesPaths.LEAVE_MESSAGE).replace(new String[] {Placeholders.PREFIX, Placeholders.PLAYER, Placeholders.SUFFIX}, prefix, name, suffix).get());
+			p.sendMessage(plugin.getLocales().getLocale(p).getOther().getConnectionMessages().getLeave(player));
 		});
-	}
-
-	private Component getPrefix(ServerPlayer player) {
-		return player.option(Placeholders.PREFIX).isPresent() ? text(player.option("prefix").get()) : Component.empty();
-	}
-
-	private Component getSuffix(ServerPlayer player) {
-		return player.option(Placeholders.PREFIX).isPresent() ? text(player.option("suffix").get()) : Component.empty();
-	}
-
-	private Component text(String string) {
-		if(isLegacyDecor(string)) {
-			return TextUtils.deserializeLegacy(string);
-		} else {
-			return TextUtils.deserialize(string);
-		}
-	}
-
-	private boolean isLegacyDecor(String string) {
-		return string.indexOf('&') != -1 && !string.endsWith("&") && isStyleChar(string.charAt(string.indexOf("&") + 1));
-	}
-
-	private boolean isStyleChar(char ch) {
-		return "0123456789abcdefklmnor".indexOf(ch) != -1;
 	}
 
 }
