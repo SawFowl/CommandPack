@@ -10,11 +10,11 @@ public interface Economy {
 
 	interface SubCommand {
 
-		Component getSuccess(String player, Currency currency, BigDecimal value);
+		Component getSuccess(Component player, Currency currency, BigDecimal value, BigDecimal money);
 
-		Component getSuccessUnknown(String player, Currency currency, BigDecimal value);
+		Component getSuccessUnknown(Component player, Currency currency, BigDecimal value, BigDecimal money);
 
-		Component getSuccessTarget(Currency currency, BigDecimal value);
+		Component getSuccessTarget(Currency currency, BigDecimal value, BigDecimal money);
 
 	}
 

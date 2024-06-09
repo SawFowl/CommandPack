@@ -36,5 +36,7 @@ public class Placeholders {
 	public static final String CURRENCY_STYLED_SYMBOL = "%currency-styled-symbol%";
 	public static final String CURRENCY_NAME = "%currency-name%";
 	public static final String CURRENCY_PLURAL_NAME = "%currency-plural-name%";
+	public static final String SIZE = "%size%";
+	public static final String PLAYERS = "%players%";
 
 }

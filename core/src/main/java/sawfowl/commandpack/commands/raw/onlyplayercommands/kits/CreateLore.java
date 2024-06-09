@@ -19,7 +19,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class CreateLore extends AbstractKitsEditCommand {
 
@@ -34,7 +33,7 @@ public class CreateLore extends AbstractKitsEditCommand {
 		kitData.setLore(Locales.DEFAULT, Arrays.asList("&dFirst line", "&eSecond line"));
 		kitData.setLore(Locales.RU_RU, Arrays.asList("&dСтрока 1", "&eСтрока 2"));
 		kitData.save();
-		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_CREATE_LORE));
+		src.sendMessage(getCommands(locale).getKits().getCreateLore());
 	}
 
 	@Override

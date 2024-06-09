@@ -12,6 +12,7 @@ import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
@@ -19,8 +20,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Fly extends AbstractParameterizedCommand {
@@ -32,16 +31,16 @@ public class Fly extends AbstractParameterizedCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		Optional<ServerPlayer> optTarget = getPlayer(context);
-		if(optTarget.isPresent() && isPlayer && !optTarget.get().uniqueId().equals(((ServerPlayer) src).uniqueId())) {
+		if(optTarget.isPresent() && (!isPlayer || !optTarget.get().uniqueId().equals(((ServerPlayer) src).uniqueId()))) {
 			if(setFly(optTarget.get())) {
-				sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_FLY_ENABLE_STAFF, LocalesPaths.COMMANDS_FLY_ENABLE);
-			} else sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_FLY_DISABLE_STAFF, LocalesPaths.COMMANDS_FLY_DISABLE);
+				sendStaffMessage(src, optTarget.get(), getFly(locale).getEnableStaff(optTarget.get()), getFly(optTarget.get()).getEnable());
+			} else sendStaffMessage(src, optTarget.get(), getFly(locale).getDisabeStaff(optTarget.get()), getFly(optTarget.get()).getDisabe());
 		} else {
-			if(!isPlayer) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
+			if(!isPlayer) exception(getExceptions(locale).getPlayerNotPresent());
 			delay((ServerPlayer) src, locale, consumer -> {
 				if(setFly((ServerPlayer) src)) {
-					src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_FLY_ENABLE));
-				} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_FLY_DISABLE));
+					src.sendMessage(getFly(locale).getEnable());
+				} else src.sendMessage(getFly(locale).getDisabe());
 			});
 		}
 	}
@@ -53,7 +52,7 @@ public class Fly extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.FLY_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.FLY_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent()));
 	}
 
 	@Override
@@ -77,9 +76,17 @@ public class Fly extends AbstractParameterizedCommand {
 		return player.get(Keys.CAN_FLY).orElse(false);
 	}
 
-	private void sendStaffMessage(Audience src, Locale staffLocale, ServerPlayer target, Object[] pathStaff, Object[] pathPlayer) {
-		src.sendMessage(getText(staffLocale, pathPlayer).replace(Placeholders.PLAYER, target.name()).get());
-		target.sendMessage(getComponent(staffLocale, pathPlayer));
+	private void sendStaffMessage(Audience src, ServerPlayer target, Component staff, Component targetMessage) {
+		src.sendMessage(staff);
+		target.sendMessage(targetMessage);
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Fly getFly(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getFly();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Fly getFly(ServerPlayer player) {
+		return getFly(player.locale());
 	}
 
 }

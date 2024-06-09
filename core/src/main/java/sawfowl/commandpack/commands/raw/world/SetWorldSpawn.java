@@ -18,8 +18,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class SetWorldSpawn extends AbstractWorldCommand {
 
@@ -31,7 +29,7 @@ public class SetWorldSpawn extends AbstractWorldCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
 		ServerPlayer player = (ServerPlayer) audience;
 		player.world().properties().setSpawnPosition(player.blockPosition());
-		player.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_SETSPAWN).replace(new String[] {Placeholders.WORLD, Placeholders.LOCATION}, new Object[] {player.world().key().asString(), player.blockPosition().toString()}).get());
+		player.sendMessage(getWorld(locale).getSetSpawn(player.world(), player.blockPosition()));
 	}
 
 	@Override

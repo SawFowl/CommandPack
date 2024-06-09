@@ -1,5 +1,7 @@
 package sawfowl.commandpack.configure.locale.locales.abstractlocale.commands;
 
+import net.kyori.adventure.text.Component;
+
 import sawfowl.localeapi.api.Text;
 
 public interface Seen {
@@ -46,10 +48,10 @@ public interface Seen {
 
 	Text getWarns();
 
-	Text getYes();
+	Component getYes();
 
-	Text getNo();
+	Component getNo();
 
-	Text getPadding();
+	Component getPadding();
 
 }

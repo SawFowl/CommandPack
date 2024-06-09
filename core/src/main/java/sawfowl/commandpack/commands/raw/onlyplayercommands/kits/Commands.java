@@ -19,7 +19,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Commands extends AbstractKitsEditCommand {
@@ -33,28 +32,21 @@ public class Commands extends AbstractKitsEditCommand {
 		Kit kit = args.<Kit>get(0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		if(kitData.getExecuteCommands().isPresent() && kitData.getExecuteCommands().get().size() > 0) {
-			Component header = getComponent(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_HEADER);
+			Component title = getCommands(locale).getKits().getCommandsTitle();
 			List<Component> commands = new ArrayList<>();
 			kitData.getExecuteCommands().get().forEach(command -> {
-				commands.add(TextUtils.createCallBack(getComponent(locale, LocalesPaths.REMOVE), () -> {
+				commands.add(TextUtils.createCallBack(plugin.getLocales().getLocale(locale).getButtons().getRemove(), () -> {
 					if(kitData.getExecuteCommands().get().contains(command)) {
 						kitData.removeCommand(command);
 						kitData.save();
-						src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_SUCCESS));
-					} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_REMOVE_FAIL));
+						src.sendMessage(getCommands(locale).getKits().getCommandRemoveSuccess());
+					} else src.sendMessage(getCommands(locale).getKits().getCommandRemoveFail());
 				}).append(Component.text(" " + command)));
 			});
-			sendPaginationList(src, header, Component.text("=").color(header.color()), 15, commands);
-		} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_COMMANDS_EMPTY));
+			sendPaginationList(src, title, Component.text("=").color(title.color()), 15, commands);
+		} else src.sendMessage(getCommands(locale).getKits().getCommandsEmpty());
 	}
-/*
-	@Override
-	public List<CommandCompletion> complete(CommandCause cause, List<String> args, String currentInput) throws CommandException {
-		if(args.size() == 0) return plugin.getKitService().getKits().stream().map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
-		if(args.size() == 1 && !currentInput.endsWith(" ")) return plugin.getKitService().getKits().stream().filter(kit -> (kit.id().startsWith(args.get(0)))).map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
-		return getEmptyCompletion();
-	}
-*/
+
 	@Override
 	public Component shortDescription(Locale locale) {
 		return text("&3View and delete commands in a kit.");

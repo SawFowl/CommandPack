@@ -38,6 +38,10 @@ public interface CommandExceptions {
 
 	Component getReasonNotPresent();
 
+	Component getLocaleNotPresent();
+
+	Component getCurrencyNotPresent();
+
 	Component getTargetSelf();
 
 	Component getCooldown(Component delay);

@@ -1,11 +1,11 @@
 package sawfowl.commandpack.configure.locale.locales.ru.commands;
 
+import java.math.BigDecimal;
+
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
-
-import com.ibm.icu.math.BigDecimal;
 
 import net.kyori.adventure.text.Component;
 
@@ -43,12 +43,12 @@ public class ImplementPay implements Pay {
 	}
 
 	@Override
-	public Component getSuccess(Currency currency, BigDecimal value, String target) {
+	public Component getSuccess(Currency currency, BigDecimal value, Component target) {
 		return Text.of(success).replace(Placeholders.CURRENCY_SYMBOL, currency.symbol()).replace(Placeholders.CURRENCY_STYLED_SYMBOL, currency.symbol().color(currency.displayName().color()).style(currency.displayName().style())).replace(Placeholders.CURRENCY_NAME, currency.displayName()).replace(Placeholders.CURRENCY_PLURAL_NAME, currency.pluralDisplayName()).replace(Placeholders.VALUE, value.doubleValue()).replace(Placeholders.PLAYER, target).get();
 	}
 
 	@Override
-	public Component getSuccessTarget(String source, Currency currency, BigDecimal value) {
+	public Component getSuccessTarget(Component source, Currency currency, BigDecimal value) {
 		return Text.of(successTarget).replace(Placeholders.PLAYER, source).replace(Placeholders.CURRENCY_SYMBOL, currency.symbol()).replace(Placeholders.CURRENCY_STYLED_SYMBOL, currency.symbol().color(currency.displayName().color()).style(currency.displayName().style())).replace(Placeholders.CURRENCY_NAME, currency.displayName()).replace(Placeholders.CURRENCY_PLURAL_NAME, currency.pluralDisplayName()).replace(Placeholders.VALUE, value.doubleValue()).get();
 	}
 

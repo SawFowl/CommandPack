@@ -35,12 +35,12 @@ public class ImplementHideBalance implements HideBalance {
 	}
 
 	@Override
-	public Component getHideStaff(String player) {
+	public Component getHideStaff(Component player) {
 		return Text.of(hideStaff).replace(Placeholders.PLAYER, player).get();
 	}
 
 	@Override
-	public Component getOpenStaff(String player) {
+	public Component getOpenStaff(Component player) {
 		return Text.of(openStaff).replace(Placeholders.PLAYER, player).get();
 	}
 

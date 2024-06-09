@@ -38,7 +38,7 @@ public class ImplementBalance implements Balance {
 	}
 
 	@Override
-	public Component getTitleOther(String player) {
+	public Component getTitleOther(Component player) {
 		return Text.of(titleOther).replace(Placeholders.PLAYER, player).get();
 	}
 
@@ -53,7 +53,7 @@ public class ImplementBalance implements Balance {
 	}
 
 	@Override
-	public Component getHiden(String player) {
+	public Component getHiden(Component player) {
 		return Text.of(hiden).replace(Placeholders.PLAYER, player).get();
 	}
 

@@ -1,6 +1,7 @@
 package sawfowl.commandpack.configure.locale.locales.ru.commands;
 
 import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
@@ -33,7 +34,7 @@ public class ImplementGlow implements Glow {
 
 	@Override
 	public Component getEnableStaff(Entity target, boolean isPlayer) {
-		return Text.of(enableStaff).replace(Placeholders.PLAYER, isPlayer ? Component.text(((ServerPlayer) target).name()) : target.asHoverEvent().value().name()).get();
+		return Text.of(enableStaff).replace(Placeholders.PLAYER, isPlayer ? ((ServerPlayer) target).name() : EntityTypes.registry().valueKey(target.type()).asString()).get();
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class ImplementGlow implements Glow {
 
 	@Override
 	public Component getDisableStaff(Entity target, boolean isPlayer) {
-		return Text.of(disableStaff).replace(Placeholders.PLAYER, isPlayer ? Component.text(((ServerPlayer) target).name()) : target.asHoverEvent().value().name()).get();
+		return Text.of(disableStaff).replace(Placeholders.PLAYER, isPlayer ? ((ServerPlayer) target).name() : EntityTypes.registry().valueKey(target.type()).asString()).get();
 	}
 
 }

@@ -9,13 +9,13 @@ import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 
 import net.kyori.adventure.audience.Audience;
+
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.parameterized.gamemode.GameModeType;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class GameMode extends AbstractParameterizedCommand {
@@ -32,10 +32,10 @@ public class GameMode extends AbstractParameterizedCommand {
 	public Parameterized build() {
 		return builder().reset()
 				.permission(permission())
-				.addChild(new GameModeType(plugin, GameModes.CREATIVE, LocalesPaths.COMMANDS_GAMEMODE_CREATIVE).build(), "creative", "1")
-				.addChild(new GameModeType(plugin, GameModes.SPECTATOR, LocalesPaths.COMMANDS_GAMEMODE_SPECTATOR).build(), "spectator", "3")
-				.addChild(new GameModeType(plugin, GameModes.SURVIVAL, LocalesPaths.COMMANDS_GAMEMODE_SURVIVAL).build(), "survival", "0")
-				.addChild(new GameModeType(plugin, GameModes.ADVENTURE, LocalesPaths.COMMANDS_GAMEMODE_ADVENTURE).build(), "adventure", "2")
+				.addChild(new GameModeType(plugin, GameModes.CREATIVE, locale -> plugin.getLocales().getLocale(locale).getCommands().getGameMode().getCreative()).build(), "creative", "1")
+				.addChild(new GameModeType(plugin, GameModes.SPECTATOR, locale -> plugin.getLocales().getLocale(locale).getCommands().getGameMode().getSpectator()).build(), "spectator", "3")
+				.addChild(new GameModeType(plugin, GameModes.SURVIVAL, locale -> plugin.getLocales().getLocale(locale).getCommands().getGameMode().getSurvival()).build(), "survival", "0")
+				.addChild(new GameModeType(plugin, GameModes.ADVENTURE, locale -> plugin.getLocales().getLocale(locale).getCommands().getGameMode().getAdventure()).build(), "adventure", "2")
 				.build();
 	}
 

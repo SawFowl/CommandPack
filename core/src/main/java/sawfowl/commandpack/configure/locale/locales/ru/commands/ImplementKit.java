@@ -73,8 +73,8 @@ public class ImplementKit implements Kit {
 	}
 
 	@Override
-	public Component getNotEnoughMoney() {
-		return notEnoughMoney;
+	public Component getNotEnoughMoney(Component price) {
+		return Text.of(notEnoughMoney).replace(Placeholders.VALUE, price).get();
 	}
 
 	@Override

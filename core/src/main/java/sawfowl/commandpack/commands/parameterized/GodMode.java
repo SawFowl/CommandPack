@@ -12,13 +12,13 @@ import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class GodMode extends AbstractParameterizedCommand {
@@ -33,19 +33,19 @@ public class GodMode extends AbstractParameterizedCommand {
 		if(isPlayer) {
 			if(optTarget.isPresent() && !optTarget.get().uniqueId().equals(((ServerPlayer) src).uniqueId())) {
 				if(setGodMode(optTarget.get())) {
-					sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_GODMODE_ENABLE_STAFF, LocalesPaths.COMMANDS_GODMODE_ENABLE);
-				} else sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_GODMODE_DISABLE_STAFF, LocalesPaths.COMMANDS_GODMODE_DISABLE);
+					sendStaffMessage(src, optTarget.get(), getGodMode(locale).getEnableStaff(optTarget.get()), getGodMode(optTarget.get()).getEnable());
+				} else sendStaffMessage(src, optTarget.get(), getGodMode(locale).getDisabeStaff(optTarget.get()), getGodMode(optTarget.get()).getDisabe());
 			} else {
 				delay((ServerPlayer) src, locale, consumer -> {
 					if(setGodMode((ServerPlayer) src)) {
-						src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_GODMODE_ENABLE));
-					} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_GODMODE_DISABLE));
+						src.sendMessage(getGodMode(locale).getEnable());
+					} else src.sendMessage(getGodMode(locale).getDisabe());
 				});
 			}
 		} else {
 			if(setGodMode(optTarget.get())) {
-				sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_GODMODE_ENABLE_STAFF, LocalesPaths.COMMANDS_GODMODE_ENABLE);
-			} else sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_GODMODE_DISABLE_STAFF, LocalesPaths.COMMANDS_GODMODE_DISABLE);
+				sendStaffMessage(src, optTarget.get(), getGodMode(locale).getEnableStaff(optTarget.get()), getGodMode(optTarget.get()).getEnable());
+			} else sendStaffMessage(src, optTarget.get(), getGodMode(locale).getDisabeStaff(optTarget.get()), getGodMode(optTarget.get()).getDisabe());
 		}
 	}
 
@@ -56,7 +56,7 @@ public class GodMode extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.GODMODE_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.GODMODE_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent()));
 	}
 
 	@Override
@@ -73,14 +73,22 @@ public class GodMode extends AbstractParameterizedCommand {
 		return player.get(Keys.INVULNERABLE).orElse(false);
 	}
 
-	private void sendStaffMessage(Audience src, Locale staffLocale, ServerPlayer target, Object[] pathStaff, Object[] pathPlayer) {
-		src.sendMessage(getComponent(staffLocale, pathStaff));
-		target.sendMessage(getComponent(staffLocale, pathPlayer));
+	private void sendStaffMessage(Audience src, ServerPlayer target, Component staff, Component player) {
+		src.sendMessage(staff);
+		target.sendMessage(player);
 	}
 
 	@Override
 	public String command() {
 		return "godmode";
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.GodMode getGodMode(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getGodMode();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.GodMode getGodMode(ServerPlayer player) {
+		return getGodMode(player.locale());
 	}
 
 }

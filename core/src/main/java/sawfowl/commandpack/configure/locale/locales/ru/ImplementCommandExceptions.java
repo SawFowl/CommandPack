@@ -49,6 +49,10 @@ public class ImplementCommandExceptions implements CommandExceptions {
 	private Component messageNotPresent = TextUtils.deserializeLegacy("&cYou didn't enter a message.");
 	@Setting("ReasonNotPresent")
 	private Component reasonNotPresent = TextUtils.deserializeLegacy("&cYou need to specify a reason.");
+	@Setting("LocaleNotPresent")
+	private Component localeNotPresent = TextUtils.deserializeLegacy("&cYou must specify the locale.");
+	@Setting("CurrencyNotPresent")
+	private Component сurrencyNotPresent = TextUtils.deserializeLegacy("&cYou must specify the currency.");
 	@Setting("TargetSelf")
 	private Component targetSelf = TextUtils.deserializeLegacy("&cYou can't point to yourself.");
 	@Setting("Cooldown")
@@ -144,6 +148,16 @@ public class ImplementCommandExceptions implements CommandExceptions {
 	@Override
 	public Component getReasonNotPresent() {
 		return reasonNotPresent;
+	}
+
+	@Override
+	public Component getLocaleNotPresent() {
+		return localeNotPresent;
+	}
+
+	@Override
+	public Component getCurrencyNotPresent() {
+		return сurrencyNotPresent;
 	}
 
 	@Override

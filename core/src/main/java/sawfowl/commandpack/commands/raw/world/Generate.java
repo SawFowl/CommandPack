@@ -29,8 +29,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Generate extends AbstractWorldCommand {
 
@@ -64,16 +62,16 @@ public class Generate extends AbstractWorldCommand {
 				Sponge.asyncScheduler().submit(Task.builder().interval(interval.orElse(5), TimeUnit.SECONDS).plugin(getContainer()).execute(fillTask).build());
 				tasks.put(world.key().asString(), fillTask);
 			}
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_START_GENERATE).replace(Placeholders.WORLD, world.key().asString()).get());
+			audience.sendMessage(getWorld(locale).getGenerate().getStart(world));
 		} else if(action.equals("pause")) {
-			if(!tasks.containsKey(world.key().asString())) exception(getText(locale, LocalesPaths.COMMANDS_WORLD_NOT_STARTED_GENERATE).replace(Placeholders.WORLD, world.key().asString()).get());
+			if(!tasks.containsKey(world.key().asString())) exception(getWorld(locale).getGenerate().getNotStarted(world));
 			tasks.get(world.key().asString()).stop().sendDebugMessage();
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_PAUSE_GENERATE).replace(Placeholders.WORLD, world.key().asString()).get());
+			audience.sendMessage(getWorld(locale).getGenerate().getPause(world));
 		} else if(action.equals("stop")) {
-			if(!tasks.containsKey(world.key().asString())) exception(getText(locale, LocalesPaths.COMMANDS_WORLD_NOT_STARTED_GENERATE).replace(Placeholders.WORLD, world.key().asString()).get());
-			if(!tasks.get(world.key().asString()).isCancelled()) exception(locale, LocalesPaths.COMMANDS_WORLD_NOT_PAUSED_GENERATE);
+			if(!tasks.containsKey(world.key().asString())) exception(getWorld(locale).getGenerate().getNotStarted(world));
+			if(!tasks.get(world.key().asString()).isCancelled()) exception(getWorld(locale).getGenerate().getNotPaused());
 			tasks.remove(world.key().asString());
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_STOP_GENERATE).replace(Placeholders.WORLD, world.key().asString()).get());
+			audience.sendMessage(getWorld(locale).getGenerate().getStop(world));
 		}
 	}
 
@@ -100,11 +98,11 @@ public class Generate extends AbstractWorldCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createWorldArgument(false, false, 0, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT)),
-			RawArguments.createStringArgument("Action", actions, false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
-			RawArguments.createIntegerArgument("Interval", new ArrayList<>(), true, true, 2, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
-			RawArguments.createLongArgument("MaxMemory", new ArrayList<>(), true, true, 3, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
-			RawArguments.createIntegerArgument("Chunks", new ArrayList<>(), true, true, 4, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createWorldArgument(false, false, 0, null, null, null, null, locale -> getExceptions(locale).getWorldNotPresent()),
+			RawArguments.createStringArgument("Action", actions, false, false, 1, null, null, null, null, locale -> getExceptions(locale).getTypeNotPresent()),
+			RawArguments.createIntegerArgument("Interval", new ArrayList<>(), true, true, 2, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent()),
+			RawArguments.createLongArgument("MaxMemory", new ArrayList<>(), true, true, 3, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent()),
+			RawArguments.createIntegerArgument("Chunks", new ArrayList<>(), true, true, 4, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 
@@ -189,7 +187,7 @@ public class Generate extends AbstractWorldCommand {
 
 		void sendDebugMessage() {
 			lastSendMessage = getCurrentTime();
-			plugin.getLogger().info(getMessage().replace(Placeholders.WORLD, world.key().asString()).replace(Placeholders.VALUE, getFilledPercent()).replace(Placeholders.LOCATION, current.toString()));
+			plugin.getLogger().info(plugin.getLocales().getSystemLocale().getCommands().getWorld().getGenerate().getDebug(world, getFilledPercent(), current));
 		}
 
 		private Vector3i nextPos(Vector3i current) {
@@ -201,13 +199,9 @@ public class Generate extends AbstractWorldCommand {
 			return Runtime.getRuntime().totalMemory() / 1024 / 1024;
 		}
 
-		private String getMessage() {
-			return getString(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_WORLD_DEBUG_GENERATE);
-		}
-
-		private String getFilledPercent() {
+		private double getFilledPercent() {
 			int value = (int) (((double) generated / totalChunksToGenerate) * 100);
-			return String.valueOf(value > 100 ? 100 : value);
+			return value > 100 ? 100 : value;
 		}
 
 		private int calcTotalChunks() {

@@ -8,7 +8,7 @@ public interface BanInfo {
 
 	Component getNotPresent();
 
-	Component getSuccess(Component source, String created, String expire, Component reason);
+	Component getSuccess(Component source, String created, Component expire, Component reason);
 
 	Component getTitle(String player);
 

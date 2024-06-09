@@ -21,8 +21,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Tell extends AbstractRawCommand {
@@ -36,17 +34,17 @@ public class Tell extends AbstractRawCommand {
 		ServerPlayer target = args.<ServerPlayer>get(0).get();
 		Component message = text(args.<String>get(1).get());
 		if(isPlayer) {
-			if(!cause.hasPermission(Permissions.TELL_STAFF) && target.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
+			if(!cause.hasPermission(Permissions.TELL_STAFF) && target.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)) exception(getExceptions(locale).getPlayerNotPresent());
 			ServerPlayer player = (ServerPlayer) audience;
-			if(target.uniqueId().equals(player.uniqueId())) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_TARGET_SELF);
+			if(target.uniqueId().equals(player.uniqueId())) exception(getExceptions(locale).getTargetSelf());
 			delay(player, locale, consumer -> {
-				player.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, target.get(Keys.CUSTOM_NAME).orElse(text(target.name())), message).get());
-				target.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, player.get(Keys.CUSTOM_NAME).orElse(text(player.name())), message).get());
+				player.sendMessage(getTell(locale).getSuccess(target.get(Keys.DISPLAY_NAME).orElse(text(target.name())), message));
+				target.sendMessage(getTell(target).getSuccessTarget(player.get(Keys.DISPLAY_NAME).orElse(text(player.name())), message));
 				plugin.getPlayersData().getTempData().addReply(target, player);
 			});
 		} else {
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {target.get(Keys.CUSTOM_NAME).orElse(text(target.name())), message}).get());
-			target.sendMessage(getText(locale, LocalesPaths.COMMANDS_TELL_SUCCESS_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text("&4Server"), message}).get());
+			audience.sendMessage(getTell(locale).getSuccess(target.get(Keys.DISPLAY_NAME).orElse(text(target.name())), message));
+			target.sendMessage(getTell(target).getSuccessTarget(text("&4Server"), message));
 			plugin.getPlayersData().getTempData().addReply(target, audience);
 		}
 	}
@@ -79,14 +77,22 @@ public class Tell extends AbstractRawCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createPlayerArgument(false, false, 0, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
-			RawArguments.createRemainingJoinedStringsArgument("Message", false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createPlayerArgument(false, false, 0, null, null, null, locale -> getExceptions(locale).getPlayerNotPresent()),
+			RawArguments.createRemainingJoinedStringsArgument("Message", false, false, 1, null, null, null, null, locale -> getExceptions(locale).getMessageNotPresent())
 		);
 	}
 
 	@Override
 	public List<RawCommand> childCommands() {
 		return null;
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Tell getTell(Locale locale) {
+		return getCommands(locale).getTell();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Tell getTell(ServerPlayer player) {
+		return getTell(player.locale());
 	}
 
 }

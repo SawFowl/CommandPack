@@ -25,8 +25,8 @@ public class ImplementGameRule implements GameRule {
 	private Component unknownType = TextUtils.deserializeLegacy("&cFailed to determine the type of game rule &e" + Placeholders.RULE + "&c. No changes have been made.");
 
 	@Override
-	public Component getSuccess(Component gamerule, ServerWorld world, int radius) {
-		return Text.of(success).replace(Placeholders.RULE, gamerule).replace(Placeholders.WORLD, world.key().asString()).replace(Placeholders.VALUE, radius).get();
+	public Component getSuccess(String gamerule, ServerWorld world, Object value) {
+		return Text.of(success).replace(Placeholders.RULE, gamerule).replace(Placeholders.WORLD, world.key().asString()).replace(Placeholders.VALUE, value).get();
 	}
 
 	@Override
@@ -35,12 +35,12 @@ public class ImplementGameRule implements GameRule {
 	}
 
 	@Override
-	public Component getIncorrectValue(Component value) {
+	public Component getIncorrectValue(String value) {
 		return Text.of(success).replace(Placeholders.RULE, value).get();
 	}
 
 	@Override
-	public Component getUnknownType(Component gamerule) {
+	public Component getUnknownType(String gamerule) {
 		return Text.of(success).replace(Placeholders.RULE, gamerule).get();
 	}
 

@@ -20,7 +20,7 @@ public interface Kit {
 
 	Component getGiveLimit();
 
-	Component getNotEnoughMoney();
+	Component getNotEnoughMoney(Component price);
 
 	Component getSuccess(Component kitName);
 

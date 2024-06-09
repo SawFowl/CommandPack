@@ -11,16 +11,12 @@ import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.JoinConfiguration;
 
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class List extends AbstractParameterizedCommand {
@@ -35,11 +31,14 @@ public class List extends AbstractParameterizedCommand {
 			ServerPlayer player = (ServerPlayer) src;
 			delay(player, locale, consumer -> {
 				if(!player.hasPermission(Permissions.LIST_STAFF)) {
-					java.util.List<Component> list = Sponge.server().onlinePlayers().stream().filter(p -> !p.get(Keys.VANISH_STATE).isPresent() || !p.get(Keys.VANISH_STATE).get().invisible()).map(p -> text(p.name())).collect(Collectors.toList());
-					player.sendMessage(getText(locale, LocalesPaths.COMMANDS_LIST_SUCCESS).replace(Placeholders.VALUE, String.valueOf(list.size())).append(Component.join(JoinConfiguration.separator(text(", ")), list)).get());
-				} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_LIST_SUCCESS).replace(Placeholders.VALUE, Sponge.server().onlinePlayers().size()).get().append(Component.join(JoinConfiguration.separator(text(", ")), Sponge.server().onlinePlayers().stream().map(p -> p.get(Keys.VANISH_STATE).isPresent() && p.get(Keys.VANISH_STATE).get().invisible() ? getText(locale, LocalesPaths.COMMANDS_LIST_VANISHED).replace(Placeholders.PLAYER, p.name()).get() : text(p.name())).collect(Collectors.toList()))));
+					player.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getList().getSuccess(Sponge.server().onlinePlayers().stream().filter(p -> !p.get(Keys.VANISH_STATE).isPresent() || !p.get(Keys.VANISH_STATE).get().invisible()).map(p -> text(p.name())).collect(Collectors.toList())));
+				} else src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getList().getSuccess(Sponge.server().onlinePlayers().stream().map(p -> isVanished(p) ? plugin.getLocales().getLocale(locale).getCommands().getList().getVanished(p) : text(p.name())).collect(Collectors.toList())));
 			});
-		} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_LIST_SUCCESS).replace(Placeholders.VALUE, Sponge.server().onlinePlayers().size()).get().append(Component.join(JoinConfiguration.separator(text(", ")), Sponge.server().onlinePlayers().stream().map(p -> p.get(Keys.VANISH_STATE).isPresent() && p.get(Keys.VANISH_STATE).get().invisible() ? getText(locale, LocalesPaths.COMMANDS_LIST_VANISHED).replace(Placeholders.PLAYER, p.name()).get() : text(p.name())).collect(Collectors.toList()))));
+		} else src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getList().getSuccess(Sponge.server().onlinePlayers().stream().map(p -> isVanished(p) ? plugin.getLocales().getLocale(locale).getCommands().getList().getVanished(p) : text(p.name())).collect(Collectors.toList())));
+	}
+
+	private boolean isVanished(ServerPlayer player) {
+		return player.get(Keys.VANISH_STATE).isPresent() && player.get(Keys.VANISH_STATE).get().invisible();
 	}
 
 	@Override

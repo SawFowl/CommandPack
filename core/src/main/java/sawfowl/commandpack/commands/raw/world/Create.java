@@ -30,8 +30,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Create extends AbstractWorldCommand {
@@ -69,7 +67,7 @@ public class Create extends AbstractWorldCommand {
 				world.properties().offer(Keys.WORLD_GEN_CONFIG, WorldGenerationConfig.builder().from(world.properties().worldGenerationConfig()).generateStructures(structures).generateBonusChest(bonusChest).build());
 			}
 			world.setBorder(world.border().toBuilder().initialDiameter(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().border().diameter()).build());
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_CREATE).replace(Placeholders.WORLD, template.key().asString()).get());
+			audience.sendMessage(getCommands(locale).getWorld().getCreate(template.key().asString()));
 		});
 	}
 
@@ -96,12 +94,12 @@ public class Create extends AbstractWorldCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createWorldTypeArgument(false, false, 0, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT)),
-			RawArguments.createStringArgument("ChunkGenerator", plugin.getAPI().getAvailableGenerators(), false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT)),
-			RawArguments.createStringArgument("Name", new ArrayList<>(), false, false, 2, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT)),
-			RawArguments.createStringArgument("Seed", new ArrayList<>(), true, true, 3, "0", null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
-			RawArguments.createBooleanArgument("Structures", true, true, 4, false, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
-			RawArguments.createBooleanArgument("BonusChest", true, true, 5, false, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createWorldTypeArgument(false, false, 0, null, null, null, locale -> getExceptions(locale).getTypeNotPresent()),
+			RawArguments.createStringArgument("ChunkGenerator", plugin.getAPI().getAvailableGenerators(), false, false, 1, null, null, null, null, locale -> getExceptions(locale).getTypeNotPresent()),
+			RawArguments.createStringArgument("Name", new ArrayList<>(), false, false, 2, null, null, null, null, locale -> getExceptions(locale).getNameNotPresent()),
+			RawArguments.createStringArgument("Seed", new ArrayList<>(), true, true, 3, "0", null, null, null, locale -> getExceptions(locale).getValueNotPresent()),
+			RawArguments.createBooleanArgument("Structures", true, true, 4, false, null, null, null, locale -> getExceptions(locale).getBooleanNotPresent()),
+			RawArguments.createBooleanArgument("BonusChest", true, true, 5, false, null, null, null, locale -> getExceptions(locale).getBooleanNotPresent())
 		);
 	}
 

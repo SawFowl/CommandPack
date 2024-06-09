@@ -24,8 +24,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Teleport extends AbstractWorldCommand {
 
@@ -43,28 +41,28 @@ public class Teleport extends AbstractWorldCommand {
 				if(!player.get().uniqueId().equals(((ServerPlayer) audience).uniqueId())) {
 					plugin.getPlayersData().getTempData().setPreviousLocation(player.get());
 					player.get().setLocation(location);
-					player.get().sendMessage(getText(player.get().locale(), LocalesPaths.COMMANDS_WORLD_TELEPORT).replace(Placeholders.WORLD, world.key().asString()).get());
-					audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_TELEPORT_OTHER).replace(new String[] {Placeholders.PLAYER, Placeholders.WORLD}, player.get().name(), world.key().asString()).get());
+					player.get().sendMessage(getWorld(player.get().locale()).getTeleport(location.worldKey().asString()));
+					audience.sendMessage(getWorld(locale).getTeleportStaff(player.get(), location.worldKey().asString()));
 				} else {
 					delay(((ServerPlayer) audience), locale, consumer -> {
 						plugin.getPlayersData().getTempData().setPreviousLocation(((ServerPlayer) audience));
 						((ServerPlayer) audience).setLocation(location);
-						audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_TELEPORT).replace(Placeholders.WORLD, world.key().asString()).get());
+						audience.sendMessage(getWorld(locale).getTeleport(location.worldKey().asString()));
 					});
 				}
 			} else {
 				delay(((ServerPlayer) audience), locale, consumer -> {
 					plugin.getPlayersData().getTempData().setPreviousLocation(((ServerPlayer) audience));
 					((ServerPlayer) audience).setLocation(location);
-					audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_TELEPORT).replace(Placeholders.WORLD, world.key().asString()).get());
+					audience.sendMessage(getWorld(locale).getTeleport(location.worldKey().asString()));
 				});
 			}
 		} else {
 			ServerPlayer target = player.get();
 			plugin.getPlayersData().getTempData().setPreviousLocation(target);
 			target.setLocation(location);
-			target.sendMessage(getText(target.locale(), LocalesPaths.COMMANDS_WORLD_TELEPORT).replace(Placeholders.WORLD, world.key().asString()).get());
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_TELEPORT_OTHER).replace(new String[] {Placeholders.PLAYER, Placeholders.WORLD}, new Object[] {target.name(), world.key().asString()}).get());
+			target.sendMessage(getWorld(target.locale()).getTeleport(location.worldKey().asString()));
+			audience.sendMessage(getWorld(locale).getTeleportStaff(target, location.worldKey().asString()));
 		}
 	}
 
@@ -92,7 +90,7 @@ public class Teleport extends AbstractWorldCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			createWorldArg(),
-			RawArguments.createPlayerArgument(true, false, 1, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT))
+			RawArguments.createPlayerArgument(true, false, 1, null, null, null, locale -> getExceptions(locale).getPlayerNotPresent())
 		);
 	}
 

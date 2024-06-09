@@ -10,12 +10,12 @@ public interface Balance {
 
 	Component getTitle();
 
-	Component getTitleOther(String player);
+	Component getTitleOther(Component player);
 
 	Component getElement(Currency currency, BigDecimal value);
 
 	Component getElementOther(Currency currency, BigDecimal value);
 
-	Component getHiden(String player);
+	Component getHiden(Component player);
 
 }

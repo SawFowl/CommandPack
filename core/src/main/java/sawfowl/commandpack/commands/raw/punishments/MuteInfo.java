@@ -1,6 +1,8 @@
 package sawfowl.commandpack.commands.raw.punishments;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,9 +24,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.commandpack.utils.TimeConverter;
 
 @Register
 public class MuteInfo extends AbstractRawCommand {
@@ -36,12 +35,12 @@ public class MuteInfo extends AbstractRawCommand {
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
 		Mute mute = args.<Mute>get(0).get();
-		Component title = getText(locale, LocalesPaths.COMMANDS_MUTEINFO_TITLE).replace(Placeholders.PLAYER, mute.getName()).get();
+		Component title = getCommands(locale).getMuteInfo().getTitle(mute.getName());
 		if(isPlayer) {
 			delay((ServerPlayer) audience, locale, consumer -> {
-				sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_SUCCESS).replace(new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, mute.getSource().orElse(text("n/a")), text(TimeConverter.toString(mute.getCreated())), mute.getExpiration().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_PERMANENT))), mute.getReason().orElse(text("-"))).get()));
+				sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getCommands(locale).getMuteInfo().getSuccess(mute.getSource().orElse(text("&4Server")), created(locale, mute), expire(locale, mute), mute.getReason().orElse(text("-")))));
 			});
-		} else sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_SUCCESS).replace(new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, new Component[] {mute.getSource().orElse(text("n/a")), text(TimeConverter.toString(mute.getCreated())), mute.getExpiration().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_MUTEINFO_PERMANENT))), mute.getReason().orElse(text("-"))}).get()));
+		} else sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getCommands(locale).getMuteInfo().getSuccess(mute.getSource().orElse(text("&4Server")), created(locale, mute), expire(locale, mute), mute.getReason().orElse(text("-")))));
 	}
 
 	@Override
@@ -71,7 +70,7 @@ public class MuteInfo extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createMuteArgument(false, false, 0, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_MUTEINFO_NOT_PRESENT)));
+		return Arrays.asList(RawArguments.createMuteArgument(false, false, 0, null, null, null, locale -> getCommands(locale).getMuteInfo().getNotPresent()));
 	}
 
 	@Override
@@ -90,6 +89,21 @@ public class MuteInfo extends AbstractRawCommand {
 	@Override
 	public List<RawCommand> childCommands() {
 		return null;
+	}
+
+	private String created(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(mute.getCreated().toEpochMilli());
+		return format.format(calendar.getTime());
+	}
+
+	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
+		if(!mute.getExpiration().isPresent()) return plugin.getLocales().getLocale(locale).getCommands().getMuteInfo().getPermanent();
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
+		return text(format.format(calendar.getTime()));
 	}
 
 }

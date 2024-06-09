@@ -2,10 +2,12 @@ package sawfowl.commandpack.configure.locale.locales.def.commands;
 
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.server.ServerWorld;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.math.vector.Vector3i;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.World;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.world.Difficulty;
@@ -19,6 +21,7 @@ import sawfowl.commandpack.configure.locale.locales.def.commands.world.Implement
 import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
+@ConfigSerializable
 public class ImplementWorld implements World {
 
 	public ImplementWorld() {}

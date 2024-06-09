@@ -27,28 +27,23 @@ public class ImplementSpeed implements Speed {
 	private Component setDefault = TextUtils.deserializeLegacy("default");
 
 	@Override
-	public Component getSetSelf(double value) {
-		return Text.of(setSelf).replace(Placeholders.VALUE, value).get();
+	public Component getSetSelf(int value) {
+		return Text.of(setSelf).replace(Placeholders.VALUE, value == 1 ? setDefault : Component.text(value)).get();
 	}
 
 	@Override
-	public Component getSetByStaff(ServerPlayer player, double value) {
-		return Text.of(setByStaff).replace(Placeholders.PLAYER, player.name()).replace(Placeholders.VALUE, value).get();
+	public Component getSetByStaff(ServerPlayer player, int value) {
+		return Text.of(setByStaff).replace(Placeholders.PLAYER, player.name()).replace(Placeholders.VALUE, value == 1 ? setDefault : Component.text(value)).get();
 	}
 
 	@Override
-	public Component getSetOther(double value) {
-		return Text.of(setOther).replace(Placeholders.VALUE, value).get();
+	public Component getSetOther(int value) {
+		return Text.of(setOther).replace(Placeholders.VALUE, value == 1 ? setDefault : Component.text(value)).get();
 	}
 
 	@Override
 	public Component getInFly() {
 		return inFly;
-	}
-
-	@Override
-	public Component getSetDefault() {
-		return setDefault;
 	}
 
 }

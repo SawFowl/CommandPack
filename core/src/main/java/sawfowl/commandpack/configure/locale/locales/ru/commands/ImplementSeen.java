@@ -166,22 +166,22 @@ public class ImplementSeen implements Seen {
 
 	@Override
 	public Text getWarns() {
-		return null;
+		return Text.of(warns);
 	}
 
 	@Override
-	public Text getYes() {
-		return Text.of(yes);
+	public Component getYes() {
+		return yes;
 	}
 
 	@Override
-	public Text getNo() {
-		return Text.of(no);
+	public Component getNo() {
+		return no;
 	}
 
 	@Override
-	public Text getPadding() {
-		return Text.of(padding);
+	public Component getPadding() {
+		return padding;
 	}
 
 }

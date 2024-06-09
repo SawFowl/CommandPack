@@ -22,7 +22,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Anvil extends AbstractParameterizedCommand {
@@ -39,7 +38,7 @@ public class Anvil extends AbstractParameterizedCommand {
 			menu.setTitle(ItemTypes.ANVIL.get().asComponent());
 			if(target.isPresent()) {
 				menu.open(target.get());
-				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_ANVIL));
+				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getAnvil().getSuccessStaff(target.get()));
 			} else delay((ServerPlayer) src, locale, consumer -> {
 				menu.open((ServerPlayer) src);
 			});
@@ -48,7 +47,7 @@ public class Anvil extends AbstractParameterizedCommand {
 			InventoryMenu menu = ViewableInventory.builder().type(ContainerTypes.ANVIL).completeStructure().carrier(target).plugin(plugin.getPluginContainer()).build().asMenu();
 			menu.setTitle(ItemTypes.CRAFTING_TABLE.get().asComponent());
 			menu.open(target);
-			src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_ANVIL));
+			src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getAnvil().getSuccessStaff(target));
 		}
 	}
 
@@ -64,7 +63,7 @@ public class Anvil extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.ANVIL_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.ANVIL_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent()));
 	}
 
 	@Override

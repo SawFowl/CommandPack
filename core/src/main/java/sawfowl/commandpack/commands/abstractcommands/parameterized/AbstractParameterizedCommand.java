@@ -10,7 +10,6 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.plugin.PluginContainer;
 
@@ -77,10 +76,6 @@ public abstract class AbstractParameterizedCommand extends AbstractPluginCommand
 
 	protected CommandExceptions getExceptions(Locale locale) {
 		return plugin.getLocales().getLocale(locale).getCommandExceptions();
-	}
-
-	protected CommandExceptions getExceptions(ServerPlayer player) {
-		return getExceptions(player.locale());
 	}
 
 }

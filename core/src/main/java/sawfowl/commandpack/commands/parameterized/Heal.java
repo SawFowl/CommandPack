@@ -19,8 +19,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Heal extends AbstractParameterizedCommand {
@@ -31,21 +29,20 @@ public class Heal extends AbstractParameterizedCommand {
 
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
+		Optional<ServerPlayer> target = getPlayer(context);
 		if(isPlayer) {
-			Optional<ServerPlayer> target = getPlayer(context);
 			if(target.isPresent() && !target.get().uniqueId().equals(((ServerPlayer) src).uniqueId())) {
 				target.get().offer(Keys.HEALTH, target.get().getOrElse(Keys.MAX_HEALTH, 20d));
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_HEAL_OTHER).replace(Placeholders.PLAYER, target.get().name()).get());
-				target.get().sendMessage(getComponent(target.get(), LocalesPaths.COMMANDS_HEAL_SELF));
-			} else {
+				src.sendMessage(getHeal(locale).getSuccessStaff(target.get()));
+				target.get().sendMessage(getHeal(target.get()).getSuccess());
+			} else delay((ServerPlayer) src, locale, consumer -> {
 				((ServerPlayer) src).offer(Keys.HEALTH, ((ServerPlayer) src).getOrElse(Keys.MAX_HEALTH, 20d));
-				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_HEAL_SELF));
-			}
+				src.sendMessage(getHeal(locale).getSuccess());
+			});
 		} else {
-			ServerPlayer player = getPlayer(context).get();
-			player.offer(Keys.HEALTH, player.getOrElse(Keys.MAX_HEALTH, 20d));
-			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_HEAL_OTHER).replace(Placeholders.PLAYER, player.name()).get());
-			player.sendMessage(getComponent(player, LocalesPaths.COMMANDS_HEAL_SELF));
+			target.get().offer(Keys.HEALTH, target.get().getOrElse(Keys.MAX_HEALTH, 20d));
+			src.sendMessage(getHeal(locale).getSuccessStaff(target.get()));
+			target.get().sendMessage(getHeal(target.get()).getSuccess());
 		}
 	}
 
@@ -61,12 +58,20 @@ public class Heal extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.HEAL_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.HEAL_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent()));
 	}
 
 	@Override
 	public String command() {
 		return "heal";
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Heal getHeal(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getHeal();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Heal getHeal(ServerPlayer player) {
+		return getHeal(player.locale());
 	}
 
 }

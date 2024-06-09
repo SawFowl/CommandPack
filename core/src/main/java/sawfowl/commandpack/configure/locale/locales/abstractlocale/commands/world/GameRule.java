@@ -6,12 +6,12 @@ import net.kyori.adventure.text.Component;
 
 public interface GameRule {
 
-	Component getSuccess(Component gamerule, ServerWorld world, int radius);
+	Component getSuccess(String gamerule, ServerWorld world, Object value);
 
 	Component getList(String value);
 
-	Component getIncorrectValue(Component value);
+	Component getIncorrectValue(String value);
 
-	Component getUnknownType(Component gamerule);
+	Component getUnknownType(String gamerule);
 
 }

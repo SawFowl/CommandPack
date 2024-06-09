@@ -21,8 +21,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Speed extends AbstractParameterizedCommand {
@@ -41,11 +39,11 @@ public class Speed extends AbstractParameterizedCommand {
 				ServerPlayer target = optTarget.get();
 				boolean fly = isFlying(target);
 				setSpeed(target, multiplier, fly);
-				Component staff = getText(locale, LocalesPaths.COMMANDS_SPEED_STAFF).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, text(target.name()), multiplier == 1 ? getComponent(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier)).get();
-				Component other = getText(target, LocalesPaths.COMMANDS_SPEED_OTHER).replace(Placeholders.VALUE, multiplier == 1 ? getComponent(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier)).get();
+				Component staff = getSpeed(locale).getSetByStaff(target, (int) multiplier);
+				Component other = getSpeed(target).getSetOther((int) multiplier);
 				if(fly) {
-					staff = staff.append(getComponent(locale, LocalesPaths.COMMANDS_SPEED_FLY));
-					other = other.append(getComponent(target, LocalesPaths.COMMANDS_SPEED_FLY));
+					staff = staff.append(getSpeed(locale).getInFly());
+					other = other.append(getSpeed(target).getInFly());
 				}
 				src.sendMessage(staff);
 				target.sendMessage(other);
@@ -58,8 +56,8 @@ public class Speed extends AbstractParameterizedCommand {
 				final double mult = multiplier;
 				delay(source, locale, consumer -> {
 					setSpeed(source, mult, fly);
-					Component text = getText(locale, LocalesPaths.COMMANDS_SPEED_SELF).replace(Placeholders.VALUE, mult == 1 ? getComponent(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) mult)).get();
-					if(fly) text = text.append(getComponent(locale, LocalesPaths.COMMANDS_SPEED_FLY));
+					Component text = getSpeed(locale).getSetSelf((int) mult);
+					if(fly) text = text.append(getSpeed(locale).getInFly());
 					source.sendMessage(text);
 				});
 			}
@@ -67,11 +65,11 @@ public class Speed extends AbstractParameterizedCommand {
 			ServerPlayer target = optTarget.get();
 			boolean fly = isFlying(target);
 			setSpeed(target, multiplier, fly);
-			Component staff = getText(locale, LocalesPaths.COMMANDS_SPEED_STAFF).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, new Component[] {text(target.name()), multiplier == 1 ? getComponent(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier)}).get();
-			Component other = getText(target, LocalesPaths.COMMANDS_SPEED_OTHER).replace(Placeholders.VALUE, multiplier == 1 ? getComponent(locale, LocalesPaths.COMMANDS_SPEED_DEFAULT) : text((int) multiplier)).get();
+			Component staff = getSpeed(locale).getSetByStaff(target, (int) multiplier);
+			Component other = getSpeed(target).getSetOther((int) multiplier);
 			if(fly) {
-				staff = staff.append(getComponent(locale, LocalesPaths.COMMANDS_SPEED_FLY));
-				other = other.append(getComponent(target, LocalesPaths.COMMANDS_SPEED_FLY));
+				staff = staff.append(getSpeed(locale).getInFly());
+				other = other.append(getSpeed(target).getInFly());
 			}
 			src.sendMessage(staff);
 			target.sendMessage(other);
@@ -91,8 +89,8 @@ public class Speed extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createRangedInteger("Speed", 0, 5, false), false, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createPlayer(Permissions.SPEED_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
+			ParameterSettings.of(CommandParameters.createRangedInteger("Speed", 0, 5, false), false, locale -> getExceptions(locale).getValueNotPresent()),
+			ParameterSettings.of(CommandParameters.createPlayer(Permissions.SPEED_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent())
 		);
 	}
 
@@ -116,6 +114,14 @@ public class Speed extends AbstractParameterizedCommand {
 
 	private boolean isFlying(ServerPlayer player) {
 		return player.get(Keys.CAN_FLY).orElse(false) && player.get(Keys.IS_FLYING).orElse(false);
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Speed getSpeed(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getSpeed();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Speed getSpeed(ServerPlayer player) {
+		return getSpeed(player.locale());
 	}
 
 }

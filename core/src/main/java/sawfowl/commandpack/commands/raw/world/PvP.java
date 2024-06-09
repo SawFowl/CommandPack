@@ -19,8 +19,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class PvP extends AbstractWorldCommand {
 
@@ -33,7 +31,7 @@ public class PvP extends AbstractWorldCommand {
 		ServerWorld world = args.getWorld(0).get();
 		boolean pvp = args.getBoolean(1).get();
 		world.properties().setPvp(pvp);
-		audience.sendMessage(getText(locale, pvp ? LocalesPaths.COMMANDS_WORLD_ENABLE_PVP : LocalesPaths.COMMANDS_WORLD_DISABLE_PVP).replace(Placeholders.WORLD, args.getInput()[0]).get());
+		audience.sendMessage(pvp ? getWorld(locale).getEnablePvP(world) : getWorld(locale).getDisablePvP(world));
 	}
 
 	@Override
@@ -59,8 +57,8 @@ public class PvP extends AbstractWorldCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createWorldArgument(false, false, 0, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT)),
-			RawArguments.createBooleanArgument("Value", false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createWorldArgument(false, false, 0, null, null, null, null, locale -> getExceptions(locale).getWorldNotPresent()),
+			RawArguments.createBooleanArgument("Value", false, false, 1, null, null, null, null, locale -> getExceptions(locale).getBooleanNotPresent())
 		);
 	}
 

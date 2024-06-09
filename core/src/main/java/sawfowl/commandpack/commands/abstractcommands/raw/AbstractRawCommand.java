@@ -2,6 +2,7 @@ package sawfowl.commandpack.commands.abstractcommands.raw;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,6 +17,8 @@ import sawfowl.commandpack.api.commands.AbstractPluginCommand;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.data.command.Settings;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.CommandExceptions;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.Commands;
 
 public abstract class AbstractRawCommand extends AbstractPluginCommand<CommandPack> implements RawCommand {
 
@@ -68,6 +71,18 @@ public abstract class AbstractRawCommand extends AbstractPluginCommand<CommandPa
 
 	public Optional<ServerPlayer> getPlayer(String name) {
 		return Sponge.server().player(name);
+	}
+
+	protected Commands getCommands(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands();
+	}
+
+	protected Commands getCommands() {
+		return plugin.getLocales().getSystemLocale().getCommands();
+	}
+
+	protected CommandExceptions getExceptions(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommandExceptions();
 	}
 
 }

@@ -25,7 +25,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Enchant extends AbstractPlayerCommand {
@@ -37,9 +36,9 @@ public class Enchant extends AbstractPlayerCommand {
 
 	@Override
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, Mutable arguments, RawArgumentsMap args) throws CommandException {
-		if(src.itemInHand(HandTypes.MAIN_HAND).quantity() == 0) exception(locale, LocalesPaths.COMMANDS_ENCHANT_ITEM_IS_NOT_PRESENT);
+		if(src.itemInHand(HandTypes.MAIN_HAND).quantity() == 0) exception(getCommands(locale).getEnchant().getItemNotPresent());
 		EnchantmentType enchant = args.getEnchantmentType(0).get();
-		if(args.getInput().length == 1) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+		if(args.getInput().length == 1) exception(getExceptions(locale).getValueNotPresent());
 		int level = args.getInteger(1).get();
 		ItemStack stack = src.itemInHand(HandTypes.MAIN_HAND);
 		List<Enchantment> enchantments = stack.get(Keys.APPLIED_ENCHANTMENTS).orElse(new ArrayList<>());
@@ -47,7 +46,7 @@ public class Enchant extends AbstractPlayerCommand {
 		delay(src, locale, consumer -> {
 			stack.offer(Keys.APPLIED_ENCHANTMENTS, enchantments);
 			src.setItemInHand(HandTypes.MAIN_HAND, stack);
-			src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_ENCHANT_SUCCES));
+			src.sendMessage(getCommands(locale).getEnchant().getSuccess());
 		});
 	}
 
@@ -79,8 +78,8 @@ public class Enchant extends AbstractPlayerCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createEnchantmentArgument(false, false, 0, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT)),
-			RawArguments.createIntegerArgument("Level", new ArrayList<>(), true, true, 1, 1, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createEnchantmentArgument(false, false, 0, null, null, null, locale -> getExceptions(locale).getTypeNotPresent()),
+			RawArguments.createIntegerArgument("Level", new ArrayList<>(), true, true, 1, 1, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

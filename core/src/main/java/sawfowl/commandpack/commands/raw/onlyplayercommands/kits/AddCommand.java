@@ -20,7 +20,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class AddCommand extends AbstractKitsEditCommand {
 
@@ -33,10 +32,10 @@ public class AddCommand extends AbstractKitsEditCommand {
 		Kit kit = args.<Kit>get(0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		Optional<String> command = args.get(1);
-		if(!command.isPresent()) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+		if(!command.isPresent()) exception(getExceptions(locale).getValueNotPresent());
 		kitData.addCommands(command.get());
 		kitData.save();
-		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_ADD_COMMAND));
+		src.sendMessage(getCommands(locale).getKits().getAddCommand());
 	}
 
 	@Override
@@ -63,7 +62,7 @@ public class AddCommand extends AbstractKitsEditCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			kitArgument(0, false, false),
-			RawArguments.createRemainingJoinedStringsArgument("Command", false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createRemainingJoinedStringsArgument("Command", false, false, 1, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

@@ -21,8 +21,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class SetBorder extends AbstractWorldCommand {
 
@@ -35,7 +33,7 @@ public class SetBorder extends AbstractWorldCommand {
 		ServerWorld world = args.getWorld(0).get();
 		int radius = args.getInteger(1).get();
 		world.setBorder(WorldBorder.builder().center(world.properties().spawnPosition().x(), world.properties().spawnPosition().z()).targetDiameter(radius).damagePerBlock(world.border().damagePerBlock()).safeZone(world.border().safeZone()).build());
-		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_SETBORDER).replace(new String[] {Placeholders.WORLD, Placeholders.VALUE, Placeholders.LOCATION}, world.key().asString(), radius, world.properties().spawnPosition()).get());
+		audience.sendMessage(getWorld(locale).getSetBorder(world, world.properties().spawnPosition(), radius));
 	}
 
 	@Override
@@ -61,8 +59,8 @@ public class SetBorder extends AbstractWorldCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createWorldArgument(false, false, 0, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT)),
-			RawArguments.createIntegerArgument("Radius", new ArrayList<>(), false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createWorldArgument(false, false, 0, null, null, null, null, locale -> getExceptions(locale).getWorldNotPresent()),
+			RawArguments.createIntegerArgument("Radius", new ArrayList<>(), false, false, 1, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

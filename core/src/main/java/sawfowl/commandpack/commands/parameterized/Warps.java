@@ -21,8 +21,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Warps extends AbstractParameterizedCommand {
@@ -33,26 +31,26 @@ public class Warps extends AbstractParameterizedCommand {
 
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
-		if(plugin.getPlayersData().getAdminWarps().isEmpty() && plugin.getPlayersData().getPlayersWarps().isEmpty()) exception(locale, LocalesPaths.COMMANDS_WARPS_EMPTY);
+		if(plugin.getPlayersData().getAdminWarps().isEmpty() && plugin.getPlayersData().getPlayersWarps().isEmpty()) exception(getWarps(locale).getEmpty());
 		if(!isPlayer) {
-			src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_WARPS_WAIT));
+			src.sendMessage(getWarps(locale).getWait());
 			Sponge.asyncScheduler().executor(plugin.getPluginContainer()).execute(() -> {
 				String warps = "";
 				if(!plugin.getPlayersData().getAdminWarps().isEmpty()) for(String warp : plugin.getPlayersData().getAdminWarps().keySet()) warps = warps.length() == 0 ? "&e" + warp : warps + "&f, &e" + warp;
 				if(!plugin.getPlayersData().getPlayersWarps().isEmpty()) for(Warp warp : plugin.getPlayersData().getPlayersWarps()) warps = warps.length() == 0 ? "&e" + warp.getPlainName() : warps + "&f, &e" + warp.getPlainName();
-				src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_WARPS_LIST).append(text(warps)));
+				src.sendMessage(getWarps(locale).getList(plugin.getPlayersData().getAdminWarps().size() + plugin.getPlayersData().getPlayersWarps().size(), text(warps)));
 			});
 			return;
 		}
 		ServerPlayer player = (ServerPlayer) src;
 		delay(player, locale, consumer -> {
-			player.sendMessage(getComponent(player, LocalesPaths.COMMANDS_WARPS_WAIT));
+			player.sendMessage(getWarps(locale).getWait());
 			List<Component> serverWarps = getServerWarps(player);
 			List<Component> playersWarps = getPlayersWarps(player);
 			Sponge.asyncScheduler().executor(plugin.getPluginContainer()).execute(() -> {
 				if(serverWarps.isEmpty()) {
 					if(playersWarps.isEmpty()) {
-						player.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_WARPS_EMPTY));
+						player.sendMessage(getWarps(locale).getEmpty());
 						return;
 					}
 					sendPlayersWarps(player, playersWarps);
@@ -82,28 +80,28 @@ public class Warps extends AbstractParameterizedCommand {
 	}
 
 	private void sendServerWarps(ServerPlayer player, List<Component> warps) {
-		Component header = getText(player.locale(), LocalesPaths.COMMANDS_WARPS_HEADER).replace(new String[] {Placeholders.SERVER, Placeholders.PLAYER}, getComponent(player.locale(), LocalesPaths.COMMANDS_WARPS_SERVER_GROUP), getComponent(player.locale(), LocalesPaths.COMMANDS_WARPS_PLAYERS_GROUP).clickEvent(SpongeComponents.executeCallback(cause -> {
+		Component header = getWarps(player).getHeader(getWarps(player).getServer(), getWarps(player).getPlayer().clickEvent(SpongeComponents.executeCallback(cause -> {
 			Sponge.asyncScheduler().executor(plugin.getPluginContainer()).execute(() -> {
-				player.sendMessage(getComponent(player, LocalesPaths.COMMANDS_WARPS_WAIT));
+				player.sendMessage(getWarps(player).getWait());
 				List<Component> playersWarps = getPlayersWarps(player);
 				if(!playersWarps.isEmpty()) {
 					sendPlayersWarps(player, playersWarps);
-				} else player.sendMessage(getComponent(player.locale(), LocalesPaths.COMMANDS_WARPS_EMPTY));
+				} else player.sendMessage(getWarps(player).getEmpty());
 			});
-		}))).get();
+		})));
 		sendList(player, header, warps);
 	}
 
 	private void sendPlayersWarps(ServerPlayer player, List<Component> warps) {
-		Component header = getText(player.locale(), LocalesPaths.COMMANDS_WARPS_HEADER).replace(new String[] {Placeholders.SERVER, Placeholders.PLAYER}, getComponent(player.locale(), LocalesPaths.COMMANDS_WARPS_SERVER_GROUP).clickEvent(SpongeComponents.executeCallback(cause -> {
+		Component header = getWarps(player).getHeader(getWarps(player).getServer().clickEvent(SpongeComponents.executeCallback(cause -> {
 			Sponge.asyncScheduler().executor(plugin.getPluginContainer()).execute(() -> {
-				player.sendMessage(getComponent(player, LocalesPaths.COMMANDS_WARPS_WAIT));
+				player.sendMessage(getWarps(player).getWait());
 				List<Component> serverWarps = getServerWarps(player);
 				if(!serverWarps.isEmpty()) {
 					sendServerWarps(player, serverWarps);
-				} else player.sendMessage(getComponent(player.locale(), LocalesPaths.COMMANDS_WARPS_EMPTY));
+				} else player.sendMessage(getWarps(player).getEmpty());
 			});
-		})), getComponent(player.locale(), LocalesPaths.COMMANDS_WARPS_PLAYERS_GROUP)).get();
+		})), getWarps(player).getPlayer());
 		sendList(player, header, warps);
 	}
 
@@ -119,15 +117,15 @@ public class Warps extends AbstractParameterizedCommand {
 	private List<Component> getServerWarps(ServerPlayer player) {
 		List<Component> list = new ArrayList<>();
 		plugin.getPlayersData().getAdminWarps().forEach((name, warp) -> {
-			Component delete = !player.hasPermission(Permissions.WARP_STAFF) ? Component.empty() : getComponent(player.locale(), LocalesPaths.REMOVE).clickEvent(SpongeComponents.executeCallback(cause -> {
+			Component delete = !player.hasPermission(Permissions.WARP_STAFF) ? Component.empty() : plugin.getLocales().getLocale(player).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(cause -> {
 				plugin.getPlayersData().removeAdminWarp(name);
 				sendServerWarps(player, getServerWarps(player));
 			}));
-			Component teleport = player.hasPermission(Permissions.getWarpPermission(name)) || player.hasPermission(Permissions.WARP_STAFF) ? getComponent(player.locale(), LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback( cause -> {
+			Component teleport = player.hasPermission(Permissions.getWarpPermission(name)) || player.hasPermission(Permissions.WARP_STAFF) ? plugin.getLocales().getLocale(player).getButtons().getTeleportClickable().clickEvent(SpongeComponents.executeCallback( cause -> {
 				plugin.getPlayersData().getTempData().setPreviousLocation(player);
 				warp.moveHere(player);
-				player.sendMessage(getText(player.locale(), LocalesPaths.COMMANDS_WARP_SUCCESS).replace(Placeholders.WARP, warp.asComponent()).get());
-			})) : getComponent(player.locale(), LocalesPaths.TELEPORT);
+				player.sendMessage(getWarp(player).getSuccess(warp.asComponent()));
+			})) : plugin.getLocales().getLocale(player).getButtons().getTeleport();
 			list.add(Component.empty().append(delete).append(teleport).append(warp.asComponent()));
 		});
 		return list;
@@ -136,18 +134,34 @@ public class Warps extends AbstractParameterizedCommand {
 	private List<Component> getPlayersWarps(ServerPlayer player) {
 		List<Component> list = new ArrayList<>();
 		plugin.getPlayersData().getPlayersWarps(warp -> !warp.isPrivate() || player.hasPermission(Permissions.WARP_STAFF) || plugin.getPlayersData().getOrCreatePlayerData(player).containsWarp(warp.getPlainName())).forEach(warp -> {
-			Component delete = !player.hasPermission(Permissions.WARP_STAFF) || !plugin.getPlayersData().getOrCreatePlayerData(player).containsWarp(warp.getPlainName()) ? Component.empty() : getComponent(player.locale(), LocalesPaths.REMOVE).clickEvent(SpongeComponents.executeCallback(cause -> {
+			Component delete = !player.hasPermission(Permissions.WARP_STAFF) || !plugin.getPlayersData().getOrCreatePlayerData(player).containsWarp(warp.getPlainName()) ? Component.empty() : plugin.getLocales().getLocale(player).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(cause -> {
 				plugin.getPlayersData().getOrCreatePlayerData(player).removeWarp(warp.getPlainName());
 				sendPlayersWarps(player, getPlayersWarps(player));
 			}));
-			Component teleport = getComponent(player.locale(), LocalesPaths.TELEPORTCLICKABLE).clickEvent(SpongeComponents.executeCallback( cause -> {
+			Component teleport = plugin.getLocales().getLocale(player).getButtons().getTeleportClickable().clickEvent(SpongeComponents.executeCallback( cause -> {
 				plugin.getPlayersData().getTempData().setPreviousLocation(player);
 				warp.moveHere(player);
-				player.sendMessage(getText(player.locale(), LocalesPaths.COMMANDS_WARP_SUCCESS).replace(Placeholders.WARP, warp.asComponent()).get());
+				player.sendMessage(getWarp(player).getSuccess(warp.asComponent()));
 			}));
 			list.add(Component.empty().append(delete).append(teleport).append(warp.asComponent()));
 		});
 		return list;
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warps getWarps(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getWarps();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warps getWarps(ServerPlayer player) {
+		return getWarps(player.locale());
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warp getWarp(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getWarp();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warp getWarp(ServerPlayer player) {
+		return getWarp(player.locale());
 	}
 
 }

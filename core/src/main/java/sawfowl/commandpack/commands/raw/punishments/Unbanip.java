@@ -21,8 +21,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Unbanip extends AbstractRawCommand {
@@ -35,7 +33,7 @@ public class Unbanip extends AbstractRawCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
 		IP ban = args.<IP>get(0).get();
 		plugin.getPunishmentService().pardon(ban.address());
-		audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_UNBANIP_SUCCESS).replace(Placeholders.VALUE, ban.address().getHostAddress()).get());
+		audience.sendMessage(getCommands().getUnbanIP().getSuccess(ban.address().getHostAddress()));
 	}
 
 	@Override
@@ -65,7 +63,7 @@ public class Unbanip extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createBanIPArgument(false, false, 0, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)));
+		return Arrays.asList(RawArguments.createBanIPArgument(false, false, 0, null, null, null, locale -> getExceptions(locale).getValueNotPresent()));
 	}
 
 	@Override

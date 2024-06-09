@@ -19,7 +19,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class GiveRule extends AbstractKitsEditCommand {
 
@@ -33,18 +32,9 @@ public class GiveRule extends AbstractKitsEditCommand {
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		kitData.setRule(sawfowl.commandpack.api.data.kits.GiveRule.getRule(args.getInput()[1]));
 		kitData.save();
-		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_GIVE_RULE));
+		src.sendMessage(getCommands(locale).getKits().getGiveRule());
 	}
-/*
-	@Override
-	public List<CommandCompletion> complete(CommandCause cause, List<String> args, String currentInput) throws CommandException {
-		if(args.size() == 0) return plugin.getKitService().getKits().stream().map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
-		if(args.size() == 1 && !currentInput.endsWith(" ")) return plugin.getKitService().getKits().stream().filter(kit -> (kit.id().startsWith(args.get(0)))).map(kit -> CommandCompletion.of(kit.id())).collect(Collectors.toList());
-		if(args.size() == 1 && currentInput.endsWith(" ")) return Stream.of(sawfowl.commandpack.api.data.kits.GiveRule.values()).map(rule -> CommandCompletion.of(rule.getName())).collect(Collectors.toList());
-		if(args.size() == 2 && !currentInput.endsWith(" ")) return Stream.of(sawfowl.commandpack.api.data.kits.GiveRule.values()).filter(rule -> (rule.getName().startsWith(args.get(1)))).map(rule -> CommandCompletion.of(rule.getName())).collect(Collectors.toList());
-		return getEmptyCompletion();
-	}
-*/
+
 	@Override
 	public Component shortDescription(Locale locale) {
 		return text("&3Changing the rule for issuing a kit.");
@@ -69,7 +59,7 @@ public class GiveRule extends AbstractKitsEditCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			kitArgument(0, false, false),
-			RawArguments.createStringArgument("Rule", sawfowl.commandpack.api.data.kits.GiveRule.getAllRules(), false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createStringArgument("Rule", sawfowl.commandpack.api.data.kits.GiveRule.getAllRules(), false, false, 1, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

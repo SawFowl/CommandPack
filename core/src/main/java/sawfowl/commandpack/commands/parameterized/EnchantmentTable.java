@@ -33,8 +33,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class EnchantmentTable extends AbstractParameterizedCommand {
@@ -67,7 +65,7 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 			if(target.isPresent()) {
 				levels.put(target.get().uniqueId(), level);
 				menu.open(target.get());
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_ENCHANTMENT_TABLE).replace(Placeholders.PLAYER, target.get().name()).get());
+				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getEnchantmentTable().getSuccessStaff(target.get()));
 			} else {
 				delay((ServerPlayer) src, locale, consumer -> {
 					levels.put(((ServerPlayer) src).uniqueId(), finalLevel);
@@ -81,7 +79,7 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 			InventoryMenu menu = ViewableInventory.builder().type(ContainerTypes.ENCHANTMENT).completeStructure().carrier(target).plugin(plugin.getPluginContainer()).build().asMenu();
 			menu.setTitle(ItemTypes.CRAFTING_TABLE.get().asComponent());
 			menu.open(target);
-			src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_ENCHANTMENT_TABLE));
+			src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getEnchantmentTable().getSuccessStaff(target));
 		}
 	}
 
@@ -98,8 +96,8 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createPlayer(Permissions.ENCHANTMENT_TABLE_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createRangedInteger("Level", Permissions.ENCHANTMENT_TABLE_STAFF, 2, 40, true), true, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
+			ParameterSettings.of(CommandParameters.createPlayer(Permissions.ENCHANTMENT_TABLE_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent()),
+			ParameterSettings.of(CommandParameters.createRangedInteger("Level", Permissions.ENCHANTMENT_TABLE_STAFF, 2, 40, true), true, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

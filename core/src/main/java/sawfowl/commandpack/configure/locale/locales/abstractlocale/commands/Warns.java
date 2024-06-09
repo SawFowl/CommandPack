@@ -12,6 +12,6 @@ public interface Warns {
 
 	Component getReason(Component reason);
 
-	Component getTimes(Component time, int limit);
+	Component getTimes(Component created, Component expire);
 
 }

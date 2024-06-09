@@ -1,7 +1,5 @@
 package sawfowl.commandpack.configure.locale.locales.ru.commands;
 
-import java.math.BigDecimal;
-
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
@@ -38,8 +36,8 @@ public class ImplementBalanceTop implements BalanceTop {
 	}
 
 	@Override
-	public Component getElement(String pos, String player, BigDecimal value) {
-		return Text.of(element).replace(Placeholders.RANK, pos).replace(Placeholders.PLAYER, player).replace(Placeholders.VALUE, value.doubleValue()).get();
+	public Component getElement(Component pos, Component player, Component value) {
+		return Text.of(element).replace(Placeholders.RANK, pos).replace(Placeholders.PLAYER, player).replace(Placeholders.VALUE, value).get();
 	}
 
 }

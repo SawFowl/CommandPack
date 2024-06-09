@@ -27,8 +27,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 @Register
@@ -40,21 +38,22 @@ public class Warnings extends AbstractRawCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
-		if(args.getInput().length == 0 && !isPlayer) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT);
+		if(args.getInput().length == 0 && !isPlayer) exception(getExceptions(locale).getUserNotPresent());
 		Optional<Warns> optWarns = args.get(0);
+		String playerName = args.getInput()[0];
 		if(!isPlayer) {
 			if(optWarns.isPresent()) {
-				audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, args.getInput()[0], optWarns.get().inAllTime()).get());
+				audience.sendMessage(getWarns(locale).getAllTimeTarget(playerName, optWarns.get().inAllTime()));
 				sendWarnsList(audience, locale, optWarns.get(), false, isPlayer);
-			} else audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, args.getInput()[0], 0).get());
+			} else audience.sendMessage(getWarns(locale).getAllTimeTarget(playerName, 0));
 		} else if(optWarns.isPresent() && !optWarns.get().getUniqueId().equals(((ServerPlayer) audience).uniqueId())) {
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME_TARGET).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, optWarns.get().getName(), optWarns.get().inAllTime()).get());
+			audience.sendMessage(getWarns(locale).getAllTimeTarget(optWarns.get().getName(), optWarns.get().inAllTime()));
 			sendWarnsList(audience, locale, optWarns.get(), cause.hasPermission(Permissions.WARNS_STAFF), isPlayer);
 		} else {
 			delay((ServerPlayer) audience, locale, consumer -> {
 				if(plugin.getPunishmentService().getWarns((ServerPlayer) audience).isPresent()) {
 					sendWarnsList(audience, locale, plugin.getPunishmentService().getWarns((ServerPlayer) audience).get(), cause.hasPermission(Permissions.WARNS_STAFF), isPlayer);
-				} else audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WARNS_ALLTIME).replace(Placeholders.VALUE, 0).get());
+				} else audience.sendMessage(getWarns(locale).getAllTime(0));
 			});
 		};
 	}
@@ -86,7 +85,7 @@ public class Warnings extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createWarnsArgument(true, true, 0, Permissions.WARNS_OTHER, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT)));
+		return Arrays.asList(RawArguments.createWarnsArgument(true, true, 0, Permissions.WARNS_OTHER, null, null, locale -> getExceptions(locale).getUserNotPresent()));
 	}
 
 	@Override
@@ -102,32 +101,44 @@ public class Warnings extends AbstractRawCommand {
 		}
 	}
 
-	private Component timeFormat(Locale locale, long time) {
-		SimpleDateFormat format = new SimpleDateFormat(getString(locale, LocalesPaths.COMMANDS_SERVERSTAT_TIMEFORMAT));
-		Calendar calendar = Calendar.getInstance(locale);
-		calendar.setTimeInMillis(time);
-		return text(format.format(calendar.getTime()));
-	}
-
 	private void sendWarnsList(Audience audience, Locale locale, Warns warns, boolean remove, boolean isPlayer) {
 		if(warns.getWarns().isEmpty()) return;
 		List<Component> list = new ArrayList<>();
 		warns.getWarns().forEach(warn -> {
-			Component removeText = TextUtils.createCallBack(getComponent(locale, LocalesPaths.REMOVE), consumer -> {
+			Component removeText = TextUtils.createCallBack(plugin.getLocales().getLocale(locale).getButtons().getRemove(), consumer -> {
 				Optional<Warns> find = plugin.getPunishmentService().getWarns(warns.getUniqueId());
 				plugin.getPunishmentService().removeWarn(warns.getUniqueId(), warn);
 				sendWarnsList(audience, locale, find.get(), remove, isPlayer);
 			});
-			Component w = isPlayer ? getText(locale, LocalesPaths.COMMANDS_WARNS_TIMES).replace(new String[] {Placeholders.TIME, Placeholders.LIMIT}, new Component[] {timeFormat(locale, warn.getCreated().toEpochMilli()), warn.getExpiration().map(i -> timeFormat(locale, i.toEpochMilli())).orElse(text("&c∞"))}).get().hoverEvent(HoverEvent.showText(getText(locale, LocalesPaths.COMMANDS_WARNS_REASON).replace(Placeholders.VALUE, warn.getReason().orElse(text("&e-"))).get())) : getText(locale, LocalesPaths.COMMANDS_WARNS_TIMES).replace(new String[] {Placeholders.TIME, Placeholders.LIMIT}, new Component[] {timeFormat(locale, warn.getCreated().toEpochMilli()), warn.getExpiration().map(i -> timeFormat(locale, i.toEpochMilli())).orElse(text("&c∞"))}).get().append(text("  ")).append(getText(locale, LocalesPaths.COMMANDS_WARNS_REASON).replace(Placeholders.VALUE, warn.getReason().orElse(text("&e-"))).get());
+			Component w = isPlayer ? getWarns(locale).getTimes(created(locale, warn), expire(locale, warn)).hoverEvent(HoverEvent.showText(getWarns(locale).getReason(warn.getReason().orElse(text("&e-"))))) : getWarns(locale).getTimes(created(locale, warn), expire(locale, warn)).append(text("  ")).append(getWarns(locale).getReason(warn.getReason().orElse(text("&e-"))));
 			list.add(remove ? removeText.append(text("    ")).append(w) : w);
 		});
-		Component title = getText(locale, LocalesPaths.COMMANDS_WARNS_TITLE).replace(Placeholders.PLAYER, warns.getName()).get();
+		Component title = getWarns(locale).getTitle(warns.getName());
 		sendPaginationList(audience, title, text("=").color(title.color()), 10, list);
 	}
 
 	@Override
 	public List<RawCommand> childCommands() {
 		return null;
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warns getWarns(Locale locale) {
+		return getCommands(locale).getWarns();
+	}
+
+	private Component created(Locale locale, sawfowl.commandpack.api.data.punishment.Warn warn) {
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(warn.getCreated().toEpochMilli());
+		return text(format.format(calendar.getTime()));
+	}
+
+	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Warn warn) {
+		if(!warn.getExpiration().isPresent()) return Component.empty();
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(warn.getExpiration().get().toEpochMilli());
+		return text(format.format(calendar.getTime()));
 	}
 
 }

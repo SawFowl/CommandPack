@@ -23,8 +23,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class GameMode extends AbstractWorldCommand {
 
@@ -38,7 +36,7 @@ public class GameMode extends AbstractWorldCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
 		ServerWorld world = args.getWorld(0).get();
 		world.properties().setGameMode(gamemodes.get(args.getString(1).get()).get());
-		audience.sendMessage(getText(locale, getLocalesPaths(args.getInput()[1])).replace(Placeholders.WORLD, world.key().asString()).get());
+		audience.sendMessage(getLocaleizedComponent(args.getInput()[1], locale, world));
 	}
 
 	@Override
@@ -61,22 +59,22 @@ public class GameMode extends AbstractWorldCommand {
 		return text("&c/world gamemode <World> <GameMode>").clickEvent(ClickEvent.suggestCommand("/world gamemode"));
 	}
 
-	private Object[] getLocalesPaths(String difficulty) {
-		switch (difficulty) {
+	private Component getLocaleizedComponent(String gamemode, Locale locale, ServerWorld world) {
+		switch (gamemode) {
 		case "creative":
-			return LocalesPaths.COMMANDS_WORLD_GAMEMODE_CREATIVE;
+			return getWorld(locale).getGameMode().getCreative(world);
 		case "adventure":
-			return LocalesPaths.COMMANDS_WORLD_GAMEMODE_ADVENTURE;
+			return getWorld(locale).getGameMode().getAdventure(world);
 		case "spectator":
-			return LocalesPaths.COMMANDS_WORLD_GAMEMODE_SPECTATOR;
+			return getWorld(locale).getGameMode().getSpectator(world);
 		case "1":
-			return LocalesPaths.COMMANDS_WORLD_GAMEMODE_CREATIVE;
+			return getWorld(locale).getGameMode().getCreative(world);
 		case "2":
-			return LocalesPaths.COMMANDS_WORLD_GAMEMODE_ADVENTURE;
+			return getWorld(locale).getGameMode().getAdventure(world);
 		case "3":
-			return LocalesPaths.COMMANDS_WORLD_GAMEMODE_SPECTATOR;
+			return getWorld(locale).getGameMode().getSpectator(world);
 		default:
-			return LocalesPaths.COMMANDS_WORLD_GAMEMODE_SURVIVAL;
+			return getWorld(locale).getGameMode().getSurvival(world);
 		}
 	}
 
@@ -85,7 +83,7 @@ public class GameMode extends AbstractWorldCommand {
 		if(gamemodes.isEmpty()) generateMap();
 		return Arrays.asList(
 			createWorldArg(),
-			RawArguments.createStringArgument("GameMode", gamemodes.keySet(), false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createStringArgument("GameMode", gamemodes.keySet(), false, false, 1, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

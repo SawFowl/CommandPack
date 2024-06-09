@@ -20,7 +20,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class GiveLimit extends AbstractKitsEditCommand {
 
@@ -35,7 +34,7 @@ public class GiveLimit extends AbstractKitsEditCommand {
 		Integer limit = args.getInteger(1).get();
 		kitData.setLimit(limit);
 		kitData.save();
-		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_GIVE_LIMIT));
+		src.sendMessage(getCommands(locale).getKits().getGiveLimit());
 	}
 
 	@Override
@@ -62,7 +61,7 @@ public class GiveLimit extends AbstractKitsEditCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			kitArgument(0, false, false),
-			RawArguments.createIntegerArgument("Limit", new ArrayList<>(), false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createIntegerArgument("Limit", new ArrayList<>(), false, false, 1, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

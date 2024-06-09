@@ -21,7 +21,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Sudo extends AbstractRawCommand {
@@ -32,7 +31,7 @@ public class Sudo extends AbstractRawCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
-		if(!Sponge.server().commandManager().commandMapping(args.getInput()[1]).isPresent()) exception(getText(locale, LocalesPaths.COMMANDS_SUDO_COMMAND_NOT_FOUND));
+		if(!Sponge.server().commandManager().commandMapping(args.getInput()[1]).isPresent()) exception(getCommands(locale).getSudo().getCommandNotFound());
 		CommandResult result = plugin.getAPI().playersData().getOrCreatePlayerData(args.getPlayer(0).get()).runCommand(locale, args.getString(1).get());
 		if(!result.isSuccess() && result.errorMessage().isPresent()) exception(result.errorMessage().get());
 	}
@@ -65,8 +64,8 @@ public class Sudo extends AbstractRawCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createPlayerArgument(false, false, 0, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)),
-			RawArguments.createRemainingJoinedStringsArgument("Command", false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createPlayerArgument(false, false, 0, null, null, null, locale -> getExceptions(locale).getPlayerNotPresent()),
+			RawArguments.createRemainingJoinedStringsArgument("Command", false, false, 1, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

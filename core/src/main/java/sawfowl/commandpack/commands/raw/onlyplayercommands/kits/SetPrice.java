@@ -21,7 +21,6 @@ import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.kits.KitPrice;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class SetPrice extends AbstractKitsEditCommand {
 
@@ -33,10 +32,10 @@ public class SetPrice extends AbstractKitsEditCommand {
 	public void process(CommandCause cause, ServerPlayer src, Locale locale, Mutable arguments, RawArgumentsMap args) throws CommandException {
 		Kit kit = args.<Kit>get(0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
-		if(args.getInput().length < 3) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+		if(args.getInput().length < 3) exception(getExceptions(locale).getValueNotPresent());
 		kitData.setPrice(KitPrice.of(args.getCurrency(1).get(), args.getBigDecimal(2).get()));
 		kitData.save();
-		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_SET_PRICE));
+		src.sendMessage(getCommands(locale).getKits().getSetPrice());
 	}
 
 	@Override
@@ -63,8 +62,8 @@ public class SetPrice extends AbstractKitsEditCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			kitArgument(0, false, false),
-			RawArguments.createCurrencyArgument(false, false, 1, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
-			RawArguments.createBigDecimalArgument("Price", new ArrayList<>(), false, false, 2, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createCurrencyArgument(false, false, 1, null, null, null, locale -> getExceptions(locale).getCurrencyNotPresent()),
+			RawArguments.createBigDecimalArgument("Price", new ArrayList<>(), false, false, 2, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

@@ -19,7 +19,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class SetName extends AbstractKitsEditCommand  {
 
@@ -32,10 +31,10 @@ public class SetName extends AbstractKitsEditCommand  {
 		Kit kit = args.<Kit>get(0).get();
 		KitData kitData = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		Locale localeForName = args.getLocale(1).get();
-		if(args.getInput().length < 3) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT);
+		if(args.getInput().length < 3) exception(getExceptions(localeForName).getNameNotPresent());
 		kitData.setName(localeForName, String.join(" ", Arrays.copyOfRange(args.getInput(), 2, args.getInput().length)));
 		kitData.save();
-		src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_KITS_SET_NAME));
+		src.sendMessage(getCommands(locale).getKits().getSetName());
 	}
 
 	@Override
@@ -62,8 +61,8 @@ public class SetName extends AbstractKitsEditCommand  {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			kitArgument(0, false, false),
-			RawArguments.createLocaleArgument(false, false, 1, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
-			RawArguments.createRemainingJoinedStringsArgument("Name", false, false, 2, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createLocaleArgument(false, false, 1, null, null, null, locale -> getExceptions(locale).getLocaleNotPresent()),
+			RawArguments.createRemainingJoinedStringsArgument("Name", false, false, 2, null, null, null, null, locale -> getExceptions(locale).getNameNotPresent())
 		);
 	}
 

@@ -47,7 +47,7 @@ public interface RawArgument<T> extends DataSerializable {
 	 * @param optionalForConsole - If true, the argument will be optional for the console. Parameter `optional` has a higher priority.
 	 * @param cursor - The number of the argument in the array of arguments input.
 	 * @param permission - The permission required to use the argument. Can be `null`.
-	 * @param localesPath - Path to the text in the plugin localization. The text will be shown if the argument was not entered or was entered incorrectly and it is mandatory.
+	 * @param supplier - The text will be shown if the argument was not entered or was entered incorrectly and it is mandatory.
 	 * @param requiredArgumentsById - Listing the required arguments by their id. Can be `null`.
 	 * @param requiredArgumentsByKey - Listing the required arguments by their keys. Can be `null`.
 	 * @return {@link RawArgument}

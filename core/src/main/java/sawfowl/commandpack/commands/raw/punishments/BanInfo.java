@@ -1,6 +1,8 @@
 package sawfowl.commandpack.commands.raw.punishments;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,9 +24,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
-import sawfowl.commandpack.utils.TimeConverter;
 
 @Register
 public class BanInfo extends AbstractRawCommand {
@@ -36,12 +35,12 @@ public class BanInfo extends AbstractRawCommand {
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
 		Profile ban = args.<Profile>get(0).get();
-		Component title = getText(locale, LocalesPaths.COMMANDS_BANINFO_TITLE).replace(Placeholders.PLAYER, ban.profile().name().orElse(ban.profile().examinableName())).get();
+		Component title = getCommands(locale).getBanInfo().getTitle(ban.profile().name().orElse(ban.profile().examinableName()));
 		if(isPlayer) {
 			delay((ServerPlayer) audience, locale, consumer -> {
-				sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getText(locale, LocalesPaths.COMMANDS_BANINFO_SUCCESS).replace(new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT))), ban.reason().orElse(text("-"))).get()));
+				sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getCommands(locale).getBanInfo().getSuccess(ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-")))));
 			});
-		} else sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getText(locale, LocalesPaths.COMMANDS_BANINFO_SUCCESS).replace(new String[] {Placeholders.SOURCE, Placeholders.CREATED, Placeholders.EXPIRE, Placeholders.REASON}, ban.banSource().orElse(text("n/a")), text(TimeConverter.toString(ban.creationDate())), ban.expirationDate().map(time -> text(TimeConverter.toString(time))).orElse(text(getText(locale, LocalesPaths.COMMANDS_BANINFO_PERMANENT))), ban.reason().orElse(text("-"))).get()));
+		} else sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getCommands(locale).getBanInfo().getSuccess(ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-")))));
 	}
 
 	@Override
@@ -71,7 +70,7 @@ public class BanInfo extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createProfileArgument(false, false, 0, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_BANINFO_NOT_PRESENT)));
+		return Arrays.asList(RawArguments.createProfileArgument(false, false, 0, null, null, null, locale -> getCommands(locale).getBanInfo().getNotPresent()));
 	}
 
 	@Override
@@ -90,6 +89,21 @@ public class BanInfo extends AbstractRawCommand {
 	@Override
 	public List<RawCommand> childCommands() {
 		return null;
+	}
+
+	private String created(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(ban.creationDate().toEpochMilli());
+		return format.format(calendar.getTime());
+	}
+
+	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
+		if(!ban.expirationDate().isPresent()) return plugin.getLocales().getLocale(locale).getCommands().getBanInfo().getPermanent();
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
+		return text(format.format(calendar.getTime()));
 	}
 
 }

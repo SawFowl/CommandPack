@@ -15,7 +15,6 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Help extends AbstractParameterizedCommand {
@@ -26,8 +25,7 @@ public class Help extends AbstractParameterizedCommand {
 
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
-		Component title = getComponent(locale, LocalesPaths.COMMANDS_HELP_TITLE);
-		sendPaginationList(src, title, Component.text("=").color(title.color()), 10, getListTexts(locale, LocalesPaths.COMMANDS_HELP_LIST));
+		sendPaginationList(src, plugin.getLocales().getLocale(locale).getCommands().getHelp().getTitle(), Component.text("=").color(plugin.getLocales().getLocale(locale).getCommands().getHelp().getTitle().color()), 10, plugin.getLocales().getLocale(locale).getCommands().getHelp().getList());
 	}
 
 	@Override

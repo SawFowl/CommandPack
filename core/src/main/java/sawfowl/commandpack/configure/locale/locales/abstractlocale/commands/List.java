@@ -6,7 +6,7 @@ import net.kyori.adventure.text.Component;
 
 public interface List {
 
-	Component getSuccess(int online);
+	Component getSuccess(java.util.List<Component> list);
 
 	Component getVanished(ServerPlayer player);
 

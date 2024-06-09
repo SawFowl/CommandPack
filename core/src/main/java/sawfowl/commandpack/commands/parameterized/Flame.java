@@ -11,7 +11,6 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.util.Ticks;
 import org.spongepowered.api.util.blockray.RayTrace;
@@ -25,8 +24,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Flame extends AbstractParameterizedCommand {
@@ -43,9 +40,10 @@ public class Flame extends AbstractParameterizedCommand {
 			if(damage) {
 				optTarget.get().offer(Keys.FIRE_TICKS, randomTicks());
 			} else optTarget.get().offer(Keys.IS_AFLAME, true);
-			sendStaffMessage(src, locale, optTarget.get(), LocalesPaths.COMMANDS_FLAME_SUCCESS_STAFF, damage ? LocalesPaths.COMMANDS_FLAME_SUCCESS_DAMAGE : LocalesPaths.COMMANDS_FLAME_SUCCESS);
+			src.sendMessage(getFlame(locale).getSuccessStaff(optTarget.get(), true));
+			optTarget.get().sendMessage(damage ? getFlame(optTarget.get()).getDamage() : getFlame(optTarget.get()).getSuccess());
 		} else {
-			if(!isPlayer) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
+			if(!isPlayer) exception(getExceptions(locale).getPlayerNotPresent());
 			if(context.hasPermission(Permissions.FLAME_STAFF)) {
 				Optional<RayTraceResult<Entity>> optEntity = targetEntity((ServerPlayer) src);
 				if(optEntity.isPresent()) {
@@ -53,8 +51,8 @@ public class Flame extends AbstractParameterizedCommand {
 					if(damage) {
 						target.offer(Keys.FIRE_TICKS, randomTicks());
 					} else target.offer(Keys.IS_AFLAME, true);
-					src.sendMessage(getText(locale, LocalesPaths.COMMANDS_FLAME_SUCCESS_STAFF).replace(Placeholders.PLAYER, target instanceof ServerPlayer ? ((ServerPlayer) target).name() : EntityTypes.registry().valueKey(target.type()).asString()).get());
-					if(target instanceof ServerPlayer) ((ServerPlayer) target).sendMessage(getComponent(((ServerPlayer) target).locale(), damage ? LocalesPaths.COMMANDS_FLAME_SUCCESS_DAMAGE : LocalesPaths.COMMANDS_FLAME_SUCCESS));
+					src.sendMessage(getFlame(locale).getSuccessStaff(target, target instanceof ServerPlayer));
+					if(target instanceof ServerPlayer) ((ServerPlayer) target).sendMessage(damage ? getFlame((ServerPlayer) target).getDamage() : getFlame((ServerPlayer) target).getSuccess());
 					return;
 				}
 			}
@@ -62,7 +60,7 @@ public class Flame extends AbstractParameterizedCommand {
 				if(damage) {
 					((ServerPlayer) src).offer(Keys.FIRE_TICKS, randomTicks());
 				} else ((ServerPlayer) src).offer(Keys.IS_AFLAME, true);
-				src.sendMessage(getComponent(locale, damage ? LocalesPaths.COMMANDS_FLAME_SUCCESS_DAMAGE : LocalesPaths.COMMANDS_FLAME_SUCCESS));
+				src.sendMessage(damage ? getFlame(locale).getDamage() : getFlame(locale).getSuccess());
 			});
 		}
 	}
@@ -85,18 +83,13 @@ public class Flame extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createPlayer(Permissions.FLAME_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createBoolean("Damage", true), true, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			ParameterSettings.of(CommandParameters.createPlayer(Permissions.FLAME_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent()),
+			ParameterSettings.of(CommandParameters.createBoolean("Damage", true), true, locale -> getExceptions(locale).getBooleanNotPresent())
 		);
 	}
 
 	private Ticks randomTicks() {
 		return Ticks.of(ThreadLocalRandom.current().nextLong(20, 2000));
-	}
-
-	private void sendStaffMessage(Audience src, Locale staffLocale, ServerPlayer target, Object[] pathStaff, Object[] pathPlayer) {
-		src.sendMessage(getText(staffLocale, pathPlayer).replace(Placeholders.PLAYER, target.name()).get());
-		target.sendMessage(getComponent(staffLocale, pathPlayer));
 	}
 
 	private Optional<RayTraceResult<Entity>> targetEntity(ServerPlayer source) {
@@ -106,6 +99,14 @@ public class Flame extends AbstractParameterizedCommand {
 				.limit(10)
 				.direction(source)
 				.execute();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Flame getFlame(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getFlame();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Flame getFlame(ServerPlayer player) {
+		return getFlame(player.locale());
 	}
 
 }

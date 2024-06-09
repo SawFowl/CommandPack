@@ -20,9 +20,7 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
-import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.configs.kits.KitData;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Cooldown extends AbstractKitsEditCommand {
 
@@ -38,7 +36,7 @@ public class Cooldown extends AbstractKitsEditCommand {
 		Duration duration = parseDuration(durationString, locale).get();
 		kitData.setCooldown(duration.getSeconds());
 		kit.save();
-		src.sendMessage(getText(locale, LocalesPaths.COMMANDS_KITS_COOLDOWN_SUCCESS).replace(Placeholders.VALUE, kit.getLocalizedName(locale)).get());
+		src.sendMessage(getCommands(locale).getKits().getCooldownSuccess(kit.getLocalizedName(locale)));
 	}
 
 	@Override
@@ -65,7 +63,7 @@ public class Cooldown extends AbstractKitsEditCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			kitArgument(0, false, false),
-			RawArguments.createStringArgument("Duration", new ArrayList<>(), false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createStringArgument("Duration", new ArrayList<>(), false, false, 1, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

@@ -19,7 +19,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class GiveOnJoin extends AbstractKitsEditCommand {
 
@@ -34,7 +33,7 @@ public class GiveOnJoin extends AbstractKitsEditCommand {
 		boolean value = args.getBoolean(1).get();
 		kitData.setGiveOnJoin(value);
 		kitData.save();
-		src.sendMessage(getComponent(locale, value ? LocalesPaths.COMMANDS_KITS_GIVE_ON_JOIN_ENABLE : LocalesPaths.COMMANDS_KITS_GIVE_ON_JOIN_DISABLE));
+		src.sendMessage(value ? getCommands(locale).getKits().getEnableGiveOnJoin() : getCommands(locale).getKits().getDisableGiveOnJoin());
 	}
 
 	@Override
@@ -61,7 +60,7 @@ public class GiveOnJoin extends AbstractKitsEditCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			kitArgument(0, false, false),
-			RawArguments.createBooleanArgument("Value", false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createBooleanArgument("Value", false, false, 1, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

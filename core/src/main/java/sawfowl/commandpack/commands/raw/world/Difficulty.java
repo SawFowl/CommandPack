@@ -23,8 +23,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Difficulty extends AbstractWorldCommand {
 
@@ -38,7 +36,7 @@ public class Difficulty extends AbstractWorldCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
 		ServerWorld world = args.getWorld(0).get();
 		world.properties().setDifficulty(difficulties.get(args.getString(1).get()).get());
-		audience.sendMessage(getText(locale, getLocalesPaths(args.getInput()[1])).replace(Placeholders.WORLD, world.key().asString()).get());
+		audience.sendMessage(getLocaleizedComponent(args.getInput()[1], locale, world));
 	}
 
 	@Override
@@ -61,22 +59,22 @@ public class Difficulty extends AbstractWorldCommand {
 		return text("&c/world difficulty <World> <Difficulty>").clickEvent(ClickEvent.suggestCommand("/world difficulty"));
 	}
 
-	private Object[] getLocalesPaths(String difficulty) {
+	private Component getLocaleizedComponent(String difficulty, Locale locale, ServerWorld world) {
 		switch (difficulty) {
 		case "easy":
-			return LocalesPaths.COMMANDS_WORLD_DIFFICULTY_EASY;
+			return getCommands(locale).getWorld().getDifficulty().getLow(world);
 		case "normal":
-			return LocalesPaths.COMMANDS_WORLD_DIFFICULTY_NORMAL;
+			return getCommands(locale).getWorld().getDifficulty().getNormal(world);
 		case "hard":
-			return LocalesPaths.COMMANDS_WORLD_DIFFICULTY_HARD;
+			return getCommands(locale).getWorld().getDifficulty().getHard(world);
 		case "1":
-			return LocalesPaths.COMMANDS_WORLD_DIFFICULTY_EASY;
+			return getCommands(locale).getWorld().getDifficulty().getLow(world);
 		case "2":
-			return LocalesPaths.COMMANDS_WORLD_DIFFICULTY_NORMAL;
+			return getCommands(locale).getWorld().getDifficulty().getNormal(world);
 		case "3":
-			return LocalesPaths.COMMANDS_WORLD_DIFFICULTY_HARD;
+			return getCommands(locale).getWorld().getDifficulty().getHard(world);
 		default:
-			return LocalesPaths.COMMANDS_WORLD_DIFFICULTY_PEACEFUL;
+			return getCommands(locale).getWorld().getDifficulty().getPeaceful(world);
 		}
 	}
 
@@ -85,7 +83,7 @@ public class Difficulty extends AbstractWorldCommand {
 		if(difficulties.isEmpty()) generateMap();
 		return Arrays.asList(
 			createWorldArg(),
-			RawArguments.createStringArgument("Difficulty", difficulties.keySet(), false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createStringArgument("Difficulty", difficulties.keySet(), false, false, 1, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

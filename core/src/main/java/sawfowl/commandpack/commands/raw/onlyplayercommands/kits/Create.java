@@ -19,7 +19,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Create extends AbstractKitsEditCommand {
 
@@ -56,7 +55,7 @@ public class Create extends AbstractKitsEditCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createStringArgument("name", new ArrayList<>(), false, false, 0, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_NAME_NOT_PRESENT)));
+		return Arrays.asList(RawArguments.createStringArgument("name", new ArrayList<>(), false, false, 0, null, null, null, null, locale -> getExceptions(locale).getNameNotPresent()));
 	}
 
 	@Override

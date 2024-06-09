@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
@@ -23,8 +24,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class HideBalance extends AbstractRawCommand {
@@ -40,17 +39,23 @@ public class HideBalance extends AbstractRawCommand {
 			if(optAccount.isPresent()) {
 				UniqueAccount account = optAccount.get();
 				plugin.getEconomy().getEconomyServiceImpl().hide(account.uniqueId());
-				audience.sendMessage(getText(locale, plugin.getEconomy().getEconomyServiceImpl().isHiden(account) ? LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN).replace(Placeholders.PLAYER, account.displayName()).get());
+				audience.sendMessage(getHideBalance(locale).getResultStaff(plugin.getEconomy().getEconomyServiceImpl().isHiden(account), account.displayName()));
+				Sponge.server().player(account.uniqueId()).ifPresent(player -> {
+					player.sendMessage(getHideBalance(player).getResult(plugin.getEconomy().getEconomyServiceImpl().isHiden(((ServerPlayer) audience).uniqueId())));
+				});
 			} else {
 				delay((ServerPlayer) audience, locale, consumer -> {
 					plugin.getEconomy().getEconomyServiceImpl().hide(((ServerPlayer) audience).uniqueId());
-					audience.sendMessage(getComponent(locale, plugin.getEconomy().getEconomyServiceImpl().isHiden(((ServerPlayer) audience).uniqueId()) ? LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_SELF_OPEN));
+					audience.sendMessage(getHideBalance(locale).getResult(plugin.getEconomy().getEconomyServiceImpl().isHiden(((ServerPlayer) audience).uniqueId())));
 				});
 			}
 		} else {
 			UniqueAccount account = args.<UniqueAccount>get(0).get();
 			plugin.getEconomy().getEconomyServiceImpl().hide(account.uniqueId());
-			audience.sendMessage(getText(locale, plugin.getEconomy().getEconomyServiceImpl().isHiden(account) ? LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_HIDEN : LocalesPaths.COMMANDS_HIDE_BALANCE_OTHER_OPEN).replace(Placeholders.PLAYER, account.displayName()).get());
+			audience.sendMessage(getHideBalance(locale).getResultStaff(plugin.getEconomy().getEconomyServiceImpl().isHiden(account), account.displayName()));
+			Sponge.server().player(account.uniqueId()).ifPresent(player -> {
+				player.sendMessage(getHideBalance(player).getResult(plugin.getEconomy().getEconomyServiceImpl().isHiden(((ServerPlayer) audience).uniqueId())));
+			});
 		}
 	}
 
@@ -81,7 +86,7 @@ public class HideBalance extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createUniqueAccountArgument(true, false, 0, Permissions.ECONOMY_STAFF, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_USER_NOT_PRESENT)));
+		return Arrays.asList(RawArguments.createUniqueAccountArgument(true, false, 0, Permissions.ECONOMY_STAFF, null, null, locale -> getExceptions(locale).getUserNotPresent()));
 	}
 
 	@Override
@@ -100,6 +105,14 @@ public class HideBalance extends AbstractRawCommand {
 	@Override
 	public List<RawCommand> childCommands() {
 		return null;
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.HideBalance getHideBalance(Locale locale) {
+		return getCommands(locale).getHideBalance();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.HideBalance getHideBalance(ServerPlayer player) {
+		return getHideBalance(player.locale());
 	}
 
 }

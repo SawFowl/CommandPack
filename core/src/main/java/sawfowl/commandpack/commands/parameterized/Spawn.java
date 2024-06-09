@@ -22,7 +22,6 @@ import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParam
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Spawn extends AbstractParameterizedCommand {
@@ -37,16 +36,18 @@ public class Spawn extends AbstractParameterizedCommand {
 		if(isPlayer) {
 			ServerPlayer source = (ServerPlayer) src;
 			ServerPlayer player = getPlayer(context).orElse(source);
-			if(source.uniqueId().equals(player.uniqueId())) {
-				delay(player, locale, consumer -> {
-					teleport(player, spawn);
-				});
-			} else teleport(player, spawn);
+			if(!source.uniqueId().equals(player.uniqueId())) {
+				teleport(player, spawn);
+				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getSpawn().getTeleportStaff(player));
+			} else delay(player, locale, consumer -> {
+				teleport(player, spawn);
+			});
 		} else {
 			Optional<ServerPlayer> player = getPlayer(context);
 			if(player.isPresent()) {
 				teleport(player.get(), spawn);
-			} else exception(locale, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT);
+				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getSpawn().getTeleportStaff(player.get()));
+			} else exception(getExceptions(locale).getPlayerNotPresent());
 		}
 	}
 
@@ -62,7 +63,7 @@ public class Spawn extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.SPAWN_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.SPAWN_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent()));
 	}
 
 	@Override
@@ -78,7 +79,7 @@ public class Spawn extends AbstractParameterizedCommand {
 				player.setRotation(rotation.asVector3d());
 			});
 		} else tpDefault(player);
-		player.sendMessage(getComponent(player.locale(), LocalesPaths.COMMANDS_SPAWN_SUCCESS));
+		player.sendMessage(plugin.getLocales().getLocale(player).getCommands().getSpawn().getTeleport());
 	}
 
 	private void tpDefault(ServerPlayer player) {

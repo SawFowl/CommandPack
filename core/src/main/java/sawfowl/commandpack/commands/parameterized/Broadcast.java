@@ -18,8 +18,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Broadcast extends AbstractParameterizedCommand {
@@ -32,15 +30,15 @@ public class Broadcast extends AbstractParameterizedCommand {
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
 			delay((ServerPlayer) src, locale, consumer -> {
-				Sponge.systemSubject().sendMessage(getComponent(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get())));
+				Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemLocale().getCommands().getBroadcast().getTitle(text(getString(context, "Message").get())));
 				Sponge.server().onlinePlayers().forEach(player -> {
-					player.sendMessage(getComponent(player, LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get().replace(Placeholders.PLAYER, player.name()))));
+					player.sendMessage(plugin.getLocales().getLocale(player.locale()).getCommands().getBroadcast().getTitle(text(getString(context, "Message").get())));
 				});
 			});
 		} else {
-			Sponge.systemSubject().sendMessage(getComponent(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get())));
+			Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemLocale().getCommands().getBroadcast().getTitle(text(getString(context, "Message").get())));
 			Sponge.server().onlinePlayers().forEach(player -> {
-				player.sendMessage(getComponent(player, LocalesPaths.COMMANDS_BROADCAST).append(text(getString(context, "Message").get().replace(Placeholders.PLAYER, player.name()))));
+				player.sendMessage(plugin.getLocales().getLocale(player.locale()).getCommands().getBroadcast().getTitle(text(getString(context, "Message").get())));
 			});
 		}
 	}
@@ -62,7 +60,7 @@ public class Broadcast extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createStrings("Message", false), false, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createStrings("Message", false), false, locale -> getExceptions(locale).getMessageNotPresent()));
 	}
 
 }

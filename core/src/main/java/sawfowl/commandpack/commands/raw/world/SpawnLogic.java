@@ -19,8 +19,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class SpawnLogic extends AbstractWorldCommand {
 
@@ -33,7 +31,7 @@ public class SpawnLogic extends AbstractWorldCommand {
 		ServerWorld world = args.getWorld(0).get();
 		boolean enable = args.getBoolean(1).get();
 		world.properties().setPerformsSpawnLogic(enable);
-		audience.sendMessage(getText(locale, enable ? LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_ENABLE : LocalesPaths.COMMANDS_WORLD_SPAWN_LOGIC_DISABLE).replace(Placeholders.WORLD, world.key().asString()).get());
+		audience.sendMessage(enable ? getWorld(locale).getGenerate().getEnableSpawnLogic(world) : getWorld(locale).getGenerate().getDisableSpawnLogic(world));
 	}
 
 	@Override
@@ -59,8 +57,8 @@ public class SpawnLogic extends AbstractWorldCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createWorldArgument(false, false, 0, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT)),
-			RawArguments.createBooleanArgument("Value", false, false, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT))
+			RawArguments.createWorldArgument(false, false, 0, null, null, null, null, locale -> getExceptions(locale).getWorldNotPresent()),
+			RawArguments.createBooleanArgument("Value", false, false, 1, null, null, null, null, locale -> getExceptions(locale).getBooleanNotPresent())
 		);
 	}
 

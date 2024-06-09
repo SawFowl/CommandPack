@@ -18,8 +18,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class ClearInventory extends AbstractParameterizedCommand {
@@ -38,18 +36,18 @@ public class ClearInventory extends AbstractParameterizedCommand {
 				ServerPlayer target = optTarget.get();
 				clear(target, invType);
 				if(!player.uniqueId().equals(target.uniqueId())) {
-					player.sendMessage(getText(locale, LocalesPaths.COMMANDS_CLEAR_SUCCES_STAFF).replace(Placeholders.PLAYER, target.name()).get());
-					target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_CLEAR_SUCCES_OTHER));
-				} else player.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_CLEAR_SUCCES));
+					player.sendMessage(getClearInventory(locale).getSuccessStaff(target));
+					target.sendMessage(getClearInventory(target).getSuccessOther());
+				} else player.sendMessage(getClearInventory(locale).getSuccess());
 			} else {
 				clear(player, invType);
-				player.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_CLEAR_SUCCES));
+				player.sendMessage(getClearInventory(locale).getSuccess());
 			}
 		} else {
 			ServerPlayer target = optTarget.get();
 			clear(target, invType);
-			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_CLEAR_SUCCES_STAFF).replace(Placeholders.PLAYER, target.name()).get());
-			target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_CLEAR_SUCCES_OTHER));
+			src.sendMessage(getClearInventory(locale).getSuccessStaff(target));
+			target.sendMessage(getClearInventory(target).getSuccessOther());
 		}
 	}
 
@@ -61,8 +59,8 @@ public class ClearInventory extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createPlayer(Permissions.CLEAR_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createInventoryTypes(true), true, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT)
+			ParameterSettings.of(CommandParameters.createPlayer(Permissions.CLEAR_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent()),
+			ParameterSettings.of(CommandParameters.createInventoryTypes(true), true, locale -> getExceptions(locale).getTypeNotPresent())
 		);
 	}
 /*
@@ -106,6 +104,14 @@ public class ClearInventory extends AbstractParameterizedCommand {
 				player.inventory().primary().clear();
 				break;
 		}
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.ClearInventory getClearInventory(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getClearInventory();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.ClearInventory getClearInventory(ServerPlayer player) {
+		return getClearInventory(player.locale());
 	}
 
 }

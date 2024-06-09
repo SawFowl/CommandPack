@@ -46,8 +46,8 @@ public class ImplementWarns implements Warns {
 	}
 
 	@Override
-	public Component getTimes(Component time, int limit) {
-		return Text.of(times).replace(Placeholders.TIME, time).replace(Placeholders.LIMIT, limit).get();
+	public Component getTimes(Component created, Component expire) {
+		return Text.of(times).replace(Placeholders.TIME, created).replace(Placeholders.LIMIT, expire).get();
 	}
 
 }

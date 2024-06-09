@@ -53,6 +53,7 @@ public class Locales {
 	private void generateDefault() {
 		if(getPluginLocale(org.spongepowered.api.util.locale.Locales.DEFAULT).getLocaleRootNode().empty()) try {
 			getPluginLocale(org.spongepowered.api.util.locale.Locales.DEFAULT).setLocaleReference(ImplementPluginLocale.class);
+			getPluginLocale(org.spongepowered.api.util.locale.Locales.DEFAULT).saveLocaleNode();
 		} catch (ConfigurateException e) {
 			e.printStackTrace();
 		}
@@ -61,6 +62,7 @@ public class Locales {
 	private void generateRu() {
 		if(getPluginLocale(org.spongepowered.api.util.locale.Locales.RU_RU).getLocaleRootNode().empty()) try {
 			getPluginLocale(org.spongepowered.api.util.locale.Locales.RU_RU).setLocaleReference(ImplementRuPluginLocale.class);
+			getPluginLocale(org.spongepowered.api.util.locale.Locales.RU_RU).saveLocaleNode();
 		} catch (ConfigurateException e) {
 			e.printStackTrace();
 		}

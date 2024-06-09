@@ -29,8 +29,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 import sawfowl.localeapi.api.TextUtils;
 
 @Register
@@ -83,7 +81,7 @@ public class BalanceTop extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createCurrencyArgument(true, true, 0, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)));
+		return Arrays.asList(RawArguments.createCurrencyArgument(true, true, 0, null, null, null, locale -> getExceptions(locale).getValueNotPresent()));
 	}
 
 	@Override
@@ -109,11 +107,11 @@ public class BalanceTop extends AbstractRawCommand {
 			List<Component> top = new ArrayList<Component>();
 			balances.entrySet().stream().sorted(Map.Entry.<Component, Double>comparingByValue().reversed()).forEach(entry -> {
 				if(!nullableName && TextUtils.clearDecorations(entry.getKey()).equals(name)) {
-					top.add(getText(locale, LocalesPaths.COMMANDS_BALANCE_TOP_LIST).replace(new String[] {Placeholders.RANK, Placeholders.PLAYER, Placeholders.VALUE}, text(top.size() + 1).decorate(TextDecoration.ITALIC), entry.getKey().decorate(TextDecoration.ITALIC), text(entry.getValue()).decorate(TextDecoration.ITALIC)).get());
-				} else top.add(getText(locale, LocalesPaths.COMMANDS_BALANCE_TOP_LIST).replace(new String[] {Placeholders.RANK, Placeholders.PLAYER, Placeholders.VALUE}, text(top.size() + 1), display(entry.getKey()), text(entry.getValue())).get());
+					top.add(getBalanceTop(locale).getElement(text(top.size() + 1).decorate(TextDecoration.ITALIC), entry.getKey().decorate(TextDecoration.ITALIC), text(entry.getValue()).decorate(TextDecoration.ITALIC)));
+				} else top.add(getBalanceTop(locale).getElement(text(top.size() + 1), display(entry.getKey()), text(entry.getValue())));
 			});
-			Component title = getText(locale, LocalesPaths.COMMANDS_BALANCE_TOP_TITLE).replace(new String[] {Placeholders.CURRENCY_NAME, Placeholders.CURRENCY_PLURAL_NAME, Placeholders.CURRENCY_SYMBOL, Placeholders.CURRENCY_STYLED_SYMBOL}, currency.displayName(), currency.pluralDisplayName(), currency.symbol(), currency.symbol().style(currency.pluralDisplayName().style())).get();
-			sendPaginationList(audience, title, getComponent(locale, LocalesPaths.COMMANDS_BALANCE_TOP_PADDING), 10, top);
+			Component title = getBalanceTop(locale).getTitle(currency);
+			sendPaginationList(audience, title, getBalanceTop(locale).getPadding(), 10, top);
 			balances.clear();
 			top.clear();
 			title = null;
@@ -128,6 +126,10 @@ public class BalanceTop extends AbstractRawCommand {
 	@Override
 	public List<RawCommand> childCommands() {
 		return null;
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.BalanceTop getBalanceTop(Locale locale) {
+		return getCommands(locale).getBalanceTop();
 	}
 
 }

@@ -20,8 +20,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Vanish extends AbstractParameterizedCommand {
@@ -64,7 +62,7 @@ public class Vanish extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.VANISH_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.VANISH_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent()));
 	}
 
 	private void vanish(ServerPlayer target, Audience src, Locale locale, boolean equals, boolean isStaff) {
@@ -72,18 +70,26 @@ public class Vanish extends AbstractParameterizedCommand {
 			target.remove(Keys.VANISH_STATE);
 			target.offer(Keys.VANISH_STATE, VanishState.unvanished());
 			if(!equals) {
-				target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_VANISH_UNVASHISHED));
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_VANISH_UNVASHISHED_STAFF).replace(Placeholders.PLAYER, target.name()).get());
-			} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_VANISH_UNVASHISHED));
+				target.sendMessage(getVanish(target).getDisable());
+				src.sendMessage(getVanish(locale).getDisableStaff(target));
+			} else src.sendMessage(getVanish(locale).getDisable());
 			plugin.getPlayersData().getTempData().removeVanishEnabledTime(target);
 		} else {
 			target.offer(Keys.VANISH_STATE, VanishState.vanished().ignoreCollisions(isStaff).createParticles(false).createSounds(!isStaff));
 			if(!equals) {
-				target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_VANISH_VASHISHED));
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_VANISH_VASHISHED_STAFF).replace(Placeholders.PLAYER, target.name()).get());
-			} else src.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_VANISH_VASHISHED));
+				target.sendMessage(getVanish(target).getEnable());
+				src.sendMessage(getVanish(locale).getEnableStaff(target));
+			} else src.sendMessage(getVanish(locale).getEnable());
 			plugin.getPlayersData().getTempData().setVanishTime(target);
 		}
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Vanish getVanish(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getVanish();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Vanish getVanish(ServerPlayer player) {
+		return getVanish(player.locale());
 	}
 
 }

@@ -12,15 +12,13 @@ import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
-
+import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Nick extends AbstractParameterizedCommand {
@@ -37,19 +35,19 @@ public class Nick extends AbstractParameterizedCommand {
 			if(optTarget.isPresent()) {
 				if(nick.equals("clear")) {
 					clearName(src, locale, optTarget.get(), optTarget.get().uniqueId().equals(((ServerPlayer) src).uniqueId()));
-				} else setName(src, locale, optTarget.get(), nick, optTarget.get().uniqueId().equals(((ServerPlayer) src).uniqueId()));
+				} else setName(src, locale, optTarget.get(), text(nick), optTarget.get().uniqueId().equals(((ServerPlayer) src).uniqueId()));
 			} else {
 				delay((ServerPlayer) src, locale, consumer -> {
 					if(nick.equals("clear")) {
 						clearName(src, locale, (ServerPlayer) src, true);
-					} else setName(src, locale, (ServerPlayer) src, nick, true);
+					} else setName(src, locale, (ServerPlayer) src, text(nick), true);
 				});
 			}
 		} else {
 			ServerPlayer target = getPlayer(context).get();
 			if(nick.equals("clear")) {
 				clearName(src, locale, target, false);
-			} else setName(src, locale, target, nick, false);
+			} else setName(src, locale, target, text(nick), false);
 		}
 	}
 
@@ -71,25 +69,33 @@ public class Nick extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createString("Nick", false), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.createPlayer(Permissions.NICK_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT)
+			ParameterSettings.of(CommandParameters.createString("Nick", false), false, locale -> getExceptions(locale).getValueNotPresent()),
+			ParameterSettings.of(CommandParameters.createPlayer(Permissions.NICK_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent())
 		);
 	}
 
-	private void setName(Audience src, Locale locale, ServerPlayer target, String nick, boolean equals) {
-		target.offer(Keys.CUSTOM_NAME, text(nick));
+	private void setName(Audience src, Locale locale, ServerPlayer target, Component nick, boolean equals) {
+		target.offer(Keys.CUSTOM_NAME, nick);
 		if(!equals) {
-			target.sendMessage(getText(target, LocalesPaths.COMMANDS_NICK_SET_SELF).replace(Placeholders.VALUE, text(nick)).get());
-			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_NICK_SET_STAFF).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, text(target.name()), text(nick)).get());
-		} else target.sendMessage(getText(target, LocalesPaths.COMMANDS_NICK_SET_SELF).replace(Placeholders.VALUE, text(nick)).get());
+			target.sendMessage(getNick(target).getSet(nick));
+			src.sendMessage(getNick(locale).getSetStaff(target, nick));
+		} else target.sendMessage(getNick(locale).getSet(nick));
 	}
 
 	private void clearName(Audience src, Locale locale, ServerPlayer target, boolean equals) {
 		target.remove(Keys.CUSTOM_NAME);
 		if(!equals) {
-			target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_NICK_CLEAR_SELF));
-			target.sendMessage(getText(target, LocalesPaths.COMMANDS_NICK_CLEAR_STAFF).replace(Placeholders.PLAYER, text(target.name())).get());
-		} else target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_NICK_CLEAR_SELF));
+			target.sendMessage(getNick(target).getClear());
+			src.sendMessage(getNick(locale).getClearStaff(target));
+		} else src.sendMessage(getNick(locale).getClear());
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Nick getNick(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getNick();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Nick getNick(ServerPlayer player) {
+		return getNick(player.locale());
 	}
 
 }

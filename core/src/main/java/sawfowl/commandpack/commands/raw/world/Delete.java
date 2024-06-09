@@ -23,8 +23,6 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Delete extends AbstractWorldCommand {
 
@@ -41,7 +39,7 @@ public class Delete extends AbstractWorldCommand {
 			} else player.setLocation(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().location(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().spawnPosition()));
 		}
 		Sponge.server().worldManager().deleteWorld(world.key()).thenRunAsync(() -> {
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_DELETE).replace(Placeholders.WORLD, args.getInput()[0]).get());
+			audience.sendMessage(getCommands(locale).getWorld().getDelete(world.key().asString()));
 		});
 	}
 
@@ -83,7 +81,7 @@ public class Delete extends AbstractWorldCommand {
 			null,
 			null,
 			null,
-			createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT)
+			locale -> getExceptions(locale).getWorldNotPresent()
 		);
 	}
 

@@ -21,8 +21,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Repair extends AbstractParameterizedCommand {
@@ -39,21 +37,24 @@ public class Repair extends AbstractParameterizedCommand {
 			ServerPlayer player = (ServerPlayer) src;
 			if(optTarget.isPresent()) {
 				ServerPlayer target = optTarget.get();
-				repairItems(target, select);
 				if(!target.uniqueId().equals(player.uniqueId())) {
-					target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_REPAIR_SUCCES_OTHER));
-					player.sendMessage(getText(locale, LocalesPaths.COMMANDS_REPAIR_SUCCES_STAFF).replace(Placeholders.PLAYER, target.name()).get());
-				} else player.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_REPAIR_SUCCES));
-			} else {
+					repairItems(target, select);
+					target.sendMessage(getRepair(target).getSuccessOther());
+					player.sendMessage(getRepair(locale).getSuccessStaff(target));
+				} else delay(player, locale, consumer -> {
+					repairItems(player, select);
+					player.sendMessage(getRepair(locale).getSuccess());
+				});
+			} else delay(player, locale, consumer -> {
 				repairItems(player, select);
-				player.sendMessage(getComponent(locale, LocalesPaths.COMMANDS_REPAIR_SUCCES));
-			}
+				player.sendMessage(getRepair(locale).getSuccess());
+			});
 		} else {
 			if(optTarget.isPresent()) {
 				ServerPlayer target = optTarget.get();
 				repairItems(target, select);
-				target.sendMessage(getComponent(target, LocalesPaths.COMMANDS_REPAIR_SUCCES_OTHER));
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_REPAIR_SUCCES_STAFF).replace(Placeholders.PLAYER, target.name()).get());
+				target.sendMessage(getRepair(target).getSuccessOther());
+				src.sendMessage(getRepair(locale).getSuccessStaff(target));
 			}
 		}
 	}
@@ -66,8 +67,8 @@ public class Repair extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createPlayer(Permissions.REPAIR_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT),
-			ParameterSettings.of(CommandParameters.REPAIR, true, LocalesPaths.COMMANDS_EXCEPTION_TYPE_NOT_PRESENT)
+			ParameterSettings.of(CommandParameters.createPlayer(Permissions.REPAIR_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent()),
+			ParameterSettings.of(CommandParameters.REPAIR, true, locale -> getExceptions(locale).getTypeNotPresent())
 		);
 	}
 
@@ -105,6 +106,14 @@ public class Repair extends AbstractParameterizedCommand {
 
 	private void repairItem(ItemStack itemStack) {
 		if(!itemStack.isEmpty()) itemStack.offer(Keys.ITEM_DURABILITY, itemStack.get(Keys.MAX_DURABILITY).orElse(Integer.MAX_VALUE));
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Repair getRepair(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getRepair();
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Repair getRepair(ServerPlayer player) {
+		return getRepair(player.locale());
 	}
 
 }

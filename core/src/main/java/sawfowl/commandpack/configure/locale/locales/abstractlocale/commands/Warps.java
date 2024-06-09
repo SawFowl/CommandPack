@@ -6,7 +6,7 @@ public interface Warps {
 
 	Component getEmpty();
 
-	Component getList();
+	Component getList(int size, Component list);
 
 	Component getWait();
 

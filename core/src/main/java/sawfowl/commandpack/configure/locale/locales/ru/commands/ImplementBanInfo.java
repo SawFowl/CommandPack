@@ -35,7 +35,7 @@ public class ImplementBanInfo implements BanInfo {
 	}
 
 	@Override
-	public Component getSuccess(Component source, String created, String expire, Component reason) {
+	public Component getSuccess(Component source, String created, Component expire, Component reason) {
 		return Text.of(success).replace(Placeholders.SOURCE, source).replace(Placeholders.CREATED, created).replace(Placeholders.EXPIRE, expire).replace(Placeholders.REASON, reason).get();
 	}
 

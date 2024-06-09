@@ -23,8 +23,6 @@ import sawfowl.commandpack.commands.parameterized.serverstat.ServerTime;
 import sawfowl.commandpack.commands.parameterized.serverstat.Tps;
 import sawfowl.commandpack.commands.parameterized.serverstat.Worlds;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 import sawfowl.localeapi.api.TextUtils;
 
@@ -108,7 +106,7 @@ public class ServerStat extends AbstractInfoCommand {
 	}
 
 	private void sendStat(Audience src, Locale locale, boolean isPlayer) {
-		Component header = getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_HEADER);
+		Component title = getServerStat(locale).getTitle();
 		List<Component> statList = new ArrayList<>();
 		Component buttons = isPlayer ? getButtons((ServerPlayer) src, locale) : null;
 		if(buttons != null) statList.add(buttons.append(Component.newline()));
@@ -118,40 +116,37 @@ public class ServerStat extends AbstractInfoCommand {
 		statList.add(Component.empty());
 		long max = Runtime.getRuntime().maxMemory() / 1024 / 1024;
 		long total = Runtime.getRuntime().totalMemory() / 1024 / 1024;
-		statList.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_MAX).replace(Placeholders.VALUE, max).get());
-		statList.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_ALLOCATED).replace(Placeholders.VALUE, total).get());
+		statList.add(getServerStat(locale).getMemory().getMax(max));
+		statList.add(getServerStat(locale).getMemory().getAllocated(total));
 		long free = Runtime.getRuntime().freeMemory() / 1024 / 1024;
 		long utilised = total - free;
-		statList.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_UTILISED).replace(
-				new  String[] {Placeholders.VALUE, Placeholders.FROM_ALLOCATED, Placeholders.FROM_MAX}, 
-				new Component[] {text(utilised), text((utilised * 100)/total), text((utilised * 100)/max)}
-			).get());
-		statList.add(getText(locale, LocalesPaths.COMMANDS_SERVERSTAT_MEMORY_FREE).replace(Placeholders.VALUE, Runtime.getRuntime().freeMemory() / 1024 / 1024).get());
-		sendPaginationList(src, header, Component.text("=").color(header.color()), linesPerPage, statList);
+		statList.add(getServerStat(locale).getMemory().getUtilised(utilised, (utilised * 100)/total, (utilised * 100)/max));
+		statList.add(getServerStat(locale).getMemory().getFree(Runtime.getRuntime().freeMemory() / 1024 / 1024));
+		sendPaginationList(src, title, Component.text("=").color(title.color()), linesPerPage, statList);
 	}
 
 	private Component getButtons(ServerPlayer src, Locale locale) {
 		Component buttons = Component.empty();
 		if(src.hasPermission(Permissions.SERVER_STAT_STAFF_INFO_SYSTEM)) {
-			Component system = TextUtils.createCallBack(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_SYSTEM), cause -> {
+			Component system = TextUtils.createCallBack(getServerStat(locale).getButtons().getSystem(), cause -> {
 				sendSystemInfo(src, locale, true);
 			});
 			buttons = buttons.append(system).append(text("&r "));
 		}
 		if(src.hasPermission(Permissions.SERVER_STAT_STAFF_INFO_WORLDS)) {
-			Component worlds = TextUtils.createCallBack(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_WORLDS), cause -> {
+			Component worlds = TextUtils.createCallBack(getServerStat(locale).getButtons().getWorlds(), cause -> {
 				sendWorldsInfo(src, locale);
 			});
 			buttons = buttons.append(worlds).append(text("&r "));
 		}
 		if(src.hasPermission(Permissions.SERVER_STAT_STAFF_PLUGINS_LIST)) {
-			Component plugins = TextUtils.createCallBack(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_PLUGINS), cause -> {
+			Component plugins = TextUtils.createCallBack(getServerStat(locale).getButtons().getPlugins(), cause -> {
 				sendPluginsInfo(src, locale, true);
 			});
 			buttons = buttons.append(plugins);
 		}
 		if(plugin.isForgeServer() && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_MODS_LIST)) {
-			Component mods = TextUtils.createCallBack(getComponent(locale, LocalesPaths.COMMANDS_SERVERSTAT_BUTTON_MODS), cause -> {
+			Component mods = TextUtils.createCallBack(getServerStat(locale).getButtons().getMods(), cause -> {
 				sendModsInfo(src, locale, true);
 			});
 			buttons = buttons.append(text("&r ")).append(mods);

@@ -23,8 +23,6 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class Load extends AbstractWorldCommand {
 
@@ -35,9 +33,9 @@ public class Load extends AbstractWorldCommand {
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
 		ResourceKey world = args.<ResourceKey>get(0).get();
-		if(!Sponge.server().worldManager().offlineWorldKeys().stream().map(ResourceKey::asString).filter(k -> k.equals(world.asString())).findFirst().isPresent()) exceptionAppendUsage(cause, getText(locale, LocalesPaths.COMMANDS_WORLD_LOADED).replace(Placeholders.WORLD, world).get());
+		if(!Sponge.server().worldManager().offlineWorldKeys().stream().map(ResourceKey::asString).filter(k -> k.equals(world.asString())).findFirst().isPresent()) exceptionAppendUsage(cause, getWorld(locale).getAlreadyLoaded(world.asString()));
 		Sponge.server().worldManager().loadWorld(world).thenRunAsync(() -> {
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_LOAD).replace(Placeholders.WORLD, world).get());
+			audience.sendMessage(getWorld(locale).getLoad(world.asString()));
 		});
 	}
 
@@ -79,7 +77,7 @@ public class Load extends AbstractWorldCommand {
 			null,
 			null,
 			null,
-			createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT)
+			locale -> getExceptions(locale).getWorldNotPresent()
 		);
 	}
 

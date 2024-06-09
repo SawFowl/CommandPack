@@ -6,14 +6,12 @@ import net.kyori.adventure.text.Component;
 
 public interface Speed {
 
-	Component getSetSelf(double value);
+	Component getSetSelf(int value);
 
-	Component getSetByStaff(ServerPlayer player, double value);
+	Component getSetByStaff(ServerPlayer player, int value);
 
-	Component getSetOther(double value);
+	Component getSetOther(int value);
 
 	Component getInFly();
-
-	Component getSetDefault();
 
 }

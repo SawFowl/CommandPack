@@ -31,8 +31,6 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 public class GameRule extends AbstractWorldCommand {
 
@@ -44,40 +42,40 @@ public class GameRule extends AbstractWorldCommand {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
-		if(args.getInput().length == 0 || !Sponge.server().worldManager().world(ResourceKey.resolve(args.getInput()[0])).isPresent()) exceptionAppendUsage(cause, locale, LocalesPaths.COMMANDS_EXCEPTION_WORLD_NOT_PRESENT);
+		if(args.getInput().length == 0 || !Sponge.server().worldManager().world(ResourceKey.resolve(args.getInput()[0])).isPresent()) exceptionAppendUsage(cause, getExceptions(locale).getWorldNotPresent());
 		if(args.getInput().length == 1 || !gamerules.containsKey(args.getInput()[1])) {
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULES).replace(Placeholders.VALUE, String.join(", ", gamerules.keySet().stream().filter(k -> !k.contains(":")).toArray(String[]::new))).get());
+			audience.sendMessage(getWorld(locale).getGameRule().getList(String.join(", ", gamerules.keySet().stream().filter(k -> !k.contains(":")).toArray(String[]::new))));
 			return;
 		}
-		if(args.getInput().length == 2) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+		if(args.getInput().length == 2) exception(getExceptions(locale).getValueNotPresent());
 		ServerWorld world = args.getWorld(0).get();
 		org.spongepowered.api.world.gamerule.GameRule<?> rule = gamerules.get(args.getString(1).get());
 		String stringValueArg = args.getString(2).get();
 		if(isBooleanType(rule)) {
-			if(BooleanUtils.toBooleanObject(args.getInput()[2]) == null) exception(locale, LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT);
+			if(BooleanUtils.toBooleanObject(args.getInput()[2]) == null) exception(getExceptions(locale).getValueNotPresent());
 			org.spongepowered.api.world.gamerule.GameRule<Boolean> boolRule = (org.spongepowered.api.world.gamerule.GameRule<Boolean>) rule;
 			boolean value = BooleanUtils.toBooleanObject(args.getInput()[2]);
 			world.properties().setGameRule(boolRule, value);
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULE_SUCCESS).replace(new String[] {Placeholders.RULE, Placeholders.WORLD, Placeholders.VALUE}, rule.name(), world.key().asString(), value).get());
+			audience.sendMessage(getWorld(locale).getGameRule().getSuccess(rule.name(), world, value));
 		} else if(isIntType(rule)) {
-			if(!NumberUtils.isParsable(stringValueArg)) exception(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULE_INCORECT_VALUE).replace(Placeholders.RULE, rule.name()).get());
+			if(!NumberUtils.isParsable(stringValueArg)) exception(getWorld(locale).getGameRule().getIncorrectValue(rule.name()));
 			org.spongepowered.api.world.gamerule.GameRule<Integer> intRule = (org.spongepowered.api.world.gamerule.GameRule<Integer>) rule;
 			int value = NumberUtils.toInt(stringValueArg);
 			world.properties().setGameRule(intRule, value);
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULE_SUCCESS).replace(new String[] {Placeholders.RULE, Placeholders.WORLD, Placeholders.VALUE}, rule.name(), world.key().asString(), value).get());
+			audience.sendMessage(getWorld(locale).getGameRule().getSuccess(rule.name(), world, value));
 		} else if(isLongType(rule)) {
-			if(!NumberUtils.isParsable(stringValueArg)) exception(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULE_INCORECT_VALUE).replace(Placeholders.RULE, rule.name()).get());
+			if(!NumberUtils.isParsable(stringValueArg)) exception(getWorld(locale).getGameRule().getIncorrectValue(rule.name()));
 			org.spongepowered.api.world.gamerule.GameRule<Long> longRule = (org.spongepowered.api.world.gamerule.GameRule<Long>) rule;
 			long value = NumberUtils.toLong(stringValueArg);
 			world.properties().setGameRule(longRule, value);
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULE_SUCCESS).replace(new String[] {Placeholders.RULE, Placeholders.WORLD, Placeholders.VALUE}, rule.name(), world.key().asString(), value).get());
+			audience.sendMessage(getWorld(locale).getGameRule().getSuccess(rule.name(), world, value));
 		} else if(isDoubleType(rule)) {
-			if(!NumberUtils.isParsable(stringValueArg)) exception(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULE_INCORECT_VALUE).replace(Placeholders.RULE, rule.name()).get());
+			if(!NumberUtils.isParsable(stringValueArg)) exception(getWorld(locale).getGameRule().getIncorrectValue(rule.name()));
 			org.spongepowered.api.world.gamerule.GameRule<Double> doubleRule = (org.spongepowered.api.world.gamerule.GameRule<Double>) rule;
 			double value = NumberUtils.toDouble(stringValueArg);
 			world.properties().setGameRule(doubleRule, value);
-			audience.sendMessage(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULE_SUCCESS).replace(new String[] {Placeholders.RULE, Placeholders.WORLD, Placeholders.VALUE}, rule.name(), world.key().asString(), value).get());
-		} else exception(getText(locale, LocalesPaths.COMMANDS_WORLD_GAMERULE_UNKNOWN_TYPE).replace(Placeholders.RULE, rule.name()).get());
+			audience.sendMessage(getWorld(locale).getGameRule().getSuccess(rule.name(), world, value));
+		} else exception(getWorld(locale).getGameRule().getUnknownType(rule.name()));
 	}
 
 	@Override
@@ -104,7 +102,7 @@ public class GameRule extends AbstractWorldCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			createWorldArg(),
-			RawArguments.createStringArgument("GameRule", gamerules.keySet().isEmpty() ? fillMap() : gamerules.keySet(), true, true, 1, null, null, null, null, createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)),
+			RawArguments.createStringArgument("GameRule", gamerules.keySet().isEmpty() ? fillMap() : gamerules.keySet(), true, true, 1, null, null, null, null, locale -> getExceptions(locale).getTypeNotPresent()),
 			createValueArg()
 		);
 	}
@@ -146,7 +144,7 @@ public class GameRule extends AbstractWorldCommand {
 			null,
 			null,
 			null,
-			createComponentSupplier(LocalesPaths.COMMANDS_EXCEPTION_VALUE_NOT_PRESENT)
+			locale -> getExceptions(locale).getBooleanNotPresent()
 		);
 	}
 

@@ -4,6 +4,6 @@ import net.kyori.adventure.text.Component;
 
 public interface Broadcast {
 
-	Component getTitle();
+	Component getTitle(Component text);
 
 }

@@ -19,8 +19,6 @@ import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.Placeholders;
-import sawfowl.commandpack.configure.locale.LocalesPaths;
 
 @Register
 public class Ping extends AbstractParameterizedCommand {
@@ -34,11 +32,9 @@ public class Ping extends AbstractParameterizedCommand {
 		Optional<ServerPlayer> player = getPlayer(context);
 		if(isPlayer) {
 			if(player.isPresent() && !player.get().uniqueId().equals(((ServerPlayer) src).uniqueId())) {
-				src.sendMessage(getText(locale, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF).replace(Placeholders.VALUE, ((MixinServerPlayer) src).getPing()).get());
-			} else src.sendMessage(getText(locale, LocalesPaths.COMMANDS_PING_SUCCESS).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, player.get().name(), ((MixinServerPlayer) src).getPing()).get());
-		} else {
-			src.sendMessage(getText(locale, LocalesPaths.COMMANDS_PING_SUCCESS_STAFF).replace(new String[] {Placeholders.PLAYER, Placeholders.VALUE}, player.get().name(), MixinServerPlayer.cast(player.get()).getPing()).get());
-		}
+				src.sendMessage(getPing(locale).getSuccessStaff(player.get(), MixinServerPlayer.cast(player.get()).getPing()));
+			} else src.sendMessage(getPing(locale).getSuccessStaff((ServerPlayer) src, MixinServerPlayer.cast((ServerPlayer) src).getPing()));
+		} else src.sendMessage(getPing(locale).getSuccessStaff(player.get(), MixinServerPlayer.cast(player.get()).getPing()));
 	}
 
 	@Override
@@ -58,7 +54,11 @@ public class Ping extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.PING_STAFF, true), false, LocalesPaths.COMMANDS_EXCEPTION_PLAYER_NOT_PRESENT));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.PING_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent()));
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Ping getPing(Locale locale) {
+		return plugin.getLocales().getLocale(locale).getCommands().getPing();
 	}
 
 }

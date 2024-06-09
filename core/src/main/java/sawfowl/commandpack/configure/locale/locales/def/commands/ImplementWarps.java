@@ -17,7 +17,7 @@ public class ImplementWarps implements Warps {
 	@Setting("Empty")
 	private Component empty = TextUtils.deserializeLegacy("&cThe list of warps is empty.");
 	@Setting("List")
-	private Component list = TextUtils.deserializeLegacy("&eWarps: ");
+	private Component list = TextUtils.deserializeLegacy("&eWarps&7(&e"+ Placeholders.SIZE + "&7)&e: " + Placeholders.VALUE);
 	@Setting("Wait")
 	private Component wait = TextUtils.deserializeLegacy("&eThe list of warps is being compiled. Please wait.");
 	@Setting("Header")
@@ -33,8 +33,8 @@ public class ImplementWarps implements Warps {
 	}
 
 	@Override
-	public Component getList() {
-		return list;
+	public Component getList(int size, Component list) {
+		return Text.of(this.list).replace(Placeholders.SIZE, size).replace(Placeholders.VALUE, list).get();
 	}
 
 	@Override
