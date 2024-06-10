@@ -19,7 +19,7 @@ public class Locales {
 	private final LocaleService localeService;
 	private String[] localesTags;
 	private String pluginid = "commandpack";
-	public Locales(LocaleService localeService, boolean json) {
+	public Locales(LocaleService localeService) {
 		this.localeService = localeService;
 		localeService.localesExist(pluginid);
 		localeService.createPluginLocale(pluginid, ConfigTypes.HOCON, org.spongepowered.api.util.locale.Locales.DEFAULT);

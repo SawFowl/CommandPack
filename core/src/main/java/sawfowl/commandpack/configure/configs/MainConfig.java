@@ -29,8 +29,6 @@ public class MainConfig {
 
 	public MainConfig() {}
 
-	@Setting("JsonLocales")
-	private boolean jsonLocales = false;
 	@Setting("DebugEconomy")
 	private boolean debugEconomy = true;
 	@Setting("HideTeleportCommandSource")
@@ -75,10 +73,6 @@ public class MainConfig {
 	@Setting("ItemSerializer")
 	@Comment("Selecting serialization variant for items.\n1 - All NBT tags will be written in 1 line. This option is the most reliable, but significantly complicates manual editing of NBT tags in config.\n2 - Advanced recording. Easier to make manual changes to the config. If you have problems with this type of serialization, you should report errors to the LocaleAPI plugin developer.\n3 - Using Sponge serializer. Some data will be written in 1 line. If you encounter problems with this type of serialization, you should report bugs to the Sponge developers.\nOptions 1 and 2 are fully interchangeable and can load data saved by option 3. Option 3 cannot load data stored by other options.")
 	private int itemSerializer = 1;
-
-	public boolean isJsonLocales() {
-		return jsonLocales;
-	}
 
 	public boolean isDebugEconomy() {
 		return debugEconomy;

@@ -36,12 +36,12 @@ public interface CommandPack {
 	/**
 	 * Viewing and changing player data.
 	 */
-	PlayersData playersData();
+	PlayersData getPlayersData();
 
 	/**
 	 * Interface for working with teleportation to random coordinates.
 	 */
-	RandomTeleportService randomTeleportService();
+	RandomTeleportService getRandomTeleportService();
 
 	/**
 	 * Whether the plugin is running on the server with Forge.
@@ -51,7 +51,7 @@ public interface CommandPack {
 	/**
 	 * Kits API.
 	 */
-	KitService kitService();
+	KitService getKitService();
 
 	/**
 	 * Registration of the custom chunk generator.<br>

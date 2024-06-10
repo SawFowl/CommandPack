@@ -32,7 +32,7 @@ public class Sudo extends AbstractRawCommand {
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
 		if(!Sponge.server().commandManager().commandMapping(args.getInput()[1]).isPresent()) exception(getCommands(locale).getSudo().getCommandNotFound());
-		CommandResult result = plugin.getAPI().playersData().getOrCreatePlayerData(args.getPlayer(0).get()).runCommand(locale, args.getString(1).get());
+		CommandResult result = plugin.getAPI().getPlayersData().getOrCreatePlayerData(args.getPlayer(0).get()).runCommand(locale, args.getString(1).get());
 		if(!result.isSuccess() && result.errorMessage().isPresent()) exception(result.errorMessage().get());
 	}
 

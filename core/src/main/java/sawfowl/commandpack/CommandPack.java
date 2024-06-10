@@ -258,11 +258,11 @@ public class CommandPack {
 
 	@Listener
 	public void onLocaleServicePostEvent(LocaleServiseEvent.Construct event) {
+		locales = new Locales(event.getLocaleService());
 		rtpService = new RTPService(instance);
 		kitService = new KitServiceImpl(instance);
 		playersData = new PlayersDataImpl(instance);
 		configManager = new ConfigManager(instance);
-		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
 		configManager.loadPlayersData();
 		isForge = checkForge();
 		economy = new Economy(instance);
@@ -308,12 +308,12 @@ public class CommandPack {
 		api = new sawfowl.commandpack.api.CommandPack() {
 
 			@Override
-			public PlayersData playersData() {
+			public PlayersData getPlayersData() {
 				return playersData;
 			}
 
 			@Override
-			public RandomTeleportService randomTeleportService() {
+			public RandomTeleportService getRandomTeleportService() {
 				return rtpService;
 			}
 
@@ -323,7 +323,7 @@ public class CommandPack {
 			}
 
 			@Override
-			public KitService kitService() {
+			public KitService getKitService() {
 				return kitService;
 			}
 

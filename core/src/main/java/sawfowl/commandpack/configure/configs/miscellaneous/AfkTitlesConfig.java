@@ -9,10 +9,10 @@ public class AfkTitlesConfig {
 
 	public AfkTitlesConfig(){}
 
-	@Setting
+	@Setting("BeforeKick")
 	@Comment("If true, then the player will be shown how much time is left before he will be disconnected from the server.")
 	private boolean beforeKick = true;
-	@Setting
+	@Setting("Unlimit")
 	@Comment("If true, the player will constantly be sent a title with the message that he is AFK.\nThis option applies only to players who do not have a time limit on the AFK.")
 	private boolean unlimit = false;
 

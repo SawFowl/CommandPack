@@ -18,9 +18,9 @@ public class SpawnData {
 		this.locationData = new LocationData(serverLocation);
 	}
 
-	public SpawnData(ServerLocation serverLocation, Vector3d rotation, boolean moveAfterSpawn, boolean moveAfterRespawn) {
+	public SpawnData(ServerLocation serverLocation, Vector3d rotation, boolean moveAfterJoin, boolean moveAfterRespawn) {
 		this.locationData = new LocationData(serverLocation, rotation);
-		this.moveAfterSpawn = moveAfterSpawn;
+		this.moveAfterJoin = moveAfterJoin;
 		this.moveAfterRespawn = moveAfterRespawn;
 	}
 
@@ -29,9 +29,9 @@ public class SpawnData {
 	@Setting("MoveAfterRespawn")
 	@Comment("Teleport on player respawn.")
 	private boolean moveAfterRespawn = false;
-	@Setting("MoveAfterSpawn")
+	@Setting("MoveAfterJoin")
 	@Comment("Teleportation of a player at the join to the server.")
-	private boolean moveAfterSpawn = false;
+	private boolean moveAfterJoin = false;
 
 	public LocationData getLocationData() {
 		return locationData;
@@ -41,14 +41,14 @@ public class SpawnData {
 		return moveAfterRespawn;
 	}
 
-	public boolean isMoveAfterSpawn() {
-		return moveAfterSpawn;
+	public boolean isMoveAfterJoin() {
+		return moveAfterJoin;
 	}
 
 	@Override
 	public String toString() {
-		return "SpawnData [Location=" + locationData + ", MoveAfterRespawn=" + moveAfterRespawn + ", MoveAfterSpawn="
-				+ moveAfterSpawn + "]";
+		return "SpawnData [Location=" + locationData + ", MoveAfterRespawn=" + moveAfterRespawn + ", MoveAfterJoin="
+				+ moveAfterJoin + "]";
 	}
 
 }

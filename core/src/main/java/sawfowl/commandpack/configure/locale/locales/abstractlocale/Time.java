@@ -14,4 +14,6 @@ public interface Time {
 
 	String getFormat();
 
+	String getTimeZone();
+
 }

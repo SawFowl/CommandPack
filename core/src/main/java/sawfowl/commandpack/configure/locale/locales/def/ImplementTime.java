@@ -22,6 +22,8 @@ public class ImplementTime implements Time {
 	private Component day = TextUtils.deserializeLegacy("d");
 	@Setting("Format")
 	private String format = "MM.dd.yyyy HH:mm:ss";
+	@Setting("TimeZone")
+	private String timeZone = "UTC";
 
 	@Override
 	public Component getSecond() {
@@ -46,6 +48,11 @@ public class ImplementTime implements Time {
 	@Override
 	public String getFormat() {
 		return format;
+	}
+
+	@Override
+	public String getTimeZone() {
+		return timeZone;
 	}
 
 }

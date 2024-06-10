@@ -23,8 +23,8 @@ public class RestrictEntitySpawn {
 	@Setting("Worlds")
 	private Map<String, RestrictEntityWorldSpawn> worlds = arraysToMap(new String[] {"minecraft:overworld", "minecraft:the_nether", "minecraft:the_end"}, new RestrictEntityWorldSpawn[] {new RestrictEntityWorldSpawn(), new RestrictEntityWorldSpawn(), new RestrictEntityWorldSpawn()});;
 
-	public boolean isAllowSpawn(String entity, String string) {
-		return !enable || (worlds.containsKey(string) && worlds.get(string).contains(entity) ? worlds.get(string).isAllowSpawn(entity) : (blackList ? !entities.contains(entity) : entities.contains(entity)));
+	public boolean isAllowSpawn(String entity, String world) {
+		return !enable || (worlds.containsKey(world) && worlds.get(world).contains(entity) ? worlds.get(world).isAllowSpawn(entity) : (blackList ? !entities.contains(entity) : entities.contains(entity)));
 	}
 
 	private Map<String, RestrictEntityWorldSpawn> arraysToMap(String[] keys, RestrictEntityWorldSpawn[] values) {
