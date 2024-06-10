@@ -17,21 +17,17 @@ public class ImplementGenerate implements Generate {
 	public ImplementGenerate() {}
 
 	@Setting("Debug")
-	private String debug = "The generation of chunks in world \"" + Placeholders.WORLD + "\" in progress. Done: " + Placeholders.VALUE + "%. The last generated chunk: " + Placeholders.LOCATION + ".";
+	private String debug = "Выполняется генерация чанков в мире \"" + Placeholders.WORLD + "\". Завершено: " + Placeholders.VALUE + "%. Последний сгенерированный чанк: " + Placeholders.LOCATION + ".";
 	@Setting("NotStarted")
-	private Component notStarted = TextUtils.deserializeLegacy("&cThe task of generating chunks in world &e\"" + Placeholders.WORLD + "\"&c is missing.");
+	private Component notStarted = TextUtils.deserializeLegacy("&cНе найдена задача генерации чанков в мире &e\"" + Placeholders.WORLD + "\"&c.");
 	@Setting("NotPaused")
-	private Component notPaused = TextUtils.deserializeLegacy("&cYou cannot delete an active generation task. Put it on pause first.");
+	private Component notPaused = TextUtils.deserializeLegacy("&cВы не можете удалить активную задачу генерации. Сначала поставьте ее на паузу.");
 	@Setting("Start")
-	private Component start = TextUtils.deserializeLegacy("&aChunk generation in world &e\"" + Placeholders.WORLD + "\" &ahas started.\n If you stop the server, when you start this operation again, generation will start from the beginning.");
+	private Component start = TextUtils.deserializeLegacy("&aЗапущена генерация чанков в мире &e\"" + Placeholders.WORLD + "\" &a.\n Если вы остановите сервер, то при повторном запуске этой операции генерация начнется с самого начала.");
 	@Setting("Pause")
-	private Component pause = TextUtils.deserializeLegacy("&aChunk generation in world &e\"" + Placeholders.WORLD + "\"&a is suspended.");
+	private Component pause = TextUtils.deserializeLegacy("&aГенерация чанков в мире &e\"" + Placeholders.WORLD + "\"&a поставлена на паузу.");
 	@Setting("Stop")
-	private Component stop = TextUtils.deserializeLegacy("&aThe generation of chunks in world&e\"" + Placeholders.WORLD + "\"&a has been stopped. The task is deleted.");
-	@Setting("EnableSpawnLogic")
-	private Component enableSpawnLogic = TextUtils.deserializeLegacy("&aEnabled the logic of spawn in the world &e\"" + Placeholders.WORLD + "\"&a.");
-	@Setting("DisableSpawnLogic")
-	private Component disableSpawnLogic = TextUtils.deserializeLegacy("&aDisabled the logic of spawn in the world &e\"" + Placeholders.WORLD + "\"&a.");
+	private Component stop = TextUtils.deserializeLegacy("&aОстановлена генерация чанков в мире&e\"" + Placeholders.WORLD + "\"&a. Задача удалена.");
 
 	@Override
 	public String getDebug(ServerWorld world, double value, Vector3i lastChunk) {
@@ -61,16 +57,6 @@ public class ImplementGenerate implements Generate {
 	@Override
 	public Component getStop(ServerWorld world) {
 		return Text.of(stop).replace(Placeholders.WORLD, world.key().asString()).get();
-	}
-
-	@Override
-	public Component getEnableSpawnLogic(ServerWorld world) {
-		return Text.of(enableSpawnLogic).replace(Placeholders.WORLD, world.key().asString()).get();
-	}
-
-	@Override
-	public Component getDisableSpawnLogic(ServerWorld world) {
-		return Text.of(disableSpawnLogic).replace(Placeholders.WORLD, world.key().asString()).get();
 	}
 
 }

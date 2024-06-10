@@ -20,17 +20,17 @@ public class ImplementBalance implements Balance {
 	public ImplementBalance() {}
 
 	@Setting("Title")
-	private Component title = TextUtils.deserializeLegacy("&3Your balance");
+	private Component title = TextUtils.deserializeLegacy("&3Ваш баланс");
 	@Setting("TitleOther")
-	private Component titleOther = TextUtils.deserializeLegacy("&3Balance: " + Placeholders.PLAYER);
+	private Component titleOther = TextUtils.deserializeLegacy("&3Баланс: " + Placeholders.PLAYER);
 	@Setting("Element")
-	@Comment("You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.")
+	@Comment("Вы можете использовать следующие плейсхолдеры для отображения валюты:\n" + Placeholders.CURRENCY_SYMBOL + " - Отображение символа валюты.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Отображение символа валюты с применением стиля из ее имени.\n" + Placeholders.CURRENCY_NAME + " - Отображение имени валюты.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Отображение имени валюты в множественном числе.")
 	private Component element = TextUtils.deserializeLegacy("&a" + Placeholders.CURRENCY_NAME + "&f: &e" + Placeholders.VALUE);
 	@Setting("ElementOther")
-	@Comment("You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.")
+	@Comment("Вы можете использовать следующие плейсхолдеры для отображения валюты:\n" + Placeholders.CURRENCY_SYMBOL + " - Отображение символа валюты.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Отображение символа валюты с применением стиля из ее имени.\n" + Placeholders.CURRENCY_NAME + " - Отображение имени валюты.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Отображение имени валюты в множественном числе.")
 	private Component elementOther = TextUtils.deserializeLegacy("&a" + Placeholders.CURRENCY_NAME + "&f: &e" + Placeholders.VALUE);
 	@Setting("Hiden")
-	private Component hiden = TextUtils.deserializeLegacy("&cThe balance of player &e" + Placeholders.PLAYER + "&c is hidden.");
+	private Component hiden = TextUtils.deserializeLegacy("&cБаланс игрока &e" + Placeholders.PLAYER + "&c скрыт.");
 
 	@Override
 	public Component getTitle() {

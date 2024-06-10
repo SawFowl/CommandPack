@@ -16,9 +16,9 @@ public class ImplementInfo implements Info {
 	public ImplementInfo() {}
 
 	@Setting("Player")
-	private Component playerInfo = TextUtils.deserializeLegacy("&aPlayer&f: &e" + Placeholders.PLAYER + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON);
+	private Component playerInfo = TextUtils.deserializeLegacy("&aИгрок&f: &e" + Placeholders.PLAYER + "\n&aБан выдал&f: &e" + Placeholders.SOURCE + "\n&aБан создан&f: &e" + Placeholders.CREATED + "\n&aИстекает&f: &e" + Placeholders.EXPIRE + "\n&aПричина&f: &e" + Placeholders.REASON);
 	@Setting("IP")
-	private Component ipInfo = TextUtils.deserializeLegacy("&aIP&f: &e" + Placeholders.VALUE + "\n&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON);
+	private Component ipInfo = TextUtils.deserializeLegacy("&aIP&f: &e" + Placeholders.VALUE + "\n&aБан выдал&f: &e" + Placeholders.SOURCE + "\n&aБан создан&f: &e" + Placeholders.CREATED + "\n&aИстекает&f: &e" + Placeholders.EXPIRE + "\n&aПричина&f: &e" + Placeholders.REASON);
 
 	@Override
 	public Component getPlayer(String player, Component source, String created, Component expire, Component reason) {

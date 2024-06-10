@@ -13,7 +13,7 @@ public class ImplementDisposal implements Disposal {
 	public ImplementDisposal() {}
 
 	@Setting("Title")
-	private Component title = TextUtils.deserializeLegacy("&a&lTrash");
+	private Component title = TextUtils.deserializeLegacy("&a&lМусорная корзина");
 
 	@Override
 	public Component getTitle() {

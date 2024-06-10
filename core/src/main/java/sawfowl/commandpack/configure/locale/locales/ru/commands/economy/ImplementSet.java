@@ -19,11 +19,11 @@ public class ImplementSet implements Economy.SubCommand {
 	public ImplementSet() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYou have set player balance &e" + Placeholders.PLAYER + "&a in currency '&e" + Placeholders.CURRENCY_NAME + "&a' = &e" + Placeholders.MONEY + "&a.");
+	private Component success = TextUtils.deserializeLegacy("&aВыы изменили баланс игрока &e" + Placeholders.PLAYER + "&a в валюте '&e" + Placeholders.CURRENCY_NAME + "&a' на &e" + Placeholders.MONEY + "&a.");
 	@Setting("SuccessUnknown")
-	private Component successUnknown = TextUtils.deserializeLegacy("&aUnknown player nickname&f: &e" + Placeholders.PLAYER + "&a. Created/used a temporary account with the specified name and changed the balance in currency '&e" + Placeholders.CURRENCY_NAME + "&a' = &e" + Placeholders.MONEY + "&a.");
+	private Component successUnknown = TextUtils.deserializeLegacy("&aНеизвестный ник игрока&f: &e" + Placeholders.PLAYER + "&a. Создание/использование временного аккаунта с указанным именем и увеличение баланса в валюте '&e" + Placeholders.CURRENCY_NAME + "&a'. Теперь баланс равен &e" + Placeholders.MONEY + "&a.");
 	@Setting("SuccessTarget")
-	private Component successTarget = TextUtils.deserializeLegacy("&aYour balance in '&e" + Placeholders.CURRENCY_NAME + "&a' currency has been changed and is now &e" + Placeholders.MONEY + "&a.");
+	private Component successTarget = TextUtils.deserializeLegacy("&aВаш баланс в валюте '&e" + Placeholders.CURRENCY_NAME + "&a' установлен в значении &e" + Placeholders.MONEY + "&a.");
 
 	@Override
 	public Component getSuccess(Component player, Currency currency, BigDecimal value, BigDecimal money) {

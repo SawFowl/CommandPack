@@ -18,15 +18,21 @@ public interface Punishment {
 		
 	}
 
+	interface WarnsBefore {
+
+		String getTitle();
+
+		String getPunishTime();
+
+	}
+
 	DBSettings getDBSettings();
+
+	WarnsBefore getWarnsBefore();
 
 	String getStorageType();
 
 	String getAnnounce();
-
-	String getWarnsBefore();
-
-	String getPunishTime();
 
 	String getDateTimeFormat();
 

@@ -15,19 +15,19 @@ public class ImplementAboutMod implements AboutMod {
 	public ImplementAboutMod() {}
 
 	@Setting("Title")
-	private Component title = TextUtils.deserializeLegacy("&3About mod");
+	private Component title = TextUtils.deserializeLegacy("&3Информация о моде");
 	@Setting("Id")
 	private Component id = TextUtils.deserializeLegacy("&2ID&f: &2" + Placeholders.VALUE);
 	@Setting("Name")
-	private Component name = TextUtils.deserializeLegacy("&2Name&f: &2" + Placeholders.VALUE);
+	private Component name = TextUtils.deserializeLegacy("&2Имя&f: &2" + Placeholders.VALUE);
 	@Setting("Version")
-	private Component version = TextUtils.deserializeLegacy("&2Version&f: &2" + Placeholders.VALUE);
+	private Component version = TextUtils.deserializeLegacy("&2Версия&f: &2" + Placeholders.VALUE);
 	@Setting("Description")
-	private Component description = TextUtils.deserializeLegacy("&2Description&f: &2" + Placeholders.VALUE);
+	private Component description = TextUtils.deserializeLegacy("&2Описание&f: &2" + Placeholders.VALUE);
 	@Setting("Dependencies")
-	private Component dependencies = TextUtils.deserializeLegacy("&2Dependencies&f: &2" + Placeholders.VALUE);
+	private Component dependencies = TextUtils.deserializeLegacy("&2Зависимости&f: &2" + Placeholders.VALUE);
 	@Setting("Links")
-	private Component links = TextUtils.deserializeLegacy("&2Links&f:\n    &2Issues&f: &b" + Placeholders.ISSUES_LINK + "\n    &2Updates&f: &b" + Placeholders.UPDATE_LINK);
+	private Component links = TextUtils.deserializeLegacy("&2Ссылки&f:\n    &2Трекер проблем&f: &b" + Placeholders.ISSUES_LINK + "\n    &2Обновления&f: &b" + Placeholders.UPDATE_LINK);
 
 	@Override
 	public Component getTitle() {

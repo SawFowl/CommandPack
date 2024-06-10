@@ -17,9 +17,9 @@ public class ImplementFeed implements Feed {
 	public ImplementFeed() {}
 
 	@Setting("Seccess")
-	private Component success = TextUtils.deserializeLegacy("&aYour food level is now maximum.");
+	private Component success = TextUtils.deserializeLegacy("&aВаш уровень сытости теперь максимальный.");
 	@Setting("SeccessStaff")
-	private Component successStaff = TextUtils.deserializeLegacy("&aYou saturated the player &e" + Placeholders.PLAYER + "&a.");
+	private Component successStaff = TextUtils.deserializeLegacy("&aВы накормили игрока &e" + Placeholders.PLAYER + "&a.");
 
 	@Override
 	public Component getSuccess() {

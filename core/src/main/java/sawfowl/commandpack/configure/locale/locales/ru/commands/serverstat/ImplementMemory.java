@@ -15,13 +15,13 @@ public class ImplementMemory implements Memory {
 	public ImplementMemory() {}
 
 	@Setting("Max")
-	private Component max = TextUtils.deserializeLegacy("&aMax(JVM) RAM&f: &e" + Placeholders.VALUE + "Mb");
+	private Component max = TextUtils.deserializeLegacy("&aМаксимум(JVM) RAM&f: &e" + Placeholders.VALUE + "Mb");
 	@Setting("Allocated")
-	private Component allocated = TextUtils.deserializeLegacy("&aAllocated RAM&f: &e" + Placeholders.VALUE + "Mb");
+	private Component allocated = TextUtils.deserializeLegacy("&aВыделено RAM&f: &e" + Placeholders.VALUE + "Mb");
 	@Setting("Utilised")
-	private Component utilised = TextUtils.deserializeLegacy("&aUtilised RAM&f: &e" + Placeholders.VALUE + "Mb(&6"+ Placeholders.FROM_ALLOCATED + "%&e of used, &6" + Placeholders.FROM_MAX + "%&e of max)");
+	private Component utilised = TextUtils.deserializeLegacy("&aИспользуется RAM&f: &e" + Placeholders.VALUE + "Mb(&6"+ Placeholders.FROM_ALLOCATED + "%&e от выделенной, &6" + Placeholders.FROM_MAX + "%&e от максимума)");
 	@Setting("Free")
-	private Component free = TextUtils.deserializeLegacy("&aFree (but allocated) memory&f: &e" + Placeholders.VALUE + "Mb");
+	private Component free = TextUtils.deserializeLegacy("&aСвободная (но выделенная) память&f: &e" + Placeholders.VALUE + "Mb");
 
 	@Override
 	public Component getMax(long value) {

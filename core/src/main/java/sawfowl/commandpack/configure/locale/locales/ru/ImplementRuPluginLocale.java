@@ -7,6 +7,7 @@ import sawfowl.commandpack.configure.locale.locales.AbstractLocale;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.Buttons;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.CommandExceptions;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.Commands;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.Comments;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.Debug;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.Other;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.Time;
@@ -22,6 +23,8 @@ public class ImplementRuPluginLocale implements AbstractLocale {
 	private ImplementCommandExceptions exceptions = new ImplementCommandExceptions();
 	@Setting("Commands")
 	private ImplementCommands commands = new ImplementCommands();
+	@Setting("Comments")
+	private ImplementComments comments = new ImplementComments();
 	@Setting("Debug")
 	private ImplementDebug debug = new ImplementDebug();
 	@Setting("Other")
@@ -42,6 +45,11 @@ public class ImplementRuPluginLocale implements AbstractLocale {
 	@Override
 	public Commands getCommands() {
 		return commands;
+	}
+
+	@Override
+	public Comments getComments() {
+		return comments;
 	}
 
 	@Override

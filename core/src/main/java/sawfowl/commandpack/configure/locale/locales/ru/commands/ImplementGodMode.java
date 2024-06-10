@@ -16,13 +16,13 @@ public class ImplementGodMode implements GodMode {
 	public ImplementGodMode() {}
 
 	@Setting("Enable")
-	private Component enable = TextUtils.deserializeLegacy("&aNow you are invulnerable.");
+	private Component enable = TextUtils.deserializeLegacy("&aТеперь вы неуязвимы.");
 	@Setting("EnableStaff")
-	private Component enableStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a now has invulnerability.");
+	private Component enableStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a теперь неуязвим.");
 	@Setting("Disable")
-	private Component disable = TextUtils.deserializeLegacy("&aInvulnerability is disabled.");
+	private Component disable = TextUtils.deserializeLegacy("&aНеуязвимость отключена.");
 	@Setting("DisableStaff")
-	private Component disableStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a no longer has invulnerability.");
+	private Component disableStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a больше не неуязвим.");
 
 	@Override
 	public Component getEnable() {

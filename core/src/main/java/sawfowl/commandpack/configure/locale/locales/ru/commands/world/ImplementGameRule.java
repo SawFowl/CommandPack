@@ -16,13 +16,13 @@ public class ImplementGameRule implements GameRule {
 	public ImplementGameRule() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aGame rule &e" + Placeholders.RULE + "&a in world &e\"" + Placeholders.WORLD + "\"&a is set to &e" + Placeholders.VALUE + "&a.");
+	private Component success = TextUtils.deserializeLegacy("&aИгровое правило &e" + Placeholders.RULE + "&a в мире &e\"" + Placeholders.WORLD + "\"&a теперь имеет значение &e" + Placeholders.VALUE + "&a.");
 	@Setting("List")
-	private Component list = TextUtils.deserializeLegacy("&6Game rules&f: &e" + Placeholders.VALUE + "&a.");
+	private Component list = TextUtils.deserializeLegacy("&6Игровые правила&f: &e" + Placeholders.VALUE + "&a.");
 	@Setting("IncorrectValue")
-	private Component incorrectValue = TextUtils.deserializeLegacy("&eInvalid value specified for game rule &e" + Placeholders.RULE + "&a.");
+	private Component incorrectValue = TextUtils.deserializeLegacy("&eУказано не корректное значение для игрового правила &e" + Placeholders.RULE + "&a.");
 	@Setting("UnknownType")
-	private Component unknownType = TextUtils.deserializeLegacy("&cFailed to determine the type of game rule &e" + Placeholders.RULE + "&c. No changes have been made.");
+	private Component unknownType = TextUtils.deserializeLegacy("&cНе удалось определить тип игрового правила &e" + Placeholders.RULE + "&c. Никаких изменений не внесено.");
 
 	@Override
 	public Component getSuccess(String gamerule, ServerWorld world, Object value) {

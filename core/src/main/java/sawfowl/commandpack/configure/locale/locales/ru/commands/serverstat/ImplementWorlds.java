@@ -19,9 +19,9 @@ public class ImplementWorlds implements Worlds {
 	public ImplementWorlds() {}
 
 	@Setting("Title")
-	private Component title = TextUtils.deserializeLegacy("&3&lWorlds information");
+	private Component title = TextUtils.deserializeLegacy("&3&lИнформация о мирах");
 	@Setting("WorldInfo")
-	private Component worldInfo = TextUtils.deserializeLegacy("&aWorld&f: &e" + Placeholders.WORLD + "&a. Chunks loaded&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Entities&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: &e" + Placeholders.VALUE + "&7(" + Placeholders.TIME + "&3ms&7)&a.");
+	private Component worldInfo = TextUtils.deserializeLegacy("&aМир&f: &e" + Placeholders.WORLD + "&a. Загружено чанков&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Сущностей&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: &e" + Placeholders.VALUE + "&7(" + Placeholders.TIME + "&3ms&7)&a.");
 
 	@Override
 	public Component getTitle() {

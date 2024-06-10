@@ -19,8 +19,4 @@ public interface Generate {
 
 	Component getStop(ServerWorld world);
 
-	Component getEnableSpawnLogic(ServerWorld world);
-
-	Component getDisableSpawnLogic(ServerWorld world);
-
 }

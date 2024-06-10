@@ -16,7 +16,7 @@ public class ImplementEnchantmentTable implements EnchantmentTable {
 	public ImplementEnchantmentTable() {}
 
 	@Setting("SuccessStaff")
-	private Component successStaff = TextUtils.deserializeLegacy("&aYou have opened the enchantment table inventory to a player &e" + Placeholders.PLAYER + "&a.");
+	private Component successStaff = TextUtils.deserializeLegacy("&aВы открыли виртуальный стол зачарований игроку &e" + Placeholders.PLAYER + "&a.");
 
 	@Override
 	public Component getSuccessStaff(ServerPlayer player) {

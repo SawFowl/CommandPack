@@ -16,13 +16,13 @@ public class ImplementFly implements Fly {
 	public ImplementFly() {}
 
 	@Setting("Enable")
-	private Component enable = TextUtils.deserializeLegacy("&aNow you can fly.");
+	private Component enable = TextUtils.deserializeLegacy("&aТеперь вы можете летать.");
 	@Setting("EnableStaff")
-	private Component enableStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a can now fly.");
+	private Component enableStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a теперь может летать.");
 	@Setting("Disable")
-	private Component disable = TextUtils.deserializeLegacy("&aFlight disabled.");
+	private Component disable = TextUtils.deserializeLegacy("&aПолет отключен.");
 	@Setting("DisableStaff")
-	private Component disableStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a can't fly anymore.");
+	private Component disableStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a больше не может летать.");
 
 	@Override
 	public Component getEnable() {

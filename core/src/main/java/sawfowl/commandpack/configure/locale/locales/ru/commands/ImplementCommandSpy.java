@@ -17,11 +17,11 @@ public class ImplementCommandSpy implements CommandSpy {
 	public ImplementCommandSpy() {}
 
 	@Setting("Enable")
-	private Component enable = TextUtils.deserializeLegacy("&aNow you will see what commands other players are using.");
+	private Component enable = TextUtils.deserializeLegacy("&aТеперь вы увидите, какие команды используют другие игроки.");
 	@Setting("Disable")
-	private Component disable = TextUtils.deserializeLegacy("&aYou will no longer see what commands other players are using.");
+	private Component disable = TextUtils.deserializeLegacy("&aВы больше не будете видеть, какие команды используют другие игроки.");
 	@Setting("Spy")
-	private Component spy = TextUtils.deserializeLegacy("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 uses the command&f: &d" + Placeholders.COMMAND).clickEvent(ClickEvent.suggestCommand("/tell " + Placeholders.PLAYER));
+	private Component spy = TextUtils.deserializeLegacy("&8[&bCommand&9Spy&8] &e" + Placeholders.PLAYER + "&7 использует команду&f: &d" + Placeholders.COMMAND).clickEvent(ClickEvent.suggestCommand("/tell " + Placeholders.PLAYER));
 
 	@Override
 	public Component getEnable() {

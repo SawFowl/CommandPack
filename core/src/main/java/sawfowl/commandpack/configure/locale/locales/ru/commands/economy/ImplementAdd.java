@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
@@ -19,11 +20,14 @@ public class ImplementAdd implements Economy.SubCommand {
 	public ImplementAdd() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aBalance of &e" + Placeholders.PLAYER + "&a has been increased in '&e" + Placeholders.CURRENCY_NAME + "&a' currency by &e" + Placeholders.VALUE + "&a and is now &e" + Placeholders.MONEY + "&a.");
+	@Comment("Вы можете использовать следующие плейсхолдеры для отображения валюты:\n" + Placeholders.CURRENCY_SYMBOL + " - Отображение символа валюты.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Отображение символа валюты с применением стиля из ее имени.\n" + Placeholders.CURRENCY_NAME + " - Отображение имени валюты.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Отображение имени валюты в множественном числе.")
+	private Component success = TextUtils.deserializeLegacy("&aБаланс &e" + Placeholders.PLAYER + "&a увеличен в валюте '&e" + Placeholders.CURRENCY_NAME + "&a' на &e" + Placeholders.VALUE + "&a и теперь составляет &e" + Placeholders.MONEY + "&a.");
 	@Setting("SuccessUnknown")
-	private Component successUnknown = TextUtils.deserializeLegacy("&aUnknown player nickname&f: &e" + Placeholders.PLAYER + "&a. Created/used a temporary account with the specified name and increased the balance in the '&e" + Placeholders.CURRENCY_NAME + "&a' currency by &e" + Placeholders.VALUE + "&a and is now &e" + Placeholders.MONEY + "&a.");
+	@Comment("Вы можете использовать следующие плейсхолдеры для отображения валюты:\n" + Placeholders.CURRENCY_SYMBOL + " - Отображение символа валюты.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Отображение символа валюты с применением стиля из ее имени.\n" + Placeholders.CURRENCY_NAME + " - Отображение имени валюты.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Отображение имени валюты в множественном числе.")
+	private Component successUnknown = TextUtils.deserializeLegacy("&aНеизвестный ник игрока&f: &e" + Placeholders.PLAYER + "&a. Создание/использование временного аккаунта с указанным именем и увеличение баланса в валюте '&e" + Placeholders.CURRENCY_NAME + "&a' на &e" + Placeholders.VALUE + "&a. Теперь баланс равен &e" + Placeholders.MONEY + "&a.");
 	@Setting("SuccessTarget")
-	private Component successTarget = TextUtils.deserializeLegacy("&aYour balance in '&e" + Placeholders.CURRENCY_NAME + "&a' currency has been increased in &e" + Placeholders.VALUE + " &aand now equals " + Placeholders.MONEY + "&a.");
+	@Comment("Вы можете использовать следующие плейсхолдеры для отображения валюты:\n" + Placeholders.CURRENCY_SYMBOL + " - Отображение символа валюты.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Отображение символа валюты с применением стиля из ее имени.\n" + Placeholders.CURRENCY_NAME + " - Отображение имени валюты.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Отображение имени валюты в множественном числе.")
+	private Component successTarget = TextUtils.deserializeLegacy("&aВаш баланс в валюте '&e" + Placeholders.CURRENCY_NAME + "&a' увеличен на &e" + Placeholders.VALUE + " &aи теперь составляет " + Placeholders.MONEY + "&a.");
 
 	@Override
 	public Component getSuccess(Component player, Currency currency, BigDecimal value, BigDecimal money) {

@@ -28,10 +28,6 @@ public class ImplementGenerate implements Generate {
 	private Component pause = TextUtils.deserializeLegacy("&aChunk generation in world &e\"" + Placeholders.WORLD + "\"&a is suspended.");
 	@Setting("Stop")
 	private Component stop = TextUtils.deserializeLegacy("&aThe generation of chunks in world&e\"" + Placeholders.WORLD + "\"&a has been stopped. The task is deleted.");
-	@Setting("EnableSpawnLogic")
-	private Component enableSpawnLogic = TextUtils.deserializeLegacy("&aEnabled the logic of spawn in the world &e\"" + Placeholders.WORLD + "\"&a.");
-	@Setting("DisableSpawnLogic")
-	private Component disableSpawnLogic = TextUtils.deserializeLegacy("&aDisabled the logic of spawn in the world &e\"" + Placeholders.WORLD + "\"&a.");
 
 	@Override
 	public String getDebug(ServerWorld world, double value, Vector3i lastChunk) {
@@ -61,16 +57,6 @@ public class ImplementGenerate implements Generate {
 	@Override
 	public Component getStop(ServerWorld world) {
 		return Text.of(stop).replace(Placeholders.WORLD, world.key().asString()).get();
-	}
-
-	@Override
-	public Component getEnableSpawnLogic(ServerWorld world) {
-		return Text.of(enableSpawnLogic).replace(Placeholders.WORLD, world.key().asString()).get();
-	}
-
-	@Override
-	public Component getDisableSpawnLogic(ServerWorld world) {
-		return Text.of(disableSpawnLogic).replace(Placeholders.WORLD, world.key().asString()).get();
 	}
 
 }

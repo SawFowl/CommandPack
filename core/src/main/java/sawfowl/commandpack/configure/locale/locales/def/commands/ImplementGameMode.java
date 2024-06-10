@@ -16,7 +16,7 @@ public class ImplementGameMode implements GameMode {
 	public ImplementGameMode() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYour game mode has been changed to" + Placeholders.VALUE + "&a.");
+	private Component success = TextUtils.deserializeLegacy("&aYour game mode has been changed to " + Placeholders.VALUE + "&a.");
 	@Setting("SuccessStaff")
 	private Component successStaff = TextUtils.deserializeLegacy("&aPlayer &e" + Placeholders.PLAYER + " &ais set to play mode " + Placeholders.VALUE + "&a.");
 	@Setting("Creative")

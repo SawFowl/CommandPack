@@ -17,11 +17,11 @@ public class ImplementFlame implements Flame {
 	public ImplementFlame() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYou are burning.");
+	private Component success = TextUtils.deserializeLegacy("&aВы горите.");
 	@Setting("Damage")
-	private Component damage = TextUtils.deserializeLegacy("&4You are burning!");
+	private Component damage = TextUtils.deserializeLegacy("&4Вы горите!");
 	@Setting("SuccessStaff")
-	private Component successStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a is now burning.");
+	private Component successStaff = TextUtils.deserializeLegacy("&aВы подожгли &e" + Placeholders.PLAYER + "&a.");
 
 	@Override
 	public Component getSuccess() {

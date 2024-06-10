@@ -16,13 +16,13 @@ public class ImplementGameMode implements GameMode {
 	public ImplementGameMode() {}
 
 	@Setting("Survival")
-	private Component survival = TextUtils.deserializeLegacy("&aSurvival mode is set in world &e\"" + Placeholders.WORLD + "\"&a.");
+	private Component survival = TextUtils.deserializeLegacy("&aУстановлен режим выживания в мире &e\"" + Placeholders.WORLD + "\"&a.");
 	@Setting("Creative")
-	private Component creative = TextUtils.deserializeLegacy("&aThe creative mode is set in world &e\"" + Placeholders.WORLD + "\"&a.");
+	private Component creative = TextUtils.deserializeLegacy("&aУстановлен творческий режим в мире &e\"" + Placeholders.WORLD + "\"&a.");
 	@Setting("Adventure")
-	private Component adventure = TextUtils.deserializeLegacy("&aThe adventure mode is set in world &e\"" + Placeholders.WORLD + "\"&a.");
+	private Component adventure = TextUtils.deserializeLegacy("&aУстановлен режим приключения в мире &e\"" + Placeholders.WORLD + "\"&a.");
 	@Setting("Spectator")
-	private Component spectator = TextUtils.deserializeLegacy("&aSpectator mode is set to world &e\"" + Placeholders.WORLD + "\"&a.");
+	private Component spectator = TextUtils.deserializeLegacy("&aУстановлен режим наблюдателя в мире &e\"" + Placeholders.WORLD + "\"&a.");
 
 	@Override
 	public Component getSurvival(ServerWorld world) {

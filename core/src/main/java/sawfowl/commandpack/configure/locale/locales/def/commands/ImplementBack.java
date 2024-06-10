@@ -19,12 +19,12 @@ public class ImplementBack implements Back {
 
 	@Override
 	public Component getNotFound() {
-		return null;
+		return notFound;
 	}
 
 	@Override
 	public Component getNotLoadedWorld() {
-		return null;
+		return notLoadedWorld;
 	}
 
 }

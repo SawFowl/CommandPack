@@ -14,10 +14,12 @@ import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.worl
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.world.GameMode;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.world.GameRule;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.world.Generate;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.world.SpawnLogic;
 import sawfowl.commandpack.configure.locale.locales.def.commands.world.ImplementDifficulty;
 import sawfowl.commandpack.configure.locale.locales.def.commands.world.ImplementGameRule;
 import sawfowl.commandpack.configure.locale.locales.def.commands.world.ImplementGameMode;
 import sawfowl.commandpack.configure.locale.locales.def.commands.world.ImplementGenerate;
+import sawfowl.commandpack.configure.locale.locales.def.commands.world.ImplementSpawnLogic;
 import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
@@ -34,6 +36,8 @@ public class ImplementWorld implements World {
 	private ImplementGameMode gameMode = new ImplementGameMode();
 	@Setting("Generate")
 	private ImplementGenerate generate = new ImplementGenerate();
+	@Setting("SpawnLogic")
+	private ImplementSpawnLogic spawnLogic = new ImplementSpawnLogic();
 	@Setting("Create")
 	private Component create = TextUtils.deserializeLegacy("&aThe world &e\"" + Placeholders.WORLD + "\"&a is created.\n&eWorlds are created in asynchronous mode. Without server restart the world will be static.");
 	@Setting("Teleport")
@@ -83,6 +87,11 @@ public class ImplementWorld implements World {
 	@Override
 	public Generate getGenerate() {
 		return generate;
+	}
+
+	@Override
+	public SpawnLogic getSpawnLogic() {
+		return spawnLogic;
 	}
 
 	@Override

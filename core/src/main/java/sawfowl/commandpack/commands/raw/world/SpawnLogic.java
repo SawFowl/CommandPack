@@ -31,7 +31,7 @@ public class SpawnLogic extends AbstractWorldCommand {
 		ServerWorld world = args.getWorld(0).get();
 		boolean enable = args.getBoolean(1).get();
 		world.properties().setPerformsSpawnLogic(enable);
-		audience.sendMessage(enable ? getWorld(locale).getGenerate().getEnableSpawnLogic(world) : getWorld(locale).getGenerate().getDisableSpawnLogic(world));
+		audience.sendMessage(enable ? getWorld(locale).getSpawnLogic().getEnable(world) : getWorld(locale).getSpawnLogic().getDisable(world));
 	}
 
 	@Override

@@ -16,17 +16,17 @@ public class ImplementGameMode implements GameMode {
 	public ImplementGameMode() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYour game mode has been changed to" + Placeholders.VALUE + "&a.");
+	private Component success = TextUtils.deserializeLegacy("&aВаш режим игры изменен на " + Placeholders.VALUE + "&a.");
 	@Setting("SuccessStaff")
-	private Component successStaff = TextUtils.deserializeLegacy("&aPlayer &e" + Placeholders.PLAYER + " &ais set to play mode " + Placeholders.VALUE + "&a.");
+	private Component successStaff = TextUtils.deserializeLegacy("&aИгроку &e" + Placeholders.PLAYER + " &aустановлен режим игры " + Placeholders.VALUE + "&a.");
 	@Setting("Creative")
-	private Component creative = TextUtils.deserializeLegacy("&dcreative");
+	private Component creative = TextUtils.deserializeLegacy("&dкреатив");
 	@Setting("Spectator")
-	private Component spectator = TextUtils.deserializeLegacy("&7spectator");
+	private Component spectator = TextUtils.deserializeLegacy("&7наблюдатель");
 	@Setting("Survival")
-	private Component survival = TextUtils.deserializeLegacy("&2survival");
+	private Component survival = TextUtils.deserializeLegacy("&2выживание");
 	@Setting("Adventure")
-	private Component adventure = TextUtils.deserializeLegacy("&aadventure");
+	private Component adventure = TextUtils.deserializeLegacy("&aприключение");
 
 	@Override
 	public Component getSuccess(Component type) {

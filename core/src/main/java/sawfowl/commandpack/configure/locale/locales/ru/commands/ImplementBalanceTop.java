@@ -18,8 +18,8 @@ public class ImplementBalanceTop implements BalanceTop {
 	public ImplementBalanceTop() {}
 
 	@Setting("Title")
-	@Comment("You can use the following placeholders to display the currency type:\n" + Placeholders.CURRENCY_SYMBOL + " - Displays the currency symbol.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Displays the currency symbol using the design from its name.\n" + Placeholders.CURRENCY_NAME + " - Displays the name of the currency.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Displays the currency name in the plural.")
-	private Component title = TextUtils.deserializeLegacy("&3<Top balances &e\"" + Placeholders.CURRENCY_STYLED_SYMBOL + "&e\"&3>");
+	@Comment("Вы можете использовать следующие плейсхолдеры для отображения валюты:\n" + Placeholders.CURRENCY_SYMBOL + " - Отображение символа валюты.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Отображение символа валюты с применением стиля из ее имени.\n" + Placeholders.CURRENCY_NAME + " - Отображение имени валюты.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Отображение имени валюты в множественном числе.")
+	private Component title = TextUtils.deserializeLegacy("&3<Топ богачей &e\"" + Placeholders.CURRENCY_STYLED_SYMBOL + "&e\"&3>");
 	@Setting("Padding")
 	private Component padding = TextUtils.deserializeLegacy("&3=");
 	@Setting("Element")

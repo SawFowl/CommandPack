@@ -6,6 +6,6 @@ public interface RestrictEntitySpawn {
 
 	String getEntitiesList();
 
-	String WorldsMap();
+	String getWorldsMap();
 
 }

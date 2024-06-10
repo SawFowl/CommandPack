@@ -16,13 +16,13 @@ public class ImplementDifficulty implements Difficulty {
 	public ImplementDifficulty() {}
 
 	@Setting("Peaceful")
-	private Component peaceful = TextUtils.deserializeLegacy("&aA peaceful difficulty in the world of&e\"" + Placeholders.WORLD + "\"&a has been set.");
+	private Component peaceful = TextUtils.deserializeLegacy("&aУстановлена мирная сложность в мире &e\"" + Placeholders.WORLD + "\"&a.");
 	@Setting("Low")
-	private Component low = TextUtils.deserializeLegacy("&aThe low difficulty in the world &e\"" + Placeholders.WORLD + "\"&a has been set.");
+	private Component low = TextUtils.deserializeLegacy("&aУстановлена легкая сложность в мире &e\"" + Placeholders.WORLD + "\"&a.");
 	@Setting("Normal")
-	private Component normal = TextUtils.deserializeLegacy("&aThe normal difficulty in the world &e\"" + Placeholders.WORLD + "\"&a has been set.");
+	private Component normal = TextUtils.deserializeLegacy("&aУстановлена нормальная сложность в мире &e\"" + Placeholders.WORLD + "\"&a.");
 	@Setting("Hard")
-	private Component hard = TextUtils.deserializeLegacy("&aThe hard difficulty in the world &e\"" + Placeholders.WORLD + "\"&a has been set.");
+	private Component hard = TextUtils.deserializeLegacy("&aУстановлена высокая сложность в мире &e\"" + Placeholders.WORLD + "\"&a.");
 
 	@Override
 	public Component getPeaceful(ServerWorld world) {

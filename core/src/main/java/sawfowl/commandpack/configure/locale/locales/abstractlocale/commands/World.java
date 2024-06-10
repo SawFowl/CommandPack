@@ -10,6 +10,7 @@ import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.worl
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.world.GameMode;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.world.GameRule;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.world.Generate;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.world.SpawnLogic;
 
 public interface World {
 
@@ -20,6 +21,8 @@ public interface World {
 	GameMode getGameMode();
 
 	Generate getGenerate();
+
+	SpawnLogic getSpawnLogic();
 
 	Component getCreate(String world);
 

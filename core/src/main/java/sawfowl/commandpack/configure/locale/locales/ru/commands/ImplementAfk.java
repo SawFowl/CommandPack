@@ -16,19 +16,19 @@ public class ImplementAfk implements Afk {
 	public ImplementAfk() {}
 
 	@Setting("EnableBroadcast")
-	private Component enableBroadcast = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + " &fis now afk.");
+	private Component enableBroadcast = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + " &fтеперь АФК.");
 	@Setting("DisableBroadcast")
-	private Component disableBroadcast = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + " &fis no longer afk.");
+	private Component disableBroadcast = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + " &fбольше не АФК.");
 	@Setting("Title")
-	private Component title = TextUtils.deserializeLegacy("&4&lAFK");
+	private Component title = TextUtils.deserializeLegacy("&4&lАФК");
 	@Setting("Subtitle")
-	private Component subtitle = TextUtils.deserializeLegacy("&eYou will be kicked in " + Placeholders.TIME + "&e.");
+	private Component subtitle = TextUtils.deserializeLegacy("&eВы будете кикнуты через " + Placeholders.TIME + "&e.");
 	@Setting("EnableInVanish")
-	private Component enableInVanish = TextUtils.deserializeLegacy("&eYou have gone AFK, but you are currently vanished, so this has not been broadcasted.");
+	private Component enableInVanish = TextUtils.deserializeLegacy("&eВы теперь АФК, но в данный момент вы невидимы, поэтому об этом не было оповещения других игроков.");
 	@Setting("DisableInVanish")
-	private Component disableInVanish = TextUtils.deserializeLegacy("&eYou have returned from AFK, but you are currently vanished, so this has not been broadcasted.");
+	private Component disableInVanish = TextUtils.deserializeLegacy("&eВы теперь не АФК, но в данный момент вы невидимы, поэтому об этом не было оповещения других игроков.");
 	@Setting("Kick")
-	private Component kick = TextUtils.deserializeLegacy("&eYou have been kicked for being AFK for too long.");
+	private Component kick = TextUtils.deserializeLegacy("&eВы были автоматически кикнуты за слишком долгую неактивность.");
 
 	@Override
 	public Component getEnableBroadcast(ServerPlayer player) {

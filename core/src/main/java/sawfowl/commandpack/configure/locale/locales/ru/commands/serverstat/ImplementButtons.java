@@ -15,15 +15,15 @@ public class ImplementButtons implements Buttons {
 	public ImplementButtons() {}
 
 	@Setting("System")
-	private Component system = TextUtils.deserializeLegacy("&7[&4System&7]");
+	private Component system = TextUtils.deserializeLegacy("&7[&4Система&7]");
 	@Setting("Worlds")
-	private Component worlds = TextUtils.deserializeLegacy("&7[&eWorlds&7]");
+	private Component worlds = TextUtils.deserializeLegacy("&7[&eМиры&7]");
 	@Setting("Plugins")
-	private Component plugins = TextUtils.deserializeLegacy("&7[&aPlugins&7]");
+	private Component plugins = TextUtils.deserializeLegacy("&7[&aПлагины&7]");
 	@Setting("Mods")
-	private Component mods = TextUtils.deserializeLegacy("&7[&2Mods&7]");
+	private Component mods = TextUtils.deserializeLegacy("&7[&2Моды&7]");
 	@Setting("RefreshPlugin")
-	private Component refreshPlugin = TextUtils.deserializeLegacy("&7[&6Refresh&7]");
+	private Component refreshPlugin = TextUtils.deserializeLegacy("&7[&6Перезагрузка&7]");
 
 	@Override
 	public Component getSystem() {

@@ -19,9 +19,9 @@ public class ImplementExtinguish implements Extinguish {
 	public ImplementExtinguish() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aFire extinguished.");
+	private Component success = TextUtils.deserializeLegacy("&aОгонь потушен.");
 	@Setting("SuccessStaff")
-	private Component successStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a is extinguished.");
+	private Component successStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a потушен.");
 
 	@Override
 	public Component getSuccess() {

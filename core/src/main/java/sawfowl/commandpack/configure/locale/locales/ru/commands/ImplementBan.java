@@ -17,19 +17,19 @@ public class ImplementBan implements Ban {
 	public ImplementBan() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYou've banned &e" + Placeholders.PLAYER + "&a.");
+	private Component success = TextUtils.deserializeLegacy("&aВы забанили &e" + Placeholders.PLAYER + "&a.");
 	@Setting("Announcement")
-	private Component announcement = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a bans player &e" + Placeholders.PLAYER + "&a.\n&aEnd of ban &e" + Placeholders.TIME + "\n&aReason: " + Placeholders.VALUE);
+	private Component announcement = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a банит игрока &e" + Placeholders.PLAYER + "&a.\n&aОкончание бана &e" + Placeholders.TIME + "\n&aПричина: " + Placeholders.VALUE);
 	@Setting("AnnouncementPermanent")
-	private Component announcementPermanent = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a permanently bans player &e" + Placeholders.PLAYER + "&a.\n&aReason: " + Placeholders.VALUE);
+	private Component announcementPermanent = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a перманентно банит &e" + Placeholders.PLAYER + "&a.\n&aПричина: " + Placeholders.VALUE);
 	@Setting("Ignore")
-	private Component ignore = TextUtils.deserializeLegacy("&cIt's impossible to ban &e" + Placeholders.PLAYER + "&c.");
+	private Component ignore = TextUtils.deserializeLegacy("&cВы не можете забанить &e" + Placeholders.PLAYER + "&c.");
 	@Setting("AlreadyBanned")
-	private Component alreadyBanned = TextUtils.deserializeLegacy("&ePlayer &e" + Placeholders.PLAYER + "&e has already banned on this server.");
+	private Component alreadyBanned = TextUtils.deserializeLegacy("&eИгрок &e" + Placeholders.PLAYER + "&e уже забанен.");
 	@Setting("Disconnect")
-	private Component disconnect = TextUtils.deserializeLegacy("&bYou are banned on the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE + "&a.\n&bEnd of ban &e" + Placeholders.TIME);
+	private Component disconnect = TextUtils.deserializeLegacy("&bВы забанены на сервере.\n&bБан выдал &e" + Placeholders.SOURCE + "\n&bПричина: &e" + Placeholders.VALUE + "&a.\n&bОкончание бана &e" + Placeholders.TIME);
 	@Setting("DisconnectPermanent")
-	private Component disconnectPermanent = TextUtils.deserializeLegacy("&bYou are permanently banned from the server.\n&bBy &e" + Placeholders.SOURCE + "\n&bReason: &e" + Placeholders.VALUE);
+	private Component disconnectPermanent = TextUtils.deserializeLegacy("&bВы перманентно забанены на сервере.\n&bBy &e" + Placeholders.SOURCE + "\n&bПричина: &e" + Placeholders.VALUE);
 
 	@Override
 	public Component getSuccess(User player) {

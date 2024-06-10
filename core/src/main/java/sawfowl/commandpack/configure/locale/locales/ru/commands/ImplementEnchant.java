@@ -13,9 +13,9 @@ public class ImplementEnchant implements Enchant {
 	public ImplementEnchant() {}
 
 	@Setting("ItemNotPresent")
-	Component itemNotPresent = TextUtils.deserializeLegacy("&cYou have to hold the item you want to enchant in your hand.");
+	Component itemNotPresent = TextUtils.deserializeLegacy("&cВы должны держать в руке предмет, который хотите зачаровать.");
 	@Setting("Success")
-	Component success = TextUtils.deserializeLegacy("&aYou have added an enchantment to the item in your hand.");
+	Component success = TextUtils.deserializeLegacy("&aВы добавили зачарование к предмету в вашей руке.");
 
 	@Override
 	public Component getItemNotPresent() {

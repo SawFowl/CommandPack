@@ -16,13 +16,13 @@ public class ImplementBanInfo implements BanInfo {
 	public ImplementBanInfo() {}
 
 	@Setting("Permanent")
-	private Component permanent = TextUtils.deserializeLegacy("&cPermanent");
+	private Component permanent = TextUtils.deserializeLegacy("&cПерманентно");
 	@Setting("NotPresent")
-	private Component notPresent = TextUtils.deserializeLegacy("&cYou need to specify the nickname of the banned player.");
+	private Component notPresent = TextUtils.deserializeLegacy("&cВам необходимо указать ник забаненного игрока.");
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON);
+	private Component success = TextUtils.deserializeLegacy("&aЗабанил&f: &e" + Placeholders.SOURCE + "\n&aБан выдан&f: &e" + Placeholders.CREATED + "\n&aИстекает&f: &e" + Placeholders.EXPIRE + "\n&aПричина&f: &e" + Placeholders.REASON);
 	@Setting("Title")
-	private Component title = TextUtils.deserializeLegacy("&3Ban Info " + Placeholders.PLAYER);
+	private Component title = TextUtils.deserializeLegacy("&3Информация о бане " + Placeholders.PLAYER);
 
 	@Override
 	public Component getPermanent() {

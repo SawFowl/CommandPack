@@ -19,11 +19,11 @@ public class ImplementBanlist implements Banlist {
 	@Setting("Info")
 	private ImplementInfo info = new ImplementInfo();
 	@Setting("Empty")
-	private Component empty = TextUtils.deserializeLegacy("&aThere are no bans to display.");
+	private Component empty = TextUtils.deserializeLegacy("&aНет банов для отображения.");
 	@Setting("Title")
 	private Component title = TextUtils.deserializeLegacy("%profile% &3|| %ip%");
 	@Setting("Profile")
-	private Component profile = TextUtils.deserializeLegacy("&7[&ePlayers&7]");
+	private Component profile = TextUtils.deserializeLegacy("&7[&eИгроки&7]");
 	@Setting("IP")
 	private Component ip = TextUtils.deserializeLegacy("&7[&eIP&7]");
 	@Setting("Element")

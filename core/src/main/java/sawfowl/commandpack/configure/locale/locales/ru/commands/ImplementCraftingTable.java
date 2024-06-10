@@ -16,7 +16,7 @@ public class ImplementCraftingTable implements CraftingTable {
 	public ImplementCraftingTable() {}
 
 	@Setting("SuccessStaff")
-	private Component successStaff = TextUtils.deserializeLegacy("&aYou have opened the workbench inventory to the player &e" + Placeholders.PLAYER + "&a.");
+	private Component successStaff = TextUtils.deserializeLegacy("&aВы открыли виртуальный верстак игроку &e" + Placeholders.PLAYER + "&a.");
 
 	@Override
 	public Component getSuccessStaff(ServerPlayer player) {

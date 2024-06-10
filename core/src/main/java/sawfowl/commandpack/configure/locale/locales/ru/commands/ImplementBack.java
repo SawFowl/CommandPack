@@ -13,18 +13,18 @@ public class ImplementBack implements Back {
 	public ImplementBack() {}
 
 	@Setting("NotFound")
-	private Component notFound = TextUtils.deserializeLegacy("&cThe previous location was not found.");
+	private Component notFound = TextUtils.deserializeLegacy("&cПредыдущая локация не найдена.");
 	@Setting("NotLoadedWorld")
-	private Component notLoadedWorld = TextUtils.deserializeLegacy("&cThe world in which the previous location is located is not loaded.");
+	private Component notLoadedWorld = TextUtils.deserializeLegacy("&cМир с предыдущей локацией не загружен.");
 
 	@Override
 	public Component getNotFound() {
-		return null;
+		return notFound;
 	}
 
 	@Override
 	public Component getNotLoadedWorld() {
-		return null;
+		return notLoadedWorld;
 	}
 
 }

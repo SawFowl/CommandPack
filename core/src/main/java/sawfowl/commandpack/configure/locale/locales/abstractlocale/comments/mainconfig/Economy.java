@@ -16,7 +16,17 @@ public interface Economy {
 
 	}
 
+	interface Tables {
+
+		String getUniqueAccounts();
+
+		String getAccounts();
+
+	}
+
 	Currency getCurrency();
+
+	Tables getTables();
 
 	String getStorageType();
 
@@ -24,6 +34,6 @@ public interface Economy {
 
 	String getDBSettings();
 
-	String getAadditionalChecks();
+	String getAdditionalChecks();
 
 }

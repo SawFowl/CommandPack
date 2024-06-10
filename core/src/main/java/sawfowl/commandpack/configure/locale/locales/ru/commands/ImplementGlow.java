@@ -19,13 +19,13 @@ public class ImplementGlow implements Glow {
 	public ImplementGlow() {}
 
 	@Setting("Enable")
-	private Component enable = TextUtils.deserializeLegacy("&aNow you're glowing.");
+	private Component enable = TextUtils.deserializeLegacy("&aВы сияете.");
 	@Setting("EnableStaff")
-	private Component enableStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a is now glowing.");
+	private Component enableStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a сияет.");
 	@Setting("Disable")
-	private Component disable = TextUtils.deserializeLegacy("&aYou don't glow anymore.");
+	private Component disable = TextUtils.deserializeLegacy("&aВы больше не сияете.");
 	@Setting("DisableStaff")
-	private Component disableStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a is no longer glowing.");
+	private Component disableStaff = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a больше не сияет.");
 
 	@Override
 	public Component getEnable() {

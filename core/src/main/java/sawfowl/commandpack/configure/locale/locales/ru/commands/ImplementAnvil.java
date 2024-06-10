@@ -17,7 +17,7 @@ public class ImplementAnvil implements Anvil {
 	public ImplementAnvil() {}
 
 	@Setting("SuccessStaff")
-	private Component successStaff = TextUtils.deserializeLegacy("&aYou opened the anvil inventory to player &e" + Placeholders.PLAYER + "&a.");
+	private Component successStaff = TextUtils.deserializeLegacy("&aВы открыли виртуальную наковальню игроку &e" + Placeholders.PLAYER + "&a.");
 
 	@Override
 	public Component getSuccessStaff(ServerPlayer player) {

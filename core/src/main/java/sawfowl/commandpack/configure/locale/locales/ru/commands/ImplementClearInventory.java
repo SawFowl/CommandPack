@@ -17,11 +17,11 @@ public class ImplementClearInventory implements ClearInventory {
 	public ImplementClearInventory() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYou have cleared your inventory.");
+	private Component success = TextUtils.deserializeLegacy("&aВы очистили свой инвентарь.");
 	@Setting("SuccessOther")
-	private Component successOther = TextUtils.deserializeLegacy("&eYour inventory has been cleared.");
+	private Component successOther = TextUtils.deserializeLegacy("&eВаш инвентарь был очищен.");
 	@Setting("SuccessStaff")
-	private Component successStaff = TextUtils.deserializeLegacy("&aYou cleared &e" + Placeholders.PLAYER + "&a inventory.");
+	private Component successStaff = TextUtils.deserializeLegacy("&aВы очистили инвентарь игрока &e" + Placeholders.PLAYER + "&a.");
 
 	@Override
 	public Component getSuccess() {
