@@ -17,7 +17,7 @@ public class ImplementList implements List {
 	public ImplementList() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aOnline(" + Placeholders.SIZE + ")&f: &e" + Placeholders.PLAYERS + "&a.");
+	private Component success = TextUtils.deserializeLegacy("&aОнлайн(" + Placeholders.SIZE + ")&f: &e" + Placeholders.PLAYERS + "&a.");
 	@Setting("Vanished")
 	private Component vanished = TextUtils.deserializeLegacy("&7" + Placeholders.PLAYER);
 

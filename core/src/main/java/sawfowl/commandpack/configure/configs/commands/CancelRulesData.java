@@ -6,10 +6,10 @@ import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.api.data.command.CancelRules;
+import sawfowl.localeapi.api.LocalisedComment;
 
 @ConfigSerializable
 public class CancelRulesData implements CancelRules {
@@ -24,10 +24,10 @@ public class CancelRulesData implements CancelRules {
 	}
 
 	@Setting("AllowMoving")
-	@Comment("Cancelling the execution a command when the player moves.")
+	@LocalisedComment(path = {"Comments", "CommandsConfig", "DelayData", "CancelRules", "AllowMoving"}, plugin = "commandpack")
 	private boolean allowMoving = false;
 	@Setting("AllowOtherCommand")
-	@Comment("Cancelling the execution a command when a player uses another command.")
+	@LocalisedComment(path = {"Comments", "CommandsConfig", "DelayData", "CancelRules", "AllowOtherCommand"}, plugin = "commandpack")
 	private boolean allowOtherCommand = false;
 
 	@Override

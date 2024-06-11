@@ -11,9 +11,9 @@ public class ImplementPrice implements Price {
 	public ImplementPrice() {}
 
 	@Setting("Currency")
-	private String currency = "The currency used. Both the currency symbol and its name are accepted.\\nIf the specified currency will not be present on the server, the ruault currency will be used.";
+	private String currency = "Используемая валюта. Принимается как символ валюты, так и ее название.\nЕсли указанная валюта не будет присутствовать на сервере, будет использована валюта по умолчанию.";
 	@Setting("Money")
-	private String money = "The price a player will pay for completing a command.";
+	private String money = "Сумма, которую игрок заплатит за выполнение команды.";
 
 	@Override
 	public String getCurrency() {

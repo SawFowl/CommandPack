@@ -17,25 +17,25 @@ public class ImplementKit implements Kit {
 	public ImplementKit() {}
 
 	@Setting("Title")
-	private Component title = TextUtils.deserializeLegacy("&3Kits");
+	private Component title = TextUtils.deserializeLegacy("&3Наборы");
 	@Setting("View")
 	private Component view = TextUtils.deserializeLegacy("&7<&b&l⊙&7>&f⏊&7<&b&l⊙&7>");
 	@Setting("Empty")
-	private Component empty = TextUtils.deserializeLegacy("&cThere are no kits created.");
+	private Component empty = TextUtils.deserializeLegacy("&cНикаких наборов не создано.");
 	@Setting("PermissionRequired")
-	private Component permissionRequired = TextUtils.deserializeLegacy("&cYou don't have permission to get this kit.");
+	private Component permissionRequired = TextUtils.deserializeLegacy("&cУ вас нет разрешения на получение этого набора.");
 	@Setting("Wait")
-	private Component wait = TextUtils.deserializeLegacy("&cYou will have to wait &e" + Placeholders.TIME + "&c before you can get this kit.");
+	private Component wait = TextUtils.deserializeLegacy("&cВам нужно подождать &e" + Placeholders.TIME + "&c прежде чем вы сможете получить этот набор.");
 	@Setting("InventoryFull")
-	private Component inventoryFull = TextUtils.deserializeLegacy("&eThere is not enough free space in your inventory. Are you sure you want this kit? Some of the items will fall to the ground. Click on this message to confirm.");
+	private Component inventoryFull = TextUtils.deserializeLegacy("&eВ вашем инвентаре недостаточно свободного места. Вы уверены, что хотите получить этот набор? Некоторые предметы упадут на землю. Нажмите на это сообщение, чтобы подтвердить.");
 	@Setting("GiveLimit")
-	private Component giveLimit = TextUtils.deserializeLegacy("&cYou have reached the limit for getting this kit.");
+	private Component giveLimit = TextUtils.deserializeLegacy("&cВы достигли лимита получения этого набора.");
 	@Setting("NotEnoughMoney")
-	private Component notEnoughMoney = TextUtils.deserializeLegacy("&cYou don't have enough money to buy this kit. You need at least  &e" + Placeholders.VALUE + "&c.");
+	private Component notEnoughMoney = TextUtils.deserializeLegacy("&cУ вас недостаточно денег, чтобы купить этот набор. Вам нужно как минимум  &e" + Placeholders.VALUE + "&c.");
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYou received a kit &e" + Placeholders.VALUE + "&a.");
+	private Component success = TextUtils.deserializeLegacy("&aВы получили набор &e" + Placeholders.VALUE + "&a.");
 	@Setting("SuccessStaff")
-	private Component successStaff = TextUtils.deserializeLegacy("&aYou gave a kit &e" + Placeholders.VALUE + "&a to the player &e" + Placeholders.PLAYER + "&a.");
+	private Component successStaff = TextUtils.deserializeLegacy("&aВы дали набор &e" + Placeholders.VALUE + "&a игроку &e" + Placeholders.PLAYER + "&a.");
 
 	@Override
 	public Component getTitle() {

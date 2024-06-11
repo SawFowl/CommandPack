@@ -17,11 +17,11 @@ public class ImplementRepair implements Repair {
 	public ImplementRepair() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aRepairs has been completed.");
+	private Component success = TextUtils.deserializeLegacy("&aРемонт выполнен.");
 	@Setting("SuccessOther")
-	private Component successOther = TextUtils.deserializeLegacy("&aYour item(s) has been repaired.");
+	private Component successOther = TextUtils.deserializeLegacy("&aВаш предмет(ы) был отремонтирован(ы).");
 	@Setting("SuccessStaff")
-	private Component successStaff = TextUtils.deserializeLegacy("&aYou repaired the item(s) to player &e" + Placeholders.PLAYER + "&a.");
+	private Component successStaff = TextUtils.deserializeLegacy("&aВы отремонтировали предмет(ы) игроку &e" + Placeholders.PLAYER + "&a.");
 
 	@Override
 	public Component getSuccess() {

@@ -16,15 +16,15 @@ public class ImplementHome implements Home {
 	public ImplementHome() {}
 
 	@Setting("NotFound")
-	private Component notFound = TextUtils.deserializeLegacy("&cA home point with a name of &e" + Placeholders.HOME + "&c does not exist.");
+	private Component notFound = TextUtils.deserializeLegacy("&cТочка дома &e" + Placeholders.HOME + "&c не найдена.");
 	@Setting("NotSet")
-	private Component notSet = TextUtils.deserializeLegacy("&cNo home point is found. Use the &e/sethome&c command to set a home point.");
+	private Component notSet = TextUtils.deserializeLegacy("&cТочка дома не установлена. Используйте команду &e/sethome&c для ее установки.");
 	@Setting("Error")
-	private Component error = TextUtils.deserializeLegacy("&cHome point is not available. Perhaps the world is not loaded.");
+	private Component error = TextUtils.deserializeLegacy("&cДомашняя точка недоступна. Возможно, мир не загружен.");
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYou teleported to home &e" + Placeholders.HOME + "&a.");
+	private Component success = TextUtils.deserializeLegacy("&aВы телепортировались в домашнюю точку &e" + Placeholders.HOME + "&a.");
 	@Setting("List")
-	private Component list = TextUtils.deserializeLegacy("&bHomes");
+	private Component list = TextUtils.deserializeLegacy("&bДома");
 
 	@Override
 	public Component getNotFound(String home) {

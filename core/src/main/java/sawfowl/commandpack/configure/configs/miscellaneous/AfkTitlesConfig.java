@@ -1,8 +1,9 @@
 package sawfowl.commandpack.configure.configs.miscellaneous;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
+
+import sawfowl.localeapi.api.LocalisedComment;
 
 @ConfigSerializable
 public class AfkTitlesConfig {
@@ -10,10 +11,10 @@ public class AfkTitlesConfig {
 	public AfkTitlesConfig(){}
 
 	@Setting("BeforeKick")
-	@Comment("If true, then the player will be shown how much time is left before he will be disconnected from the server.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Afk", "Titles", "BeforeKick"}, plugin = "commandpack")
 	private boolean beforeKick = true;
 	@Setting("Unlimit")
-	@Comment("If true, the player will constantly be sent a title with the message that he is AFK.\nThis option applies only to players who do not have a time limit on the AFK.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Afk", "Titles", "Unlimit"}, plugin = "commandpack")
 	private boolean unlimit = false;
 
 	public boolean isBeforeKick() {

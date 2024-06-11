@@ -13,7 +13,7 @@ public class ImplementTpPos implements TpPos {
 	public ImplementTpPos() {}
 
 	@Setting("InvalidLocation")
-	private Component invalidLocation = TextUtils.deserializeLegacy("&cAn unacceptable location is specified.");
+	private Component invalidLocation = TextUtils.deserializeLegacy("&cУказано недопустимое местоположение.");
 
 	@Override
 	public Component getInvalidLocation() {

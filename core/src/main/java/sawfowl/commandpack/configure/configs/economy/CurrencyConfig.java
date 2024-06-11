@@ -3,10 +3,11 @@ package sawfowl.commandpack.configure.configs.economy;
 import java.util.Objects;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
+
+import sawfowl.localeapi.api.LocalisedComment;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
@@ -19,13 +20,13 @@ public class CurrencyConfig {
 	@Setting("PluralName")
 	private String pluralName = "&2Dollars";
 	@Setting("Key")
-	@Comment("Currency Registration Key.\nDo not use text decoration or special characters!")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Economy", "Currency", "Key"}, plugin = "commandpack")
 	private String key = "dollar";
 	@Setting("DBCollumn")
-	@Comment("This option is only used when selecting MySql to store the economy data.\nEach currency must have its own column name to record data correctly.\nCan be used to customize compatibility with Bukkit economy plugin databases.\nUse compatibility at your own risk.\nStable work is not guaranteed.\nDo not use text decoration or special characters other than underscores!")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Economy", "Currency", "DBCollumn"}, plugin = "commandpack")
 	private String dbCollumn = "dollars";
 	@Setting("ID")
-	@Comment("This option is only used when selecting MySql to store the economy data.\nEach currency must have its own id.\nIt is not allowed to change it after creating tables.\nIt is also not allowed to insert new currencies by id between existing ones.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Economy", "Currency", "ID"}, plugin = "commandpack")
 	private int dbID = 0;
 	@Setting("Symbol")
 	private char symbol = '$';
@@ -34,7 +35,7 @@ public class CurrencyConfig {
 	@Setting("Default")
 	private boolean isDefault = true;
 	@Setting("TransferPermission")
-	@Comment("If true, the player must have a permission to transfer the currency to someone.\nThis rule applies only to the `/pay` command.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Economy", "Currency", "TransferPermission"}, plugin = "commandpack")
 	private boolean transferPerm = false;
 
 	public String getName() {

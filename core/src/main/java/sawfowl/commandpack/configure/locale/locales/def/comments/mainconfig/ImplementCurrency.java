@@ -13,7 +13,7 @@ public class ImplementCurrency implements Currency {
 	@Setting("Key")
 	private String key = "Currency Registration Key.\nDo not use text decoration or special characters!";
 	@Setting("DBCollumn")
-	private String dBCollumn = "This option is only used when selecting MySql to store the economy data.\nEach currency must have its own column name to record data correctly.\nCan be used to customize compatibility with Bukkit economy plugin databases.\nUse compatibility at your own risk.\nStable work is not guaranteed.\nDo not use text decoration or special characters other than underscores!";
+	private String dBCollumn = "This option is only used when selecting MySql to store the economy data.\nEach currency must have its own column name to record data correctly.\nCan be used to customize compatibility with Bukkit economy plugin databases.\nUse compatibility at your own risk. Stable work is not guaranteed.\nDo not use text decoration or special characters other than underscores!";
 	@Setting("ID")
 	private String iD = "This option is only used when selecting MySql to store the economy data.\nEach currency must have its own id.\nIt is not allowed to change it after creating tables.\nIt is also not allowed to insert new currencies by id between existing ones.";
 	@Setting("Default")

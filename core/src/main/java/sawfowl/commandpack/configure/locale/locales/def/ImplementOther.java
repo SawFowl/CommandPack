@@ -1,6 +1,7 @@
 package sawfowl.commandpack.configure.locale.locales.def;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
@@ -19,6 +20,7 @@ public class ImplementOther implements Other {
 	public ImplementOther() {}
 
 	@Setting("ConnectionMessages")
+	@Comment("These messages use placeholders registered in LocaleAPI.")
 	private ImplementConnectionMessages connectionMessages = new ImplementConnectionMessages();
 	@Setting("Keep")
 	private ImplementKeep keep = new ImplementKeep();

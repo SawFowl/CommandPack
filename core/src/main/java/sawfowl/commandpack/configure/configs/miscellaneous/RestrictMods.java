@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
+
+import sawfowl.localeapi.api.LocalisedComment;
 
 @ConfigSerializable
 public class RestrictMods {
@@ -15,9 +16,10 @@ public class RestrictMods {
 	@Setting("Enable")
 	private boolean enable = false;
 	@Setting("Blacklist")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RestrictMods", "Blacklist"}, plugin = "commandpack")
 	private boolean blackList = true;
 	@Setting("Mods")
-	@Comment("This list contains only the id of the mods.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RestrictMods", "ModsList"}, plugin = "commandpack")
 	private List<String> mods = new ArrayList<>();
 
 	public boolean isEnable() {

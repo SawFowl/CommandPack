@@ -8,10 +8,13 @@ import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.command.Price;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;
 
 public class CommandPriceSerializer implements TypeSerializer<Price> {
+
+	private final CommandPack INSTANCE = CommandPack.getInstance();
 
 	@Override
 	public Price deserialize(Type type, ConfigurationNode node) throws SerializationException {
@@ -23,9 +26,13 @@ public class CommandPriceSerializer implements TypeSerializer<Price> {
 		node.node("Currency").set(price.getCurrency());
 		node.node("Money").set(price.getMoney());
 		if(node instanceof CommentedConfigurationNode commented) {
-			commented.node("Currency").comment("The currency used. Both the currency symbol and its name are accepted.\nIf the specified currency will not be present on the server, the default currency will be used.");
-			commented.node("Money").comment("The price a player will pay for completing a command.");
+			commented.node("Currency").comment(getPrice().getCurrency());
+			commented.node("Money").comment(getPrice().getMoney());
 		}
+	}
+
+	private sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.commandsconfig.Price getPrice() {
+		return INSTANCE.getLocales().getSystemLocale().getComments().getCommandsConfig().getPrice();
 	}
 
 }

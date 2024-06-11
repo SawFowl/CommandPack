@@ -19,8 +19,8 @@ public class ImplementDebug implements Debug {
 	@Setting("Commands")
 	private ImplementCommands commands = new ImplementCommands();
 	@Setting("ModsList")
-	@Comment("This feature only works if you have Forge on the server side.")
-	private String modsList = "The player " + Placeholders.PLAYER + " login to the server with the mods: " + Placeholders.VALUE + ".";
+	@Comment("Эта функция работает только при наличии Forge на стороне сервера.")
+	private String modsList = "Игрок " + Placeholders.PLAYER + " входит на сервер с модами: " + Placeholders.VALUE + ".";
 
 	@Override
 	public Economy getEconomy() {

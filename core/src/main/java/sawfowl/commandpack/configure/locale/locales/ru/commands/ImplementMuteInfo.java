@@ -16,13 +16,13 @@ public class ImplementMuteInfo implements MuteInfo {
 	public ImplementMuteInfo() {}
 
 	@Setting("Permanent")
-	private Component permanent = TextUtils.deserializeLegacy("&cPermanent");
+	private Component permanent = TextUtils.deserializeLegacy("&cПерманентно");
 	@Setting("NotPresent")
-	private Component notPresent = TextUtils.deserializeLegacy("&cYou need to specify the nickname of the player with blocked chat.");
+	private Component notPresent = TextUtils.deserializeLegacy("&cВам нужно указать ник игрока, у которого заблокирован чат.");
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aSource&f: &e" + Placeholders.SOURCE + "\n&aCreated&f: &e" + Placeholders.CREATED + "\n&aExpire&f: &e" + Placeholders.EXPIRE + "\n&aReason&f: &e" + Placeholders.REASON);
+	private Component success = TextUtils.deserializeLegacy("&aЗамутил&f: &e" + Placeholders.SOURCE + "\n&aМут создан&f: &e" + Placeholders.CREATED + "\n&aИстекает&f: &e" + Placeholders.EXPIRE + "\n&aПричина&f: &e" + Placeholders.REASON);
 	@Setting("Title")
-	private Component title = TextUtils.deserializeLegacy("&3Mute Info " + Placeholders.PLAYER);
+	private Component title = TextUtils.deserializeLegacy("&3О муте " + Placeholders.PLAYER);
 
 	@Override
 	public Component getPermanent() {

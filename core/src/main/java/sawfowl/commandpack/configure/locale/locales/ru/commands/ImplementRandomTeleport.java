@@ -18,17 +18,17 @@ public class ImplementRandomTeleport implements RandomTeleport {
 	public ImplementRandomTeleport() {}
 
 	@Setting("PositionSearchErrorStaff")
-	Component positionSearchErrorStaff = TextUtils.deserializeLegacy("&cFailed to find a position in the world '" + Placeholders.WORLD + "' for teleportation. The search attempt limit has been reached: " + Placeholders.LIMIT + ".");
+	Component positionSearchErrorStaff = TextUtils.deserializeLegacy("&cНе удалось подобрать позицию для телепортации в мире '" + Placeholders.WORLD + "'. Достигнут лимит попыток поиска: " + Placeholders.LIMIT + ".");
 	@Setting("PositionSearchError")
-	Component positionSearchError = TextUtils.deserializeLegacy("&cUnable to find teleportation position. Try again.");
+	Component positionSearchError = TextUtils.deserializeLegacy("&cНе удалось подобрать позицию для телепортации. Попробуйте еще раз.");
 	@Setting("SuccessStaff")
-	Component successStaff = TextUtils.deserializeLegacy("&aPlayer &e" + Placeholders.PLAYER + "&a teleported to location &e<" + Placeholders.WORLD + "> " + Placeholders.LOCATION + "&a.");
+	Component successStaff = TextUtils.deserializeLegacy("&aИгрок &e" + Placeholders.PLAYER + "&a телепортирован в локацию &e<" + Placeholders.WORLD + "> " + Placeholders.LOCATION + "&a.");
 	@Setting("Success")
-	Component success = TextUtils.deserializeLegacy("&aYou teleported to location &e<" + Placeholders.WORLD + "> " + Placeholders.LOCATION + "&a.");
+	Component success = TextUtils.deserializeLegacy("&aВы переместились в локацию &e<" + Placeholders.WORLD + "> " + Placeholders.LOCATION + "&a.");
 	@Setting("Wait")
-	Component wait = TextUtils.deserializeLegacy("&eThe search for a proper location has started. Please wait.");
+	Component wait = TextUtils.deserializeLegacy("&eНачался поиск подходящего места. Пожалуйста, подождите.");
 	@Setting("Cancelled")
-	Component cancelled = TextUtils.deserializeLegacy("&eTeleportation has been canceled. Try again.");
+	Component cancelled = TextUtils.deserializeLegacy("&eТелепортация была отменена. Попробуйте еще раз.");
 
 	@Override
 	public Component getPositionSearchErrorStaff(ServerWorld world, int limit) {

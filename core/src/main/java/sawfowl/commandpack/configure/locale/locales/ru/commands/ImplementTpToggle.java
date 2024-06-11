@@ -13,9 +13,9 @@ public class ImplementTpToggle implements TpToggle {
 	public ImplementTpToggle() {}
 
 	@Setting("Enable")
-	private Component enable = TextUtils.deserializeLegacy("&aYou will now receive teleportation requests.");
+	private Component enable = TextUtils.deserializeLegacy("&aТеперь вы будете получать запросы на телепортацию.");
 	@Setting("Disable")
-	private Component disable = TextUtils.deserializeLegacy("&aIncoming teleportation requests will now be automatically rejected.");
+	private Component disable = TextUtils.deserializeLegacy("&aВходящие запросы на телепортацию теперь будут автоматически отклоняться.");
 
 	@Override
 	public Component getEnable() {

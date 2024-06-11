@@ -14,10 +14,10 @@ import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.api.RandomTeleportService.RandomTeleportOptions;
+import sawfowl.localeapi.api.LocalisedComment;
 
 @ConfigSerializable
 public class RandomTeleportConfig implements RandomTeleportOptions {
@@ -25,37 +25,37 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 	public RandomTeleportConfig(){}
 
 	@Setting("Attempts")
-	@Comment("The number of attempts to find the position. Increasing the value can lead to server crashes.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RandomTeleport", "Attempts"}, plugin = "commandpack")
 	private int attempts = 10;
 	@Setting("WorldSelector")
-	@Comment("Specifies the target world for teleportation by the player's current world.\nIf the player's current world is not listed in this worlds map as a source world, the player will be teleported to the same world he is in.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RandomTeleport", "WorldSelector"}, plugin = "commandpack")
 	private Map<String, RandomTeleportWorldConfig> map = createDefault();
 	@Setting("StartFromWorldSpawn")
-	@Comment("If true, the search for a random position will be performed from the world spawn point.\nIf false, the search will be performed from the current coordinates of the player.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RandomTeleport", "StartFromWorldSpawn"}, plugin = "commandpack")
 	private boolean startFromWorldSpawn = false;
 	@Setting("MinRadius")
-	@Comment("Minimum teleportation distance.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RandomTeleport", "MinRadius"}, plugin = "commandpack")
 	private int minRadius = 1000;
 	@Setting("Radius")
-	@Comment("Maximum teleportation distance.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RandomTeleport", "Radius"}, plugin = "commandpack")
 	private int radius= 3000;
 	@Setting("MaxY")
-	@Comment("Maximum height for finding a position.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RandomTeleport", "MaxY"}, plugin = "commandpack")
 	private int maxY = 255;
 	@Setting("MinY")
-	@Comment("Minimum height for finding a position.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RandomTeleport", "MinY"}, plugin = "commandpack")
 	private int minY = 10;
 	@Setting("ProhibitedBiomes")
-	@Comment("Biomes specified in this list will not be available for teleportation by random coordinates.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RandomTeleport", "ProhibitedBiomes"}, plugin = "commandpack")
 	private Set<String> prohibitedBiomes = new HashSet<>();
 	@Setting("OnlySurface")
-	@Comment("If true, the player will always move to the surface.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RandomTeleport", "OnlySurface"}, plugin = "commandpack")
 	private boolean onlySurface = false;
 	@Setting("ProhibitedLiquids")
-	@Comment("If true, the search for the correct position will skip fluid blocks.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RandomTeleport", "ProhibitedLiquids"}, plugin = "commandpack")
 	private boolean prohibitedLiquids = true;
 	@Setting("ProhibitedBlocks")
-	@Comment("Blocks specified in this list will not be available for teleportation by random coordinates.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RandomTeleport", "ProhibitedBlocks"}, plugin = "commandpack")
 	private Set<String> prohibitedBlocks = new HashSet<>();
 
 	public ServerWorld getTargetWorld(ServerWorld source) {
@@ -188,7 +188,7 @@ public class RandomTeleportConfig implements RandomTeleportOptions {
 
 	private Map<String, RandomTeleportWorldConfig> createDefault() {
 		Map<String, RandomTeleportWorldConfig> map = new HashMap<>();
-		map.put("minecraft:overworld", new RandomTeleportWorldConfig("minecraft:overworld", new HashSet<>(Arrays.asList("minecraft:ocean", "minecraft:deep_ocean", "minecraft:frozen_ocean"))));
+		map.put("minecraft:overworld", new RandomTeleportWorldConfig("minecraft:overworld", -50, 255, new HashSet<>(Arrays.asList("minecraft:ocean", "minecraft:deep_ocean", "minecraft:frozen_ocean")), true));
 		map.put("minecraft:the_nether", new RandomTeleportWorldConfig("minecraft:the_nether", 128, true));
 		map.put("minecraft:the_end", new RandomTeleportWorldConfig("minecraft:the_end"));
 		return map;

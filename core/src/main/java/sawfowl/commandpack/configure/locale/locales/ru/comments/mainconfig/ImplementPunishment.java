@@ -15,13 +15,13 @@ public class ImplementPunishment implements Punishment {
 	@Setting("WarnsBefore")
 	private ImplementWarnsBefore warnsBefore = new ImplementWarnsBefore();
 	@Setting("StorageType")
-	private String storageType = "Available values: File, H2, MySql.";
+	private String storageType = "Допустимые значения: File, H2, MySql.";
 	@Setting("Announce")
-	private String announce = "Enabling and disabling the annoncing of player punishments.";
+	private String announce = "Включение и отключение оповещения о наказаниях игроков.";
 	@Setting("DateTimeFormat")
-	private String dateTimeFormat = "Don't change unnecessarily.";
+	private String dateTimeFormat = "Не меняйте без необходимости.";
 	@Setting("TimeZone")
-	private String timeZone = "Set your date time zone.\nAvailable options can be viewed at the link - https://gist.github.com/SawFowl/12dc8342e14bce41f95411f833d911f4";
+	private String timeZone = "Установить часовой пояс.\nДоступные варианты можно посмотреть по ссылке - https://gist.github.com/SawFowl/12dc8342e14bce41f95411f833d911f4";
 
 	@Override
 	public DBSettings getDBSettings() {

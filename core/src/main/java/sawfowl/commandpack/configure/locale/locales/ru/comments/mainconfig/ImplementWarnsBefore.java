@@ -11,9 +11,9 @@ public class ImplementWarnsBefore implements WarnsBefore {
 	public ImplementWarnsBefore() {}
 
 	@Setting("Title")
-	private String title = "Here you can specify the number of warnings the player will be automatically penalised on reaching.\nAs well as the duration of the punishment.";
+	private String title = "Здесь вы можете указать количество предупреждений, за которые игрок будет автоматически наказываться при достижении лимита.\nА также продолжительность наказания.";
 	@Setting("PunishTime")
-	private String punishTime = "Duration of punishments in minutes when the warning limit is reached.\nUsed only if all player warnings are permanent. Otherwise the duration will be equal to the shortest warning.\nSetting the value to 0 or below 0 will give the player a permanent punishment, provided that the player has not exceeded the warning limit and has temporary warnings.";
+	private String punishTime = "Продолжительность наказаний в минутах при достижении лимита предупреждений.\nИспользуется только в том случае, если все предупреждения игрока являются постоянными. В противном случае продолжительность будет равна самому короткому предупреждению.\nУстановка значение на 0 или ниже 0, приведет к тому, что игрок получит постоянное наказание, при условии, что он не превысил лимит предупреждений и имеет временные предупреждения.";
 
 	@Override
 	public String getTitle() {

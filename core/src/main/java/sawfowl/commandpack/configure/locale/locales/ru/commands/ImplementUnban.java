@@ -17,9 +17,9 @@ public class ImplementUnban implements Unban {
 	public ImplementUnban() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYou unbanned &e" + Placeholders.PLAYER + "&a.");
+	private Component success = TextUtils.deserializeLegacy("&aВы разбанили &e" + Placeholders.PLAYER + "&a.");
 	@Setting("Announcement")
-	private Component announcement = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a unbans &e" + Placeholders.PLAYER + "&a.");
+	private Component announcement = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a разбанивает &e" + Placeholders.PLAYER + "&a.");
 
 	@Override
 	public Component getSuccess(GameProfile player) {

@@ -16,49 +16,49 @@ public class ImplementCommandExceptions implements CommandExceptions {
 	public ImplementCommandExceptions() {}
 
 	@Setting("OnlyPlayer")
-	private Component onlyPlayer = TextUtils.deserializeLegacy("&cThis command can only be executed by the player.");
+	private Component onlyPlayer = TextUtils.deserializeLegacy("&cЭта команда может быть выполнена только игроком.");
 	@Setting("PlayerIsOffline")
-	private Component playerIsOffline = TextUtils.deserializeLegacy("&cPlayer " + Placeholders.PLAYER + "&c is offline.");
+	private Component playerIsOffline = TextUtils.deserializeLegacy("&cИгрок " + Placeholders.PLAYER + "&c оффлайн.");
 	@Setting("UserNotPresent")
-	private Component userNotPresent = TextUtils.deserializeLegacy("&cYou need to specify the nickname of the player who is now online or was previously on the server.");
+	private Component userNotPresent = TextUtils.deserializeLegacy("&cВам нужно указать ник игрока, который сейчас находится онлайн или ранее был на сервере.");
 	@Setting("PlayerNotPresent")
-	private Component playerNotPresent = TextUtils.deserializeLegacy("&cYou need to specify the nickname of the player online.");
+	private Component playerNotPresent = TextUtils.deserializeLegacy("&cВам необходимо указать ник игрока онлайн.");
 	@Setting("NameNotPresent")
-	private Component nameNotPresent = TextUtils.deserializeLegacy("&cYou must specify a name.");
+	private Component nameNotPresent = TextUtils.deserializeLegacy("&cВы должны указать имя.");
 	@Setting("TypeNotPresent")
-	private Component typeNotPresent = TextUtils.deserializeLegacy("&cYou must specify a type.");
+	private Component typeNotPresent = TextUtils.deserializeLegacy("&cВы должны указать тип.");
 	@Setting("ValueNotPresent")
-	private Component valueNotPresent = TextUtils.deserializeLegacy("&cYou must specify a value.");
+	private Component valueNotPresent = TextUtils.deserializeLegacy("&cВы должны указать значение.");
 	@Setting("DurationNotPresent")
-	private Component durationNotPresent = TextUtils.deserializeLegacy("&cSpecify the duration in ISO time format.");
+	private Component durationNotPresent = TextUtils.deserializeLegacy("&cУкажите продолжительность в формате времени ISO.");
 	@Setting("BooleanNotPresent")
-	private Component booleanNotPresent = TextUtils.deserializeLegacy("&cIt is necessary to specify the command argument as boolean.");
+	private Component booleanNotPresent = TextUtils.deserializeLegacy("&cНеобходимо указать аргумент как true или false");
 	@Setting("LocationNotPresent")
-	private Component locationNotPresent = TextUtils.deserializeLegacy("&cYou need to specify the coordinates.");
+	private Component locationNotPresent = TextUtils.deserializeLegacy("&cВам необходимо указать координаты.");
 	@Setting("WorldNotPresent")
-	private Component worldNotPresent = TextUtils.deserializeLegacy("&cYou must to specify the world.");
+	private Component worldNotPresent = TextUtils.deserializeLegacy("&cВы должны указать мир.");
 	@Setting("KitNotPresent")
-	private Component kitNotPresent = TextUtils.deserializeLegacy("&cYou must to specify a kit.");
+	private Component kitNotPresent = TextUtils.deserializeLegacy("&cВы должны указать набор.");
 	@Setting("WarpNotPresent")
-	private Component warpNotPresent = TextUtils.deserializeLegacy("&cYou must to specify warp.");
+	private Component warpNotPresent = TextUtils.deserializeLegacy("&cВы должны указать варп.");
 	@Setting("PluginNotPresent")
-	private Component pluginNotPresent = TextUtils.deserializeLegacy("&cYou must specify the plugin.");
+	private Component pluginNotPresent = TextUtils.deserializeLegacy("&cВы должны указать плагин.");
 	@Setting("ModNotPresent")
-	private Component modNotPresent = TextUtils.deserializeLegacy("&cYou must to specify the mod.");
+	private Component modNotPresent = TextUtils.deserializeLegacy("&cВы должны указать мод.");
 	@Setting("MessageNotPresent")
-	private Component messageNotPresent = TextUtils.deserializeLegacy("&cYou didn't enter a message.");
+	private Component messageNotPresent = TextUtils.deserializeLegacy("&cВы не ввели сообщение.");
 	@Setting("ReasonNotPresent")
-	private Component reasonNotPresent = TextUtils.deserializeLegacy("&cYou need to specify a reason.");
+	private Component reasonNotPresent = TextUtils.deserializeLegacy("&cВам необходимо указать причину.");
 	@Setting("LocaleNotPresent")
-	private Component localeNotPresent = TextUtils.deserializeLegacy("&cYou must specify the locale.");
+	private Component localeNotPresent = TextUtils.deserializeLegacy("&cВы должны указать локаль.");
 	@Setting("CurrencyNotPresent")
-	private Component сurrencyNotPresent = TextUtils.deserializeLegacy("&cYou must specify the currency.");
+	private Component сurrencyNotPresent = TextUtils.deserializeLegacy("&cВы должны указать валюту.");
 	@Setting("TargetSelf")
-	private Component targetSelf = TextUtils.deserializeLegacy("&cYou can't point to yourself.");
+	private Component targetSelf = TextUtils.deserializeLegacy("&cВы не можете указывать на себя.");
 	@Setting("Cooldown")
-	private Component cooldown = TextUtils.deserializeLegacy("&cWait &e" + Placeholders.DELAY + "&c before using this command again.");
+	private Component cooldown = TextUtils.deserializeLegacy("&cПодождите &e" + Placeholders.DELAY + "&c перед повторным использованием этой команды.");
 	@Setting("Wait")
-	private Component wait = TextUtils.deserializeLegacy("&aCommand activation via &e" + Placeholders.DELAY + "&a.");
+	private Component wait = TextUtils.deserializeLegacy("&aАктивация команды через &e" + Placeholders.DELAY + "&a.");
 
 	@Override
 	public Component getOnlyPlayer() {

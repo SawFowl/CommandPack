@@ -17,15 +17,15 @@ public class ImplementSpeed implements Speed {
 	public ImplementSpeed() {}
 
 	@Setting("SetSelf")
-	private Component setSelf = TextUtils.deserializeLegacy("&aYou have set your speed multiplier: &e" + Placeholders.VALUE + "&a.");
+	private Component setSelf = TextUtils.deserializeLegacy("&aВы установили свой множитель скорости: &e" + Placeholders.VALUE + "&a.");
 	@Setting("SetByStaff")
-	private Component setByStaff = TextUtils.deserializeLegacy("&aYou have set a player speed multiplier &e" + Placeholders.PLAYER + "&a: &e" + Placeholders.VALUE + "&a.");
+	private Component setByStaff = TextUtils.deserializeLegacy("&aВы установили множитель скорости игрока &e" + Placeholders.PLAYER + "&a: &e" + Placeholders.VALUE + "&a.");
 	@Setting("SetOther")
-	private Component setOther = TextUtils.deserializeLegacy("&aYou have been set a multiplier for your speed: &e" + Placeholders.VALUE + "&a.");
+	private Component setOther = TextUtils.deserializeLegacy("&aВам установлен множитель скорости: &e" + Placeholders.VALUE + "&a.");
 	@Setting("InFly")
-	private Component inFly = TextUtils.deserializeLegacy("\n&aThe speed has been changed for flight mode because of being in the air.");
+	private Component inFly = TextUtils.deserializeLegacy("\n&aСкорость изменена для режима полета из-за нахождения в воздухе..");
 	@Setting("SetDefault")
-	private Component setDefault = TextUtils.deserializeLegacy("default");
+	private Component setDefault = TextUtils.deserializeLegacy("по умолчанию");
 
 	@Override
 	public Component getSetSelf(int value) {

@@ -14,11 +14,11 @@ public class ImplementButtons implements Buttons {
 	public ImplementButtons() {}
 
 	@Setting("Remove")
-	private Component remove = TextUtils.deserializeLegacy("&7[&cRemove&7] ");
+	private Component remove = TextUtils.deserializeLegacy("&7[&cУдалить&7] ");
 	@Setting("Teleport")
-	private Component teleport = TextUtils.deserializeLegacy("&7[&aTeleport&7] ");
+	private Component teleport = TextUtils.deserializeLegacy("&7[&8Телепортация&7] ");
 	@Setting("TeleportClickable")
-	private Component teleportClickable = TextUtils.deserializeLegacy("&7[&eTeleport&7] ");
+	private Component teleportClickable = TextUtils.deserializeLegacy("&7[&eТелепортация&7] ");
 
 	@Override
 	public Component getRemove() {

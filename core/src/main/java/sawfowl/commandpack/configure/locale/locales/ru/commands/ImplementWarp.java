@@ -17,13 +17,13 @@ public class ImplementWarp implements Warp {
 	public ImplementWarp() {}
 
 	@Setting("NotFound")
-	Component notFound = TextUtils.deserializeLegacy("&cWarp with the specified name was not found.");
+	Component notFound = TextUtils.deserializeLegacy("&cВарп с указанным именем не найден.");
 	@Setting("Success")
-	Component success = TextUtils.deserializeLegacy("&aYou have moved to warp " + Placeholders.WARP + "&a.");
+	Component success = TextUtils.deserializeLegacy("&aВы переместились на варп " + Placeholders.WARP + "&a.");
 	@Setting("SuccessOther")
-	Component successOther = TextUtils.deserializeLegacy("&aYou've been transferred to warp " + Placeholders.WARP + "&a.");
+	Component successOther = TextUtils.deserializeLegacy("&aВас переместили на варп " + Placeholders.WARP + "&a.");
 	@Setting("SuccessStaff")
-	Component successStaff = TextUtils.deserializeLegacy("&aYou moved &e" + Placeholders.PLAYER + " to warp " + Placeholders.WARP + "&a.");
+	Component successStaff = TextUtils.deserializeLegacy("&aВы переместили &e" + Placeholders.PLAYER + " на варп " + Placeholders.WARP + "&a.");
 
 	@Override
 	public Component getNotFound() {

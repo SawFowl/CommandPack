@@ -4,7 +4,6 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.mainconfig.Economy;
-import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.mainconfig.ImplementTables;
 
 @ConfigSerializable
 public class ImplementEconomy implements Economy {
@@ -16,13 +15,13 @@ public class ImplementEconomy implements Economy {
 	@Setting("Tables")
 	private ImplementTables tables = new ImplementTables();
 	@Setting("StorageType")
-	private String storageType = "Available values: File, H2, MySql.";
+	private String storageType = "Допустимые значения: File, H2, MySql.";
 	@Setting("UpdateInterval")
-	private String updateInterval = "The time between polls of the MySql database to update the data in the cache.\nThe time is specified in milliseconds.";
+	private String updateInterval = "Время между опросами базы данных MySql для обновления данных в кэше.\nВремя указывается в миллисекундах.";
 	@Setting("DBSettings")
-	private String dBSettings = "This options is only used when selecting MySql to store the economy data.\nCan be used to customize compatibility with Bukkit economy plugin databases.\nUse compatibility at your own risk.\nStable work is not guaranteed.";
+	private String dBSettings = "Эти настройки используются только при выборе MySql для хранения данных экономики.\nМожет быть использовано для настройки совместимости с базами данных плагина экономики Bukkit.\nИспользуйте совместимость на свой страх и риск. Стабильная работа не гарантируется.";
 	@Setting("AdditionalChecks")
-	private String additionalChecks = "Additional checks when performing transactions with player balance reduction when using MySql.";
+	private String additionalChecks = "Дополнительные проверки при выполнении транзакций с уменьшением баланса игрока при использовании MySql.";
 
 	@Override
 	public Currency getCurrency() {

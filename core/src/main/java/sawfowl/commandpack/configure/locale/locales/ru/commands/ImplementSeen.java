@@ -16,51 +16,51 @@ public class ImplementSeen implements Seen {
 	public ImplementSeen() {}
 
 	@Setting("Title")
-	private Component title = TextUtils.deserializeLegacy("&3Player Info&f: " + Placeholders.PLAYER);
+	private Component title = TextUtils.deserializeLegacy("&3Информация об игроке&f: " + Placeholders.PLAYER);
 	@Setting("Online")
-	private Component online = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a is currently &2online");
+	private Component online = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a сейчас &2онлайн");
 	@Setting("Offline")
-	private Component offline = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a is currently &4offline");
+	private Component offline = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a сейчас &4офлайн");
 	@Setting("OnlineTime")
-	private Component onlineTime = TextUtils.deserializeLegacy("&aOnline for&f: &e" + Placeholders.VALUE);
+	private Component onlineTime = TextUtils.deserializeLegacy("&aВремя в онлайне&f: &e" + Placeholders.VALUE);
 	@Setting("LastOnline")
-	private Component lastOnline = TextUtils.deserializeLegacy("&aLast online&f: &e" + Placeholders.VALUE + "&a ago");
+	private Component lastOnline = TextUtils.deserializeLegacy("&aБыл(а) в сети&f: &e" + Placeholders.VALUE + "&a назад");
 	@Setting("DisplayName")
-	private Component displayName = TextUtils.deserializeLegacy("&aDisplay name&f: &e" + Placeholders.VALUE);
+	private Component displayName = TextUtils.deserializeLegacy("&aОтображаемое имя&f: &e" + Placeholders.VALUE);
 	@Setting("UUID")
 	private Component uuid = TextUtils.deserializeLegacy("&aUUID&f: &e" + Placeholders.VALUE);
 	@Setting("IP")
 	private Component ip = TextUtils.deserializeLegacy("&aIP&f: &e" + Placeholders.VALUE);
 	@Setting("FirstPlayed")
-	private Component firstPlayed = TextUtils.deserializeLegacy("&aFirst played&f: " + Placeholders.VALUE);
+	private Component firstPlayed = TextUtils.deserializeLegacy("&aПервый вход&f: " + Placeholders.VALUE);
 	@Setting("WalkingSpeed")
-	private Component walkingSpeed = TextUtils.deserializeLegacy("&aWalking speed&f: " + Placeholders.VALUE);
+	private Component walkingSpeed = TextUtils.deserializeLegacy("&aСкорость хотьбы&f: " + Placeholders.VALUE);
 	@Setting("FlyingSpeed")
-	private Component flyingSpeed = TextUtils.deserializeLegacy("&aFlying speed&f: " + Placeholders.VALUE);
+	private Component flyingSpeed = TextUtils.deserializeLegacy("&aСкорость полета&f: " + Placeholders.VALUE);
 	@Setting("CurrentLocation")
-	private Component currentLocation = TextUtils.deserializeLegacy("&aCurrent location&f: " + Placeholders.VALUE);
+	private Component currentLocation = TextUtils.deserializeLegacy("&aТекущая локация&f: " + Placeholders.VALUE);
 	@Setting("CanFly")
-	private Component canFly = TextUtils.deserializeLegacy("&aCan fly&f: " + Placeholders.VALUE);
+	private Component canFly = TextUtils.deserializeLegacy("&aМожет летать&f: " + Placeholders.VALUE);
 	@Setting("IsFlying")
-	private Component isFlying = TextUtils.deserializeLegacy("&aIs flying&f: " + Placeholders.VALUE);
+	private Component isFlying = TextUtils.deserializeLegacy("&aЛетает&f: " + Placeholders.VALUE);
 	@Setting("GameMode")
-	private Component gameMode = TextUtils.deserializeLegacy("&aGamemode&f: " + Placeholders.VALUE);
+	private Component gameMode = TextUtils.deserializeLegacy("&aРежим игры&f: " + Placeholders.VALUE);
 	@Setting("Vanished")
-	private Component vanished = TextUtils.deserializeLegacy("&aVanished&f: " + Placeholders.VALUE);
+	private Component vanished = TextUtils.deserializeLegacy("&aНевидимость&f: " + Placeholders.VALUE);
 	@Setting("Invulnerable")
-	private Component invulnerable = TextUtils.deserializeLegacy("&aInvulnerable&f: " + Placeholders.VALUE);
+	private Component invulnerable = TextUtils.deserializeLegacy("&aНеуязвимость&f: " + Placeholders.VALUE);
 	@Setting("AFK")
 	private Component afk = TextUtils.deserializeLegacy("&aAFK&f: " + Placeholders.VALUE);
 	@Setting("Ban")
-	private Component ban = TextUtils.deserializeLegacy("&aBan&f: " + Placeholders.VALUE);
+	private Component ban = TextUtils.deserializeLegacy("&aБан&f: " + Placeholders.VALUE);
 	@Setting("Mute")
-	private Component mute = TextUtils.deserializeLegacy("&aMute&f: " + Placeholders.VALUE);
+	private Component mute = TextUtils.deserializeLegacy("&aМут&f: " + Placeholders.VALUE);
 	@Setting("Warns")
-	private Component warns = TextUtils.deserializeLegacy("&aWarns&f: " + Placeholders.VALUE);
+	private Component warns = TextUtils.deserializeLegacy("&aПредупреждения&f: " + Placeholders.VALUE);
 	@Setting("Yes")
-	private Component yes = TextUtils.deserializeLegacy("&eYes");
+	private Component yes = TextUtils.deserializeLegacy("&eДа");
 	@Setting("No")
-	private Component no = TextUtils.deserializeLegacy("&eNo");
+	private Component no = TextUtils.deserializeLegacy("&eНет");
 	@Setting("Padding")
 	private Component padding = TextUtils.deserializeLegacy("&3=");
 

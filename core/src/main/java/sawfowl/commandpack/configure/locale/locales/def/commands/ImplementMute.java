@@ -30,7 +30,7 @@ public class ImplementMute implements Mute {
 	@Setting("Ignore")
 	private Component ignore = TextUtils.deserializeLegacy("&cUnable to block chat for player &e" + Placeholders.PLAYER + "&c.");
 	@Setting("AlreadyMuted")
-	private Component alreadyMuted = TextUtils.deserializeLegacy("&ePlayer &e" + Placeholders.PLAYER + "&e already cannot write in chat.");
+	private Component alreadyMuted = TextUtils.deserializeLegacy("&cPlayer &e" + Placeholders.PLAYER + "&c already cannot write in chat.");
 
 	@Override
 	public Component getSuccess(String player) {

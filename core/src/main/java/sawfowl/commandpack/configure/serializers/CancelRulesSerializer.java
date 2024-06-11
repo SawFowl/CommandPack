@@ -8,10 +8,14 @@ import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.command.CancelRules;
 import sawfowl.commandpack.configure.configs.commands.CancelRulesData;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.commandsconfig.DelayData;
 
 public class CancelRulesSerializer implements TypeSerializer<CancelRules> {
+
+	private final CommandPack INSTANCE = CommandPack.getInstance();
 
 	@Override
 	public CancelRules deserialize(Type type, ConfigurationNode node) throws SerializationException {
@@ -23,9 +27,13 @@ public class CancelRulesSerializer implements TypeSerializer<CancelRules> {
 		node.node("AllowMoving").set(rules.isAllowMoving());
 		node.node("AllowOtherCommand").set(rules.isAllowOtherCommand());
 		if(node instanceof CommentedConfigurationNode commented) {
-			commented.node("AllowMoving").comment("Cancelling the execution a command when the player moves.");
-			commented.node("AllowOtherCommand").comment("Cancelling the execution a command when a player uses another command.");
+			commented.node("AllowMoving").comment(getCancelRules().getAllowMoving());
+			commented.node("AllowOtherCommand").comment(getCancelRules().getAllowOtherCommand());
 		}
+	}
+
+	private DelayData.CancelRules getCancelRules() {
+		return INSTANCE.getLocales().getSystemLocale().getComments().getCommandsConfig().getDelayData().getCancelRules();
 	}
 
 }

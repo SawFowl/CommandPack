@@ -15,15 +15,15 @@ public class ImplementItem implements Item {
 	public ImplementItem() {}
 
 	@Setting("SetName")
-	private Component setName = TextUtils.deserializeLegacy("&aYou have established a new name for the item: &e" + Placeholders.VALUE + "&a.");
+	private Component setName = TextUtils.deserializeLegacy("&aВы установили новое имя для предмета: &e" + Placeholders.VALUE + "&a.");
 	@Setting("ClearName")
-	private Component clearName = TextUtils.deserializeLegacy("&aYou have restored the original name of the item.");
+	private Component clearName = TextUtils.deserializeLegacy("&aВы восстановили оригинальное название предмета.");
 	@Setting("EmptyHand")
-	private Component emptyHand = TextUtils.deserializeLegacy("&cYou have to hold the item in your hand.");
+	private Component emptyHand = TextUtils.deserializeLegacy("&cВы должны держать предмет в руке.");
 	@Setting("SetLore")
-	private Component setLore = TextUtils.deserializeLegacy("&aYou changed the lore of the item.");
+	private Component setLore = TextUtils.deserializeLegacy("&aВы изменили описание предмета.");
 	@Setting("ClearLore")
-	private Component clearLore = TextUtils.deserializeLegacy("&aYou have cleared the item lore.");
+	private Component clearLore = TextUtils.deserializeLegacy("&aВы очистили описание предмета.");
 
 	@Override
 	public Component getSetName(Component value) {

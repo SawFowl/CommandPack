@@ -16,15 +16,15 @@ public class ImplementTime implements Time {
 	public ImplementTime() {}
 
 	@Setting("Morning")
-	private Component morning = TextUtils.deserializeLegacy("&aYou have set the morning in the world &e" + Placeholders.WORLD + "&a.");
+	private Component morning = TextUtils.deserializeLegacy("&aВы установили утро в мире &e" + Placeholders.WORLD + "&a.");
 	@Setting("Day")
-	private Component day = TextUtils.deserializeLegacy("&aYou have set the day in the world &e" + Placeholders.WORLD + "&a.");
+	private Component day = TextUtils.deserializeLegacy("&aВы установили день в мире &e" + Placeholders.WORLD + "&a.");
 	@Setting("Evening")
-	private Component evening = TextUtils.deserializeLegacy("&aYou have set an evening in the world &e" + Placeholders.WORLD + "&a.");
+	private Component evening = TextUtils.deserializeLegacy("&aВы установили вечер в мире &e" + Placeholders.WORLD + "&a.");
 	@Setting("Night")
-	private Component night = TextUtils.deserializeLegacy("&aYou have set the night in the world &e" + Placeholders.WORLD + "&a.");
+	private Component night = TextUtils.deserializeLegacy("&aВы установили ночь в мире &e" + Placeholders.WORLD + "&a.");
 	@Setting("Add")
-	private Component add = TextUtils.deserializeLegacy("&aYou have changed the time in the world &e" + Placeholders.WORLD + "&a.");
+	private Component add = TextUtils.deserializeLegacy("&aВы изменили время в мире &e" + Placeholders.WORLD + "&a.");
 
 	@Override
 	public Component getMorning(ServerWorld world) {

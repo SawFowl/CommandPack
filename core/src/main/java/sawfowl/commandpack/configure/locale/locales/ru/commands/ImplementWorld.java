@@ -15,10 +15,10 @@ import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.worl
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.world.GameRule;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.world.Generate;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.world.SpawnLogic;
-import sawfowl.commandpack.configure.locale.locales.def.commands.world.ImplementDifficulty;
-import sawfowl.commandpack.configure.locale.locales.def.commands.world.ImplementGameRule;
-import sawfowl.commandpack.configure.locale.locales.def.commands.world.ImplementGameMode;
-import sawfowl.commandpack.configure.locale.locales.def.commands.world.ImplementGenerate;
+import sawfowl.commandpack.configure.locale.locales.ru.commands.world.ImplementDifficulty;
+import sawfowl.commandpack.configure.locale.locales.ru.commands.world.ImplementGameRule;
+import sawfowl.commandpack.configure.locale.locales.ru.commands.world.ImplementGameMode;
+import sawfowl.commandpack.configure.locale.locales.ru.commands.world.ImplementGenerate;
 import sawfowl.commandpack.configure.locale.locales.ru.commands.world.ImplementSpawnLogic;
 import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
@@ -39,35 +39,35 @@ public class ImplementWorld implements World {
 	@Setting("SpawnLogic")
 	private ImplementSpawnLogic spawnLogic = new ImplementSpawnLogic();
 	@Setting("Create")
-	private Component create = TextUtils.deserializeLegacy("&aThe world &e\"" + Placeholders.WORLD + "\"&a is created.\n&eWorlds are created in asynchronous mode. Without server restart the world will be static.");
+	private Component create = TextUtils.deserializeLegacy("&aМир &e\"" + Placeholders.WORLD + "\"&a создан.\n&eМиры создаются в асинхронном режиме. Без перезагрузки сервера мир будет статичным.");
 	@Setting("Teleport")
-	private Component teleport = TextUtils.deserializeLegacy("&aYou teleported into the world &e\"" + Placeholders.WORLD + "\"&a.");
+	private Component teleport = TextUtils.deserializeLegacy("&aВы телепортировались в мир &e\"" + Placeholders.WORLD + "\"&a.");
 	@Setting("TeleportStaff")
-	private Component teleportStaff = TextUtils.deserializeLegacy("&aYou teleported the player &e" + Placeholders.PLAYER + "&a to the world &e\"" + Placeholders.WORLD + "\"&a.");
+	private Component teleportStaff = TextUtils.deserializeLegacy("&aВы телепортировали игрока &e" + Placeholders.PLAYER + "&a в мир &e\"" + Placeholders.WORLD + "\"&a.");
 	@Setting("Delete")
-	private Component delete = TextUtils.deserializeLegacy("&aThe world &e\"" + Placeholders.WORLD + "\"&a is deleted.");
+	private Component delete = TextUtils.deserializeLegacy("&aМир &e\"" + Placeholders.WORLD + "\"&a удален.");
 	@Setting("Unload")
-	private Component unload = TextUtils.deserializeLegacy("&aThe world &e\"" + Placeholders.WORLD + "\"&a is unloaded.");
+	private Component unload = TextUtils.deserializeLegacy("&aМир &e\"" + Placeholders.WORLD + "\"&a выгружен.");
 	@Setting("NotLoaded")
-	private Component notLoaded = TextUtils.deserializeLegacy("&cThe world &e\"" + Placeholders.WORLD + "\"&c is not loaded.");
+	private Component notLoaded = TextUtils.deserializeLegacy("&cМир &e\"" + Placeholders.WORLD + "\"&c не загружен.");
 	@Setting("Load")
-	private Component load = TextUtils.deserializeLegacy("&aThe world &e\"" + Placeholders.WORLD + "\"&a is loaded.");
+	private Component load = TextUtils.deserializeLegacy("&aМир &e\"" + Placeholders.WORLD + "\"&a загружен.");
 	@Setting("AlreadyLoaded")
-	private Component alreadyLoaded = TextUtils.deserializeLegacy("&cThe world &e\"" + Placeholders.WORLD + "\"&c is already loaded.");
+	private Component alreadyLoaded = TextUtils.deserializeLegacy("&cМир &e\"" + Placeholders.WORLD + "\"&c уже загружен.");
 	@Setting("SetSpawn")
-	private Component setSpawn = TextUtils.deserializeLegacy("&aSpawn point is set in the world &e\"" + Placeholders.WORLD + "\"&a at the coordinates &e" + Placeholders.LOCATION + "&a.");
+	private Component setSpawn = TextUtils.deserializeLegacy("&aТочка спавна в мире &e\"" + Placeholders.WORLD + "\"&a установленна по координатам &e" + Placeholders.LOCATION + "&a.");
 	@Setting("SetBorder")
-	private Component setBorder = TextUtils.deserializeLegacy("&aThe diameter of world &e\"" + Placeholders.WORLD + "\"&a border is set to the value &e" + Placeholders.VALUE + "&a with the center at the coordinates &e" + Placeholders.LOCATION + "&a.");
+	private Component setBorder = TextUtils.deserializeLegacy("&aДиаметр границы мира &e\"" + Placeholders.WORLD + "\"&a установлен в занчении &e" + Placeholders.VALUE + "&a блок(а/ов) с центром по координатам &e" + Placeholders.LOCATION + "&a.");
 	@Setting("Enable")
-	private Component enable = TextUtils.deserializeLegacy("&aThe world &e\"" + Placeholders.WORLD + "\"&a will be loaded when the server starts up.");
+	private Component enable = TextUtils.deserializeLegacy("&aМир &e\"" + Placeholders.WORLD + "\"&a будет загружаться при запуске сервера.");
 	@Setting("Disable")
-	private Component disable = TextUtils.deserializeLegacy("&aThe world &e\"" + Placeholders.WORLD + "\"&a will not load when the server starts.");
+	private Component disable = TextUtils.deserializeLegacy("&aМир &e\"" + Placeholders.WORLD + "\"&a не будет загружаться при запуске сервера.");
 	@Setting("EnablePvP")
-	private Component enablePvP = TextUtils.deserializeLegacy("&aPvP enabled in the world &e\"" + Placeholders.WORLD + "\"&a.");
+	private Component enablePvP = TextUtils.deserializeLegacy("&aPvP включено в мире &e\"" + Placeholders.WORLD + "\"&a.");
 	@Setting("DisablePvP")
-	private Component disablePvP = TextUtils.deserializeLegacy("&aPvP disabled in the world &e\"" + Placeholders.WORLD + "\"&a.");
+	private Component disablePvP = TextUtils.deserializeLegacy("&aPvP выключено в мире &e\"" + Placeholders.WORLD + "\"&a.");
 	@Setting("SetViewDistance")
-	private Component setViewDistance = TextUtils.deserializeLegacy("&aThe view distance in world &e\"" + Placeholders.WORLD + "\"&a is set to &e" + Placeholders.VALUE + "&a.");
+	private Component setViewDistance = TextUtils.deserializeLegacy("&aДальность видимости в мире &e\"" + Placeholders.WORLD + "\"&a теперь составляет &e" + Placeholders.VALUE + "&a.");
 
 	@Override
 	public Difficulty getDifficulty() {

@@ -18,7 +18,7 @@ public class ImplementInventorySee implements InventorySee {
 	public ImplementInventorySee() {}
 
 	@Setting("Title")
-	private Component title = TextUtils.deserializeLegacy("&2&lInventory&f&l: &e&l" + Placeholders.PLAYER);
+	private Component title = TextUtils.deserializeLegacy("&2&lИнвентарь&f&l: &e&l" + Placeholders.PLAYER);
 
 	@Override
 	public Component getTitle(ServerPlayer player) {

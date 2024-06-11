@@ -9,4 +9,6 @@ public interface CommandsConfig {
 
 	Price getPrice();
 
+	String getAutoCompleteRaw();
+
 }

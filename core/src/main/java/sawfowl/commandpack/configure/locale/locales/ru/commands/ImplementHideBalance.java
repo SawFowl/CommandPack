@@ -16,13 +16,13 @@ public class ImplementHideBalance implements HideBalance {
 	public ImplementHideBalance() {}
 
 	@Setting("Hide")
-	private Component hide = TextUtils.deserializeLegacy("&aYour balance is hidden from other players.");
+	private Component hide = TextUtils.deserializeLegacy("&aВаш баланс скрыт от других игроков.");
 	@Setting("Open")
-	private Component open = TextUtils.deserializeLegacy("&aOther players can once again view your balance.");
+	private Component open = TextUtils.deserializeLegacy("&aДругие игроки снова могут видеть ваш баланс.");
 	@Setting("HideStaff")
-	private Component hideStaff = TextUtils.deserializeLegacy("&aThe balance of the player &e" + Placeholders.PLAYER + "&a is hidden from other players.");
+	private Component hideStaff = TextUtils.deserializeLegacy("&aБаланс игрока &e" + Placeholders.PLAYER + "&a теперь скрыт от других игроков");
 	@Setting("OpenStaff")
-	private Component openStaff = TextUtils.deserializeLegacy("&aPlayer balance &e" + Placeholders.PLAYER + "&a is once again available for other players to view.");
+	private Component openStaff = TextUtils.deserializeLegacy("&aБаланс игрока &e" + Placeholders.PLAYER + "&a снова виден другим игрокам");
 
 	@Override
 	public Component getHide() {

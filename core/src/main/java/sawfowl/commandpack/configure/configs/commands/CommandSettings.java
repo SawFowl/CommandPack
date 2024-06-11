@@ -16,6 +16,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.api.data.command.Delay;
 import sawfowl.commandpack.api.data.command.Price;
+import sawfowl.localeapi.api.LocalisedComment;
 
 @ConfigSerializable
 public class CommandSettings implements sawfowl.commandpack.api.data.command.Settings {
@@ -39,6 +40,7 @@ public class CommandSettings implements sawfowl.commandpack.api.data.command.Set
 	@Setting("Price")
 	private CommandPrice price = new CommandPrice();
 	private UUID uuid = UUID.randomUUID();
+	@LocalisedComment(path = {"Comments", "CommandsConfig", "AutoCompleteRaw"}, plugin = "commandpack")
 	private Boolean autoComplete = null;
 
 	@Override

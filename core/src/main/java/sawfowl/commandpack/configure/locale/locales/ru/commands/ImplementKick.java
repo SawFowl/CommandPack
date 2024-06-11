@@ -16,13 +16,13 @@ public class ImplementKick implements Kick {
 	public ImplementKick() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYou kicked &e" + Placeholders.PLAYER + "&a.");
+	private Component success = TextUtils.deserializeLegacy("&aВы кикнули &e" + Placeholders.PLAYER + "&a.");
 	@Setting("Disconnect")
-	private Component disconnect = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&b kicked you from the server.\n&bReason: &e" + Placeholders.VALUE + ".");
+	private Component disconnect = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&b выгоняет вас с сервера.\n&bПричина: &e" + Placeholders.VALUE + ".");
 	@Setting("Announcement")
-	private Component announcement = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a kicks out from the server  " + Placeholders.PLAYER + ".\n&aReason: &e" + Placeholders.VALUE + "&a.");
+	private Component announcement = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a выгоняет с сервера  " + Placeholders.PLAYER + ".\n&aПричина: &e" + Placeholders.VALUE + "&a.");
 	@Setting("Ignore")
-	private Component ignore = TextUtils.deserializeLegacy("&cYou can't kick &e" + Placeholders.PLAYER + "&c.");
+	private Component ignore = TextUtils.deserializeLegacy("&cВы не можете кикнуть &e" + Placeholders.PLAYER + "&c.");
 
 	@Override
 	public Component getSuccess(String player) {

@@ -15,13 +15,13 @@ public class ImplementSetWarp implements SetWarp {
 	public ImplementSetWarp(){}
 
 	@Setting("AllreadyExist")
-	Component allreadyExist = TextUtils.deserializeLegacy("&cA warp with the specified name already exists.");
+	Component allreadyExist = TextUtils.deserializeLegacy("&cВарп с указанным именем уже существует.");
 	@Setting("Limit")
-	Component limit = TextUtils.deserializeLegacy("&cYour limit&7(&4" + Placeholders.LIMIT + "&7)&c does not allow you to set a new warp point.");
+	Component limit = TextUtils.deserializeLegacy("&cВаш лимит&7(&4" + Placeholders.LIMIT + "&7)&c Ваш лимит не позволяет установить новый варп.");
 	@Setting("Success")
-	Component success = TextUtils.deserializeLegacy("&aWarp is set.");
+	Component success = TextUtils.deserializeLegacy("&aВарп установлен.");
 	@Setting("SuccessAdmin")
-	Component successAdmin = TextUtils.deserializeLegacy("&aAdmin warp is set.");
+	Component successAdmin = TextUtils.deserializeLegacy("&aАдминистративный варп установлен.");
 
 	@Override
 	public Component getAllreadyExist() {

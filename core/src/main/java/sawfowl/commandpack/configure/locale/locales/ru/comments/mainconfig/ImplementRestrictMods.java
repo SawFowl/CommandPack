@@ -11,11 +11,11 @@ public class ImplementRestrictMods implements RestrictMods {
 	public ImplementRestrictMods() {}
 
 	@Setting("Title")
-	private String title = "These settings will only work if the plugin is running on a server with Forge.";
+	private String title = "Эти настройки будут работать только в том случае, если плагин запущен на сервере с Forge.";
 	@Setting("Blacklist")
-	private String blacklist = "If true, the player will not be able to connect to the server if they have at least 1 of the mods listed in this setting.";
+	private String blacklist = "Если значение равно true, игрок не сможет подключиться к серверу, если у него установлен хотя бы 1 из модов, перечисленных в этой настройке.";
 	@Setting("ModsList")
-	private String modsList = "This list contains only the id of the mods.";
+	private String modsList = "Этот список содержит только идентификаторы модов.";
 
 	@Override
 	public String getTitle() {

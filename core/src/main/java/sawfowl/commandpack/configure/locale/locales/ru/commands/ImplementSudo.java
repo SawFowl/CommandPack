@@ -17,11 +17,11 @@ public class ImplementSudo implements Sudo {
 	public ImplementSudo() {}
 
 	@Setting("CommandNotFound")
-	private Component commandNotFound = TextUtils.deserializeLegacy("&cCommand not found.");
+	private Component commandNotFound = TextUtils.deserializeLegacy("&cКоманда не найдена.");
 	@Setting("CommandNotAllowed")
-	private Component commandNotAllowed = TextUtils.deserializeLegacy("&cYou cannot use this command, or the target player has no rights to execute it. Forcing execution is not available.");
+	private Component commandNotAllowed = TextUtils.deserializeLegacy("&cВы не можете использовать эту команду, или у целевого игрока нет прав на ее выполнение. Принудительное выполнение недоступно.");
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&eAn attempt is made to forcibly execute a command by the player &6" + Placeholders.PLAYER + "&e.");
+	private Component success = TextUtils.deserializeLegacy("&eПредпринимается попытка принудительного выполнения команды игроком &6" + Placeholders.PLAYER + "&e.");
 
 	@Override
 	public Component getCommandNotFound() {

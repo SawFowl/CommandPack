@@ -15,10 +15,10 @@ import org.spongepowered.api.registry.RegistryReference;
 import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.world.biome.Biome;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.api.RandomTeleportService.RandomTeleportOptions;
+import sawfowl.localeapi.api.LocalisedComment;
 
 @ConfigSerializable
 public class RandomTeleportWorldConfig implements RandomTeleportOptions {
@@ -28,7 +28,7 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 	@Setting("Attempts")
 	private int attempts = 10;
 	@Setting("World")
-	@Comment("The identifier of the target world.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RandomTeleport", "World"}, plugin = "commandpack")
 	private String world = null;
 	@Setting("StartFromWorldSpawn")
 	private boolean startFromWorldSpawn = false;
@@ -61,6 +61,15 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 	public RandomTeleportWorldConfig(String world, int maxY, boolean prohibitedLiquids) {
 		this.world = world;
 		this.maxY = maxY;
+		this.prohibitedLiquids = prohibitedLiquids;
+		onlySurface = false;
+	}
+
+	public RandomTeleportWorldConfig(String world, int minY, int maxY, Set<String> prohibitedBiomes, boolean prohibitedLiquids) {
+		this.world = world;
+		this.minY = minY;
+		this.maxY = maxY;
+		this.prohibitedBiomes = prohibitedBiomes;
 		this.prohibitedLiquids = prohibitedLiquids;
 		onlySurface = false;
 	}

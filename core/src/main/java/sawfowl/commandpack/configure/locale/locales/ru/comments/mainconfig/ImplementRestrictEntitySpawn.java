@@ -10,12 +10,14 @@ public class ImplementRestrictEntitySpawn implements RestrictEntitySpawn {
 
 	public ImplementRestrictEntitySpawn() {}
 
+	@Setting("Title")
+	private String title = "Используйте этот раздел конфигурации, чтобы контролировать, какие сущности могут появляться на сервере.\nНастройки для миров имеют более высокий приоритет, чем глобальные.\nСущность с id \"minecraft:player\" всегда игнорирует запрет на спавн.";
 	@Setting("BlackList")
-	private String blackList = "If true, entities specified in this setting will not be able to spawn.\nIf false, only those entities listed in this setting will be spawned.";
+	private String blackList = "Если значение равно true, то сущности, указанные в этой настройке, не смогут появляться в мире.\nЕсли значение равно false, то будут появляться только те сущности, которые указаны в этой настройке.";
 	@Setting("EntitiesList")
-	private String entitiesList = "A list of entities to control their spawning.";
+	private String entitiesList = "Список сущностей для управления их спавном.";
 	@Setting("WorldsMap")
-	private String worldsMap = "Personalised settings for each game world.";
+	private String worldsMap = "Индивидуальные настройки для каждого игрового мира.";
 
 	@Override
 	public String getBlackList() {

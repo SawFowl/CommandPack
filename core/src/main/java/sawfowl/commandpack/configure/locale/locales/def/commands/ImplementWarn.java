@@ -17,11 +17,11 @@ public class ImplementWarn implements Warn {
 	@Setting("Success")
 	private Component success = TextUtils.deserialize("&aYou warned the player &e" + Placeholders.PLAYER + "&a.");
 	@Setting("SuccessTarget")
-	private Component successTarget = TextUtils.deserialize("&e" + Placeholders.SOURCE + "&a warned you.\nReason: &e\"" + Placeholders.VALUE + "&e\"&a.\nValid until &e" + Placeholders.TIME);
+	private Component successTarget = TextUtils.deserialize("&e" + Placeholders.SOURCE + "&a warned you.\nReason: &e\"" + Placeholders.VALUE + "&e\"&a.\nValid until: &e" + Placeholders.TIME);
 	@Setting("SuccessTargetPermanent")
-	private Component successTargetPermanent = TextUtils.deserialize("&e" + Placeholders.SOURCE + "&a has issued a permanent warning to you.\nReason:  &e\"" + Placeholders.VALUE + "&e\"&a.");
+	private Component successTargetPermanent = TextUtils.deserialize("&e" + Placeholders.SOURCE + "&a has issued a permanent warning to you.\nReason: &e\"" + Placeholders.VALUE + "&e\"&a.");
 	@Setting("Announcement")
-	private Component announcement = TextUtils.deserialize("&e" + Placeholders.SOURCE + "&a has warned player &e" + Placeholders.PLAYER + "&a.\nValid until &e" + Placeholders.TIME + "&a.\n&aReason: " + Placeholders.VALUE);
+	private Component announcement = TextUtils.deserialize("&e" + Placeholders.SOURCE + "&a has warned player &e" + Placeholders.PLAYER + "&a.\nValid until: &e" + Placeholders.TIME + "&a.\n&aReason: " + Placeholders.VALUE);
 	@Setting("AnnouncementPermanent")
 	private Component announcementPermanent = TextUtils.deserialize("&e" + Placeholders.SOURCE + "&a issues a permanent warning to player &e" + Placeholders.PLAYER + "&a.\n&aReason: " + Placeholders.VALUE);
 	@Setting("Ignore")
@@ -29,11 +29,11 @@ public class ImplementWarn implements Warn {
 	@Setting("Autopunish")
 	private Component autopunish = TextUtils.deserialize("&4Automatic issuance of punishments");
 	@Setting("BanLimit")
-	private Component banLimit = TextUtils.deserialize("&cWarning limit reached before ban &e" + Placeholders.VALUE + "&c");
+	private Component banLimit = TextUtils.deserialize("&cWarning limit reached before ban: &e" + Placeholders.VALUE + "&c");
 	@Setting("MuteLimit")
-	private Component muteLimit = TextUtils.deserialize("&cWarning limit reached before mute &e" + Placeholders.VALUE + "&c");
+	private Component muteLimit = TextUtils.deserialize("&cWarning limit reached before mute: &e" + Placeholders.VALUE + "&c");
 	@Setting("KickLimit")
-	private Component kickLimit = TextUtils.deserialize("&cWarning limit reached before kick &e" + Placeholders.VALUE + "&c");
+	private Component kickLimit = TextUtils.deserialize("&cWarning limit reached before kick: &e" + Placeholders.VALUE + "&c");
 
 	@Override
 	public Component getSuccess(String player) {

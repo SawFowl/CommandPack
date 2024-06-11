@@ -10,6 +10,8 @@ public class ImplementRestrictEntitySpawn implements RestrictEntitySpawn {
 
 	public ImplementRestrictEntitySpawn() {}
 
+	@Setting("Title")
+	private String title = "Use this configuration section to control which entities can spawn on the server.\nSettings for worlds have a higher priority than global settings.\nAn entity with the id \"minecraft:player\" will always be able to spawn regardless of these settings.";
 	@Setting("BlackList")
 	private String blackList = "If true, entities specified in this setting will not be able to spawn.\nIf false, only those entities listed in this setting will be spawned.";
 	@Setting("EntitiesList")

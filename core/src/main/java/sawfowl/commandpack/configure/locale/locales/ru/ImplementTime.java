@@ -23,7 +23,7 @@ public class ImplementTime implements Time {
 	@Setting("Format")
 	private String format = "d.MM.yyyy HH:mm:ss";
 	@Setting("TimeZone")
-	private String timeZone = "UTC+3";
+	private String timeZone = "Europe/Moscow";
 
 	@Override
 	public Component getSecond() {

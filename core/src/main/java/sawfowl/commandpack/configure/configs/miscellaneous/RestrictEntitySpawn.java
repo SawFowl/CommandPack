@@ -9,6 +9,8 @@ import java.util.stream.IntStream;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import sawfowl.localeapi.api.LocalisedComment;
+
 @ConfigSerializable
 public class RestrictEntitySpawn {
 
@@ -17,10 +19,13 @@ public class RestrictEntitySpawn {
 	@Setting("Enable")
 	private boolean enable = false;
 	@Setting("BlackList")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RestrictEntitySpawn", "BlackList"}, plugin = "commandpack")
 	private boolean blackList = true;
 	@Setting("Entities")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RestrictEntitySpawn", "EntitiesList"}, plugin = "commandpack")
 	private List<String> entities = new ArrayList<>();
 	@Setting("Worlds")
+	@LocalisedComment(path = {"Comments", "MainConfig", "RestrictEntitySpawn", "WorldsMap"}, plugin = "commandpack")
 	private Map<String, RestrictEntityWorldSpawn> worlds = arraysToMap(new String[] {"minecraft:overworld", "minecraft:the_nether", "minecraft:the_end"}, new RestrictEntityWorldSpawn[] {new RestrictEntityWorldSpawn(), new RestrictEntityWorldSpawn(), new RestrictEntityWorldSpawn()});;
 
 	public boolean isAllowSpawn(String entity, String world) {

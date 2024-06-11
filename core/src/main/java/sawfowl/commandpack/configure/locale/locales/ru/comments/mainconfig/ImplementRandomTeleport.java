@@ -11,29 +11,29 @@ public class ImplementRandomTeleport implements RandomTeleport {
 	public ImplementRandomTeleport() {}
 
 	@Setting("Attempts")
-	private String attempts = "The number of attempts to find the position. Increasing the value can lead to server crashes.";
+	private String attempts = "Количество попыток найти позицию. Увеличение этого значения может привести к сбоям в работе сервера.";
 	@Setting("WorldSelector")
-	private String worldSelector = "Specifies the target world for teleportation by the player's current world.\nIf the player's current world is not listed in this worlds map as a source world, the player will be teleported to the same world he is in.";
+	private String worldSelector = "Указывает целевой мир для телепортации из текущего мира игрока.\nЕсли текущий мир игрока не указан в этой карте миров как исходный, игрок будет телепортирован в тот же мир, в котором он находится.";
 	@Setting("StartFromWorldSpawn")
-	private String startFromWorldSpawn = "If true, the search for a random position will be performed from the world spawn point.\nIf false, the search will be performed from the current coordinates of the player.";
+	private String startFromWorldSpawn = "Если true, то поиск случайной позиции будет осуществляться от точки спавна мира.\nЕсли false, то поиск будет осуществляться от текущих координат игрока.";
 	@Setting("MinRadius")
-	private String minRadius = "Minimum teleportation distance.";
+	private String minRadius = "Минимальная дистанция телепортации.";
 	@Setting("Radius")
-	private String radius = "Maximum teleportation distance.";
+	private String radius = "Максимальная дистанция телепортации.";
 	@Setting("MaxY")
-	private String maxY = "Maximum height for finding a position.";
+	private String maxY = "Максимальная высота для поиска позиции.";
 	@Setting("MinY")
-	private String minY = "Minimum height for finding a position.";
+	private String minY = "Минимальная высота для поиска позиции.";
 	@Setting("ProhibitedBiomes")
-	private String prohibitedBiomes = "Biomes specified in this list will not be available for teleportation by random coordinates.";
+	private String prohibitedBiomes = "Биомы, указанные в этом списке, не будут доступны для телепортации по случайным координатам.";
 	@Setting("OnlySurface")
-	private String onlySurface = "If true, the player will always move to the surface.";
+	private String onlySurface = "Если значение равно true, игрок всегда будет телепортирован на поверхность.";
 	@Setting("ProhibitedLiquids")
-	private String prohibitedLiquids = "If true, the search for the correct position will skip fluid blocks.";
+	private String prohibitedLiquids = "Если значение равно true, поиск правильной позиции будет пропускать блоки жидкости.";
 	@Setting("ProhibitedBlocks")
-	private String prohibitedBlocks = "Blocks specified in this list will not be available for teleportation by random coordinates.";
+	private String prohibitedBlocks = "Блоки, указанные в этом списке, не будут доступны для телепортации по случайным координатам.";
 	@Setting("World")
-	private String world = "The identifier of the target world.";
+	private String world = "Идентификатор целевого мира.";
 
 	@Override
 	public String getAttempts() {

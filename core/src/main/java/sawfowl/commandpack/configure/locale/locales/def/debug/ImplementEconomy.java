@@ -13,10 +13,10 @@ public class ImplementEconomy implements Economy {
 
 	@Setting("ErrorGiveMoney")
 	private String errorGiveMoney = "Failed to add game currency to player " + Placeholders.PLAYER + ".";
-	@Setting("ErrorTakMoney")
-	private String errorTakMoney = "Failed to take game currency from player " + Placeholders.PLAYER + ".";
+	@Setting("ErrorTakeMoney")
+	private String errorTakeMoney = "Failed to take game currency from player " + Placeholders.PLAYER + ".";
 	@Setting("NotFound")
-	private String notFound = "&eThere is no economy plugin on the server. Some of the functionality will not be available.";
+	private String notFound = "There is no economy plugin on the server. Some of the functionality will not be available. You can enable the economy plugin functionality in the main configuration of the CommandPack plugin.";
 
 	@Override
 	public String getErrorGiveMoney(String player) {
@@ -25,7 +25,7 @@ public class ImplementEconomy implements Economy {
 
 	@Override
 	public String getErrorTakeMoney(String player) {
-		return errorTakMoney.replace(Placeholders.PLAYER, player);
+		return errorTakeMoney.replace(Placeholders.PLAYER, player);
 	}
 
 	@Override

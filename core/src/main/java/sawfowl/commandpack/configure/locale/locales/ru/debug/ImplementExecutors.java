@@ -12,13 +12,13 @@ public class ImplementExecutors implements Debug.Commands.Executors {
 	public ImplementExecutors() {}
 
 	@Setting("Server")
-	private String server = "Server";
+	private String server = "Сервер";
 	@Setting("CommandBlock")
-	private String commandBlock = "CommandBlock" + Placeholders.LOCATION;
+	private String commandBlock = "Коммандный блок" + Placeholders.LOCATION;
 	@Setting("CommandBlockMinecart")
-	private String commandBlockMinecart = "Minecart with command block" + Placeholders.LOCATION;
+	private String commandBlockMinecart = "Вагонетка с командным блоком" + Placeholders.LOCATION;
 	@Setting("Unknown")
-	private String unknown = "Unknown";
+	private String unknown = "Неизвестный исполнитель команды";
 
 	@Override
 	public String getServer() {

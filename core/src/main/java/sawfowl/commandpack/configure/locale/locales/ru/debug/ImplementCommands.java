@@ -14,9 +14,9 @@ public class ImplementCommands implements Commands {
 	@Setting("Executors")
 	private ImplementExecutors executors = new ImplementExecutors();
 	@Setting("Log")
-	private String log = Placeholders.SOURCE + " ran the command: /" + Placeholders.COMMAND + " " + Placeholders.ARGS;
+	private String log = Placeholders.SOURCE + " использует команду: /" + Placeholders.COMMAND + " " + Placeholders.ARGS;
 	@Setting("NotTracking")
-	private String notTracking = "Settings \"" + Placeholders.COMMAND + "\" is not registered for tracking.";
+	private String notTracking = "Команда \"" + Placeholders.COMMAND + "\" не зарегистрирована для отслеживания.";
 
 	@Override
 	public Executors getExecutors() {

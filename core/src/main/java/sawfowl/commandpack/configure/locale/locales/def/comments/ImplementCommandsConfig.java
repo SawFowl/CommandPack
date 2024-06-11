@@ -16,8 +16,10 @@ public class ImplementCommandsConfig implements CommandsConfig {
 
 	@Setting("DelayData")
 	private ImplementDelayData delayData = new ImplementDelayData();
-	@Setting("DelayData")
+	@Setting("Price")
 	private ImplementPrice price = new ImplementPrice();
+	@Setting("AutoCompleteRaw")
+	private String autoCompleteRaw = "If this section is present, it means that this command belongs to the raw commands.\nIf true, then autocompletion of arguments will be available for this command, which may simplify its use by the player.\nIf false, then autocompletion will be unavailable.";
 
 	@Override
 	public DelayData getDelayData() {
@@ -27,6 +29,11 @@ public class ImplementCommandsConfig implements CommandsConfig {
 	@Override
 	public Price getPrice() {
 		return price;
+	}
+
+	@Override
+	public String getAutoCompleteRaw() {
+		return autoCompleteRaw;
 	}
 
 }

@@ -16,13 +16,13 @@ public class ImplementNick implements Nick {
 	public ImplementNick() {}
 
 	@Setting("Set")
-	private Component set = TextUtils.deserializeLegacy("&aYour nickname has been changed to &e" + Placeholders.VALUE + "&a.");
+	private Component set = TextUtils.deserializeLegacy("&aВаш отображаемый ник изменен на &e" + Placeholders.VALUE + "&a.");
 	@Setting("Clear")
-	private Component clear = TextUtils.deserializeLegacy("&aYour nickname has been changed to the original.");
+	private Component clear = TextUtils.deserializeLegacy("&aВаш ник изменен на оригинальный.");
 	@Setting("SetStaff")
-	private Component setStaff = TextUtils.deserializeLegacy("&aYou have changed the nickname of the player &e" + Placeholders.PLAYER + "&a to &e" + Placeholders.VALUE + "&a.");
+	private Component setStaff = TextUtils.deserializeLegacy("&aВы изменили отображаемый ник игрока &e" + Placeholders.PLAYER + "&a на &e" + Placeholders.VALUE + "&a.");
 	@Setting("ClearStaff")
-	private Component clearStaff = TextUtils.deserializeLegacy("&aYou restored the original nickname of player &e" + Placeholders.PLAYER + "&a.");
+	private Component clearStaff = TextUtils.deserializeLegacy("&aВы восстановили оригинальный ник игрока &e" + Placeholders.PLAYER + "&a.");
 
 	@Override
 	public Component getSet(Component value) {

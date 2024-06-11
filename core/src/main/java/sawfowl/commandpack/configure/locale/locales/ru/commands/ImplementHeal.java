@@ -17,9 +17,9 @@ public class ImplementHeal implements Heal {
 	public ImplementHeal() {}
 
 	@Setting("Seccess")
-	private Component success = TextUtils.deserializeLegacy("&aYour heals level is now maximum.");
+	private Component success = TextUtils.deserializeLegacy("&aВаш уровень здоровья теперь максимальный.");
 	@Setting("SeccessStaff")
-	private Component successStaff = TextUtils.deserializeLegacy("&aYou healed player &e" + Placeholders.PLAYER + "&a.");
+	private Component successStaff = TextUtils.deserializeLegacy("&aВы исцелили игрока &e" + Placeholders.PLAYER + "&a.");
 
 	@Override
 	public Component getSuccess() {

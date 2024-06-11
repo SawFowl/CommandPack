@@ -14,7 +14,7 @@ public class ImplementReply implements Reply {
 	public ImplementReply() {}
 
 	@Setting("Nothing")
-	private Component nothing = TextUtils.deserializeLegacy("&cNo one to answer to.");
+	private Component nothing = TextUtils.deserializeLegacy("&cНекому отвечать.");
 
 	@Override
 	public Component getNothing() {

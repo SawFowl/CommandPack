@@ -11,7 +11,7 @@ public class ImplementDBSettings implements DBSettings {
 	public ImplementDBSettings() {}
 
 	@Setting("Title")
-	private String title = "Configuring queries to work with the MySQL database.\nChanging the settings can help in creating compatibility with other plugins.\nDo not remove the `written` column from queries. It is used for automatic data synchronization.";
+	private String title = "Configuring work with MySql database";
 	@Setting("Columns")
 	private String columns = "Names of columns for receiving data.\nIf you change the names, you must delete the tables in the existing database or manually rename the columns in the `ban` and `mute` tables.";
 	@Setting("Tables")

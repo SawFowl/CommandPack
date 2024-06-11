@@ -15,13 +15,13 @@ public class ImplementWarns implements Warns {
 	public ImplementWarns() {}
 
 	@Setting("AllTime")
-	private Component allTime = TextUtils.deserializeLegacy("&aWarnings in all time &e" + Placeholders.VALUE + "&a.");
+	private Component allTime = TextUtils.deserializeLegacy("&aПредупреждений за все время &e" + Placeholders.VALUE + "&a.");
 	@Setting("AllTimeTarget")
-	private Component allTimeTarget = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a warnings in all time &e" + Placeholders.VALUE + "&a.");
+	private Component allTimeTarget = TextUtils.deserializeLegacy("&aПредупреждений &e" + Placeholders.PLAYER + "&a за все время &e" + Placeholders.VALUE + "&a.");
 	@Setting("Title")
-	private Component title = TextUtils.deserializeLegacy("&3" + Placeholders.PLAYER + " warnings");
+	private Component title = TextUtils.deserializeLegacy("&3Предупреждения " + Placeholders.PLAYER);
 	@Setting("Reason")
-	private Component reason = TextUtils.deserializeLegacy("&aReason: " + Placeholders.VALUE);
+	private Component reason = TextUtils.deserializeLegacy("&aПричина: " + Placeholders.VALUE);
 	@Setting("Times")
 	private Component times = TextUtils.deserializeLegacy("&e" + Placeholders.TIME + " &a➢ &e" + Placeholders.LIMIT);
 

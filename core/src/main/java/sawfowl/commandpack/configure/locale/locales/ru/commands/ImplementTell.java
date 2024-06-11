@@ -16,9 +16,9 @@ public class ImplementTell implements Tell {
 	public ImplementTell() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&5You whisper &e" + Placeholders.PLAYER + "&f: &d" + Placeholders.VALUE);
+	private Component success = TextUtils.deserializeLegacy("&5Вы шепчете &e" + Placeholders.PLAYER + "&f: &d" + Placeholders.VALUE);
 	@Setting("SuccessTarget")
-	private Component successTarget = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + " &5whispers to you&f: &d" + Placeholders.VALUE);
+	private Component successTarget = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + " &5шепчет вам&f: &d" + Placeholders.VALUE);
 
 	@Override
 	public Component getSuccess(Component target, Component message) {

@@ -1,4 +1,4 @@
-package sawfowl.commandpack.configure.locale.locales.ru.comments.mainconfig;
+package sawfowl.commandpack.configure.locale.locales.ru.comments.commandsconfig;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
@@ -11,9 +11,9 @@ public class ImplementCancelRules implements CancelRules {
 	public ImplementCancelRules() {}
 
 	@Setting("AllowMoving")
-	private String allowMoving = "Cancelling the execution a command when the player moves.";
+	private String allowMoving = "Отмена выполнения команды при перемещении игрока.";
 	@Setting("AllowOtherCommand")
-	private String allowOtherCommand = "Cancelling the execution a command when a player uses another command.";
+	private String allowOtherCommand = "Отмена выполнения команды, когда игрок использует другую команду.";
 
 	@Override
 	public String getAllowMoving() {

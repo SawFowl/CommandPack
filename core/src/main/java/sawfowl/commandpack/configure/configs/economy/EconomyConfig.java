@@ -7,12 +7,12 @@ import java.util.Optional;
 
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.configure.configs.economy.dbsettings.DBSettings;
 import sawfowl.commandpack.utils.StorageType;
+import sawfowl.localeapi.api.LocalisedComment;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
@@ -25,16 +25,16 @@ public class EconomyConfig {
 	@Setting("Currencies")
 	private List<CurrencyConfig> currencies = new ArrayList<CurrencyConfig>(Arrays.asList(new CurrencyConfig()));
 	@Setting("StorageType")
-	@Comment("Available values: File, H2, MySql.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Economy", "StorageType"}, plugin = "commandpack")
 	private String storageType = StorageType.FILE.typeName();
 	@Setting("UpdateInterval")
-	@Comment("The time between polls of the MySql database to update the data in the cache.\nThe time is specified in milliseconds.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Economy", "UpdateInterval"}, plugin = "commandpack")
 	private long updateInterval = 500;
 	@Setting("DBSettings")
-	@Comment("This options is only used when selecting MySql to store the economy data.\nCan be used to customize compatibility with Bukkit economy plugin databases.\nUse compatibility at your own risk.\nStable work is not guaranteed.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Economy", "DBSettings"}, plugin = "commandpack")
 	private DBSettings dbSettings = new DBSettings();
-	@Setting("AadditionalChecks")
-	@Comment("Additional checks when performing transactions with player balance reduction when using MySql.")
+	@Setting("AdditionalChecks")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Economy", "AdditionalChecks"}, plugin = "commandpack")
 	private boolean additionalChecks = true;
 
 	public boolean isEnable() {

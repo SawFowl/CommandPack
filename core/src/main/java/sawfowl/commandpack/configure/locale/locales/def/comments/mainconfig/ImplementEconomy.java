@@ -4,7 +4,6 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.mainconfig.Economy;
-import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.mainconfig.ImplementTables;
 
 @ConfigSerializable
 public class ImplementEconomy implements Economy {

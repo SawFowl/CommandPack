@@ -16,7 +16,7 @@ public class ImplementCommands implements Commands {
 	@Setting("Log")
 	private String log = Placeholders.SOURCE + " ran the command: /" + Placeholders.COMMAND + " " + Placeholders.ARGS;
 	@Setting("NotTracking")
-	private String notTracking = "Settings \"" + Placeholders.COMMAND + "\" is not registered for tracking.";
+	private String notTracking = "Command \"" + Placeholders.COMMAND + "\" is not registered for tracking.";
 
 	@Override
 	public Executors getExecutors() {

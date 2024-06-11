@@ -1,4 +1,4 @@
-package sawfowl.commandpack.configure.locale.locales.def.comments.mainconfig;
+package sawfowl.commandpack.configure.locale.locales.def.comments.commandsconfig;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;

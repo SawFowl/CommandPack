@@ -15,11 +15,11 @@ public class ImplementUnmute implements Unmute {
 	public ImplementUnmute() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYou unmuted &e" + Placeholders.PLAYER + "&a.");
+	private Component success = TextUtils.deserializeLegacy("&aВы сняли мут с &e" + Placeholders.PLAYER + "&a.");
 	@Setting("SuccessTarget")
-	private Component successTarget = TextUtils.deserializeLegacy("&aYou can write in the chat again.");
+	private Component successTarget = TextUtils.deserializeLegacy("&aВы снова можете писать в чат.");
 	@Setting("Announcement")
-	private Component announcement = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a unmute &e" + Placeholders.PLAYER + "&a.");
+	private Component announcement = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a снимает мут с &e" + Placeholders.PLAYER + "&a.");
 
 	@Override
 	public Component getSuccess(String player) {

@@ -6,9 +6,9 @@ import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import sawfowl.localeapi.api.LocalisedComment;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
@@ -30,10 +30,10 @@ public class CommandPrice implements sawfowl.commandpack.api.data.command.Price 
 	}
 
 	@Setting("Currency")
-	@Comment("The currency used. Both the currency symbol and its name are accepted.\nIf the specified currency will not be present on the server, the default currency will be used.")
+	@LocalisedComment(path = {"Comments", "CommandsConfig", "Price", "Currency"}, plugin = "commandpack")
 	private String currency = "$";
 	@Setting("Money")
-	@Comment("The price a player will pay for completing a command.")
+	@LocalisedComment(path = {"Comments", "CommandsConfig", "Price", "Money"}, plugin = "commandpack")
 	private double money = 0;
 
 	@Override

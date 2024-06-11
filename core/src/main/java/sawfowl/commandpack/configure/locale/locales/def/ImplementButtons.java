@@ -16,7 +16,7 @@ public class ImplementButtons implements Buttons {
 	@Setting("Remove")
 	private Component remove = TextUtils.deserializeLegacy("&7[&cRemove&7] ");
 	@Setting("Teleport")
-	private Component teleport = TextUtils.deserializeLegacy("&7[&aTeleport&7] ");
+	private Component teleport = TextUtils.deserializeLegacy("&7[&8Teleport&7] ");
 	@Setting("TeleportClickable")
 	private Component teleportClickable = TextUtils.deserializeLegacy("&7[&eTeleport&7] ");
 

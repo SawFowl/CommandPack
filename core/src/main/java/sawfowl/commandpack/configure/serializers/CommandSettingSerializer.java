@@ -5,17 +5,21 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
-
+import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
+import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.data.command.Delay;
 import sawfowl.commandpack.api.data.command.Price;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
+import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.CommandsConfig;
 
 public class CommandSettingSerializer implements TypeSerializer<Settings> {
+
+	private final CommandPack INSTANCE = CommandPack.getInstance();
 
 	@Override
 	public Settings deserialize(Type type, ConfigurationNode node) throws SerializationException {
@@ -37,7 +41,14 @@ public class CommandSettingSerializer implements TypeSerializer<Settings> {
 		node.node("Enable").set(settings.isEnable());
 		node.node("Price").set(settings.getPrice());
 		Optional<Boolean> autoComplete = settings.isAutoComplete();
-		if(autoComplete.isPresent()) node.node("AutoCompleteRaw").set(autoComplete.get());
+		if(autoComplete.isPresent()) {
+			node.node("AutoCompleteRaw").set(autoComplete.get());
+			if(node.node("AutoCompleteRaw") instanceof CommentedConfigurationNode commented) commented.comment(getCommandsConfig().getAutoCompleteRaw());
+		}
+	}
+
+	private CommandsConfig getCommandsConfig() {
+		return INSTANCE.getLocales().getSystemLocale().getComments().getCommandsConfig();
 	}
 
 }

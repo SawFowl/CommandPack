@@ -16,11 +16,11 @@ public class ImplementSpawn implements Spawn {
 	public ImplementSpawn(){}
 
 	@Setting("Set")
-	private Component set = TextUtils.deserializeLegacy("&aThe spawn point has been set.");
+	private Component set = TextUtils.deserializeLegacy("&aТочка спавна установлена.");
 	@Setting("teleport")
-	private Component teleport = TextUtils.deserializeLegacy("&aYou teleported to the spawn point.");
+	private Component teleport = TextUtils.deserializeLegacy("&aВы телепортировались на спавн.");
 	@Setting("TeleportStaff")
-	private Component teleportStaff = TextUtils.deserializeLegacy("&aYou teleported &e" + Placeholders.PLAYER + "&a to the spawn.");
+	private Component teleportStaff = TextUtils.deserializeLegacy("&aВы телепортировали &e" + Placeholders.PLAYER + "&a на спавн.");
 
 	@Override
 	public Component getSet() {

@@ -16,7 +16,7 @@ public class ImplementUnbanIP implements UnbanIP {
 	public ImplementUnbanIP() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYou unbanned IP &e" + Placeholders.VALUE + "&a.");
+	private Component success = TextUtils.deserializeLegacy("&aВы разбанили IP &e" + Placeholders.VALUE + "&a.");
 
 	@Override
 	public Component getSuccess(String ip) {

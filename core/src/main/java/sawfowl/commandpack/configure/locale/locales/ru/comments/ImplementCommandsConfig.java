@@ -16,8 +16,10 @@ public class ImplementCommandsConfig implements CommandsConfig {
 
 	@Setting("DelayData")
 	private ImplementDelayData delayData = new ImplementDelayData();
-	@Setting("DelayData")
+	@Setting("Price")
 	private ImplementPrice price = new ImplementPrice();
+	@Setting("AutoCompleteRaw")
+	private String autoCompleteRaw = "Наличие этой секции означает, что данная команда относится к сырым командам.\nЕсли true, то для данной команды будет доступно автодополнение аргументов, что может упростить ее использование игроку.\nЕсли false, то автодополнение будет недоступно.";
 
 	@Override
 	public DelayData getDelayData() {
@@ -27,6 +29,11 @@ public class ImplementCommandsConfig implements CommandsConfig {
 	@Override
 	public Price getPrice() {
 		return price;
+	}
+
+	@Override
+	public String getAutoCompleteRaw() {
+		return null;
 	}
 
 }

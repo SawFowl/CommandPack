@@ -12,9 +12,9 @@ public class ImplementAfk implements Afk {
 	@Setting("Titles")
 	private ImplementTitles titles = new ImplementTitles();
 	@Setting("TurnOnDelay")
-	private String turnOnDelay = "Delay before AFK status turns on.";
+	private String turnOnDelay = "Задержка перед включением статуса AFK.";
 	@Setting("KickDelay")
-	private String kickDelay = "Time before kick a player with AFK status turned on if he does not have permission for unlimited AFK.";
+	private String kickDelay = "Время до кика игрока с включенным статусом AFK, если у него нет разрешения на неограниченный AFK.";
 
 	@Override
 	public Titles getTitles() {

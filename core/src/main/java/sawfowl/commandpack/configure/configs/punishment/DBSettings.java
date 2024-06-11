@@ -1,12 +1,12 @@
 package sawfowl.commandpack.configure.configs.punishment;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.configure.configs.punishment.dbsettings.Columns;
 import sawfowl.commandpack.configure.configs.punishment.dbsettings.SyncIntervals;
 import sawfowl.commandpack.configure.configs.punishment.dbsettings.Tables;
+import sawfowl.localeapi.api.LocalisedComment;
 
 @ConfigSerializable
 public class DBSettings {
@@ -14,19 +14,19 @@ public class DBSettings {
 	public DBSettings(){}
 
 	@Setting("Columns")
-	@Comment("Names of columns for receiving data.\nIf you change the names, you must delete the tables in the existing database or manually rename the columns in the `ban` and `mute` tables.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Punishment", "DBSettings", "Columns"}, plugin = "commandpack")
 	private Columns columns = new Columns();
 	@Setting("Tables")
-	@Comment("Table names for automatic data synchronization.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Punishment", "DBSettings", "Tables"}, plugin = "commandpack")
 	private Tables tables = new Tables();
 	@Setting("SyncIntervals")
-	@Comment("Intervals between plugin data updates.\nTime is indicated in seconds.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Punishment", "DBSettings", "SyncIntervals"}, plugin = "commandpack")
 	private SyncIntervals syncIntervals = new SyncIntervals();
 	@Setting("CreateCombinedBansTable")
-	@Comment("Creating a combined table with bans data.\nNot recommended.\nUse if you need to work with an existing database of another plugin. Compatibility is not guaranteed.\nWhen using the combo table, removing the ban of a player who was banned by IP will remove the IP address ban as well. Similarly with the removal of the ban by IP.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Punishment", "DBSettings", "CreateCombinedBansTable"}, plugin = "commandpack")
 	private boolean createCombinedBansTable = false;
 	@Setting("UnixTime")
-	@Comment("Using unix time in database queries.\nIf you change the time format, you may need to delete tables.\nUse only to ensure compatibility with other plugins.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Punishment", "DBSettings", "UnixTime"}, plugin = "commandpack")
 	private boolean unixTime = false;
 
 	public Columns getColumns() {

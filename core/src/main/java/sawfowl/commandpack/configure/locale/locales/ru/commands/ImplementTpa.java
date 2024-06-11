@@ -16,17 +16,17 @@ public class ImplementTpa implements Tpa {
 	public ImplementTpa() {}
 
 	@Setting("DisabledRequest")
-	private Component disabledRequest = TextUtils.deserializeLegacy("&cThis player has disabled receiving teleportation requests.");
+	private Component disabledRequest = TextUtils.deserializeLegacy("&cЭтот игрок отключил прием запросов на телепортацию.");
 	@Setting("Offline")
-	private Component offline = TextUtils.deserializeLegacy("&cThe request is not valid. The player is offline.");
+	private Component offline = TextUtils.deserializeLegacy("&cЗапрос недействителен. Игрок не в сети.");
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYou sent a teleportation request.");
+	private Component success = TextUtils.deserializeLegacy("&aВы отправили запрос на телепортацию.");
 	@Setting("Accepted")
-	private Component accepted = TextUtils.deserializeLegacy("&aThe teleportation request is accepted.");
+	private Component accepted = TextUtils.deserializeLegacy("&aЗапрос на телепортацию принят.");
 	@Setting("Request")
-	private Component request = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a is requesting permission to teleport to you. Click this message to accept the request.");
+	private Component request = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a запрашивает разрешение на телепортацию к вам. Щелкните это сообщение, чтобы принять запрос.");
 	@Setting("RequestHere")
-	private Component requestHere = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a asks you to teleport to him/her. Click this message to accept the request.");
+	private Component requestHere = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a просит вас телепортироваться к нему(ней). Щелкните это сообщение, чтобы принять запрос.");
 
 	@Override
 	public Component getDisabledRequest() {

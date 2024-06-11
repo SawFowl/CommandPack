@@ -16,12 +16,12 @@ public class ImplementHelp implements Help {
 	public ImplementHelp() {}
 
 	@Setting("Title")
-	private Component title = toComponent("&3Help");
+	private Component title = toComponent("&3Справка");
 	@Setting("List")
 	private List<Component> list = Arrays.asList(
-			toComponent("&eThe commands will be available if you have permission for them."),
-			toComponent("&2/spawn &f- &eteleport to a spawnpoint"),
-			toComponent("&2/home &f- &eteleporting to your home")
+			toComponent("&eКоманды будут доступны, если у вас есть на них разрешение."),
+			toComponent("&2/spawn &f- &eтелепорт на точку спавна"),
+			toComponent("&2/home &f- &eтелепорт домой")
 		);
 
 	@Override

@@ -16,15 +16,15 @@ public class ImplementHat implements Hat {
 	public ImplementHat(){}
 
 	@Setting("NotPresent")
-	private Component notPresent = TextUtils.deserializeLegacy("&cYou have to hold an item in your main hand.");
+	private Component notPresent = TextUtils.deserializeLegacy("&cВы должны держать предмет в основной руке.");
 	@Setting("Blacklist")
-	private Component blackListItem = TextUtils.deserializeLegacy("&cThis item cannot be put on your head.");
+	private Component blackListItem = TextUtils.deserializeLegacy("&cЭтот предмет нельзя надевать на голову.");
 	@Setting("FullInventory")
-	private Component fullInventory = TextUtils.deserializeLegacy("&cThe player's inventory &e" + Placeholders.PLAYER + "&c is full. Click on this message if you want to replace an item on a player's head. The item on the player's head will be lost!");
+	private Component fullInventory = TextUtils.deserializeLegacy("&cИнвентарь игрока &e" + Placeholders.PLAYER + "&c полон. Нажмите на это сообщение, если хотите заменить предмет на голове игрока. Предмет на голове игрока будет потерян!");
 	@Setting("SuccessStaff")
-	private Component successStaff = TextUtils.deserializeLegacy("&aYou put an item on the head of player " + Placeholders.PLAYER + "&a.");
+	private Component successStaff = TextUtils.deserializeLegacy("&aВы надели предмет на голову игрока " + Placeholders.PLAYER + "&a.");
 	@Setting("SuccessSelf")
-	private Component successSelf = TextUtils.deserializeLegacy("&aYou put the item on your head.");
+	private Component successSelf = TextUtils.deserializeLegacy("&aВы надели предмет на голову.");
 
 	@Override
 	public Component getNotPresent() {

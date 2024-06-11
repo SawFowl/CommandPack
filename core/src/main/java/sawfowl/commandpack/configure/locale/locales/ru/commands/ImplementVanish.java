@@ -16,13 +16,13 @@ public class ImplementVanish implements Vanish {
 	public ImplementVanish() {}
 
 	@Setting("Enable")
-	private Component enable = TextUtils.deserializeLegacy("&aYou are now invisible.");
+	private Component enable = TextUtils.deserializeLegacy("&aТеперь вы невидимы.");
 	@Setting("EnableStaff")
-	private Component enableStaff = TextUtils.deserializeLegacy("&aThe player &e" + Placeholders.PLAYER + "&a is now invisible.");
+	private Component enableStaff = TextUtils.deserializeLegacy("&aИгрок &e" + Placeholders.PLAYER + "&a теперь невидим.");
 	@Setting("Disable")
-	private Component disable = TextUtils.deserializeLegacy("&aYou are visible again.");
+	private Component disable = TextUtils.deserializeLegacy("&aВы снова стали видимы.");
 	@Setting("DisableStaff")
-	private Component disableStaff = TextUtils.deserializeLegacy("&aThe player &e" + Placeholders.PLAYER + "&a is visible again.");
+	private Component disableStaff = TextUtils.deserializeLegacy("&aИгрок &e" + Placeholders.PLAYER + "&a снова видим.");
 
 	@Override
 	public Component getEnable() {

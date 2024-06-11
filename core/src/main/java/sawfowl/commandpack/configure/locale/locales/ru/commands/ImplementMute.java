@@ -17,20 +17,20 @@ public class ImplementMute implements Mute {
 	public ImplementMute() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aYou blocked the chat to the player &e" + Placeholders.PLAYER + "&a.");
+	private Component success = TextUtils.deserializeLegacy("&aВы заблокировали чат игроку &e" + Placeholders.PLAYER + "&a.");
 	@Setting("SuccessTarget")
 	@Comment("Можно добавить плейсхолдер: " + Placeholders.SOURCE)
-	private Component successTarget = TextUtils.deserializeLegacy("&cYou are blocked from writing in chat blocked until &e" + Placeholders.TIME + "&c.\nReason: " + Placeholders.VALUE);
+	private Component successTarget = TextUtils.deserializeLegacy("&cВам запрещено писать в чат до &e" + Placeholders.TIME + "&c.\nПричина: " + Placeholders.VALUE);
 	@Setting("SuccessTargetPermanent")
-	private Component successTargetPermanent = TextUtils.deserializeLegacy("&cYou are permanently blocked from writing in the chat.\nReason: " + Placeholders.VALUE);
+	private Component successTargetPermanent = TextUtils.deserializeLegacy("&cВам навсегда запрещено писать в чате.\nПричина: " + Placeholders.VALUE);
 	@Setting("Announcement")
-	private Component announcement = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a mute player &e" + Placeholders.PLAYER + "&a.\nEnd of mute &e" + Placeholders.TIME + "&a.\n&aReason: " + Placeholders.VALUE);
+	private Component announcement = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a блокирует чат игроку &e" + Placeholders.PLAYER + "&a.\nОкончание мута &e" + Placeholders.TIME + "&a.\n&aПричина: " + Placeholders.VALUE);
 	@Setting("AnnouncementPermanent")
-	private Component announcementPermanent = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a permanently mute player &e" + Placeholders.PLAYER + "&a.\n&aReason: " + Placeholders.VALUE);
+	private Component announcementPermanent = TextUtils.deserializeLegacy("&e" + Placeholders.SOURCE + "&a навсегда блокирует чат игроку &e" + Placeholders.PLAYER + "&a.\n&aПричина: " + Placeholders.VALUE);
 	@Setting("Ignore")
-	private Component ignore = TextUtils.deserializeLegacy("&cUnable to block chat for player &e" + Placeholders.PLAYER + "&c.");
+	private Component ignore = TextUtils.deserializeLegacy("&cВы не можете заблокировать чат &e" + Placeholders.PLAYER + "&c.");
 	@Setting("AlreadyMuted")
-	private Component alreadyMuted = TextUtils.deserializeLegacy("&ePlayer &e" + Placeholders.PLAYER + "&e already cannot write in chat.");
+	private Component alreadyMuted = TextUtils.deserializeLegacy("&cИгрок &e" + Placeholders.PLAYER + "&c уже не может писать в чат.");
 
 	@Override
 	public Component getSuccess(String player) {

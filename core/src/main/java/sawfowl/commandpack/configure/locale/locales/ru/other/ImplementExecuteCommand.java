@@ -18,13 +18,13 @@ public class ImplementExecuteCommand implements ExecuteCommand {
 	public ImplementExecuteCommand() {}
 
 	@Setting("OtherCommand")
-	private Component otherCommand = TextUtils.deserializeLegacy("&cExecution of command &e\"&5" + Placeholders.COMMAND + "&e\"&c has stopped because you entered another command.");
+	private Component otherCommand = TextUtils.deserializeLegacy("&cВыполнение команды &e\"&5" + Placeholders.COMMAND + "&e\"&c отменено так как вы ввели другую команду.");
 	@Setting("Moving")
-	private Component moving = TextUtils.deserializeLegacy("&cExecution of command &e\"&5" + Placeholders.COMMAND + "&e\"&c is stopped because you have moved.");
+	private Component moving = TextUtils.deserializeLegacy("&cВыполнение команды &e\"&5" + Placeholders.COMMAND + "&e\"&c отменено так как вы двинулись с места.");
 	@Setting("NoMoney")
-	private Component noMoney = TextUtils.deserializeLegacy("&cYou need to have a balance of &2" + Placeholders.CURRENCY_STYLED_SYMBOL + Placeholders.MONEY + "&c to execute command &e\"&5" + Placeholders.COMMAND + "&e\"&c.");
+	private Component noMoney = TextUtils.deserializeLegacy("&cВам необходимо иметь на балансе &2" + Placeholders.CURRENCY_STYLED_SYMBOL + Placeholders.MONEY + "&c для выполнения команды &e\"&5" + Placeholders.COMMAND + "&e\"&c.");
 	@Setting("TakeMoney")
-	private Component takeMoney = TextUtils.deserializeLegacy("&eWithdrawn money from your account &2" + Placeholders.CURRENCY_STYLED_SYMBOL + Placeholders.MONEY + "&e for executing the &e\"&5" + Placeholders.COMMAND + "&e\" command.");
+	private Component takeMoney = TextUtils.deserializeLegacy("&eС вашего счета списаны деньги &2" + Placeholders.CURRENCY_STYLED_SYMBOL + Placeholders.MONEY + "&e за выполнение команды &e\"&5" + Placeholders.COMMAND + "&e\".");
 
 	@Override
 	public Component getOtherCommand(String command) {

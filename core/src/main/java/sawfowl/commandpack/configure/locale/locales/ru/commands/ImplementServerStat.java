@@ -12,11 +12,11 @@ import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.serv
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.serverstat.Buttons;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.serverstat.Memory;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.serverstat.Worlds;
-import sawfowl.commandpack.configure.locale.locales.def.commands.serverstat.ImplementAboutMod;
-import sawfowl.commandpack.configure.locale.locales.def.commands.serverstat.ImplementAboutPlugin;
-import sawfowl.commandpack.configure.locale.locales.def.commands.serverstat.ImplementButtons;
-import sawfowl.commandpack.configure.locale.locales.def.commands.serverstat.ImplementMemory;
-import sawfowl.commandpack.configure.locale.locales.def.commands.serverstat.ImplementWorlds;
+import sawfowl.commandpack.configure.locale.locales.ru.commands.serverstat.ImplementAboutMod;
+import sawfowl.commandpack.configure.locale.locales.ru.commands.serverstat.ImplementAboutPlugin;
+import sawfowl.commandpack.configure.locale.locales.ru.commands.serverstat.ImplementButtons;
+import sawfowl.commandpack.configure.locale.locales.ru.commands.serverstat.ImplementMemory;
+import sawfowl.commandpack.configure.locale.locales.ru.commands.serverstat.ImplementWorlds;
 import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 
@@ -36,29 +36,29 @@ public class ImplementServerStat implements ServerStat {
 	@Setting("AboutMod")
 	private ImplementAboutMod aboutMod = new ImplementAboutMod();
 	@Setting("Title")
-	private Component title = TextUtils.deserializeLegacy("&3&lServer info");
+	private Component title = TextUtils.deserializeLegacy("&3&lИнформация о сервере");
 	@Setting("TPS")
-	private Component tps = TextUtils.deserializeLegacy("&aTPS(Current, 1m, 5m, 10m)&f: " + Placeholders.VALUE);
+	private Component tps = TextUtils.deserializeLegacy("&aTPS(Текущий, 1m, 5m, 10m)&f: " + Placeholders.VALUE);
 	@Setting("Uptime")
-	private Component uptime = TextUtils.deserializeLegacy("&aUptime / JVM&f: &e" + Placeholders.VALUE);
+	private Component uptime = TextUtils.deserializeLegacy("&aАптайм / JVM&f: &e" + Placeholders.VALUE);
 	@Setting("ServerTime")
-	private Component serverTime = TextUtils.deserializeLegacy("&aServer time&f: &e" + Placeholders.VALUE);
+	private Component serverTime = TextUtils.deserializeLegacy("&aВремя сервера&f: &e" + Placeholders.VALUE);
 	@Setting("SystemInfo")
-	private Component systemInfo = TextUtils.deserializeLegacy("&3&lSystem information");
+	private Component systemInfo = TextUtils.deserializeLegacy("&3&lИнформация о системе");
 	@Setting("System")
-	private Component system = TextUtils.deserializeLegacy("&aSystem&f: &e" + Placeholders.VALUE);
+	private Component system = TextUtils.deserializeLegacy("&aСистема&f: &e" + Placeholders.VALUE);
 	@Setting("Java")
 	private Component java = TextUtils.deserializeLegacy("&aJava&f: &e" + Placeholders.VALUE);
 	@Setting("JavaHome")
 	private Component javaHome = TextUtils.deserializeLegacy("&e" + Placeholders.VALUE);
 	@Setting("Plugins")
-	private Component plugins = TextUtils.deserializeLegacy("&ePlugins &7(&b" + Placeholders.VALUE + "&7)&e");
+	private Component plugins = TextUtils.deserializeLegacy("&eПлагины &7(&b" + Placeholders.VALUE + "&7)&e");
 	@Setting("RefreshPlugin")
-	private Component refreshPlugin = TextUtils.deserializeLegacy("&eAn attempt is made to reboot the plugin. If the plugin does not implement listening to the reboot event, there will be no effect.");
+	private Component refreshPlugin = TextUtils.deserializeLegacy("&eПредпринимается попытка перезагрузить плагин. Если плагин не поддерживает прослушивание события перезагрузки, эффекта не будет.");
 	@Setting("Mods")
-	private Component mods = TextUtils.deserializeLegacy("&eMods &7(&b" + Placeholders.VALUE + "&7)&e");
+	private Component mods = TextUtils.deserializeLegacy("&eМоды &7(&b" + Placeholders.VALUE + "&7)&e");
 	@Setting("PlayerMods")
-	private Component playerMods = TextUtils.deserializeLegacy("&eMods " + Placeholders.PLAYER + " &7(&b" + Placeholders.VALUE + "&7)&e");
+	private Component playerMods = TextUtils.deserializeLegacy("&eМоды " + Placeholders.PLAYER + " &7(&b" + Placeholders.VALUE + "&7)&e");
 
 	@Override
 	public Buttons getButtons() {

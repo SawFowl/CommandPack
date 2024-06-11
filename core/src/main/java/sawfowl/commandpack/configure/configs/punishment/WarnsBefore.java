@@ -1,8 +1,9 @@
 package sawfowl.commandpack.configure.configs.punishment;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
+
+import sawfowl.localeapi.api.LocalisedComment;
 
 @ConfigSerializable
 public class WarnsBefore {
@@ -16,7 +17,7 @@ public class WarnsBefore {
 	@Setting("Mute")
 	private int mute = 3;
 	@Setting("PunishTime")
-	@Comment("Duration of punishments in minutes when the warning limit is reached.\nUsed only if all player warnings are permanent. Otherwise the duration will be equal to the shortest warning.\nSetting the value to 0 or below 0 will give the player a permanent punishment, provided that the player has not exceeded the warning limit and has temporary warnings.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "Punishment", "WarnsBefore", "PunishTime"}, plugin = "commandpack")
 	private PunishTime punishTime = new PunishTime();
 
 	public int getBan() {

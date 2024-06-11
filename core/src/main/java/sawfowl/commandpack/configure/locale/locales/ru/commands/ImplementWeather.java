@@ -16,11 +16,11 @@ public class ImplementWeather implements Weather {
 	public ImplementWeather() {}
 
 	@Setting("Sun")
-	private Component sun = TextUtils.deserializeLegacy("&aYou have set a clear weather in the world  &e" + Placeholders.WORLD + "&a.");
+	private Component sun = TextUtils.deserializeLegacy("&aВы установили ясную погоду в мире &e" + Placeholders.WORLD + "&a.");
 	@Setting("Rain")
-	private Component rain = TextUtils.deserializeLegacy("&aYou have set the rainy weather in the world  &e" + Placeholders.WORLD + "&a.");
+	private Component rain = TextUtils.deserializeLegacy("&aВы установили дождливую погоду в мире &e" + Placeholders.WORLD + "&a.");
 	@Setting("Thunder")
-	private Component thunder = TextUtils.deserializeLegacy("&aYou have set a thunder weather in the world &e" + Placeholders.WORLD + "&a.");
+	private Component thunder = TextUtils.deserializeLegacy("&aВы установили штормовую погоду в мире &e" + Placeholders.WORLD + "&a.");
 
 	@Override
 	public Component getSun(ServerWorld world) {

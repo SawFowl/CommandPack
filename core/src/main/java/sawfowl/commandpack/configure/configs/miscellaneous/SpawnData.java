@@ -2,9 +2,10 @@ package sawfowl.commandpack.configure.configs.miscellaneous;
 
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.math.vector.Vector3d;
+
+import sawfowl.localeapi.api.LocalisedComment;
 
 @ConfigSerializable
 public class SpawnData {
@@ -27,10 +28,10 @@ public class SpawnData {
 	@Setting("Location")
 	private LocationData locationData;
 	@Setting("MoveAfterRespawn")
-	@Comment("Teleport on player respawn.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "SpawnData", "MoveAfterRespawn"}, plugin = "commandpack")
 	private boolean moveAfterRespawn = false;
 	@Setting("MoveAfterJoin")
-	@Comment("Teleportation of a player at the join to the server.")
+	@LocalisedComment(path = {"Comments", "MainConfig", "SpawnData", "MoveAfterJoin"}, plugin = "commandpack")
 	private boolean moveAfterJoin = false;
 
 	public LocationData getLocationData() {

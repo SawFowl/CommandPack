@@ -13,7 +13,7 @@ public class ImplementJump implements Jump {
 	public ImplementJump() {}
 
 	@Setting("Exception")
-	private Component exception = TextUtils.deserializeLegacy("&cFailed to determine the position for the jump.");
+	private Component exception = TextUtils.deserializeLegacy("&cНе удалось определить позицию для прыжка.");
 
 	@Override
 	public Component getException() {

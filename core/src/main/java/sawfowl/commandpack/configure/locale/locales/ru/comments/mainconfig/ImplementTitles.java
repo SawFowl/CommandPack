@@ -11,9 +11,9 @@ public class ImplementTitles implements Titles {
 	public ImplementTitles() {}
 
 	@Setting("BeforeKick")
-	private String beforeKick = "If true, then the player will be shown how much time is left before he will be disconnected from the server.";
+	private String beforeKick = "Если true, то игроку будет показано, сколько времени осталось до отключения от сервера.";
 	@Setting("Unlimit")
-	private String unlimit = "If true, the player will constantly be sent a title with the message that he is AFK.\nThis option applies only to players who do not have a time limit on the AFK.";
+	private String unlimit = "Если значение равно true, игроку постоянно будет приходить сообщение о том, что он AFK.\nЭта опция применима только к игрокам, у которых нет ограничения по времени AFK.";
 
 	@Override
 	public String getBeforeKick() {

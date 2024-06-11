@@ -16,9 +16,9 @@ public class ImplementPing implements Ping {
 	public ImplementPing() {}
 
 	@Setting("Success")
-	private Component success = TextUtils.deserializeLegacy("&aPing&f: &e" + Placeholders.VALUE);
+	private Component success = TextUtils.deserializeLegacy("&aПинг&f: &e" + Placeholders.VALUE);
 	@Setting("SuccessStaff")
-	private Component successStaff = TextUtils.deserializeLegacy("&aPing of player &e" + Placeholders.PLAYER + "&f: &e" + Placeholders.VALUE);
+	private Component successStaff = TextUtils.deserializeLegacy("&aПинг игрока &e" + Placeholders.PLAYER + "&f: &e" + Placeholders.VALUE);
 
 	@Override
 	public Component getSuccess(long ping) {

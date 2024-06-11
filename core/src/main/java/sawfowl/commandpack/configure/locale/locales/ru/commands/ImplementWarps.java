@@ -15,17 +15,17 @@ public class ImplementWarps implements Warps {
 	public ImplementWarps() {}
 
 	@Setting("Empty")
-	private Component empty = TextUtils.deserializeLegacy("&cThe list of warps is empty.");
+	private Component empty = TextUtils.deserializeLegacy("&cСписок варпов пуст.");
 	@Setting("List")
-	private Component list = TextUtils.deserializeLegacy("&eWarps&7(&e"+ Placeholders.SIZE + "&7)&e: " + Placeholders.VALUE);
+	private Component list = TextUtils.deserializeLegacy("&eВарпы&7(&e"+ Placeholders.SIZE + "&7)&e: " + Placeholders.VALUE);
 	@Setting("Wait")
-	private Component wait = TextUtils.deserializeLegacy("&eThe list of warps is being compiled. Please wait.");
+	private Component wait = TextUtils.deserializeLegacy("&eСписок варпов находится в процессе составления. Пожалуйста, подождите.");
 	@Setting("Header")
-	private Component header = TextUtils.deserializeLegacy("&bWarps: ============ " + Placeholders.SERVER + " | " + Placeholders.PLAYER + " ================");
+	private Component header = TextUtils.deserializeLegacy("&bВарпы: ============ " + Placeholders.SERVER + " | " + Placeholders.PLAYER + " ================");
 	@Setting("ServerGroup")
-	private Component server = TextUtils.deserializeLegacy("&7[&4Server&7]");
+	private Component server = TextUtils.deserializeLegacy("&7[&4Сервер&7]");
 	@Setting("PlayerGroup")
-	private Component player = TextUtils.deserializeLegacy("&7[&ePlayers&7]");
+	private Component player = TextUtils.deserializeLegacy("&7[&eИгроки&7]");
 
 	@Override
 	public Component getEmpty() {

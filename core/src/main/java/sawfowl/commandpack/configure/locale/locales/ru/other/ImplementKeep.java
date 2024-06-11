@@ -16,9 +16,9 @@ public class ImplementKeep implements Keep {
 	public ImplementKeep() {}
 
 	@Setting("Inventory")
-	private Component inventory = TextUtils.deserializeLegacy("&aYour inventory will be saved. The chance of saving each item is &e" + Placeholders.VALUE + "%&a. Items will be returned to you after respawn.");
+	private Component inventory = TextUtils.deserializeLegacy("&aВаш инвентарь будет сохранен. Шанс сохранить каждый предмет составляет &e" + Placeholders.VALUE + "%&a. Предметы будут возвращены вам после респавна.");
 	@Setting("Exp")
-	private Component exp = TextUtils.deserializeLegacy("&aYour experience will be saved to the extent of &e" + Placeholders.VALUE + "%&a. Experience will be returned to you after respawn.");
+	private Component exp = TextUtils.deserializeLegacy("&aВаш опыт будет сохранен в объеме &e" + Placeholders.VALUE + "%&a. Опыт будет возвращен вам после респавна.");
 
 	@Override
 	public Component getInventory(double chance) {

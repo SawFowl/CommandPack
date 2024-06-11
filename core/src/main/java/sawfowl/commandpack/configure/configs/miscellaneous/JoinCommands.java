@@ -7,8 +7,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
+
+import sawfowl.localeapi.api.LocalisedComment;
 
 @ConfigSerializable
 public class JoinCommands {
@@ -18,10 +19,10 @@ public class JoinCommands {
 	@Setting("Enable")
 	private Map<String, Boolean> enable = arraysToMap(new String[] {"FirstJoin", "Regularly"}, new Boolean[] {false, false});
 	@Setting("FirstJoin")
-	@Comment("These commands are executed only when the player first login to the server.")
+	@LocalisedComment(path = {"Comments", "JoinCommands", "FirstJoin"}, plugin = "commandpack")
 	private List<String> firstJoin = Arrays.asList("console:tell %player% Hello", "player:home");
 	@Setting("Regularly")
-	@Comment("These commands are executed every time a player login to the server, except for the first login.")
+	@LocalisedComment(path = {"Comments", "JoinCommands", "Regularly"}, plugin = "commandpack")
 	private List<String> regularly = Arrays.asList("console:tell %player% Hello", "player:home");
 
 	public boolean isEnableFirstJoin() {

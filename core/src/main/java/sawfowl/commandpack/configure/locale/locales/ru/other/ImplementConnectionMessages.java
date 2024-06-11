@@ -29,8 +29,8 @@ public class ImplementConnectionMessages implements ConnectionMessages {
 	@Setting("Motd")
 	private List<Component> motd = Arrays.asList(
 			toText("&b================================"),
-			toText("&dGreetings &e" + DefaultPlaceholderKeys.ENTITY_DISPLAY_NAME.textKey() + "&d. Welcome to the server."),
-			toText("&dWe hope you like it here."),
+			toText("&dПриветствуем &e" + DefaultPlaceholderKeys.ENTITY_DISPLAY_NAME.textKey() + "&d. Добро пожаловать на сервер."),
+			toText("&dНадеемся вам тут понравится."),
 			toText("&b================================")
 			);
 

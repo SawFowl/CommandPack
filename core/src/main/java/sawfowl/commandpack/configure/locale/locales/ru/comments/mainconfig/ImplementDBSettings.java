@@ -11,17 +11,17 @@ public class ImplementDBSettings implements DBSettings {
 	public ImplementDBSettings() {}
 
 	@Setting("Title")
-	private String title = "Configuring queries to work with the MySQL database.\nChanging the settings can help in creating compatibility with other plugins.\nDo not remove the `written` column from queries. It is used for automatic data synchronization.";
+	private String title = "Настройка работы с базой данных MySql";
 	@Setting("Columns")
-	private String columns = "Names of columns for receiving data.\nIf you change the names, you must delete the tables in the existing database or manually rename the columns in the `ban` and `mute` tables.";
+	private String columns = "Имена столбцов для получения данных.\nЕсли вы измените имена, вы должны удалить таблицы в существующей базе данных или вручную переименовать столбцы в таблицах `ban` и `mute`.";
 	@Setting("Tables")
-	private String tables = "Table names for automatic data synchronization.";
+	private String tables = "Имена таблиц для автоматической синхронизации данных.";
 	@Setting("SyncIntervals")
-	private String syncIntervals = "Intervals between plugin data updates.\nTime is indicated in seconds.";
+	private String syncIntervals = "Интервалы между обновлениями данных плагина.\\nВремя указывается в секундах.";
 	@Setting("CreateCombinedBansTable")
-	private String createCombinedBansTable = "Creating a combined table with bans data.\nNot recommended.\nUse if you need to work with an existing database of another plugin. Compatibility is not guaranteed.\nWhen using the combo table, removing the ban of a player who was banned by IP will remove the IP address ban as well. Similarly with the removal of the ban by IP.";
+	private String createCombinedBansTable = "Создание комбинированной таблицы с данными о банах.\nНе рекомендуется.\nИспользуйте, если вам нужно работать с существующей базой данных другого плагина. Совместимость не гарантируется.\nПри использовании комбинированной таблицы, удаление бана игрока, который был забанен по IP, удалит и бан по IP-адресу. Аналогично с удалением бана по IP.";
 	@Setting("UnixTime")
-	private String unixTime = "Using unix time in database queries.\nIf you change the time format, you may need to delete tables.\nUse only to ensure compatibility with other plugins.";
+	private String unixTime = "Использование времени unix в запросах к базе данных.\nЕсли вы измените формат времени, вам, возможно, придется удалить таблицы.\nИспользуйте только для обеспечения совместимости с другими плагинами.";
 
 	@Override
 	public String getTitle() {
