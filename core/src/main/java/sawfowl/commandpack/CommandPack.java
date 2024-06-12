@@ -4,10 +4,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import java.nio.file.Path;
-
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.event.EventContext;
 import org.spongepowered.api.event.EventContextKeys;
@@ -60,7 +62,7 @@ import net.kyori.adventure.title.TitlePart;
 
 import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.api.event.LocaleServiseEvent;
-
+import sawfowl.localeapi.api.placeholders.Placeholders;
 import sawfowl.commandpack.api.KitService;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.RandomTeleportService;
@@ -467,6 +469,7 @@ public class CommandPack {
 				});
 			} else ((TempPlayerDataImpl) playersData.getTempData()).registerUser(profile.name().get());
 		});
+		registerPlaceholders();
 	}
 
 	@Listener
@@ -566,6 +569,21 @@ public class CommandPack {
 		if(command.getCommandSettings() != null && command.getCommandSettings().getAliases() != null && command.getCommandSettings().getAliases().length > 0) {
 			manager.registrar(Parameterized.class).get().register(command.getContainer(), command.build(), command.command(), command.getCommandSettings().getAliases());
 		} else manager.registrar(Parameterized.class).get().register(command.getContainer(), command.build(), command.command());
+	}
+
+	private void registerPlaceholders() {
+		Placeholders.register(ServerWorld.class, "WorldTPS", (text, world, def) -> (text.replace("%world-tps%", BigDecimal.valueOf(getAPI().getTPS().getWorldTPS(world)).setScale(2, RoundingMode.HALF_UP).doubleValue())));
+		Placeholders.register(ServerWorld.class, "WorldTicks", (text, world, def) -> (text.replace("%world-ticks%", BigDecimal.valueOf(getAPI().getTPS().getWorldTickTime(world)).setScale(2, RoundingMode.HALF_UP).doubleValue())));
+		Placeholders.register(ServerPlayer.class, "PlayerWarns", (text, player, def) -> (text.replace("%player-warns%", getPunishmentService().getWarns(player).map(warns -> warns.totalWarns() + "/" + warns.inAllTime()).orElse("0"))));
+		if(getMainConfig().getPunishment().isEnable()) Placeholders.register(ServerPlayer.class, "PlayerMuteExpire", (text, player, def) -> (text.replace("%player-mute-expire%", getPunishmentService().getMute(player).map(mute -> expire(player.locale(), mute)).orElse(Component.empty()))));
+	}
+
+	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
+		if(!mute.getExpiration().isPresent()) return getLocales().getLocale(locale).getCommands().getMuteInfo().getPermanent();
+		SimpleDateFormat format = new SimpleDateFormat(getLocales().getLocale(locale).getTime().getFormat());
+		Calendar calendar = Calendar.getInstance(locale);
+		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
+		return TextUtils.deserialize(format.format(calendar.getTime()));
 	}
 
 }
