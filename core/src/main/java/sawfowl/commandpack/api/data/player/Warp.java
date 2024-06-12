@@ -1,5 +1,8 @@
 package sawfowl.commandpack.api.data.player;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 import org.spongepowered.api.entity.Entity;
@@ -17,6 +20,8 @@ public interface Warp extends DataSerializable {
 	static Builder builder() {
 		return Sponge.game().builderProvider().provide(Builder.class);
 	}
+
+	Optional<UUID> getOwner();
 
 	/**
 	 * Creating a new warp point.

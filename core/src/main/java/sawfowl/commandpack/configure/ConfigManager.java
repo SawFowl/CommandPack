@@ -136,7 +136,9 @@ public class ConfigManager {
 		try {
 			ConfigurationReference<CommentedConfigurationNode> configReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(playerConfig.toPath()).build().loadToReference();
 			ValueReference<PlayerData, CommentedConfigurationNode> config = configReference.referenceTo(PlayerData.class);
-			((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(config.get());
+			PlayerData data = config.get().updateWarpsOwnerData();
+			((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(data);
+			((PlayersDataImpl) plugin.getPlayersData()).addWarps(data);
 		} catch (ConfigurateException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
 		}
@@ -156,7 +158,7 @@ public class ConfigManager {
 		warpsConfigLoader = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(plugin.getConfigDir().resolve("Warps.conf")).build();
 		try {
 			warpsNode = warpsConfigLoader.load();
-			if(!warpsNode.childrenMap().isEmpty()) for(CommentedConfigurationNode node : warpsNode.childrenMap().values()) plugin.getPlayersData().addAdminWarp(node.get(WarpData.class));
+			if(!warpsNode.childrenMap().isEmpty()) for(CommentedConfigurationNode node : warpsNode.childrenMap().values()) plugin.getPlayersData().addWarp(node.get(WarpData.class), null);
 		} catch (ConfigurateException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
 		}

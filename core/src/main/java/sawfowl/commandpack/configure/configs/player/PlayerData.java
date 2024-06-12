@@ -147,25 +147,23 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 		} else return false;
 	}
 
-	@Override
-	public boolean addWarp(Warp warp, int limit) {
-		if(!removeWarp(warp.getName()) && warps.size() >= limit) return false;
-		warps.add((WarpData) warp);
-		return true;
+	public PlayerData addWarp(Warp warp) {
+		warps.add(((WarpData) warp).setOwnerName(this));
+		return this;
 	}
 
-	@Override
-	public boolean removeWarp(String name) {
-		if(warps.removeIf(warp -> (warp.getName().equals(name)))) {
-			warps.removeIf(warp -> warp.getName() == null);
+	public PlayerData removeWarp(String name) {
+		System.out.println(name);
+		if(warps.removeIf(warp -> warp.getName() == null || warp.getName().equals(name) || warp.getPlainName().equals(name))) {
+			warps.removeIf(warp -> warp.getName() == null || warp.getPlainName() == null);
 			save();
-			return true;
-		} else return false;
+		}
+		return this;
 	}
 
 	@Override
 	public boolean containsWarp(String name) {
-		return warps.stream().filter(warp -> (warp.getName().equals(name))).findFirst().isPresent();
+		return warps.stream().filter(warp -> (warp.getPlainName().equals(name) || warp.getPlainName().equals(this.name + "-" + name))).findFirst().isPresent();
 	}
 
 	@Override
@@ -308,6 +306,11 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	public void setLastExit() {
 		lastExit = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
 		save();
+	}
+
+	public PlayerData updateWarpsOwnerData() {
+		warps.forEach(warp -> warp.setOwner(this));
+		return this;
 	}
 
 	private CommandCause createPlayerCause(ServerPlayer player, String command) {

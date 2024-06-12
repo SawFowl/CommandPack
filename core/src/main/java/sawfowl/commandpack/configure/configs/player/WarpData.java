@@ -1,6 +1,8 @@
 package sawfowl.commandpack.configure.configs.player;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.data.persistence.DataContainer;
@@ -31,6 +33,7 @@ public class WarpData implements Warp {
 	private LocationData locationData;
 	@Setting("Private")
 	private Boolean privated;
+	private UUID owner;
 
 	@Override
 	public Component asComponent() {
@@ -43,8 +46,28 @@ public class WarpData implements Warp {
 	}
 
 	@Override
+	public Optional<UUID> getOwner() {
+		return Optional.ofNullable(owner);
+	}
+
+	public WarpData setOwner(PlayerData owner) {
+		this.owner = owner.getUniqueId();
+		return this;
+	}
+
+	@Override
 	public String getName() {
 		return name;
+	}
+
+	WarpData setOwnerName(PlayerData owner) {
+		if(name.contains("-")) name = clearName(getPlainName().split("-"));
+		name = owner.getName() + "-" + name;
+		return setOwner(owner);
+	}
+
+	String clearName(String[] splited) {
+		return splited.length > 1 ? splited[1] : name;
 	}
 
 	@Override

@@ -75,16 +75,6 @@ public interface PlayerData {
 	boolean removeHome(String name);
 
 	/**
-	 * Add {@link Warp} point.
-	 */
-	boolean addWarp(Warp warp, int limit);
-
-	/**
-	 * Remove {@link Warp} point
-	 */
-	boolean removeWarp(String name);
-
-	/**
 	 * Check for {@link Warp} exist by name.
 	 */
 	boolean containsWarp(String name);

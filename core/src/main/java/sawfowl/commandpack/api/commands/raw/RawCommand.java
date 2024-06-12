@@ -310,6 +310,8 @@ public interface RawCommand extends PluginCommand, Raw {
 		Argument<?> node = command.getArguments().get(depth).getArgumentType() != null ? command.getArguments().get(depth).getArgumentType() : CommandTreeNodeTypes.STRING.get().createNode().greedy().customCompletions();
 		if(!command.getArguments().containsKey(depth + 1)) node.executable();
 		if(!parrent.getChildren().containsKey(command.getArguments().get(depth).getTreeKey())) {
+			Optional<String> perm = command.getArguments().get(depth).getPermision();
+			if(perm.isPresent()) node = (Argument<?>) node.requires(cause -> cause.hasPermission(perm.get()));
 			parrent.child(command.getArguments().get(depth).getTreeKey(), node);
 		}
 		argsTree(depth + 1, (AbstractCommandTreeNode<?, ?>) node, command);

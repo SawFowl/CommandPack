@@ -8,6 +8,6 @@ public interface Worlds {
 
 	Component getTitle();
 
-	Component getWorldInfo(ServerWorld world, double tps, double ticks);
+	Component getWorldInfo(ServerWorld world, Component tps, Component ticks);
 
 }

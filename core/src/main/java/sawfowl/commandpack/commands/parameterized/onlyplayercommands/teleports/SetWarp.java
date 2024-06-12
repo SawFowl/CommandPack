@@ -33,13 +33,17 @@ public class SetWarp extends AbstractPlayerCommand {
 		delay(src, locale, consumer -> {
 			PlayerData playerData = plugin.getPlayersData().getOrCreatePlayerData(src);
 			String name = getString(context, "Warp", src.name());
-			if(plugin.getPlayersData().streamAllWarps().filter(warp -> warp.getPlainName().equalsIgnoreCase(TextUtils.clearDecorations(name))).findFirst().isPresent()) exception(plugin.getLocales().getLocale(locale).getCommands().getSetWarp().getAllreadyExist());
+			boolean admin = getBoolean(context, "Admin", false);
+			if(warpIsPresent(name, admin, src)) {
+				if(admin) exception(plugin.getLocales().getLocale(locale).getCommands().getSetWarp().getAllreadyExist());
+				plugin.getPlayersData().removeWarp(name, playerData);
+			}
 			Warp warp = Warp.of(name, Location.of(src), getBoolean(context, "Private", false));
-			if(getBoolean(context, "Admin", false)) {
-				plugin.getPlayersData().addAndSaveAdminWarp(warp);
+			if(admin) {
+				plugin.getPlayersData().addAndSaveWarp(warp, null);
 				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getSetWarp().getSuccessAdmin());
-			} else if(playerData.addWarp(warp, Permissions.getWarpsLimit(src))) {
-				playerData.save();
+			} else if(src.hasPermission(Permissions.WARP_STAFF) || playerData.getTotalWarps() < Permissions.getWarpsLimit(src)) {
+				plugin.getPlayersData().addAndSaveWarp(warp, playerData);
 				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getSetWarp().getSuccess());
 			} else exception(plugin.getLocales().getLocale(locale).getCommands().getSetWarp().getLimit(Permissions.getWarpsLimit(src)));
 		});
@@ -75,6 +79,10 @@ public class SetWarp extends AbstractPlayerCommand {
 	@Override
 	public String command() {
 		return "setwarp";
+	}
+
+	private boolean warpIsPresent(String name, boolean isAdmin, ServerPlayer src) {
+		return isAdmin ? plugin.getPlayersData().getAdminWarps().containsKey(TextUtils.clearDecorations(name)) : plugin.getPlayersData().getOrCreatePlayerData(src).containsWarp(TextUtils.clearDecorations(name));
 	}
 
 }

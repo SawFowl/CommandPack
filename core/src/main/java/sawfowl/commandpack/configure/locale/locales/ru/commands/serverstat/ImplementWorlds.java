@@ -21,7 +21,7 @@ public class ImplementWorlds implements Worlds {
 	@Setting("Title")
 	private Component title = TextUtils.deserializeLegacy("&3&lИнформация о мирах");
 	@Setting("WorldInfo")
-	private Component worldInfo = TextUtils.deserializeLegacy("&aМир&f: &e" + Placeholders.WORLD + "&a. Загружено чанков&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Сущностей&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: &e" + Placeholders.VALUE + "&7(" + Placeholders.TIME + "&3ms&7)&a.");
+	private Component worldInfo = TextUtils.deserializeLegacy("&aМир&f: &e" + Placeholders.WORLD + "&a. Загружено чанков&f: &e" + Placeholders.CHUNKS_SIZE + "&a. Сущностей&f: &e" + Placeholders.ENTITIES_SIZE + "&a. TPS&f: " + Placeholders.VALUE + "&7(" + Placeholders.TIME + "&3мс&7)&a.");
 
 	@Override
 	public Component getTitle() {
@@ -29,7 +29,7 @@ public class ImplementWorlds implements Worlds {
 	}
 
 	@Override
-	public Component getWorldInfo(ServerWorld world, double tps, double ticks) {
+	public Component getWorldInfo(ServerWorld world, Component tps, Component ticks) {
 		return Text.of(worldInfo).replace(Placeholders.WORLD, world.key().asString()).replace(Placeholders.CHUNKS_SIZE, Stream.of(world.loadedChunks()).count()).replace(Placeholders.ENTITIES_SIZE, world.entities().size()).replace(Placeholders.VALUE, tps).replace(Placeholders.TIME, ticks).get();
 	}
 

@@ -60,7 +60,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 
 	protected void sendWorldsInfo(Audience target, Locale locale) {
 		Component header = getServerStat(locale).getWorlds().getTitle();
-		List<Component> worldsInfo = Sponge.server().worldManager().worlds().stream().map(world -> getServerStat(locale).getWorlds().getWorldInfo(world, BigDecimal.valueOf(plugin.getAPI().getTPS().getWorldTPS(world)).setScale(2, RoundingMode.HALF_UP).doubleValue(), plugin.getAPI().getTPS().getWorldTickTime(world))).toList();
+		List<Component> worldsInfo = Sponge.server().worldManager().worlds().stream().map(world -> getServerStat(locale).getWorlds().getWorldInfo(world, tPStoText(BigDecimal.valueOf(plugin.getAPI().getTPS().getWorldTPS(world)).setScale(2, RoundingMode.HALF_UP).doubleValue()), tickToText(BigDecimal.valueOf(plugin.getAPI().getTPS().getWorldTickTime(world)).setScale(2, RoundingMode.HALF_UP).doubleValue()))).toList();
 		sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, worldsInfo);
 	}
 
@@ -144,7 +144,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	protected Component getTPS(Locale locale) {
 		return getServerStat(locale).getTPS(tPStoText(currentTPS())
 				.append(text("&f-"))
-				.append(tickToText(Sponge.server().averageTickTime()))
+				.append(tickToText(Sponge.server().averageTickTime()).append(plugin.getLocales().getLocale(locale).getTime().getMilliseconds()))
 				.append(text("&f, "))
 				.append(tPStoText(plugin.getAverageTPS1m()))
 				.append(text("&f, "))

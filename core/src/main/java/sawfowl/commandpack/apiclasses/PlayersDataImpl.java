@@ -2,13 +2,16 @@ package sawfowl.commandpack.apiclasses;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPack;
@@ -30,6 +33,8 @@ public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 
 	private Map<String, Warp> adminWarps = new HashMap<>();
 
+	private Set<Warp> allWarps = new HashSet<>();
+
 	@Override
 	public Optional<PlayerData> getPlayerData(UUID uuid) {
 		return players.containsKey(uuid) ? Optional.ofNullable(players.get(uuid)) : Optional.empty();
@@ -49,14 +54,25 @@ public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 		players.put(playerData.getUniqueId(), playerData);
 	}
 
+	public void addWarps(PlayerData playerData) {
+		allWarps.addAll(playerData.getWarps());
+	}
+
 	public void reload() {
 		players.clear();
+		allWarps.clear();
+		allWarps.addAll(adminWarps.values());
 		plugin.getConfigManager().loadPlayersData();
 	}
 
 	@Override
 	public Stream<Warp> streamAllWarps() {
-		return Stream.concat(adminWarps.values().stream(), players.values().stream().map(PlayerData::getWarps).flatMap(list -> (list.size() > 10000 ? list.parallelStream() : list.stream())));
+		return allWarps.stream();
+	}
+
+	@Override
+	public Map<String, Warp> getAdminWarps() {
+		return adminWarps;
 	}
 
 	@Override
@@ -71,41 +87,46 @@ public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 
 	@Override
 	public Optional<Warp> getWarp(String name) {
-		return getPlayersWarps().stream().filter(warp -> (name.equals(TextUtils.clearDecorations(warp.asComponent())))).findFirst();
+		return adminWarps.containsKey(name) ? Optional.ofNullable(adminWarps.get(name)) : getPlayersWarps().stream().filter(warp -> (name.equals(TextUtils.clearDecorations(warp.asComponent())))).findFirst();
 	}
 
 	@Override
 	public Optional<Warp> getWarp(String name, Predicate<Warp> filter) {
-		return getPlayersWarps().stream().filter(warp -> (name.equals(TextUtils.clearDecorations(warp.asComponent())))).filter(filter).findFirst();
+		return allWarps.stream().filter(warp -> (name.equals(TextUtils.clearDecorations(warp.asComponent())))).filter(filter).findFirst();
 	}
 
 	@Override
-	public Map<String, Warp> getAdminWarps() {
-		return adminWarps;
+	public void addWarp(Warp warp, @Nullable PlayerData data) {
+		if(data == null) {
+			adminWarps.put(TextUtils.clearDecorations(warp.asComponent()), warp);
+		} else {
+			plugin.getConfigManager().savePlayerData(((sawfowl.commandpack.configure.configs.player.PlayerData) data).addWarp(warp));
+		}
+		allWarps.add(warp);
 	}
 
 	@Override
-	public void addAdminWarp(Warp warp) {
-		adminWarps.put(TextUtils.clearDecorations(warp.asComponent()), warp);
+	public void addAndSaveWarp(Warp warp, @Nullable PlayerData data) {
+		allWarps.add(warp);
+		if(data == null) {
+			adminWarps.put(TextUtils.clearDecorations(warp.asComponent()), warp);
+			plugin.getConfigManager().saveAdminWarp(warp);
+		} else {
+			plugin.getConfigManager().savePlayerData(((sawfowl.commandpack.configure.configs.player.PlayerData) data).addWarp(warp));
+		}
 	}
 
 	@Override
-	public void addAndSaveAdminWarp(Warp warp) {
-		adminWarps.put(TextUtils.clearDecorations(warp.asComponent()), warp);
-		plugin.getConfigManager().saveAdminWarp(warp);
-	}
-
-	@Override
-	public boolean removeAdminWarp(String name) {
-		if(!adminWarps.containsKey(name)) return false;
-		adminWarps.remove(name);
-		plugin.getConfigManager().deleteAdminWarp(name);
+	public boolean removeWarp(String name, @Nullable PlayerData data) {
+		allWarps.removeIf(warp -> warp.getPlainName().equals(name));
+		if(data == null) {
+			if(!adminWarps.containsKey(name)) return false;
+			adminWarps.remove(name);
+			plugin.getConfigManager().deleteAdminWarp(name);
+		} else {
+			plugin.getConfigManager().savePlayerData(((sawfowl.commandpack.configure.configs.player.PlayerData) data).removeWarp(name));
+		}
 		return true;
-	}
-
-	@Override
-	public Optional<Warp> getAdminWarp(String name) {
-		return adminWarps.containsKey(name) ? Optional.ofNullable(adminWarps.get(name)) : Optional.empty();
 	}
 
 	@Override

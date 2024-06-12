@@ -12,6 +12,8 @@ public class ImplementTime implements Time {
 
 	public ImplementTime() {}
 
+	@Setting("Milliseconds")
+	private Component milliseconds = TextUtils.deserializeLegacy("мс");
 	@Setting("Second")
 	private Component second = TextUtils.deserializeLegacy("с");
 	@Setting("Minute")
@@ -24,6 +26,11 @@ public class ImplementTime implements Time {
 	private String format = "d.MM.yyyy HH:mm:ss";
 	@Setting("TimeZone")
 	private String timeZone = "Europe/Moscow";
+
+	@Override
+	public Component getMilliseconds() {
+		return milliseconds;
+	}
 
 	@Override
 	public Component getSecond() {

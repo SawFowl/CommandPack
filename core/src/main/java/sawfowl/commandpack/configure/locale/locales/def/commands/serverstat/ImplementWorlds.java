@@ -29,7 +29,7 @@ public class ImplementWorlds implements Worlds {
 	}
 
 	@Override
-	public Component getWorldInfo(ServerWorld world, double tps, double ticks) {
+	public Component getWorldInfo(ServerWorld world, Component tps, Component ticks) {
 		return Text.of(worldInfo).replace(Placeholders.WORLD, world.key().asString()).replace(Placeholders.CHUNKS_SIZE, Stream.of(world.loadedChunks()).count()).replace(Placeholders.ENTITIES_SIZE, world.entities().size()).replace(Placeholders.VALUE, tps).replace(Placeholders.TIME, ticks).get();
 	}
 
