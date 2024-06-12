@@ -10,6 +10,8 @@ public interface PlayerModInfo {
 
 	String getVersion();
 
+	String getFullInfo();
+
 	Component asComponent();
 
 }

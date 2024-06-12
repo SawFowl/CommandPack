@@ -7,7 +7,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import sawfowl.commandpack.api.mixin.game.EntityItem;
 
-@Mixin(ItemEntity.class)
+@Mixin(value = ItemEntity.class, remap = false)
 public abstract class MixinForgeEntityItemImpl implements EntityItem {
 
 	@Shadow public abstract ItemStack getItem();

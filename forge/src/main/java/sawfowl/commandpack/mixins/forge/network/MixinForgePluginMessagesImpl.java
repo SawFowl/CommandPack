@@ -26,7 +26,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.events.RecievePacketEvent;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 
-@Mixin(ServerGamePacketListenerImpl.class)
+@Mixin(value = ServerGamePacketListenerImpl.class, remap = false)
 public abstract class MixinForgePluginMessagesImpl {
 
 	@Shadow public ServerPlayer player;
@@ -36,7 +36,7 @@ public abstract class MixinForgePluginMessagesImpl {
 	}
 
 	private Cause createCause() {
-		return Cause.of(EventContext.builder().add(EventContextKeys.PLAYER, (MixinServerPlayer) player).add(EventContextKeys.PLUGIN, CommandPack.getInstance().getPluginContainer()).build(), CommandPack.getInstance().getPluginContainer());
+		return Cause.of(EventContext.builder().add(EventContextKeys.PLAYER, getPlayer().get()).add(EventContextKeys.PLUGIN, CommandPack.getInstance().getPluginContainer()).build(), CommandPack.getInstance().getPluginContainer());
 	}
 
 	@Inject(method = "handleCustomPayload", at = @At("HEAD"))

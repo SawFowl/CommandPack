@@ -10,13 +10,14 @@ import org.spongepowered.asm.mixin.Shadow;
 import io.netty.buffer.Unpooled;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraftforge.network.NetworkContext;
-
+import net.minecraftforge.network.packets.ModVersions;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
@@ -24,7 +25,7 @@ import sawfowl.commandpack.apiclasses.CustomPacketImpl;
 
 import sawfowl.localeapi.api.Text;
 
-@Mixin(ServerPlayer.class)
+@Mixin(value = ServerPlayer.class, remap = false)
 public abstract class MixinForgeServerPlayerImpl implements MixinServerPlayer {
 
 	@Shadow
@@ -49,7 +50,7 @@ public abstract class MixinForgeServerPlayerImpl implements MixinServerPlayer {
 	@Override
 	public List<PlayerModInfo> getModList() {
 		if(!mods.isEmpty()) return mods;
-		mods = NetworkContext.get(connection.getConnection()).getModList().entrySet().stream().map(info -> ((ModIdInfo) (Object) info.getValue()).setId(info.getKey())).toList();
+		mods = NetworkContext.get(connection.getConnection()).getModList().entrySet().stream().map(info -> createModInfo(info.getValue(), info.getKey())).toList();
 		return mods;
 	}
 
@@ -64,6 +65,44 @@ public abstract class MixinForgeServerPlayerImpl implements MixinServerPlayer {
 
 	private ClientboundCustomPayloadPacket createPacket(CustomPacketImpl custom) {
 		return ClientboundCustomPayloadPacket.CONFIG_STREAM_CODEC.decode(createFriendlyByteBuf(custom));
+	}
+
+	private PlayerModInfo createModInfo(ModVersions.Info info, String id) {
+		return new PlayerModInfo() {
+
+			String modId = id;
+			String version = info.version();
+			String name = info.name();
+			String fullInfo = info.name() + "(" + id + ")" + " - v" + info.version();
+			Component component = Component.text(info.name()).color(TextColor.color(255, 137, 0))
+				.append(Component.text(" - ").color(TextColor.color(255, 255, 255)))
+				.append(Component.text("v" + info.version()).color(TextColor.color(135, 70, 222)));
+
+			@Override
+			public String getVersion() {
+				return version;
+			}
+			
+			@Override
+			public String getName() {
+				return name;
+			}
+			
+			@Override
+			public String getId() {
+				return modId;
+			}
+
+			@Override
+			public String getFullInfo() {
+				return fullInfo;
+			}
+			
+			@Override
+			public Component asComponent() {
+				return component;
+			}
+		};
 	}
 
 }

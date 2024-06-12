@@ -574,8 +574,10 @@ public class CommandPack {
 	private void registerPlaceholders() {
 		Placeholders.register(ServerWorld.class, "WorldTPS", (text, world, def) -> (text.replace("%world-tps%", BigDecimal.valueOf(getAPI().getTPS().getWorldTPS(world)).setScale(2, RoundingMode.HALF_UP).doubleValue())));
 		Placeholders.register(ServerWorld.class, "WorldTicks", (text, world, def) -> (text.replace("%world-ticks%", BigDecimal.valueOf(getAPI().getTPS().getWorldTickTime(world)).setScale(2, RoundingMode.HALF_UP).doubleValue())));
-		Placeholders.register(ServerPlayer.class, "PlayerWarns", (text, player, def) -> (text.replace("%player-warns%", getPunishmentService().getWarns(player).map(warns -> warns.totalWarns() + "/" + warns.inAllTime()).orElse("0"))));
-		if(getMainConfig().getPunishment().isEnable()) Placeholders.register(ServerPlayer.class, "PlayerMuteExpire", (text, player, def) -> (text.replace("%player-mute-expire%", getPunishmentService().getMute(player).map(mute -> expire(player.locale(), mute)).orElse(Component.empty()))));
+		if(getMainConfig().getPunishment().isEnable()) {
+			Placeholders.register(ServerPlayer.class, "PlayerWarns", (text, player, def) -> (text.replace("%player-warns%", getPunishmentService().getWarns(player).map(warns -> warns.totalWarns() + "/" + warns.inAllTime()).orElse("0"))));
+			Placeholders.register(ServerPlayer.class, "PlayerMuteExpire", (text, player, def) -> (text.replace("%player-mute-expire%", getPunishmentService().getMute(player).map(mute -> expire(player.locale(), mute)).orElse(Component.empty()))));
+		}
 	}
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {

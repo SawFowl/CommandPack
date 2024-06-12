@@ -49,7 +49,7 @@ public class PlayerConnectionListener {
 		((TempPlayerDataImpl) plugin.getPlayersData().getTempData()).registerPlayer(event.player());
 		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(event.player());
 		if(plugin.isForgeServer()) {
-			if(plugin.getMainConfig().isPrintPlayerMods() && !MixinServerPlayer.cast(event.player()).getModList().isEmpty()) plugin.getLogger().info(plugin.getLocales().getSystemLocale().getDebug().getModsList(event.player().name(), String.join(", ", MixinServerPlayer.cast(event.player()).getModList().stream().map(mod -> mod.getId()).toList())));
+			if(plugin.getMainConfig().isPrintPlayerMods() && !MixinServerPlayer.cast(event.player()).getModList().isEmpty()) plugin.getLogger().info(plugin.getLocales().getSystemLocale().getDebug().getModsList(event.player().name(), String.join(", ", MixinServerPlayer.cast(event.player()).getModList().stream().map(mod -> mod.getFullInfo()).toList())));
 			if(plugin.getMainConfig().getRestrictMods().isEnable() && !event.player().hasPermission(Permissions.ALL_MODS_ACCESS)) {
 				Sponge.server().scheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).delay(Ticks.of(10)).execute(() -> {
 					List<String> banedPlayerMods = new ArrayList<>();
