@@ -26,6 +26,7 @@ import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.item.enchantment.EnchantmentTypes;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.service.ban.Ban;
 import org.spongepowered.api.service.ban.Ban.Profile;
@@ -193,6 +194,17 @@ public class RawArguments {
 			ServerPlayer.class,
 			(CommandCause cause, String[] args) -> CommandPack.getInstance().getPlayersData().getTempData().streamOnlinePlayers().filter(name -> Sponge.server().player(name).filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).isPresent()),
 			(CommandCause cause, String[] args) -> args.length >= data.cursor() + 1 ? Sponge.server().onlinePlayers().stream().filter(player -> player.name().equals(args[data.cursor()])).findFirst() : Optional.empty(),
+			data.toRawArgumentData(CommandTreeNodeTypes.GAME_PROFILE.get().createNode()),
+			rawOptional,
+			supplier
+		);
+	}
+
+	public static RawArgument<GameProfile> createGameProfile(RawBasicArgumentData<GameProfile> data, RawOptional rawOptional, ComponentSupplier supplier) {
+		return RawArgument.of(
+			GameProfile.class,
+			(CommandCause cause, String[] args) -> Sponge.server().userManager().streamAll().map(profile -> profile.name().orElse(profile.examinableName())),
+			(CommandCause cause, String[] args) -> args.length >= data.cursor() + 1 ? Sponge.server().userManager().streamAll().filter(profile -> profile.name().orElse(profile.examinableName()).equals(args[0])).findFirst() : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.GAME_PROFILE.get().createNode()),
 			rawOptional,
 			supplier
