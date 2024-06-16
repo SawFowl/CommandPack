@@ -439,25 +439,30 @@ public class CommandPack {
 	}
 
 	private void createAPI() {
-		AverageTPS averageTPS = new AverageTPS() {
+		AverageTPS averageTPS = createAverageTPS();
+		TPS tps = createTPS(averageTPS);
+		api = createAPI(tps);
+	}
 
+	private AverageTPS createAverageTPS() {
+		return new AverageTPS() {
 			@Override
 			public double get1m() {
 				return getAverageTPS1m();
 			}
-			
 			@Override
 			public double get5m() {
 				return getAverageTPS5m();
 			}
-			
 			@Override
 			public double get10m() {
 				return getAverageTPS10m();
 			}
 		};
-		TPS tps = new TPS() {
-			
+	}
+
+	private TPS createTPS(AverageTPS averageTPS) {
+		return new TPS() {
 			@Override
 			public double getWorldTickTime(ServerWorld world) {
 				long[] tickTimes = ((ServerLevelBridge) world).bridge$recentTickTimes();
@@ -465,85 +470,72 @@ public class CommandPack {
 				for(long $$2 : tickTimes) $$1 += $$2;
 				return ((double)$$1 / (double)tickTimes.length) * 1.0E-6D;
 			}
-			
 			@Override
 			public double getWorldTPS(ServerWorld world) {
 				return Math.min(1000.0 / (getWorldTickTime(world)), 20.0);
 			}
-			
 			@Override
 			public AverageTPS getAverageTPS() {
 				return averageTPS;
 			}
 		};
-		api = new sawfowl.commandpack.api.CommandPack() {
+	}
 
+	private sawfowl.commandpack.api.CommandPack createAPI(TPS tps) {
+		return new sawfowl.commandpack.api.CommandPack() {
 			@Override
 			public PlayersData getPlayersData() {
 				return playersData;
 			}
-
 			@Override
 			public RandomTeleportService getRandomTeleportService() {
 				return rtpService;
 			}
-
 			@Override
 			public boolean isForgeServer() {
 				return isForge;
 			}
-
 			@Override
 			public KitService getKitService() {
 				return kitService;
 			}
-
 			@Override
 			public void registerCustomGenerator(String name, ChunkGenerator chunkGenerator) {
 				generators.put(name, chunkGenerator);
 			}
-
 			@Override
 			public Optional<ChunkGenerator> getCustomGenerator(String name) {
 				return Optional.ofNullable(generators.getOrDefault(name, null));
 			}
-
 			@Override
 			public Set<String> getAvailableGenerators() {
 				return new HashSet<>(generators.keySet());
 			}
-
 			@Override
 			public Optional<PunishmentService> getPunishmentService() {
 				return Optional.ofNullable(punishmentService);
 			}
-
 			@Override
 			public Optional<CPEconomyService> getEconomyService() {
 				return Optional.ofNullable(economy.getEconomyServiceImpl());
 			}
-
 			@Override
 			public TPS getTPS() {
 				return tps;
 			}
-
 			@Override
 			public Collection<PluginContainer> getPluginContainers() {
 				return containers;
 			}
-
 			@Override
 			public Collection<ModContainer> getModContainers() {
 				return mods;
 			}
-
 			@Override
 			public void registerCommand(RawCommand command) throws IllegalStateException {
 				if(manager == null && isStarted) throw new IllegalStateException("Registration of commands through CommandPack is no longer available. Perform registration as soon as you receive the API.");
 				if(command.getContainer() != null && command.isEnable() && !registeredRawCommands.stream().filter(raw -> raw.command().equals(command.command())).findFirst().isPresent()) registeredRawCommands.add(command);
 			}
-
 			@Override
 			public void registerCommand(ParameterizedCommand command) throws IllegalStateException {
 				if(manager == null && isStarted) throw new IllegalStateException("Registration of commands through CommandPack is no longer available. Perform registration as soon as you receive the API.");

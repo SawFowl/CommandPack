@@ -12,7 +12,6 @@ public interface ThrowingConsumer<T, E extends CommandException> {
 			try {
 				consumer.accept(t);
 			} catch (CommandException e) {
-				throw new RuntimeException(e);
 			}
 		};
 	}
