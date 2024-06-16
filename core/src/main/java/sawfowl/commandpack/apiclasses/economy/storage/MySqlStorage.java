@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -47,9 +46,7 @@ public class MySqlStorage extends SqlStorage {
 	private String accountsTable;
 	private LinkedHashMap<CurrencyConfig, Currency> currenciesCollumns;
 	private Connection syncConnection;
-	private Statement syncStatement;
 	private Connection checkConnection;
-	private Statement checkStatement;
 	public MySqlStorage(CommandPack plugin, EconomyServiceImpl economyService) {
 		super(plugin, economyService);
 		Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(plugin.getMainConfig().getEconomy().getUpdateInterval(), TimeUnit.MILLISECONDS).execute(() -> {
@@ -248,14 +245,12 @@ public class MySqlStorage extends SqlStorage {
 
 	private ResultSet syncResultSet(String sql) throws SQLException {
 		checkSyncConnection();
-		if(syncStatement == null || syncStatement.isClosed()) syncStatement = syncConnection.createStatement();
-		return syncStatement.executeQuery(sql);
+		return syncConnection.prepareStatement(sql).executeQuery();
 	}
 
 	private ResultSet checkResultSet(String sql) throws SQLException {
 		if(checkConnection == null || checkConnection.isClosed()) checkConnection = plugin.getMariaDB().get().createNewConnection();
-		if(checkStatement == null || checkStatement.isClosed()) checkStatement = checkConnection.createStatement();
-		return checkStatement.executeQuery(sql);
+		return checkConnection.prepareStatement(sql).executeQuery();
 	}
 
 	private void checkSyncConnection() throws SQLException {
