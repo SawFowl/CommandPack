@@ -33,6 +33,8 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.commandpack.api.events.KitGiveEvent;
@@ -411,8 +413,8 @@ public class Kit extends AbstractRawCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createKitArgument(true, true, 0, null, null, null, locale -> getExceptions(locale).getKitNotPresent()),
-			RawArguments.createPlayerArgument(true, false, 1, null, null, null, locale -> getExceptions(locale).getPlayerNotPresent())
+			RawArguments.createKitArgument(RawBasicArgumentData.createKit(0, null, null), RawOptional.optional(), locale -> getExceptions(locale).getKitNotPresent()),
+			RawArguments.createPlayerArgument(RawBasicArgumentData.createPlayer(1, null, null), RawOptional.player(), locale -> getExceptions(locale).getPlayerNotPresent())
 		);
 	}
 

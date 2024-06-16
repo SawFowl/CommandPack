@@ -46,7 +46,7 @@ public class ImplementCommandExceptions implements CommandExceptions {
 	@Setting("ModNotPresent")
 	private Component modNotPresent = TextUtils.deserializeLegacy("&cYou must to specify the mod.");
 	@Setting("MessageNotPresent")
-	private Component messageNotPresent = TextUtils.deserializeLegacy("&cYou didn't enter a message.");
+	private Component messageNotPresent = TextUtils.deserializeLegacy("&cYou must enter a message.");
 	@Setting("ReasonNotPresent")
 	private Component reasonNotPresent = TextUtils.deserializeLegacy("&cYou need to specify a reason.");
 	@Setting("LocaleNotPresent")

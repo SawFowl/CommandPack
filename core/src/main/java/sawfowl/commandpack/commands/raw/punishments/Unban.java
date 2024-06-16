@@ -22,6 +22,8 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
 
@@ -72,7 +74,7 @@ public class Unban extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createProfileArgument(false, false, 0, null, null, null, locale -> getCommands().getBanInfo().getNotPresent()));
+		return Arrays.asList(RawArguments.createProfileArgument(RawBasicArgumentData.createProfile(0, null, null), RawOptional.notOptional(), locale -> getCommands().getBanInfo().getNotPresent()));
 	}
 
 	@Override

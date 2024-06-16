@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.spongepowered.api.command.CommandCause;
+import org.spongepowered.api.command.exception.CommandException;
 
 /**
  * 
@@ -24,6 +25,6 @@ public interface RawResultSupplier<T> {
 	 * @param args - Array of input arguments. It is necessary to select an element with the argument number from the array and search for the required object by it.
 	 * @return {@link Optional} with argument T or empty {@link Optional}
 	 */
-	Optional<T> get(CommandCause cause, String[] args);
+	Optional<T> get(CommandCause cause, String[] args) throws CommandException;
 
 }

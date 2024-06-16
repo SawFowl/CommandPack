@@ -23,6 +23,7 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Balance;
 
@@ -80,7 +81,7 @@ public class BalanceAll extends AbstractRawCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		if(empty == null) empty = new ArrayList<BigDecimal>();
-		return Arrays.asList(RawArguments.createAccountArgument(false, false, 0, null, null, null, locale -> getExceptions(locale).getUserNotPresent()));
+		return Arrays.asList(RawArguments.createAccountArgument(RawBasicArgumentData.createAccount(0, null, null), null, locale -> getExceptions(locale).getUserNotPresent()));
 	}
 
 	@Override

@@ -16,6 +16,8 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
@@ -61,8 +63,8 @@ public class SetName extends AbstractKitsEditCommand  {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			kitArgument(0, false, false),
-			RawArguments.createLocaleArgument(false, false, 1, null, null, null, locale -> getExceptions(locale).getLocaleNotPresent()),
-			RawArguments.createRemainingJoinedStringsArgument("Name", false, false, 2, null, null, null, null, locale -> getExceptions(locale).getNameNotPresent())
+			RawArguments.createLocaleArgument(RawBasicArgumentData.createLocale(1, null, null), RawOptional.notOptional(), locale -> getExceptions(locale).getLocaleNotPresent()),
+			RawArguments.createRemainingJoinedStringsArgument(new RawBasicArgumentData<String>(null, "Name", 2, null, null), RawOptional.notOptional(), locale -> getExceptions(locale).getNameNotPresent())
 		);
 	}
 

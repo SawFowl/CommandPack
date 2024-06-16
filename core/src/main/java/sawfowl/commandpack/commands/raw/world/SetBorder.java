@@ -1,6 +1,5 @@
 package sawfowl.commandpack.commands.raw.world;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -20,7 +19,10 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
+import sawfowl.commandpack.utils.CommandsUtil;
 
 public class SetBorder extends AbstractWorldCommand {
 
@@ -59,8 +61,8 @@ public class SetBorder extends AbstractWorldCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createWorldArgument(false, false, 0, null, null, null, null, locale -> getExceptions(locale).getWorldNotPresent()),
-			RawArguments.createIntegerArgument("Radius", new ArrayList<>(), false, false, 1, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
+			RawArguments.createWorldArgument(RawBasicArgumentData.createWorld(null, 0, null, null), RawOptional.notOptional(), locale -> getExceptions(locale).getWorldNotPresent()),
+			RawArguments.createIntegerArgument(CommandsUtil.getEmptyList(), new RawBasicArgumentData<>(null, "Radius", 1, null, null), RawOptional.notOptional(), locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

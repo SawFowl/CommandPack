@@ -16,6 +16,8 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
 import sawfowl.commandpack.configure.configs.kits.KitData;
@@ -59,7 +61,7 @@ public class GiveRule extends AbstractKitsEditCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			kitArgument(0, false, false),
-			RawArguments.createStringArgument("Rule", sawfowl.commandpack.api.data.kits.GiveRule.getAllRules(), false, false, 1, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
+			RawArguments.createStringArgument(sawfowl.commandpack.api.data.kits.GiveRule.getAllRules(), new RawBasicArgumentData<>(null, "Rule", 1, null, null), RawOptional.notOptional(), locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

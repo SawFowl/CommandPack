@@ -19,6 +19,8 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
 
@@ -63,7 +65,7 @@ public class Unbanip extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createBanIPArgument(false, false, 0, null, null, null, locale -> getExceptions(locale).getValueNotPresent()));
+		return Arrays.asList(RawArguments.createBanIPArgument(RawBasicArgumentData.createBanIP(0, null, null), RawOptional.notOptional(), locale -> getExceptions(locale).getValueNotPresent()));
 	}
 
 	@Override

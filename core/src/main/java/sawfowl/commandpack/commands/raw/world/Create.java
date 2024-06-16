@@ -1,6 +1,5 @@
 package sawfowl.commandpack.commands.raw.world;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -15,6 +14,7 @@ import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.WorldType;
+import org.spongepowered.api.world.generation.ChunkGenerator;
 import org.spongepowered.api.world.generation.config.WorldGenerationConfig;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.api.world.server.WorldTemplate;
@@ -29,7 +29,10 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
+import sawfowl.commandpack.utils.CommandsUtil;
 import sawfowl.localeapi.api.TextUtils;
 
 public class Create extends AbstractWorldCommand {
@@ -43,7 +46,7 @@ public class Create extends AbstractWorldCommand {
 		WorldType worldType = args.<WorldType>get(0).get();
 		String name = args.getString(2).get();
 		WorldTemplate.Builder builder = (WorldTemplate.builder().key(ResourceKey.sponge(TextUtils.clearDecorations(name).toLowerCase()))
-				.add(Keys.CHUNK_GENERATOR, plugin.getAPI().getCustomGenerator(args.getString(1).get()).get())
+				.add(Keys.CHUNK_GENERATOR, args.<ChunkGenerator>get(1).get())
 				.add(Keys.GAME_MODE, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().gameMode())
 				.add(Keys.HARDCORE, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().hardcore())
 				.add(Keys.WORLD_DIFFICULTY, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().difficulty())
@@ -94,12 +97,12 @@ public class Create extends AbstractWorldCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createWorldTypeArgument(false, false, 0, null, null, null, locale -> getExceptions(locale).getTypeNotPresent()),
-			RawArguments.createStringArgument("ChunkGenerator", plugin.getAPI().getAvailableGenerators(), false, false, 1, null, null, null, null, locale -> getExceptions(locale).getTypeNotPresent()),
-			RawArguments.createStringArgument("Name", new ArrayList<>(), false, false, 2, null, null, null, null, locale -> getExceptions(locale).getNameNotPresent()),
-			RawArguments.createStringArgument("Seed", new ArrayList<>(), true, true, 3, "0", null, null, null, locale -> getExceptions(locale).getValueNotPresent()),
-			RawArguments.createBooleanArgument("Structures", true, true, 4, false, null, null, null, locale -> getExceptions(locale).getBooleanNotPresent()),
-			RawArguments.createBooleanArgument("BonusChest", true, true, 5, false, null, null, null, locale -> getExceptions(locale).getBooleanNotPresent())
+			RawArguments.createWorldTypeArgument(RawBasicArgumentData.createWorldType(0, null, null), RawOptional.notOptional(), locale -> getExceptions(locale).getTypeNotPresent()),
+			RawArguments.createChunkGenerator(RawBasicArgumentData.createChunkGenerator(1, null, null), RawOptional.notOptional(), locale -> getExceptions(locale).getTypeNotPresent()),
+			RawArguments.createStringArgument(CommandsUtil.getEmptyList(), new RawBasicArgumentData<>(null, "Name", 2, null, null), RawOptional.notOptional(), locale -> getExceptions(locale).getNameNotPresent()),
+			RawArguments.createStringArgument(CommandsUtil.getEmptyList(), new RawBasicArgumentData<>(null, "Seed", 3, null, null), RawOptional.optional(), locale -> getExceptions(locale).getValueNotPresent()),
+			RawArguments.createBooleanArgument(new RawBasicArgumentData<>(null, "Structures", 4, null, null), RawOptional.optional(), locale -> getExceptions(locale).getBooleanNotPresent()),
+			RawArguments.createBooleanArgument(new RawBasicArgumentData<>(null, "BonusChest", 5, null, null), RawOptional.optional(), locale -> getExceptions(locale).getBooleanNotPresent())
 		);
 	}
 

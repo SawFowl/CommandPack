@@ -22,6 +22,8 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 
@@ -90,7 +92,7 @@ public class Teleport extends AbstractWorldCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			createWorldArg(),
-			RawArguments.createPlayerArgument(true, false, 1, null, null, null, locale -> getExceptions(locale).getPlayerNotPresent())
+			RawArguments.createPlayerArgument(RawBasicArgumentData.createPlayer(1, null, null), RawOptional.player(), locale -> getExceptions(locale).getPlayerNotPresent())
 		);
 	}
 

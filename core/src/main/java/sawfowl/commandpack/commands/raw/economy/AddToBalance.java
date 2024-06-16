@@ -26,8 +26,11 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentData;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Economy;
 
@@ -100,20 +103,14 @@ public class AddToBalance extends AbstractRawCommand {
 		return Arrays.asList(
 			RawArgument.of(
 				String.class,
-				CommandTreeNodeTypes.GAME_PROFILE.get().createNode(),
 				(cause, args) -> plugin.getEconomy().getEconomyService() == null ? Stream.empty() : plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier),
 				(cause, args) -> args.length >= 1 ? Optional.ofNullable(plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier).filter(var -> var.equals(args[0])).findFirst().orElse(args[0])) : Optional.empty(),
-				"Player",
-				true,
-				false,
-				0,
-				null,
-				null,
-				null,
+				new RawArgumentData<>("Player", CommandTreeNodeTypes.GAME_PROFILE.get().createNode(), 0, null, null),
+				new RawOptional(true, false),
 				locale -> getExceptions(locale).getUserNotPresent()
 			),
-			RawArguments.createBigDecimalArgument("Money", empty, false, false, 1, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent()),
-			RawArguments.createCurrencyArgument(true, true, 2, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
+			RawArguments.createBigDecimalArgument(empty, new RawBasicArgumentData<BigDecimal>(null, "Money", 1, null, null), null, locale -> getExceptions(locale).getValueNotPresent()),
+			RawArguments.createCurrencyArgument(RawBasicArgumentData.createCurrency(2, null, null), RawOptional.optional(), locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

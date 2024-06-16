@@ -8,6 +8,7 @@ import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.World;
 
@@ -28,7 +29,7 @@ public abstract class AbstractWorldCommand extends AbstractRawCommand {
 	}
 
 	protected RawArgument<ServerWorld> createWorldArg() {
-		return RawArguments.createWorldArgument(false, false, 0, null, null, null, null, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getWorldNotPresent());
+		return RawArguments.createWorldArgument(RawBasicArgumentData.createWorld(null, 0, null, null), null, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getWorldNotPresent());
 	}
 
 	@Override

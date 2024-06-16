@@ -23,8 +23,11 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.Register;
+import sawfowl.commandpack.utils.CommandsUtil;
 
 @Register
 public class Enchant extends AbstractPlayerCommand {
@@ -78,8 +81,8 @@ public class Enchant extends AbstractPlayerCommand {
 	@Override
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
-			RawArguments.createEnchantmentArgument(false, false, 0, null, null, null, locale -> getExceptions(locale).getTypeNotPresent()),
-			RawArguments.createIntegerArgument("Level", new ArrayList<>(), true, true, 1, 1, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
+			RawArguments.createEnchantmentArgument(RawBasicArgumentData.createEnchantmentType(0, null, null), RawOptional.notOptional(), locale -> getExceptions(locale).getTypeNotPresent()),
+			RawArguments.createIntegerArgument(CommandsUtil.getEmptyList(), new RawBasicArgumentData<Integer>(null, "Level", 1, null, null), RawOptional.optional(), locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

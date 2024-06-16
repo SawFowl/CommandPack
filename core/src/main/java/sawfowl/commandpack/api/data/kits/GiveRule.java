@@ -11,6 +11,7 @@ import java.util.stream.Stream;
  */
 public enum GiveRule {
 
+
 	IGNORE_FULL_INVENTORY {
 
 		@Override
@@ -52,6 +53,8 @@ public enum GiveRule {
 	
 	};
 
+	private static final List<String> ALL = Stream.of(GiveRule.values()).map(GiveRule::getName).collect(Collectors.toList());
+
 	public abstract String getName();
 
 	public static GiveRule getRule(String name) {
@@ -59,7 +62,7 @@ public enum GiveRule {
 	}
 
 	public static List<String> getAllRules() {
-		return Stream.of(GiveRule.values()).map(GiveRule::getName).collect(Collectors.toList());
+		return ALL;
 	}
 
 }

@@ -21,7 +21,9 @@ import net.kyori.adventure.text.event.ClickEvent;
 import sawfowl.commandpack.CommandPack;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
+import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentData;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 
 public class Delete extends AbstractWorldCommand {
@@ -71,16 +73,10 @@ public class Delete extends AbstractWorldCommand {
 	private RawArgument<ServerWorld> createWorldArgument() {
 		return RawArgument.of(
 			ServerWorld.class,
-			CommandTreeNodeTypes.RESOURCE_LOCATION.get().createNode(),
 			(cause, args) -> Sponge.server().worldManager().worlds().stream().filter(w -> w.key().namespace().equals("sponge")).map(w -> w.key().asString()),
 			(cause, args) -> args.length >= 1 ? Sponge.server().worldManager().worlds().stream().filter(w -> w.key().namespace().equals("sponge") && w.key().asString().equals(args[0])).findFirst() : Optional.empty(),
-			"World",
-			false,
-			false,
-			0,
-			null,
-			null,
-			null,
+			new RawArgumentData<>("World", CommandTreeNodeTypes.RESOURCE_LOCATION.get().createNode(), 0, null, null),
+			RawOptional.notOptional(),
 			locale -> getExceptions(locale).getWorldNotPresent()
 		);
 	}

@@ -1,6 +1,5 @@
 package sawfowl.commandpack.commands.raw.onlyplayercommands.kits;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -17,8 +16,11 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractKitsEditCommand;
+import sawfowl.commandpack.utils.CommandsUtil;
 
 public class Create extends AbstractKitsEditCommand {
 
@@ -55,7 +57,7 @@ public class Create extends AbstractKitsEditCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createStringArgument("name", new ArrayList<>(), false, false, 0, null, null, null, null, locale -> getExceptions(locale).getNameNotPresent()));
+		return Arrays.asList(RawArguments.createStringArgument(CommandsUtil.getEmptyList(), new RawBasicArgumentData<String>(null, "Name", 0, null, null), RawOptional.notOptional(), locale -> getExceptions(locale).getNameNotPresent()));
 	}
 
 	@Override

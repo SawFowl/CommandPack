@@ -39,22 +39,17 @@ public interface RawArgument<T> extends DataSerializable {
 
 	/**
 	 * @param clazz - Argument object type.
-	 * @param argumentNodeType - {@link CommandTreeNode} type
 	 * @param variants - See {@link RawCompleterSupplier}
 	 * @param result - See {@link RawResultSupplier}
-	 * @param key - Argument {@link String} key
-	 * @param optional - If true, the argument will be optional.
-	 * @param optionalForConsole - If true, the argument will be optional for the console. Parameter `optional` has a higher priority.
-	 * @param cursor - The number of the argument in the array of arguments input.
-	 * @param permission - The permission required to use the argument. Can be `null`.
+	 * @param argumentData - Argument data such as: number, identifier, argument type, and requirements for use.
+	 * @param optional - Argument optionality settings..
 	 * @param supplier - The text will be shown if the argument was not entered or was entered incorrectly and it is mandatory.
-	 * @param requiredArgumentsById - Listing the required arguments by their id. Can be `null`.
-	 * @param requiredArgumentsByKey - Listing the required arguments by their keys. Can be `null`.
+	 * 
 	 * @return {@link RawArgument}
 	 */
 	@SuppressWarnings("unchecked")
-	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(@NotNull Class<T> clazz, Argument<C> argumentNodeType, @NotNull RawCompleterSupplier<Stream<String>> variants, @NotNull RawResultSupplier<T> result, @NotNull String key, boolean optional, boolean optionalForConsole, int cursor, String permission, Integer[] requiredArgumentsById, String[] requiredArgumentsByKey, @NotNull ComponentSupplier supplier) {
-		return (RawArgument<T>) builder().setArgumentType(argumentNodeType).variants(variants).result(clazz, result).optional(optional).optionalForConsole(optionalForConsole).cursor(cursor).permission(permission).treeKey(key).setRequiredArguments(requiredArgumentsById).setRequiredArguments(requiredArgumentsByKey).setComponentSupplier(supplier).build();
+	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(@NotNull Class<T> clazz, @NotNull RawCompleterSupplier<Stream<String>> variants, @NotNull RawResultSupplier<T> result, @NotNull RawArgumentData<C> argumentData, @NotNull RawOptional optional, @NotNull ComponentSupplier supplier) {
+		return (RawArgument<T>) builder().setArgumentType(argumentData.argumentNodeType()).variants(variants).result(clazz, result).optional(optional == null ? false : optional.all()).optionalForConsole(optional == null ? false : optional.console()).cursor(argumentData.cursor()).permission(argumentData.permission()).treeKey(argumentData.key()).setRequiredArguments(argumentData.requiredArgs() == null ? null : argumentData.requiredArgs().byId()).setRequiredArguments(argumentData.requiredArgs() == null ? null : argumentData.requiredArgs().byKey()).setComponentSupplier(supplier).build();
 	}
 
 

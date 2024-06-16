@@ -22,6 +22,8 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 
 public class GameMode extends AbstractWorldCommand {
@@ -83,7 +85,7 @@ public class GameMode extends AbstractWorldCommand {
 		if(gamemodes.isEmpty()) generateMap();
 		return Arrays.asList(
 			createWorldArg(),
-			RawArguments.createStringArgument("GameMode", gamemodes.keySet(), false, false, 1, null, null, null, null, locale -> getExceptions(locale).getValueNotPresent())
+			RawArguments.createStringArgument(gamemodes.keySet(), new RawBasicArgumentData<String>(null, "GameMode", 1, null, null), RawOptional.notOptional(), locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 

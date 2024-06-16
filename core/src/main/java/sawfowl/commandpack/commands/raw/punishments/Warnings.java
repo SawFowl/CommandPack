@@ -24,6 +24,8 @@ import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
+import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
+import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
@@ -85,7 +87,7 @@ public class Warnings extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createWarnsArgument(true, true, 0, Permissions.WARNS_OTHER, null, null, locale -> getExceptions(locale).getUserNotPresent()));
+		return Arrays.asList(RawArguments.createWarnsArgument(RawBasicArgumentData.createWarns(0, Permissions.WARNS_OTHER, null), RawOptional.optional(), locale -> getExceptions(locale).getUserNotPresent()));
 	}
 
 	@Override

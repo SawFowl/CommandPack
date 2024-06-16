@@ -1,7 +1,5 @@
 package sawfowl.commandpack.api.commands.raw;
 
-import java.time.Duration;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,11 +12,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.ArrayUtils;
+
+import org.jetbrains.annotations.Nullable;
+
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
-import org.apache.commons.lang3.ArrayUtils;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
@@ -127,7 +127,7 @@ public interface RawCommand extends PluginCommand, Raw {
 
 	@Override
 	default List<CommandCompletion> complete(CommandCause cause, Mutable arguments) throws CommandException {
-		return enableAutoComplete() ? completeChild(cause, Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).toArray(String[]::new), arguments.input()) : CommandsUtil.EMPTY_COMPLETIONS;
+		return enableAutoComplete() ? completeChild(cause, Stream.of(arguments.input().split(" ")).filter(string -> (!string.equals(""))).toArray(String[]::new), arguments.input()) : CommandsUtil.getEmptyList();
 	}
 
 	default RawArgumentsMap checkChildAndArguments(CommandCause cause, RawArgumentsMap args, boolean isPlayer, Locale locale) throws CommandException {
@@ -178,10 +178,10 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * Auto-complete command arguments.
 	 */
 	default List<CommandCompletion> completeArgs(CommandCause cause, String[] args, String currentInput) {
-		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.length || (!getArguments().isEmpty() && !getArguments().get(args.length > 0 ? args.length - 1 : 0).hasPermission(cause)) || (getArguments().containsKey(args.length > 0 ? args.length : 0) && !getArguments().get(args.length > 0 ? args.length : 0).checkRequiredOtherArguments(cause, getArguments(), args))) return CommandsUtil.EMPTY_COMPLETIONS;
+		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.length || (!getArguments().isEmpty() && !getArguments().get(args.length > 0 ? args.length - 1 : 0).hasPermission(cause)) || (getArguments().containsKey(args.length > 0 ? args.length : 0) && !getArguments().get(args.length > 0 ? args.length : 0).checkRequiredOtherArguments(cause, getArguments(), args))) return CommandsUtil.getEmptyList();
 		if(currentInput.endsWith(" ") || args.length == 0) {
 			if(getArguments().containsKey(args.length)) return getArguments().get(args.length).getVariants(cause, args).map(CommandCompletion::of).collect(Collectors.toList());
-			return CommandsUtil.EMPTY_COMPLETIONS;
+			return CommandsUtil.getEmptyList();
 		} else return getArguments().get(args.length - 1).getVariants(cause, args).filter(v -> ((v.contains(args[args.length - 1]) && !currentInput.endsWith(" ")) || (args[args.length - 1].contains(v) && !args[args.length - 1].contains(v + " ")) || (v.contains(":") && (v.split(":")[0].contains(args[args.length - 1]) || v.split(":")[1].contains(args[args.length - 1]))))).map(CommandCompletion::of).collect(Collectors.toList());
 	}
 
@@ -221,43 +221,15 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	default CommandException exceptionAppendUsage(CommandCause cause, Component text, String markArg) throws CommandException {
-		throw new CommandException(usage(cause) == null ? text : text.append(Component.newline()).append(Text.of(usage(cause)).replace("<" + markArg + ">", "↳" + markArg + "↲").get()));
+		throw new CommandException(usage(cause) == null ? text : text.append(Component.newline()).append(Text.of(usage(cause)).replace(markArg, "↳" + markArg + "↲").get()));
 	}
 
 	default CommandException exceptionAppendUsage(CommandCause cause, Locale locale, Object[] localePath) throws CommandException {
 		throw new CommandException(getComponent(locale, localePath).append(Component.newline()).append(usage(cause)));
 	}
 
-	/**
-	 * Convert string to object {@link Duration}
-	 */
-	default Optional<Duration> parseDuration(String s, Locale locale) throws CommandException {
-		s = s.toUpperCase();
-		if (!s.contains("T")) {
-			if (s.contains("D")) {
-				if (s.contains("H") || s.contains("M") || s.contains("S")) {
-					s = s.replace("D", "DT");
-				}
-			} else {
-				if (s.startsWith("P")) {
-					s = "PT" + s.substring(1);
-				} else {
-					s = "T" + s;
-				}
-			}
-		}
-		if (!s.startsWith("P")) {
-			s = "P" + s;
-		}
-		try {
-			return Optional.ofNullable(Duration.parse(s));
-		} catch (final DateTimeParseException ex) {
-			throw exception(CommandPack.getInstance().getLocales().getLocale(locale).getCommandExceptions().getDurationNotPresent());
-		}
-	}
-
 	default List<CommandCompletion> getEmptyCompletion() {
-		return CommandsUtil.EMPTY_COMPLETIONS;
+		return CommandsUtil.getEmptyList();
 	}
 
 	/**
