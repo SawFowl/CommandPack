@@ -20,7 +20,7 @@ import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationOptions;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
 import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
@@ -28,7 +28,7 @@ import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
 public abstract class AbstractEconomyStorage extends Thread {
 
-	final CommandPack plugin;
+	final CommandPackInstance plugin;
 	final EconomyServiceImpl economyService;
 
 	Map<UUID, UniqueAccount> uniqueAccounts = new HashMap<UUID, UniqueAccount>();
@@ -36,7 +36,7 @@ public abstract class AbstractEconomyStorage extends Thread {
 	ConfigurationOptions options;
 	Map<Currency, BigDecimal> defaultBalances;
 	private Map<Character, Currency> currenciesMap;
-	public AbstractEconomyStorage(CommandPack plugin, EconomyServiceImpl economyService) {
+	public AbstractEconomyStorage(CommandPackInstance plugin, EconomyServiceImpl economyService) {
 		this.plugin = plugin;
 		this.economyService = economyService;
 		options = SerializeOptions.selectOptions(plugin.getMainConfig().getItemSerializer());

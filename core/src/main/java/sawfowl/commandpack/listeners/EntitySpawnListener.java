@@ -5,12 +5,12 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.ConstructEntityEvent;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 
 public class EntitySpawnListener {
 
-	private final CommandPack plugin;
-	public EntitySpawnListener(CommandPack plugin) {
+	private final CommandPackInstance plugin;
+	public EntitySpawnListener(CommandPackInstance plugin) {
 		this.plugin = plugin;
 	}
 

@@ -18,7 +18,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -34,7 +34,7 @@ import sawfowl.localeapi.api.TextUtils;
 @Register
 public class Warnings extends AbstractRawCommand {
 
-	public Warnings(CommandPack plugin) {
+	public Warnings(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

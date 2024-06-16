@@ -10,7 +10,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
@@ -19,7 +19,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Worlds extends AbstractInfoCommand {
 
-	public Worlds(CommandPack plugin) {
+	public Worlds(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

@@ -12,7 +12,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
@@ -39,7 +39,7 @@ import sawfowl.commandpack.commands.settings.Register;
 public class World extends AbstractWorldCommand {
 
 	private List<RawCommand> childs;
-	public World(CommandPack plugin) {
+	public World(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

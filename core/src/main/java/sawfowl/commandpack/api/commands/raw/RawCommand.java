@@ -35,7 +35,7 @@ import org.spongepowered.common.command.registrar.tree.builder.AbstractCommandTr
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
@@ -208,12 +208,12 @@ public interface RawCommand extends PluginCommand, Raw {
 	 */
 	default void register(RegisterCommandEvent<Raw> event) {
 		if(getCommandSettings() == null) {
-			if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPack.getInstance().getAPI().registerCommand(this);
+			if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPackInstance.getInstance().getAPI().registerCommand(this);
 		} else {
 			if(!getCommandSettings().isEnable()) return;
-			if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPack.getInstance().getAPI().registerCommand(this);
+			if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPackInstance.getInstance().getAPI().registerCommand(this);
 		}
-		CommandPack.getInstance().getPlayersData().getTempData().addTrackingCooldownCommand(this);
+		CommandPackInstance.getInstance().getPlayersData().getTempData().addTrackingCooldownCommand(this);
 	}
 
 	default CommandException exceptionAppendUsage(CommandCause cause, Component text) throws CommandException {
@@ -240,7 +240,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	 */
 	default Map<Integer, RawArgument<?>> createArgumentsMap(@Nullable Collection<RawArgument<?>> args) {
 		return args == null ? new HashMap<>() : args.stream().collect(Collectors.toUnmodifiableMap(arg -> arg.getCursor(), arg -> arg, (arg1, arg2) -> {
-			CommandPack.getInstance().getLogger().warn("A duplicate command argument key was detected. The duplicate will not be added to the argument map. Command: \"" + command() + "\". Command class: \"" + getClass().getName() + "\". Argument key: \"" + arg1.getTreeKey() + "\"");
+			CommandPackInstance.getInstance().getLogger().warn("A duplicate command argument key was detected. The duplicate will not be added to the argument map. Command: \"" + command() + "\". Command class: \"" + getClass().getName() + "\". Argument key: \"" + arg1.getTreeKey() + "\"");
 			return arg1;
 		}));
 	}

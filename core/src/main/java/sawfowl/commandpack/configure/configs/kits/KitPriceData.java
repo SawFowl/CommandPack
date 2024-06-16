@@ -11,7 +11,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.kits.KitPrice;
 import sawfowl.localeapi.api.TextUtils;
 
@@ -44,7 +44,7 @@ public class KitPriceData implements KitPrice {
 
 	@Override
 	public Currency getCurrency() {
-		return CommandPack.getInstance().getEconomy().checkCurrency(currency);
+		return CommandPackInstance.getInstance().getEconomy().checkCurrency(currency);
 	}
 
 	@Override

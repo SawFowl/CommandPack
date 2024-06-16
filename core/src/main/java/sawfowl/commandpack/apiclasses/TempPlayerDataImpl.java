@@ -23,14 +23,14 @@ import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.api.data.command.Settings;
 
 public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerData {
 
-	private final CommandPack plugin;
+	private final CommandPackInstance plugin;
 	private Map<String, Set<UUID>> trackingCommandDelay = new HashMap<>();
 	private Map<String, Settings> commandsSettings = new HashMap<>();
 	private Set<UUID> tptoggleSet = new HashSet<>();
@@ -43,7 +43,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	private Map<UUID, Audience> replyMap = new HashMap<>();
 	private Set<String> onlinePlayers = new HashSet<String>();
 	private Set<String> users = new HashSet<String>();
-	public TempPlayerDataImpl(CommandPack plugin) {
+	public TempPlayerDataImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
 		Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
 	}

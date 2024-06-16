@@ -7,12 +7,12 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.command.ExecuteCommandEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 
 public class PlayerCommandListener {
 
-	private final CommandPack plugin;
-	public PlayerCommandListener(CommandPack plugin) {
+	private final CommandPackInstance plugin;
+	public PlayerCommandListener(CommandPackInstance plugin) {
 		this.plugin = plugin;
 	}
 

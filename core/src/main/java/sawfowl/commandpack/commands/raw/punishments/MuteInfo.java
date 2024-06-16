@@ -15,7 +15,7 @@ import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -30,7 +30,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class MuteInfo extends AbstractRawCommand {
 
-	public MuteInfo(CommandPack plugin) {
+	public MuteInfo(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

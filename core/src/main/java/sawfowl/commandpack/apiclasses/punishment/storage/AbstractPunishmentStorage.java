@@ -15,7 +15,7 @@ import org.spongepowered.api.service.ban.Ban.IP;
 import org.spongepowered.api.service.ban.Ban.Profile;
 import org.spongepowered.configurate.ConfigurationOptions;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.utils.StorageType;
@@ -23,13 +23,13 @@ import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
 public abstract class AbstractPunishmentStorage extends Thread {
 
-	final CommandPack plugin;
+	final CommandPackInstance plugin;
 	Map<UUID, Ban.Profile> bans = new HashMap<>();
 	Map<InetAddress, Ban.IP> bansIP = new HashMap<>();
 	Map<UUID, Mute> mutes = new HashMap<>();
 	Map<UUID, Warns> warns = new HashMap<>();
 	ConfigurationOptions options;
-	public AbstractPunishmentStorage(CommandPack plugin) {
+	public AbstractPunishmentStorage(CommandPackInstance plugin) {
 		this.plugin = plugin;
 		options = SerializeOptions.selectOptions(plugin.getMainConfig().getItemSerializer());
 		load();

@@ -15,7 +15,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -25,7 +25,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Repair extends AbstractParameterizedCommand {
 
-	public Repair(CommandPack plugin) {
+	public Repair(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

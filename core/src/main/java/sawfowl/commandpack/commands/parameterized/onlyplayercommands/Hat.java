@@ -15,7 +15,7 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentTypes;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
@@ -25,7 +25,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Hat extends AbstractPlayerCommand {
 
-	public Hat(CommandPack plugin) {
+	public Hat(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

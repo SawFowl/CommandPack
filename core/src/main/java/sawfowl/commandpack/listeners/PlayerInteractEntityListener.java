@@ -5,12 +5,12 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 
 public class PlayerInteractEntityListener {
 
-	private final CommandPack plugin;
-	public PlayerInteractEntityListener(CommandPack plugin) {
+	private final CommandPackInstance plugin;
+	public PlayerInteractEntityListener(CommandPackInstance plugin) {
 		this.plugin = plugin;
 	}
 

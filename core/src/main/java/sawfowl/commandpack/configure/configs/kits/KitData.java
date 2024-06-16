@@ -33,7 +33,7 @@ import org.spongepowered.plugin.PluginContainer;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.kits.Kit;
@@ -167,7 +167,7 @@ public class KitData implements Kit {
 
 	@Override
 	public Optional<KitPrice> getKitPrice() {
-		return CommandPack.getInstance().getEconomy().isPresent() ? Optional.ofNullable(priceData) : Optional.empty();
+		return CommandPackInstance.getInstance().getEconomy().isPresent() ? Optional.ofNullable(priceData) : Optional.empty();
 	}
 
 	@Override
@@ -200,7 +200,7 @@ public class KitData implements Kit {
 				});
 				save();
 				menu.inventory().clear();
-				carrier.sendMessage(CommandPack.getInstance().getLocales().getLocale(carrier.locale()).getCommands().getKits().getSaved(getLocalizedName(carrier.locale())));
+				carrier.sendMessage(CommandPackInstance.getInstance().getLocales().getLocale(carrier.locale()).getCommands().getKits().getSaved(getLocalizedName(carrier.locale())));
 				menu.unregisterAll();
 			}
 		});
@@ -209,7 +209,7 @@ public class KitData implements Kit {
 
 	@Override
 	public void save() {
-		CommandPack.getInstance().getConfigManager().saveKit(this);
+		CommandPackInstance.getInstance().getConfigManager().saveKit(this);
 	}
 
 	private Component text(String string) {

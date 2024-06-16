@@ -23,7 +23,7 @@ import org.spongepowered.api.service.ban.BanTypes;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -33,7 +33,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Ban extends AbstractParameterizedCommand {
 
-	public Ban(CommandPack plugin) {
+	public Ban(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

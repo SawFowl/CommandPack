@@ -12,7 +12,7 @@ import org.spongepowered.api.util.locale.Locales;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
@@ -22,7 +22,7 @@ import sawfowl.commandpack.configure.configs.kits.KitData;
 
 public class CreateLore extends AbstractKitsEditCommand {
 
-	public CreateLore(CommandPack plugin) {
+	public CreateLore(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

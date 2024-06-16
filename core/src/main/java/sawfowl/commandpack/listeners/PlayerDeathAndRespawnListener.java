@@ -17,15 +17,15 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Ticks;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 
 public class PlayerDeathAndRespawnListener {
 
-	private final CommandPack plugin;
+	private final CommandPackInstance plugin;
 	Map<UUID, Map<Integer, ItemStack>> inventories = new HashMap<UUID, Map<Integer, ItemStack>>();
 	Map<UUID, Integer> exps = new HashMap<UUID, Integer>();
-	public PlayerDeathAndRespawnListener(CommandPack plugin) {
+	public PlayerDeathAndRespawnListener(CommandPackInstance plugin) {
 		this.plugin = plugin;
 	}
 

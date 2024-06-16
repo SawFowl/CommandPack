@@ -20,7 +20,7 @@ import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.configure.configs.punishment.BanData;
@@ -47,7 +47,7 @@ public class H2Storage extends SqlStorage {
 	private String deleteIPBanSql;
 	private String deleteMuteSql;
 	private String deleteWarnsSql;
-	public H2Storage(CommandPack plugin) {
+	public H2Storage(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

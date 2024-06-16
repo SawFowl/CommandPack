@@ -13,7 +13,7 @@ import org.spongepowered.api.service.ban.Ban.IP;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -27,7 +27,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Unbanip extends AbstractRawCommand {
 
-	public Unbanip(CommandPack plugin) {
+	public Unbanip(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

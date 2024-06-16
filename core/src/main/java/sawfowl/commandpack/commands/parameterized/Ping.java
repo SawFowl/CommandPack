@@ -12,7 +12,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
@@ -23,7 +23,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Ping extends AbstractParameterizedCommand {
 
-	public Ping(CommandPack plugin) {
+	public Ping(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

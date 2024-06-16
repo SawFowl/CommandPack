@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import org.spongepowered.api.world.server.ServerWorld;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
@@ -14,7 +14,7 @@ import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Worl
 
 public abstract class AbstractWorldCommand extends AbstractRawCommand {
 
-	public AbstractWorldCommand(CommandPack plugin) {
+	public AbstractWorldCommand(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

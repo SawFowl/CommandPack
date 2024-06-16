@@ -15,7 +15,7 @@ import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -26,7 +26,7 @@ import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 @Register
 public class Spawn extends AbstractParameterizedCommand {
 
-	public Spawn(CommandPack plugin) {
+	public Spawn(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

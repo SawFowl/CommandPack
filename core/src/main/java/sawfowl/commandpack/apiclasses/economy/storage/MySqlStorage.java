@@ -21,7 +21,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.economy.Currency;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
 import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
@@ -50,7 +50,7 @@ public class MySqlStorage extends SqlStorage {
 	private Statement syncStatement;
 	private Connection checkConnection;
 	private Statement checkStatement;
-	public MySqlStorage(CommandPack plugin, EconomyServiceImpl economyService) {
+	public MySqlStorage(CommandPackInstance plugin, EconomyServiceImpl economyService) {
 		super(plugin, economyService);
 		Sponge.asyncScheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).interval(plugin.getMainConfig().getEconomy().getUpdateInterval(), TimeUnit.MILLISECONDS).execute(() -> {
 			sync();

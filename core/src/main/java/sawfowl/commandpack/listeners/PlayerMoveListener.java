@@ -7,13 +7,13 @@ import org.spongepowered.api.event.cause.entity.MovementTypes;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 
 public class PlayerMoveListener {
 
-	private final CommandPack plugin;
-	public PlayerMoveListener(CommandPack plugin) {
+	private final CommandPackInstance plugin;
+	public PlayerMoveListener(CommandPackInstance plugin) {
 		this.plugin = plugin;
 	}
 

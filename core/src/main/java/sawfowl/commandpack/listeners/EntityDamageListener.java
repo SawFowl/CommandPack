@@ -7,12 +7,12 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.AttackEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 
 public class EntityDamageListener {
 
-	private final CommandPack plugin;
-	public EntityDamageListener(CommandPack commandPack) {
+	private final CommandPackInstance plugin;
+	public EntityDamageListener(CommandPackInstance commandPack) {
 		this.plugin = commandPack;
 	}
 

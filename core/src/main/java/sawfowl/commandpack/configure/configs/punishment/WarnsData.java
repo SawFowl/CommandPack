@@ -16,7 +16,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
 
@@ -109,8 +109,8 @@ public class WarnsData implements Warns {
 	}
 
 	private void save() {
-		CommandPack.getInstance().getPunishmentService().removeWarns(uuid);
-		CommandPack.getInstance().getPunishmentService().addWarns(this);
+		CommandPackInstance.getInstance().getPunishmentService().removeWarns(uuid);
+		CommandPackInstance.getInstance().getPunishmentService().addWarns(this);
 	}
 
 	private class Builder implements Warns.Builder {

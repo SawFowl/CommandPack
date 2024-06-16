@@ -20,7 +20,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.punishment.Mute.Builder;
@@ -31,7 +31,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Mute extends AbstractParameterizedCommand {
 
-	public Mute(CommandPack plugin) {
+	public Mute(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

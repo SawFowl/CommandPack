@@ -10,7 +10,7 @@ import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.configurate.reference.ConfigurationReference;
 import org.spongepowered.configurate.reference.ValueReference;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
 import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
@@ -21,7 +21,7 @@ public class FileStorage extends AbstractEconomyStorage {
 
 	private Path playersPath;
 	private Path otherPath;
-	public FileStorage(CommandPack plugin, EconomyServiceImpl economyService) {
+	public FileStorage(CommandPackInstance plugin, EconomyServiceImpl economyService) {
 		super(plugin, economyService);
 	}
 

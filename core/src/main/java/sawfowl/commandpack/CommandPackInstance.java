@@ -63,6 +63,7 @@ import net.kyori.adventure.title.TitlePart;
 import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.api.event.LocaleServiseEvent;
 import sawfowl.localeapi.api.placeholders.Placeholders;
+import sawfowl.commandpack.api.CommandPack;
 import sawfowl.commandpack.api.KitService;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.RandomTeleportService;
@@ -138,10 +139,10 @@ import sawfowl.commandpack.utils.MariaDB;
 import sawfowl.commandpack.utils.ModListGetter;
 
 @Plugin("commandpack")
-public class CommandPack {
+public class CommandPackInstance {
 	private Logger logger;
 
-	private static CommandPack instance;
+	private static CommandPackInstance instance;
 	private PluginContainer pluginContainer;
 	private Path configDir;
 	private Locales locales;
@@ -155,7 +156,7 @@ public class CommandPack {
 	private Map<Long, Double> tps5m = new HashMap<>();
 	private Map<Long, Double> tps10m = new HashMap<>();
 	private long serverStartedTime;
-	private sawfowl.commandpack.api.CommandPack api;
+	private CommandPack api;
 	private PunishmentService punishmentService;
 	private MariaDB mariaDB;
 	private Map<String, ChunkGenerator> generators = new HashMap<>();
@@ -166,7 +167,7 @@ public class CommandPack {
 	private boolean isStarted = false;
 	private SpongeCommandManager manager;
 
-	public static CommandPack getInstance() {
+	public static CommandPackInstance getInstance() {
 		return instance;
 	}
 
@@ -234,7 +235,7 @@ public class CommandPack {
 		return (System.currentTimeMillis() - serverStartedTime) / 1000;
 	}
 
-	public sawfowl.commandpack.api.CommandPack getAPI() {
+	public CommandPack getAPI() {
 		return api;
 	}
 
@@ -251,7 +252,7 @@ public class CommandPack {
 	}
 
 	@Inject
-	public CommandPack(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
+	public CommandPackInstance(PluginContainer pluginContainer, @ConfigDir(sharedRoot = false) Path configDirectory) {
 		instance = this;
 		this.pluginContainer = pluginContainer;
 		configDir = configDirectory;
@@ -288,7 +289,7 @@ public class CommandPack {
 		generators.put("overworld", ChunkGenerator.overworld());
 		generators.put("end", ChunkGenerator.theEnd());
 		generators.put("nether", ChunkGenerator.theNether());
-		Sponge.eventManager().post(new sawfowl.commandpack.api.CommandPack.PostAPI() {
+		Sponge.eventManager().post(new CommandPack.PostAPI() {
 
 			@Override
 			public Cause cause() {
@@ -296,7 +297,7 @@ public class CommandPack {
 			}
 
 			@Override
-			public sawfowl.commandpack.api.CommandPack getAPI() {
+			public CommandPack getAPI() {
 				return api;
 			}
 
@@ -481,8 +482,8 @@ public class CommandPack {
 		};
 	}
 
-	private sawfowl.commandpack.api.CommandPack createAPI(TPS tps) {
-		return new sawfowl.commandpack.api.CommandPack() {
+	private CommandPack createAPI(TPS tps) {
+		return new CommandPack() {
 			@Override
 			public PlayersData getPlayersData() {
 				return playersData;

@@ -20,7 +20,7 @@ import org.spongepowered.api.service.economy.transaction.TransferResult;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.apiclasses.economy.storage.AbstractEconomyStorage;
 import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 import sawfowl.commandpack.configure.configs.economy.SerializedAccount;
@@ -30,7 +30,7 @@ public class CPAccount implements Account, VirtualAccount {
 
 	protected String identifier = "n/a";
 	protected Map<Currency, BigDecimal> balances;
-	private EconomyConfig config = CommandPack.getInstance().getMainConfig().getEconomy();
+	private EconomyConfig config = CommandPackInstance.getInstance().getMainConfig().getEconomy();
 	protected AbstractEconomyStorage storage;
 	public CPAccount(){}
 	public CPAccount(String identifier, Map<Currency, BigDecimal> balances, AbstractEconomyStorage storage) {

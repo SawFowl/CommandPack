@@ -5,12 +5,12 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 
 public class PlayerInteractBlockListener {
 
-	private final CommandPack plugin;
-	public PlayerInteractBlockListener(CommandPack plugin) {
+	private final CommandPackInstance plugin;
+	public PlayerInteractBlockListener(CommandPackInstance plugin) {
 		this.plugin = plugin;
 	}
 

@@ -13,7 +13,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -24,7 +24,7 @@ import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Game
 @Register
 public class Creative extends AbstractParameterizedCommand {
 
-	public Creative(CommandPack plugin) {
+	public Creative(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

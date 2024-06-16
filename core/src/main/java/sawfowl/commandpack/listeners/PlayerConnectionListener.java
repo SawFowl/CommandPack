@@ -24,7 +24,7 @@ import org.spongepowered.api.util.Ticks;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.kits.Kit;
@@ -39,8 +39,8 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class PlayerConnectionListener {
 
-	private final CommandPack plugin;
-	public PlayerConnectionListener(CommandPack plugin) {
+	private final CommandPackInstance plugin;
+	public PlayerConnectionListener(CommandPackInstance plugin) {
 		this.plugin = plugin;
 	}
 

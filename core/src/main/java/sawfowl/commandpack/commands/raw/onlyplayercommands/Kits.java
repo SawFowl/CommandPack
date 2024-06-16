@@ -16,7 +16,7 @@ import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -41,7 +41,7 @@ import sawfowl.commandpack.commands.settings.Register;
 public class Kits extends AbstractPlayerCommand {
 
 	private List<RawCommand> childs;
-	public Kits(CommandPack plugin) {
+	public Kits(CommandPackInstance plugin) {
 		super(plugin);
 		Sponge.eventManager().registerListeners(getContainer(), this);
 	}

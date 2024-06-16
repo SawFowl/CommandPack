@@ -29,7 +29,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.ServerStat;
@@ -44,7 +44,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	protected final String java;
 	protected final String javaHome;
 	protected final int linesPerPage = 15;
-	public AbstractInfoCommand(CommandPack plugin) {
+	public AbstractInfoCommand(CommandPackInstance plugin) {
 		super(plugin);
 		os = System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch");
 		java = System.getProperty("java.vendor") + " " + System.getProperty("java.version");

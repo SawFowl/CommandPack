@@ -11,7 +11,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
@@ -21,7 +21,7 @@ import sawfowl.commandpack.commands.settings.Register;
 public class Suicide extends AbstractPlayerCommand {
 
 	private DamageSource damageSource;
-	public Suicide(CommandPack plugin) {
+	public Suicide(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

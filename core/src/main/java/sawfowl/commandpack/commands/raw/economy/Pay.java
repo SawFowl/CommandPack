@@ -19,7 +19,7 @@ import org.spongepowered.api.service.economy.account.UniqueAccount;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -34,7 +34,7 @@ import sawfowl.commandpack.commands.settings.Register;
 public class Pay extends AbstractPlayerCommand {
 
 	private List<BigDecimal> empty = new ArrayList<BigDecimal>();
-	public Pay(CommandPack plugin) {
+	public Pay(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

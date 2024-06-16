@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 
 public class TimeConverter {
 
-	private static final CommandPack plugin = CommandPack.getInstance();
+	private static final CommandPackInstance plugin = CommandPackInstance.getInstance();
 	private static final TimeZone timeZone = plugin.getMainConfig().getPunishment().getTimeZone();
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(plugin.getMainConfig().getPunishment().getDateTimeFormat()).withZone(timeZone.toZoneId());
 	private static final DateFormat dateFormat = setDateFormat();

@@ -8,7 +8,7 @@ import org.spongepowered.api.util.locale.Locales;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.utils.StorageType;
 import sawfowl.localeapi.api.LocalisedComment;
 
@@ -32,10 +32,10 @@ public class Punishment {
 	private DBSettings dbSettings = new DBSettings();
 	@Setting("DateTimeFormat")
 	@LocalisedComment(path = {"Comments", "MainConfig", "Punishment", "DateTimeFormat"}, plugin = "commandpack")
-	private String dateTimeFormat = CommandPack.getInstance().getLocales().getSystemLocale().getTime().getFormat();
+	private String dateTimeFormat = CommandPackInstance.getInstance().getLocales().getSystemLocale().getTime().getFormat();
 	@Setting("TimeZone")
 	@LocalisedComment(path = {"Comments", "MainConfig", "Punishment", "TimeZone"}, plugin = "commandpack")
-	private String timeZone = CommandPack.getInstance().getLocales().getSystemLocale().getTime().getTimeZone();
+	private String timeZone = CommandPackInstance.getInstance().getLocales().getSystemLocale().getTime().getTimeZone();
 
 	public boolean isEnable() {
 		return enable;

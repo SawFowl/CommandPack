@@ -15,7 +15,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
@@ -24,7 +24,7 @@ import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Item
 
 public class AddLore extends AbstractPlayerCommand {
 
-	public AddLore(CommandPack plugin) {
+	public AddLore(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

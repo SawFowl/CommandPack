@@ -14,7 +14,7 @@ import org.spongepowered.api.registry.DefaultedRegistryReference;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.command.Settings;
@@ -30,11 +30,11 @@ public class GameModeType extends AbstractParameterizedCommand {
 	private String name;
 	private ComponentSupplier supplier;
 
-	public GameModeType(CommandPack plugin) {
+	public GameModeType(CommandPackInstance plugin) {
 		super(plugin);
 	}
 
-	public GameModeType(CommandPack plugin, DefaultedRegistryReference<GameMode> gameMode, ComponentSupplier supplier) {
+	public GameModeType(CommandPackInstance plugin, DefaultedRegistryReference<GameMode> gameMode, ComponentSupplier supplier) {
 		super(plugin);
 		this.gameMode = gameMode;
 		name = gameMode.location().value();

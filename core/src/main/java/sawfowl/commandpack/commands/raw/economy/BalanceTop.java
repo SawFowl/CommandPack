@@ -21,7 +21,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextDecoration;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -36,7 +36,7 @@ import sawfowl.localeapi.api.TextUtils;
 @Register
 public class BalanceTop extends AbstractRawCommand {
 
-	public BalanceTop(CommandPack plugin) {
+	public BalanceTop(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

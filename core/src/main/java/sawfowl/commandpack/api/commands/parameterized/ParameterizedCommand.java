@@ -17,7 +17,7 @@ import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import net.kyori.adventure.audience.Audience;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.commands.PluginCommand;
 
 /**
@@ -50,7 +50,7 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 	default CommandResult execute(CommandContext context) throws CommandException {
 		boolean isPlayer = context.cause().first(ServerPlayer.class).isPresent();
 		Locale locale = getLocale(context.cause());
-		if(!isPlayer && onlyPlayer()) exception(CommandPack.getInstance().getLocales().getLocale(locale).getCommandExceptions().getOnlyPlayer());
+		if(!isPlayer && onlyPlayer()) exception(CommandPackInstance.getInstance().getLocales().getLocale(locale).getCommandExceptions().getOnlyPlayer());
 		if(getSettingsMap() != null && !getSettingsMap().isEmpty()) for(ParameterSettings settings : getSettingsMap().values()) if(!settings.containsIn(context) && (!settings.isOptional() || (!isPlayer && !settings.isOptionalForConsole()))) exception(settings.getComponentSupplier().get(locale));
 		checkCooldown(context.cause(), locale, isPlayer);
 		execute(context, context.cause().first(ServerPlayer.class).map(player -> (Audience) player).orElse(context.cause().audience()), locale, isPlayer);
@@ -67,12 +67,12 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 	default void register(RegisterCommandEvent<Parameterized> event) {
 		if(build() == null) return;
 		if(getCommandSettings() == null) {
-			if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPack.getInstance().getAPI().registerCommand(this);
+			if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPackInstance.getInstance().getAPI().registerCommand(this);
 		} else {
 			if(!getCommandSettings().isEnable()) return;
-			if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPack.getInstance().getAPI().registerCommand(this);
+			if(getCommandSettings() == null || getCommandSettings().isEnable()) CommandPackInstance.getInstance().getAPI().registerCommand(this);
 		}
-		CommandPack.getInstance().getPlayersData().getTempData().addTrackingCooldownCommand(this);
+		CommandPackInstance.getInstance().getPlayersData().getTempData().addTrackingCooldownCommand(this);
 	}
 
 	/**

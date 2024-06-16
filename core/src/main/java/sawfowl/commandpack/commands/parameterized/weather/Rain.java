@@ -18,7 +18,7 @@ import org.spongepowered.api.world.weather.WeatherTypes;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -29,7 +29,7 @@ import sawfowl.commandpack.commands.settings.Register;
 public class Rain extends AbstractParameterizedCommand {
 
 	private Random random;
-	public Rain(CommandPack plugin) {
+	public Rain(CommandPackInstance plugin) {
 		super(plugin);
 		random = new Random();
 	}

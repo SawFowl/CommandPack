@@ -13,7 +13,7 @@ import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
@@ -37,7 +37,7 @@ public class ServerStat extends AbstractInfoCommand {
 	private final Parameterized tpsCommand;
 	private final ServerTime time;
 	private final Parameterized timeCommand;
-	public ServerStat(CommandPack plugin) {
+	public ServerStat(CommandPackInstance plugin) {
 		super(plugin);
 		plugins = new Plugins(plugin);
 		pluginsCommand = plugins.build();

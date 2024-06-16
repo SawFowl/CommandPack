@@ -16,7 +16,7 @@ import org.spongepowered.api.service.economy.account.AccountDeletionResultType;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.api.service.economy.account.VirtualAccount;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.apiclasses.economy.storage.AbstractEconomyStorage;
@@ -27,13 +27,13 @@ import sawfowl.commandpack.utils.MariaDB;
 
 public class EconomyServiceImpl implements CPEconomyService {
 
-	CommandPack plugin;
+	CommandPackInstance plugin;
 	private AbstractEconomyStorage storage;
 	private Currency def;
 	private Currency[] currencies;
 	private Map<Character, Currency> currenciesMap = new HashMap<Character, Currency>();
 	private Map<String, VirtualAccount> virtualAccounts = new HashMap<String, VirtualAccount>();
-	public EconomyServiceImpl(CommandPack plugin) {
+	public EconomyServiceImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
 		def = new CPCurrency(ResourceKey.resolve(plugin.getMainConfig().getEconomy().getDefaultCurrency().getKey()));
 		currenciesMap.put(plugin.getMainConfig().getEconomy().getDefaultCurrency().getSymbol(), def);

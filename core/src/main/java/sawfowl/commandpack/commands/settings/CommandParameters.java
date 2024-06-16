@@ -18,7 +18,7 @@ import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.plugin.PluginContainer;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
 import sawfowl.localeapi.api.EnumLocales;
@@ -56,7 +56,7 @@ public class CommandParameters {
 		return (optional ? Parameter.string().key("User").optional() : Parameter.string().key("User")).requiredPermission(permission).completer(new ValueCompleter() {
 			@Override
 			public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-				return CommandPack.getInstance().getPlayersData().getTempData().streamUsers().filter(p -> (currentInput.length() == 0 || p.startsWith(currentInput))).map(p -> CommandCompletion.of(p)).collect(Collectors.toList());
+				return CommandPackInstance.getInstance().getPlayersData().getTempData().streamUsers().filter(p -> (currentInput.length() == 0 || p.startsWith(currentInput))).map(p -> CommandCompletion.of(p)).collect(Collectors.toList());
 			}
 		}).build();
 	}
@@ -143,8 +143,8 @@ public class CommandParameters {
 		return (optional ? Parameter.duration().key("Duration").optional() : Parameter.duration().key("Duration")).build();
 	}
 
-	private static CommandPack getInstance() {
-		return CommandPack.getInstance();
+	private static CommandPackInstance getInstance() {
+		return CommandPackInstance.getInstance();
 	}
 
 }

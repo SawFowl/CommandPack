@@ -9,7 +9,7 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
@@ -20,7 +20,7 @@ import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 @Register
 public class SetSpawn extends AbstractPlayerCommand {
 
-	public SetSpawn(CommandPack plugin) {
+	public SetSpawn(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

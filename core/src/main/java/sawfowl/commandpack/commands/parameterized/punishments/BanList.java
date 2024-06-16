@@ -18,7 +18,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -30,7 +30,7 @@ import sawfowl.localeapi.api.Text;
 public class BanList extends AbstractParameterizedCommand {
 
 	Value<String> arg;
-	public BanList(CommandPack plugin) {
+	public BanList(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

@@ -10,7 +10,7 @@ import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.command.Delay;
 import sawfowl.commandpack.api.data.command.Price;
 import sawfowl.commandpack.api.data.command.Settings;
@@ -19,7 +19,7 @@ import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.Comm
 
 public class CommandSettingSerializer implements TypeSerializer<Settings> {
 
-	private final CommandPack INSTANCE = CommandPack.getInstance();
+	private final CommandPackInstance INSTANCE = CommandPackInstance.getInstance();
 
 	@Override
 	public Settings deserialize(Type type, ConfigurationNode node) throws SerializationException {

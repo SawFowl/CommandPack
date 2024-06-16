@@ -12,7 +12,7 @@ import org.spongepowered.plugin.PluginContainer;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
@@ -20,7 +20,7 @@ import sawfowl.commandpack.commands.settings.CommandParameters;
 
 public class RefreshPlugin extends AbstractInfoCommand {
 
-	public RefreshPlugin(CommandPack plugin) {
+	public RefreshPlugin(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

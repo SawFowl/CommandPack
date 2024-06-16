@@ -24,7 +24,7 @@ import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
@@ -37,7 +37,7 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class Create extends AbstractWorldCommand {
 
-	public Create(CommandPack plugin) {
+	public Create(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

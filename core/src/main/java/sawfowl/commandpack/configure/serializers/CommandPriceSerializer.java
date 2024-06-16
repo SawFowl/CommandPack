@@ -8,13 +8,13 @@ import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.command.Price;
 import sawfowl.commandpack.configure.configs.commands.CommandPrice;
 
 public class CommandPriceSerializer implements TypeSerializer<Price> {
 
-	private final CommandPack INSTANCE = CommandPack.getInstance();
+	private final CommandPackInstance INSTANCE = CommandPackInstance.getInstance();
 
 	@Override
 	public Price deserialize(Type type, ConfigurationNode node) throws SerializationException {

@@ -13,7 +13,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -23,7 +23,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Heal extends AbstractParameterizedCommand {
 
-	public Heal(CommandPack plugin) {
+	public Heal(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

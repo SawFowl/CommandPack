@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.TempPlayerData;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.api.data.player.Warp;
@@ -22,9 +22,9 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 
-	final CommandPack plugin;
+	final CommandPackInstance plugin;
 	final TempPlayerData tempData;
-	public PlayersDataImpl(CommandPack plugin) {
+	public PlayersDataImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
 		tempData = new TempPlayerDataImpl(plugin);
 	}

@@ -24,7 +24,7 @@ import org.spongepowered.plugin.PluginContainer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.command.Price;
 import sawfowl.commandpack.api.data.command.Settings;
@@ -96,7 +96,7 @@ public interface PluginCommand {
 	}
 
 	default Map<UUID, Long> getCooldowns() {
-		return CommandPack.getInstance().getPlayersData().getTempData().getTrackingMap(trackingName());
+		return CommandPackInstance.getInstance().getPlayersData().getTempData().getTrackingMap(trackingName());
 	}
 
 	/**
@@ -114,7 +114,7 @@ public interface PluginCommand {
 	}
 
 	default Locale getLocale(CommandCause cause) {
-		return cause.audience() instanceof SystemSubject ? CommandPack.getInstance().getLocales().getLocaleService().getSystemOrDefaultLocale() : (cause.audience() instanceof LocaleSource ? ((LocaleSource) cause.audience()).locale() : org.spongepowered.api.util.locale.Locales.DEFAULT);
+		return cause.audience() instanceof SystemSubject ? CommandPackInstance.getInstance().getLocales().getLocaleService().getSystemOrDefaultLocale() : (cause.audience() instanceof LocaleSource ? ((LocaleSource) cause.audience()).locale() : org.spongepowered.api.util.locale.Locales.DEFAULT);
 	}
 
 	/**
@@ -123,7 +123,7 @@ public interface PluginCommand {
 	default Component getComponent(Locale locale, Object... path) {
 		Component text = getComponent(path);
 		if(text != null) return text;
-		return CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getComponent(path);
+		return CommandPackInstance.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getComponent(path);
 	}
 
 	/**
@@ -134,7 +134,7 @@ public interface PluginCommand {
 	}
 
 	default List<Component> getListTexts(Locale locale, Object... path) {
-		return CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getListStrings(path).stream().map(s -> text(s)).collect(Collectors.toList());
+		return CommandPackInstance.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getListStrings(path).stream().map(s -> text(s)).collect(Collectors.toList());
 	}
 
 	default CommandResult success() {
@@ -210,7 +210,7 @@ public interface PluginCommand {
 	 */
 	default void delay(ServerPlayer player, Locale locale, ThrowingConsumer<PluginCommand, CommandException> consumer) throws CommandException {
 		if(getCommandSettings() != null && getCommandSettings().getDelay().getSeconds() > 0 && !player.hasPermission(Permissions.getIgnoreDelayTimer(command()))) {
-			CommandPack.getInstance().getPlayersData().getTempData().addCommandTracking(trackingName(), player);
+			CommandPackInstance.getInstance().getPlayersData().getTempData().addCommandTracking(trackingName(), player);
 			Sponge.server().scheduler().submit(Task.builder().plugin(getContainer()).interval(1, TimeUnit.SECONDS).execute(new DelayTimerTask(consumer, player, getContainer(), command(), this)).build());
 		} else {
 			economy(player, locale);
@@ -222,12 +222,12 @@ public interface PluginCommand {
 	 * Payment for the execution of the command.
 	 */
 	default void economy(ServerPlayer player, Locale locale) throws CommandException {
-		if(getCommandSettings() == null || !CommandPack.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command()))) return;
+		if(getCommandSettings() == null || !CommandPackInstance.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command()))) return;
 		Price price = getCommandSettings().getPrice();
 		if(price.getMoney() > 0) {
-			Currency currency = CommandPack.getInstance().getEconomy().checkCurrency(price.getCurrency());
+			Currency currency = CommandPackInstance.getInstance().getEconomy().checkCurrency(price.getCurrency());
 			BigDecimal money = createDecimal(price.getMoney());
-			if(!CommandPack.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money) || !CommandPack.getInstance().getEconomy().removeFromPlayerBalance(player, currency, money)) exception(getLocale(player.locale()).getOther().getExecuteCommand().getNoMoney(currency, money, "/" + command()));
+			if(!CommandPackInstance.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money) || !CommandPackInstance.getInstance().getEconomy().removeFromPlayerBalance(player, currency, money)) exception(getLocale(player.locale()).getOther().getExecuteCommand().getNoMoney(currency, money, "/" + command()));
 		}
 	}
 
@@ -249,7 +249,7 @@ public interface PluginCommand {
 	}
 
 	default <T extends LocaleReference> T getPluginLocale(Class<T> localeClass, Locale locale) {
-		return CommandPack.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer(), locale).asReference(localeClass);
+		return CommandPackInstance.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer(), locale).asReference(localeClass);
 	}
 
 	default boolean isEnable() {
@@ -257,7 +257,7 @@ public interface PluginCommand {
 	}
 
 	private AbstractLocale getLocale(Locale locale) {
-		return CommandPack.getInstance().getLocales().getLocale(locale);
+		return CommandPackInstance.getInstance().getLocales().getLocale(locale);
 	}
 
 }

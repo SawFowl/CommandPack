@@ -38,7 +38,7 @@ import org.spongepowered.api.world.WorldTypes;
 import org.spongepowered.api.world.generation.ChunkGenerator;
 import org.spongepowered.api.world.server.ServerWorld;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.player.Warp;
@@ -55,7 +55,7 @@ import sawfowl.localeapi.api.EnumLocales;
  */
 public class RawArguments {
 
-	private static final CommandPack plugin = CommandPack.getInstance();
+	private static final CommandPackInstance plugin = CommandPackInstance.getInstance();
 	public static final List<String> EMPTY = new ArrayList<>();
 	public static final Integer[] emptyIds = {};
 	public static final String[] emptyKeys = {};
@@ -192,7 +192,7 @@ public class RawArguments {
 	public static RawArgument<ServerPlayer> createPlayerArgument(RawBasicArgumentData<ServerPlayer> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			ServerPlayer.class,
-			(CommandCause cause, String[] args) -> CommandPack.getInstance().getPlayersData().getTempData().streamOnlinePlayers().filter(name -> Sponge.server().player(name).filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).isPresent()),
+			(CommandCause cause, String[] args) -> CommandPackInstance.getInstance().getPlayersData().getTempData().streamOnlinePlayers().filter(name -> Sponge.server().player(name).filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).isPresent()),
 			(CommandCause cause, String[] args) -> args.length >= data.cursor() + 1 ? Sponge.server().onlinePlayers().stream().filter(player -> player.name().equals(args[data.cursor()])).findFirst() : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.GAME_PROFILE.get().createNode()),
 			rawOptional,
@@ -214,7 +214,7 @@ public class RawArguments {
 	public static RawArgument<CompletableFuture<Optional<User>>> createUserArgument(RawBasicArgumentData<CompletableFuture<Optional<User>>> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			USER_LOAD_CLASS,
-			(CommandCause cause, String[] args) -> CommandPack.getInstance().getPlayersData().getTempData().streamOnlinePlayers().filter(name -> Sponge.server().player(name).filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).isPresent()),
+			(CommandCause cause, String[] args) -> CommandPackInstance.getInstance().getPlayersData().getTempData().streamOnlinePlayers().filter(name -> Sponge.server().player(name).filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).isPresent()),
 			(CommandCause cause, String[] args) -> args.length >= data.cursor() + 1 ? plugin.getPlayersData().getTempData().getUser(args[data.cursor()]) : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.GAME_PROFILE.get().createNode()),
 			rawOptional,
@@ -355,7 +355,7 @@ public class RawArguments {
 	}
 
 	private static Stream<Account> getAllAccounts() {
-		return CommandPack.getInstance().isStarted() ? Stream.concat(plugin.getEconomy().getEconomyService().streamUniqueAccounts(), plugin.getEconomy().getEconomyService().streamVirtualAccounts()) : Stream.empty();
+		return CommandPackInstance.getInstance().isStarted() ? Stream.concat(plugin.getEconomy().getEconomyService().streamUniqueAccounts(), plugin.getEconomy().getEconomyService().streamVirtualAccounts()) : Stream.empty();
 	}
 
 	private static Optional<Duration> parseDuration(String s, Locale locale) throws CommandException {

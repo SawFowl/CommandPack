@@ -12,7 +12,7 @@ import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
 import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
@@ -24,7 +24,7 @@ public abstract class SqlStorage extends AbstractEconomyStorage {
 
 	private Connection connection;
 	private Statement statement;
-	public SqlStorage(CommandPack plugin, EconomyServiceImpl economyService) {
+	public SqlStorage(CommandPackInstance plugin, EconomyServiceImpl economyService) {
 		super(plugin, economyService);
 	}
 

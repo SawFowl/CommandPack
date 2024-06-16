@@ -22,7 +22,7 @@ import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.events.RecievePacketEvent;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 
@@ -36,7 +36,7 @@ public abstract class MixinForgePluginMessagesImpl {
 	}
 
 	private Cause createCause() {
-		return Cause.of(EventContext.builder().add(EventContextKeys.PLAYER, getPlayer().get()).add(EventContextKeys.PLUGIN, CommandPack.getInstance().getPluginContainer()).build(), CommandPack.getInstance().getPluginContainer());
+		return Cause.of(EventContext.builder().add(EventContextKeys.PLAYER, getPlayer().get()).add(EventContextKeys.PLUGIN, CommandPackInstance.getInstance().getPluginContainer()).build(), CommandPackInstance.getInstance().getPluginContainer());
 	}
 
 	@Inject(method = "handleCustomPayload", at = @At("HEAD"))

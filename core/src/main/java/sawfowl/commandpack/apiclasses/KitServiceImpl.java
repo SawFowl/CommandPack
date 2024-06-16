@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.KitService;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.localeapi.api.TextUtils;
@@ -14,8 +14,8 @@ import sawfowl.localeapi.api.TextUtils;
 public class KitServiceImpl implements KitService {
 
 	private Map<String, Kit> kits = new HashMap<>();
-	private final CommandPack plugin;
-	public KitServiceImpl(CommandPack plugin) {
+	private final CommandPackInstance plugin;
+	public KitServiceImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
 	}
 

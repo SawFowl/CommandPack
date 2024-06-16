@@ -13,7 +13,7 @@ import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.command.Settings;
@@ -22,7 +22,7 @@ import sawfowl.commandpack.commands.settings.CommandParameters;
 
 public class PluginInfo extends AbstractInfoCommand {
 
-	public PluginInfo(CommandPack plugin) {
+	public PluginInfo(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

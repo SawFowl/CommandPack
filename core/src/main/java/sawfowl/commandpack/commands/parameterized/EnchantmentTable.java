@@ -27,7 +27,7 @@ import org.spongepowered.api.item.inventory.type.ViewableInventory;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -38,7 +38,7 @@ import sawfowl.commandpack.commands.settings.Register;
 public class EnchantmentTable extends AbstractParameterizedCommand {
 
 	private Map<UUID, Integer> levels = new HashMap<>();
-	public EnchantmentTable(CommandPack plugin) {
+	public EnchantmentTable(CommandPackInstance plugin) {
 		super(plugin);
 		Sponge.eventManager().registerListeners(getContainer(), this);
 	}

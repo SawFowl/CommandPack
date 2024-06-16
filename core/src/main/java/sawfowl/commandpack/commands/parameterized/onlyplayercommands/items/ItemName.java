@@ -9,14 +9,14 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
 
 public class ItemName extends AbstractPlayerCommand {
 
-	public ItemName(CommandPack plugin) {
+	public ItemName(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

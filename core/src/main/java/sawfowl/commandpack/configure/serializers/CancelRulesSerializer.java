@@ -8,14 +8,14 @@ import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.command.CancelRules;
 import sawfowl.commandpack.configure.configs.commands.CancelRulesData;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.commandsconfig.DelayData;
 
 public class CancelRulesSerializer implements TypeSerializer<CancelRules> {
 
-	private final CommandPack INSTANCE = CommandPack.getInstance();
+	private final CommandPackInstance INSTANCE = CommandPackInstance.getInstance();
 
 	@Override
 	public CancelRules deserialize(Type type, ConfigurationNode node) throws SerializationException {

@@ -20,7 +20,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.PluginCommand;
 import sawfowl.commandpack.api.data.command.Price;
@@ -50,7 +50,7 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 	private PluginCommand commandClass;
 	@Override
 	public void accept(ScheduledTask task) {
-		Optional<Map<String, Settings>> trackingPlayerCommands = CommandPack.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(uuid);
+		Optional<Map<String, Settings>> trackingPlayerCommands = CommandPackInstance.getInstance().getPlayersData().getTempData().getTrackingPlayerCommands(uuid);
 		if(seconds <= 0 || !getPlayer(uuid).isPresent() || !getPlayer(uuid).get().isOnline()) {
 			Sponge.server().scheduler().executor(container).execute(() -> {
 				getPlayer(uuid).ifPresent(player -> {
@@ -64,7 +64,7 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 					}
 				});
 			});
-			if(trackingPlayerCommands.isPresent() && trackingPlayerCommands.get().containsKey(command)) CommandPack.getInstance().getPlayersData().getTempData().removeCommandTracking(command, uuid);
+			if(trackingPlayerCommands.isPresent() && trackingPlayerCommands.get().containsKey(command)) CommandPackInstance.getInstance().getPlayersData().getTempData().removeCommandTracking(command, uuid);
 			task.cancel();
 			return;
 		} else {
@@ -80,33 +80,33 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 			if(getExpireHourFromNow(seconds) > 0) {
 				if(hour != getExpireHourFromNow(seconds)) {
 					hour = getExpireHourFromNow(seconds);
-					player.sendMessage(CommandPack.getInstance().getLocales().getLocale(player).getCommandExceptions().getWait(getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+					player.sendMessage(CommandPackInstance.getInstance().getLocales().getLocale(player).getCommandExceptions().getWait(getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
 				}
 			} else if(seconds > 60) {
 				if(minute != getExpireMinuteFromNow(seconds)) {
 					minute = getExpireMinuteFromNow(seconds);
-					player.sendMessage(CommandPack.getInstance().getLocales().getLocale(player).getCommandExceptions().getCooldown(getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+					player.sendMessage(CommandPackInstance.getInstance().getLocales().getLocale(player).getCommandExceptions().getCooldown(getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
 				}
 			} else if(seconds == 60 || seconds == 30 || seconds == 10 || seconds <= 5 || first) {
 				first = false;
-				player.sendMessage(CommandPack.getInstance().getLocales().getLocale(player).getCommandExceptions().getCooldown(getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+				player.sendMessage(CommandPackInstance.getInstance().getLocales().getLocale(player).getCommandExceptions().getCooldown(getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
 			}
 			seconds--;
 		}
 	}
 
 	void economy(ServerPlayer player, Locale locale) throws CommandException {
-		if(commandClass.getCommandSettings() == null || CommandPack.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command))) return;
+		if(commandClass.getCommandSettings() == null || CommandPackInstance.getInstance().getEconomy().isPresent() || player.hasPermission(Permissions.getIgnorePrice(command))) return;
 		Price price = commandClass.getCommandSettings().getPrice();
 		if(price.getMoney() > 0) {
-			Currency currency = CommandPack.getInstance().getEconomy().checkCurrency(price.getCurrency());
+			Currency currency = CommandPackInstance.getInstance().getEconomy().checkCurrency(price.getCurrency());
 			BigDecimal money = createDecimal(price.getMoney());
-			if(!CommandPack.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exceptionMoney(locale, currency, money);
+			if(!CommandPackInstance.getInstance().getEconomy().checkPlayerBalance(player.uniqueId(), currency, money)) exceptionMoney(locale, currency, money);
 		}
 	}
 
 	private CommandException exceptionMoney(Locale locale, Currency currency, BigDecimal money) throws CommandException {
-		return new CommandException(CommandPack.getInstance().getLocales().getLocale(locale).getOther().getExecuteCommand().getNoMoney(currency, money, "/" + command));
+		return new CommandException(CommandPackInstance.getInstance().getLocales().getLocale(locale).getOther().getExecuteCommand().getNoMoney(currency, money, "/" + command));
 	}
 
 	private long getExpireHourFromNow(long second) {
@@ -130,10 +130,10 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 		long hour = TimeUnit.SECONDS.toHours(second);
 		if(hour == 0) {
 			if(minute == 0) {
-				return Text.of(String.format((second > 9 ? "%02d" : "%01d"), second) + "%second%").replace("%second%", CommandPack.getInstance().getLocales().getLocale(locale).getTime().getSecond()).get();
-			} else return Text.of(String.format((minute > 9 ? "%02d" : "%01d"), minute) + "%minute%" + (second - (minute * 60) > 0 ? " " + String.format((second - (minute * 60) > 9 ? "%02d" : "%01d"), second - (minute * 60)) + "%second%" : "")).replace(new String[] {"%minute%", "%second%"}, CommandPack.getInstance().getLocales().getLocale(locale).getTime().getMinute(), CommandPack.getInstance().getLocales().getLocale(locale).getTime().getSecond()).get();
+				return Text.of(String.format((second > 9 ? "%02d" : "%01d"), second) + "%second%").replace("%second%", CommandPackInstance.getInstance().getLocales().getLocale(locale).getTime().getSecond()).get();
+			} else return Text.of(String.format((minute > 9 ? "%02d" : "%01d"), minute) + "%minute%" + (second - (minute * 60) > 0 ? " " + String.format((second - (minute * 60) > 9 ? "%02d" : "%01d"), second - (minute * 60)) + "%second%" : "")).replace(new String[] {"%minute%", "%second%"}, CommandPackInstance.getInstance().getLocales().getLocale(locale).getTime().getMinute(), CommandPackInstance.getInstance().getLocales().getLocale(locale).getTime().getSecond()).get();
 		}
-		return Text.of(String.format((hour > 9 ? "%02d" : "%01d"), hour) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")).replace(new String[] {"%hour%", "%minute%"}, CommandPack.getInstance().getLocales().getLocale(locale).getTime().getHour(), CommandPack.getInstance().getLocales().getLocale(locale).getTime().getMinute()).get();
+		return Text.of(String.format((hour > 9 ? "%02d" : "%01d"), hour) + "%hour%" + (minute - (hour * 60) > 0 ? " " + String.format((minute - (hour * 60) > 9 ? "%02d" : "%01d"), minute - (hour * 60)) + "%minute%" : "")).replace(new String[] {"%hour%", "%minute%"}, CommandPackInstance.getInstance().getLocales().getLocale(locale).getTime().getHour(), CommandPackInstance.getInstance().getLocales().getLocale(locale).getTime().getMinute()).get();
 	}
 
 

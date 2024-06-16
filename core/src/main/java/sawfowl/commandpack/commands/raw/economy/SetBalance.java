@@ -21,7 +21,7 @@ import org.spongepowered.api.service.economy.account.UniqueAccount;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -36,7 +36,7 @@ import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Econ
 public class SetBalance extends AbstractRawCommand {
 
 	private List<BigDecimal> empty = new ArrayList<BigDecimal>();
-	public SetBalance(CommandPack plugin) {
+	public SetBalance(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

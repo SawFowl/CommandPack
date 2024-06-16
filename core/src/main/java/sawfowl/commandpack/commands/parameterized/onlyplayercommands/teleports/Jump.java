@@ -15,7 +15,7 @@ import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.math.vector.Vector3d;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
@@ -24,7 +24,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Jump extends AbstractPlayerCommand {
 
-	public Jump(CommandPack plugin) {
+	public Jump(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

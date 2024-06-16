@@ -10,7 +10,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
@@ -21,7 +21,7 @@ public class ServerTime extends AbstractInfoCommand {
 
 	protected Parameterized command;
 	boolean register;
-	public ServerTime(CommandPack plugin) {
+	public ServerTime(CommandPackInstance plugin) {
 		super(plugin);
 		register = !plugin.getConfigManager().getCommandsConfig().get().getCommandConfig("serverstat").isEnable();
 	}

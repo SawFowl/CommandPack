@@ -15,17 +15,17 @@ import org.spongepowered.plugin.PluginContainer;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.commands.AbstractPluginCommand;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.commands.parameterized.ParameterizedCommand;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.CommandExceptions;
 
-public abstract class AbstractParameterizedCommand extends AbstractPluginCommand<CommandPack> implements ParameterizedCommand {
+public abstract class AbstractParameterizedCommand extends AbstractPluginCommand<CommandPackInstance> implements ParameterizedCommand {
 
 	protected final Map<String, ParameterSettings> parameterSettings = new HashMap<>();
-	public AbstractParameterizedCommand(CommandPack plugin) {
+	public AbstractParameterizedCommand(CommandPackInstance plugin) {
 		super(plugin);
 		List<ParameterSettings> parameterSettings = getParameterSettings();
 		if(parameterSettings != null && !parameterSettings.isEmpty()) {

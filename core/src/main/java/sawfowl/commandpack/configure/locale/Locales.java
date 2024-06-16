@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.configurate.ConfigurateException;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.configure.locale.locales.AbstractLocale;
 import sawfowl.commandpack.configure.locale.locales.def.ImplementPluginLocale;
 import sawfowl.commandpack.configure.locale.locales.ru.ImplementRuPluginLocale;
@@ -24,7 +24,7 @@ public class Locales {
 		localeService.localesExist(pluginid);
 		localeService.createPluginLocale(pluginid, ConfigTypes.HOCON, org.spongepowered.api.util.locale.Locales.DEFAULT);
 		localeService.createPluginLocale(pluginid, ConfigTypes.HOCON, org.spongepowered.api.util.locale.Locales.RU_RU);
-		localeService.setDefaultReference(CommandPack.getInstance().getPluginContainer(), ImplementPluginLocale.class);
+		localeService.setDefaultReference(CommandPackInstance.getInstance().getPluginContainer(), ImplementPluginLocale.class);
 		generateDefault();
 		generateRu();
 	}

@@ -9,12 +9,12 @@ import org.spongepowered.api.service.economy.Currency;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 
 public class CPCurrency implements Currency {
 
-	private final EconomyConfig config = CommandPack.getInstance().getMainConfig().getEconomy();
+	private final EconomyConfig config = CommandPackInstance.getInstance().getMainConfig().getEconomy();
 	private ResourceKey key;
 	private Component name;
 	private Component pluralName;

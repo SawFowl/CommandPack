@@ -12,7 +12,7 @@ import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
 import sawfowl.localeapi.api.serializetools.SerializeOptions;
@@ -21,7 +21,7 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 
 	protected Connection connection;
 	protected Statement statement;
-	public SqlStorage(CommandPack plugin) {
+	public SqlStorage(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

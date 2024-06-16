@@ -15,7 +15,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
@@ -27,7 +27,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Mods extends AbstractInfoCommand {
 
-	public Mods(CommandPack plugin) {
+	public Mods(CommandPackInstance plugin) {
 		super(plugin);
 	}
 
@@ -84,7 +84,7 @@ public class Mods extends AbstractInfoCommand {
 				event.register(getContainer(), build(), command(), getCommandSettings().getAliases());
 			} else event.register(getContainer(), build(), command());
 		}
-		CommandPack.getInstance().getPlayersData().getTempData().addTrackingCooldownCommand(this);
+		CommandPackInstance.getInstance().getPlayersData().getTempData().addTrackingCooldownCommand(this);
 	}
 
 }

@@ -9,7 +9,7 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
@@ -18,7 +18,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class TeleportHereAll extends AbstractPlayerCommand {
 
-	public TeleportHereAll(CommandPack plugin) {
+	public TeleportHereAll(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

@@ -5,11 +5,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 
 public class MariaDB {
 
-	private final CommandPack plugin;
+	private final CommandPackInstance plugin;
 	private final String user;
 	private final String database;
 	private final String password;
@@ -20,7 +20,7 @@ public class MariaDB {
 	private String url;
 	private Properties properties;
 
-	public MariaDB(CommandPack instance) {
+	public MariaDB(CommandPackInstance instance) {
 		this.plugin = instance;
 		this.hostname = plugin.getMainConfig().getMySqlConfig().getHost();
 		this.port = plugin.getMainConfig().getMySqlConfig().getPort();

@@ -18,7 +18,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentData;
@@ -28,7 +28,7 @@ import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 
 public class Delete extends AbstractWorldCommand {
 
-	public Delete(CommandPack plugin) {
+	public Delete(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

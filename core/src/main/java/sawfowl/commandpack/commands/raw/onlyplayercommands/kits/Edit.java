@@ -14,7 +14,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
@@ -24,7 +24,7 @@ import sawfowl.localeapi.api.TextUtils;
 
 public class Edit extends AbstractKitsEditCommand {
 
-	public Edit(CommandPack plugin) {
+	public Edit(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

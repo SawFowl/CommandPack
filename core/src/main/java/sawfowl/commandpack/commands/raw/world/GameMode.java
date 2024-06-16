@@ -17,7 +17,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArguments;
@@ -29,7 +29,7 @@ import sawfowl.commandpack.commands.abstractcommands.raw.AbstractWorldCommand;
 public class GameMode extends AbstractWorldCommand {
 
 	private Map<String, DefaultedRegistryReference<org.spongepowered.api.entity.living.player.gamemode.GameMode>> gamemodes = new HashMap<>();
-	public GameMode(CommandPack plugin) {
+	public GameMode(CommandPackInstance plugin) {
 		super(plugin);
 		generateMap();
 	}

@@ -15,7 +15,7 @@ import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.command.Settings;
@@ -24,7 +24,7 @@ import sawfowl.commandpack.commands.settings.CommandParameters;
 
 public class Add extends AbstractParameterizedCommand {
 
-	public Add(CommandPack plugin) {
+	public Add(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

@@ -9,7 +9,7 @@ import org.spongepowered.configurate.loader.ConfigurationLoader;
 import org.spongepowered.configurate.reference.ConfigurationReference;
 import org.spongepowered.configurate.reference.ValueReference;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
@@ -24,7 +24,7 @@ import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
 public class ConfigManager {
 
-	private final CommandPack plugin;
+	private final CommandPackInstance plugin;
 	private ConfigurationReference<CommentedConfigurationNode> mainConfigReference;
 	private ValueReference<MainConfig, CommentedConfigurationNode> mainConfig;
 	private ConfigurationReference<CommentedConfigurationNode> joinCommandsConfigReference;
@@ -35,7 +35,7 @@ public class ConfigManager {
 	private ConfigurationLoader<CommentedConfigurationNode> warpsConfigLoader;
 	private CommentedConfigurationNode warpsNode;
 	private final Path kitsPath;
-	public ConfigManager(CommandPack plugin) {
+	public ConfigManager(CommandPackInstance plugin) {
 		this.plugin = plugin;
 		playerDataPath = plugin.getConfigDir().resolve("PlayerData");
 		kitsPath = plugin.getConfigDir().resolve("Kits");

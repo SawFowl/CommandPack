@@ -13,14 +13,14 @@ import org.spongepowered.api.event.message.PlayerChatEvent;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.localeapi.api.TextUtils;
 
 public class PlayerChatListener {
 
-	private final CommandPack plugin;
-	public PlayerChatListener(CommandPack plugin) {
+	private final CommandPackInstance plugin;
+	public PlayerChatListener(CommandPackInstance plugin) {
 		this.plugin = plugin;
 	}
 

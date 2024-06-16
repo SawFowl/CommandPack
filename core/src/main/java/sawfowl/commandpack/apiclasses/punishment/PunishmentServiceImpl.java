@@ -15,7 +15,7 @@ import org.spongepowered.api.service.ban.Ban.IP;
 import org.spongepowered.api.service.ban.Ban.Profile;
 import org.spongepowered.api.service.ban.BanTypes;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
@@ -29,9 +29,9 @@ import sawfowl.commandpack.utils.StorageType;
 
 public class PunishmentServiceImpl implements PunishmentService {
 
-	final CommandPack plugin;
+	final CommandPackInstance plugin;
 	private AbstractPunishmentStorage storage;
-	public PunishmentServiceImpl(CommandPack plugin) {
+	public PunishmentServiceImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
 		switch (plugin.getMainConfig().getPunishment().getStorageType()) {
 			case H2:

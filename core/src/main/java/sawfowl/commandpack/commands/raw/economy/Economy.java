@@ -11,7 +11,7 @@ import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -23,7 +23,7 @@ import sawfowl.commandpack.commands.settings.Register;
 public class Economy extends AbstractRawCommand {
 
 	private List<RawCommand> childs;
-	public Economy(CommandPack plugin) {
+	public Economy(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

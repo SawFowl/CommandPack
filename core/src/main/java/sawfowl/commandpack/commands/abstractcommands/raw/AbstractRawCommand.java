@@ -12,7 +12,7 @@ import org.spongepowered.plugin.PluginContainer;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.commands.AbstractPluginCommand;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -20,11 +20,11 @@ import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.CommandExceptions;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.Commands;
 
-public abstract class AbstractRawCommand extends AbstractPluginCommand<CommandPack> implements RawCommand {
+public abstract class AbstractRawCommand extends AbstractPluginCommand<CommandPackInstance> implements RawCommand {
 
 	private Map<String, RawCommand> childExecutors = new HashMap<String, RawCommand>();
 	private Map<Integer, RawArgument<?>> args = null;
-	public AbstractRawCommand(CommandPack plugin) {
+	public AbstractRawCommand(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

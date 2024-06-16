@@ -16,7 +16,7 @@ import org.spongepowered.api.item.inventory.type.ViewableInventory;
 
 import net.kyori.adventure.audience.Audience;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -26,7 +26,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class CraftingTable extends AbstractParameterizedCommand {
 
-	public CraftingTable(CommandPack plugin) {
+	public CraftingTable(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

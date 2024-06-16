@@ -11,7 +11,7 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.item.inventory.ItemStack;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
@@ -19,7 +19,7 @@ import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Item
 
 public class ClearLore extends AbstractPlayerCommand {
 
-	public ClearLore(CommandPack plugin) {
+	public ClearLore(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

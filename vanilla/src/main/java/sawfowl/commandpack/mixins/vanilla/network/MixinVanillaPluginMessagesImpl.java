@@ -21,7 +21,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.server.network.ServerCommonPacketListenerImpl;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.events.RecievePacketEvent;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 
@@ -35,7 +35,7 @@ public abstract class MixinVanillaPluginMessagesImpl {
 	}
 
 	private Cause createCause() {
-		return !getPlayer().isPresent() ? Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, CommandPack.getInstance().getPluginContainer()).build(), CommandPack.getInstance().getPluginContainer()) : Cause.of(EventContext.builder().add(EventContextKeys.PLAYER, getPlayer().get()).add(EventContextKeys.PLUGIN, CommandPack.getInstance().getPluginContainer()).build(), CommandPack.getInstance().getPluginContainer());
+		return !getPlayer().isPresent() ? Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, CommandPackInstance.getInstance().getPluginContainer()).build(), CommandPackInstance.getInstance().getPluginContainer()) : Cause.of(EventContext.builder().add(EventContextKeys.PLAYER, getPlayer().get()).add(EventContextKeys.PLUGIN, CommandPackInstance.getInstance().getPluginContainer()).build(), CommandPackInstance.getInstance().getPluginContainer());
 	}
 
 	@Inject(method = "handleCustomPayload", at = @At("HEAD"))

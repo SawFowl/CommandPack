@@ -14,7 +14,7 @@ import org.spongepowered.api.item.inventory.menu.InventoryMenu;
 import org.spongepowered.api.item.inventory.menu.handler.CloseHandler;
 import org.spongepowered.api.item.inventory.type.ViewableInventory;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
@@ -23,7 +23,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Disposal extends AbstractPlayerCommand {
 
-	public Disposal(CommandPack plugin) {
+	public Disposal(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

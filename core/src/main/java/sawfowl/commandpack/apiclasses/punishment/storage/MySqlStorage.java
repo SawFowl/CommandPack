@@ -31,7 +31,7 @@ import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
@@ -71,7 +71,7 @@ public class MySqlStorage extends SqlStorage {
 	private String deleteIPBanSql;
 	private String deleteMuteSql;
 	private String deleteWarnsSql;
-	public MySqlStorage(CommandPack plugin) {
+	public MySqlStorage(CommandPackInstance plugin) {
 		super(plugin);
 		selectBans = selectAllProfileBansSql + " WHERE " + plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getUniqueId() + " = '";
 		selectBansIP = isCombined ? selectBans : selectAllIPBansSql + " WHERE " + plugin.getMainConfig().getPunishment().getDBSettings().getColumns().getIp() + " = '";

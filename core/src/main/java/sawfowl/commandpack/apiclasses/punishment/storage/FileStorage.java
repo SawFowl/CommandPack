@@ -15,7 +15,7 @@ import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.configurate.reference.ConfigurationReference;
 import org.spongepowered.configurate.reference.ValueReference;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.configure.configs.punishment.BanData;
@@ -29,7 +29,7 @@ public class FileStorage extends AbstractPunishmentStorage {
 	private Path bansIPPath;
 	private Path mutesPath;
 	private Path warnsPath;
-	public FileStorage(CommandPack plugin) {
+	public FileStorage(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

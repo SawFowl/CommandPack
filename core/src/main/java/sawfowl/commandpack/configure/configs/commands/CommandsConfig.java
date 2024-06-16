@@ -31,7 +31,7 @@ import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModFileInfo;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
@@ -237,11 +237,11 @@ public class CommandsConfig {
 		return Optional.ofNullable(map.getOrDefault(command, null));
 	}
 
-	public void registerParameterized(RegisterCommandEvent<Parameterized> event, CommandPack plugin) {
+	public void registerParameterized(RegisterCommandEvent<Parameterized> event, CommandPackInstance plugin) {
 		try {
 			for(Class<AbstractParameterizedCommand> clazz : findAllCommandsClasses(plugin, "sawfowl.commandpack.commands.parameterized", AbstractParameterizedCommand.class)) {
 				try {
-					AbstractParameterizedCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
+					AbstractParameterizedCommand command = clazz.getConstructor(CommandPackInstance.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
 						registerParameterizedCommand(event, plugin, settings, command);
 					});
@@ -255,11 +255,11 @@ public class CommandsConfig {
 		}
 	}
 
-	public void registerRaw(RegisterCommandEvent<Raw> event, CommandPack plugin) {
+	public void registerRaw(RegisterCommandEvent<Raw> event, CommandPackInstance plugin) {
 		try {
 			for(Class<AbstractRawCommand> clazz : findAllCommandsClasses(plugin, "sawfowl.commandpack.commands.raw", AbstractRawCommand.class)) {
 				try {
-					AbstractRawCommand command = clazz.getConstructor(CommandPack.class).newInstance(plugin);
+					AbstractRawCommand command = clazz.getConstructor(CommandPackInstance.class).newInstance(plugin);
 					getOptCommandSettings(command.command()).ifPresent(settings -> {
 						if(settings.isEnable()) {
 							command.register(event);
@@ -293,11 +293,11 @@ public class CommandsConfig {
 
 	
 	@SuppressWarnings("unchecked")
-	private <T> Set<Class<T>> findAllCommandsClasses(CommandPack plugin, String packageName, Class<T> clazz) throws IOException, URISyntaxException {
+	private <T> Set<Class<T>> findAllCommandsClasses(CommandPackInstance plugin, String packageName, Class<T> clazz) throws IOException, URISyntaxException {
 		final String pkgPath = packageName.replace('.', '/');
 		URI pkg = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource(pkgPath)).toURI();
-		if(plugin.isForgeServer() && ModList.get().getModContainerByObject(CommandPack.getInstance()).isPresent()) {
-			ModContainer container = ModList.get().getModContainerByObject(CommandPack.getInstance()).get();
+		if(plugin.isForgeServer() && ModList.get().getModContainerByObject(CommandPackInstance.getInstance()).isPresent()) {
+			ModContainer container = ModList.get().getModContainerByObject(CommandPackInstance.getInstance()).get();
 			IModFileInfo modFileInfo = container.getModInfo().getOwningFile();
 			pkg = URI.create("jar:" + modFileInfo.getFile().getFilePath().toUri().toString()  + "!/" + pkgPath);
 		}
@@ -327,7 +327,7 @@ public class CommandsConfig {
 		return allClasses;
 	}
 
-	private void registerParameterizedCommand(RegisterCommandEvent<Parameterized> event, CommandPack plugin, Settings settings, AbstractParameterizedCommand command) {
+	private void registerParameterizedCommand(RegisterCommandEvent<Parameterized> event, CommandPackInstance plugin, Settings settings, AbstractParameterizedCommand command) {
 		if(!settings.isEnable() || (serverStat.isEnable() && (command.command().equalsIgnoreCase("mods") || command.command().equalsIgnoreCase("plugins") || command.command().equalsIgnoreCase("tps") || command.command().equalsIgnoreCase("servertime")))) return;
 		command.register(event);
 		plugin.getPlayersData().getTempData().registerCommandTracking(command);

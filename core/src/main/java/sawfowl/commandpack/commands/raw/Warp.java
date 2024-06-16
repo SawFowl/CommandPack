@@ -13,7 +13,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -27,7 +27,7 @@ import sawfowl.commandpack.commands.settings.Register;
 @Register
 public class Warp extends AbstractRawCommand {
 
-	public Warp(CommandPack plugin) {
+	public Warp(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

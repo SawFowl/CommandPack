@@ -27,7 +27,7 @@ import org.spongepowered.api.service.permission.Subject;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
@@ -48,7 +48,7 @@ import sawfowl.localeapi.api.TextUtils;
 @Register
 public class Kit extends AbstractRawCommand {
 
-	public Kit(CommandPack plugin) {
+	public Kit(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

@@ -5,12 +5,12 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 
 public class PlayerInventoryListener {
 
-	private final CommandPack plugin;
-	public PlayerInventoryListener(CommandPack plugin) {
+	private final CommandPackInstance plugin;
+	public PlayerInventoryListener(CommandPackInstance plugin) {
 		this.plugin = plugin;
 	}
 

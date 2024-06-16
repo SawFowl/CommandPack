@@ -16,7 +16,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
@@ -26,7 +26,7 @@ import sawfowl.commandpack.api.data.punishment.Mute;
 @Register
 public class MuteList extends AbstractParameterizedCommand {
 
-	public MuteList(CommandPack plugin) {
+	public MuteList(CommandPackInstance plugin) {
 		super(plugin);
 	}
 

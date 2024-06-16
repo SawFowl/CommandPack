@@ -10,7 +10,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.api.service.pagination.PaginationList;
 
-import sawfowl.commandpack.CommandPack;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.player.PlayerData;
@@ -19,7 +19,7 @@ import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Home
 
 public class HomeList extends AbstractPlayerCommand {
 
-	public HomeList(CommandPack plugin) {
+	public HomeList(CommandPackInstance plugin) {
 		super(plugin);
 	}
 
