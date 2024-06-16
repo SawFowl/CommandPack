@@ -259,7 +259,7 @@ public class CommandPack {
 	}
 
 	@Listener
-	public void onLocaleServicePostEvent(LocaleServiseEvent.Construct event) {
+	public void onLocaleInit(LocaleServiseEvent.Construct event) {
 		locales = new Locales(event.getLocaleService());
 		rtpService = new RTPService(instance);
 		kitService = new KitServiceImpl(instance);
@@ -270,118 +270,7 @@ public class CommandPack {
 		economy = new Economy(instance);
 		Sponge.eventManager().registerListeners(pluginContainer, economy);
 		fillLists();
-		AverageTPS averageTPS = new AverageTPS() {
-			
-			@Override
-			public double get1m() {
-				return getAverageTPS1m();
-			}
-			
-			@Override
-			public double get5m() {
-				return getAverageTPS5m();
-			}
-			
-			@Override
-			public double get10m() {
-				return getAverageTPS10m();
-			}
-		};
-		TPS tps = new TPS() {
-			
-			@Override
-			public double getWorldTickTime(ServerWorld world) {
-				long[] tickTimes = ((ServerLevelBridge) world).bridge$recentTickTimes();
-				long $$1 = 0L;
-				for(long $$2 : tickTimes) $$1 += $$2;
-				return ((double)$$1 / (double)tickTimes.length) * 1.0E-6D;
-			}
-			
-			@Override
-			public double getWorldTPS(ServerWorld world) {
-				return Math.min(1000.0 / (getWorldTickTime(world)), 20.0);
-			}
-			
-			@Override
-			public AverageTPS getAverageTPS() {
-				return averageTPS;
-			}
-		};
-		api = new sawfowl.commandpack.api.CommandPack() {
-
-			@Override
-			public PlayersData getPlayersData() {
-				return playersData;
-			}
-
-			@Override
-			public RandomTeleportService getRandomTeleportService() {
-				return rtpService;
-			}
-
-			@Override
-			public boolean isForgeServer() {
-				return isForge;
-			}
-
-			@Override
-			public KitService getKitService() {
-				return kitService;
-			}
-
-			@Override
-			public void registerCustomGenerator(String name, ChunkGenerator chunkGenerator) {
-				generators.put(name, chunkGenerator);
-			}
-
-			@Override
-			public Optional<ChunkGenerator> getCustomGenerator(String name) {
-				return Optional.ofNullable(generators.getOrDefault(name, null));
-			}
-
-			@Override
-			public Set<String> getAvailableGenerators() {
-				return new HashSet<>(generators.keySet());
-			}
-
-			@Override
-			public Optional<PunishmentService> getPunishmentService() {
-				return Optional.ofNullable(punishmentService);
-			}
-
-			@Override
-			public Optional<CPEconomyService> getEconomyService() {
-				return Optional.ofNullable(economy.getEconomyServiceImpl());
-			}
-
-			@Override
-			public TPS getTPS() {
-				return tps;
-			}
-
-			@Override
-			public Collection<PluginContainer> getPluginContainers() {
-				return containers;
-			}
-
-			@Override
-			public Collection<ModContainer> getModContainers() {
-				return mods;
-			}
-
-			@Override
-			public void registerCommand(RawCommand command) throws IllegalStateException {
-				if(manager == null && isStarted) throw new IllegalStateException("Registration of commands through CommandPack is no longer available. Perform registration as soon as you receive the API.");
-				if(command.getContainer() != null && command.isEnable() && !registeredRawCommands.stream().filter(raw -> raw.command().equals(command.command())).findFirst().isPresent()) registeredRawCommands.add(command);
-			}
-
-			@Override
-			public void registerCommand(ParameterizedCommand command) throws IllegalStateException {
-				if(manager == null && isStarted) throw new IllegalStateException("Registration of commands through CommandPack is no longer available. Perform registration as soon as you receive the API.");
-				if(command.getContainer() != null && command.isEnable() && !registeredParameterizedCommands.stream().filter(parameterized -> parameterized.command().equals(command.command())).findFirst().isPresent()) registeredParameterizedCommands.add(command);
-			}
-
-		};
+		createAPI();
 		if(getMainConfig().getMySqlConfig().isEnable()) {
 			mariaDB = new MariaDB(instance);
 			if(mariaDB.openConnection() == null) mariaDB = null;
@@ -393,17 +282,7 @@ public class CommandPack {
 		isStarted = true;
 		manager = (SpongeCommandManager) Sponge.server().commandManager();
 		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getSystemLocale().getDebug().getEconomy().getNotFound());
-		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerChatListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerCommandListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerConnectionListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractBlockListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractEntityListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractItemListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInventoryListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerDeathAndRespawnListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new EntityDamageListener(instance));
+		registerListeners();
 		configManager.loadKits();
 		generators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureSets(null).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
 		generators.put("overworld", ChunkGenerator.overworld());
@@ -422,36 +301,7 @@ public class CommandPack {
 			}
 
 		});
-		Sponge.asyncScheduler().submit(Task.builder().delay(15, TimeUnit.SECONDS).interval(5, TimeUnit.SECONDS).plugin(pluginContainer).execute(() -> {
-			long currentTime = System.currentTimeMillis() / 1000;
-			tps1m.keySet().removeIf(time -> (currentTime - 60 > time));
-			tps5m.keySet().removeIf(time -> (currentTime - 300 > time));
-			tps10m.keySet().removeIf(time -> (currentTime - 600 > time));
-			tps1m.put(currentTime, Sponge.server().ticksPerSecond());
-			tps5m.put(currentTime, Sponge.server().ticksPerSecond());
-			tps10m.put(currentTime, Sponge.server().ticksPerSecond());
-			if(getMainConfig().getAfkConfig().isEnable()) Sponge.server().onlinePlayers().forEach(player -> {
-				if(getPlayersData().getTempData().getLastActivity(player) > 0) {
-					if(getPlayersData().getTempData().isAfk(player) && !player.hasPermission(Permissions.AFK_UNLIMIT)) {
-						if((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay()) - Duration.ofMillis(System.currentTimeMillis()).getSeconds() <= 0) {
-							player.kick(getLocales().getLocale(player.locale()).getCommands().getAfk().getKick());
-							getPlayersData().getTempData().updateLastActivity(player);
-						}
-					} else if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - getMainConfig().getAfkConfig().getTurnOnDlay()) getPlayersData().getTempData().setAfkStatus(player);
-				}
-			});
-		}).build());
-		Sponge.asyncScheduler().submit(Task.builder().delay(15, TimeUnit.SECONDS).interval(1, TimeUnit.SECONDS).plugin(pluginContainer).execute(() -> {
-			Sponge.server().onlinePlayers().forEach(player -> {
-				if(getPlayersData().getTempData().isAfk(player)) {
-					if(player.hasPermission(Permissions.AFK_UNLIMIT)) {
-						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isUnlimit()) player.sendTitlePart(TitlePart.TITLE, locales.getLocale(player.locale()).getCommands().getAfk().getTitle());
-					} else {
-						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isBeforeKick()) player.showTitle(Title.title(locales.getLocale(player.locale()).getCommands().getAfk().getTitle(), locales.getLocale(player.locale()).getCommands().getAfk().getSubtitle(timeFormat((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay() + 1) - Duration.ofMillis(System.currentTimeMillis()).getSeconds(), player.locale()))));
-					}
-				}
-			});
-		}).build());
+		createTasks();
 		serverStartedTime = System.currentTimeMillis();
 		registeredRawCommands.forEach(this::registerRaw);
 		registeredParameterizedCommands.forEach(this::registerParameterized);
@@ -586,6 +436,167 @@ public class CommandPack {
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
 		return TextUtils.deserialize(format.format(calendar.getTime()));
+	}
+
+	private void createAPI() {
+		AverageTPS averageTPS = new AverageTPS() {
+
+			@Override
+			public double get1m() {
+				return getAverageTPS1m();
+			}
+			
+			@Override
+			public double get5m() {
+				return getAverageTPS5m();
+			}
+			
+			@Override
+			public double get10m() {
+				return getAverageTPS10m();
+			}
+		};
+		TPS tps = new TPS() {
+			
+			@Override
+			public double getWorldTickTime(ServerWorld world) {
+				long[] tickTimes = ((ServerLevelBridge) world).bridge$recentTickTimes();
+				long $$1 = 0L;
+				for(long $$2 : tickTimes) $$1 += $$2;
+				return ((double)$$1 / (double)tickTimes.length) * 1.0E-6D;
+			}
+			
+			@Override
+			public double getWorldTPS(ServerWorld world) {
+				return Math.min(1000.0 / (getWorldTickTime(world)), 20.0);
+			}
+			
+			@Override
+			public AverageTPS getAverageTPS() {
+				return averageTPS;
+			}
+		};
+		api = new sawfowl.commandpack.api.CommandPack() {
+
+			@Override
+			public PlayersData getPlayersData() {
+				return playersData;
+			}
+
+			@Override
+			public RandomTeleportService getRandomTeleportService() {
+				return rtpService;
+			}
+
+			@Override
+			public boolean isForgeServer() {
+				return isForge;
+			}
+
+			@Override
+			public KitService getKitService() {
+				return kitService;
+			}
+
+			@Override
+			public void registerCustomGenerator(String name, ChunkGenerator chunkGenerator) {
+				generators.put(name, chunkGenerator);
+			}
+
+			@Override
+			public Optional<ChunkGenerator> getCustomGenerator(String name) {
+				return Optional.ofNullable(generators.getOrDefault(name, null));
+			}
+
+			@Override
+			public Set<String> getAvailableGenerators() {
+				return new HashSet<>(generators.keySet());
+			}
+
+			@Override
+			public Optional<PunishmentService> getPunishmentService() {
+				return Optional.ofNullable(punishmentService);
+			}
+
+			@Override
+			public Optional<CPEconomyService> getEconomyService() {
+				return Optional.ofNullable(economy.getEconomyServiceImpl());
+			}
+
+			@Override
+			public TPS getTPS() {
+				return tps;
+			}
+
+			@Override
+			public Collection<PluginContainer> getPluginContainers() {
+				return containers;
+			}
+
+			@Override
+			public Collection<ModContainer> getModContainers() {
+				return mods;
+			}
+
+			@Override
+			public void registerCommand(RawCommand command) throws IllegalStateException {
+				if(manager == null && isStarted) throw new IllegalStateException("Registration of commands through CommandPack is no longer available. Perform registration as soon as you receive the API.");
+				if(command.getContainer() != null && command.isEnable() && !registeredRawCommands.stream().filter(raw -> raw.command().equals(command.command())).findFirst().isPresent()) registeredRawCommands.add(command);
+			}
+
+			@Override
+			public void registerCommand(ParameterizedCommand command) throws IllegalStateException {
+				if(manager == null && isStarted) throw new IllegalStateException("Registration of commands through CommandPack is no longer available. Perform registration as soon as you receive the API.");
+				if(command.getContainer() != null && command.isEnable() && !registeredParameterizedCommands.stream().filter(parameterized -> parameterized.command().equals(command.command())).findFirst().isPresent()) registeredParameterizedCommands.add(command);
+			}
+		};
+	}
+
+	private void registerListeners() {
+		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerChatListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerCommandListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerConnectionListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractBlockListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractEntityListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractItemListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInventoryListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerDeathAndRespawnListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new EntityDamageListener(instance));
+	}
+
+	private void createTasks() {
+		Sponge.asyncScheduler().submit(Task.builder().delay(15, TimeUnit.SECONDS).interval(5, TimeUnit.SECONDS).plugin(pluginContainer).execute(() -> {
+			long currentTime = System.currentTimeMillis() / 1000;
+			tps1m.keySet().removeIf(time -> (currentTime - 60 > time));
+			tps5m.keySet().removeIf(time -> (currentTime - 300 > time));
+			tps10m.keySet().removeIf(time -> (currentTime - 600 > time));
+			tps1m.put(currentTime, Sponge.server().ticksPerSecond());
+			tps5m.put(currentTime, Sponge.server().ticksPerSecond());
+			tps10m.put(currentTime, Sponge.server().ticksPerSecond());
+			if(getMainConfig().getAfkConfig().isEnable()) Sponge.server().onlinePlayers().forEach(player -> {
+				if(getPlayersData().getTempData().getLastActivity(player) > 0) {
+					if(getPlayersData().getTempData().isAfk(player) && !player.hasPermission(Permissions.AFK_UNLIMIT)) {
+						if((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay()) - Duration.ofMillis(System.currentTimeMillis()).getSeconds() <= 0) {
+							player.kick(getLocales().getLocale(player.locale()).getCommands().getAfk().getKick());
+							getPlayersData().getTempData().updateLastActivity(player);
+						}
+					} else if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - getMainConfig().getAfkConfig().getTurnOnDlay()) getPlayersData().getTempData().setAfkStatus(player);
+				}
+			});
+		}).build());
+		Sponge.asyncScheduler().submit(Task.builder().delay(15, TimeUnit.SECONDS).interval(1, TimeUnit.SECONDS).plugin(pluginContainer).execute(() -> {
+			Sponge.server().onlinePlayers().forEach(player -> {
+				if(getPlayersData().getTempData().isAfk(player)) {
+					if(player.hasPermission(Permissions.AFK_UNLIMIT)) {
+						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isUnlimit()) player.sendTitlePart(TitlePart.TITLE, locales.getLocale(player.locale()).getCommands().getAfk().getTitle());
+					} else {
+						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isBeforeKick()) player.showTitle(Title.title(locales.getLocale(player.locale()).getCommands().getAfk().getTitle(), locales.getLocale(player.locale()).getCommands().getAfk().getSubtitle(timeFormat((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay() + 1) - Duration.ofMillis(System.currentTimeMillis()).getSeconds(), player.locale()))));
+					}
+				}
+			});
+		}).build());
 	}
 
 }
