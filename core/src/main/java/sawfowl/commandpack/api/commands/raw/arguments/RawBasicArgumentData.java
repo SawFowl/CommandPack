@@ -12,6 +12,7 @@ import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ban.Ban;
 import org.spongepowered.api.service.ban.Ban.Profile;
 import org.spongepowered.api.service.economy.Currency;
@@ -52,6 +53,10 @@ public record RawBasicArgumentData<T>(@Nullable T def, @NotNull String key, int 
 
 	public static RawBasicArgumentData<ServerPlayer> createPlayer(int cursor, @Nullable String permission, @Nullable RawRequiredArgs requiredArgs) {
 		return create("Player", cursor, permission, requiredArgs);
+	}
+
+	public static RawBasicArgumentData<GameProfile> createGameProfile(int cursor, @Nullable String permission, @Nullable RawRequiredArgs requiredArgs) {
+		return create("GameProfile", cursor, permission, requiredArgs);
 	}
 
 	public static RawBasicArgumentData<CompletableFuture<Optional<User>>> createUser(int cursor, @Nullable String permission, @Nullable RawRequiredArgs requiredArgs) {
