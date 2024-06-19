@@ -38,7 +38,7 @@ sponge {
 	plugin(rootProject.name.toLowerCase()) {
 		displayName(rootProject.name)
 		version("${major}.${minor}.${patch}")
-		entrypoint("${rootProject.group}.${rootProject.name}")
+		entrypoint("${rootProject.group}.CommandPackInstance")
 		description("The Essentials plugin analog.")
 		links {
 			homepage("https://discord.gg/7xnZGSYJH9")

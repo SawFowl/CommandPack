@@ -30,7 +30,9 @@ public interface MainConfig {
 
 	String getChangeConnectionMessages();
 
-	String getPrintPlayerMods();
+	String getDebugMods();
+
+	String getPackets();
 
 	String getMySQL();
 

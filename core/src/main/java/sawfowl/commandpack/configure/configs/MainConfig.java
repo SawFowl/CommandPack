@@ -15,6 +15,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportConfig;
 import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.AfkConfig;
+import sawfowl.commandpack.configure.configs.miscellaneous.DebugPlayerData;
 import sawfowl.commandpack.configure.configs.miscellaneous.MySqlConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.PreventDamage;
 import sawfowl.commandpack.configure.configs.miscellaneous.RestrictEntitySpawn;
@@ -47,9 +48,8 @@ public class MainConfig {
 	@Setting("ChangeConnectionMessages")
 	@LocalisedComment(path = {"Comments", "MainConfig", "ChangeConnectionMessages"}, plugin = "commandpack")
 	private boolean changeConnectionMessages = true;
-	@Setting("PrintPlayerMods")
-	@LocalisedComment(path = {"Comments", "MainConfig", "PrintPlayerMods"}, plugin = "commandpack")
-	private boolean printPlayerMods = true;
+	@Setting("DebugPlayerData")
+	private DebugPlayerData debugPlayerData  = new DebugPlayerData();
 	@Setting("RestrictMods")
 	@LocalisedComment(path = {"Comments", "MainConfig", "RestrictMods", "Title"}, plugin = "commandpack")
 	private RestrictMods restrictMods = new RestrictMods();
@@ -117,8 +117,8 @@ public class MainConfig {
 		return changeConnectionMessages;
 	}
 
-	public boolean isPrintPlayerMods() {
-		return printPlayerMods;
+	public DebugPlayerData getDebugPlayerData() {
+		return debugPlayerData;
 	}
 
 	public RestrictMods getRestrictMods() {

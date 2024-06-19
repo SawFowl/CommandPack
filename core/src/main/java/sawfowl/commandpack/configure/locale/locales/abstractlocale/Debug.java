@@ -34,10 +34,18 @@ public interface Debug {
 
 	}
 
+	interface DebugPlayerData {
+
+		String getMods(String player, String mods);
+
+		String getPackets(String player, String packet, String data);
+
+	}
+
 	Economy getEconomy();
 
 	Commands getCommands();
 
-	String getModsList(String player, String mods);
+	DebugPlayerData getDebugPlayerData();
 
 }

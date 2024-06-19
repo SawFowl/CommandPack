@@ -45,8 +45,10 @@ public class ImplementMainConfig implements MainConfig {
 	private String enableMotd = "The message to the player at login will be taken from the localization files.\nThe player must have the permission: \'" + Permissions.MOTD_ACCESS + "\'.";
 	@Setting("ChangeConnectionMessages")
 	private String changeConnectionMessages = "Changing the player login/logout messages.\nThe messages are in the localization files.";
-	@Setting("PrintPlayerMods")
-	private String printPlayerMods = "If true, then a message will be sent to the console with a list of mods in the player when he connects to the server.\nThis option only works if the server uses Forge.";
+	@Setting("DebugMods")
+	private String debugMods = "If true, then a message will be sent to the console with a list of mods in the player when he connects to the server.\nThis option only works if the server uses Forge.";
+	@Setting("DebugPackets")
+	private String debugPackets = "If true, when the player connects, the console will display information about the packets received from the player's client.";
 	@Setting("MySQL")
 	private String mySQL = "Configure this if you need to store player punishment and economy data in a MySQL database.";
 	@Setting("FixTopCommand")
@@ -107,8 +109,13 @@ public class ImplementMainConfig implements MainConfig {
 	}
 
 	@Override
-	public String getPrintPlayerMods() {
-		return printPlayerMods;
+	public String getDebugMods() {
+		return debugMods;
+	}
+
+	@Override
+	public String getPackets() {
+		return debugPackets;
 	}
 
 	@Override

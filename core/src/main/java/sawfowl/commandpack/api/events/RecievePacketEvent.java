@@ -1,6 +1,5 @@
 package sawfowl.commandpack.api.events;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.spongepowered.api.event.Event;
@@ -24,7 +23,7 @@ public interface RecievePacketEvent extends Event {
 	 * The player from whom the data packet was received.
 	 * @return {@link MixinServerPlayer}
 	 */
-	Optional<MixinServerPlayer> getMixinPlayer();
+	MixinServerPlayer getMixinPlayer();
 
 	/**
 	 * Getting the profile of the player from whom the data packet was received.

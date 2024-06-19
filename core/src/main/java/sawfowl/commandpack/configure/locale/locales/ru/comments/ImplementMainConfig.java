@@ -45,8 +45,10 @@ public class ImplementMainConfig implements MainConfig {
 	private String enableMotd = "Сообщение игроку при входе в игру будет взято из файлов локализации.\nИгрок должен иметь разрешение: \'" + Permissions.MOTD_ACCESS + "\'.";
 	@Setting("ChangeConnectionMessages")
 	private String changeConnectionMessages = "Изменение сообщений о входе/выходе игрока.\nСообщения находятся в файлах локализации.";
-	@Setting("PrintPlayerMods")
-	private String printPlayerMods = "Если true, то при подключении игрока к серверу в консоль будет отправлено сообщение со списком модов.\nЭта опция работает только в том случае, если сервер использует Forge.";
+	@Setting("DebugMods")
+	private String debugMods = "Если true, то при подключении игрока к серверу в консоль будет отправлено сообщение со списком модов.\nЭта опция работает только в том случае, если сервер использует Forge.";
+	@Setting("DebugPackets")
+	private String debugPackets = "Если true, то при подключении игрока в консоли будет показана информация о получаемых пакетах с клиента игрока.";
 	@Setting("MySQL")
 	private String mySQL = "Выполните настройку соединения, если вам нужно хранить данные о наказаниях игроков и экономике в базе данных MySQL.";
 	@Setting("FixTopCommand")
@@ -107,8 +109,13 @@ public class ImplementMainConfig implements MainConfig {
 	}
 
 	@Override
-	public String getPrintPlayerMods() {
-		return printPlayerMods;
+	public String getDebugMods() {
+		return debugMods;
+	}
+
+	@Override
+	public String getPackets() {
+		return null;
 	}
 
 	@Override

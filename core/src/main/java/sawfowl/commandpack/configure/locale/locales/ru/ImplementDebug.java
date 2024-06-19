@@ -1,13 +1,12 @@
 package sawfowl.commandpack.configure.locale.locales.ru;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.Debug;
 import sawfowl.commandpack.configure.locale.locales.ru.debug.ImplementEconomy;
 import sawfowl.commandpack.configure.locale.locales.ru.debug.ImplementCommands;
+import sawfowl.commandpack.configure.locale.locales.ru.debug.ImplementDebugPlayerData;
 
 @ConfigSerializable
 public class ImplementDebug implements Debug {
@@ -18,9 +17,8 @@ public class ImplementDebug implements Debug {
 	private ImplementEconomy economy = new ImplementEconomy();
 	@Setting("Commands")
 	private ImplementCommands commands = new ImplementCommands();
-	@Setting("ModsList")
-	@Comment("Эта функция работает только при наличии Forge на стороне сервера.")
-	private String modsList = "Игрок " + Placeholders.PLAYER + " входит на сервер с модами: " + Placeholders.VALUE + ".";
+	@Setting("DebugPlayerData")
+	private ImplementDebugPlayerData debugPlayerData = new ImplementDebugPlayerData();
 
 	@Override
 	public Economy getEconomy() {
@@ -33,8 +31,8 @@ public class ImplementDebug implements Debug {
 	}
 
 	@Override
-	public String getModsList(String player, String mods) {
-		return modsList.replace(Placeholders.PLAYER, player).replace(Placeholders.VALUE, mods);
+	public DebugPlayerData getDebugPlayerData() {
+		return debugPlayerData;
 	}
 
 }

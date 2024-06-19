@@ -38,5 +38,6 @@ public class Placeholders {
 	public static final String CURRENCY_PLURAL_NAME = "%currency-plural-name%";
 	public static final String SIZE = "%size%";
 	public static final String PLAYERS = "%players%";
+	public static final String PACKET = "%packet%";
 
 }
