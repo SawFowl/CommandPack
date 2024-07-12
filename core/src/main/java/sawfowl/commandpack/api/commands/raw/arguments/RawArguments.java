@@ -313,8 +313,8 @@ public class RawArguments {
 	public static RawArgument<Currency> createCurrencyArgument(RawBasicArgumentData<Currency> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Currency.class,
-			(CommandCause cause, String[] args) -> Sponge.game().findRegistry(RegistryTypes.CURRENCY).map(registry -> registry .streamEntries().map(e -> e.key().asString())).orElse(Stream.empty()),
-			(CommandCause cause, String[] args) -> args.length >= data.cursor() + 1 ? Sponge.game().findRegistry(RegistryTypes.CURRENCY).map(registry -> registry.streamEntries()).orElse(Stream.empty()).filter(e -> e.key().asString().equals(args[data.cursor()])).findFirst().map(e -> e.value()) : Optional.empty(),
+			(CommandCause cause, String[] args) -> RegistryTypes.CURRENCY.get().streamEntries().map(e -> e.key().asString()),
+			(CommandCause cause, String[] args) -> args.length >= data.cursor() + 1 ? RegistryTypes.CURRENCY.get().streamEntries().filter(e -> e.key().asString().equals(args[data.cursor()])).findFirst().map(e -> e.value()) : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.RESOURCE_LOCATION.get().createNode()),
 			rawOptional,
 			supplier

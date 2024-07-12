@@ -1,7 +1,6 @@
 package sawfowl.commandpack.commands.raw.economy;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -29,11 +28,11 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
 import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractPlayerCommand;
 import sawfowl.commandpack.commands.settings.Register;
+import sawfowl.commandpack.utils.CommandsUtil;
 
 @Register
 public class Pay extends AbstractPlayerCommand {
 
-	private List<BigDecimal> empty = new ArrayList<BigDecimal>();
 	public Pay(CommandPackInstance plugin) {
 		super(plugin);
 	}
@@ -93,10 +92,9 @@ public class Pay extends AbstractPlayerCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		if(empty == null) empty = new ArrayList<BigDecimal>();
 		return Arrays.asList(
 			RawArguments.createUniqueAccountArgument(RawBasicArgumentData.createUniqueAccount(0, null, null), null, locale -> getExceptions(locale).getUserNotPresent()),
-			RawArguments.createBigDecimalArgument(empty, new RawBasicArgumentData<>(null, "Money", 0, null, null), null, locale -> getExceptions(locale).getValueNotPresent()),
+			RawArguments.createBigDecimalArgument(CommandsUtil.getEmptyList(), new RawBasicArgumentData<>(null, "Money", 1, null, null), null, locale -> getExceptions(locale).getValueNotPresent()),
 			RawArguments.createCurrencyArgument(RawBasicArgumentData.createCurrency(2, null, null), RawOptional.optional(), locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}

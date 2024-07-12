@@ -18,6 +18,7 @@ apply plugin: 'org.spongepowered.mixin'
 
 minecraft {
 	mappings channel: 'official', version: "${minecraft}"
+	reobf = false
 }
 
 dependencies {
