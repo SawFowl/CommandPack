@@ -22,6 +22,8 @@ public interface EntityItem extends Entity {
 
 	ItemStack getItemStack();
 
+	Optional<Entity> getOwner();
+
 	default ResourceKey getId() {
 		return ItemTypes.registry().findValueKey(getItemStack().type()).orElse(ResourceKey.minecraft("air"));
 	}

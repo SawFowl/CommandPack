@@ -7,8 +7,12 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.event.Cause;
+import org.spongepowered.api.event.EventContext;
+import org.spongepowered.api.event.EventContextKeys;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ban.Ban;
 import org.spongepowered.api.service.ban.Ban.IP;
@@ -19,21 +23,25 @@ import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
+import sawfowl.commandpack.api.events.SetDataStorageEvent;
 import sawfowl.commandpack.api.services.PunishmentService;
-import sawfowl.commandpack.apiclasses.punishment.storage.AbstractPunishmentStorage;
+import sawfowl.commandpack.api.storages.PunishmentStorage;
 import sawfowl.commandpack.apiclasses.punishment.storage.FileStorage;
 import sawfowl.commandpack.apiclasses.punishment.storage.H2Storage;
 import sawfowl.commandpack.apiclasses.punishment.storage.MySqlStorage;
 import sawfowl.commandpack.utils.MariaDB;
-import sawfowl.commandpack.utils.StorageType;
 
 public class PunishmentServiceImpl implements PunishmentService {
 
 	final CommandPackInstance plugin;
-	private AbstractPunishmentStorage storage;
+	private PunishmentStorage storage;
 	public PunishmentServiceImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
-		switch (plugin.getMainConfig().getPunishment().getStorageType()) {
+		StorageEvent event = new StorageEvent();
+		Sponge.eventManager().post(event);
+		if(event.storage != null) {
+			storage = event.storage;
+		} else switch (plugin.getMainConfig().getPunishment().getStorageType()) {
 			case H2:
 				try {
 					Class.forName("org.h2.Driver");
@@ -62,8 +70,8 @@ public class PunishmentServiceImpl implements PunishmentService {
 
 	@Override
 	public void saveBans(Profile profile, IP ip) {
-		if(storage.getStorageType() == StorageType.MYSQL) {
-			((MySqlStorage) storage).saveBans(profile, ip);
+		if(storage.isSupportCombined()) {
+			storage.saveBans(profile, ip);
 		} else {
 			if(profile != null) storage.saveBan(profile);
 			if(ip != null) storage.saveBan(ip);
@@ -213,6 +221,23 @@ public class PunishmentServiceImpl implements PunishmentService {
 	@Override
 	public boolean removeWarns(UUID player) {
 		return storage.deleteWarns(player);
+	}
+
+	class StorageEvent implements SetDataStorageEvent.Punishment {
+
+		Cause cause = Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, plugin.getPluginContainer()).build(), plugin.getPluginContainer());
+		PunishmentStorage storage;
+
+		@Override
+		public Cause cause() {
+			return cause;
+		}
+
+		@Override
+		public void setStorage(PunishmentStorage storage) {
+			this.storage = storage;
+		}
+
 	}
 
 }

@@ -1,5 +1,8 @@
 package sawfowl.commandpack.mixins.forge.game;
 
+import java.util.Optional;
+
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -15,6 +18,11 @@ public abstract class MixinForgeEntityItemImpl implements EntityItem {
 	@Override
 	public org.spongepowered.api.item.inventory.ItemStack getItemStack() {
 		return (org.spongepowered.api.item.inventory.ItemStack) (Object) getItem();
+	}
+
+	@Override
+	public Optional<Entity> getOwner() {
+		return Optional.ofNullable((Entity) ((ItemEntity) (Object) this).getOwner());
 	}
 
 }

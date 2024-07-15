@@ -9,7 +9,11 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.spongepowered.api.ResourceKey;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.event.Cause;
+import org.spongepowered.api.event.EventContext;
+import org.spongepowered.api.event.EventContextKeys;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.AccountDeletionResultType;
@@ -18,8 +22,9 @@ import org.spongepowered.api.service.economy.account.VirtualAccount;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.player.PlayerData;
+import sawfowl.commandpack.api.events.SetDataStorageEvent;
 import sawfowl.commandpack.api.services.CPEconomyService;
-import sawfowl.commandpack.apiclasses.economy.storage.AbstractEconomyStorage;
+import sawfowl.commandpack.api.storages.EconomyStorage;
 import sawfowl.commandpack.apiclasses.economy.storage.FileStorage;
 import sawfowl.commandpack.apiclasses.economy.storage.H2Storage;
 import sawfowl.commandpack.apiclasses.economy.storage.MySqlStorage;
@@ -28,7 +33,7 @@ import sawfowl.commandpack.utils.MariaDB;
 public class EconomyServiceImpl implements CPEconomyService {
 
 	CommandPackInstance plugin;
-	private AbstractEconomyStorage storage;
+	private EconomyStorage storage;
 	private Currency def;
 	private Currency[] currencies;
 	private Map<Character, Currency> currenciesMap = new HashMap<Character, Currency>();
@@ -45,7 +50,11 @@ public class EconomyServiceImpl implements CPEconomyService {
 			}
 		}
 		currencies = currenciesMap.values().toArray(new Currency[]{});
-		switch (plugin.getMainConfig().getEconomy().getStorageType()) {
+		StorageEvent event = new StorageEvent();
+		Sponge.eventManager().post(event);
+		if(event.storage != null) {
+			this.storage = event.storage;
+		} else switch (plugin.getMainConfig().getEconomy().getStorageType()) {
 			case H2:
 				try {
 					Class.forName("org.h2.Driver");
@@ -161,6 +170,23 @@ public class EconomyServiceImpl implements CPEconomyService {
 
 	public void checkAccounts(ServerPlayer player) {
 		storage.checkAccounts(player);
+	}
+
+	class StorageEvent implements SetDataStorageEvent.Economy {
+
+		Cause cause = Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, plugin.getPluginContainer()).build(), plugin.getPluginContainer());
+		EconomyStorage storage;
+
+		@Override
+		public Cause cause() {
+			return cause;
+		}
+
+		@Override
+		public void setStorage(EconomyStorage storage) {
+			this.storage = storage;
+		}
+
 	}
 
 }

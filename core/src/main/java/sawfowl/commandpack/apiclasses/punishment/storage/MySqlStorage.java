@@ -87,8 +87,8 @@ public class MySqlStorage extends SqlStorage {
 	}
 
 	@Override
-	public StorageType getStorageType() {
-		return StorageType.MYSQL;
+	public boolean isSupportCombined() {
+		return true;
 	}
 
 	@Override

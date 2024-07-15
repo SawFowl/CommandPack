@@ -21,7 +21,6 @@ import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.configure.configs.punishment.BanData;
 import sawfowl.commandpack.configure.configs.punishment.MuteData;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
-import sawfowl.commandpack.utils.StorageType;
 
 public class FileStorage extends AbstractPunishmentStorage {
 
@@ -34,8 +33,8 @@ public class FileStorage extends AbstractPunishmentStorage {
 	}
 
 	@Override
-	public StorageType getStorageType() {
-		return StorageType.FILE;
+	public boolean isSupportCombined() {
+		return false;
 	}
 
 	private void checkPaths() {
@@ -49,6 +48,12 @@ public class FileStorage extends AbstractPunishmentStorage {
 		if(!bansIPPath.toFile().exists()) bansIPPath.toFile().mkdir();
 		if(!mutesPath.toFile().exists()) mutesPath.toFile().mkdir();
 		if(!warnsPath.toFile().exists()) warnsPath.toFile().mkdir();
+	}
+
+	@Override
+	public void saveBans(Profile profile, IP ip) {
+		saveBan(profile);
+		saveBan(ip);
 	}
 
 	@Override

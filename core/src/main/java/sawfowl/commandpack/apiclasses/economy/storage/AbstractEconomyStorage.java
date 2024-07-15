@@ -17,16 +17,16 @@ import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.AccountDeletionResultType;
 import org.spongepowered.api.service.economy.account.AccountDeletionResultTypes;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
-import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationOptions;
 
 import sawfowl.commandpack.CommandPackInstance;
+import sawfowl.commandpack.api.storages.EconomyStorage;
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
 import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
 import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
-public abstract class AbstractEconomyStorage extends Thread {
+public abstract class AbstractEconomyStorage extends Thread implements EconomyStorage {
 
 	final CommandPackInstance plugin;
 	final EconomyServiceImpl economyService;
@@ -42,22 +42,8 @@ public abstract class AbstractEconomyStorage extends Thread {
 		options = SerializeOptions.selectOptions(plugin.getMainConfig().getItemSerializer());
 		defaultBalances = createDefaultBalances();
 		currenciesMap = economyService.getCurrenciesMap();
-		try {
-			load();
-		} catch (ConfigurateException e) {
-			plugin.getLogger().error(e.getLocalizedMessage());
-		}
+		load();
 	}
-
-	public abstract void load() throws ConfigurateException;
-
-	public abstract void removeUniqueAccount(UUID uuid);
-
-	public abstract void removeAccount(String identifier);
-
-	public abstract void saveUniqueAccount(CPUniqueAccount account);
-
-	public abstract void saveAccount(CPAccount account);
 
 	public UniqueAccount createUniqueAccount(UUID uuid) {
 		CPUniqueAccount account = new CPUniqueAccount(uuid, defaultBalances, this);
@@ -142,7 +128,7 @@ public abstract class AbstractEconomyStorage extends Thread {
 		account.save();
 	}
 
-	public void fixUniqueAccount(ServerPlayer player) {
+	private void fixUniqueAccount(ServerPlayer player) {
 		List<UUID> toRemove = new ArrayList<UUID>();
 		for(UniqueAccount account : uniqueAccounts()) {
 			if(account.identifier().equals(player.name()) && !account.uniqueId().equals(player.uniqueId())) toRemove.add(account.uniqueId());

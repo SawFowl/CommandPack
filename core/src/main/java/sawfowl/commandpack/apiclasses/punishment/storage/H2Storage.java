@@ -52,8 +52,8 @@ public class H2Storage extends SqlStorage {
 	}
 
 	@Override
-	public StorageType getStorageType() {
-		return StorageType.H2;
+	public boolean isSupportCombined() {
+		return false;
 	}
 
 	@Override
@@ -101,6 +101,12 @@ public class H2Storage extends SqlStorage {
 		while(!results.isClosed() && results.next()) loadMute(results);
 		results = resultSet(selectAllWarnsSql);
 		while(!results.isClosed() && results.next()) loadWarns(results);
+	}
+
+	@Override
+	public void saveBans(Profile profile, IP ip) {
+		saveBan(profile);
+		saveBan(ip);
 	}
 
 	@Override

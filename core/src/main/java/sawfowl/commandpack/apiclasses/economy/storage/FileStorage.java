@@ -26,17 +26,29 @@ public class FileStorage extends AbstractEconomyStorage {
 	}
 
 	@Override
-	public void load() throws ConfigurateException {
+	public void load() {
 		checkPaths();
-		for(File file : playersPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) {
+		for(File file : playersPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) loadPlayer(file);
+		for(File file : otherPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) loadOther(file);
+	}
+
+	private void loadPlayer(File file) {
+		try {
 			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(file.toPath()).build().loadToReference();
 			ValueReference<SerializedUniqueAccount, CommentedConfigurationNode> config = configReference.referenceTo(SerializedUniqueAccount.class);
 			uniqueAccounts.put(config.get().getUserId(), CPUniqueAccount.deserealize(config.get(), this));
+		} catch (ConfigurateException e) {
+			plugin.getLogger().error(e.getLocalizedMessage());
 		}
-		for(File file : otherPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) {
+	}
+
+	private void loadOther(File file) {
+		try {
 			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(file.toPath()).build().loadToReference();
 			ValueReference<SerializedAccount, CommentedConfigurationNode> config = configReference.referenceTo(SerializedAccount.class);
 			accounts.put(config.get().getName(), CPAccount.deserealize(config.get(), this));
+		} catch (Exception e) {
+			plugin.getLogger().error(e.getLocalizedMessage());
 		}
 	}
 

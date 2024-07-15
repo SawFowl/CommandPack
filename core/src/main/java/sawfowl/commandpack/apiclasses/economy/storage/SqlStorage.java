@@ -37,7 +37,7 @@ public abstract class SqlStorage extends AbstractEconomyStorage {
 	protected abstract void createTablesAndLoad() throws SQLException;
 
 	@Override
-	public void load() throws ConfigurateException {
+	public void load() {
 		try {
 			createTablesAndLoad();
 		} catch (SQLException e) {
