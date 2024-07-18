@@ -57,7 +57,7 @@ public abstract class MixinVanillaServerPlayerImpl implements MixinServerPlayer 
 	}
 
 	private FriendlyByteBuf createFriendlyByteBuf(CustomPacketImpl custom) {
-		return new FriendlyByteBuf(Unpooled.buffer()).writeResourceLocation(new ResourceLocation(custom.getLocation())).writeBytes(custom.getData().getBytes(StandardCharsets.UTF_8));
+		return new FriendlyByteBuf(Unpooled.buffer()).writeResourceLocation(ResourceLocation.parse(custom.getLocation())).writeBytes(custom.getData().getBytes(StandardCharsets.UTF_8));
 	}
 
 	private ClientboundCustomPayloadPacket createPacket(CustomPacketImpl custom) {

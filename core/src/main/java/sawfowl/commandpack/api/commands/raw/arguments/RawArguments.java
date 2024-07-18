@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.jetbrains.annotations.NotNull;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
@@ -65,7 +64,7 @@ public class RawArguments {
 	@SuppressWarnings("unchecked")
 	public static final Class<CompletableFuture<Optional<User>>> USER_LOAD_CLASS = (Class<CompletableFuture<Optional<User>>>) new CompletableFuture<Optional<User>>().getClass();
 
-	public static RawArgument<String> createStringArgument(@NotNull Stream<String> variants, RawBasicArgumentData<String> data, RawOptional rawOptional, ComponentSupplier supplier) {
+	public static RawArgument<String> createStringArgument(Stream<String> variants, RawBasicArgumentData<String> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			String.class,
 			(cause, args) -> variants,
@@ -76,7 +75,7 @@ public class RawArguments {
 		);
 	}
 
-	public static RawArgument<String> createStringArgument(@NotNull Collection<String> variants, RawBasicArgumentData<String> data, RawOptional rawOptional, ComponentSupplier supplier) {
+	public static RawArgument<String> createStringArgument(Collection<String> variants, RawBasicArgumentData<String> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			String.class,
 			(cause, args) -> variants.size() > 10000 ? variants.parallelStream() : variants.stream(),
@@ -101,7 +100,7 @@ public class RawArguments {
 		);
 	}
 
-	public static RawArgument<Integer> createIntegerArgument(@NotNull Collection<Integer> variants, RawBasicArgumentData<Integer> data, RawOptional rawOptional, ComponentSupplier supplier) {
+	public static RawArgument<Integer> createIntegerArgument(Collection<Integer> variants, RawBasicArgumentData<Integer> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Integer.class,
 			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
@@ -112,7 +111,7 @@ public class RawArguments {
 		);
 	}
 
-	public static RawArgument<Long> createLongArgument(@NotNull Collection<Long> variants, RawBasicArgumentData<Long> data, RawOptional rawOptional, ComponentSupplier supplier) {
+	public static RawArgument<Long> createLongArgument(Collection<Long> variants, RawBasicArgumentData<Long> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Long.class,
 			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
@@ -123,7 +122,7 @@ public class RawArguments {
 		);
 	}
 
-	public static RawArgument<Double> createDoubleArgument(@NotNull Collection<Double> variants, RawBasicArgumentData<Double> data, RawOptional rawOptional, ComponentSupplier supplier) {
+	public static RawArgument<Double> createDoubleArgument(Collection<Double> variants, RawBasicArgumentData<Double> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Double.class,
 			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
@@ -134,7 +133,7 @@ public class RawArguments {
 		);
 	}
 
-	public static RawArgument<BigDecimal> createBigDecimalArgument(@NotNull Collection<BigDecimal> variants, RawBasicArgumentData<BigDecimal> data, RawOptional rawOptional, ComponentSupplier supplier) {
+	public static RawArgument<BigDecimal> createBigDecimalArgument(Collection<BigDecimal> variants, RawBasicArgumentData<BigDecimal> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			BigDecimal.class,
 			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),

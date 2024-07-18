@@ -14,15 +14,18 @@ apply plugin: 'org.spongepowered.mixin'
 
 minecraft {
 	mappings channel: 'official', version: "${minecraft}"
+	reobf = false
 }
 
 dependencies {
 	minecraft "net.minecraftforge:forge:${minecraft}-${forge}"
+	implementation "org.spongepowered:spongeapi:${api}"
+	implementation "org.spongepowered:spongevanilla:1.21-12.0.0-RC1779:universal"
 	implementation 'org.spongepowered:mixin:0.8.5'
 	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-	//implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
+	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
 	implementation project(':core')
-	implementation fileTree(dir: 'libs', include: '*.jar')
+	//implementation fileTree(dir: 'libs', include: '*.jar')
 }
 
 mixin {

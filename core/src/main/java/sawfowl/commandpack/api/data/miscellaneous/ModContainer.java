@@ -2,6 +2,7 @@ package sawfowl.commandpack.api.data.miscellaneous;
 
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 import net.kyori.adventure.text.Component;
@@ -23,6 +24,8 @@ public interface ModContainer {
 	URL getIssueURL();
 
 	String getVersion();
+
+	List<String> getLoaders();
 
 	Component getDependencies();
 

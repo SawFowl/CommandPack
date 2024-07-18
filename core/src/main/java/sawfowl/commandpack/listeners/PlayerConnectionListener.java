@@ -48,7 +48,7 @@ public class PlayerConnectionListener {
 	public void onConnect(ServerSideConnectionEvent.Join event) {
 		((TempPlayerDataImpl) plugin.getPlayersData().getTempData()).registerPlayer(event.player());
 		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(event.player());
-		if(plugin.isForgeServer()) {
+		if(plugin.isModifiedServer()) {
 			if(plugin.getMainConfig().getDebugPlayerData().mods() && !MixinServerPlayer.cast(event.player()).getModList().isEmpty()) plugin.getLogger().info(plugin.getLocales().getSystemLocale().getDebug().getDebugPlayerData().getMods(event.player().name(), String.join(", ", MixinServerPlayer.cast(event.player()).getModList().stream().map(mod -> mod.getFullInfo()).toList())));
 			if(plugin.getMainConfig().getRestrictMods().isEnable() && !event.player().hasPermission(Permissions.ALL_MODS_ACCESS)) {
 				Sponge.server().scheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).delay(Ticks.of(10)).execute(() -> {

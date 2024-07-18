@@ -7,8 +7,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.jetbrains.annotations.NotNull;
-
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.api.entity.living.player.User;
@@ -116,7 +114,7 @@ public class WarnsData implements Warns {
 	private class Builder implements Warns.Builder {
 
 		@Override
-		public @NotNull Warns build() {
+		public Warns build() {
 			return WarnsData.this;
 		}
 

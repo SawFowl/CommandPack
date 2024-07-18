@@ -7,10 +7,7 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -60,10 +57,12 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
 
+import sawfowl.localeapi.api.Logger;
 import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.api.event.LocaleServiseEvent;
 import sawfowl.localeapi.api.placeholders.Placeholders;
 import sawfowl.commandpack.api.CommandPack;
+import sawfowl.commandpack.api.ContainersCollection;
 import sawfowl.commandpack.api.KitService;
 import sawfowl.commandpack.api.PlayersData;
 import sawfowl.commandpack.api.RandomTeleportService;
@@ -79,7 +78,6 @@ import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.data.kits.KitPrice;
 import sawfowl.commandpack.api.data.miscellaneous.Location;
-import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
 import sawfowl.commandpack.api.data.miscellaneous.Point;
 import sawfowl.commandpack.api.data.miscellaneous.Position;
 import sawfowl.commandpack.api.data.player.Home;
@@ -93,6 +91,7 @@ import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.api.services.PunishmentService;
 import sawfowl.commandpack.api.tps.AverageTPS;
 import sawfowl.commandpack.api.tps.TPS;
+import sawfowl.commandpack.apiclasses.ContainersImpl;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
 import sawfowl.commandpack.apiclasses.KitServiceImpl;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
@@ -134,9 +133,7 @@ import sawfowl.commandpack.listeners.PlayerInventoryListener;
 import sawfowl.commandpack.listeners.PlayerMoveListener;
 import sawfowl.commandpack.listeners.PlayerDeathAndRespawnListener;
 import sawfowl.commandpack.utils.Economy;
-import sawfowl.commandpack.utils.Logger;
 import sawfowl.commandpack.utils.MariaDB;
-import sawfowl.commandpack.utils.ModListGetter;
 
 @Plugin("commandpack")
 public class CommandPackInstance {
@@ -152,6 +149,7 @@ public class CommandPackInstance {
 	private RandomTeleportService rtpService;
 	private KitService kitService;
 	private boolean isForge;
+	private boolean isNeo;
 	private Map<Long, Double> tps1m = new HashMap<>();
 	private Map<Long, Double> tps5m = new HashMap<>();
 	private Map<Long, Double> tps10m = new HashMap<>();
@@ -160,8 +158,6 @@ public class CommandPackInstance {
 	private PunishmentService punishmentService;
 	private MariaDB mariaDB;
 	private Map<String, ChunkGenerator> generators = new HashMap<>();
-	private Collection<PluginContainer> containers = new HashSet<>();
-	private Collection<ModContainer> mods = new HashSet<>();
 	private Set<RawCommand> registeredRawCommands = new HashSet<RawCommand>();
 	private Set<ParameterizedCommand> registeredParameterizedCommands = new HashSet<ParameterizedCommand>();
 	private boolean isStarted = false;
@@ -219,6 +215,14 @@ public class CommandPackInstance {
 		return isForge;
 	}
 
+	public boolean isNeoForgeServer() {
+		return isNeo;
+	}
+
+	public boolean isModifiedServer() {
+		return isForge || isNeo;
+	}
+
 	public double getAverageTPS1m() {
 		return BigDecimal.valueOf(tps1m.values().stream().mapToDouble(d -> d).average().orElse(Sponge.server().ticksPerSecond())).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
@@ -256,7 +260,7 @@ public class CommandPackInstance {
 		instance = this;
 		this.pluginContainer = pluginContainer;
 		configDir = configDirectory;
-		logger = new Logger();
+		logger = Logger.createApacheLogger("CommandPack");
 	}
 
 	@Listener
@@ -268,9 +272,9 @@ public class CommandPackInstance {
 		configManager = new ConfigManager(instance);
 		configManager.loadPlayersData();
 		isForge = checkForge();
+		isNeo = checkNeo();
 		economy = new Economy(instance);
 		Sponge.eventManager().registerListeners(pluginContainer, economy);
-		fillLists();
 		createAPI();
 		if(getMainConfig().getMySqlConfig().isEnable()) {
 			mariaDB = new MariaDB(instance);
@@ -390,16 +394,18 @@ public class CommandPackInstance {
 		});
 	}
 
-	void fillLists() {
-		if(isForgeServer()) {
-			mods = ModListGetter.getMods();
-			containers = ModListGetter.getPlugins(mods);
-		} else containers = Collections.unmodifiableCollection(new ArrayList<>(Sponge.pluginManager().plugins()));
-	}
-
 	private boolean checkForge() {
 		try {
 			Class.forName("net.minecraftforge.fml.javafmlmod.FMLModContainer");
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	private boolean checkNeo() {
+		try {
+			Class.forName("net.neoforged.neoforge.common.NeoForge");
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -484,6 +490,7 @@ public class CommandPackInstance {
 
 	private CommandPack createAPI(TPS tps) {
 		return new CommandPack() {
+			ContainersCollection colletions = new ContainersImpl(getInstance());
 			@Override
 			public PlayersData getPlayersData() {
 				return playersData;
@@ -495,6 +502,14 @@ public class CommandPackInstance {
 			@Override
 			public boolean isForgeServer() {
 				return isForge;
+			}
+			@Override
+			public boolean isNeoForgeServer() {
+				return isNeo;
+			}
+			@Override
+			public boolean isModifiedServer() {
+				return isForge || isNeo;
 			}
 			@Override
 			public KitService getKitService() {
@@ -525,14 +540,6 @@ public class CommandPackInstance {
 				return tps;
 			}
 			@Override
-			public Collection<PluginContainer> getPluginContainers() {
-				return containers;
-			}
-			@Override
-			public Collection<ModContainer> getModContainers() {
-				return mods;
-			}
-			@Override
 			public void registerCommand(RawCommand command) throws IllegalStateException {
 				if(manager == null && isStarted) throw new IllegalStateException("Registration of commands through CommandPack is no longer available. Perform registration as soon as you receive the API.");
 				if(command.getContainer() != null && command.isEnable() && !registeredRawCommands.stream().filter(raw -> raw.command().equals(command.command())).findFirst().isPresent()) registeredRawCommands.add(command);
@@ -541,6 +548,10 @@ public class CommandPackInstance {
 			public void registerCommand(ParameterizedCommand command) throws IllegalStateException {
 				if(manager == null && isStarted) throw new IllegalStateException("Registration of commands through CommandPack is no longer available. Perform registration as soon as you receive the API.");
 				if(command.getContainer() != null && command.isEnable() && !registeredParameterizedCommands.stream().filter(parameterized -> parameterized.command().equals(command.command())).findFirst().isPresent()) registeredParameterizedCommands.add(command);
+			}
+			@Override
+			public ContainersCollection getContainersCollection() {
+				return colletions;
 			}
 		};
 	}

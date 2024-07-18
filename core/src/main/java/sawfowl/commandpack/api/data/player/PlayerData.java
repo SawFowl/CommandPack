@@ -6,8 +6,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
-
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.entity.living.player.User;
@@ -143,7 +141,7 @@ public interface PlayerData {
 	/**
 	 * Getting data on a previously issued kit to a player.
 	 */
-	@Nullable GivedKit getKitGivedData(Kit kit);
+	GivedKit getKitGivedData(Kit kit);
 
 	/**
 	 * Check if the kit has been issued to a player before.

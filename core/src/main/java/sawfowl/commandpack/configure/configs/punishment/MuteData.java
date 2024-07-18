@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.Queries;
@@ -110,7 +109,7 @@ public class MuteData implements Mute {
 	private class Builder implements Mute.Builder {
 
 		@Override
-		public @NotNull Mute build() {
+		public Mute build() {
 			if(created == null) created = TimeConverter.toString(Instant.now());
 			return MuteData.this;
 		}

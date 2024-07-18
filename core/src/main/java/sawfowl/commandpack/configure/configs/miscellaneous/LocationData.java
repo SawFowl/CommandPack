@@ -2,7 +2,6 @@ package sawfowl.commandpack.configure.configs.miscellaneous;
 
 import java.util.Optional;
 
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataContainer;
@@ -135,7 +134,7 @@ public class LocationData implements Location {
 		}
 
 		@Override
-		public @NotNull Location build() {
+		public Location build() {
 			return LocationData.this;
 		}
 

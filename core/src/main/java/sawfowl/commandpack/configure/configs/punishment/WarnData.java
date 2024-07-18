@@ -4,8 +4,6 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.jetbrains.annotations.NotNull;
-
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.Queries;
@@ -113,7 +111,7 @@ public class WarnData implements Warn {
 	private class Builder implements Warn.Builder {
 
 		@Override
-		public @NotNull Warn build() {
+		public Warn build() {
 			if(created == null) created = TimeConverter.toString(Instant.now());
 			return WarnData.this;
 		}

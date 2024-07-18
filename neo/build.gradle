@@ -1,0 +1,21 @@
+plugins {
+	id("org.spongepowered.gradle.vanilla") version "0.2.1-SNAPSHOT"
+}
+
+minecraft {
+	version("${minecraft}")
+}
+
+dependencies {
+	implementation "net.neoforged:neoforge:${neoforge}"
+	implementation "net.neoforged.fancymodloader:loader:${fancymodloader}"
+	implementation "org.spongepowered:spongeapi:${api}"
+	implementation 'org.spongepowered:mixin:0.8.6'
+	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
+	implementation project(':core')
+	//implementation fileTree(dir: 'libs', include: '*.jar')
+}
+
+jar {
+	archiveBaseName = 'part'
+}

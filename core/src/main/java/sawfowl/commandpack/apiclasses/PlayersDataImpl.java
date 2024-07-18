@@ -11,7 +11,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPackInstance;
@@ -96,7 +95,7 @@ public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 	}
 
 	@Override
-	public void addWarp(Warp warp, @Nullable PlayerData data) {
+	public void addWarp(Warp warp, PlayerData data) {
 		if(data == null) {
 			adminWarps.put(TextUtils.clearDecorations(warp.asComponent()), warp);
 		} else {
@@ -106,7 +105,7 @@ public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 	}
 
 	@Override
-	public void addAndSaveWarp(Warp warp, @Nullable PlayerData data) {
+	public void addAndSaveWarp(Warp warp, PlayerData data) {
 		allWarps.add(warp);
 		if(data == null) {
 			adminWarps.put(TextUtils.clearDecorations(warp.asComponent()), warp);
@@ -117,7 +116,7 @@ public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 	}
 
 	@Override
-	public boolean removeWarp(String name, @Nullable PlayerData data) {
+	public boolean removeWarp(String name, PlayerData data) {
 		allWarps.removeIf(warp -> warp.getPlainName().equals(name));
 		if(data == null) {
 			if(!adminWarps.containsKey(name)) return false;

@@ -27,12 +27,9 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.configurate.reference.ValueReference;
 import org.spongepowered.configurate.serialize.SerializationException;
 
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.forgespi.language.IModFileInfo;
-
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.command.Settings;
+import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
 import sawfowl.commandpack.commands.settings.Register;
@@ -296,10 +293,10 @@ public class CommandsConfig {
 	private <T> Set<Class<T>> findAllCommandsClasses(CommandPackInstance plugin, String packageName, Class<T> clazz) throws IOException, URISyntaxException {
 		final String pkgPath = packageName.replace('.', '/');
 		URI pkg = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource(pkgPath)).toURI();
-		if(plugin.isForgeServer() && ModList.get().getModContainerByObject(CommandPackInstance.getInstance()).isPresent()) {
-			ModContainer container = ModList.get().getModContainerByObject(CommandPackInstance.getInstance()).get();
-			IModFileInfo modFileInfo = container.getModInfo().getOwningFile();
-			pkg = URI.create("jar:" + modFileInfo.getFile().getFilePath().toUri().toString()  + "!/" + pkgPath);
+		Optional<ModContainer> mod = plugin.getAPI().getContainersCollection().getPluginAsMod(plugin.getPluginContainer());
+		if(plugin.isModifiedServer() && mod.isPresent()) {
+			pkg = URI.create("jar:" + mod.get().getPath().toUri().toString()  + "!/" + pkgPath);
+			mod = null;
 		}
 		final Set<Class<T>> allClasses = new HashSet<Class<T>>();
 		Path root;

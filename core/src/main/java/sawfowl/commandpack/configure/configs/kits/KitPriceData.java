@@ -2,7 +2,6 @@ package sawfowl.commandpack.configure.configs.kits;
 
 import java.math.BigDecimal;
 
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
@@ -11,6 +10,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.kits.KitPrice;
 import sawfowl.localeapi.api.TextUtils;
@@ -60,7 +60,7 @@ public class KitPriceData implements KitPrice {
 	class Builder implements KitPrice.Builder {
 
 		@Override
-		public @NotNull KitPrice build() {
+		public KitPrice build() {
 			return KitPriceData.this;
 		}
 

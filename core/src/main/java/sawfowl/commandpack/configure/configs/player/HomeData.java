@@ -2,7 +2,6 @@ package sawfowl.commandpack.configure.configs.player;
 
 import java.util.Objects;
 
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
@@ -10,6 +9,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.api.data.miscellaneous.Location;
 import sawfowl.commandpack.api.data.player.Home;
 import sawfowl.commandpack.configure.configs.miscellaneous.LocationData;
@@ -119,7 +119,7 @@ public class HomeData implements Home {
 		}
 
 		@Override
-		public @NotNull Home build() {
+		public Home build() {
 			return HomeData.this;
 		}
 		

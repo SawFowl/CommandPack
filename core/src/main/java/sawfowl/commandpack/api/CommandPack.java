@@ -1,6 +1,5 @@
 package sawfowl.commandpack.api;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
@@ -44,9 +43,19 @@ public interface CommandPack {
 	RandomTeleportService getRandomTeleportService();
 
 	/**
-	 * Whether the plugin is running on the server with Forge.
+	 * Whether the plugin is running on the server with LexForge.
 	 */
 	boolean isForgeServer();
+
+	/**
+	 * Whether the plugin is running on the server with NeoForge.
+	 */
+	boolean isNeoForgeServer();
+
+	/**
+	 * Whether the plugin is running on the server with LexForge or NeoForge.
+	 */
+	boolean isModifiedServer();
 
 	/**
 	 * Kits API.
@@ -85,14 +94,9 @@ public interface CommandPack {
 	TPS getTPS();
 
 	/**
-	 * Getting a collection of {@link PluginContainer} on the server.
+	 * Getting a collections of {@link PluginContainer} and {@link ModContainer} on the server.
 	 */
-	Collection<PluginContainer> getPluginContainers();
-
-	/**
-	 * Getting a collection of {@link ModContainer} on the server.
-	 */
-	Collection<ModContainer> getModContainers();
+	ContainersCollection getContainersCollection();
 
 	/**
 	 * Registering a command at the final stage of server loading, when all in-game data is available.<br>

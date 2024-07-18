@@ -1,6 +1,5 @@
 package sawfowl.commandpack.configure.configs.commands;
 
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
@@ -62,7 +61,7 @@ public class CommandPrice implements sawfowl.commandpack.api.data.command.Price 
 	public class Builder implements sawfowl.commandpack.api.data.command.Price.Builder {
 
 		@Override
-		public @NotNull CommandPrice build() {
+		public CommandPrice build() {
 			return CommandPrice.this;
 		}
 

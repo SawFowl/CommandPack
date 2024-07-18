@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.adventure.SpongeComponents;
 import org.spongepowered.api.block.BlockSnapshot;
@@ -278,7 +277,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 
 	@SuppressWarnings("hiding")
 	@Override
-	public <ServerPlayer> CommandResult runCommand(@NotNull Locale sourceLocale, @NotNull String command) throws CommandException {
+	public <ServerPlayer> CommandResult runCommand(Locale sourceLocale, String command) throws CommandException {
 		if(!getPlayer().isPresent() || !getPlayer().get().isOnline()) return CommandResult.error(CommandPackInstance.getInstance().getLocales().getLocale(sourceLocale).getCommandExceptions().getPlayerIsOffline(name));
 		CommandMapping mapping = Sponge.server().commandManager().commandMapping(command.contains(" ") ? command.split(" ")[0] : command).get();
 		try(StackFrame frame = Sponge.server().causeStackManager().pushCauseFrame()) {

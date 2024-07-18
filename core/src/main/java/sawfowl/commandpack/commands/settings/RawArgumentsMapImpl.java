@@ -10,8 +10,6 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-import org.jetbrains.annotations.NotNull;
-
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
@@ -137,7 +135,7 @@ public class RawArgumentsMapImpl implements RawArgumentsMap {
 		return new Builder() {
 			
 			@Override
-			public @NotNull RawArgumentsMap build() {
+			public RawArgumentsMap build() {
 				return RawArgumentsMapImpl.this;
 			}
 			

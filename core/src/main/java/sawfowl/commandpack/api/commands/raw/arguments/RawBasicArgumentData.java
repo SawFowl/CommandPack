@@ -5,8 +5,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
 import org.spongepowered.api.entity.living.player.User;
@@ -37,7 +36,7 @@ import sawfowl.commandpack.api.data.punishment.Warns;
  * 
  * @author SawFowl
  */
-public record RawBasicArgumentData<T>(@Nullable T def, @NotNull String key, int cursor, @Nullable String permission, @Nullable RawRequiredArgs requiredArgs) {
+public record RawBasicArgumentData<T>(@Nullable T def, String key, int cursor, @Nullable String permission, @Nullable RawRequiredArgs requiredArgs) {
 
 	public <C extends CommandTreeNode<C>> RawArgumentData<C> toRawArgumentData(Argument<C> argumentNodeType) {
 		return new RawArgumentData<C>(key, argumentNodeType, cursor, permission, requiredArgs);
@@ -115,11 +114,11 @@ public record RawBasicArgumentData<T>(@Nullable T def, @NotNull String key, int 
 		return create("ChunkGenerator", cursor, permission, requiredArgs);
 	}
 
-	private static <T> RawBasicArgumentData<T> create(T def, @NotNull String key,  int cursor, @Nullable String permission, @Nullable RawRequiredArgs requiredArgs) {
+	private static <T> RawBasicArgumentData<T> create(T def, String key,  int cursor, @Nullable String permission, @Nullable RawRequiredArgs requiredArgs) {
 		return new RawBasicArgumentData<T>(def, key, cursor, permission, requiredArgs);
 	}
 
-	private static <T> RawBasicArgumentData<T> create(@NotNull String key, int cursor, @Nullable String permission, @Nullable RawRequiredArgs requiredArgs) {
+	private static <T> RawBasicArgumentData<T> create(String key, int cursor, @Nullable String permission, @Nullable RawRequiredArgs requiredArgs) {
 		return new RawBasicArgumentData<T>(null, key, cursor, permission, requiredArgs);
 	}
 

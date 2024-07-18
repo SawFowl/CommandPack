@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jetbrains.annotations.NotNull;
-
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
@@ -173,7 +171,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public @NotNull RawArgument<T> build() {
+		public RawArgument<T> build() {
 			if(node == null) node = CommandTreeNodeTypes.STRING.get().createNode();
 			if(treeKey == null) treeKey = clazz.getSimpleName();
 			return (RawArgument<T>) RawArgumentImpl.this;

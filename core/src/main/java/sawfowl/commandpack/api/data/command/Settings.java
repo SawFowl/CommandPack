@@ -3,8 +3,6 @@ package sawfowl.commandpack.api.data.command;
 import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.Nullable;
-
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 
@@ -66,7 +64,7 @@ public interface Settings extends DataSerializable {
 	 */
 	boolean isEnable();
 
-	@Nullable public Optional<Boolean> isAutoComplete();
+	public Optional<Boolean> isAutoComplete();
 
 	interface Builder extends AbstractBuilder<Settings>, org.spongepowered.api.util.Builder<Settings, Builder> {
 

@@ -3,7 +3,6 @@ package sawfowl.commandpack.api.data.punishment;
 import java.time.Instant;
 import java.util.Optional;
 
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -29,7 +28,6 @@ public interface Warn extends DataSerializable {
 
 	Optional<String> getExpirationTimeString();
 
-	@Nullable
 	long getExpirationTime();
 
 	Optional<Component> getSource();

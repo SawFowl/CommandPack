@@ -1,0 +1,16 @@
+{
+    "required": true,
+    "minVersion": "0.8.5",
+    "package": "sawfowl.commandpack.mixins.neoforge",
+    "target": "@env(DEFAULT)",
+    "compatibilityLevel": "JAVA_18",
+    "mixins": [
+        "network.MixinNeoForgeServerPlayerImpl",
+        "network.MixinNeoForgePluginMessagesImpl",
+        "plugin.MixinContainersImpl",
+        "game.MixinNeoForgeEntityItemImpl"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

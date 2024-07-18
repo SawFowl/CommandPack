@@ -1,7 +1,5 @@
 package sawfowl.commandpack.configure.configs.commands;
 
-import org.jetbrains.annotations.NotNull;
-
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
@@ -77,7 +75,7 @@ public class DelayData implements Delay {
 		}
 
 		@Override
-		public @NotNull DelayData build() {
+		public DelayData build() {
 			return DelayData.this;
 		}
 		

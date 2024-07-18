@@ -1,0 +1,52 @@
+plugins {
+	id("java")
+	id("eclipse")
+	id("org.spongepowered.gradle.plugin") version "2.2.0"
+}
+
+sponge {
+	apiVersion("${api}")
+	loader {
+		name("java_plain")
+		version("1.0")
+	}
+	license("GPL-3.0")
+	plugin(rootProject.name.toLowerCase()) {
+		displayName(rootProject.name)
+		version("${major}.${minor}.${patch}")
+		entrypoint("${rootProject.group}.CommandPackInstance")
+		description("The Essentials plugin analog.")
+		links {
+			homepage("https://discord.gg/7xnZGSYJH9")
+			source("https://github.com/SawFowl/CommandPack")
+			issues("https://discord.gg/7xnZGSYJH9")
+		}
+		contributor("SawFowl") {
+			description("Lead Developer")
+		}
+		dependency("spongeapi") {
+			optional(false)
+			loadOrder("after")
+			version("${api}")
+		}
+		dependency("localeapi") {
+			optional(false)
+			loadOrder("after")
+			version("${localeapi}")
+		}
+		dependency("mysqldriver") {
+			optional(true)
+			loadOrder("after")
+			version("1.0.0")
+		}
+		dependency("h2driver") {
+			optional(true)
+			loadOrder("after")
+			version("1.0.0")
+		}
+	}
+}
+
+jar {
+	archiveBaseName = 'part'
+}

@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.jetbrains.annotations.NotNull;
-
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.CommandCause;
@@ -17,6 +15,7 @@ import org.spongepowered.api.data.persistence.DataSerializable;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.localeapi.api.ComponentSupplier;
 
@@ -48,7 +47,7 @@ public interface RawArgument<T> extends DataSerializable {
 	 * @return {@link RawArgument}
 	 */
 	@SuppressWarnings("unchecked")
-	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(@NotNull Class<T> clazz, @NotNull RawCompleterSupplier<Stream<String>> variants, @NotNull RawResultSupplier<T> result, @NotNull RawArgumentData<C> argumentData, @NotNull RawOptional optional, @NotNull ComponentSupplier supplier) {
+	static <T, C extends CommandTreeNode<C>> RawArgument<T> of(Class<T> clazz, RawCompleterSupplier<Stream<String>> variants, RawResultSupplier<T> result, RawArgumentData<C> argumentData, RawOptional optional, ComponentSupplier supplier) {
 		return (RawArgument<T>) builder().setArgumentType(argumentData.argumentNodeType()).variants(variants).result(clazz, result).optional(optional == null ? false : optional.all()).optionalForConsole(optional == null ? false : optional.console()).cursor(argumentData.cursor()).permission(argumentData.permission()).treeKey(argumentData.key()).setRequiredArguments(argumentData.requiredArgs() == null ? null : argumentData.requiredArgs().byId()).setRequiredArguments(argumentData.requiredArgs() == null ? null : argumentData.requiredArgs().byKey()).setComponentSupplier(supplier).build();
 	}
 
@@ -137,12 +136,12 @@ public interface RawArgument<T> extends DataSerializable {
 		/**
 		 * Set variants for auto-complete commands.
 		 */
-		Builder<T> variants(@NotNull RawCompleterSupplier<Stream<String>> variants);
+		Builder<T> variants(RawCompleterSupplier<Stream<String>> variants);
 
 		/**
 		 * Setting parameters to get the target object from the command argument.
 		 */
-		Builder<T> result(@NotNull Class<?> clazz, @NotNull RawResultSupplier<?> result);
+		Builder<T> result(Class<?> clazz, RawResultSupplier<?> result);
 
 		/**
 		 * Whether the argument is optional.

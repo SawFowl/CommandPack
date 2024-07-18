@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import org.jetbrains.annotations.NotNull;
-
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
@@ -156,7 +154,7 @@ public class BackpackData implements Backpack {
 	public class Builder implements Backpack.Builder {
 
 		@Override
-		public @NotNull Backpack build() {
+		public Backpack build() {
 			return BackpackData.this;
 		}
 

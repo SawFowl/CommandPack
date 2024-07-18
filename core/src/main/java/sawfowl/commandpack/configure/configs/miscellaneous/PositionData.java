@@ -2,7 +2,6 @@ package sawfowl.commandpack.configure.configs.miscellaneous;
 
 import java.util.Optional;
 
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
@@ -100,7 +99,7 @@ public class PositionData implements Position {
 		}
 
 		@Override
-		public @NotNull Position build() {
+		public Position build() {
 			return PositionData.this;
 		}
 		

@@ -7,7 +7,6 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.api.data.player.PlayerData;
@@ -71,17 +70,17 @@ public interface PlayersData {
 	/**
 	 * Adding admin {@link Warp}.
 	 */
-	void addWarp(Warp warp, @Nullable PlayerData data);
+	void addWarp(Warp warp, PlayerData data);
 
 	/**
 	 * Adding and save admin {@link Warp}.
 	 */
-	void addAndSaveWarp(Warp warp, @Nullable PlayerData data);
+	void addAndSaveWarp(Warp warp, PlayerData data);
 
 	/**
 	 * Remove admin {@link Warp}.
 	 */
-	boolean removeWarp(String name, @Nullable PlayerData data);
+	boolean removeWarp(String name, PlayerData data);
 
 	/**
 	 * Search admin {@link Warp} by name.<br>

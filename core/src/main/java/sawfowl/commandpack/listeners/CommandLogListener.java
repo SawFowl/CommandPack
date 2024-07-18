@@ -26,7 +26,7 @@ public class CommandLogListener {
 	}
 
 	@Listener(order = Order.PRE)
-	public void onExecute(ExecuteCommandEvent.Post event) {
+	public void onExecute(ExecuteCommandEvent.Pre event) {
 		switch (CommandExecutorTypes.findType(event.commandCause())) {
 		case SYSTEM:
 			log(getCommands().getLog(getCommands().getExecutors().getServer(), event.command(), event.arguments()));

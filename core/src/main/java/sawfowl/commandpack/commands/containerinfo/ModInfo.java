@@ -28,10 +28,10 @@ public class ModInfo extends AbstractInfoCommand {
 		if(!context.one(CommandParameters.MOD).isPresent()) exception(plugin.getLocales().getLocale(locale).getCommandExceptions().getModNotPresent());
 		if(isPlayer) {
 			delay((ServerPlayer) src, locale, consumer -> {
-				sendModInfo(src, locale, plugin.getAPI().getModContainers().stream().filter(mod -> mod.getModId().equalsIgnoreCase(getString(context, "Mod").get())).findFirst().orElse(null));
+				sendModInfo(src, locale, plugin.getAPI().getContainersCollection().getMods().stream().filter(mod -> mod.getModId().equalsIgnoreCase(getString(context, "Mod").get())).findFirst().orElse(null));
 			});
 		} else {
-			sendModInfo(src, locale, plugin.getAPI().getModContainers().stream().filter(mod -> mod.getModId().equalsIgnoreCase(getString(context, "Mod").get())).findFirst().orElse(null));
+			sendModInfo(src, locale, plugin.getAPI().getContainersCollection().getMods().stream().filter(mod -> mod.getModId().equalsIgnoreCase(getString(context, "Mod").get())).findFirst().orElse(null));
 		}}
 
 	@Override
@@ -56,7 +56,7 @@ public class ModInfo extends AbstractInfoCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return plugin.getAPI().getModContainers().isEmpty() ? null : Arrays.asList(ParameterSettings.of(CommandParameters.MOD, false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getModNotPresent()));
+		return plugin.getAPI().getContainersCollection().getMods().isEmpty() ? null : Arrays.asList(ParameterSettings.of(CommandParameters.MOD, false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getModNotPresent()));
 	}
 
 }

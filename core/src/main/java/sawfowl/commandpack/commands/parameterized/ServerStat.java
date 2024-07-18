@@ -31,7 +31,7 @@ public class ServerStat extends AbstractInfoCommand {
 
 	private final Plugins plugins;
 	private final Parameterized pluginsCommand;
-	private  Mods modsClass;
+	private Mods modsClass;
 	private Parameterized modsCommand;
 	private final Tps tps;
 	private final Parameterized tpsCommand;
@@ -41,7 +41,7 @@ public class ServerStat extends AbstractInfoCommand {
 		super(plugin);
 		plugins = new Plugins(plugin);
 		pluginsCommand = plugins.build();
-		if(plugin.isForgeServer()) {
+		if(plugin.isModifiedServer()) {
 			modsClass = new Mods(plugin);
 			modsCommand = modsClass.build();
 		}
@@ -64,7 +64,7 @@ public class ServerStat extends AbstractInfoCommand {
 
 	@Override
 	public Parameterized build() {
-		return (plugin.isForgeServer() ? builder().addChild(modsCommand, "mods") : builder())
+		return (plugin.isModifiedServer() ? builder().addChild(modsCommand, "mods") : builder())
 				.addChild(new Worlds(plugin).build(), "worlds")
 				.addChild(pluginsCommand, "plugins")
 				.addChild(tpsCommand, "tps")
@@ -82,7 +82,7 @@ public class ServerStat extends AbstractInfoCommand {
 				event.register(getContainer(), build(), command(), getCommandSettings().getAliases());
 			} else event.register(getContainer(), build(), command());
 		}
-		if(plugin.isForgeServer()) modsClass.register(event);
+		if(plugin.isModifiedServer()) modsClass.register(event);
 		plugins.register(event);
 		tps.enableRegister();
 		tps.register(event);
@@ -145,7 +145,7 @@ public class ServerStat extends AbstractInfoCommand {
 			});
 			buttons = buttons.append(plugins);
 		}
-		if(plugin.isForgeServer() && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_MODS_LIST)) {
+		if(plugin.isModifiedServer() && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_MODS_LIST)) {
 			Component mods = TextUtils.createCallBack(getServerStat(locale).getButtons().getMods(), cause -> {
 				sendModsInfo(src, locale, true);
 			});

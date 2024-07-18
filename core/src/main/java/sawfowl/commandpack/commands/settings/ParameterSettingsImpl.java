@@ -4,8 +4,6 @@ import java.util.Optional;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import org.jetbrains.annotations.NotNull;
-
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.command.parameter.Parameter.Value;
@@ -140,7 +138,7 @@ public class ParameterSettingsImpl implements sawfowl.commandpack.api.commands.p
 		}
 
 		@Override
-		public @NotNull ParameterSettingsImpl build() {
+		public ParameterSettingsImpl build() {
 			return ParameterSettingsImpl.this;
 		}
 		

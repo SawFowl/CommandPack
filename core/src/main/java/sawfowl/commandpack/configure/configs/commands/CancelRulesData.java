@@ -1,7 +1,5 @@
 package sawfowl.commandpack.configure.configs.commands;
 
-import org.jetbrains.annotations.NotNull;
-
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
@@ -86,7 +84,7 @@ public class CancelRulesData implements CancelRules {
 		}
 
 		@Override
-		public @NotNull CancelRulesData build() {
+		public CancelRulesData build() {
 			return CancelRulesData.this;
 		}
 		

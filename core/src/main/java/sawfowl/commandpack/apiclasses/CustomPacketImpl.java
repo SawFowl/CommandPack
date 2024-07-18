@@ -1,6 +1,5 @@
 package sawfowl.commandpack.apiclasses;
 
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
@@ -29,7 +28,7 @@ public class CustomPacketImpl implements CustomPacket {
 				return build();
 			}
 			@Override
-			public @NotNull CustomPacket build() {
+			public CustomPacket build() {
 				return CustomPacketImpl.this;
 			}
 		};

@@ -65,12 +65,12 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected void sendPluginsInfo(Audience target, Locale locale, boolean isPlayer) {
-		Component header = getServerStat(locale).getPlugins(plugin.getAPI().getPluginContainers().size());
+		Component header = getServerStat(locale).getPlugins(plugin.getAPI().getContainersCollection().getPlugins().size());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) target;
 			List<Component> content = new ArrayList<>();
 			boolean allowRefresh = player.hasPermission(Permissions.SERVER_STAT_STAFF_INFO_PLUGINS_REFRESH);
-			for(PluginContainer container : plugin.getAPI().getPluginContainers()) {
+			for(PluginContainer container : plugin.getAPI().getContainersCollection().getPlugins()) {
 				if(allowRefresh) {
 					content.add(getServerStat(locale).getButtons().getRefreshPlugin().createCallBack(cause -> {
 						sendRefreshEvent(container);
@@ -89,8 +89,8 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 			sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, content);
 		} else {
 			header = header.append(text("&f: "));
-			int size = plugin.getAPI().getPluginContainers().size();
-			for(PluginContainer container : plugin.getAPI().getPluginContainers()) {
+			int size = plugin.getAPI().getContainersCollection().getPlugins().size();
+			for(PluginContainer container : plugin.getAPI().getContainersCollection().getPlugins()) {
 				header = size > 1 ? header.append(text("&e" + container.metadata().name().orElse(container.metadata().id()) + "&f, ")) : header.append(text("&e" + container.metadata().name().orElse(container.metadata().id()) + "&f."));
 				size--;
 			}
@@ -99,11 +99,11 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected void sendModsInfo(Audience target, Locale locale, boolean isPlayer) {
-		Component header = getServerStat(locale).getMods(plugin.getAPI().getModContainers().size());
+		Component header = getServerStat(locale).getMods(plugin.getAPI().getContainersCollection().getMods().size());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) target;
 			List<Component> content = new ArrayList<>();
-			for(ModContainer container : plugin.getAPI().getModContainers()) {
+			for(ModContainer container : plugin.getAPI().getContainersCollection().getMods()) {
 				content.add(player.hasPermission(Permissions.SERVER_STAT_STAFF_PLUGINS_INFO)
 						?
 						Text.of(text("&a" + container.getDisplayName())).createCallBack(() -> {
@@ -115,8 +115,8 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 			sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, content);
 		} else {
 			header = header.append(text("&f: "));
-			int size = plugin.getAPI().getModContainers().size();
-			for(ModContainer container : plugin.getAPI().getModContainers()) {
+			int size = plugin.getAPI().getContainersCollection().getMods().size();
+			for(ModContainer container : plugin.getAPI().getContainersCollection().getMods()) {
 				header = size > 1 ? header.append(text("&e" + container.getDisplayName() + "&f, ")) : header.append(text("&e" + container.getDisplayName() + "&f."));
 				size--;
 			}

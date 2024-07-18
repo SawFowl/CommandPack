@@ -74,7 +74,7 @@ public class Mods extends AbstractInfoCommand {
 
 	@Override
 	public void register(RegisterCommandEvent<Parameterized> event) {
-		if(!plugin.isForgeServer()) return;
+		if(!plugin.isModifiedServer()) return;
 		if(build() == null) return;
 		if(getCommandSettings() == null) {
 			event.register(getContainer(), build(), command());

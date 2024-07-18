@@ -1,6 +1,5 @@
 package sawfowl.commandpack.configure.configs.miscellaneous;
 
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.math.vector.Vector3d;
@@ -55,7 +54,7 @@ public class PointData implements Point {
 		}
 
 		@Override
-		public @NotNull Point build() {
+		public Point build() {
 			return PointData.this;
 		}
 

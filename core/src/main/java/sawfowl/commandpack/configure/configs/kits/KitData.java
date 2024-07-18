@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.jetbrains.annotations.NotNull;
-
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
@@ -280,7 +278,7 @@ public class KitData implements Kit {
 	public class Builder implements Kit.Builder {
 
 		@Override
-		public @NotNull Kit build() {
+		public Kit build() {
 			return KitData.this;
 		}
 

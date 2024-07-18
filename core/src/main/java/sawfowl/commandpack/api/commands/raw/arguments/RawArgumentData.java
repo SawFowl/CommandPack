@@ -1,7 +1,6 @@
 package sawfowl.commandpack.api.commands.raw.arguments;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
 
@@ -15,4 +14,4 @@ import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
  * 
  * @author SawFowl
  */
-public record RawArgumentData<C extends CommandTreeNode<C>>(@NotNull String key, Argument<C> argumentNodeType, int cursor, @Nullable String permission, @Nullable RawRequiredArgs requiredArgs) {}
+public record RawArgumentData<C extends CommandTreeNode<C>>(String key, Argument<C> argumentNodeType, int cursor, @Nullable String permission, @Nullable RawRequiredArgs requiredArgs) {}

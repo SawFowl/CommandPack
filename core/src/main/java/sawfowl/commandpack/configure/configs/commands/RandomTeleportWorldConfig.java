@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataContainer;
@@ -179,7 +178,7 @@ public class RandomTeleportWorldConfig implements RandomTeleportOptions {
 		}
 
 		@Override
-		public @NotNull RandomTeleportOptions build() {
+		public RandomTeleportOptions build() {
 			return RandomTeleportWorldConfig.this;
 		}
 
