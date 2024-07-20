@@ -32,19 +32,19 @@ public class ImplementSeen implements Seen {
 	@Setting("IP")
 	private Component ip = TextUtils.deserializeLegacy("&aIP&f: &e" + Placeholders.VALUE);
 	@Setting("FirstPlayed")
-	private Component firstPlayed = TextUtils.deserializeLegacy("&aFirst played&f: " + Placeholders.VALUE);
+	private Component firstPlayed = TextUtils.deserializeLegacy("&aFirst played&f: &e" + Placeholders.VALUE);
 	@Setting("WalkingSpeed")
-	private Component walkingSpeed = TextUtils.deserializeLegacy("&aWalking speed&f: " + Placeholders.VALUE);
+	private Component walkingSpeed = TextUtils.deserializeLegacy("&aWalking speed&f: &e" + Placeholders.VALUE);
 	@Setting("FlyingSpeed")
-	private Component flyingSpeed = TextUtils.deserializeLegacy("&aFlying speed&f: " + Placeholders.VALUE);
+	private Component flyingSpeed = TextUtils.deserializeLegacy("&aFlying speed&f: &e" + Placeholders.VALUE);
 	@Setting("CurrentLocation")
-	private Component currentLocation = TextUtils.deserializeLegacy("&aCurrent location&f: " + Placeholders.VALUE);
+	private Component currentLocation = TextUtils.deserializeLegacy("&aCurrent location&f: &e" + Placeholders.VALUE);
 	@Setting("CanFly")
 	private Component canFly = TextUtils.deserializeLegacy("&aCan fly&f: " + Placeholders.VALUE);
 	@Setting("IsFlying")
 	private Component isFlying = TextUtils.deserializeLegacy("&aIs flying&f: " + Placeholders.VALUE);
 	@Setting("GameMode")
-	private Component gameMode = TextUtils.deserializeLegacy("&aGamemode&f: " + Placeholders.VALUE);
+	private Component gameMode = TextUtils.deserializeLegacy("&aGamemode&f: &e" + Placeholders.VALUE);
 	@Setting("Vanished")
 	private Component vanished = TextUtils.deserializeLegacy("&aVanished&f: " + Placeholders.VALUE);
 	@Setting("Invulnerable")
@@ -56,7 +56,9 @@ public class ImplementSeen implements Seen {
 	@Setting("Mute")
 	private Component mute = TextUtils.deserializeLegacy("&aMute&f: " + Placeholders.VALUE);
 	@Setting("Warns")
-	private Component warns = TextUtils.deserializeLegacy("&aWarns&f: " + Placeholders.VALUE);
+	private Component warns = TextUtils.deserializeLegacy("&aWarns&f: &e" + Placeholders.VALUE);
+	@Setting("ClientName")
+	private Component clientName = TextUtils.deserializeLegacy("&aClient&f: &e" + Placeholders.VALUE);
 	@Setting("Yes")
 	private Component yes = TextUtils.deserializeLegacy("&eYes");
 	@Setting("No")
@@ -182,6 +184,11 @@ public class ImplementSeen implements Seen {
 	@Override
 	public Component getPadding() {
 		return padding;
+	}
+
+	@Override
+	public Component getClientName(String clientName) {
+		return Text.of(this.clientName).replace(Placeholders.VALUE, clientName).get();
 	}
 
 }

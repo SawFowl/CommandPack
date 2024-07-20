@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.Parameter;
@@ -25,15 +24,17 @@ import sawfowl.localeapi.api.EnumLocales;
 
 public class CommandParameters {
 
+	private static final CommandPackInstance plugin = CommandPackInstance.getInstance();
+
 	public static final Value<Duration> DURATION = Parameter.duration().key("Duration").build();
 
 	public static final Value<String> REPAIR = Parameter.choices("all", "armor", "hands").optional().key("Repair").requiredPermission(Permissions.REPAIR_SELECT).build();
 
 	public static final Value<String> LOCALES = Parameter.choices(Stream.of(EnumLocales.values()).map(EnumLocales::getTag).toArray(String[]::new)).key("Locale").requiredPermission(Permissions.REPAIR_SELECT).build();
 
-	public static final Parameter.Value<PluginContainer> PLUGIN = Parameter.builder(PluginContainer.class).key("Plugin").completer((context, currentInput) -> getInstance().getAPI().getContainersCollection().getPlugins().stream().filter(plugin -> plugin.metadata().id().contains(currentInput)).map(plugin -> CommandCompletion.of(plugin.metadata().id())).toList()).addParser(VariableValueParameters.dynamicChoicesBuilder(PluginContainer.class).choices(() -> getInstance().getAPI().getContainersCollection().getPlugins().stream().map(plugin -> plugin.metadata().id()).toList()).results(key -> getInstance().getAPI().getContainersCollection().getPlugins().stream().filter(plugin -> plugin.metadata().id().equals(key)).findFirst().orElse(null)).build()).build();
+	public static final Parameter.Value<PluginContainer> PLUGIN = Parameter.builder(PluginContainer.class).key("Plugin").completer((context, currentInput) -> plugin.getAPI().getContainersCollection().getPlugins().stream().filter(plugin -> plugin.metadata().id().contains(currentInput)).map(plugin -> CommandCompletion.of(plugin.metadata().id())).toList()).addParser(VariableValueParameters.dynamicChoicesBuilder(PluginContainer.class).choices(() -> plugin.getAPI().getContainersCollection().getPlugins().stream().map(plugin -> plugin.metadata().id()).toList()).results(key -> plugin.getAPI().getContainersCollection().getPlugins().stream().filter(plugin -> plugin.metadata().id().equals(key)).findFirst().orElse(null)).build()).build();
 
-	public static final Parameter.Value<ModContainer> MOD = Parameter.builder(ModContainer.class).key("Mod").completer((context, currentInput) -> getInstance().getAPI().getContainersCollection().getMods().stream().filter(mod -> mod.getModId().contains(currentInput)).map(mod -> CommandCompletion.of(mod.getModId())).toList()).addParser(VariableValueParameters.dynamicChoicesBuilder(ModContainer.class).choices(() -> getInstance().getAPI().getContainersCollection().getMods().stream().map(mod -> mod.getModId()).toList()).results(key -> getInstance().getAPI().getContainersCollection().getMods().stream().filter(mod -> mod.getModId().equals(key)).findFirst().orElse(null)).build()).build();
+	public static final Parameter.Value<ModContainer> MOD = Parameter.builder(ModContainer.class).key("Mod").completer((context, currentInput) -> plugin.getAPI().getContainersCollection().getMods().stream().filter(mod -> mod.getModId().contains(currentInput)).map(mod -> CommandCompletion.of(mod.getModId())).toList()).addParser(VariableValueParameters.dynamicChoicesBuilder(ModContainer.class).choices(() -> plugin.getAPI().getContainersCollection().getMods().stream().map(mod -> mod.getModId()).toList()).results(key -> plugin.getAPI().getContainersCollection().getMods().stream().filter(mod -> mod.getModId().equals(key)).findFirst().orElse(null)).build()).build();
 
 	public static Value<ServerPlayer> createPlayer(boolean optional) {
 		return (optional ? Parameter.player().key("Player").optional() : Parameter.player().key("Player")).build();
@@ -47,7 +48,7 @@ public class CommandParameters {
 		return (optional ? Parameter.string().key("User").optional() : Parameter.string().key("User")).completer(new ValueCompleter() {
 			@Override
 			public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-				return Sponge.server().userManager().streamAll().filter(p -> p.name().isPresent() && (currentInput.length() == 0 || p.name().get().startsWith(currentInput))).map(p -> CommandCompletion.of(p.name().get())).collect(Collectors.toList());
+				return plugin.getPlayersData().getTempData().streamUsers().map(p -> CommandCompletion.of(p)).collect(Collectors.toList());
 			}
 		}).build();
 	}
@@ -56,7 +57,7 @@ public class CommandParameters {
 		return (optional ? Parameter.string().key("User").optional() : Parameter.string().key("User")).requiredPermission(permission).completer(new ValueCompleter() {
 			@Override
 			public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-				return CommandPackInstance.getInstance().getPlayersData().getTempData().streamUsers().filter(p -> (currentInput.length() == 0 || p.startsWith(currentInput))).map(p -> CommandCompletion.of(p)).collect(Collectors.toList());
+				return plugin.getPlayersData().getTempData().streamUsers().map(p -> CommandCompletion.of(p)).collect(Collectors.toList());
 			}
 		}).build();
 	}
@@ -74,7 +75,7 @@ public class CommandParameters {
 	}
 
 	public static Value<String> createStringHome() {
-		return Parameter.string().optional().key("Home").completer((context, currentInput) -> getInstance().getPlayersData().getOrCreatePlayerData(context.cause().first(ServerPlayer.class).get()).getHomes().stream().filter(home -> home.getName().contains(currentInput)).map(home -> CommandCompletion.of(home.getName())).toList()).build();
+		return Parameter.string().optional().key("Home").completer((context, currentInput) -> plugin.getPlayersData().getOrCreatePlayerData(context.cause().first(ServerPlayer.class).get()).getHomes().stream().filter(home -> home.getName().contains(currentInput)).map(home -> CommandCompletion.of(home.getName())).toList()).build();
 	}
 
 	public static Value<String> createStrings(String key, boolean optional) {
@@ -141,10 +142,6 @@ public class CommandParameters {
 
 	public static Value<Duration> createDuration(boolean optional) {
 		return (optional ? Parameter.duration().key("Duration").optional() : Parameter.duration().key("Duration")).build();
-	}
-
-	private static CommandPackInstance getInstance() {
-		return CommandPackInstance.getInstance();
 	}
 
 }

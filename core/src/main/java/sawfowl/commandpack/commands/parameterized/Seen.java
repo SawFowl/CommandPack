@@ -30,6 +30,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warns;
+import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.api.services.PunishmentService;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
@@ -101,6 +102,7 @@ public class Seen extends AbstractParameterizedCommand {
 			if(full) {
 				messages.add(getSeen(locale).getOnline().replace(Placeholders.PLAYER, target.name()).get());
 				messages.add(getSeen(locale).getOnlineTime().replace(Placeholders.VALUE, timeFormat(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) - (plugin.getPlayersData().getPlayerData(target.uniqueId()).isPresent() ? plugin.getPlayersData().getPlayerData(target.uniqueId()).get().getLastJoinTime() : TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())), locale)).get());
+				if(context.hasPermission(Permissions.SEEN_STAFF)) messages.add(getSeen(locale).getClientName(MixinServerPlayer.cast(player.get()).getClientName()));
 			} else {
 				calendar.setTimeInMillis(plugin.getPlayersData().getTempData().getVanishEnabledTime(player.get()).isPresent() ? System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(plugin.getPlayersData().getTempData().getVanishEnabledTime(player.get()).get()) : System.currentTimeMillis());
 				messages.add(getSeen(locale).getOffline().replace(Placeholders.PLAYER, target.name()).get());

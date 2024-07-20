@@ -54,4 +54,6 @@ public interface Seen {
 
 	Component getPadding();
 
+	Component getClientName(String clientName);
+
 }
