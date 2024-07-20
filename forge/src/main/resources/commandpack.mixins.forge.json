@@ -7,11 +7,11 @@
     "mixins": [
         "network.MixinForgeServerPlayerImpl",
         "network.MixinForgePluginMessagesImpl",
-        "plugin.MixinContainersImpl",
+        "network.MixinForgeConnectionImpl",
+        "plugin.MixinForgeContainersImpl",
         "game.MixinForgeEntityItemImpl"
     ],
     "injectors": {
         "defaultRequire": 1
-    },
-    "refmap": "commandpack.refmap.json"
+    }
 }

@@ -2,44 +2,29 @@ package sawfowl.commandpack.mixins.neoforge.plugin;
 
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.Overwrite;
 
 import net.kyori.adventure.text.Component;
+
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.moddiscovery.ModInfo;
 import net.neoforged.neoforgespi.language.IModInfo.ModVersion;
+
 import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
 import sawfowl.commandpack.apiclasses.ContainersImpl;
 import sawfowl.localeapi.api.TextUtils;
 
 @Mixin(value = ContainersImpl.class, remap = false)
-public abstract class MixinContainersImpl {
+public abstract class MixinNeoForgeContainersImpl {
 
-	@Shadow private Collection<ModContainer> mods;
-	@Shadow private Collection<ModContainer> allMods;
-	@Inject(method = "fillMods", at = @At("HEAD"))
-	public void onFillMods(CallbackInfo ci) {
-		if(mods.isEmpty()) mods.addAll(getForgeMods());
-	}
-
-	private Collection<ModContainer> getForgeMods() {
-		Collection<ModContainer> mods = new ArrayList<ModContainer>();
-		allMods.addAll(FMLLoader.getLoadingModList().getMods().stream().map(mod -> new ModContainerImpl(mod)).toList());
-		allMods.forEach(mod -> {
-			if(!mod.getLoaders().stream().filter(loader -> loader.equalsIgnoreCase("java_plain")).findFirst().isPresent()) mods.add(mod);
-		});
-		return Collections.unmodifiableCollection(new ArrayList<>(mods));
+	@Overwrite
+	private List<ModContainerImpl> findMods() {
+		return FMLLoader.getLoadingModList().getMods().stream().map(mod -> new ModContainerImpl(mod)).toList();
 	}
 
 	private class ModContainerImpl implements ModContainer {
@@ -52,7 +37,7 @@ public abstract class MixinContainersImpl {
 		private final String version;
 		private final List<String> loaders;
 		private final Component dependencies;
-		private final Path path;;
+		private final Path path;
 		public ModContainerImpl(ModInfo mod) {
 			name = mod.getDisplayName();
 			id = mod.getModId();

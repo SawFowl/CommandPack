@@ -19,6 +19,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
+import sawfowl.commandpack.apiclasses.CPConnection;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
 import sawfowl.commandpack.utils.CommandsUtil;
 
@@ -49,6 +50,11 @@ public abstract class MixinNeoForgeServerPlayerImpl implements MixinServerPlayer
 	@Override
 	public List<PlayerModInfo> getModList() {
 		return (List<PlayerModInfo>) CommandsUtil.EMPTY_VARIANTS;
+	}
+
+	@Override
+	public String getClientName() {
+		return ((CPConnection) ((MixinNeoForgeAccessorServerCommonPacketListener) connection).accessor$connection()).getClientName();
 	}
 
 	@Override

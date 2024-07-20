@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import io.netty.buffer.Unpooled;
 
 import net.kyori.adventure.text.Component;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -19,6 +18,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
+import sawfowl.commandpack.apiclasses.CPConnection;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
 import sawfowl.commandpack.utils.CommandsUtil;
 
@@ -27,8 +27,7 @@ import sawfowl.localeapi.api.Text;
 @Mixin(ServerPlayer.class)
 public abstract class MixinVanillaServerPlayerImpl implements MixinServerPlayer {
 
-	@Shadow
-	public ServerGamePacketListenerImpl connection;
+	@Shadow public ServerGamePacketListenerImpl connection;
 
 	@Override
 	public void sendPacket(CustomPacket packet) {
@@ -49,6 +48,11 @@ public abstract class MixinVanillaServerPlayerImpl implements MixinServerPlayer 
 	@Override
 	public List<PlayerModInfo> getModList() {
 		return (List<PlayerModInfo>) CommandsUtil.EMPTY_VARIANTS;
+	}
+
+	@Override
+	public String getClientName() {
+		return ((CPConnection) ((MixinVanillaAccessorServerCommonPacketListener) connection).accessor$connection()).getClientName();
 	}
 
 	@Override

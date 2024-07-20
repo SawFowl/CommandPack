@@ -61,10 +61,14 @@ public abstract class MixinNeoForgePluginMessagesImpl {
 			packetName = packet;
 			readableBytes = buffer.readableBytes();
 			isReadable = buffer.isReadable();
-			data = buffer.readableBytes() == 0 ? new byte[]{} : buffer.array();
+			data = buffer.readableBytes() == 0 ? new byte[]{} : buffer.readByteArray();
 			stringData = readableBytes == 0 ? "" : buffer.toString(0, readableBytes, StandardCharsets.UTF_8);
-			if(stringData.startsWith("\r")) stringData = stringData.substring(1);
-			if(stringData.startsWith(packet)) stringData = stringData.replaceFirst(packet, "");
+			char first = stringData.charAt(0);
+			stringData = !stringData.startsWith(packet) ? (stringData.contains(packet) && stringData.startsWith(first + packet) ? stringData.replace(first + packet, "") : stringData) : stringData.replace(first + packet, "");
+			stringData = stringData.replaceAll("\\p{C}", " ");
+			while(stringData.length() > 0 && stringData.charAt(stringData.length() - 1) == ' ') {
+				stringData = stringData.substring(0, stringData.length() - 1);
+			}
 			if(plugin.getMainConfig().getDebugPlayerData().packets()) {
 				plugin.getLogger().info(plugin.getLocales().getSystemLocale().getDebug().getDebugPlayerData().getPackets(player.getName().getString(), packet, stringData));
 			}

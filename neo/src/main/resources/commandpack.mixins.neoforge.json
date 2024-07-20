@@ -7,7 +7,8 @@
     "mixins": [
         "network.MixinNeoForgeServerPlayerImpl",
         "network.MixinNeoForgePluginMessagesImpl",
-        "plugin.MixinContainersImpl",
+        "network.MixinNeoForgeConnectionImpl",
+        "plugin.MixinNeoForgeContainersImpl",
         "game.MixinNeoForgeEntityItemImpl"
     ],
     "injectors": {

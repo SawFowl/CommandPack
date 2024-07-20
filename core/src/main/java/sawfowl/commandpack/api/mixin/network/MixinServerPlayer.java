@@ -43,6 +43,12 @@ public interface MixinServerPlayer extends ServerPlayer {
 	void sendMessage(String message);
 
 	/**
+	 * Getting the name of the player's client.<br>
+	 * Can be useful for tracking some cheat clients.
+	 */
+	String getClientName();
+
+	/**
 	 * Getting a list of mods from a player. Will work only on the server with Forge.<br>
 	 * If you have a vanilla server, the list will always be empty.<br>
 	 * The list will also be empty if the player has no mods.

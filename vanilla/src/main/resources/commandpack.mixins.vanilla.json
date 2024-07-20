@@ -7,6 +7,8 @@
     "mixins": [
         "network.MixinVanillaServerPlayerImpl",
         "network.MixinVanillaPluginMessagesImpl",
+        "network.MixinVanillaConnectionImpl",
+        "network.MixinVanillaAccessorServerCommonPacketListener",
         "game.MixinVanillaEntityItemImpl"
     ],
     "injectors": {

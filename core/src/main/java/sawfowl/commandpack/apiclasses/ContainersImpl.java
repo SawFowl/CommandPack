@@ -3,6 +3,7 @@ package sawfowl.commandpack.apiclasses;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
@@ -15,13 +16,14 @@ import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
 public class ContainersImpl implements ContainersCollection {
 
 	private CommandPackInstance plugin;
-	private final Collection<PluginContainer> plugins = new ArrayList<PluginContainer>();
-	private final Collection<ModContainer> mods = new ArrayList<ModContainer>();
-	private final Collection<ModContainer> allMods = new ArrayList<ModContainer>();
+	private final Collection<PluginContainer> plugins;;
+	private final Collection<ModContainer> allMods;
+	private final Collection<ModContainer> mods;
 	public ContainersImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
-		fillMods();
-		fillPlugins();
+		allMods = findMods();
+		mods = allMods.stream().filter(mod -> !mod.getLoaders().stream().filter(loader -> loader.equalsIgnoreCase("java_plain")).findFirst().isPresent()).toList();
+		plugins = findPlugins();
 	}
 
 	@Override
@@ -43,14 +45,16 @@ public class ContainersImpl implements ContainersCollection {
 			Optional.empty();
 	}
 
-	private void fillMods() {}
+	private List<ModContainer> findMods() {
+		return new ArrayList<ModContainer>();
+	}
 
-	public void fillPlugins() {
-		plugins.addAll(plugin.isModifiedServer()
+	private Collection<PluginContainer> findPlugins() {
+		return plugin.isModifiedServer()
 			?
 			Collections.unmodifiableCollection(new ArrayList<>(Sponge.pluginManager().plugins().stream().filter(container -> (!mods.stream().filter(mod -> mod.getModId().equals(container.metadata().id())).findFirst().isPresent())).toList()))
 			:
-			Sponge.pluginManager().plugins());
+			Sponge.pluginManager().plugins();
 	}
 
 }

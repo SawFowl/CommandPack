@@ -11,6 +11,7 @@ import io.netty.buffer.Unpooled;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -18,9 +19,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraftforge.network.NetworkContext;
 import net.minecraftforge.network.packets.ModVersions;
+
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
+import sawfowl.commandpack.apiclasses.CPConnection;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
 
 import sawfowl.localeapi.api.Text;
@@ -52,6 +55,11 @@ public abstract class MixinForgeServerPlayerImpl implements MixinServerPlayer {
 		if(!mods.isEmpty()) return mods;
 		mods = NetworkContext.get(connection.getConnection()).getModList().entrySet().stream().map(info -> createModInfo(info.getValue(), info.getKey())).toList();
 		return mods;
+	}
+
+	@Override
+	public String getClientName() {
+		return ((CPConnection) connection.getConnection()).getClientName();
 	}
 
 	@Override

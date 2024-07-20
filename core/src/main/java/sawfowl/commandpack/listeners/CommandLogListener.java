@@ -11,6 +11,7 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.command.ExecuteCommandEvent;
 import org.spongepowered.api.util.Nameable;
 import org.spongepowered.api.world.LocatableBlock;
+import org.spongepowered.common.SpongeGame;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.Debug.Commands;
@@ -27,6 +28,7 @@ public class CommandLogListener {
 
 	@Listener(order = Order.PRE)
 	public void onExecute(ExecuteCommandEvent.Pre event) {
+		if(event.commandCause().root() instanceof SpongeGame) return; //Bug in SpongeForge
 		switch (CommandExecutorTypes.findType(event.commandCause())) {
 		case SYSTEM:
 			log(getCommands().getLog(getCommands().getExecutors().getServer(), event.command(), event.arguments()));

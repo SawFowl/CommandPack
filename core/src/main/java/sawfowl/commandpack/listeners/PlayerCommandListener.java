@@ -17,7 +17,7 @@ public class PlayerCommandListener {
 	}
 
 	@Listener(order = Order.LAST)
-	public void onExecute(ExecuteCommandEvent.Pre event, @First ServerPlayer player) {
+	public void onExecute(ExecuteCommandEvent.Post event, @First ServerPlayer player) {
 		if(Sponge.server().onlinePlayers().size() > 40) {
 			Sponge.asyncScheduler().executor(plugin.getPluginContainer()).execute(() -> {
 				spyCommand(event, player, true);
@@ -36,7 +36,7 @@ public class PlayerCommandListener {
 		});
 	}
 
-	private void spyCommand(ExecuteCommandEvent.Pre event, ServerPlayer player, boolean parallel) {
+	private void spyCommand(ExecuteCommandEvent.Post event, ServerPlayer player, boolean parallel) {
 		(parallel ? Sponge.server().onlinePlayers().parallelStream() : Sponge.server().onlinePlayers().stream()).filter(p -> !p.uniqueId().equals(player.uniqueId()) && plugin.getPlayersData().getTempData().isSpyCommand(p)).forEach(p -> {
 			p.sendMessage(plugin.getLocales().getLocale(p).getCommands().getCommandSpy().getSpy(player, "/" + event.command() + " " + event.arguments()));
 		});
