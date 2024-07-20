@@ -28,7 +28,7 @@ subprojects {
 			url = 'https://libraries.minecraft.net/'
 		}
 		maven {
-			name = "JitPack"
+			name = "AspectRepo"
 			url 'https://maven.aspect-realms.ru/repository/maven-public/'
 		}
 	}
