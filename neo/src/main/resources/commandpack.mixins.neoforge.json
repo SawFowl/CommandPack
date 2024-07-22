@@ -9,6 +9,7 @@
         "network.MixinNeoForgePluginMessagesImpl",
         "network.MixinNeoForgeConnectionImpl",
         "plugin.MixinNeoForgeContainersImpl",
+        "plugin.MixinNeoForgeModPlatformEventListenerImpl",
         "game.MixinNeoForgeEntityItemImpl"
     ],
     "injectors": {

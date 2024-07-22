@@ -53,6 +53,8 @@ public interface Other {
 
 	Component getIllegalMods(String mods);
 
+	Component getIllegalClient(String mods);
+
 	Component getBackPack(String player);
 
 }

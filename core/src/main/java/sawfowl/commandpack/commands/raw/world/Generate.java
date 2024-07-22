@@ -1,5 +1,6 @@
 package sawfowl.commandpack.commands.raw.world;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -121,6 +122,7 @@ public class Generate extends AbstractWorldCommand {
 		private Vector3i current;
 		private int generated = 0;
 		private int totalChunksToGenerate;
+		private int save = 0;
 		FillChunksTask(ServerWorld world, int interval, long maxMemory, int chunks) {
 			this.world = world;
 			this.interval = interval;
@@ -140,13 +142,23 @@ public class Generate extends AbstractWorldCommand {
 			if(task == null) task = t;
 			int i = 0;
 			while(Sponge.server().targetTicksPerSecond() > 10 && getUsedMemory() < maxMemory && i < chunks && max.z() - current.z() > 0) {
-				Vector3i next = nextPos(current);
-				if(next.z() < max.z()) {
-					current = next;
-					world.loadChunk(current, true);
+				if(save <= 20) {
+					Vector3i next = nextPos(current);
+					if(next.z() < max.z()) {
+						current = next;
+						world.loadChunk(current, true);
+					}
+					generated++;
+					i++;
+					save++;
+				} else {
+					try {
+						world.saveAndFlush();
+						save = 0;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
-				generated++;
-				i++;
 			}
 			if(getCurrentTime() - lastSendMessage >= 5) sendDebugMessage();
 			if(generated >= totalChunksToGenerate) {

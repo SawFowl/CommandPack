@@ -123,6 +123,7 @@ import sawfowl.commandpack.configure.configs.punishment.WarnsData;
 import sawfowl.commandpack.configure.locale.Locales;
 import sawfowl.commandpack.listeners.CommandLogListener;
 import sawfowl.commandpack.listeners.EntityDamageListener;
+import sawfowl.commandpack.listeners.ModPlatformEventListener;
 import sawfowl.commandpack.listeners.PlayerChatListener;
 import sawfowl.commandpack.listeners.PlayerCommandListener;
 import sawfowl.commandpack.listeners.PlayerConnectionListener;
@@ -568,6 +569,7 @@ public class CommandPackInstance {
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new PlayerDeathAndRespawnListener(instance));
 		Sponge.eventManager().registerListeners(pluginContainer, new EntityDamageListener(instance));
+		if(isModifiedServer()) new ModPlatformEventListener(instance);
 	}
 
 	private void createTasks() {

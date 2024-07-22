@@ -8,7 +8,6 @@ import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
-import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -36,6 +35,10 @@ public class Mods extends AbstractInfoCommand {
 		if(getPlayer(context).isPresent()) {
 			ServerPlayer target = getPlayer(context).get();
 			List<Component> mods = MixinServerPlayer.cast(target).getModList().stream().map(mod -> mod.asComponent()).toList();
+			if(mods.isEmpty()) {
+				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getServerStat().getModsNotFound());
+				return;
+			}
 			Component title = plugin.getLocales().getLocale(locale).getCommands().getServerStat().getPlayerMods(target, mods.size());
 			if(isPlayer) {
 				delay((ServerPlayer) src, locale, consumer -> sendPaginationList(src, title, Component.text("=").color(NamedTextColor.DARK_AQUA), linesPerPage, mods));
@@ -47,7 +50,7 @@ public class Mods extends AbstractInfoCommand {
 
 	@Override
 	public Parameterized build() {
-		return builder()
+		return !plugin.isModifiedServer() ? fastBuild() : builder()
 				.addChild(new ModInfo(plugin).build(), "info")
 				.build();
 	}
@@ -69,22 +72,7 @@ public class Mods extends AbstractInfoCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.SERVER_STAT_STAFF_PLAYER_MODS_LIST, true), true, locale -> getExceptions(locale).getPlayerNotPresent()));
-	}
-
-	@Override
-	public void register(RegisterCommandEvent<Parameterized> event) {
-		if(!plugin.isModifiedServer()) return;
-		if(build() == null) return;
-		if(getCommandSettings() == null) {
-			event.register(getContainer(), build(), command());
-		} else {
-			if(!getCommandSettings().isEnable()) return;
-			if(getCommandSettings().getAliases() != null && getCommandSettings().getAliases().length > 0) {
-				event.register(getContainer(), build(), command(), getCommandSettings().getAliases());
-			} else event.register(getContainer(), build(), command());
-		}
-		CommandPackInstance.getInstance().getPlayersData().getTempData().addTrackingCooldownCommand(this);
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.SERVER_STAT_STAFF_PLAYER_MODS_LIST, plugin.isModifiedServer()), plugin.isModifiedServer(), locale -> getExceptions(locale).getPlayerNotPresent()));
 	}
 
 }

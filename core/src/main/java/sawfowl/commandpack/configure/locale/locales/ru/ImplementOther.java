@@ -26,6 +26,8 @@ public class ImplementOther implements Other {
 	private ImplementKeep keep = new ImplementKeep();
 	@Setting("ExecuteCommand")
 	private ImplementExecuteCommand executeCommand = new ImplementExecuteCommand();
+	@Setting("IllegalClient")
+	private Component illegalClient = TextUtils.deserializeLegacy("&cНа сервере установлен запрет на подключение с клиента&f:&c" + Placeholders.VALUE + ".");
 	@Setting("IllegalMods")
 	private Component illegalMods = TextUtils.deserializeLegacy("&cНа сервере действует запрет на использование некоторых модов, которые у вас есть&f:\n&c" + Placeholders.VALUE + ".");
 	@Setting("BackPack")
@@ -44,6 +46,11 @@ public class ImplementOther implements Other {
 	@Override
 	public ExecuteCommand getExecuteCommand() {
 		return executeCommand;
+	}
+
+	@Override
+	public Component getIllegalClient(String client) {
+		return Text.of(illegalClient).replace(Placeholders.VALUE, client).get();
 	}
 
 	@Override

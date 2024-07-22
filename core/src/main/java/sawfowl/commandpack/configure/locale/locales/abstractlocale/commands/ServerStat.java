@@ -46,4 +46,6 @@ public interface ServerStat {
 
 	Component getPlayerMods(ServerPlayer player, int value);
 
+	Component getModsNotFound();
+
 }

@@ -6,6 +6,10 @@ public interface RestrictMods {
 
 	String getBlacklist();
 
+	String getClients();
+
 	String getModsList();
+
+	String getPackets();
 
 }

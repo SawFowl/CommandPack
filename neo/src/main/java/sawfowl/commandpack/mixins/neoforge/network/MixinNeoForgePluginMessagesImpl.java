@@ -1,6 +1,7 @@
 package sawfowl.commandpack.mixins.neoforge.network;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.UUID;
 
 import org.spongepowered.api.Sponge;
@@ -22,6 +23,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 import sawfowl.commandpack.CommandPackInstance;
+import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.events.RecievePacketEvent;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 
@@ -44,7 +46,14 @@ public abstract class MixinNeoForgePluginMessagesImpl {
 	public void onPluginMessage(ServerboundCustomPayloadPacket packet, CallbackInfo ci) {
 		FriendlyByteBuf copy = new FriendlyByteBuf(Unpooled.buffer());
 		ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
-		Sponge.eventManager().post(new PacketEvent(packet.payload().type().id().toString(), copy));
+		PacketEvent event = new PacketEvent(packet.payload().type().id().toString(), copy);
+		if(plugin.getMainConfig().getRestrictMods().isEnable() && !getPlayer().hasPermission(Permissions.ALL_MODS_ACCESS) && event.getPacketName().equals("minecraft:register")) {
+			List<String> disAllowedMods = plugin.getMainConfig().getRestrictMods().getDisAllowedMods(event.getDataAsString());
+			if(!disAllowedMods.isEmpty()) getPlayer().kick(plugin.getLocales().getLocale(getPlayer()).getOther().getIllegalMods(String.join(", ", disAllowedMods)));
+			disAllowedMods = null;
+		}
+		if(getPlayer().isOnline()) Sponge.eventManager().post(event);
+		event = null;
 	}
 
 	private class PacketEvent implements RecievePacketEvent {

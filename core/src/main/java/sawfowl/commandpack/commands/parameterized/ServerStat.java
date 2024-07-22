@@ -41,10 +41,8 @@ public class ServerStat extends AbstractInfoCommand {
 		super(plugin);
 		plugins = new Plugins(plugin);
 		pluginsCommand = plugins.build();
-		if(plugin.isModifiedServer()) {
-			modsClass = new Mods(plugin);
-			modsCommand = modsClass.build();
-		}
+		modsClass = new Mods(plugin);
+		modsCommand = modsClass.build();
 		this.tps = new Tps(plugin);
 		this.tpsCommand = tps.build();
 		this.time = new ServerTime(plugin);
@@ -64,7 +62,7 @@ public class ServerStat extends AbstractInfoCommand {
 
 	@Override
 	public Parameterized build() {
-		return (plugin.isModifiedServer() ? builder().addChild(modsCommand, "mods") : builder())
+		return builder().addChild(modsCommand, "mods")
 				.addChild(new Worlds(plugin).build(), "worlds")
 				.addChild(pluginsCommand, "plugins")
 				.addChild(tpsCommand, "tps")
@@ -82,7 +80,7 @@ public class ServerStat extends AbstractInfoCommand {
 				event.register(getContainer(), build(), command(), getCommandSettings().getAliases());
 			} else event.register(getContainer(), build(), command());
 		}
-		if(plugin.isModifiedServer()) modsClass.register(event);
+		modsClass.register(event);
 		plugins.register(event);
 		tps.enableRegister();
 		tps.register(event);

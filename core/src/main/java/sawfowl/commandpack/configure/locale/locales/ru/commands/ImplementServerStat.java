@@ -59,6 +59,8 @@ public class ImplementServerStat implements ServerStat {
 	private Component mods = TextUtils.deserializeLegacy("&eМоды &7(&b" + Placeholders.VALUE + "&7)&e");
 	@Setting("PlayerMods")
 	private Component playerMods = TextUtils.deserializeLegacy("&eМоды " + Placeholders.PLAYER + " &7(&b" + Placeholders.VALUE + "&7)&e");
+	@Setting("ModsNotFound")
+	private Component modsNotFound = TextUtils.deserializeLegacy("&eУ игрока нет модов или их невозможно определить.");
 
 	@Override
 	public Buttons getButtons() {
@@ -143,6 +145,11 @@ public class ImplementServerStat implements ServerStat {
 	@Override
 	public Component getPlayerMods(ServerPlayer player, int value) {
 		return Text.of(playerMods).replace(Placeholders.PLAYER, player.name()).replace(Placeholders.VALUE, value).get();
+	}
+
+	@Override
+	public Component getModsNotFound() {
+		return modsNotFound;
 	}
 
 }
