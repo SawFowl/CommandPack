@@ -27,6 +27,13 @@ public class Locales {
 		localeService.setDefaultReference(CommandPackInstance.getInstance().getPluginContainer(), ImplementPluginLocale.class);
 		generateDefault();
 		generateRu();
+		localeService.getPluginLocales(pluginid).values().forEach(locale -> {
+			try {
+				locale.setLocaleReference(ImplementPluginLocale.class);
+			} catch (ConfigurateException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	public LocaleService getLocaleService() {
