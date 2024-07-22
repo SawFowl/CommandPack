@@ -51,7 +51,7 @@ public interface Other {
 
 	ExecuteCommand getExecuteCommand();
 
-	Component getIllegalMods(String mods);
+	Component getIllegalMods(boolean blackList, String mods);
 
 	Component getIllegalClient(String mods);
 

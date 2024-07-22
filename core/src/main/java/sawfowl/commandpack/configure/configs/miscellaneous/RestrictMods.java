@@ -36,19 +36,20 @@ public class RestrictMods {
 		return enable;
 	}
 
+	public boolean isBlackList() {
+		return blackList;
+	}
+
 	public boolean isAllowedPlayerMod(String modId) {
 		return blackList ? !mods.contains(modId) : mods.contains(modId);
 	}
 
 	public List<String> getDisAllowedMods(String packetData) {
-		return blackList ?
-			packets.entrySet().stream().filter(entry -> packetData.contains(entry.getKey())).map(entry -> entry.getValue()).toList()
-			:
-			packets.entrySet().stream().filter(entry -> !packetData.contains(entry.getKey())).map(entry -> entry.getValue()).toList();
+		return packets.entrySet().stream().filter(entry -> packetData.contains(entry.getKey())).map(entry -> entry.getValue()).toList();
 	}
 
 	public boolean isAllowedClient(String client) {
-		return blackList ? clients.contains(client) : !clients.contains(client);
+		return blackList ? !clients.contains(client.toLowerCase()) : clients.contains(client.toLowerCase());
 	}
 
 }

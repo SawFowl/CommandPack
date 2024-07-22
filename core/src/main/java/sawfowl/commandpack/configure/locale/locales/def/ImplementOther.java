@@ -27,9 +27,11 @@ public class ImplementOther implements Other {
 	@Setting("ExecuteCommand")
 	private ImplementExecuteCommand executeCommand = new ImplementExecuteCommand();
 	@Setting("IllegalClient")
-	private Component illegalClient = TextUtils.deserializeLegacy("&cThe server is set to prohibit connection from the client&f:&c" + Placeholders.VALUE + ".");
+	private Component illegalClient = TextUtils.deserializeLegacy("&cThe server is set to prohibit connection from the client&f:&e " + Placeholders.VALUE + "&c.");
 	@Setting("IllegalMods")
-	private Component illegalMods = TextUtils.deserializeLegacy("&cThe server has a ban on the use of some of the mods you have&f:\n&c" + Placeholders.VALUE + ".");
+	private Component illegalMods = TextUtils.deserializeLegacy("&cThe server has a ban on the use of some of the mods you have&f:\n&e" + Placeholders.VALUE + "&c.");
+	@Setting("RequiredMods")
+	private Component requiredMods = TextUtils.deserializeLegacy("&cThe following mods are required to log into the server&f:\n&e" + Placeholders.VALUE + "&c.");
 	@Setting("BackPack")
 	private Component backPack = TextUtils.deserializeLegacy("&6&lBackpack " + Placeholders.PLAYER);
 
@@ -54,8 +56,8 @@ public class ImplementOther implements Other {
 	}
 
 	@Override
-	public Component getIllegalMods(String mods) {
-		return Text.of(illegalMods).replace(Placeholders.VALUE, mods).get();
+	public Component getIllegalMods(boolean blackList, String mods) {
+		return Text.of(blackList ? illegalMods : requiredMods).replace(Placeholders.VALUE, mods).get();
 	}
 
 	@Override

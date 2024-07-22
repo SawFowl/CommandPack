@@ -2,8 +2,6 @@ package sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.mai
 
 public interface RestrictMods {
 
-	String getTitle();
-
 	String getBlacklist();
 
 	String getClients();

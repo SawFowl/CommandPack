@@ -49,7 +49,7 @@ public abstract class MixinNeoForgePluginMessagesImpl {
 		PacketEvent event = new PacketEvent(packet.payload().type().id().toString(), copy);
 		if(plugin.getMainConfig().getRestrictMods().isEnable() && !getPlayer().hasPermission(Permissions.ALL_MODS_ACCESS) && event.getPacketName().equals("minecraft:register")) {
 			List<String> disAllowedMods = plugin.getMainConfig().getRestrictMods().getDisAllowedMods(event.getDataAsString());
-			if(!disAllowedMods.isEmpty()) getPlayer().kick(plugin.getLocales().getLocale(getPlayer()).getOther().getIllegalMods(String.join(", ", disAllowedMods)));
+			if(!disAllowedMods.isEmpty()) getPlayer().kick(plugin.getLocales().getLocale(getPlayer()).getOther().getIllegalMods(true, String.join(", ", disAllowedMods)));
 			disAllowedMods = null;
 		}
 		if(getPlayer().isOnline()) Sponge.eventManager().post(event);

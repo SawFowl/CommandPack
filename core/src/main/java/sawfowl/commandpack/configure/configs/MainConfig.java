@@ -51,7 +51,6 @@ public class MainConfig {
 	@Setting("DebugPlayerData")
 	private DebugPlayerData debugPlayerData  = new DebugPlayerData();
 	@Setting("RestrictMods")
-	@LocalisedComment(path = {"Comments", "MainConfig", "RestrictMods", "Title"}, plugin = "commandpack")
 	private RestrictMods restrictMods = new RestrictMods();
 	@Setting("RestrictEntitySpawn")
 	@LocalisedComment(path = {"Comments", "MainConfig", "RestrictEntitySpawn", "Title"}, plugin = "commandpack")

@@ -59,7 +59,7 @@ public class PlayerConnectionListener {
 				MixinServerPlayer.cast(event.player()).getModList().forEach(mod -> {
 					if(!plugin.getMainConfig().getRestrictMods().isAllowedPlayerMod(mod.getId())) banedPlayerMods.add(mod.getId());
 				});
-				if(!banedPlayerMods.isEmpty() && event.player().isOnline()) event.player().kick(plugin.getLocales().getLocale(event.player()).getOther().getIllegalMods(String.join(", ", banedPlayerMods)));
+				if(!banedPlayerMods.isEmpty() && event.player().isOnline()) event.player().kick(plugin.getLocales().getLocale(event.player()).getOther().getIllegalMods(plugin.getMainConfig().getRestrictMods().isBlackList(), String.join(", ", banedPlayerMods)));
 			}).build());
 		}
 		if(plugin.getMainConfig().getEconomy().isEnable()) plugin.getEconomy().getEconomyServiceImpl().checkAccounts(event.player());
