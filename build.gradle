@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "sawfowl.commandpack"
-version = "${major}.${minor}.${patch}-${api}-${suffix}"
+version = "${major}.${minor}.${patch}-${suffix}-S${api}"
 
 subprojects {
 	apply {

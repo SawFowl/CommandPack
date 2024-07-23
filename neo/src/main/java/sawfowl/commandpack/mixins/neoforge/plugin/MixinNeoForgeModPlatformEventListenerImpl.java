@@ -1,5 +1,6 @@
 package sawfowl.commandpack.mixins.neoforge.plugin;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.spongepowered.api.Sponge;
@@ -78,8 +79,18 @@ public class MixinNeoForgeModPlatformEventListenerImpl {
 			}
 
 			@Override
-			public List<Vector3i> getBlockPositionsAffected() {
+			public Collection<Vector3i> getBlockPositionsAffected() {
 				return blockPositionsAffected;
+			}
+
+			@Override
+			public void removeBlock(Vector3i vector3i) {
+				event.getExplosion().getToBlow().removeIf(position -> position.getX() == vector3i.x() && position.getY() == vector3i.y() && position.getZ() == vector3i.z());
+			}
+
+			@Override
+			public void removeBlocks(Collection<Vector3i> vectors3i) {
+				vectors3i.forEach(vector3i -> removeBlock(vector3i));
 			}
 
 		});

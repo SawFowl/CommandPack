@@ -1,6 +1,6 @@
 package sawfowl.commandpack.api.events;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.annotation.Nullable;
 
@@ -18,7 +18,11 @@ public interface ModExplosionEvent extends Event, Cancellable {
 
 	ServerWorld getWorld();
 
-	List<Vector3i> getBlockPositionsAffected();
+	Collection<Vector3i> getBlockPositionsAffected();
+
+	void removeBlock(Vector3i vector3i);
+
+	void removeBlocks(Collection<Vector3i> vectors3i);
 
 	@Nullable Entity getDirectSourceEntity();
 
