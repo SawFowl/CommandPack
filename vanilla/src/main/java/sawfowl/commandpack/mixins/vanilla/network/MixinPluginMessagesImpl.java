@@ -1,4 +1,4 @@
-package sawfowl.commandpack.mixins.neoforge.network;
+package sawfowl.commandpack.mixins.vanilla.network;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -28,7 +28,7 @@ import sawfowl.commandpack.api.events.RecievePacketEvent;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 
 @Mixin(ServerGamePacketListenerImpl.class)
-public abstract class MixinNeoForgePluginMessagesImpl {
+public abstract class MixinPluginMessagesImpl {
 
 	private static final CommandPackInstance plugin = CommandPackInstance.getInstance();
 

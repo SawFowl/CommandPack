@@ -20,7 +20,7 @@ import sawfowl.commandpack.apiclasses.ContainersImpl;
 import sawfowl.localeapi.api.TextUtils;
 
 @Mixin(value = ContainersImpl.class, remap = false)
-public abstract class MixinNeoForgeContainersImpl {
+public abstract class MixinContainersImpl {
 
 	@Overwrite
 	private List<ModContainerImpl> findMods() {

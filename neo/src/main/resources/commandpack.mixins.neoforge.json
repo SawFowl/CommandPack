@@ -5,12 +5,13 @@
     "target": "@env(DEFAULT)",
     "compatibilityLevel": "JAVA_18",
     "mixins": [
-        "network.MixinNeoForgeServerPlayerImpl",
-        "network.MixinNeoForgePluginMessagesImpl",
-        "network.MixinNeoForgeConnectionImpl",
-        "plugin.MixinNeoForgeContainersImpl",
-        "plugin.MixinNeoForgeModPlatformEventListenerImpl",
-        "game.MixinNeoForgeEntityItemImpl"
+        "network.MixinServerPlayerImpl",
+        "network.MixinPluginMessagesImpl",
+        "network.MixinConnectionImpl",
+        "plugin.MixinContainersImpl",
+        "plugin.MixinModPlatformEventListenerImpl",
+        "game.MixinEntityItemImpl",
+        "game.MixinServerLevelImpl"
     ],
     "injectors": {
         "defaultRequire": 1

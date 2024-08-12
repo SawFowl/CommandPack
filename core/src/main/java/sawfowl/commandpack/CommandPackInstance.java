@@ -45,7 +45,6 @@ import org.spongepowered.api.world.generation.ChunkGenerator;
 import org.spongepowered.api.world.generation.config.flat.FlatGeneratorConfig;
 import org.spongepowered.api.world.generation.config.flat.LayerConfig;
 import org.spongepowered.api.world.server.ServerWorld;
-import org.spongepowered.common.bridge.server.level.ServerLevelBridge;
 import org.spongepowered.common.command.manager.SpongeCommandManager;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
@@ -86,6 +85,7 @@ import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
+import sawfowl.commandpack.api.mixin.game.MixinServerWorld;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.api.services.PunishmentService;
@@ -430,8 +430,8 @@ public class CommandPackInstance {
 	}
 
 	private void registerPlaceholders() {
-		Placeholders.register(ServerWorld.class, "WorldTPS", (text, world, def) -> (text.replace("%world-tps%", BigDecimal.valueOf(getAPI().getTPS().getWorldTPS(world)).setScale(2, RoundingMode.HALF_UP).doubleValue())));
-		Placeholders.register(ServerWorld.class, "WorldTicks", (text, world, def) -> (text.replace("%world-ticks%", BigDecimal.valueOf(getAPI().getTPS().getWorldTickTime(world)).setScale(2, RoundingMode.HALF_UP).doubleValue())));
+		Placeholders.register(ServerWorld.class, "WorldTPS", (text, world, def) -> (text.replace("%world-tps%", BigDecimal.valueOf(MixinServerWorld.cast(world).getTPS()).setScale(2, RoundingMode.HALF_UP).doubleValue())));
+		Placeholders.register(ServerWorld.class, "WorldTicks", (text, world, def) -> (text.replace("%world-ticks%", BigDecimal.valueOf(MixinServerWorld.cast(world).getTickTime()).setScale(2, RoundingMode.HALF_UP).doubleValue())));
 		if(getMainConfig().getPunishment().isEnable()) {
 			Placeholders.register(ServerPlayer.class, "PlayerWarns", (text, player, def) -> (text.replace("%player-warns%", getPunishmentService().getWarns(player).map(warns -> warns.totalWarns() + "/" + warns.inAllTime()).orElse("0"))));
 			Placeholders.register(ServerPlayer.class, "PlayerMuteExpire", (text, player, def) -> (text.replace("%player-mute-expire%", getPunishmentService().getMute(player).map(mute -> expire(player.locale(), mute)).orElse(Component.empty()))));
@@ -473,14 +473,11 @@ public class CommandPackInstance {
 		return new TPS() {
 			@Override
 			public double getWorldTickTime(ServerWorld world) {
-				long[] tickTimes = ((ServerLevelBridge) world).bridge$recentTickTimes();
-				long $$1 = 0L;
-				for(long $$2 : tickTimes) $$1 += $$2;
-				return ((double)$$1 / (double)tickTimes.length) * 1.0E-6D;
+				return MixinServerWorld.cast(world).getTickTime();
 			}
 			@Override
 			public double getWorldTPS(ServerWorld world) {
-				return Math.min(1000.0 / (getWorldTickTime(world)), 20.0);
+				return MixinServerWorld.cast(world).getTPS();
 			}
 			@Override
 			public AverageTPS getAverageTPS() {
@@ -539,6 +536,10 @@ public class CommandPackInstance {
 			@Override
 			public TPS getTPS() {
 				return tps;
+			}
+			@Override
+			public AverageTPS getAverageTPS() {
+				return tps.getAverageTPS();
 			}
 			@Override
 			public void registerCommand(RawCommand command) throws IllegalStateException {

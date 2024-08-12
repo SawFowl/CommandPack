@@ -1,4 +1,4 @@
-package sawfowl.commandpack.mixins.vanilla.network;
+package sawfowl.commandpack.mixins.forge.network;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -27,12 +27,12 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.events.RecievePacketEvent;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 
-@Mixin(ServerGamePacketListenerImpl.class)
-public abstract class MixinVanillaPluginMessagesImpl {
+@Mixin(value = ServerGamePacketListenerImpl.class, remap = false)
+public abstract class MixinPluginMessagesImpl {
 
 	private static final CommandPackInstance plugin = CommandPackInstance.getInstance();
 
-	@Shadow ServerPlayer player;
+	@Shadow public ServerPlayer player;
 
 	private MixinServerPlayer getPlayer() {
 		return (MixinServerPlayer) player;

@@ -5,12 +5,13 @@
     "target": "@env(DEFAULT)",
     "compatibilityLevel": "JAVA_18",
     "mixins": [
-        "network.MixinForgeServerPlayerImpl",
-        "network.MixinForgePluginMessagesImpl",
-        "network.MixinForgeConnectionImpl",
-        "plugin.MixinForgeContainersImpl",
-        "plugin.MixinForgeModPlatformEventListenerImpl",
-        "game.MixinForgeEntityItemImpl"
+        "network.MixinServerPlayerImpl",
+        "network.MixinPluginMessagesImpl",
+        "network.MixinConnectionImpl",
+        "plugin.MixinContainersImpl",
+        "plugin.MixinModPlatformEventListenerImpl",
+        "game.MixinEntityItemImpl",
+        "game.MixinServerLevelImpl"
     ],
     "injectors": {
         "defaultRequire": 1

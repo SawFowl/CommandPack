@@ -1,4 +1,4 @@
-package sawfowl.commandpack.mixins.neoforge.network;
+package sawfowl.commandpack.mixins.vanilla.network;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import io.netty.buffer.Unpooled;
 
 import net.kyori.adventure.text.Component;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -26,10 +25,9 @@ import sawfowl.commandpack.utils.CommandsUtil;
 import sawfowl.localeapi.api.Text;
 
 @Mixin(ServerPlayer.class)
-public abstract class MixinNeoForgeServerPlayerImpl implements MixinServerPlayer {
+public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
-	@Shadow
-	public ServerGamePacketListenerImpl connection;
+	@Shadow public ServerGamePacketListenerImpl connection;
 
 	@Override
 	public void sendPacket(CustomPacket packet) {
@@ -54,7 +52,7 @@ public abstract class MixinNeoForgeServerPlayerImpl implements MixinServerPlayer
 
 	@Override
 	public String getClientName() {
-		return ((CPConnection) ((MixinNeoForgeAccessorServerCommonPacketListener) connection).accessor$connection()).getClientName();
+		return ((CPConnection) ((MixinAccessorServerCommonPacketListener) connection).accessor$connection()).getClientName();
 	}
 
 	@Override

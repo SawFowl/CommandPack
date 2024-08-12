@@ -1,4 +1,4 @@
-package sawfowl.commandpack.mixins.neoforge.game;
+package sawfowl.commandpack.mixins.forge.game;
 
 import java.util.Optional;
 
@@ -10,8 +10,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import sawfowl.commandpack.api.mixin.game.EntityItem;
 
-@Mixin(ItemEntity.class)
-public abstract class MixinNeoForgeEntityItemImpl implements EntityItem {
+@Mixin(value = ItemEntity.class, remap = false)
+public abstract class MixinEntityItemImpl implements EntityItem {
 
 	@Shadow public abstract ItemStack getItem();
 

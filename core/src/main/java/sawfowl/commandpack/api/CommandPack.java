@@ -15,8 +15,10 @@ import sawfowl.commandpack.api.data.command.Delay;
 import sawfowl.commandpack.api.data.command.Price;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
+import sawfowl.commandpack.api.mixin.game.MixinServerWorld;
 import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.api.services.PunishmentService;
+import sawfowl.commandpack.api.tps.AverageTPS;
 import sawfowl.commandpack.api.tps.TPS;
 import sawfowl.commandpack.configure.serializers.CancelRulesSerializer;
 import sawfowl.commandpack.configure.serializers.CommandPriceSerializer;
@@ -90,8 +92,15 @@ public interface CommandPack {
 
 	/**
 	 * Getting information about server and worlds TPS.
+	 * @deprecated Use {@link MixinServerWorld}
 	 */
+	@Deprecated
 	TPS getTPS();
+
+	/**
+	 * View average TPS values over time intervals of 1m, 5m, 10m.
+	 */
+	AverageTPS getAverageTPS();
 
 	/**
 	 * Getting a collections of {@link PluginContainer} and {@link ModContainer} on the server.

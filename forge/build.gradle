@@ -1,16 +1,15 @@
-buildscript {
-	repositories {
-		mavenCentral()
-		maven { url = 'https://maven.minecraftforge.net' }
-	}
-	dependencies {
-		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '6.0.+', changing: true
-		classpath 'org.spongepowered:mixingradle:0.7+'
-	}
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'net.minecraftforge.gradle' version '6.0.24'
+    id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
+
+repositories {
+	mavenCentral()
+	maven { url = 'https://maven.minecraftforge.net' }
+}
 
 minecraft {
 	mappings channel: 'official', version: "${minecraft}"
@@ -18,7 +17,7 @@ minecraft {
 }
 
 dependencies {
-	minecraft "net.minecraftforge:forge:${minecraft}-${forge}"
+	minecraft "net.minecraftforge:forge:${forge}"
 	implementation "org.spongepowered:spongeapi:${api}"
 	implementation "org.spongepowered:spongevanilla:1.21-12.0.0-RC1779:universal"
 	implementation 'org.spongepowered:mixin:0.8.5'

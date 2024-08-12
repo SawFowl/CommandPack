@@ -27,7 +27,7 @@ public class CommandLogListener {
 	}
 
 	@Listener(order = Order.PRE)
-	public void onExecute(ExecuteCommandEvent.Pre event) {
+	public void onExecute(ExecuteCommandEvent.Post event) {
 		if(event.commandCause().root() instanceof SpongeGame) return; //Bug in SpongeForge
 		switch (CommandExecutorTypes.findType(event.commandCause())) {
 		case SYSTEM:

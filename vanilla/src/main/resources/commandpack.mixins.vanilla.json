@@ -5,11 +5,12 @@
     "target": "@env(DEFAULT)",
     "compatibilityLevel": "JAVA_21",
     "mixins": [
-        "network.MixinVanillaServerPlayerImpl",
-        "network.MixinVanillaPluginMessagesImpl",
-        "network.MixinVanillaConnectionImpl",
-        "network.MixinVanillaAccessorServerCommonPacketListener",
-        "game.MixinVanillaEntityItemImpl"
+        "network.MixinServerPlayerImpl",
+        "network.MixinPluginMessagesImpl",
+        "network.MixinConnectionImpl",
+        "network.MixinAccessorServerCommonPacketListener",
+        "game.MixinEntityItemImpl",
+        "game.MixinServerLevelImpl"
     ],
     "injectors": {
         "defaultRequire": 1

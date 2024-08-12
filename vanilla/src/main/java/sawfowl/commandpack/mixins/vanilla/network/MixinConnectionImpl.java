@@ -1,4 +1,4 @@
-package sawfowl.commandpack.mixins.neoforge.network;
+package sawfowl.commandpack.mixins.vanilla.network;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,7 +15,7 @@ import net.minecraft.network.protocol.common.custom.BrandPayload;
 import sawfowl.commandpack.apiclasses.CPConnection;
 
 @Mixin(Connection.class)
-public class MixinNeoForgeConnectionImpl implements CPConnection {
+public class MixinConnectionImpl implements CPConnection {
 
 	private String clientName;
 

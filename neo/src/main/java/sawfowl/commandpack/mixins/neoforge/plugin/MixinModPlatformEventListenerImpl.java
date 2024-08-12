@@ -26,7 +26,7 @@ import sawfowl.commandpack.api.events.ModExplosionEvent;
 import sawfowl.commandpack.listeners.ModPlatformEventListener;
 
 @Mixin(value = ModPlatformEventListener.class, remap = false)
-public class MixinNeoForgeModPlatformEventListenerImpl {
+public class MixinModPlatformEventListenerImpl {
 
 	@Shadow CommandPackInstance plugin;
 
