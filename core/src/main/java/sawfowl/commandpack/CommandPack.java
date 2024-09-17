@@ -261,7 +261,6 @@ public class CommandPack {
 		playersData = new PlayersDataImpl(instance);
 		configManager = new ConfigManager(instance);
 		locales = new Locales(event.getLocaleService(), getMainConfig().isJsonLocales());
-		configManager.loadPlayersData();
 		isForge = checkForge();
 		economy = new Economy(instance);
 		Sponge.eventManager().registerListeners(pluginContainer, economy);
@@ -448,6 +447,7 @@ public class CommandPack {
 				}
 			});
 		}).build());
+		configManager.loadPlayersData();
 		serverStartedTime = System.currentTimeMillis();
 		registeredRawCommands.forEach(this::registerRaw);
 		registeredParameterizedCommands.forEach(this::registerParameterized);
