@@ -31,7 +31,7 @@ public class MixinConnector implements IMixinConnector {
 
 	private boolean checkNeo() {
 		try {
-			Class.forName("net.neoforged.neoforge.common.NeoForge");
+			Class.forName("net.neoforged.fml.loading.moddiscovery.ModInfo");
 			return true;
 		} catch (Exception e) {
 			return false;

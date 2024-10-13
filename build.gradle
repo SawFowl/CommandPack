@@ -27,10 +27,10 @@ subprojects {
 			name = "MinecraftLibs"
 			url = 'https://libraries.minecraft.net/'
 		}
-		maven {
-			name = "AspectRepo"
-			url 'https://maven.aspect-realms.ru/repository/maven-public/'
-		}
+		//maven {
+		//	name = "AspectRepo"
+		//	url 'https://maven.aspect-realms.ru/repository/maven-public/'
+		//}
 	}
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'
