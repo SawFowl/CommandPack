@@ -311,7 +311,7 @@ public class Kit extends AbstractRawCommand {
 		List<Item> itemsSpawn = new ArrayList<>();
 		items.forEach(i -> {
 			Item item = player.world().createEntity(EntityTypes.ITEM.get(), player.blockPosition());
-			item.offer(Keys.ITEM_STACK_SNAPSHOT, i.createSnapshot());
+			item.offer(Keys.ITEM_STACK_SNAPSHOT, i.asImmutable());
 			itemsSpawn.add(item);
 		});
 		try(StackFrame frame = Sponge.server().causeStackManager().pushCauseFrame()) {

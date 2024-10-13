@@ -75,7 +75,7 @@ public class BackpackData implements Backpack {
 
 	@Override
 	public boolean addItem(int slot, ItemStackSnapshot item) {
-		return addItem(slot, item.createStack());
+		return addItem(slot, item.asMutable());
 	}
 
 	@Override
