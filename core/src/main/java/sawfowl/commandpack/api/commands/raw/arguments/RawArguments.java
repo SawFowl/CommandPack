@@ -203,8 +203,8 @@ public class RawArguments {
 	public static RawArgument<GameProfile> createGameProfile(RawBasicArgumentData<GameProfile> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			GameProfile.class,
-			(CommandCause cause, String[] args) -> Sponge.server().userManager().streamAll().map(profile -> profile.name().orElse(profile.examinableName())),
-			(CommandCause cause, String[] args) -> args.length >= data.cursor() + 1 ? Sponge.server().userManager().streamAll().filter(profile -> profile.name().orElse(profile.examinableName()).equals(args[0])).findFirst() : Optional.empty(),
+			(CommandCause cause, String[] args) -> Sponge.server().gameProfileManager().cache().all().stream().map(profile -> profile.name().orElse(profile.examinableName())),
+			(CommandCause cause, String[] args) -> args.length >= data.cursor() + 1 ? Sponge.server().gameProfileManager().cache().findByName(args[0]) : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.GAME_PROFILE.get().createNode()),
 			rawOptional,
 			supplier

@@ -20,10 +20,6 @@ subprojects {
 			name = "Sponge"
 			url = "https://repo.spongepowered.org/repository/maven-public"
 		}
-		maven {
-			name = "JitPack"
-			url 'https://jitpack.io'
-		}
 	}
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'
