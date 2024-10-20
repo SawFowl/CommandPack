@@ -24,6 +24,10 @@ subprojects {
 			url = 'https://maven.neoforged.net/releases'
 		}
 		maven { 
+			name = "Forge"
+			url = 'https://maven.minecraftforge.net'
+		}
+		maven { 
 			name = "MinecraftLibs"
 			url = 'https://libraries.minecraft.net/'
 		}

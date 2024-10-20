@@ -292,12 +292,15 @@ public class CommandsConfig {
 	@SuppressWarnings("unchecked")
 	private <T> Set<Class<T>> findAllCommandsClasses(CommandPackInstance plugin, String packageName, Class<T> clazz) throws IOException, URISyntaxException {
 		final String pkgPath = packageName.replace('.', '/');
-		URI pkg = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource(pkgPath)).toURI();
-		Optional<ModContainer> mod = plugin.getAPI().getContainersCollection().getPluginAsMod(plugin.getPluginContainer());
-		if(plugin.isModifiedServer() && mod.isPresent()) {
-			pkg = URI.create("jar:" + mod.get().getPath().toUri().toString()  + "!/" + pkgPath);
-			mod = null;
-		}
+		URI pkg = null;
+		if(plugin.isModifiedServer()) {
+			Optional<ModContainer> mod = plugin.getAPI().getContainersCollection().getPluginAsMod(plugin.getPluginContainer());
+			if(mod.isPresent()) {
+				pkg = URI.create("jar:" + mod.get().getPath().toUri().toString()  + "!/" + pkgPath);
+				mod = null;
+			}
+		} else pkg = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource(pkgPath)).toURI();
+		if(pkg == null) return new HashSet<>();
 		final Set<Class<T>> allClasses = new HashSet<Class<T>>();
 		Path root;
 		if (pkg.toString().startsWith("jar:")) {

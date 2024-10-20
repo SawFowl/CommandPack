@@ -28,10 +28,10 @@ public class ModInfo extends AbstractInfoCommand {
 		if(!context.one(CommandParameters.MOD).isPresent()) exception(plugin.getLocales().getLocale(locale).getCommandExceptions().getModNotPresent());
 		if(isPlayer) {
 			delay((ServerPlayer) src, locale, consumer -> {
-				sendModInfo(src, locale, plugin.getAPI().getContainersCollection().getMods().stream().filter(mod -> mod.getModId().equalsIgnoreCase(getString(context, "Mod").get())).findFirst().orElse(null));
+				sendModInfo(src, locale, getArgument(context, CommandParameters.MOD).orElse(null));
 			});
 		} else {
-			sendModInfo(src, locale, plugin.getAPI().getContainersCollection().getMods().stream().filter(mod -> mod.getModId().equalsIgnoreCase(getString(context, "Mod").get())).findFirst().orElse(null));
+			sendModInfo(src, locale, getArgument(context, CommandParameters.MOD).orElse(null));
 		}}
 
 	@Override

@@ -26,7 +26,7 @@ public class RefreshPlugin extends AbstractInfoCommand {
 
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
-		PluginContainer container = context.one(CommandParameters.PLUGIN).get();
+		PluginContainer container = getArgument(context, CommandParameters.PLUGIN).get();
 		if(isPlayer) {
 			delay((ServerPlayer) src, locale, consumer -> {
 				sendRefreshEvent(container);

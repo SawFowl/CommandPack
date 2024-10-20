@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
@@ -30,10 +29,10 @@ public class PluginInfo extends AbstractInfoCommand {
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
 			delay((ServerPlayer) src, locale, consumer -> {
-				sendPluginInfo(src, locale, Sponge.pluginManager().plugin(getString(context, "Plugin").get()).get().metadata());
+				sendPluginInfo(src, locale, getArgument(context, CommandParameters.PLUGIN).get().metadata());
 			});
 		} else {
-			sendPluginInfo(src, locale, Sponge.pluginManager().plugin(getString(context, "Plugin").get()).get().metadata());
+			sendPluginInfo(src, locale, getArgument(context, CommandParameters.PLUGIN).get().metadata());
 		}}
 
 	@Override
