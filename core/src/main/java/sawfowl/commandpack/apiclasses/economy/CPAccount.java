@@ -6,7 +6,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.service.context.Context;
 import org.spongepowered.api.service.economy.Currency;
@@ -21,6 +23,12 @@ import org.spongepowered.api.service.economy.transaction.TransferResult;
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.CommandPackInstance;
+import sawfowl.commandpack.api.events.ChangeBalanceEvent;
+import sawfowl.commandpack.api.events.ChangeBalanceEvent.Pre;
+import sawfowl.commandpack.api.events.ChangeBalanceEvent.Post;
+import sawfowl.commandpack.api.events.ChangeBalanceEvent.Transfer;
+import sawfowl.commandpack.apiclasses.economy.events.change.PostImpl;
+import sawfowl.commandpack.apiclasses.economy.events.change.PreImpl;
 import sawfowl.commandpack.apiclasses.economy.storage.AbstractEconomyStorage;
 import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 import sawfowl.commandpack.configure.configs.economy.SerializedAccount;
@@ -105,66 +113,44 @@ public class CPAccount implements Account, VirtualAccount {
 	public TransactionResult setBalance(Currency currency, BigDecimal amount, Set<Context> contexts) {
 		TransactionType type = TransactionTypes.DEPOSIT.get();
 		if(amount.doubleValue() < 0) amount = BigDecimal.ZERO;
-		BigDecimal finalAmount = amount;
 		if(balances.containsKey(currency)) {
 			if(balances.get(currency).doubleValue() > amount.doubleValue()) type = TransactionTypes.WITHDRAW.get();
+			if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
 			balances.remove(currency);
+			balances.put(currency, amount);
+		} else {
+			if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
+			balances.put(currency, amount);
 		}
-		balances.put(currency, amount);
-		TransactionType finalType = type;
 		save();
-		return new CPTransactionResult(this, currency, finalAmount, ResultType.SUCCESS, finalType);
+		return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type)).getResult();
 	}
 
 	@Override
 	public TransactionResult setBalance(Currency currency, BigDecimal amount, Cause cause) {
 		TransactionType type = TransactionTypes.DEPOSIT.get();
 		if(amount.doubleValue() < 0) amount = BigDecimal.ZERO;
-		BigDecimal finalAmount = amount;
 		if(balances.containsKey(currency)) {
 			if(balances.get(currency).doubleValue() > amount.doubleValue()) type = TransactionTypes.WITHDRAW.get();
+			if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
 			balances.remove(currency);
+			balances.put(currency, amount);
+		} else {
+			if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
+			balances.put(currency, amount);
 		}
-		balances.put(currency, amount);
-		TransactionType finalType = type;
 		save();
-		return new CPTransactionResult(this, currency, finalAmount, ResultType.SUCCESS, finalType);
+		return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type)).getResult();
 	}
 
 	@Override
 	public Map<Currency, TransactionResult> resetBalances(Set<Context> contexts) {
-		Map<Currency, TransactionResult> transacrions = new HashMap<Currency, TransactionResult>();
-		balances.entrySet().removeIf(b -> !config.getCurrency(b.getKey().displayName()).isPresent());
-		config.getCurrencies().forEach(cur -> {
-			Optional<Currency> optCurrency = balances.keySet().stream().filter(c -> TextUtils.serializeLegacy(c.displayName()).equals(cur.getName())).findFirst();
-			if(optCurrency.isPresent()) {
-				TransactionType type = balances.get(optCurrency.get()).doubleValue() < cur.getStartingBalance() ? TransactionTypes.DEPOSIT.get() : TransactionTypes.WITHDRAW.get();
-				BigDecimal amount = BigDecimal.valueOf(cur.getStartingBalance());
-				balances.remove(optCurrency.get());
-				balances.put(optCurrency.get(), amount);
-				transacrions.put(optCurrency.get(), new CPTransactionResult(this, optCurrency.get(), amount, ResultType.SUCCESS, type));
-			}
-		});
-		save();
-		return transacrions;
+		return balances.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey(), entry -> resetBalance(entry.getKey(), contexts)));
 	}
 
 	@Override
 	public Map<Currency, TransactionResult> resetBalances(Cause cause) {
-		Map<Currency, TransactionResult> transacrions = new HashMap<Currency, TransactionResult>();
-		balances.entrySet().removeIf(b -> !config.getCurrency(b.getKey().displayName()).isPresent());
-		config.getCurrencies().forEach(cur -> {
-			Optional<Currency> optCurrency = balances.keySet().stream().filter(c -> TextUtils.serializeLegacy(c.displayName()).equals(cur.getName())).findFirst();
-			if(optCurrency.isPresent()) {
-				TransactionType type = balances.get(optCurrency.get()).doubleValue() < cur.getStartingBalance() ? TransactionTypes.DEPOSIT.get() : TransactionTypes.WITHDRAW.get();
-				BigDecimal amount = BigDecimal.valueOf(cur.getStartingBalance());
-				balances.remove(optCurrency.get());
-				balances.put(optCurrency.get(), amount);
-				transacrions.put(optCurrency.get(), new CPTransactionResult(this, optCurrency.get(), amount, ResultType.SUCCESS, type));
-			}
-		});
-		save();
-		return transacrions;
+		return balances.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey(), entry -> resetBalance(entry.getKey(), cause)));
 	}
 
 	@Override
@@ -175,16 +161,19 @@ public class CPAccount implements Account, VirtualAccount {
 			double old = balances.remove(currency).doubleValue();
 			double newValue = balances.put(currency, BigDecimal.valueOf(optConfig.map(config -> config.getStartingBalance()).orElse(0d))).doubleValue();
 			TransactionType type = old > newValue ? TransactionTypes.WITHDRAW.get() : TransactionTypes.DEPOSIT.get();
+			BigDecimal amount = BigDecimal.valueOf(newValue);
+			if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
 			save();
-			return new CPTransactionResult(this, currency, balances.get(currency), ResultType.SUCCESS, type);
+			return postChange(currency, balances.get(currency), new CPTransactionResult(this, currency, balances.get(currency), ResultType.SUCCESS, type)).getResult();
 		}
 		sawfowl.commandpack.configure.configs.economy.CurrencyConfig config = optConfig.get();
 		TransactionType type = (!contains || balances.get(currency).doubleValue() < config.getStartingBalance() ? TransactionTypes.DEPOSIT : TransactionTypes.WITHDRAW).get();
 		BigDecimal amount = BigDecimal.valueOf(config.getStartingBalance());
+		if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
 		if(contains) balances.remove(currency);
 		balances.put(currency, amount);
 		save();
-		return new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type);
+		return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type)).getResult();
 	}
 
 	@Override
@@ -195,18 +184,19 @@ public class CPAccount implements Account, VirtualAccount {
 			double old = balances.remove(currency).doubleValue();
 			double newValue = balances.put(currency, BigDecimal.valueOf(optConfig.map(config -> config.getStartingBalance()).orElse(0d))).doubleValue();
 			TransactionType type = old > newValue ? TransactionTypes.WITHDRAW.get() : TransactionTypes.DEPOSIT.get();
+			BigDecimal amount = BigDecimal.valueOf(newValue);
+			if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
 			save();
-			return new CPTransactionResult(this, currency, balances.get(currency), ResultType.SUCCESS, type);
+			return postChange(currency, balances.get(currency), new CPTransactionResult(this, currency, balances.get(currency), ResultType.SUCCESS, type)).getResult();
 		}
 		sawfowl.commandpack.configure.configs.economy.CurrencyConfig config = optConfig.get();
 		TransactionType type = (!contains || balances.get(currency).doubleValue() < config.getStartingBalance() ? TransactionTypes.DEPOSIT : TransactionTypes.WITHDRAW).get();
 		BigDecimal amount = BigDecimal.valueOf(config.getStartingBalance());
-		if(contains) {
-			balances.remove(currency, amount);
-		}
+		if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
+		if(contains) balances.remove(currency);
 		balances.put(currency, amount);
 		save();
-		return new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type);
+		return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type)).getResult();
 	}
 
 	@Override
@@ -214,13 +204,17 @@ public class CPAccount implements Account, VirtualAccount {
 		TransactionType type = TransactionTypes.DEPOSIT.get();
 		if(balances.containsKey(currency)) {
 			if(amount.doubleValue() < 0) type = TransactionTypes.WITHDRAW.get();
+			if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
 			amount = balances.get(currency).add(amount);
 			balances.remove(currency);
+			balances.put(currency, amount);
+		} else {
+			if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
+			balances.put(currency, amount);
 		}
-		balances.put(currency, amount);
 		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		save();
-		return new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type);
+		return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type)).getResult();
 	}
 
 	@Override
@@ -228,13 +222,17 @@ public class CPAccount implements Account, VirtualAccount {
 		TransactionType type = TransactionTypes.DEPOSIT.get();
 		if(balances.containsKey(currency)) {
 			if(amount.doubleValue() < 0) type = TransactionTypes.WITHDRAW.get();
+			if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
 			amount = balances.get(currency).add(amount);
 			balances.remove(currency);
+			balances.put(currency, amount);
+		} else {
+			if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
+			balances.put(currency, amount);
 		}
-		balances.put(currency, amount);
 		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
 		save();
-		return new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type);
+		return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type)).getResult();
 	}
 
 	@Override
@@ -244,16 +242,17 @@ public class CPAccount implements Account, VirtualAccount {
 			double check = checkDB(currency, balances.get(currency).doubleValue());
 			if(check != balances.get(currency).doubleValue()) {
 				balances.replace(currency, BigDecimal.valueOf(check));
-				return new CPTransactionResult(this, currency, amount, ResultType.ACCOUNT_NO_FUNDS, type);
+				return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.ACCOUNT_NO_FUNDS, type)).getResult();
 			}
 			if(amount.doubleValue() < 0) type = TransactionTypes.DEPOSIT.get();
 			amount = balances.get(currency).subtract(amount);
+			if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
 			balances.remove(currency);
-		} else return new CPTransactionResult(this, currency, amount, ResultType.ACCOUNT_NO_FUNDS, type);
-		balances.put(currency, amount);
-		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
-		save();
-		return new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type);
+			balances.put(currency, amount);
+			if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
+			save();
+			return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type)).getResult();
+		} else return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.ACCOUNT_NO_FUNDS, type)).getResult();
 	}
 
 	@Override
@@ -263,48 +262,51 @@ public class CPAccount implements Account, VirtualAccount {
 			double check = checkDB(currency, balances.get(currency).doubleValue());
 			if(check != balances.get(currency).doubleValue()) {
 				balances.replace(currency, BigDecimal.valueOf(check));
-				return new CPTransactionResult(this, currency, amount, ResultType.ACCOUNT_NO_FUNDS, type);
+				return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.ACCOUNT_NO_FUNDS, type)).getResult();
 			}
 			if(amount.doubleValue() < 0) type = TransactionTypes.DEPOSIT.get();
 			amount = balances.get(currency).subtract(amount);
+			if(preChange(currency, amount, type).cancel()) return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.FAILED, type)).getResult();
 			balances.remove(currency);
-		} else return new CPTransactionResult(this, currency, amount, ResultType.ACCOUNT_NO_FUNDS, type);
-		balances.put(currency, amount);
-		if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
-		save();
-		return new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type);
+			balances.put(currency, amount);
+			if(balances.get(currency).doubleValue() < 0) balances.replace(currency, BigDecimal.ZERO);
+			save();
+			return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.SUCCESS, type)).getResult();
+		} else return postChange(currency, amount, new CPTransactionResult(this, currency, amount, ResultType.ACCOUNT_NO_FUNDS, type)).getResult();
 	}
 
 	@Override
 	public TransferResult transfer(Account to, Currency currency, BigDecimal amount, Set<Context> contexts) {
-		if(!balances.containsKey(currency) || balances.get(currency).doubleValue() < amount.doubleValue()) return new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get());
+		if(!balances.containsKey(currency) || balances.get(currency).doubleValue() < amount.doubleValue()) return postTransfer(to, currency, amount, new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get())).getResult();
 		double check = checkDB(currency, balances.get(currency).doubleValue());
 		if(check != balances.get(currency).doubleValue()) {
 			balances.replace(currency, BigDecimal.valueOf(check));
-			return new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get());
+			return postTransfer(to, currency, amount, new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get())).getResult();
 		}
 		BigDecimal newValue = balances.get(currency).subtract(amount);
+		if(preTransfer(to, currency, amount).cancel() || preChange(currency, newValue, TransactionTypes.WITHDRAW.get()).cancel()) return postTransfer(to, currency, amount, new CPTransferResult(this, to, currency, amount, ResultType.FAILED, TransactionTypes.TRANSFER.get())).getResult();;
 		balances.remove(currency);
 		balances.put(currency, newValue);
 		to.deposit(currency, amount);
 		save();
-		return new CPTransferResult(this, to, currency, amount, ResultType.SUCCESS, TransactionTypes.TRANSFER.get());
+		return postTransfer(to, currency, amount, new CPTransferResult(this, to, currency, amount, ResultType.SUCCESS, TransactionTypes.TRANSFER.get())).getResult();
 	}
 
 	@Override
 	public TransferResult transfer(Account to, Currency currency, BigDecimal amount, Cause cause) {
-		if(!balances.containsKey(currency) || balances.get(currency).doubleValue() < amount.doubleValue()) return new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get());
+		if(!balances.containsKey(currency) || balances.get(currency).doubleValue() < amount.doubleValue()) return postTransfer(to, currency, amount, new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get())).getResult();
 		double check = checkDB(currency, balances.get(currency).doubleValue());
 		if(check != balances.get(currency).doubleValue()) {
 			balances.replace(currency, BigDecimal.valueOf(check));
-			return new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get());
+			return postTransfer(to, currency, amount, new CPTransferResult(this, to, currency, amount, ResultType.ACCOUNT_NO_FUNDS, TransactionTypes.TRANSFER.get())).getResult();
 		}
 		BigDecimal newValue = balances.get(currency).subtract(amount);
+		if(preTransfer(to, currency, amount).cancel() || preChange(currency, newValue, TransactionTypes.WITHDRAW.get()).cancel()) return postTransfer(to, currency, amount, new CPTransferResult(this, to, currency, amount, ResultType.FAILED, TransactionTypes.TRANSFER.get())).getResult();;
 		balances.remove(currency);
 		balances.put(currency, newValue);
 		to.deposit(currency, amount);
 		save();
-		return new CPTransferResult(this, to, currency, amount, ResultType.SUCCESS, TransactionTypes.TRANSFER.get());
+		return postTransfer(to, currency, amount, new CPTransferResult(this, to, currency, amount, ResultType.SUCCESS, TransactionTypes.TRANSFER.get())).getResult();
 	}
 
 	public CPAccount setStorage(AbstractEconomyStorage storage) {
@@ -352,6 +354,27 @@ public class CPAccount implements Account, VirtualAccount {
 		if (this == obj) return true;
 		if (obj == null || getClass() != obj.getClass()) return false;
 		return Objects.equals(identifier, ((CPAccount) obj).identifier);
+	}
+
+	private <T extends ChangeBalanceEvent> T postEvent(T event) {
+		Sponge.eventManager().post(event);
+		return event;
+	}
+
+	private Pre preChange(Currency currency, BigDecimal amount, TransactionType type) {
+		return postEvent(new PreImpl(this, currency, amount, type));
+	}
+
+	private Post postChange(Currency currency, BigDecimal amount, TransactionResult result) {
+		return postEvent(new PostImpl(this, currency, amount, result));
+	}
+
+	private Transfer.Pre preTransfer(Account other, Currency currency, BigDecimal amount) {
+		return postEvent(new sawfowl.commandpack.apiclasses.economy.events.transfer.PreImpl(this, other, currency, amount));
+	}
+
+	private Transfer.Post postTransfer(Account other, Currency currency, BigDecimal amount, TransferResult result) {
+		return postEvent(new sawfowl.commandpack.apiclasses.economy.events.transfer.PostImpl(this, other, currency, amount, result));
 	}
 
 }
