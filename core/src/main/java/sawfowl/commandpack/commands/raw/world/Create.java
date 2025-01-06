@@ -59,7 +59,7 @@ public class Create extends AbstractWorldCommand {
 			boolean structures = args.getBoolean(4).get();
 			boolean bonusChest = args.getBoolean(5).get();
 			// need test
-			builder = builder.add(Keys.WORLD_GEN_CONFIG, WorldGenerationConfig.builder().seed(seed.hashCode()).generateStructures(structures).generateBonusChest(bonusChest).build());
+			//builder = builder.add(Keys.WORLD_GEN_CONFIG, WorldGenerationConfig.builder().seed(seed.hashCode()).generateStructures(structures).generateBonusChest(bonusChest).build());
 		}
 		WorldTemplate template = ((AbstractBuilder<WorldTemplate>) builder).build();
 		Sponge.server().worldManager().loadWorld(template).thenRunAsync(() -> {
