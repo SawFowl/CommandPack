@@ -44,7 +44,7 @@ public class Enchant extends AbstractPlayerCommand {
 		if(args.getInput().length == 1) exception(getExceptions(locale).getValueNotPresent());
 		int level = args.getInteger(1).get();
 		ItemStack stack = src.itemInHand(HandTypes.MAIN_HAND);
-		List<Enchantment> enchantments = stack.get(Keys.APPLIED_ENCHANTMENTS).orElse(new ArrayList<>());
+		List<Enchantment> enchantments = new ArrayList<>(stack.get(Keys.APPLIED_ENCHANTMENTS).orElse(new ArrayList<>()));
 		enchantments.add(Enchantment.builder().type(enchant).level(level).build());
 		delay(src, locale, consumer -> {
 			stack.offer(Keys.APPLIED_ENCHANTMENTS, enchantments);
@@ -82,7 +82,7 @@ public class Enchant extends AbstractPlayerCommand {
 	public List<RawArgument<?>> arguments() {
 		return Arrays.asList(
 			RawArguments.createEnchantmentArgument(RawBasicArgumentData.createEnchantmentType(0, null, null), RawOptional.notOptional(), locale -> getExceptions(locale).getTypeNotPresent()),
-			RawArguments.createIntegerArgument(CommandsUtil.getEmptyList(), new RawBasicArgumentData<Integer>(null, "Level", 1, null, null), RawOptional.optional(), locale -> getExceptions(locale).getValueNotPresent())
+			RawArguments.createIntegerArgument(CommandsUtil.getEmptyList(), new RawBasicArgumentData<Integer>(1, "Level", 1, null, null), RawOptional.optional(), locale -> getExceptions(locale).getValueNotPresent())
 		);
 	}
 
