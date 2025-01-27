@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Map.Entry;
 import java.util.stream.Stream;
 
 import org.spongepowered.api.ResourceKey;
@@ -51,6 +52,7 @@ public class EconomyServiceImpl implements CPEconomyService {
 		}
 		currencies = currenciesMap.values().toArray(new Currency[]{});
 		StorageEvent event = new StorageEvent();
+		event.currenciesMap = currenciesMap;
 		Sponge.eventManager().post(event);
 		if(event.storage != null) {
 			this.storage = event.storage;
@@ -176,6 +178,7 @@ public class EconomyServiceImpl implements CPEconomyService {
 
 		Cause cause = Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, plugin.getPluginContainer()).build(), plugin.getPluginContainer());
 		EconomyStorage storage;
+		private Map<Character, Currency> currenciesMap;
 
 		@Override
 		public Cause cause() {
@@ -185,6 +188,22 @@ public class EconomyServiceImpl implements CPEconomyService {
 		@Override
 		public void setStorage(EconomyStorage storage) {
 			this.storage = storage;
+		}
+
+		@Override
+		public Map<Character, Currency> getCurrenciesMap() {
+			return currenciesMap;
+		}
+
+		@Override
+		public Map<Currency, BigDecimal> getDefaultBalances() {
+			Map<Currency, BigDecimal> balances = new HashMap<Currency, BigDecimal>();
+			for(Entry<Character, Currency> currency : currenciesMap.entrySet()) {
+				plugin.getMainConfig().getEconomy().getCurrency(currency.getKey()).ifPresent(config -> {
+					balances.put(currency.getValue(), BigDecimal.valueOf(config.getStartingBalance()));
+				});
+			}
+			return balances;
 		}
 
 	}

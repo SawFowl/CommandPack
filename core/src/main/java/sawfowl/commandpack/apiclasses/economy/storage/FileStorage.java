@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.UUID;
 
+import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
@@ -78,7 +79,7 @@ public class FileStorage extends AbstractEconomyStorage {
 	}
 
 	@Override
-	public void saveUniqueAccount(CPUniqueAccount account) {
+	public void saveUniqueAccount(UniqueAccount account) {
 		checkPaths();
 		try {
 			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(playersPath.resolve(account.uniqueId().toString() + ".conf")).build().loadToReference();

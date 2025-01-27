@@ -27,6 +27,7 @@ import sawfowl.commandpack.api.events.ChangeBalanceEvent;
 import sawfowl.commandpack.api.events.ChangeBalanceEvent.Pre;
 import sawfowl.commandpack.api.events.ChangeBalanceEvent.Post;
 import sawfowl.commandpack.api.events.ChangeBalanceEvent.Transfer;
+import sawfowl.commandpack.api.storages.EconomyStorage;
 import sawfowl.commandpack.apiclasses.economy.events.change.PostImpl;
 import sawfowl.commandpack.apiclasses.economy.events.change.PreImpl;
 import sawfowl.commandpack.apiclasses.economy.storage.AbstractEconomyStorage;
@@ -39,9 +40,9 @@ public class CPAccount implements Account, VirtualAccount {
 	protected String identifier = "n/a";
 	protected Map<Currency, BigDecimal> balances;
 	private EconomyConfig config = CommandPackInstance.getInstance().getMainConfig().getEconomy();
-	protected AbstractEconomyStorage storage;
+	protected EconomyStorage storage;
 	public CPAccount(){}
-	public CPAccount(String identifier, Map<Currency, BigDecimal> balances, AbstractEconomyStorage storage) {
+	public CPAccount(String identifier, Map<Currency, BigDecimal> balances, EconomyStorage storage) {
 		this.identifier = identifier;
 		this.balances = balances;
 		this.storage = storage;

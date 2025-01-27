@@ -13,7 +13,6 @@ import org.spongepowered.api.service.economy.account.AccountDeletionResultType;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
-import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 
 public interface EconomyStorage {
 
@@ -23,7 +22,7 @@ public interface EconomyStorage {
 
 	void removeAccount(String identifier);
 
-	void saveUniqueAccount(CPUniqueAccount account);
+	void saveUniqueAccount(UniqueAccount account);
 
 	void saveAccount(CPAccount account);
 

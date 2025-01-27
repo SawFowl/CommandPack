@@ -9,13 +9,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
-import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
 import sawfowl.commandpack.configure.configs.economy.SerializedAccount;
 import sawfowl.commandpack.configure.configs.economy.SerializedUniqueAccount;
@@ -44,7 +44,7 @@ public class H2Storage extends SqlStorage {
 	}
 
 	@Override
-	public void saveUniqueAccount(CPUniqueAccount account) {
+	public void saveUniqueAccount(UniqueAccount account) {
 		try {
 			createStatement(insertUniqueAccount, new Object[] {account.uniqueId().toString(), uniqueAccountToString(account)}).execute();
 		} catch (SQLException | ConfigurateException e) {
@@ -104,7 +104,7 @@ public class H2Storage extends SqlStorage {
 		while(resultSetAccounts.next()) accounts.put(resultSetAccounts.getString(identifierCollumn), accountFromString(resultSetAccounts.getString(dataCollumn)));
 	}
 
-	private String uniqueAccountToString(CPUniqueAccount account) throws ConfigurateException {
+	private String uniqueAccountToString(UniqueAccount account) throws ConfigurateException {
 		StringWriter sink = new StringWriter();
 		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(options).sink(() -> new BufferedWriter(sink)).build();
 		ConfigurationNode node = loader.createNode();

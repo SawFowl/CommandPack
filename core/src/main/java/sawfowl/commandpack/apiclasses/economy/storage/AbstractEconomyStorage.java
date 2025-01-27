@@ -34,7 +34,7 @@ public abstract class AbstractEconomyStorage extends Thread implements EconomySt
 	Map<UUID, UniqueAccount> uniqueAccounts = new HashMap<UUID, UniqueAccount>();
 	Map<String, Account> accounts = new HashMap<String, Account>();
 	ConfigurationOptions options;
-	Map<Currency, BigDecimal> defaultBalances;
+	private Map<Currency, BigDecimal> defaultBalances;
 	private Map<Character, Currency> currenciesMap;
 	public AbstractEconomyStorage(CommandPackInstance plugin, EconomyServiceImpl economyService) {
 		this.plugin = plugin;

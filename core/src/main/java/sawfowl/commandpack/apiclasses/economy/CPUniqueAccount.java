@@ -14,7 +14,7 @@ import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 
 import net.kyori.adventure.text.Component;
-
+import sawfowl.commandpack.api.storages.EconomyStorage;
 import sawfowl.commandpack.apiclasses.economy.storage.AbstractEconomyStorage;
 import sawfowl.commandpack.configure.configs.economy.SerializedUniqueAccount;
 
@@ -22,7 +22,7 @@ public class CPUniqueAccount extends CPAccount implements UniqueAccount {
 
 	private UUID userId;
 	private CPUniqueAccount(){}
-	public CPUniqueAccount(UUID userId, Map<Currency, BigDecimal> balances, AbstractEconomyStorage storage) {
+	public CPUniqueAccount(UUID userId, Map<Currency, BigDecimal> balances, EconomyStorage storage) {
 		super();
 		this.userId = userId;
 		super.balances = balances.entrySet().stream().filter(entry -> entry.getKey() instanceof CPCurrency).collect(Collectors.toMap(entry -> (CPCurrency) entry.getKey(), entry -> entry.getValue()));

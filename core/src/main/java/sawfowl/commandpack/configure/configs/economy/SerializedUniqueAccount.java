@@ -7,17 +7,17 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.spongepowered.api.service.economy.Currency;
+import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
 public class SerializedUniqueAccount {
 
 	public SerializedUniqueAccount(){}
-	public SerializedUniqueAccount(CPUniqueAccount account) {
+	public SerializedUniqueAccount(UniqueAccount account) {
 		userId = account.uniqueId();
 		name = account.identifier();
 		account.balances().forEach((k, v) -> {

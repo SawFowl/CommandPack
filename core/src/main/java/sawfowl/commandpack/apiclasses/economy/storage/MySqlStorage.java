@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.economy.Currency;
+import org.spongepowered.api.service.economy.account.UniqueAccount;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
@@ -118,7 +119,7 @@ public class MySqlStorage extends SqlStorage {
 	}
 
 	@Override
-	public void saveUniqueAccount(CPUniqueAccount account) {
+	public void saveUniqueAccount(UniqueAccount account) {
 		try {
 			createStatement(insertUniqueAccount, uniqueAccountSqlArgs(account)).execute();
 		} catch (SQLException e) {
@@ -135,7 +136,7 @@ public class MySqlStorage extends SqlStorage {
 		}
 	}
 
-	private Object[] uniqueAccountSqlArgs(CPUniqueAccount account) {
+	private Object[] uniqueAccountSqlArgs(UniqueAccount account) {
 		List<Object> args = new ArrayList<Object>();
 		args.add(account.uniqueId());
 		args.add(account.identifier());
