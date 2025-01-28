@@ -5,17 +5,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.spongepowered.api.service.economy.Currency;
+import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import sawfowl.commandpack.apiclasses.economy.CPAccount;
 import sawfowl.localeapi.api.TextUtils;
 
 @ConfigSerializable
 public class SerializedAccount {
 
 	public SerializedAccount(){}
-	public SerializedAccount(CPAccount account) {
+	public SerializedAccount(Account account) {
 		name = account.identifier();
 		account.balances().forEach((k, v) -> {
 			balances.put(TextUtils.clearDecorations(k.symbol()).charAt(0), v.doubleValue());

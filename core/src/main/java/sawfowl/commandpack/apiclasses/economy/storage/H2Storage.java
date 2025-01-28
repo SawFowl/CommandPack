@@ -9,13 +9,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
 import sawfowl.commandpack.CommandPackInstance;
-import sawfowl.commandpack.apiclasses.economy.CPAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
 import sawfowl.commandpack.configure.configs.economy.SerializedAccount;
 import sawfowl.commandpack.configure.configs.economy.SerializedUniqueAccount;
@@ -53,7 +53,7 @@ public class H2Storage extends SqlStorage {
 	}
 
 	@Override
-	public void saveAccount(CPAccount account) {
+	public void saveAccount(Account account) {
 		try {
 			createStatement(insertAccount, new Object[] {account.identifier(), accountToString(account)}).execute();
 		} catch (SQLException | ConfigurateException e) {
@@ -113,7 +113,7 @@ public class H2Storage extends SqlStorage {
 		return sink.toString();
 	}
 
-	private String accountToString(CPAccount account) throws ConfigurateException {
+	private String accountToString(Account account) throws ConfigurateException {
 		StringWriter sink = new StringWriter();
 		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(options).sink(() -> new BufferedWriter(sink)).build();
 		ConfigurationNode node = loader.createNode();

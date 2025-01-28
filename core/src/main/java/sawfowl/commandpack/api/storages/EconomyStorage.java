@@ -12,8 +12,6 @@ import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.AccountDeletionResultType;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
 
-import sawfowl.commandpack.apiclasses.economy.CPAccount;
-
 public interface EconomyStorage {
 
 	void load();
@@ -24,7 +22,7 @@ public interface EconomyStorage {
 
 	void saveUniqueAccount(UniqueAccount account);
 
-	void saveAccount(CPAccount account);
+	void saveAccount(Account account);
 
 	boolean hasAccount(UUID uuid);
 
