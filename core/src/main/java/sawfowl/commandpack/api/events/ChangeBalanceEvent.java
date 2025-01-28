@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.apache.http.concurrent.Cancellable;
-
 import org.spongepowered.api.event.Event;
+import org.spongepowered.api.event.economy.EconomyTransactionEvent;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
@@ -75,12 +75,17 @@ public interface ChangeBalanceEvent extends Event {
 
 		}
 
-		interface Post extends Transfer {
+		interface Post extends EconomyTransactionEvent, Transfer {
 
 			/**
 			 * See {@link TransferResult}
 			 */
 			TransferResult getResult();
+
+			@Override
+			default TransactionResult transactionResult() {
+				return getResult();
+			}
 
 		}
 
@@ -95,12 +100,17 @@ public interface ChangeBalanceEvent extends Event {
 
 	}
 
-	interface Post extends ChangeBalanceEvent {
+	interface Post extends EconomyTransactionEvent, ChangeBalanceEvent {
 
 		/**
 		 * See {@link TransactionResult}
 		 */
 		TransactionResult getResult();
+
+		@Override
+		default TransactionResult transactionResult() {
+			return getResult();
+		}
 
 	}
 
