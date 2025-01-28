@@ -346,15 +346,27 @@ public class CPAccount implements Account, VirtualAccount {
 	public String toString() {
 		return "CPAccount [identifier=" + identifier + ", balances=" + balances + "]";
 	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(identifier);
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
 		if (obj == null || getClass() != obj.getClass()) return false;
 		return Objects.equals(identifier, ((CPAccount) obj).identifier);
+	}
+
+	public Map<Currency, BigDecimal> balances() {
+		return balances;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends CPAccount> T setIdentifier(String identifier) {
+		this.identifier = identifier;
+		return (T) this;
 	}
 
 	private <T extends ChangeBalanceEvent> T postEvent(T event) {
