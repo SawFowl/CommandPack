@@ -65,7 +65,7 @@ public class CPUniqueAccount extends CPAccount implements UniqueAccount {
 	}
 
 	public void setName(String name) {
-		super.identifier = name;
+		setIdentifier(name);
 		save();
 	}
 
