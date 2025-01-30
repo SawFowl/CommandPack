@@ -149,12 +149,12 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	}
 
 	public PlayerData addWarp(Warp warp) {
+		removeWarp(warp.getName());
 		warps.add(((WarpData) warp).setOwnerName(this));
 		return this;
 	}
 
 	public PlayerData removeWarp(String name) {
-		System.out.println(name);
 		if(warps.removeIf(warp -> warp.getName() == null || warp.getName().equals(name) || warp.getPlainName().equals(name))) {
 			warps.removeIf(warp -> warp.getName() == null || warp.getPlainName() == null);
 			save();
