@@ -2,10 +2,12 @@ package sawfowl.commandpack.configure.configs.player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -65,9 +67,9 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	@Setting("UUID")
 	private UUID uuid;
 	@Setting("Homes")
-	private List<HomeData> homes = new ArrayList<>();
+	private Set<HomeData> homes = new HashSet<>();
 	@Setting("Warps")
-	private List<WarpData> warps = new ArrayList<>();
+	private Set<WarpData> warps = new HashSet<>();
 	@Setting("Backpack")
 	private BackpackData backpackData = new BackpackData();
 	@Setting("GivedKits")
