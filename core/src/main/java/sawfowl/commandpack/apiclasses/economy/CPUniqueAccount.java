@@ -15,7 +15,6 @@ import org.spongepowered.api.service.economy.account.UniqueAccount;
 
 import net.kyori.adventure.text.Component;
 import sawfowl.commandpack.api.storages.EconomyStorage;
-import sawfowl.commandpack.apiclasses.economy.storage.AbstractEconomyStorage;
 import sawfowl.commandpack.configure.configs.economy.SerializedUniqueAccount;
 
 public class CPUniqueAccount extends CPAccount implements UniqueAccount {
@@ -46,7 +45,7 @@ public class CPUniqueAccount extends CPAccount implements UniqueAccount {
 		save();
 	}
 
-	public static CPUniqueAccount create(UUID userId, String identifier, Map<Currency, BigDecimal> balances, AbstractEconomyStorage storage) {
+	public static CPUniqueAccount create(UUID userId, String identifier, Map<Currency, BigDecimal> balances, EconomyStorage storage) {
 		CPUniqueAccount uniqueAccount = new CPUniqueAccount();
 		uniqueAccount.userId = userId;
 		uniqueAccount.identifier = identifier;
@@ -55,7 +54,7 @@ public class CPUniqueAccount extends CPAccount implements UniqueAccount {
 		return uniqueAccount;
 	}
 
-	public static CPUniqueAccount deserealize(SerializedUniqueAccount account, AbstractEconomyStorage storage) {
+	public static CPUniqueAccount deserealize(SerializedUniqueAccount account, EconomyStorage storage) {
 		CPUniqueAccount uniqueAccount = new CPUniqueAccount();
 		uniqueAccount.storage = storage;
 		uniqueAccount.userId = account.getUserId();

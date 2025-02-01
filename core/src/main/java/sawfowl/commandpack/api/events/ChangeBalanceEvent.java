@@ -3,7 +3,7 @@ package sawfowl.commandpack.api.events;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import org.apache.http.concurrent.Cancellable;
+import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.economy.EconomyTransactionEvent;
 import org.spongepowered.api.service.economy.Currency;

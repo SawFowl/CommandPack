@@ -19,7 +19,7 @@ public class PreImpl extends ChangeBalanceEventImpl implements Pre {
 	}
 
 	@Override
-	public boolean cancel() {
+	public boolean isCancelled() {
 		return cancel;
 	}
 

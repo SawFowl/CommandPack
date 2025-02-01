@@ -16,7 +16,7 @@ public class PreImpl extends TransferEventImp implements Pre {
 	}
 
 	@Override
-	public boolean cancel() {
+	public boolean isCancelled() {
 		return cancel;
 	}
 
