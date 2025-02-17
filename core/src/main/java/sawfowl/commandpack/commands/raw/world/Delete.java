@@ -37,7 +37,7 @@ public class Delete extends AbstractWorldCommand {
 		ServerWorld world = args.getWorld(0).get();
 		for(ServerPlayer player : Sponge.server().onlinePlayers()) if(player.world().key().asString().equalsIgnoreCase(world.key().asString())) {
 			if(plugin.getMainConfig().getSpawnData().isPresent()) {
-				plugin.getMainConfig().getSpawnData().get().getLocationData().moveHere(player);
+				plugin.getMainConfig().getSpawnData().get().getLocation().moveHere(player);
 			} else player.setLocation(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().location(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().spawnPosition()));
 		}
 		Sponge.server().worldManager().deleteWorld(world.key()).thenRunAsync(() -> {

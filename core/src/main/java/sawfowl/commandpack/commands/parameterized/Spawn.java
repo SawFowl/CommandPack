@@ -21,7 +21,6 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 
 @Register
 public class Spawn extends AbstractParameterizedCommand {
@@ -32,7 +31,7 @@ public class Spawn extends AbstractParameterizedCommand {
 
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
-		Optional<SpawnData> spawn = plugin.getMainConfig().getSpawnData();
+		Optional<sawfowl.commandpack.api.data.miscellaneous.Spawn> spawn = plugin.getMainConfig().getSpawnData();
 		if(isPlayer) {
 			ServerPlayer source = (ServerPlayer) src;
 			ServerPlayer player = getPlayer(context).orElse(source);
@@ -71,11 +70,11 @@ public class Spawn extends AbstractParameterizedCommand {
 		return "spawn";
 	}
 
-	private void teleport(ServerPlayer player, Optional<SpawnData> location) {
+	private void teleport(ServerPlayer player, Optional<sawfowl.commandpack.api.data.miscellaneous.Spawn> location) {
 		plugin.getPlayersData().getTempData().setPreviousLocation(player);
-		if(location.isPresent() && location.get().getLocationData().getServerLocation().isPresent()) {
-			player.setLocation(location.get().getLocationData().getServerLocation().get());
-			location.get().getLocationData().getPosition().getRotation().ifPresent(rotation -> {
+		if(location.isPresent() && location.get().getLocation().getServerLocation().isPresent()) {
+			player.setLocation(location.get().getLocation().getServerLocation().get());
+			location.get().getLocation().getPosition().getRotation().ifPresent(rotation -> {
 				player.setRotation(rotation.asVector3d());
 			});
 		} else tpDefault(player);

@@ -15,6 +15,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.TempPlayerData;
+import sawfowl.commandpack.api.data.miscellaneous.Spawn;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.localeapi.api.TextUtils;
@@ -136,6 +137,11 @@ public class PlayersDataImpl implements sawfowl.commandpack.api.PlayersData {
 	@Override
 	public TempPlayerData getTempData() {
 		return tempData;
+	}
+
+	@Override
+	public Optional<Spawn> getSpawn() {
+		return plugin.getMainConfig().getSpawnData();
 	}
 
 }

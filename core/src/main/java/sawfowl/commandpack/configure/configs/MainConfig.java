@@ -12,6 +12,7 @@ import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import sawfowl.commandpack.api.data.miscellaneous.Spawn;
 import sawfowl.commandpack.configure.configs.commands.RandomTeleportConfig;
 import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.AfkConfig;
@@ -92,7 +93,7 @@ public class MainConfig {
 		return Sponge.game().registry(RegistryTypes.ITEM_TYPE).valueKey(item.type()).value();
 	}
 
-	public Optional<SpawnData> getSpawnData() {
+	public Optional<Spawn> getSpawnData() {
 		return Optional.ofNullable(spawnData);
 	}
 

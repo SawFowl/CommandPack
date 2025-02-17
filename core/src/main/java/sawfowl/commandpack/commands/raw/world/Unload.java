@@ -38,7 +38,7 @@ public class Unload extends AbstractWorldCommand {
 		if(!world.isLoaded()) exceptionAppendUsage(cause, getWorld(locale).getNotLoaded(world.key().asString()));
 		for(ServerPlayer player : Sponge.server().onlinePlayers()) if(player.world().key().asString().equalsIgnoreCase(world.key().asString())) {
 			if(plugin.getMainConfig().getSpawnData().isPresent()) {
-				plugin.getMainConfig().getSpawnData().get().getLocationData().moveHere(player);
+				plugin.getMainConfig().getSpawnData().get().getLocation().moveHere(player);
 			} else player.setLocation(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().location(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().spawnPosition()));
 		}
 		Sponge.server().worldManager().unloadWorld(world).thenRunAsync(() -> {

@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
+import sawfowl.commandpack.api.data.miscellaneous.Spawn;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.api.data.player.Warp;
 
@@ -93,5 +94,7 @@ public interface PlayersData {
 	 * CommandPack does not save this data to disk.
 	 */
 	TempPlayerData getTempData();
+
+	Optional<Spawn> getSpawn();
 
 }

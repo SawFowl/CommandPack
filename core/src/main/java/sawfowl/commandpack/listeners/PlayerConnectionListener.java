@@ -78,9 +78,9 @@ public class PlayerConnectionListener {
 			if(!playerData.isVanished() || !event.player().hasPermission(Permissions.HIDE_CONNECT)) sendJoinMessage(event.player());
 			Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemLocale().getOther().getConnectionMessages().getJoin(event.player()));
 		}
-		if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterJoin() && plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().isPresent()) {
-			event.player().setLocation(plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().get());
-			plugin.getMainConfig().getSpawnData().get().getLocationData().getPosition().getRotation().ifPresent(rotation -> {
+		if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterJoin() && plugin.getMainConfig().getSpawnData().get().getLocation().getServerLocation().isPresent()) {
+			event.player().setLocation(plugin.getMainConfig().getSpawnData().get().getLocation().getServerLocation().get());
+			plugin.getMainConfig().getSpawnData().get().getLocation().getPosition().getRotation().ifPresent(rotation -> {
 				event.player().setRotation(rotation.asVector3d());
 			});
 		}

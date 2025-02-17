@@ -89,9 +89,9 @@ public class PlayerDeathAndRespawnListener {
 				event.entity().offer(Keys.EXPERIENCE, exps.get(event.entity().uniqueId()));
 				exps.remove(event.entity().uniqueId());
 			}
-			if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterRespawn() && plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().isPresent()) {
-				event.entity().setLocation(plugin.getMainConfig().getSpawnData().get().getLocationData().getServerLocation().get());
-				plugin.getMainConfig().getSpawnData().get().getLocationData().getPosition().getRotation().ifPresent(rotation -> {
+			if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterRespawn() && plugin.getMainConfig().getSpawnData().get().getLocation().getServerLocation().isPresent()) {
+				event.entity().setLocation(plugin.getMainConfig().getSpawnData().get().getLocation().getServerLocation().get());
+				plugin.getMainConfig().getSpawnData().get().getLocation().getPosition().getRotation().ifPresent(rotation -> {
 					event.entity().setRotation(rotation.asVector3d());
 				});
 			}

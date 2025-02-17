@@ -5,10 +5,12 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.math.vector.Vector3d;
 
+import sawfowl.commandpack.api.data.miscellaneous.Location;
+import sawfowl.commandpack.api.data.miscellaneous.Spawn;
 import sawfowl.localeapi.api.LocalisedComment;
 
 @ConfigSerializable
-public class SpawnData {
+public class SpawnData implements Spawn {
 
 	public SpawnData() {}
 	public SpawnData(LocationData locationData) {
@@ -34,14 +36,17 @@ public class SpawnData {
 	@LocalisedComment(path = {"Comments", "MainConfig", "SpawnData", "MoveAfterJoin"}, plugin = "commandpack")
 	private boolean moveAfterJoin = false;
 
-	public LocationData getLocationData() {
+	@Override
+	public Location getLocation() {
 		return locationData;
 	}
 
+	@Override
 	public boolean isMoveAfterRespawn() {
 		return moveAfterRespawn;
 	}
 
+	@Override
 	public boolean isMoveAfterJoin() {
 		return moveAfterJoin;
 	}
