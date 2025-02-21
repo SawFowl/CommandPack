@@ -11,7 +11,8 @@
         "plugin.MixinContainersImpl",
         "plugin.MixinModPlatformEventListenerImpl",
         "game.MixinEntityItemImpl",
-        "game.MixinServerLevelImpl"
+        "game.MixinServerLevelImpl",
+        "game.MixinPortalShapeImpl"
     ],
     "injectors": {
         "defaultRequire": 1

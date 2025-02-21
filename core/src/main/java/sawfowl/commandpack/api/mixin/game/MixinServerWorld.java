@@ -2,10 +2,15 @@ package sawfowl.commandpack.api.mixin.game;
 
 import java.util.Optional;
 
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.server.ServerWorld;
+import org.spongepowered.math.vector.Vector3i;
+
+import com.google.common.base.Predicate;
 
 /**
  * This interface adds additional functionality to the world class.
@@ -50,6 +55,32 @@ public interface MixinServerWorld extends ServerWorld {
 	 * Getting the TPS of the world.
 	 */
 	double getTPS();
+
+	/**
+	 * Finding the shape of the portal in the world.
+	 */
+	Optional<PortalShape> findPortalShape(boolean empty, int x, int y, int z, Direction direction, @Nullable Predicate<PortalShape> predicate);
+
+	/**
+	 * Finding the shape of the portal in the world.
+	 */
+	default Optional<PortalShape> findPortalShape(boolean empty, Vector3i blockPos, Direction direction, @Nullable Predicate<PortalShape> predicate) {
+		return findPortalShape(empty, blockPos.x(), blockPos.y(), blockPos.z(), direction, predicate);
+	}
+
+	/**
+	 * Search for an empty portal shape in the world.
+	 */
+	default Optional<PortalShape> findEmptyPortalShape(Vector3i blockPos, Direction direction) {
+		return findPortalShape(true, blockPos, direction, null);
+	}
+
+	/**
+	 * Search for an empty portal shape in the world.
+	 */
+	default Optional<PortalShape> findEmptyPortalShape(int x, int y, int z, Direction direction) {
+		return findPortalShape(true, x, y, z, direction, null);
+	}
 
 	enum Defaults {
 

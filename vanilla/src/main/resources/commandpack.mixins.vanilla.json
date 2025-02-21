@@ -10,7 +10,8 @@
         "network.MixinConnectionImpl",
         "network.MixinAccessorServerCommonPacketListener",
         "game.MixinEntityItemImpl",
-        "game.MixinServerLevelImpl"
+        "game.MixinServerLevelImpl",
+        "game.MixinPortalShapeImpl"
     ],
     "injectors": {
         "defaultRequire": 1

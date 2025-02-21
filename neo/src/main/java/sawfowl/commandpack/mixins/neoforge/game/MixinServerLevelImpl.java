@@ -1,12 +1,16 @@
 package sawfowl.commandpack.mixins.neoforge.game;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.api.util.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundTickingStatePacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -17,7 +21,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.google.common.base.Predicate;
+
 import sawfowl.commandpack.api.mixin.game.MixinServerWorld;
+import sawfowl.commandpack.api.mixin.game.PortalShape;
 
 @Mixin(value = ServerLevel.class)
 public abstract class MixinServerLevelImpl implements MixinServerWorld {
@@ -51,6 +58,22 @@ public abstract class MixinServerLevelImpl implements MixinServerWorld {
 
 	public TickRateManager getTicksManager() {
 		return ticksManager;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Optional<PortalShape> findPortalShape(boolean empty, int x, int y, int z, Direction direction, @Nullable Predicate<PortalShape> predicate) {
+		if(predicate == null) predicate = shape -> true;
+		return findPortalShape(empty, new BlockPos(x, y, z), net.minecraft.core.Direction.fromDelta(direction.asBlockOffset().x(), direction.asBlockOffset().y(), direction.asBlockOffset().z()), (Predicate<net.minecraft.world.level.portal.PortalShape>) (Object) predicate).map(s -> (PortalShape) s);
+	}
+
+	private Optional<net.minecraft.world.level.portal.PortalShape> findPortalShape(boolean empty, BlockPos blockPos, net.minecraft.core.Direction direction, Predicate<net.minecraft.world.level.portal.PortalShape> predicate) {
+		if(empty) return net.minecraft.world.level.portal.PortalShape.findEmptyPortalShape(asVanilla(), blockPos, (direction == null ? net.minecraft.core.Direction.NORTH : direction).getAxis());
+		return net.minecraft.world.level.portal.PortalShape.findPortalShape(asVanilla(), blockPos, predicate, (direction == null ? net.minecraft.core.Direction.NORTH : direction).getAxis());
+	}
+
+	private ServerLevel asVanilla() {
+		return (ServerLevel) (Object) this;
 	}
 
 	@SuppressWarnings("unchecked")
