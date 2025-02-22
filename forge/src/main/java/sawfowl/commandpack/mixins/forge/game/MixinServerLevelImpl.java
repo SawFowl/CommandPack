@@ -17,10 +17,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.TickRateManager;
+import net.minecraft.world.level.portal.PortalForcer;
 
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.math.vector.Vector3i;
 
 import sawfowl.commandpack.api.mixin.game.MixinServerWorld;
 import sawfowl.commandpack.api.mixin.game.PortalShape;
@@ -30,6 +32,8 @@ public abstract class MixinServerLevelImpl implements MixinServerWorld {
 
 	@Shadow
 	public abstract @NonNull MinecraftServer shadow$getServer();
+	@Shadow
+	public abstract PortalForcer getPortalForcer();
 	abstract long[] bridge$recentTickTimes();
 	private TickRateManager ticksManager = new TickRateManager();
 
@@ -69,6 +73,15 @@ public abstract class MixinServerLevelImpl implements MixinServerWorld {
 	private Optional<net.minecraft.world.level.portal.PortalShape> findPortalShape(boolean empty, BlockPos blockPos, net.minecraft.core.Direction direction, Predicate<net.minecraft.world.level.portal.PortalShape> predicate) {
 		if(empty) return net.minecraft.world.level.portal.PortalShape.findEmptyPortalShape(asVanilla(), blockPos, direction.getAxis()).filter(predicate);
 		return net.minecraft.world.level.portal.PortalShape.findPortalShape(asVanilla(), blockPos, predicate, direction.getAxis());
+	}
+
+	@Override
+	public Optional<Vector3i> findClosestPortalPosition(Vector3i blockPos, boolean isNether) {
+		return findClosestPortalPosition(new BlockPos(blockPos.x(), blockPos.y(), blockPos.z()), isNether).map(pos -> Vector3i.from(pos.getX(), pos.getY(), pos.getZ()));
+	}
+
+	private Optional<BlockPos> findClosestPortalPosition(BlockPos blockPos, boolean isNether) {
+		return getPortalForcer().findClosestPortalPosition(blockPos, isNether, asVanilla().getWorldBorder());
 	}
 
 	private ServerLevel asVanilla() {

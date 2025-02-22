@@ -95,6 +95,13 @@ public interface MixinServerWorld extends ServerWorld {
 		return findPortalShape(true, x, y, z, direction, predicate);
 	}
 
+	/**
+	 * Finding the position of the exit portal.
+	 * @param blockPos - The starting position of the search.
+	 * @param isNether - If true, the search will be performed within a radius of 16 blocks. If false, the search will be performed within a radius of 128 blocks.
+	 */
+	Optional<Vector3i> findClosestPortalPosition(Vector3i blockPos, boolean isNether);
+
 	enum Defaults {
 
 		OVERWORLD {
