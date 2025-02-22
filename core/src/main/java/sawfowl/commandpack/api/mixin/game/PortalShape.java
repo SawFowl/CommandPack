@@ -16,4 +16,6 @@ public interface PortalShape {
 
 	Vector3i getBottomLeft();
 
+	boolean isCanBeFilled();
+
 }
