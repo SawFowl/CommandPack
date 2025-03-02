@@ -11,8 +11,6 @@ import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
-import org.spongepowered.api.world.DefaultWorldKeys;
-import org.spongepowered.api.world.server.ServerWorld;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -69,8 +67,8 @@ public class Load extends AbstractWorldCommand {
 	private RawArgument<ResourceKey> createWorldArgument() {
 		return RawArgument.of(
 			ResourceKey.class,
-			(cause, args) -> Sponge.server().worldManager().worlds().stream().filter(w -> !w.isLoaded() && !w.key().asString().equals(DefaultWorldKeys.DEFAULT.asString())).map(w -> w.key().asString()),
-			(cause, args) -> args.length >= 1 ? Sponge.server().worldManager().worlds().stream().filter(w -> !w.isLoaded() && !w.key().asString().equals(DefaultWorldKeys.DEFAULT.asString()) && w.key().asString().equals(args[0])).findFirst().map(ServerWorld::key) : Optional.empty(),
+			(cause, args) -> Sponge.server().worldManager().offlineWorldKeys().stream().map(w -> w.asString()),
+			(cause, args) -> args.length >= 1 ? Sponge.server().worldManager().offlineWorldKeys().stream().filter(w -> w.asString().equals(args[0])).findFirst() : Optional.empty(),
 			new RawArgumentData<>("World", CommandTreeNodeTypes.DIMENSION.get().createNode(), 0, null, null),
 			RawOptional.notOptional(),
 			locale -> getExceptions(locale).getWorldNotPresent()
