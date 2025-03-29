@@ -14,6 +14,8 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.math.vector.Vector3d;
 
+import com.google.gson.JsonObject;
+
 import sawfowl.commandpack.api.data.miscellaneous.Location;
 import sawfowl.commandpack.api.data.miscellaneous.Position;
 import sawfowl.commandpack.api.data.miscellaneous.Point;
@@ -105,6 +107,14 @@ public class LocationData implements Location {
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
+	@Override
+	public JsonObject asJson() {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("World", world);
+		jsonObject.add("Position", position.asJson());
+		return jsonObject;
+	}
+
 	public class Builder implements Location.Builder {
 
 		@Override
@@ -136,6 +146,16 @@ public class LocationData implements Location {
 		@Override
 		public Location build() {
 			return LocationData.this;
+		}
+
+		@Override
+		public Optional<Location> fromJson(JsonObject json) {
+			if(json.has("World") && json.has("Position") && json.get("World").isJsonPrimitive() && json.get("World").getAsString().contains(":") && json.get("Position").isJsonObject()) {
+				world = json.get("World").getAsString();
+				position = Position.builder().fromJson(json.get("Position").getAsJsonObject()).map(p -> (PositionData) p).orElse(null);
+				if(position != null) return Optional.ofNullable(LocationData.this);
+			}
+			return Optional.empty();
 		}
 
 	}

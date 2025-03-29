@@ -11,6 +11,8 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import com.google.gson.JsonObject;
+
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.api.data.miscellaneous.Location;
@@ -124,6 +126,15 @@ public class WarpData implements Warp {
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
+	@Override
+	public JsonObject asJson() {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("Name", name);
+		jsonObject.addProperty("Private", privated);
+		jsonObject.add("Location", locationData.asJson());
+		return jsonObject;
+	}
+
 	public class Builder implements Warp.Builder {
 
 		@Override
@@ -147,6 +158,17 @@ public class WarpData implements Warp {
 		@Override
 		public Warp build() {
 			return WarpData.this;
+		}
+
+		@Override
+		public Optional<Warp> fromJson(JsonObject json) {
+			if(json.has("Name") && json.has("Private") && json.has("Location") && json.get("Name").isJsonPrimitive() && json.get("Private").isJsonPrimitive() && json.get("Location").isJsonObject()) {
+				name = json.get("Name").getAsString();
+				privated = json.get("Private").getAsBoolean();
+				locationData = Location.builder().fromJson(json.getAsJsonObject("Location")).map(l -> (LocationData) l).orElse(null);
+				if(locationData != null) return Optional.ofNullable(WarpData.this);
+			}
+			return Optional.empty();
 		}
 		
 	}

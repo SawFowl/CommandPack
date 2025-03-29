@@ -3,6 +3,8 @@ package sawfowl.commandpack.configure.configs.player;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import com.google.gson.JsonObject;
+
 import sawfowl.commandpack.api.data.player.GivedKit;
 
 @ConfigSerializable
@@ -38,6 +40,21 @@ public class GivedKitData implements GivedKit {
 	@Override
 	public void setGivedCount(int value) {
 		this.givedCount = value;
+	}
+
+	@Override
+	public JsonObject asJson() {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("LastGivedTime", lastGivedTime);
+		jsonObject.addProperty("GivedCount", givedCount);
+		return jsonObject;
+	}
+
+	@Override
+	public GivedKitData updateFromJson(JsonObject json) {
+		if(json.has("LastGivedTime")) setLastGivedTime(json.get("LastGivedTime").getAsLong());
+		if(json.has("GivedCount")) setGivedCount(json.get("GivedCount").getAsInt());
+		return this;
 	}
 
 }

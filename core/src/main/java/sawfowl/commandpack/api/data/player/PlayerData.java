@@ -11,6 +11,8 @@ import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
+import com.google.gson.JsonObject;
+
 import net.kyori.adventure.text.Component;
 
 import sawfowl.commandpack.api.data.kits.Kit;
@@ -170,5 +172,13 @@ public interface PlayerData {
 	<ServerPlayer> CommandResult runCommand(Locale sourceLocale, String command) throws CommandException;
 
 	PlayerData save();
+
+	/**
+	 * Convert to Json.<br>
+	 * The name and UUID will not be included in this Json.
+	 */
+	JsonObject asJson();
+
+	void updateFromJson(JsonObject json);
 
 }

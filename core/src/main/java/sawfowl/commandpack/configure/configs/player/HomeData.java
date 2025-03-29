@@ -1,12 +1,15 @@
 package sawfowl.commandpack.configure.configs.player;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
+
+import com.google.gson.JsonObject;
 
 import net.kyori.adventure.text.Component;
 
@@ -85,10 +88,12 @@ public class HomeData implements Home {
 	Home toInterface() {
 		return this;
 	}
+
 	@Override
 	public int contentVersion() {
 		return 1;
 	}
+
 	@Override
 	public DataContainer toContainer() {
 		return DataContainer.createNew()
@@ -97,6 +102,16 @@ public class HomeData implements Home {
 				.set(DataQuery.of("Default"), def)
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
+
+	@Override
+	public JsonObject asJson() {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("Name", name);
+		jsonObject.addProperty("Default", def);
+		jsonObject.add("Location", locationData.asJson());
+		return jsonObject;
+	}
+
 
 	public class Builder implements Home.Builder {
 
@@ -122,7 +137,17 @@ public class HomeData implements Home {
 		public Home build() {
 			return HomeData.this;
 		}
+
+		@Override
+		public Optional<Home> fromJson(JsonObject json) {
+			if(json.has("Name") && json.has("Default") && json.has("Location") && json.get("Name").isJsonPrimitive() && json.get("Default").isJsonPrimitive() && json.get("Location").isJsonObject()) {
+				name = json.get("Name").getAsString();
+				def = json.get("Default").getAsBoolean();
+				locationData = Location.builder().fromJson(json.getAsJsonObject("Location")).map(l -> (LocationData) l).orElse(null);
+				if(locationData != null) return Optional.ofNullable(HomeData.this);
+			}
+			return Optional.empty();
+		}
 		
 	}
-
 }

@@ -10,6 +10,8 @@ import org.spongepowered.api.world.Locatable;
 import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 
+import com.google.gson.JsonObject;
+
 import net.kyori.adventure.builder.AbstractBuilder;
 
 /**
@@ -59,6 +61,11 @@ public interface Location extends DataSerializable {
 	 */
 	boolean moveHere(Entity entity);
 
+	/**
+	 * Convert to Json.
+	 */
+	JsonObject asJson();
+
 	interface Builder extends AbstractBuilder<Location>, org.spongepowered.api.util.Builder<Location, Builder> {
 
 		Builder setWorld(ServerWorld world);
@@ -68,6 +75,8 @@ public interface Location extends DataSerializable {
 		Builder setLocationAndRotation(ServerLocation location, Point point);
 
 		Builder setPosition(Position position);
+
+		Optional<Location> fromJson(JsonObject json);
 
 	}
 

@@ -32,6 +32,11 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.math.vector.Vector3d;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identified;
 import net.kyori.adventure.identity.Identity;
@@ -397,6 +402,82 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	@Override
 	public void setHideBalance(boolean hideBalance) {
 		this.hideBalance = hideBalance;
+	}
+
+	@Override
+	public JsonObject asJson() {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.add("Homes", putAllJsonArray(new JsonArray(), homes.stream().map(h -> h.asJson()).toArray(JsonObject[]::new)));
+		jsonObject.add("Warps", putAllJsonArray(new JsonArray(), warps.stream().map(w -> w.asJson()).toArray(JsonObject[]::new)));
+		jsonObject.add("Backpack", backpackData.asJson());
+		JsonObject givedKits = new JsonObject();
+		this.givedKits.forEach((kit, data) -> givedKits.add(kit, data.asJson()));
+		jsonObject.add("GivedKits", givedKits);
+		jsonObject.addProperty("LastJoin", lastJoin);
+		jsonObject.addProperty("LastExit", lastExit);
+		jsonObject.addProperty("Vanished", vanished);
+		jsonObject.addProperty("GodMode", godMode);
+		jsonObject.addProperty("Fly", fly);
+		jsonObject.addProperty("HideBalance", hideBalance);
+		return jsonObject;
+	}
+
+	@Override
+	public void updateFromJson(JsonObject json) {
+		if(json.has("Homes") && json.get("Homes").isJsonArray()) {
+			Set<HomeData> newHomes = new HashSet<HomeData>();
+			for(JsonElement jsonHomeElement : json.get("Homes").getAsJsonArray()) {
+				if(jsonHomeElement instanceof JsonObject jsonHome && jsonHome.has("Name") && jsonHome.get("Name").isJsonPrimitive()) {
+					HomeData home = Home.builder().fromJson(jsonHome).map(h -> (HomeData) h).orElse(null);
+					if(home != null) {
+						newHomes.add(home);
+						home = null;
+					}
+				}
+			}
+			if(!newHomes.isEmpty()) {
+				homes.clear();
+				homes.addAll(newHomes);
+				newHomes = null;
+			}
+		}
+		if(json.has("Warps") && json.get("Warps").isJsonArray()) {
+			Set<WarpData> newWarps = new HashSet<WarpData>();
+			for(JsonElement jsonHomeElement : json.get("Homes").getAsJsonArray()) {
+				if(jsonHomeElement instanceof JsonObject jsonWarp && jsonWarp.has("Name") && jsonWarp.get("Name").isJsonPrimitive()) {
+					WarpData home = Warp.builder().fromJson(jsonWarp).map(w -> (WarpData) w).orElse(null);
+					if(home != null) {
+						newWarps.add(home);
+						home = null;
+					}
+				}
+			}
+			if(!newWarps.isEmpty()) {
+				warps.clear();
+				warps.addAll(newWarps);
+				newWarps = null;
+			}
+		}
+		if(json.has("Backpack") && json.get("Backpack").isJsonObject()) backpackData = (BackpackData) Backpack.builder().fromJson(json.get("Backpack").getAsJsonObject()).orElse(backpackData);
+		if(json.has("GivedKits") && json.get("GivedKits").isJsonObject()) {
+			json.getAsJsonObject("GivedKits").asMap().forEach((kit, data) -> {
+				if(givedKits.containsKey(kit)) {
+					givedKits.get(kit).updateFromJson(json);
+				} else givedKits.put(kit, new GivedKitData().updateFromJson(json));
+			});
+		}
+		if(json.has("LastJoin") && json.get("LastJoin") instanceof JsonPrimitive primitive && primitive.isNumber()) lastJoin = primitive.getAsLong();
+		if(json.has("LastExit") && json.get("LastExit") instanceof JsonPrimitive primitive && primitive.isNumber()) lastExit = primitive.getAsLong();
+		if(json.has("Vanished") && json.get("Vanished") instanceof JsonPrimitive primitive && primitive.isBoolean()) vanished = primitive.getAsBoolean();
+		if(json.has("GodMode") && json.get("GodMode") instanceof JsonPrimitive primitive && primitive.isBoolean()) godMode = primitive.getAsBoolean();
+		if(json.has("Fly") && json.get("Fly") instanceof JsonPrimitive primitive && primitive.isBoolean()) fly = primitive.getAsBoolean();
+		if(json.has("HideBalance") && json.get("HideBalance") instanceof JsonPrimitive primitive && primitive.isBoolean()) hideBalance = primitive.getAsBoolean();
+		save();
+	}
+
+	private JsonArray putAllJsonArray(JsonArray array, JsonElement... elements) {
+		for(JsonElement e : elements) array.add(e);
+		return array;
 	}
 
 }

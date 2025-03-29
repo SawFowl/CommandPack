@@ -1,7 +1,11 @@
 package sawfowl.commandpack.api.data.player;
 
+import java.util.Optional;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
+
+import com.google.gson.JsonObject;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
@@ -53,6 +57,11 @@ public interface Home extends DataSerializable {
 	 */
 	boolean isDefault();
 
+	/**
+	 * Convert to Json.
+	 */
+	JsonObject asJson();
+
 	interface Builder extends AbstractBuilder<Home>, org.spongepowered.api.util.Builder<Home, Builder> {
 
 		/**
@@ -72,7 +81,9 @@ public interface Home extends DataSerializable {
 		 * If a player will have several points marked as the default point, the first matching this condition will be chosen when receiving the default point.
 		 */
 		Builder setDefault(boolean def);
-		
+
+		Optional<Home> fromJson(JsonObject json);
+
 	}
 
 }

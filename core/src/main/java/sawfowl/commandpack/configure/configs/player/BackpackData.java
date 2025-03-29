@@ -1,5 +1,6 @@
 package sawfowl.commandpack.configure.configs.player;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,12 +8,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import org.apache.commons.lang3.math.NumberUtils;
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.persistence.DataFormats;
 import org.spongepowered.api.data.persistence.DataQuery;
+import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.data.persistence.Queries;
+import org.spongepowered.api.data.persistence.StringDataFormat;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Cause;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Container;
 import org.spongepowered.api.item.inventory.ContainerType;
 import org.spongepowered.api.item.inventory.ContainerTypes;
@@ -27,10 +34,13 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.plugin.PluginContainer;
 
-import net.kyori.adventure.text.Component;
+import com.google.gson.JsonObject;
 
+import net.kyori.adventure.text.Component;
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.localeapi.api.TextUtils;
+import sawfowl.localeapi.api.serializetools.itemstack.SerializedItemStack;
 
 @ConfigSerializable
 public class BackpackData implements Backpack {
@@ -104,6 +114,11 @@ public class BackpackData implements Backpack {
 	}
 
 	@Override
+	public void clear() {
+		items.clear();
+	}
+
+	@Override
 	public InventoryMenu asMenu(PluginContainer container, ServerPlayer player, int rows, Component title) {
 		InventoryMenu menu = ViewableInventory.builder().type(getType(rows)).completeStructure().carrier(player).plugin(container).build().asMenu();
 		if(title == null) {
@@ -119,8 +134,6 @@ public class BackpackData implements Backpack {
 					});
 				});
 				save();
-				menu.unregisterAll();
-				menu.inventory().clear();
 			}
 		});
 		items.forEach((k, v) -> {
@@ -132,6 +145,13 @@ public class BackpackData implements Backpack {
 	@Override
 	public void save() {
 		if(save != null) save.accept(this);
+	}
+
+	@Override
+	public JsonObject asJson() {
+		JsonObject jsonObject = new JsonObject();
+		items.forEach((slot, item) -> jsonObject.add(String.valueOf(slot), new SerializedItemStack(item).toJsonComponents().toJsonObject()));
+		return jsonObject;
 	}
 
 	private DefaultedRegistryReference<ContainerType> getType(int rows) {
@@ -182,6 +202,36 @@ public class BackpackData implements Backpack {
 				});
 			});
 			return this;
+		}
+
+		@Override
+		public Optional<Backpack> fromJson(JsonObject jsonObject) {
+			Map<Integer, ItemStack> items = new HashMap<>();
+			jsonObject.asMap().forEach((key, value) -> {
+				if(NumberUtils.isCreatable(key) && value instanceof JsonObject object && object.has("ItemType")) {
+					ItemTypes.registry().findValue(ResourceKey.resolve(object.get("ItemType").getAsString())).ifPresent(type -> {
+						ItemStack stack = ItemStack.of(type, object.has("Quantity") ? object.get("Quantity").getAsInt() : 1);
+						if(object.has("ComponentsMap")) {
+							DataContainer container = stack.toContainer();
+							try {
+								container.set(DataQuery.of(new String[]{"components"}), ((StringDataFormat) DataFormats.JSON.get()).read(object.get("ComponentsMap").getAsJsonObject().toString()));
+								stack = ItemStack.builder().fromContainer(container).build();
+							} catch (InvalidDataException | IOException e) {
+								e.printStackTrace();
+							}
+							container = null;
+						}
+						items.put(NumberUtils.createInteger(key), stack);
+						stack = null;
+					});
+				}
+			});
+			if(!items.isEmpty()) {
+				BackpackData.this.items.clear();
+				BackpackData.this.items.putAll(items);
+				return Optional.ofNullable(BackpackData.this);
+			}
+			return Optional.empty();
 		}
 		
 	}

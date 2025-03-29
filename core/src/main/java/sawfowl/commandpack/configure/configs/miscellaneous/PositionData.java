@@ -10,6 +10,9 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.math.vector.Vector3d;
 import org.spongepowered.math.vector.Vector3i;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+
 import sawfowl.commandpack.api.data.miscellaneous.Position;
 import sawfowl.commandpack.api.data.miscellaneous.Point;
 
@@ -68,10 +71,12 @@ public class PositionData implements Position {
 	public String toString() {
 		return "PositionData [x=" + x + ", y=" + y + ", z=" + z + ", rotation=" + rotation + "]";
 	}
+
 	@Override
 	public int contentVersion() {
 		return 1;
 	}
+
 	@Override
 	public DataContainer toContainer() {
 		return DataContainer.createNew()
@@ -80,6 +85,16 @@ public class PositionData implements Position {
 				.set(DataQuery.of("Z"), z)
 				.set(DataQuery.of("Point"), rotation)
 				.set(Queries.CONTENT_VERSION, contentVersion());
+	}
+
+	@Override
+	public JsonObject asJson() {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("X", x);
+		jsonObject.addProperty("Y", y);
+		jsonObject.addProperty("Z", z);
+		jsonObject.add("Point", rotation.asJson());
+		return jsonObject;
 	}
 
 	public class Builder implements Position.Builder {
@@ -101,6 +116,31 @@ public class PositionData implements Position {
 		@Override
 		public Position build() {
 			return PositionData.this;
+		}
+
+		@Override
+		public Optional<PositionData> fromJson(JsonObject json) {
+			if(json.has("X") && json.has("Y") && json.has("Z")) {
+				var xJson = json.get("X");
+				var yJson = json.get("Y");
+				var zJson = json.get("Z");
+				if(xJson instanceof JsonPrimitive x && x.isNumber() && yJson instanceof JsonPrimitive y && y.isNumber() && zJson instanceof JsonPrimitive z && z.isNumber()) {
+					PositionData.this.x = x.getAsDouble();
+					PositionData.this.y = y.getAsDouble();
+					PositionData.this.z = z.getAsDouble();
+					xJson = null;
+					yJson = null;
+					zJson = null;
+					if(json.has("Point") && json.get("Point").isJsonObject()) Point.builder().fromJson(json.getAsJsonObject("Point")).ifPresent(p -> {
+						rotation = (PointData) p;
+					});
+					return Optional.ofNullable(PositionData.this);
+				}
+				xJson = null;
+				yJson = null;
+				zJson = null;
+			}
+			return Optional.empty();
 		}
 		
 	}

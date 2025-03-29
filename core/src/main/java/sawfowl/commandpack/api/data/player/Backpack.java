@@ -13,6 +13,8 @@ import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.menu.InventoryMenu;
 import org.spongepowered.plugin.PluginContainer;
 
+import com.google.gson.JsonObject;
+
 import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
 
@@ -60,6 +62,8 @@ public interface Backpack extends DataSerializable {
 	 */
 	Optional<ItemStack> getItem(int slot);
 
+	void clear();
+
 	/**
 	 * Getting the contents of the backpack in the menu with the specified number of lines.<br>
 	 * All changes made will be automatically saved if the backpack data refers to the player's data in the CommandPack plugin.<br>
@@ -73,6 +77,11 @@ public interface Backpack extends DataSerializable {
 	 */
 	void save();
 
+	/**
+	 * Convert to Json.
+	 */
+	JsonObject asJson();
+
 	interface Builder extends AbstractBuilder<Backpack>, org.spongepowered.api.util.Builder<Backpack, Builder> {
 
 		Builder fromInventory(Inventory inventory);
@@ -80,6 +89,8 @@ public interface Backpack extends DataSerializable {
 		Builder fromMap(Map<Integer, ItemStack> map);
 
 		Builder copyFrom(Backpack backpack);
+
+		Optional<Backpack> fromJson(JsonObject jsonObject);
 
 	}
 

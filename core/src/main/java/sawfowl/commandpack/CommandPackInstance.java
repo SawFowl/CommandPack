@@ -271,7 +271,6 @@ public class CommandPackInstance {
 		kitService = new KitServiceImpl(instance);
 		playersData = new PlayersDataImpl(instance);
 		configManager = new ConfigManager(instance);
-		configManager.loadPlayersData();
 		isForge = checkForge();
 		isNeo = checkNeo();
 		economy = new Economy(instance);
@@ -290,6 +289,7 @@ public class CommandPackInstance {
 		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getSystemLocale().getDebug().getEconomy().getNotFound());
 		registerListeners();
 		configManager.loadKits();
+		configManager.loadPlayersData();
 		generators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureSets(null).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
 		generators.put("overworld", ChunkGenerator.overworld());
 		generators.put("end", ChunkGenerator.theEnd());

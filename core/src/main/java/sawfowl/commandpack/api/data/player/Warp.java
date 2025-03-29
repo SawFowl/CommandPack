@@ -7,6 +7,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 import org.spongepowered.api.entity.Entity;
 
+import com.google.gson.JsonObject;
+
 import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
 
@@ -67,6 +69,11 @@ public interface Warp extends DataSerializable {
 	 */
 	boolean moveHere(Entity entity);
 
+	/**
+	 * Convert to Json.
+	 */
+	JsonObject asJson();
+
 	interface Builder extends AbstractBuilder<Warp>, org.spongepowered.api.util.Builder<Warp, Builder> {
 
 		/**
@@ -83,7 +90,9 @@ public interface Warp extends DataSerializable {
 		 * Changing Warp Status. If true, the warp will be private. If false, the warp will be public.
 		 */
 		Builder setPrivate(boolean value);
-		
+
+		Optional<Warp> fromJson(JsonObject json);
+
 	}
 
 }

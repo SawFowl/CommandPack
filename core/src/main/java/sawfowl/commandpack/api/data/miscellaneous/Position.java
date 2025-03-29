@@ -6,7 +6,10 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
 import org.spongepowered.math.vector.Vector3d;
 
+import com.google.gson.JsonObject;
+
 import net.kyori.adventure.builder.AbstractBuilder;
+import sawfowl.commandpack.configure.configs.miscellaneous.PositionData;
 
 /**
  * @author SawFowl
@@ -32,6 +35,8 @@ public interface Position extends Point, DataSerializable {
 		Builder setPosition(Vector3d position);
 
 		Builder setRotation(Vector3d rotation);
+
+		Optional<PositionData> fromJson(JsonObject json);
 
 	}
 
