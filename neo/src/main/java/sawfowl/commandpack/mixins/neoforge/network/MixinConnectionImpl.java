@@ -25,7 +25,7 @@ public class MixinConnectionImpl implements CPConnection {
 	}
 
 	@Inject(method = "channelRead0", at = @At("HEAD"))
-	public void onRead(ChannelHandlerContext context, Packet<?> packet, CallbackInfo ci) {
+	public void commandpack$onRead(ChannelHandlerContext context, Packet<?> packet, CallbackInfo ci) {
 		if(clientName == null && packet instanceof ServerboundCustomPayloadPacket p && p.payload() instanceof BrandPayload b) clientName = b.brand();
 	}
 

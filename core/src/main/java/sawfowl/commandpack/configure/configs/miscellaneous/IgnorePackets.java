@@ -19,9 +19,9 @@ public class IgnorePackets {
 	@Setting("Debug")
 	@LocalisedComment(path = {"Comments", "MainConfig", "IgnorePackets", "Debug"}, plugin = "commandpack")
 	private boolean debug = false;
-	@Setting("Blacklist")
-	@LocalisedComment(path = {"Comments", "MainConfig", "IgnorePackets", "Blacklist"}, plugin = "commandpack")
-	private boolean blacklist = true;
+	@Setting("Whitelist")
+	@LocalisedComment(path = {"Comments", "MainConfig", "IgnorePackets", "Whitelist"}, plugin = "commandpack")
+	private boolean whitelist = true;
 	@Setting("Packets")
 	@LocalisedComment(path = {"Comments", "MainConfig", "IgnorePackets", "Packets"}, plugin = "commandpack")
 	private List<String> packets = Arrays.asList("worldedit:cui");
@@ -35,7 +35,7 @@ public class IgnorePackets {
 	}
 
 	public boolean canEncode(String packet) {
-		return blacklist ? !packets.contains(packet) : packets.contains(packet);
+		return whitelist ? packets.contains(packet) : !packets.contains(packet);
 	}
 
 }

@@ -14,8 +14,8 @@ public class IgnorePackets {
 	private String enable = "If false, these settings will be disabled.";
 	@Setting("Debug")
 	private String debug = "If true, all package ids will be output to the console.";
-	@Setting("Blacklist")
-	private String blacklist = "If true, the list of packet IDs will be prohibitive.";
+	@Setting("Whitelist")
+	private String whitelist = "If false, the list of packet IDs will be prohibitive.";
 	@Setting("Packets")
 	private String packets = "A list of packet identifiers. If Blacklist = true, then data retrieval from packets will be applied only to those packets whose identifiers are specified in this list.";
 

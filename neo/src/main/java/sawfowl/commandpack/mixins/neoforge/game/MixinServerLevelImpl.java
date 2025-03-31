@@ -96,12 +96,12 @@ public abstract class MixinServerLevelImpl implements MixinServerWorld {
 	}
 
 	@Inject(method = "addPlayer", at = @At("HEAD"))
-	private void onAddPlayer(ServerPlayer $$0, CallbackInfo info) {
+	private void commandpack$onAddPlayer(ServerPlayer $$0, CallbackInfo info) {
 		$$0.connection.send(ClientboundTickingStatePacket.from(ticksManager));
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-	public void onTick(BooleanSupplier $$0, CallbackInfo info) {
+	public void commandpack$onTick(BooleanSupplier $$0, CallbackInfo info) {
 		if(isFreezeTicks()) {
 			bridge$recentTickTimes()[this.shadow$getServer().getTickCount() % 100] = 0;
 			info.cancel();

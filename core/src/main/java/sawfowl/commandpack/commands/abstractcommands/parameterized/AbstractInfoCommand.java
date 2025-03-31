@@ -14,11 +14,13 @@ import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.event.Cause;
+import org.spongepowered.api.event.EventContext;
+import org.spongepowered.api.event.EventContextKeys;
 import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
 import org.spongepowered.common.SpongeCommon;
 import org.spongepowered.common.event.manager.SpongeEventManager;
-import org.spongepowered.common.event.tracking.PhaseTracker;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 import org.spongepowered.plugin.metadata.model.PluginContributor;
@@ -163,7 +165,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 
 	protected void sendRefreshEvent(PluginContainer container) {
 		RefreshGameEvent event = SpongeEventFactory.createRefreshGameEvent(
-			PhaseTracker.getCauseStackManager().currentCause(),
+			Cause.builder().append(Sponge.systemSubject()).build(EventContext.builder().add(EventContextKeys.PLUGIN, container).build()),
 			SpongeCommon.game()
 		);
 		((SpongeEventManager) SpongeCommon.game().eventManager()).postToPlugin(event, container);

@@ -45,24 +45,26 @@ public abstract class MixinPluginMessagesImpl {
 	}
 
 	@Inject(method = "handleCustomPayload", at = @At("HEAD"))
-	public void onPluginMessage(ServerboundCustomPayloadPacket packet, CallbackInfo ci) {
+	public void commandpack$onPluginMessage(ServerboundCustomPayloadPacket packet, CallbackInfo ci) {
 		String packetId = packet.payload().type().id().toString();
 		if(plugin.getMainConfig().getRestrictMods().isEnable() && !getPlayer().hasPermission(Permissions.ALL_MODS_ACCESS) && packet.payload() instanceof MinecraftRegisterPayload minecraftRegisterPayload && restrinctMods(minecraftRegisterPayload)) return;
 		if(plugin.getMainConfig().getIgnorePackets().isEnable()) {
-			if(plugin.getMainConfig().getIgnorePackets().isDebug()) plugin.getLogger().debug(packetId);
+			if(plugin.getMainConfig().getIgnorePackets().isDebug()) plugin.getLogger().info(packetId);
 			if(!plugin.getMainConfig().getIgnorePackets().canEncode(packetId)) {
 				packetId = null;
 				return;
 			}
 		}
-		FriendlyByteBuf copy = new FriendlyByteBuf(Unpooled.buffer());
-		ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
-		PacketEvent event = new PacketEvent(packetId, copy);
-		if(getPlayer().isOnline()) Sponge.eventManager().post(event);
-		event = null;
+		try {
+			FriendlyByteBuf copy = new FriendlyByteBuf(Unpooled.buffer());
+			ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
+			PacketEvent event = new PacketEvent(packetId, copy);
+			if(getPlayer().isOnline()) Sponge.eventManager().post(event);
+			event = null;
+			copy = null;
+		} catch (Exception e) {
+		}
 		packetId = null;
-		copy = null;
-		event = null;
 	}
 
 	private boolean restrinctMods(MinecraftRegisterPayload payload) {

@@ -43,7 +43,7 @@ public abstract class MixinPluginMessagesImpl {
 	}
 
 	@Inject(method = "handleCustomPayload", at = @At("HEAD"))
-	public void onPluginMessage(ServerboundCustomPayloadPacket packet, CallbackInfo ci) {
+	public void commandpack$onPluginMessage(ServerboundCustomPayloadPacket packet, CallbackInfo ci) {
 		String packetId = packet.payload().type().id().toString();
 		FriendlyByteBuf copy = new FriendlyByteBuf(Unpooled.buffer());
 		boolean emptyBuffer = true;
@@ -72,12 +72,15 @@ public abstract class MixinPluginMessagesImpl {
 			}
 		}
 		if(emptyBuffer) ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
-		PacketEvent event = new PacketEvent(packetId, copy);
-		if(getPlayer().isOnline()) Sponge.eventManager().post(event);
-		event = null;
+		try {
+			ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
+			PacketEvent event = new PacketEvent(packetId, copy);
+			if(getPlayer().isOnline()) Sponge.eventManager().post(event);
+			event = null;
+		} catch (Exception e) {
+		}
 		packetId = null;
 		copy = null;
-		event = null;
 	}
 
 	private class PacketEvent implements RecievePacketEvent {
