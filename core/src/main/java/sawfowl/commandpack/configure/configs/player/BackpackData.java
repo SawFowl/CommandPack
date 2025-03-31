@@ -37,7 +37,7 @@ import org.spongepowered.plugin.PluginContainer;
 import com.google.gson.JsonObject;
 
 import net.kyori.adventure.text.Component;
-import sawfowl.commandpack.CommandPackInstance;
+
 import sawfowl.commandpack.api.data.player.Backpack;
 import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.api.serializetools.itemstack.SerializedItemStack;

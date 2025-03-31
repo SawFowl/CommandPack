@@ -22,6 +22,8 @@ import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
+import net.neoforged.neoforge.network.payload.MinecraftRegisterPayload;
+
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.events.RecievePacketEvent;
@@ -44,16 +46,33 @@ public abstract class MixinPluginMessagesImpl {
 
 	@Inject(method = "handleCustomPayload", at = @At("HEAD"))
 	public void onPluginMessage(ServerboundCustomPayloadPacket packet, CallbackInfo ci) {
+		String packetId = packet.payload().type().id().toString();
+		if(plugin.getMainConfig().getRestrictMods().isEnable() && !getPlayer().hasPermission(Permissions.ALL_MODS_ACCESS) && packet.payload() instanceof MinecraftRegisterPayload minecraftRegisterPayload && restrinctMods(minecraftRegisterPayload)) return;
+		if(plugin.getMainConfig().getIgnorePackets().isEnable()) {
+			if(plugin.getMainConfig().getIgnorePackets().isDebug()) plugin.getLogger().debug(packetId);
+			if(!plugin.getMainConfig().getIgnorePackets().canEncode(packetId)) {
+				packetId = null;
+				return;
+			}
+		}
 		FriendlyByteBuf copy = new FriendlyByteBuf(Unpooled.buffer());
 		ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
-		PacketEvent event = new PacketEvent(packet.payload().type().id().toString(), copy);
-		if(plugin.getMainConfig().getRestrictMods().isEnable() && !getPlayer().hasPermission(Permissions.ALL_MODS_ACCESS) && event.getPacketName().equals("minecraft:register")) {
-			List<String> disAllowedMods = plugin.getMainConfig().getRestrictMods().getDisAllowedMods(event.getDataAsString());
-			if(!disAllowedMods.isEmpty()) getPlayer().kick(plugin.getLocales().getLocale(getPlayer()).getOther().getIllegalMods(true, String.join(", ", disAllowedMods)));
-			disAllowedMods = null;
-		}
+		PacketEvent event = new PacketEvent(packetId, copy);
 		if(getPlayer().isOnline()) Sponge.eventManager().post(event);
 		event = null;
+		packetId = null;
+		copy = null;
+		event = null;
+	}
+
+	private boolean restrinctMods(MinecraftRegisterPayload payload) {
+		List<String> disAllowedMods = plugin.getMainConfig().getRestrictMods().getDisAllowedMods(payload.newChannels().stream().map(rl -> rl.toString()).toList());
+		if(!disAllowedMods.isEmpty()) {
+			getPlayer().kick(plugin.getLocales().getLocale(getPlayer()).getOther().getIllegalMods(true, String.join(", ", disAllowedMods)));
+			return true;
+		}
+		disAllowedMods = null;
+		return false;
 	}
 
 	private class PacketEvent implements RecievePacketEvent {

@@ -12,6 +12,7 @@ import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.main
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.mainconfig.RestrictEntitySpawn;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.mainconfig.RestrictMods;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.mainconfig.SpawnData;
+import sawfowl.commandpack.configure.locale.locales.ru.comments.mainconfig.IgnorePackets;
 import sawfowl.commandpack.configure.locale.locales.ru.comments.mainconfig.ImplementAfk;
 import sawfowl.commandpack.configure.locale.locales.ru.comments.mainconfig.ImplementEconomy;
 import sawfowl.commandpack.configure.locale.locales.ru.comments.mainconfig.ImplementPunishment;
@@ -39,6 +40,8 @@ public class ImplementMainConfig implements MainConfig {
 	private ImplementRestrictMods restrictMods = new ImplementRestrictMods();
 	@Setting("SpawnData")
 	private ImplementSpawnData spawnData = new ImplementSpawnData();
+	@Setting("IgnorePackets")
+	private IgnorePackets ignorePackets = new IgnorePackets();
 	@Setting("HideTeleportCommandSource")
 	private String hideTeleportCommandSource = "Если значение равно true, игрок не увидит, что кто-то применил к нему команду телепортации с административным разрешением.";
 	@Setting("EnableMotd")

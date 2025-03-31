@@ -1,6 +1,7 @@
 package sawfowl.commandpack.configure.configs.miscellaneous;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,6 +43,10 @@ public class RestrictMods {
 
 	public boolean isAllowedPlayerMod(String modId) {
 		return blackList ? !mods.contains(modId) : mods.contains(modId);
+	}
+
+	public List<String> getDisAllowedMods(Collection<String> packetData) {
+		return packets.entrySet().stream().filter(entry -> packetData.contains(entry.getKey())).map(entry -> entry.getValue()).toList();
 	}
 
 	public List<String> getDisAllowedMods(String packetData) {

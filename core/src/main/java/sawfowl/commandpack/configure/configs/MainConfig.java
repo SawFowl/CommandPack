@@ -17,6 +17,7 @@ import sawfowl.commandpack.configure.configs.commands.RandomTeleportConfig;
 import sawfowl.commandpack.configure.configs.economy.EconomyConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.AfkConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.DebugPlayerData;
+import sawfowl.commandpack.configure.configs.miscellaneous.IgnorePackets;
 import sawfowl.commandpack.configure.configs.miscellaneous.MySqlConfig;
 import sawfowl.commandpack.configure.configs.miscellaneous.PreventDamage;
 import sawfowl.commandpack.configure.configs.miscellaneous.RestrictEntitySpawn;
@@ -72,6 +73,9 @@ public class MainConfig {
 	@Setting("ItemSerializer")
 	@LocalisedComment(path = {"Comments", "MainConfig", "ItemSerializer"}, plugin = "commandpack")
 	private int itemSerializer = 2;
+	@Setting("IgnorePackets")
+	@LocalisedComment(path = {"Comments", "MainConfig", "IgnorePackets", "Title"}, plugin = "commandpack")
+	private IgnorePackets ignorePackets = new IgnorePackets();
 
 	public boolean isDebugEconomy() {
 		return debugEconomy;
@@ -151,6 +155,10 @@ public class MainConfig {
 
 	public int getItemSerializer() {
 		return itemSerializer;
+	}
+
+	public IgnorePackets getIgnorePackets() {
+		return ignorePackets;
 	}
 
 }

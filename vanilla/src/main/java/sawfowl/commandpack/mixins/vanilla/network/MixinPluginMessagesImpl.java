@@ -44,15 +44,39 @@ public abstract class MixinPluginMessagesImpl {
 
 	@Inject(method = "handleCustomPayload", at = @At("HEAD"))
 	public void onPluginMessage(ServerboundCustomPayloadPacket packet, CallbackInfo ci) {
+		String packetId = packet.payload().type().id().toString();
 		FriendlyByteBuf copy = new FriendlyByteBuf(Unpooled.buffer());
-		ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
-		PacketEvent event = new PacketEvent(packet.payload().type().id().toString(), copy);
-		if(plugin.getMainConfig().getRestrictMods().isEnable() && !getPlayer().hasPermission(Permissions.ALL_MODS_ACCESS) && event.getPacketName().equals("minecraft:register")) {
-			List<String> disAllowedMods = plugin.getMainConfig().getRestrictMods().getDisAllowedMods(event.getDataAsString());
-			if(!disAllowedMods.isEmpty()) getPlayer().kick(plugin.getLocales().getLocale(getPlayer()).getOther().getIllegalMods(true, String.join(", ", disAllowedMods)));
-			disAllowedMods = null;
+		boolean emptyBuffer = true;
+		if(plugin.getMainConfig().getIgnorePackets().isEnable()) {
+			if(plugin.getMainConfig().getIgnorePackets().isDebug()) plugin.getLogger().debug(packetId);
+			if(!plugin.getMainConfig().getIgnorePackets().canEncode(packetId)) {
+				if(plugin.getMainConfig().getRestrictMods().isEnable() && packetId.equals("minecraft:register") && !getPlayer().hasPermission(Permissions.ALL_MODS_ACCESS)) {
+					ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
+					emptyBuffer = false;
+					if(copy.readableBytes() > 0) {
+						List<String> disAllowedMods = plugin.getMainConfig().getRestrictMods().getDisAllowedMods(copy.toString(0, copy.readableBytes(), StandardCharsets.UTF_8));
+						if(!disAllowedMods.isEmpty()) {
+							getPlayer().kick(plugin.getLocales().getLocale(getPlayer()).getOther().getIllegalMods(true, String.join(", ", disAllowedMods)));
+							copy = null;
+							disAllowedMods = null;
+							return;
+						}
+						disAllowedMods = null;
+					}
+					copy = null;
+				} else {
+					copy = null;
+					packetId = null;
+					return;
+				}
+			}
 		}
+		if(emptyBuffer) ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
+		PacketEvent event = new PacketEvent(packetId, copy);
 		if(getPlayer().isOnline()) Sponge.eventManager().post(event);
+		event = null;
+		packetId = null;
+		copy = null;
 		event = null;
 	}
 
