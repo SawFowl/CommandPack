@@ -97,10 +97,10 @@ public class MixinModPlatformEventListenerImpl {
 	}
 
 	private Cause createCause(Living living, Entity entity) {
-		if(living != null && entity != null) return Cause.builder().build(EventContext.builder().add(EventContextKeys.IGNITER, living).add(EventContextKeys.CREATOR, entity.uniqueId()).build());
-		if(living != null) return Cause.builder().build(EventContext.builder().add(EventContextKeys.IGNITER, living).build());
-		if(entity != null) return Cause.builder().build(EventContext.builder().add(EventContextKeys.CREATOR, entity.uniqueId()).build());
-		return Cause.builder().build(EventContext.empty());
+		if(living != null && entity != null) return Cause.builder().append(living).append(entity).build(EventContext.builder().add(EventContextKeys.IGNITER, living).add(EventContextKeys.CREATOR, entity.uniqueId()).build());
+		if(living != null) return Cause.builder().append(living).build(EventContext.builder().add(EventContextKeys.IGNITER, living).build());
+		if(entity != null) return Cause.builder().append(entity).build(EventContext.builder().add(EventContextKeys.CREATOR, entity.uniqueId()).build());
+		return Cause.builder().append(Sponge.systemSubject()).build(EventContext.empty());
 	}
 
 }
