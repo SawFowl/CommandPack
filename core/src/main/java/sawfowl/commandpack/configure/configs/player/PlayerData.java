@@ -461,9 +461,9 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 		if(json.has("Backpack") && json.get("Backpack").isJsonObject()) backpackData = (BackpackData) Backpack.builder().fromJson(json.get("Backpack").getAsJsonObject()).orElse(backpackData);
 		if(json.has("GivedKits") && json.get("GivedKits").isJsonObject()) {
 			json.getAsJsonObject("GivedKits").asMap().forEach((kit, data) -> {
-				if(givedKits.containsKey(kit)) {
-					givedKits.get(kit).updateFromJson(json);
-				} else givedKits.put(kit, new GivedKitData().updateFromJson(json));
+				if(data instanceof JsonObject jsonData) if(givedKits.containsKey(kit)) {
+					givedKits.get(kit).updateFromJson(jsonData);
+				} else givedKits.put(kit, new GivedKitData().updateFromJson(jsonData));
 			});
 		}
 		if(json.has("LastJoin") && json.get("LastJoin") instanceof JsonPrimitive primitive && primitive.isNumber()) lastJoin = primitive.getAsLong();
