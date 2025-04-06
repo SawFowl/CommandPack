@@ -28,7 +28,7 @@ public class PlayerCommandListener {
 		if(!plugin.getPlayersData().getTempData().isTrackingPlayer(player)) return;
 		plugin.getPlayersData().getTempData().getTrackingPlayerCommands(player).ifPresent(map -> {
 			map.forEach((commandName, config) -> {
-				if(!config.getDelay().getCancelRules().isAllowOtherCommand()) {
+				if(config.getDelay().getSeconds() > 0 && !config.getDelay().getCancelRules().isAllowOtherCommand()) {
 					plugin.getPlayersData().getTempData().removeCommandTracking(commandName, player);
 					player.sendMessage(plugin.getLocales().getLocale(player.locale()).getOther().getExecuteCommand().getOtherCommand("/" + commandName));
 				}

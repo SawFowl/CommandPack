@@ -2,6 +2,7 @@ package sawfowl.commandpack.api.mixin.network;
 
 import java.util.List;
 
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import sawfowl.localeapi.api.Text;
@@ -56,5 +57,7 @@ public interface MixinServerPlayer extends ServerPlayer {
 	List<PlayerModInfo> getModList();
 
 	long getPing();
+
+	float getMiningSpeed(BlockState block);
 
 }

@@ -3,6 +3,7 @@ package sawfowl.commandpack.mixins.vanilla.network;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -66,6 +67,11 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
 	private ClientboundCustomPayloadPacket createPacket(CustomPacketImpl custom) {
 		return ClientboundCustomPayloadPacket.CONFIG_STREAM_CODEC.decode(createFriendlyByteBuf(custom));
+	}
+
+	@Override
+	public float getMiningSpeed(BlockState block) {
+		return ((ServerPlayer) (Object) this).getDestroySpeed((net.minecraft.world.level.block.state.BlockState) block);
 	}
 
 }

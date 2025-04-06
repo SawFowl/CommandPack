@@ -1,19 +1,20 @@
 {
-    "required": true,
-    "minVersion": "0.8.6",
-    "package": "sawfowl.commandpack.mixins.vanilla",
-    "target": "@env(DEFAULT)",
-    "compatibilityLevel": "JAVA_21",
-    "mixins": [
-        "network.MixinServerPlayerImpl",
-        "network.MixinPluginMessagesImpl",
-        "network.MixinConnectionImpl",
-        "network.MixinAccessorServerCommonPacketListener",
-        "game.MixinEntityItemImpl",
-        "game.MixinServerLevelImpl",
-        "game.MixinPortalShapeImpl"
-    ],
-    "injectors": {
-        "defaultRequire": 1
-    }
+  "required": true,
+  "minVersion": "0.8.6",
+  "package": "sawfowl.commandpack.mixins.vanilla",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "game.MixinEntityItemImpl",
+    "game.MixinPortalShapeImpl",
+    "game.MixinServerLevelImpl",
+    "game.MixinServerPlayerGameMode",
+    "network.MixinAccessorServerCommonPacketListener",
+    "network.MixinConnectionImpl",
+    "network.MixinPluginMessagesImpl",
+    "network.MixinServerPlayerImpl"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }
