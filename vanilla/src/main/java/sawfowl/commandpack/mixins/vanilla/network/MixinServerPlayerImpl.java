@@ -6,6 +6,7 @@ import java.util.List;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.math.vector.Vector3i;
 
 import io.netty.buffer.Unpooled;
 
@@ -70,7 +71,7 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 	}
 
 	@Override
-	public float getMiningSpeed(BlockState block) {
+	public float getMiningSpeed(BlockState block, Vector3i position) {
 		return ((ServerPlayer) (Object) this).getDestroySpeed((net.minecraft.world.level.block.state.BlockState) block);
 	}
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.math.vector.Vector3i;
 
 import sawfowl.localeapi.api.Text;
 
@@ -58,6 +59,12 @@ public interface MixinServerPlayer extends ServerPlayer {
 
 	long getPing();
 
-	float getMiningSpeed(BlockState block);
+	/**
+	 * Getting the block mining speed of a player.
+	 * 
+	 * @param block - Target Block.
+	 * @param position - Not used in Vanilla and NeoForge.
+	 */
+	float getMiningSpeed(BlockState block, Vector3i position);
 
 }

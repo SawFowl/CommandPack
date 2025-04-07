@@ -4,14 +4,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.math.vector.Vector3i;
 
 import io.netty.buffer.Unpooled;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -73,6 +75,11 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
 	private ClientboundCustomPayloadPacket createPacket(CustomPacketImpl custom) {
 		return ClientboundCustomPayloadPacket.CONFIG_STREAM_CODEC.decode(createFriendlyByteBuf(custom));
+	}
+
+	@Override
+	public float getMiningSpeed(BlockState block, Vector3i position) {
+		return ((ServerPlayer) (Object) this).getDestroySpeed((net.minecraft.world.level.block.state.BlockState) block, new BlockPos(position.x(), position.y(), position.z()));
 	}
 
 	private PlayerModInfo createModInfo(ModVersions.Info info, String id) {

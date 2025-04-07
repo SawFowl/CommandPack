@@ -12,6 +12,7 @@
         "plugin.MixinModPlatformEventListenerImpl",
         "game.MixinEntityItemImpl",
         "game.MixinServerLevelImpl",
+        "game.MixinServerPlayerGameMode",
         "game.MixinPortalShapeImpl"
     ],
     "injectors": {
