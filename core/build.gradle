@@ -13,7 +13,7 @@ dependencies {
 	//implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
 	implementation fileTree(dir: 'libs', include: '*.jar')
 }
-
+/*
 task javadocJar(type: Jar, dependsOn: javadoc) {
 	archiveClassifier = 'javadoc'
 	from javadoc.destinationDir
@@ -64,7 +64,7 @@ artifacts {
 	archives sourcesJar
 	archives javadocJar
 }
-
+*/
 jar {
 	archiveBaseName = 'part'
 }

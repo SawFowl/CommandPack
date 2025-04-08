@@ -69,7 +69,7 @@ build.dependsOn(allJar);
 
 jar.enabled(false)
 
-publishing {
+/*publishing {
 	publications {
 		myLib(MavenPublication) {
 			from project(":core").components.java
@@ -77,4 +77,4 @@ publishing {
 			artifact project(":core").javadocJar
 		}
 	}
-}
+}*/
