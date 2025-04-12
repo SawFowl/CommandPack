@@ -31,7 +31,6 @@ public class MixinServerPlayerGameMode {
 	@Shadow private boolean hasDelayedDestroy;
 	@Shadow private int delayedTickStart;
 	@Shadow private BlockPos delayedDestroyPos;
-	@Shadow private int destroyProgressStart;
 	@Shadow private BlockPos destroyPos;
 
 	@ModifyVariable(
