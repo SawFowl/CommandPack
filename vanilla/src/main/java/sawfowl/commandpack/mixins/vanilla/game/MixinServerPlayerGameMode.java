@@ -31,6 +31,8 @@ public class MixinServerPlayerGameMode {
 	@Shadow private boolean hasDelayedDestroy;
 	@Shadow private int delayedTickStart;
 	@Shadow private BlockPos delayedDestroyPos;
+	@Shadow private int destroyProgressStart;
+	@Shadow private BlockPos destroyPos;
 
 	@ModifyVariable(
 		method = "incrementDestroyProgress",
@@ -62,7 +64,10 @@ public class MixinServerPlayerGameMode {
 			hasDelayedDestroy = true;
 			delayedTickStart = gameTicks - 250;
 			lastSentState = 0;
-			delayedDestroyPos = $$1;
+			if(value >= 0.9f) {
+				delayedDestroyPos = new BlockPos(0, player.serverLevel().getMaxBuildHeight() + 1, 0);
+				destroyPos = delayedDestroyPos;
+			}
 			return 0.0f;
 		}
 		return value;
@@ -98,7 +103,10 @@ public class MixinServerPlayerGameMode {
 			hasDelayedDestroy = true;
 			delayedTickStart = gameTicks - 250;
 			lastSentState = 0;
-			delayedDestroyPos = $$0;
+			if(value >= 0.9f) {
+				delayedDestroyPos = new BlockPos(0, player.serverLevel().getMaxBuildHeight() + 1, 0);
+				destroyPos = delayedDestroyPos;
+			}
 			return 0.0f;
 		}
 		blockState = null;
