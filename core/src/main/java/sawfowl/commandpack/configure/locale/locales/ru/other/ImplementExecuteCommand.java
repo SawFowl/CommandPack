@@ -38,7 +38,7 @@ public class ImplementExecuteCommand implements ExecuteCommand {
 
 	@Override
 	public Component getNoMoney(Currency currency, BigDecimal money, String command) {
-		return Text.of(otherCommand).replace(Placeholders.CURRENCY_SYMBOL, currency.symbol()).replace(Placeholders.CURRENCY_STYLED_SYMBOL, currency.symbol().color(currency.displayName().color()).style(currency.displayName().style())).replace(Placeholders.CURRENCY_NAME, currency.displayName()).replace(Placeholders.CURRENCY_PLURAL_NAME, currency.pluralDisplayName()).replace(Placeholders.MONEY, money.doubleValue()).replace(Placeholders.COMMAND, command).get();
+		return Text.of(noMoney).replace(Placeholders.CURRENCY_SYMBOL, currency.symbol()).replace(Placeholders.CURRENCY_STYLED_SYMBOL, currency.symbol().color(currency.displayName().color()).style(currency.displayName().style())).replace(Placeholders.CURRENCY_NAME, currency.displayName()).replace(Placeholders.CURRENCY_PLURAL_NAME, currency.pluralDisplayName()).replace(Placeholders.MONEY, money.doubleValue()).replace(Placeholders.COMMAND, command).get();
 	}
 
 	@Override
