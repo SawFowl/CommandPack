@@ -2,6 +2,10 @@ plugins {
 	id("org.spongepowered.gradle.vanilla") version "0.2.1-SNAPSHOT"
 }
 
+gradle.projectsEvaluated {
+	compileJava.dependsOn(rootProject.tasks.getByName("extractSpongeVanillaMod"))
+}
+
 minecraft {
 	version("${minecraft}")
 }
@@ -9,9 +13,10 @@ minecraft {
 dependencies {
 	implementation 'org.spongepowered:mixin:0.8.6'
 	implementation "org.spongepowered:spongeapi:${api}"
-	implementation "org.spongepowered:spongevanilla:1.21-12.0.0-RC1779:universal"
+	//implementation "org.spongepowered:spongevanilla:1.21-12.0.0-RC1779:universal"
 	//implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
 	implementation fileTree(dir: 'libs', include: '*.jar')
+	implementation fileTree(dir: rootProject.buildDir.toPath().resolve("unpacked/jars"), include: '*.jar')
 }
 /*
 task javadocJar(type: Jar, dependsOn: javadoc) {
