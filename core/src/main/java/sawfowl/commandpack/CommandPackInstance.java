@@ -1,5 +1,6 @@
 package sawfowl.commandpack;
 
+import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -271,10 +272,11 @@ public class CommandPackInstance {
 		kitService = new KitServiceImpl(instance);
 		playersData = new PlayersDataImpl(instance);
 		configManager = new ConfigManager(instance);
+		configManager.loadPlayersData();
 		isForge = checkForge();
 		isNeo = checkNeo();
 		economy = new Economy(instance);
-		Sponge.eventManager().registerListeners(pluginContainer, economy);
+		Sponge.eventManager().registerListeners(pluginContainer, economy, MethodHandles.lookup());
 		createAPI();
 		if(getMainConfig().getMySqlConfig().isEnable()) {
 			mariaDB = new MariaDB(instance);
@@ -289,7 +291,6 @@ public class CommandPackInstance {
 		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getSystemLocale().getDebug().getEconomy().getNotFound());
 		registerListeners();
 		configManager.loadKits();
-		configManager.loadPlayersData();
 		generators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureSets(null).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
 		generators.put("overworld", ChunkGenerator.overworld());
 		generators.put("end", ChunkGenerator.theEnd());
@@ -559,17 +560,17 @@ public class CommandPackInstance {
 	}
 
 	private void registerListeners() {
-		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerChatListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerCommandListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerConnectionListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractBlockListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractEntityListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractItemListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInventoryListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new PlayerDeathAndRespawnListener(instance));
-		Sponge.eventManager().registerListeners(pluginContainer, new EntityDamageListener(instance));
+		Sponge.eventManager().registerListeners(pluginContainer, new CommandLogListener(instance), MethodHandles.lookup());
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerChatListener(instance), MethodHandles.lookup());
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerCommandListener(instance), MethodHandles.lookup());
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerConnectionListener(instance), MethodHandles.lookup());
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractBlockListener(instance), MethodHandles.lookup());
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractEntityListener(instance), MethodHandles.lookup());
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInteractItemListener(instance), MethodHandles.lookup());
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerInventoryListener(instance), MethodHandles.lookup());
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerMoveListener(instance), MethodHandles.lookup());
+		Sponge.eventManager().registerListeners(pluginContainer, new PlayerDeathAndRespawnListener(instance), MethodHandles.lookup());
+		Sponge.eventManager().registerListeners(pluginContainer, new EntityDamageListener(instance), MethodHandles.lookup());
 		if(isModifiedServer()) new ModPlatformEventListener(instance);
 	}
 
