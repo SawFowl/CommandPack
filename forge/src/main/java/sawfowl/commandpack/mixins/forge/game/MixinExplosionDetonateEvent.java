@@ -47,7 +47,7 @@ public class MixinExplosionDetonateEvent {
 	@Inject(method = "<init>", at = @At("RETURN"))
 	private void commandPack$InitDetonate(Level level, Explosion explosion, List<BlockPos> blocks, List<Entity> entityList, CallbackInfo callback) {
 		vectors = blocks.stream().map(pos -> Vector3i.from(pos.getX(), pos.getY(), pos.getZ())).collect(Collectors.toList());
-		entities = new ArrayList<org.spongepowered.api.entity.Entity>((Collection<? extends org.spongepowered.api.entity.Entity>) entityList);
+		entities = new ArrayList<org.spongepowered.api.entity.Entity>((List<org.spongepowered.api.entity.Entity>) (Object) entityList);
 		try {
 			if(Sponge.eventManager().post(createSpongeEvent(level, explosion))) {
 				vectors.clear();
@@ -66,7 +66,7 @@ public class MixinExplosionDetonateEvent {
 	@SuppressWarnings("unchecked")
 	@Inject(method = "getAffectedEntities", at = @At("HEAD"))
 	public void commandpack$getAffectedEntities(CallbackInfoReturnable<List<Entity>> cir) {
-		if(entities.size() != entityList.size()) cir.setReturnValue((List<Entity>) (List<? extends Entity>) entities);
+		if(entities.size() != entityList.size()) cir.setReturnValue((List<Entity>) (Object) entities);
 	}
 
 	private ModExplosionEvent createSpongeEvent(Level level, Explosion explosion) {
