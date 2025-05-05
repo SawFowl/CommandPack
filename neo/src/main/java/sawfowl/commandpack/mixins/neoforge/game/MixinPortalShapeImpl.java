@@ -2,6 +2,7 @@ package sawfowl.commandpack.mixins.neoforge.game;
 
 import java.util.stream.StreamSupport;
 
+import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -9,10 +10,13 @@ import org.spongepowered.math.vector.Vector3i;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.portal.PortalShape;
 
+import sawfowl.commandpack.mixins.PortalShapeAccessor;
+
 @Mixin(PortalShape.class)
-public abstract class MixinPortalShapeImpl implements sawfowl.commandpack.api.mixin.game.PortalShape {
+public abstract class MixinPortalShapeImpl implements PortalShapeAccessor {
 
 	@Shadow private int numPortalBlocks;
 	@Shadow private BlockPos bottomLeft;
@@ -20,9 +24,10 @@ public abstract class MixinPortalShapeImpl implements sawfowl.commandpack.api.mi
 	@Shadow @Final private int width;
 	@Shadow @Final private Direction rightDir;
 	private Vector3i bl;
+	private ServerWorld world;
 
 	@Shadow @Override public abstract boolean isValid();
-	@Shadow @Override public abstract void createPortalBlocks();
+	@Shadow public abstract void createPortalBlocks(LevelAccessor $$0);
 
 	@Override
 	public int totalPortalBlocks() {
@@ -37,6 +42,17 @@ public abstract class MixinPortalShapeImpl implements sawfowl.commandpack.api.mi
 	@Override
 	public int getWidth() {
 		return width;
+	}
+
+	@Override
+	public void createPortalBlocks() {
+		createPortalBlocks((LevelAccessor) world);
+	}
+
+	@Override
+	public sawfowl.commandpack.api.mixin.game.PortalShape setWorld(ServerWorld world) {
+		this.world = world;
+		return this;
 	}
 
 	@Override
