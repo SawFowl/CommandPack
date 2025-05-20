@@ -8,6 +8,7 @@ import org.spongepowered.api.event.command.ExecuteCommandEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
 import sawfowl.commandpack.CommandPackInstance;
+import sawfowl.commandpack.Permissions;
 
 public class PlayerCommandListener {
 
@@ -26,7 +27,7 @@ public class PlayerCommandListener {
 		if(!plugin.getPlayersData().getTempData().isTrackingPlayer(player)) return;
 		plugin.getPlayersData().getTempData().getTrackingPlayerCommands(player).ifPresent(map -> {
 			map.forEach((commandName, config) -> {
-				if(config.getDelay().getSeconds() > 0 && !config.getDelay().getCancelRules().isAllowOtherCommand()) {
+				if(config.getDelay().getSeconds() > 0 && !config.getDelay().getCancelRules().isAllowOtherCommand() && !event.command().equals(commandName) && !player.hasPermission(Permissions.IGNORE_DELAY_OTHER_COMMAND)) {
 					plugin.getPlayersData().getTempData().removeCommandTracking(commandName, player);
 					player.sendMessage(plugin.getLocales().getLocale(player.locale()).getOther().getExecuteCommand().getOtherCommand("/" + commandName));
 				}

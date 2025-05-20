@@ -85,11 +85,11 @@ public class DelayTimerTask implements Consumer<ScheduledTask> {
 			} else if(seconds > 60) {
 				if(minute != getExpireMinuteFromNow(seconds)) {
 					minute = getExpireMinuteFromNow(seconds);
-					player.sendMessage(CommandPackInstance.getInstance().getLocales().getLocale(player).getCommandExceptions().getCooldown(getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+					player.sendMessage(CommandPackInstance.getInstance().getLocales().getLocale(player).getCommandExceptions().getWait(getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
 				}
 			} else if(seconds == 60 || seconds == 30 || seconds == 10 || seconds <= 5 || first) {
 				first = false;
-				player.sendMessage(CommandPackInstance.getInstance().getLocales().getLocale(player).getCommandExceptions().getCooldown(getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
+				player.sendMessage(CommandPackInstance.getInstance().getLocales().getLocale(player).getCommandExceptions().getWait(getExpireTimeFromNow(seconds, player.locale())).hoverEvent(HoverEvent.showText(Component.text("/" + command).color(NamedTextColor.LIGHT_PURPLE))));
 			}
 			seconds--;
 		}
