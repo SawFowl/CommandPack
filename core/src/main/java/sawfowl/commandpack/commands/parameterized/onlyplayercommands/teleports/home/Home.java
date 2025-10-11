@@ -45,7 +45,10 @@ public class Home extends AbstractPlayerCommand {
 
 	@Override
 	public Parameterized build() {
-		return builder().addChild(new HomeList(plugin).build(), "list").build();
+		return builderNoPerm()
+				.executionRequirements(cause -> canUse(cause))
+				.addChild(new HomeList(plugin).build(), "list")
+				.build();
 	}
 
 	@Override
