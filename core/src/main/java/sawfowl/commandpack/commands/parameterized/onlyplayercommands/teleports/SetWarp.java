@@ -52,9 +52,7 @@ public class SetWarp extends AbstractPlayerCommand {
 	@Override
 	public Parameterized build() {
 		return Command.builder()
-				.executionRequirements(cause -> (
-					cause.audience() instanceof ServerPlayer && cause.hasPermission(permission()))
-				)
+				.executionRequirements(cause -> canUse(cause))
 				.executor(this)
 				.addParameter(CommandParameters.createString("Warp", false))
 				.addParameter(CommandParameters.createBoolean("Private", false))

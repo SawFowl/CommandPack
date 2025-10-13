@@ -1,18 +1,47 @@
 plugins {
-	id("org.spongepowered.gradle.vanilla") version "0.2.1-SNAPSHOT"
+	id 'dev.architectury.loom' version '1.9.426'
+	id 'architectury-plugin' version '3.4.161'
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
+	id 'maven-publish'
 }
 
-minecraft {
-	version("${minecraft}")
+architectury {
+	platformSetupLoomIde()
+	neoForge()
+}
+
+loom {
+	silentMojangMappingsLicense()
+}
+
+configurations {
+	common {
+		canBeResolved = true
+		canBeConsumed = false
+	}
+	compileClasspath.extendsFrom common
+	runtimeClasspath.extendsFrom common
+	developmentNeoForge.extendsFrom common
+}
+
+repositories {
+	maven {
+		name = "NeoForge"
+		url = "https://maven.neoforged.net/releases"
+	}
 }
 
 dependencies {
-	implementation "net.neoforged:neoforge:${neoforge}"
-	implementation "net.neoforged.fancymodloader:loader:${fancymodloader}"
+	implementation project(':core')
+	neoForge "net.neoforged:neoforge:$rootProject.neoforge"
+	minecraft "net.minecraft:minecraft:$rootProject.minecraft"
+	mappings loom.officialMojangMappings()
+    //common(project(path: ":core", configuration: "namedElements")) { transitive false }
+	//implementation "net.neoforged:neoforge:${neoforge}"
+	//implementation "net.neoforged.fancymodloader:loader:${fancymodloader}"
 	implementation "org.spongepowered:spongeapi:${api}"
 	implementation 'org.spongepowered:mixin:0.8.5'
 	//implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
-	implementation project(':core')
 	implementation fileTree(dir: 'libs', include: '*.jar')
 }
 

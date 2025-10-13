@@ -66,9 +66,9 @@ public class PlayerConnectionListener {
 		if(!plugin.getPlayersData().getPlayerData(event.player().uniqueId()).isPresent()) ((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(new PlayerData(event.player()).save());
 		PlayerData playerData = ((PlayerData) plugin.getPlayersData().getPlayerData(event.player().uniqueId()).get());
 		playerData.setLastJoin();
-		if(playerData.isVanished()) event.player().offer(Keys.VANISH_STATE, VanishState.vanished());
-		if(playerData.isGodMode()) event.player().offer(Keys.INVULNERABLE, true);
-		if(playerData.isFly()) {
+		if(event.player().hasPermission(Permissions.VANISH) && playerData.isVanished()) event.player().offer(Keys.VANISH_STATE, VanishState.vanished());
+		if(event.player().hasPermission(Permissions.GODMODE) && playerData.isGodMode()) event.player().offer(Keys.INVULNERABLE, true);
+		if(event.player().hasPermission(Permissions.FLY) && playerData.isFly()) {
 			event.player().offer(Keys.CAN_FLY, true);
 			event.player().offer(Keys.IS_FLYING, true);
 		}
