@@ -21,3 +21,25 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+.classpath
+/.gradle
+.project
+/.settings
+/build
+/core/.settings
+/core/build
+core/libs
+/forge/.settings
+/forge/bin
+/forge/build
+forge/libs
+/meta/.settings
+/meta/bin
+/meta/build
+/neo/.settings
+/neo/bin
+/neo/build
+neo/libs
+/vanilla/.settings
+/vanilla/bin
+/vanilla/build
