@@ -41,8 +41,8 @@ dependencies {
 	//implementation "net.neoforged.fancymodloader:loader:${fancymodloader}"
 	implementation "org.spongepowered:spongeapi:${api}"
 	implementation 'org.spongepowered:mixin:0.8.5'
-	//implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
-	implementation fileTree(dir: 'libs', include: '*.jar')
+	implementation "SawFowl:LocaleAPI:${localeapi}"
+	//implementation fileTree(dir: 'libs', include: '*.jar')
 }
 
 jar {
