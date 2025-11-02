@@ -13,7 +13,7 @@ minecraft {
 dependencies {
 	implementation 'org.spongepowered:mixin:0.8.6'
 	implementation "org.spongepowered:spongeapi:${api}"
-	implementation "SawFowl:LocaleAPI:${localeapi}"
+	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
 	//implementation fileTree(dir: 'libs', include: '*.jar')
 	implementation fileTree(dir: rootProject.buildDir.toPath().resolve("unpacked/jars"), include: '*.jar')
 }
