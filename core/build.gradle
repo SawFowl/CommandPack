@@ -25,7 +25,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 task sourcesJar(type: Jar, dependsOn: classes) {
 	archiveClassifier = 'sources'
-	from subprojects.collect { it.sourceSets.main.allSource }
+	from sourceSets.main.allSource
 	exclude('sawfowl/commandpack/apiclasses/**')
 	exclude('sawfowl/commandpack/commands/**')
 	exclude('sawfowl/commandpack/configure/**')
@@ -34,6 +34,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	exclude('sawfowl/commandpack/CommandPack.java')
 	exclude('sawfowl/commandpack/Permissions.java')
 	exclude('sawfowl/commandpack/mixins/**')
+	exclude('sawfowl/commandpack/CommandPackInstance.java')
 	exclude('META-INF/sponge_plugins.json')
 	exclude('*.json')
 }
