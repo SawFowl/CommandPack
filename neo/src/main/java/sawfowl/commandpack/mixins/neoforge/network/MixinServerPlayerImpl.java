@@ -11,7 +11,7 @@ import org.spongepowered.math.vector.Vector3i;
 import io.netty.buffer.Unpooled;
 
 import net.kyori.adventure.text.Component;
-
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -74,7 +74,7 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
 	@Override
 	public float getMiningSpeed(BlockState block, Vector3i position) {
-		return ((ServerPlayer) (Object) this).getDestroySpeed((net.minecraft.world.level.block.state.BlockState) block);
+		return ((ServerPlayer) (Object) this).getDigSpeed((net.minecraft.world.level.block.state.BlockState) block, new BlockPos(position.x(), position.y(), position.z()));
 	}
 
 }
