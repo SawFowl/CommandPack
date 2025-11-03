@@ -46,7 +46,7 @@ public class MixinRegisterCustomPayloads {
 						// Server-side packet, let plugin handle it
 						plugin.getPayloadsService().getRawListeners((ResourceKey) (Object) payload.type().id()).forEach(listener -> listener.read(player, rawPacket));
 						if(plugin.getPayloadsService().containsSerializer((ResourceKey) (Object) payload.type().id())) plugin.getPayloadsService().getListeners((ResourceKey) (Object) payload.type().id()).forEach(listener -> {
-							SerializedPacketImpl packet = (SerializedPacketImpl) SerializedPacket.of(plugin.getPayloadsService().getSerializer((ResourceKey) (Object) payload.type().id()));
+							SerializedPacketImpl packet = (SerializedPacketImpl) SerializedPacket.of((ResourceKey) (Object) payload.type().id(), plugin.getPayloadsService().getSerializer((ResourceKey) (Object) payload.type().id()));
 							packet.apply(rawPacket.data());
 							listener.read(player, packet);
 						});
@@ -70,7 +70,7 @@ public class MixinRegisterCustomPayloads {
 								);
 								if(plugin.getPayloadsService().containsSerializer((ResourceKey) (Object) payload.type().id())) plugin.getPayloadsService().getListeners((ResourceKey) (Object) payload.type().id()).forEach(listener -> {
 									@SuppressWarnings("rawtypes")
-									SerializedPacketImpl packet = (SerializedPacketImpl) SerializedPacket.of(plugin.getPayloadsService().getSerializer((ResourceKey) (Object) payload.type().id()));
+									SerializedPacketImpl packet = (SerializedPacketImpl) SerializedPacket.of((ResourceKey) (Object) payload.type().id(), plugin.getPayloadsService().getSerializer((ResourceKey) (Object) payload.type().id()));
 									packet.apply(rawPacket.data());
 									listener.read(player, packet);
 								});

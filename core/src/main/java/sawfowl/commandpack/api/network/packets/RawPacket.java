@@ -9,10 +9,19 @@ import com.google.gson.JsonParser;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 
+/**
+ * Often, this option of receiving data from the client is suitable for implementing interaction with the mod on the client.
+ */
 public interface RawPacket {
 
+	/**
+	 * The data of the data packet is in raw form.
+	 */
 	String data();
 
+	/**
+	 * Identifier of the data channel.
+	 */
 	ResourceKey channel();
 
 	/**

@@ -31,6 +31,7 @@ public interface MixinServerPlayer extends ServerPlayer {
 	/**
 	 * Sending a data packet to the player.
 	 */
+	@Deprecated
 	void sendPacket(CustomPacket packet);
 
 	/**

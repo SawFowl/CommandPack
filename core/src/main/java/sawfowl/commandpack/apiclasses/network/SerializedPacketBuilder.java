@@ -3,6 +3,7 @@ package sawfowl.commandpack.apiclasses.network;
 import java.util.function.Function;
 
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.data.persistence.DataContainer;
 
 import sawfowl.commandpack.api.network.packets.SerializedPacket;
@@ -12,8 +13,10 @@ public class SerializedPacketBuilder<T> implements SerializedPacket.Builder<T> {
 	@SuppressWarnings("hiding")
 	public class SerializedPacketImpl<T> implements SerializedPacket<T> {
 
-		Function<String, T> function;
-		private SerializedPacketImpl(Function<String, T> function) {
+		private ResourceKey channel;
+		private Function<String, T> function;
+		private SerializedPacketImpl(ResourceKey channel, Function<String, T> function) {
+			this.channel = channel;
 			this.function = function;
 		}
 
@@ -38,6 +41,11 @@ public class SerializedPacketBuilder<T> implements SerializedPacket.Builder<T> {
 			data = function.apply(raw);
 		}
 
+		@Override
+		public ResourceKey channel() {
+			return channel;
+		}
+
 	}
 
 	@Override
@@ -46,8 +54,8 @@ public class SerializedPacketBuilder<T> implements SerializedPacket.Builder<T> {
 	}
 
 	@Override
-	public SerializedPacket<T> build(Function<String, T> function) {
-		return new SerializedPacketImpl<T>(function);
+	public SerializedPacket<T> build(ResourceKey channel, Function<String, T> function) {
+		return new SerializedPacketImpl<T>(channel, function);
 	}
 	
 }

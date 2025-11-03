@@ -17,9 +17,10 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
+import sawfowl.commandpack.api.network.packets.RawPacket;
+import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 import sawfowl.commandpack.apiclasses.CPConnection;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
-import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 import sawfowl.commandpack.utils.CommandsUtil;
 
 import sawfowl.localeapi.api.Text;
@@ -33,6 +34,11 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 	@Override
 	public void sendPacket(CustomPacket packet) {
 		if(packet instanceof CustomPacketImpl custom) connection.send(new RawPacketImpl(ResourceKey.resolve(custom.getLocation()), custom.getData()));
+	}
+
+	@Override
+	public void sendPacket(RawPacket packet) {
+		if(packet instanceof RawPacketImpl impl) connection.send(impl);
 	}
 
 	@Override
