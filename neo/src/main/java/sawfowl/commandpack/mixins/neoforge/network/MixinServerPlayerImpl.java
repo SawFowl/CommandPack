@@ -1,20 +1,16 @@
 package sawfowl.commandpack.mixins.neoforge.network;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.math.vector.Vector3i;
 
-import io.netty.buffer.Unpooled;
-
 import net.kyori.adventure.text.Component;
+
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
@@ -23,6 +19,7 @@ import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
 import sawfowl.commandpack.apiclasses.CPConnection;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
+import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 import sawfowl.commandpack.utils.CommandsUtil;
 
 import sawfowl.localeapi.api.Text;
@@ -35,7 +32,7 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
 	@Override
 	public void sendPacket(CustomPacket packet) {
-		if(packet instanceof CustomPacketImpl custom) connection.send(createPacket(custom));
+		if(packet instanceof CustomPacketImpl custom) connection.send(new RawPacketImpl(ResourceKey.resolve(custom.getLocation()), custom.getData()));
 	}
 
 	@Override
@@ -62,14 +59,6 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 	@Override
 	public long getPing() {
 		return connection.latency();
-	}
-
-	private FriendlyByteBuf createFriendlyByteBuf(CustomPacketImpl custom) {
-		return new FriendlyByteBuf(Unpooled.buffer()).writeResourceLocation(ResourceLocation.parse(custom.getLocation())).writeBytes(custom.getData().getBytes(StandardCharsets.UTF_8));
-	}
-
-	private ClientboundCustomPayloadPacket createPacket(CustomPacketImpl custom) {
-		return ClientboundCustomPayloadPacket.CONFIG_STREAM_CODEC.decode(createFriendlyByteBuf(custom));
 	}
 
 	@Override
