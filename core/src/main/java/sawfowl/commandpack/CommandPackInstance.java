@@ -324,8 +324,6 @@ public class CommandPackInstance {
 		registeredParameterizedCommands.forEach(this::registerParameterized);
 		registeredRawCommands.clear();
 		registeredParameterizedCommands.clear();
-		registeredRawCommands = null;
-		registeredParameterizedCommands = null;
 		Sponge.server().userManager().streamAll().forEach(profile -> {
 			if(!profile.name().isPresent()) {
 				Sponge.server().userManager().load(profile).thenAccept(optUser -> {
