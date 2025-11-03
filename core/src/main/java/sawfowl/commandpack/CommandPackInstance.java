@@ -320,10 +320,12 @@ public class CommandPackInstance {
 		generators.put("nether", ChunkGenerator.theNether());
 		createTasks();
 		serverStartedTime = System.currentTimeMillis();
-		registeredRawCommands.forEach(this::registerRaw);
-		registeredParameterizedCommands.forEach(this::registerParameterized);
-		registeredRawCommands.clear();
-		registeredParameterizedCommands.clear();
+		Sponge.server().scheduler().submit(Task.builder().plugin(pluginContainer).delay(2, TimeUnit.SECONDS).execute(() -> {
+			registeredRawCommands.forEach(this::registerRaw);
+			registeredParameterizedCommands.forEach(this::registerParameterized);
+			registeredRawCommands.clear();
+			registeredParameterizedCommands.clear();
+		}).build());
 		Sponge.server().userManager().streamAll().forEach(profile -> {
 			if(!profile.name().isPresent()) {
 				Sponge.server().userManager().load(profile).thenAccept(optUser -> {
