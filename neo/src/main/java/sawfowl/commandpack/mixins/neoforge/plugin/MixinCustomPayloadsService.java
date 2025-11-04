@@ -70,12 +70,13 @@ public abstract class MixinCustomPayloadsService {
 		});
 	}
 
-	private <T extends CustomPacketPayload> PayloadRegistration<T> createNewHandler(PayloadRegistration<T> existingHandler, CustomPacketPayload.Type<RawPacketImpl> type, StreamCodec<RegistryFriendlyByteBuf, RawPacketImpl> codec) {
-		return new PayloadRegistration<T>(existingHandler.type(), existingHandler.codec(), (payload, context) -> {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private PayloadRegistration<?> createNewHandler(PayloadRegistration<?> existingHandler, CustomPacketPayload.Type<RawPacketImpl> type, StreamCodec<RegistryFriendlyByteBuf, RawPacketImpl> codec) {
+		return new PayloadRegistration(existingHandler.type(), existingHandler.codec(), (payload, context) -> {
 			if (context.player() instanceof MixinServerPlayer player && payload instanceof RawPacket rawPacket) {
 				// Server-side packet, let plugin handle it
 				handle(player, rawPacket);
-				((IPayloadHandler<T>)existingHandler.handler()).handle(payload, context);
+				((IPayloadHandler)existingHandler.handler()).handle(payload, context);
 				return;
 			}
 		}, existingHandler.protocols(), existingHandler.flow(), existingHandler.version(), existingHandler.optional());
@@ -87,7 +88,7 @@ public abstract class MixinCustomPayloadsService {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> void handleSerialized(MixinServerPlayer player, RawPacket rawPacket, boolean stringSerializer, boolean bufferSerializer) {
+	private void handleSerialized(MixinServerPlayer player, RawPacket rawPacket, boolean stringSerializer, boolean bufferSerializer) {
 		if(stringSerializer || bufferSerializer) for(PacketListener<?> listener : getListeners(rawPacket.channel())) listener.read(player, serialize(rawPacket, bufferSerializer));
 	}
 
