@@ -28,7 +28,6 @@ import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
 import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.apiclasses.CPConnection;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
-import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 import sawfowl.localeapi.api.Text;
 
 @Mixin(value = ServerPlayer.class, remap = false)
@@ -38,10 +37,11 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 	private List<PlayerModInfo> mods = new ArrayList<PlayerModInfo>();
 
 	@Override
-	public void sendPacket(CustomPacket packet) {
+	public void sendPacket(@SuppressWarnings("deprecation") CustomPacket packet) {
 		if(packet instanceof CustomPacketImpl custom) connection.send(createPacket(custom));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void sendPacket(RawPacket packet) {
 		sendPacket(CustomPacket.of(packet.channel(), packet.getDataAsString()));
