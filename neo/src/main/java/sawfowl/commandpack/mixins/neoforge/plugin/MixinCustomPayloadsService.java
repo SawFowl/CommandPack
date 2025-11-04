@@ -70,26 +70,25 @@ public abstract class MixinCustomPayloadsService {
 		});
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private PayloadRegistration<?> createNewHandler(PayloadRegistration<?> existingHandler, CustomPacketPayload.Type<RawPacketImpl> type, StreamCodec<RegistryFriendlyByteBuf, RawPacketImpl> codec) {
-		return new PayloadRegistration(existingHandler.type(), existingHandler.codec(), (payload, context) -> {
+	private <T extends CustomPacketPayload> PayloadRegistration<T> createNewHandler(PayloadRegistration<T> existingHandler, CustomPacketPayload.Type<RawPacketImpl> type, StreamCodec<RegistryFriendlyByteBuf, RawPacketImpl> codec) {
+		return new PayloadRegistration<T>(existingHandler.type(), existingHandler.codec(), (payload, context) -> {
 			if (context.player() instanceof MixinServerPlayer player && payload instanceof RawPacket rawPacket) {
 				// Server-side packet, let plugin handle it
 				handle(player, rawPacket);
-				((IPayloadHandler)existingHandler.handler()).handle(payload, context);
+				((IPayloadHandler<T>)existingHandler.handler()).handle(payload, context);
 				return;
 			}
 		}, existingHandler.protocols(), existingHandler.flow(), existingHandler.version(), existingHandler.optional());
 	}
 
-	@SuppressWarnings("unchecked")
 	private void handle(MixinServerPlayer player, RawPacket rawPacket) {
 		getRawListeners(rawPacket.channel()).forEach(listener -> listener.read(player, rawPacket));
-		Boolean stringSerializer = containsSerializer(rawPacket.channel());
-		Boolean bufferSerializer = containsBufferSerializer(rawPacket.channel());
+		handleSerialized(player, rawPacket, containsSerializer(rawPacket.channel()), containsBufferSerializer(rawPacket.channel()));
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T> void handleSerialized(MixinServerPlayer player, RawPacket rawPacket, boolean stringSerializer, boolean bufferSerializer) {
 		if(stringSerializer || bufferSerializer) for(PacketListener<?> listener : getListeners(rawPacket.channel())) listener.read(player, serialize(rawPacket, bufferSerializer));
-		stringSerializer = null;
-		bufferSerializer = null;
 	}
 
 	@SuppressWarnings("rawtypes")
