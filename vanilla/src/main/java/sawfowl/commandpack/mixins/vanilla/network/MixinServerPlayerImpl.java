@@ -39,7 +39,7 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
 	@Override
 	public void sendPacket(RawPacket packet) {
-		sendPacket(CustomPacket.of(packet.channel(), packet.data()));
+		sendPacket(CustomPacket.of(packet.channel(), packet.getDataAsString()));
 	}
 
 	@Override

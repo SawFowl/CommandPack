@@ -34,6 +34,7 @@ public class CustomPacketImpl implements CustomPacket {
 		};
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void sendTo(ServerPlayer player) {
 		MixinServerPlayer.cast(player).sendPacket(this);

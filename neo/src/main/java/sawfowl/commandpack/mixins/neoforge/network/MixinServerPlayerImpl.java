@@ -33,7 +33,7 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
 	@Override
 	public void sendPacket(CustomPacket packet) {
-		if(packet instanceof CustomPacketImpl custom) connection.send(new RawPacketImpl(ResourceKey.resolve(custom.getLocation()), custom.getData()));
+		if(packet instanceof CustomPacketImpl custom) connection.send(new RawPacketImpl(ResourceKey.resolve(custom.getLocation()), null, custom.getData()));
 	}
 
 	@Override

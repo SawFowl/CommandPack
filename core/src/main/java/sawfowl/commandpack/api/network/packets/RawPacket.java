@@ -1,8 +1,10 @@
 package sawfowl.commandpack.api.network.packets;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.network.channel.ChannelBuf;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -15,9 +17,17 @@ import net.kyori.adventure.builder.AbstractBuilder;
 public interface RawPacket {
 
 	/**
-	 * The data of the data packet is in raw form.
+	 * Receiving packet data as a raw string.
+	 * If the buffer does not contain any readable bytes, the string will be empty.
 	 */
-	String data();
+	String getDataAsString();
+
+	/**
+	 * Retrieving a buffer with data that has not been extracted from it.<br>
+	 * In data packets that are sent to the player, this method will always return `null'.<br>
+	 * Incoming packets will always provide access to the buffer.
+	 */
+	@Nullable ChannelBuf getBuffer();
 
 	/**
 	 * Identifier of the data channel.

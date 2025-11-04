@@ -19,4 +19,5 @@ public interface NetworkRegistryAccessor {
 	static Map<ConnectionProtocol, Map<ResourceLocation, PayloadRegistration<?>>> getPAYLOAD_REGISTRATIONS() {
 		throw new AssertionError();
 	}
+
 }

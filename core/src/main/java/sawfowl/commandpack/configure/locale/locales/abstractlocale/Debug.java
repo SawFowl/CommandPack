@@ -1,5 +1,7 @@
 package sawfowl.commandpack.configure.locale.locales.abstractlocale;
 
+import org.spongepowered.api.ResourceKey;
+
 public interface Debug {
 
 	interface Economy {
@@ -47,5 +49,7 @@ public interface Debug {
 	Commands getCommands();
 
 	DebugPlayerData getDebugPlayerData();
+
+	String getFinishedRegisterNetworkData(ResourceKey channel);
 
 }

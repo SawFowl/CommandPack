@@ -11,7 +11,7 @@
         "network.NetworkRegistryAccessor",
         "plugin.MixinContainersImpl",
         "plugin.MixinModPlatformEventListenerImpl",
-        "plugin.MixinRegisterCustomPayloads",
+        "plugin.MixinCustomPayloadsService",
         "game.MixinEntityItemImpl",
         "game.MixinServerLevelImpl",
         "game.MixinServerPlayerGameMode",

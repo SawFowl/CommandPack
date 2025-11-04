@@ -3,6 +3,7 @@ package sawfowl.commandpack.apiclasses.network;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.network.channel.ChannelBuf;
 
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -18,15 +19,22 @@ public class RawPacketImpl implements CustomPacketPayload, RawPacket {
 
 	private Type<RawPacketImpl> type;
 	private String data;
-	public RawPacketImpl(ResourceKey channel, String string) {
+	private ChannelBuf buffer;
+	public RawPacketImpl(ResourceKey channel, ChannelBuf buffer, String data) {
 		type = new Type<>((ResourceLocation) (Object) channel);
-		data = string;
+		this.buffer = buffer;
+		this.data = data;
 	}
 
 	public RawPacketImpl(){}
 
-	public String data() {
+	public String getDataAsString() {
 		return data;
+	}
+
+	@Override
+	public ChannelBuf getBuffer() {
+		return buffer;
 	}
 
 	@Override

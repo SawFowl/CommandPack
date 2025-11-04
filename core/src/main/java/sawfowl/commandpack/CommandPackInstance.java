@@ -462,7 +462,7 @@ public class CommandPackInstance {
 		AverageTPS averageTPS = createAverageTPS();
 		TPS tps = createTPS(averageTPS);
 		api = createAPI(tps);
-		payloadsService = new CustomPayloadsServiceImpl();
+		payloadsService = new CustomPayloadsServiceImpl(instance);
 	}
 
 	private AverageTPS createAverageTPS() {

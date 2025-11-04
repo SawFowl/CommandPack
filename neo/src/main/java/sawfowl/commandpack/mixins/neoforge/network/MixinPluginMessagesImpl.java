@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.event.EventContext;
@@ -31,6 +32,7 @@ import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.events.RecievePacketEvent;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
+import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 
 @Mixin(ServerGamePacketListenerImpl.class)
@@ -61,7 +63,7 @@ public abstract class MixinPluginMessagesImpl {
 		}
 		try {
 			FriendlyByteBuf copy = new FriendlyByteBuf(Unpooled.buffer());
-			Optional<StreamCodec<RegistryFriendlyByteBuf, RawPacketImpl>> codec = plugin.getPayloadsService().getCodecs().entrySet().stream().filter(entry -> entry.getKey().id().equals(packet.payload().type().id())).findFirst().map(entry -> entry.getValue());
+			Optional<StreamCodec<RegistryFriendlyByteBuf, RawPacket>> codec = plugin.getPayloadsService().findCodec((ResourceKey) (Object) packet.payload().type().id());
 			if(codec.isPresent() && packet.payload() instanceof RawPacketImpl rawPacketImpl) {
 				RegistryFriendlyByteBuf friendlyByteBuf = new RegistryFriendlyByteBuf(copy, null, ConnectionType.OTHER);
 				codec.get().encode(friendlyByteBuf, rawPacketImpl);
