@@ -13,6 +13,7 @@
     "network.MixinConnectionImpl",
     "network.MixinPluginMessagesImpl",
     "network.MixinServerPlayerImpl"
+    "plugin.MixinCustomPayloadsService",
   ],
   "injectors": {
     "defaultRequire": 1

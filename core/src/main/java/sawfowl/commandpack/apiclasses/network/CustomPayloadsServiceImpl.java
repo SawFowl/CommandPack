@@ -10,6 +10,7 @@ import java.util.function.Function;
 
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.network.channel.ChannelBuf;
+import org.spongepowered.api.network.channel.raw.RawDataChannel;
 import org.spongepowered.plugin.PluginContainer;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -31,6 +32,7 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 	private Map<ResourceKey, Function<ChannelBuf, SerializedPacket<?>>> bufferSerializers = new HashMap<>();
 	private Map<ResourceKey, Map<PluginContainer, RawPacketListener>> rawListeners = new HashMap<>();
 	private Map<ResourceKey, Map<PluginContainer, PacketListener<?>>> listeners = new HashMap<>();
+	private Map<ResourceKey, RawDataChannel> spongeChannels = new HashMap<>();
 	private boolean finished = false;
 	private final CommandPackInstance plugin;
 	public CustomPayloadsServiceImpl(CommandPackInstance plugin) {
@@ -145,6 +147,10 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 				buffer -> new RawPacketImpl(channel, (ChannelBuf) buffer, buffer.readableBytes() > 0 ? buffer.readCharSequence(buffer.readableBytes(), StandardCharsets.UTF_8).toString() : "")
 			)
 		);
+	}
+
+	public Map<ResourceKey, RawDataChannel> getSpongeChannels() {
+		return spongeChannels;
 	}
 
 }

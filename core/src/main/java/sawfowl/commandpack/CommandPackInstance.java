@@ -373,7 +373,7 @@ public class CommandPackInstance {
 		getCommandsConfig().registerRaw(event, instance);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@Listener
 	public void registerBuilders(RegisterBuilderEvent event) {
 		event.register(RandomTeleportService.RandomTeleportOptions.Builder.class, () -> new RandomTeleportWorldConfig().builder());

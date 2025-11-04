@@ -6,6 +6,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 
+@SuppressWarnings("deprecation")
 public class CustomPacketImpl implements CustomPacket {
 
 	private String loc;
@@ -34,7 +35,6 @@ public class CustomPacketImpl implements CustomPacket {
 		};
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void sendTo(ServerPlayer player) {
 		MixinServerPlayer.cast(player).sendPacket(this);

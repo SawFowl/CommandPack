@@ -32,7 +32,7 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 	public ServerGamePacketListenerImpl connection;
 
 	@Override
-	public void sendPacket(CustomPacket packet) {
+	public void sendPacket(@SuppressWarnings("deprecation") CustomPacket packet) {
 		if(packet instanceof CustomPacketImpl custom) connection.send(new RawPacketImpl(ResourceKey.resolve(custom.getLocation()), null, custom.getData()));
 	}
 

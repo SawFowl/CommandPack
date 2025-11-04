@@ -2,8 +2,11 @@ package sawfowl.commandpack.mixins.vanilla.network;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.network.channel.raw.RawDataChannel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.math.vector.Vector3i;
@@ -17,6 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
@@ -33,13 +37,20 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 	@Shadow public ServerGamePacketListenerImpl connection;
 
 	@Override
-	public void sendPacket(CustomPacket packet) {
-		if(packet instanceof CustomPacketImpl custom) connection.send(createPacket(custom));
+	public void sendPacket(@SuppressWarnings("deprecation") CustomPacket packet) {
+		if(packet instanceof CustomPacketImpl custom) {
+			ResourceKey channel = ResourceKey.resolve(custom.getLocation());
+			if(getSpongeChannels().containsKey(channel)) {
+				getSpongeChannels().get(channel).play().sendTo(this, buffer -> buffer.writeString(custom.getData()));
+			} else connection.send(createPacket(custom));
+		}
 	}
 
 	@Override
 	public void sendPacket(RawPacket packet) {
-		sendPacket(CustomPacket.of(packet.channel(), packet.getDataAsString()));
+		if(getSpongeChannels().containsKey(packet.channel())) {
+			getSpongeChannels().get(packet.channel()).play().sendTo(this, buffer -> buffer.writeString(packet.getDataAsString()));
+		} else connection.send(createPacket(packet));
 	}
 
 	@Override
@@ -68,6 +79,14 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 		return connection.latency();
 	}
 
+	private FriendlyByteBuf createFriendlyByteBuf(RawPacket custom) {
+		return new FriendlyByteBuf(Unpooled.buffer()).writeResourceLocation((ResourceLocation) (Object) custom.channel()).writeBytes(custom.getDataAsString().getBytes(StandardCharsets.UTF_8));
+	}
+
+	private ClientboundCustomPayloadPacket createPacket(RawPacket custom) {
+		return ClientboundCustomPayloadPacket.CONFIG_STREAM_CODEC.decode(createFriendlyByteBuf(custom));
+	}
+
 	private FriendlyByteBuf createFriendlyByteBuf(CustomPacketImpl custom) {
 		return new FriendlyByteBuf(Unpooled.buffer()).writeResourceLocation(ResourceLocation.parse(custom.getLocation())).writeBytes(custom.getData().getBytes(StandardCharsets.UTF_8));
 	}
@@ -79,6 +98,10 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 	@Override
 	public float getMiningSpeed(BlockState block, Vector3i position) {
 		return ((ServerPlayer) (Object) this).getDestroySpeed((net.minecraft.world.level.block.state.BlockState) block);
+	}
+
+	private Map<ResourceKey, RawDataChannel> getSpongeChannels() {
+		return CommandPackInstance.getInstance().getPayloadsService().getSpongeChannels();
 	}
 
 }
