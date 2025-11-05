@@ -150,7 +150,6 @@ public interface RawCommand extends PluginCommand, Raw {
 	}
 
 	default List<CommandCompletion> completeChild(CommandCause cause, String[] args, String currentInput) {
-		
 		if(getChildExecutors() != null && !getChildExecutors().isEmpty()) {
 			if(args.length == 0 || (args.length == 1 && !currentInput.endsWith(" "))) {
 				return new ArrayList<CommandCompletion>() {
