@@ -29,6 +29,7 @@ import sawfowl.commandpack.api.network.listeners.PacketListener;
 import sawfowl.commandpack.api.network.listeners.RawPacketListener;
 import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.api.network.packets.SerializedPacket;
+import sawfowl.commandpack.apiclasses.DataChannelRegistrationEventImpl;
 import sawfowl.commandpack.apiclasses.network.CustomPayloadsServiceImpl;
 import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 import sawfowl.commandpack.apiclasses.network.SerializedPacketBuilder.SerializedPacketImpl;
@@ -55,6 +56,7 @@ public abstract class MixinCustomPayloadsService {
 
 	@Listener(order = Order.LAST)
 	public void onChannelRegistration(RegisterChannelEvent event) {
+		Sponge.eventManager().post(new DataChannelRegistrationEventImpl(plugin));
 		finished = true;
 		spongeChannelsToRegister.forEach(id -> addHandler((RawDataChannel) Sponge.channelManager().get(id).filter(channel -> channel instanceof RawDataChannel).orElse(event.register(id, RawDataChannel.class)), id));
 	}

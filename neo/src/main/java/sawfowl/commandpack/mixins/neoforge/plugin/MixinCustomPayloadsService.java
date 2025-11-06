@@ -5,7 +5,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.spongepowered.api.ResourceKey;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.network.channel.ChannelBuf;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,12 +23,13 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistration;
-
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.api.network.listeners.PacketListener;
 import sawfowl.commandpack.api.network.listeners.RawPacketListener;
 import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.api.network.packets.SerializedPacket;
+import sawfowl.commandpack.apiclasses.DataChannelRegistrationEventImpl;
 import sawfowl.commandpack.apiclasses.network.CustomPayloadsServiceImpl;
 import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 import sawfowl.commandpack.apiclasses.network.SerializedPacketBuilder.SerializedPacketImpl;
@@ -37,6 +40,7 @@ public abstract class MixinCustomPayloadsService {
 
 	private ModContainer modContainer;
 	@Shadow private boolean finished;
+	@Shadow @Final private CommandPackInstance plugin;
 
 	@Overwrite
 	private void init() {
@@ -46,6 +50,7 @@ public abstract class MixinCustomPayloadsService {
 	
 	@SubscribeEvent
 	public void register(RegisterPayloadHandlersEvent event) {
+		Sponge.eventManager().post(new DataChannelRegistrationEventImpl(plugin));
 		finished = true;
 		register(event, NetworkRegistryAccessor.getPAYLOAD_REGISTRATIONS());
 	}

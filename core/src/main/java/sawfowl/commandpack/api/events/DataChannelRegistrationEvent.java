@@ -1,8 +1,9 @@
-package sawfowl.commandpack.api.network;
+package sawfowl.commandpack.api.events;
 
 import java.util.function.Function;
 
 import org.spongepowered.api.ResourceKey;
+import org.spongepowered.api.event.Event;
 import org.spongepowered.api.network.channel.ChannelBuf;
 import org.spongepowered.plugin.PluginContainer;
 
@@ -10,7 +11,7 @@ import sawfowl.commandpack.api.network.listeners.PacketListener;
 import sawfowl.commandpack.api.network.listeners.RawPacketListener;
 import sawfowl.commandpack.api.network.packets.SerializedPacket;
 
-public interface CustomPayloadsService {
+public interface DataChannelRegistrationEvent extends Event {
 
 	void registerChannel(ResourceKey channel);
 
@@ -21,15 +22,5 @@ public interface CustomPayloadsService {
 	void registerRawListener(PluginContainer container, ResourceKey channel, RawPacketListener listener);
 
 	<T> void registerListener(PluginContainer container, ResourceKey channel, PacketListener<T> listener);
-
-	void unregisterRawListener(PluginContainer container, ResourceKey channel);
-
-	void unregisterListener(PluginContainer container, ResourceKey channel);
-
-	void unregisterRawListeners(PluginContainer container);
-
-	void unregisterAllListeners(PluginContainer container);
-
-	void unregisterListeners(PluginContainer container);
 
 }

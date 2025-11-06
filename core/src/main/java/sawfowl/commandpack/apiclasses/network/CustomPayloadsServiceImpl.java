@@ -43,14 +43,13 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 	private void init() {}
 
 	@Override
-	public void registerRawCodecAndChannel(ResourceKey channel) {
+	public void registerChannel(ResourceKey channel) {
 		if(finished) {
 			plugin.getLocales().getSystemLocale().getDebug().getFinishedRegisterNetworkData(channel);
 		} else registerRawCodec(new Type<>((ResourceLocation) (Object) channel), channel);
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public Optional<StreamCodec<RegistryFriendlyByteBuf, RawPacket>> findCodec(ResourceKey channel) {
 		return codecs.entrySet().stream().filter(entry -> entry.getKey().id().equals((ResourceLocation) (Object) channel)).findFirst().map(entry -> (StreamCodec<RegistryFriendlyByteBuf, RawPacket>) (Object) entry.getValue());
 	}
@@ -73,7 +72,7 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 	}
 
 	@Override
-	public void registerListener(PluginContainer container, ResourceKey channel, PacketListener<?> listener) {
+	public <T> void registerListener(PluginContainer container, ResourceKey channel, PacketListener<T> listener) {
 		if(!listeners.containsKey(channel)) listeners.put(channel, new HashMap<>());
 		if(listeners.get(channel).containsKey(container)) return;
 		listeners.get(channel).put(container, listener);
