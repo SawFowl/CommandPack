@@ -83,7 +83,7 @@ public abstract class MixinCustomPayloadsService {
 				.payloadChannel()
 				.any()
 				.bidirectional()
-				.add(new Type<>((ResourceLocation) (Object) channel), createCodec(channel), (payload, context) -> handle((RawPacketImpl) payload, context))
+				.add(new Type<>((ResourceLocation) (Object) channel), createCodec(channel), (payload, context) -> handle(payload, context))
 				.build();
 			}
 		);
