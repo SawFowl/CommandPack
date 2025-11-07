@@ -3,7 +3,9 @@ package sawfowl.commandpack.mixins.forge.plugin;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.spongepowered.api.ResourceKey;
@@ -46,6 +48,7 @@ public abstract class MixinCustomPayloadsService {
 	@Shadow @Final private CommandPackInstance plugin;
 	@Shadow private boolean finished;
 	@Shadow private Map<ResourceKey, RawDataChannel> spongeChannels = new HashMap<>();
+	private Set<ResourceKey> forgeChannels = new HashSet<>();
 	private int channelVersion = 766; // NetworkInitialization.getVersion();
 
 	@Overwrite
@@ -54,29 +57,36 @@ public abstract class MixinCustomPayloadsService {
 	}
 
 	@Overwrite
-	public void registerRawCodecAndChannel(ResourceKey channel) {
-		var find = NetworkRegistry.findTarget((ResourceLocation) (Object) channel);
-		if(find != null) {
-			find.addListener(event -> {
-				if(event.getPayloadObject() instanceof MixinServerPlayer player && event.getPayload() instanceof ChannelBuf buf) handle(player, new RawPacketImpl(channel, buf, event.getPayload().readableBytes() > 0 ? event.getPayload().toString(StandardCharsets.UTF_8) : ""));
-			});
-			find = null;
-		} else ChannelBuilder
-			.named((ResourceLocation) (Object) channel)
-			.connectionHandler(consumer -> MinecraftServerAccessor.getconnection())
-			.serverAcceptedVersions(VersionTest.exact(channelVersion))
-			.clientAcceptedVersions(VersionTest.exact(channelVersion))
-			.networkProtocolVersion(channelVersion)
-			.payloadChannel()
-			.any()
-			.bidirectional()
-			.add(new Type<>((ResourceLocation) (Object) channel), createCodec(channel), (payload, context) -> handle((RawPacketImpl) payload, context))
-			.build();
+	public void registerChannel(ResourceKey channel) {
+		if(finished) {
+			plugin.getLocales().getSystemLocale().getDebug().getFinishedRegisterNetworkData(channel);
+		} else if(!forgeChannels.contains(channel)) forgeChannels.add(channel);
 	}
 
 	@Listener(order = Order.LAST)
 	public void onChannelRegistration(RegisterChannelEvent event) {
 		Sponge.eventManager().post(new DataChannelRegistrationEventImpl(plugin));
+		finished = true;
+		forgeChannels.forEach(channel -> {
+			var find = NetworkRegistry.findTarget((ResourceLocation) (Object) channel);
+			if(find != null) {
+				find.addListener(listener -> {
+					if(listener.getPayloadObject() instanceof MixinServerPlayer player && listener.getPayload() instanceof ChannelBuf buf) handle(player, new RawPacketImpl(channel, buf, listener.getPayload().readableBytes() > 0 ? listener.getPayload().toString(StandardCharsets.UTF_8) : ""));
+				});
+				find = null;
+			} else ChannelBuilder
+				.named((ResourceLocation) (Object) channel)
+				.connectionHandler(consumer -> MinecraftServerAccessor.getconnection())
+				.serverAcceptedVersions(VersionTest.exact(channelVersion))
+				.clientAcceptedVersions(VersionTest.exact(channelVersion))
+				.networkProtocolVersion(channelVersion)
+				.payloadChannel()
+				.any()
+				.bidirectional()
+				.add(new Type<>((ResourceLocation) (Object) channel), createCodec(channel), (payload, context) -> handle((RawPacketImpl) payload, context))
+				.build();
+			}
+		);
 	}
 
 	private StreamCodec<FriendlyByteBuf, RawPacketImpl> createCodec(ResourceKey channel) {
