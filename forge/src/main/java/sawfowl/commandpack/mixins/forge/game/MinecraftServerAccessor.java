@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerConnectionListener;
 
-@Mixin(MinecraftServer.class)
+@Mixin(value = MinecraftServer.class, remap = false)
 public interface MinecraftServerAccessor {
 
 	@Accessor

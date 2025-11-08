@@ -29,14 +29,14 @@ dependencies {
 	spongeVanillaMod "org.spongepowered:spongevanilla:${spongevanilla}:universal@jar"
 }
 
-task extractSpongeVanillaMod(type: Copy) {
+/*task extractSpongeVanillaMod(type: Copy) {
 	from(zipTree(configurations.spongeVanillaMod.singleFile)) {
 		include "jars/spongevanilla-mod.jar"
 	}
 	into "$buildDir/unpacked"
 	rename { "spongevanilla-mod-extracted.jar" }
 }
-
+*/
 subprojects {
 	apply {
 		plugin 'java'

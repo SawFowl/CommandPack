@@ -42,7 +42,7 @@ import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 import sawfowl.commandpack.apiclasses.network.SerializedPacketBuilder.SerializedPacketImpl;
 import sawfowl.commandpack.mixins.forge.game.MinecraftServerAccessor;
 
-@Mixin(CustomPayloadsServiceImpl.class)
+@Mixin(value = CustomPayloadsServiceImpl.class, remap = false)
 public abstract class MixinCustomPayloadsService {
 
 	@Shadow @Final private CommandPackInstance plugin;
