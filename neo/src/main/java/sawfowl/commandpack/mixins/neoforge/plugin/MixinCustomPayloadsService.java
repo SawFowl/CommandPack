@@ -78,7 +78,6 @@ public abstract class MixinCustomPayloadsService {
 					type,
 					codec,
 					(payload, context) -> {
-						CommandPackInstance.getInstance().getLogger().warn("ИМЯ КЛАССА НАГРУЗКИ -> " + payload.getClass().getName());
 						if (context.player() instanceof MixinServerPlayer player) {
 							// Server-side packet, let plugin handle it
 							handle(player, payload);
