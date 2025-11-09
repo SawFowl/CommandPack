@@ -49,7 +49,7 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 	@Override
 	public void sendPacket(RawPacket packet) {
 		if(getSpongeChannels().containsKey(packet.channel())) {
-			getSpongeChannels().get(packet.channel()).play().sendTo(this, buffer -> buffer.writeString(packet.getDataAsString()));
+			getSpongeChannels().get(packet.channel()).play().sendTo(this, buffer -> buffer.writeBytes(packet.getDataAsString().getBytes(StandardCharsets.UTF_8)));
 		} else connection.send(createPacket(packet));
 	}
 

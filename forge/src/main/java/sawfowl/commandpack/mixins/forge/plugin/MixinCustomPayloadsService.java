@@ -10,8 +10,6 @@ import java.util.function.Function;
 
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.lifecycle.RegisterChannelEvent;
 import org.spongepowered.api.network.channel.ChannelBuf;
 import org.spongepowered.api.network.channel.raw.RawDataChannel;
@@ -36,7 +34,6 @@ import sawfowl.commandpack.api.network.listeners.PacketListener;
 import sawfowl.commandpack.api.network.listeners.RawPacketListener;
 import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.api.network.packets.SerializedPacket;
-import sawfowl.commandpack.apiclasses.DataChannelRegistrationEventImpl;
 import sawfowl.commandpack.apiclasses.network.CustomPayloadsServiceImpl;
 import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 import sawfowl.commandpack.apiclasses.network.SerializedPacketBuilder.SerializedPacketImpl;
@@ -51,11 +48,10 @@ public abstract class MixinCustomPayloadsService {
 	private Set<ResourceKey> forgeChannels = new HashSet<>();
 	private int channelVersion = 766; // NetworkInitialization.getVersion();
 
-	@Overwrite
-	private void init() {
-		Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
-	}
-
+	/**
+	 * @author
+	 * @reason
+	 */
 	@Overwrite
 	public void registerChannel(ResourceKey channel) {
 		if(finished) {
@@ -63,23 +59,26 @@ public abstract class MixinCustomPayloadsService {
 		} else if(!forgeChannels.contains(channel)) forgeChannels.add(channel);
 	}
 
-	@Listener(order = Order.LAST)
-	public void onChannelRegistration(RegisterChannelEvent event) {
-		Sponge.eventManager().post(new DataChannelRegistrationEventImpl(plugin));
-		finished = true;
+	/**
+	 * @author
+	 * @reason
+	 */
+	@Overwrite
+	private void spongeEvent(RegisterChannelEvent event) {
 		forgeChannels.forEach(channel -> {
 			var find = NetworkRegistry.findTarget((ResourceLocation) (Object) channel);
 			if(find != null) {
 				find.addListener(listener -> {
-					if(listener.getPayloadObject() instanceof MixinServerPlayer player && listener.getPayload() instanceof ChannelBuf buf) handle(player, new RawPacketImpl(channel, buf, listener.getPayload().readableBytes() > 0 ? listener.getPayload().toString(StandardCharsets.UTF_8) : ""));
+					if(listener.getSource().getSender() instanceof MixinServerPlayer player && listener.getPayload() instanceof ChannelBuf buf) handle(player, new RawPacketImpl(channel, buf, listener.getPayload().readableBytes() > 0 ? listener.getPayload().toString(StandardCharsets.UTF_8) : ""));
 				});
 				find = null;
 			} else ChannelBuilder
 				.named((ResourceLocation) (Object) channel)
-				.connectionHandler(consumer -> MinecraftServerAccessor.getconnection())
+				.connectionHandler(consumer -> ((MinecraftServerAccessor) Sponge.server()).getconnection())
 				.serverAcceptedVersions(VersionTest.exact(channelVersion))
 				.clientAcceptedVersions(VersionTest.exact(channelVersion))
 				.networkProtocolVersion(channelVersion)
+				.optional()
 				.payloadChannel()
 				.any()
 				.bidirectional()

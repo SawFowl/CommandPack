@@ -273,6 +273,9 @@ public class CommandPackInstance {
 		this.pluginContainer = pluginContainer;
 		configDir = configDirectory;
 		logger = Logger.createApacheLogger("CommandPack");
+		isForge = checkForge();
+		isNeo = checkNeo();
+		createAPI();
 	}
 
 	@Listener
@@ -282,11 +285,8 @@ public class CommandPackInstance {
 		kitService = new KitServiceImpl(instance);
 		playersData = new PlayersDataImpl(instance);
 		configManager = new ConfigManager(instance);
-		isForge = checkForge();
-		isNeo = checkNeo();
 		economy = new Economy(instance);
 		Sponge.eventManager().registerListeners(pluginContainer, economy);
-		createAPI();
 		Sponge.eventManager().post(new CommandPack.PostAPI() {
 
 			@Override

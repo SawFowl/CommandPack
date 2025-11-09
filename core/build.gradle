@@ -11,10 +11,10 @@ minecraft {
 }
 
 dependencies {
-	implementation 'org.spongepowered:mixin:0.8.6'
+	implementation "org.spongepowered:mixin:${mixin}"
 	implementation "org.spongepowered:spongeapi:${api}"
+	implementation "org.spongepowered:sponge:${sponge}"
 	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
-	implementation 'org.spongepowered:sponge:1.21.1-12.0.2'
 	//implementation fileTree(dir: 'libs', include: '*.jar')
 	//implementation fileTree(dir: rootProject.buildDir.toPath().resolve("unpacked/jars"), include: '*.jar')
 }

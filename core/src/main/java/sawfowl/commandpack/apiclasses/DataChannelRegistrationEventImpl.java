@@ -22,7 +22,7 @@ public class DataChannelRegistrationEventImpl implements DataChannelRegistration
 	private Cause cause;
 	public DataChannelRegistrationEventImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
-		cause = Cause.builder().build(EventContext.builder().add(EventContextKeys.PLUGIN, plugin.getPluginContainer()).build());
+		cause = Cause.builder().append(plugin.getPluginContainer()).build(EventContext.builder().add(EventContextKeys.PLUGIN, plugin.getPluginContainer()).build());
 	}
 
 	@Override

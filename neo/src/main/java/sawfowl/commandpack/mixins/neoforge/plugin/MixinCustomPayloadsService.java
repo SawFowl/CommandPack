@@ -1,9 +1,12 @@
 package sawfowl.commandpack.mixins.neoforge.plugin;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.network.channel.ChannelBuf;
@@ -12,17 +15,26 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+
 import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.network.connection.ConnectionType;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
+import net.neoforged.neoforge.network.registration.NetworkRegistry;
 import net.neoforged.neoforge.network.registration.PayloadRegistration;
+
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.api.network.listeners.PacketListener;
@@ -41,14 +53,15 @@ public abstract class MixinCustomPayloadsService {
 	private ModContainer modContainer;
 	@Shadow private boolean finished;
 	@Shadow @Final private CommandPackInstance plugin;
+	@Shadow private Set<ResourceKey> needRecode;
 
 	@Overwrite
 	private void init() {
 		modContainer = ModList.get().getModContainerById("commandpack").get();
 		modContainer.getEventBus().register(this);
 	}
-	
-	@SubscribeEvent
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void register(RegisterPayloadHandlersEvent event) {
 		Sponge.eventManager().post(new DataChannelRegistrationEventImpl(plugin));
 		finished = true;
@@ -57,33 +70,46 @@ public abstract class MixinCustomPayloadsService {
 
 	private void register(RegisterPayloadHandlersEvent event, Map<ConnectionProtocol, Map<ResourceLocation, PayloadRegistration<?>>> registrations) {
 		getCodecs().forEach((type, codec) -> {
-			if(!registrations.get(ConnectionProtocol.PLAY).containsKey(type.id())) {
+			var existingHandler = registrations.get(ConnectionProtocol.PLAY).get(type.id());
+			if(existingHandler == null) {
 				event.registrar("1")
 				.optional()
 				.playBidirectional(
 					type,
 					codec,
 					(payload, context) -> {
-						if (context.player() instanceof MixinServerPlayer player && payload instanceof RawPacket rawPacket) {
+						CommandPackInstance.getInstance().getLogger().warn("ИМЯ КЛАССА НАГРУЗКИ -> " + payload.getClass().getName());
+						if (context.player() instanceof MixinServerPlayer player) {
 							// Server-side packet, let plugin handle it
-							handle(player, rawPacket);
+							handle(player, payload);
 							return;
 						}
 					}
 				);
-			} else registrations.get(ConnectionProtocol.PLAY).put(type.id(), createNewHandler(registrations.get(ConnectionProtocol.PLAY).get(type.id()), type, codec));
+			} else registrations.get(ConnectionProtocol.PLAY).put(type.id(), createNewHandler(existingHandler));
+			existingHandler = null;
 		});
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private PayloadRegistration<?> createNewHandler(PayloadRegistration<?> existingHandler, CustomPacketPayload.Type<RawPacketImpl> type, StreamCodec<RegistryFriendlyByteBuf, RawPacketImpl> codec) {
+	private PayloadRegistration<?> createNewHandler(PayloadRegistration existingHandler) {
+		needRecode.add((ResourceKey) (Object) existingHandler.type().id());
 		return new PayloadRegistration(existingHandler.type(), existingHandler.codec(), (payload, context) -> {
-			if (context.player() instanceof MixinServerPlayer player && payload instanceof RawPacket rawPacket) {
-				// Server-side packet, let plugin handle it
-				handle(player, rawPacket);
-				((IPayloadHandler)existingHandler.handler()).handle(payload, context);
-				return;
+			@Nullable StreamCodec<ByteBuf, CustomPacketPayload> codec = (@Nullable StreamCodec<ByteBuf, CustomPacketPayload>) NetworkRegistry.getCodec(payload.type().id(), ConnectionProtocol.PLAY, PacketFlow.SERVERBOUND);
+			ByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), null, ConnectionType.OTHER);
+			try {
+				codec.encode(buffer, payload);
+			} catch (Exception e) {
+				buffer = new FriendlyByteBuf(Unpooled.buffer());
+				try {
+					codec.encode(buffer, payload);
+				} catch (Exception e2) {
+				}
 			}
+			codec = null;
+			if(context.player() instanceof MixinServerPlayer player && buffer.hasArray()) handle(player, new RawPacketImpl((ResourceKey) (Object) payload.type().id(), (ChannelBuf) buffer, buffer.readableBytes() > 0 ? buffer.readCharSequence(buffer.readableBytes(), StandardCharsets.UTF_8).toString() : ""));
+			((IPayloadHandler)existingHandler.handler()).handle(payload, context);
+			buffer = null;
 		}, existingHandler.protocols(), existingHandler.flow(), existingHandler.version(), existingHandler.optional());
 	}
 
@@ -109,7 +135,7 @@ public abstract class MixinCustomPayloadsService {
 
 	@Shadow abstract Collection<RawPacketListener> getRawListeners(ResourceKey channel);
 
-	@Shadow abstract Map<CustomPacketPayload.Type<RawPacketImpl>, StreamCodec<RegistryFriendlyByteBuf, RawPacketImpl>> getCodecs();
+	@Shadow abstract Map<CustomPacketPayload.Type<RawPacketImpl>, StreamCodec<ByteBuf, RawPacketImpl>> getCodecs();
 
 	@Shadow abstract Collection<PacketListener<?>> getListeners(ResourceKey channel);
 

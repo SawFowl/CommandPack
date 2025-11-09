@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -63,7 +64,7 @@ public abstract class MixinPluginMessagesImpl {
 		}
 		try {
 			FriendlyByteBuf copy = new FriendlyByteBuf(Unpooled.buffer());
-			Optional<StreamCodec<RegistryFriendlyByteBuf, RawPacket>> codec = plugin.getPayloadsService().findCodec((ResourceKey) (Object) packet.payload().type().id());
+			Optional<StreamCodec<ByteBuf, RawPacket>> codec = plugin.getPayloadsService().findCodec((ResourceKey) (Object) packet.payload().type().id());
 			if(codec.isPresent() && packet.payload() instanceof RawPacketImpl rawPacketImpl) {
 				RegistryFriendlyByteBuf friendlyByteBuf = new RegistryFriendlyByteBuf(copy, null, ConnectionType.OTHER);
 				codec.get().encode(friendlyByteBuf, rawPacketImpl);

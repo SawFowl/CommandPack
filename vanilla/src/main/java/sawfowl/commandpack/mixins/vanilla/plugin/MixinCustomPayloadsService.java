@@ -10,11 +10,8 @@ import java.util.function.Function;
 
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.lifecycle.RegisterChannelEvent;
-import org.spongepowered.api.network.EngineConnectionState;
-import org.spongepowered.api.network.EngineConnectionState.Game;
+import org.spongepowered.api.network.ServerConnectionState;
 import org.spongepowered.api.network.channel.ChannelBuf;
 import org.spongepowered.api.network.channel.raw.RawDataChannel;
 import org.spongepowered.api.network.channel.raw.play.RawPlayDataHandler;
@@ -29,7 +26,6 @@ import sawfowl.commandpack.api.network.listeners.PacketListener;
 import sawfowl.commandpack.api.network.listeners.RawPacketListener;
 import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.api.network.packets.SerializedPacket;
-import sawfowl.commandpack.apiclasses.DataChannelRegistrationEventImpl;
 import sawfowl.commandpack.apiclasses.network.CustomPayloadsServiceImpl;
 import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 import sawfowl.commandpack.apiclasses.network.SerializedPacketBuilder.SerializedPacketImpl;
@@ -43,47 +39,27 @@ public abstract class MixinCustomPayloadsService {
 	private Set<ResourceKey> spongeChannelsToRegister = new HashSet<>();
 
 	@Overwrite
-	private void init() {
-		Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
-	}
-
-	@Overwrite
 	public void registerChannel(ResourceKey channel) {
 		if(finished) {
 			plugin.getLocales().getSystemLocale().getDebug().getFinishedRegisterNetworkData(channel);
 		} else if(!spongeChannelsToRegister.contains(channel)) spongeChannelsToRegister.add(channel);
 	}
 
-	@Listener(order = Order.LAST)
-	public void onChannelRegistration(RegisterChannelEvent event) {
-		Sponge.eventManager().post(new DataChannelRegistrationEventImpl(plugin));
-		finished = true;
-		spongeChannelsToRegister.forEach(id -> addHandler((RawDataChannel) Sponge.channelManager().get(id).filter(channel -> channel instanceof RawDataChannel).orElse(event.register(id, RawDataChannel.class)), id));
-	}
-
-	private void addHandler(RawDataChannel channel, ResourceKey type) {
-		channel.play().addHandler(EngineConnectionState.Game.class, new SpongeHandler(type));
-		spongeChannels.put(type, channel);
-	}
-
-	private void handle(MixinServerPlayer player, RawPacket rawPacket) {
-		getRawListeners(rawPacket.channel()).forEach(listener -> listener.read(player, rawPacket));
-		handleSerialized(player, rawPacket, containsSerializer(rawPacket.channel()), containsBufferSerializer(rawPacket.channel()));
-	}
-
-	@SuppressWarnings("unchecked")
-	private void handleSerialized(MixinServerPlayer player, RawPacket rawPacket, boolean stringSerializer, boolean bufferSerializer) {
-		if(stringSerializer || bufferSerializer) for(PacketListener<?> listener : getListeners(rawPacket.channel())) listener.read(player, serialize(rawPacket, bufferSerializer));
-	}
-
-	@SuppressWarnings("rawtypes")
-	private SerializedPacket serialize(RawPacket packet, boolean bufferSerializer) {
-		return ((SerializedPacketImpl) (bufferSerializer 
-			?
-			SerializedPacket.ofBuffer(packet.channel(), getBufferSerializer(packet.channel()))
-			:
-			SerializedPacket.of(packet.channel(), getSerializer(packet.channel()))))
-		.apply(packet.getBuffer(), packet.getDataAsString());
+	@Overwrite
+	private void spongeEvent(RegisterChannelEvent event) {
+		spongeChannelsToRegister.forEach(id -> {
+			var existChannel = Sponge.channelManager().get(id).filter(channel -> channel instanceof RawDataChannel);
+			if(existChannel.isPresent()) {
+				if(existChannel.get() instanceof RawDataChannel raw) {
+					raw.play().addHandler(ServerConnectionState.Game.class, new SpongeHandler(id));
+					spongeChannels.put(id, raw);
+				}
+			} else {
+				var channel = event.register(id, RawDataChannel.class);
+				channel.play().addHandler(ServerConnectionState.Game.class, new SpongeHandler(id));
+				spongeChannels.put(id, channel);
+			}
+		});
 	}
 
 	@Shadow abstract Collection<RawPacketListener> getRawListeners(ResourceKey channel);
@@ -98,7 +74,7 @@ public abstract class MixinCustomPayloadsService {
 
 	@Shadow abstract Function<ChannelBuf, SerializedPacket<?>> getBufferSerializer(ResourceKey channel);
 
-	private class SpongeHandler implements RawPlayDataHandler<EngineConnectionState.Game> {
+	private class SpongeHandler implements RawPlayDataHandler<ServerConnectionState.Game> {
 
 		private final ResourceKey channel;
 		SpongeHandler(ResourceKey channel) {
@@ -106,9 +82,28 @@ public abstract class MixinCustomPayloadsService {
 		}
 
 		@Override
-		public void handlePayload(ChannelBuf data, Game state) {
-			if(!(state.player() instanceof MixinServerPlayer player)) return;
-			handle(player, new RawPacketImpl(channel, data, data.hasArray() ? new String(data.array(), StandardCharsets.UTF_8) : ""));
+		public void handlePayload(ChannelBuf data, ServerConnectionState.Game state) {
+			handle(MixinServerPlayer.cast(state.player()), new RawPacketImpl(channel, data, data.available() > 0 ? new String(data.readBytes(data.available()), StandardCharsets.UTF_8) : ""));
+		}
+
+		private void handle(MixinServerPlayer player, RawPacket rawPacket) {
+			getRawListeners(rawPacket.channel()).forEach(listener -> listener.read(player, rawPacket));
+			handleSerialized(player, rawPacket, containsSerializer(rawPacket.channel()), containsBufferSerializer(rawPacket.channel()));
+		}
+
+		@SuppressWarnings("unchecked")
+		private void handleSerialized(MixinServerPlayer player, RawPacket rawPacket, boolean stringSerializer, boolean bufferSerializer) {
+			if(stringSerializer || bufferSerializer) for(PacketListener<?> listener : getListeners(rawPacket.channel())) listener.read(player, serialize(rawPacket, bufferSerializer));
+		}
+
+		@SuppressWarnings("rawtypes")
+		private SerializedPacket serialize(RawPacket packet, boolean bufferSerializer) {
+			return ((SerializedPacketImpl) (bufferSerializer 
+				?
+				SerializedPacket.ofBuffer(packet.channel(), getBufferSerializer(packet.channel()))
+				:
+				SerializedPacket.of(packet.channel(), getSerializer(packet.channel()))))
+			.apply(packet.getBuffer(), packet.getDataAsString());
 		}
 		
 	}

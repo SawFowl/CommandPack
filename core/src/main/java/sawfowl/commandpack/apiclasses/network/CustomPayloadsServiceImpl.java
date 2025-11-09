@@ -4,43 +4,72 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.spongepowered.api.ResourceKey;
+import org.spongepowered.api.Server;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.lifecycle.RegisterChannelEvent;
+import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.network.channel.ChannelBuf;
 import org.spongepowered.api.network.channel.raw.RawDataChannel;
 import org.spongepowered.plugin.PluginContainer;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
+
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type;
 import net.minecraft.resources.ResourceLocation;
+
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.network.CustomPayloadsService;
 import sawfowl.commandpack.api.network.listeners.PacketListener;
 import sawfowl.commandpack.api.network.listeners.RawPacketListener;
 import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.api.network.packets.SerializedPacket;
+import sawfowl.commandpack.apiclasses.DataChannelRegistrationEventImpl;
 
 public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 
-	private Map<CustomPacketPayload.Type<RawPacketImpl>, StreamCodec<RegistryFriendlyByteBuf, RawPacketImpl>> codecs = new HashMap<>();
+	private Map<CustomPacketPayload.Type<RawPacketImpl>, StreamCodec<ByteBuf, RawPacketImpl>> codecs = new HashMap<>();
 	private Map<ResourceKey, Function<String, SerializedPacket<?>>> serializers = new HashMap<>();
 	private Map<ResourceKey, Function<ChannelBuf, SerializedPacket<?>>> bufferSerializers = new HashMap<>();
 	private Map<ResourceKey, Map<PluginContainer, RawPacketListener>> rawListeners = new HashMap<>();
 	private Map<ResourceKey, Map<PluginContainer, PacketListener<?>>> listeners = new HashMap<>();
 	private Map<ResourceKey, RawDataChannel> spongeChannels = new HashMap<>();
+	private Set<ResourceKey> needRecode = new HashSet<ResourceKey>();
 	private boolean finished = false;
 	private final CommandPackInstance plugin;
 	public CustomPayloadsServiceImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
+		if(!plugin.isNeoForgeServer()) Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
 		init();
 	}
 
 	private void init() {}
+
+	private void spongeEvent(RegisterChannelEvent event) {}
+
+	private void spongeEvent(StartedEngineEvent<Server> event) {}
+
+	@Listener
+	public void onServerStarted(StartedEngineEvent<Server> event) {
+		spongeEvent(event);
+	}
+
+	@Listener(order = Order.LAST)
+	public void onChannelRegistration(RegisterChannelEvent event) {
+		Sponge.eventManager().post(new DataChannelRegistrationEventImpl(plugin));
+		finished = true;
+		spongeEvent(event);
+	}
 
 	@Override
 	public void registerChannel(ResourceKey channel) {
@@ -50,8 +79,8 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Optional<StreamCodec<RegistryFriendlyByteBuf, RawPacket>> findCodec(ResourceKey channel) {
-		return codecs.entrySet().stream().filter(entry -> entry.getKey().id().equals((ResourceLocation) (Object) channel)).findFirst().map(entry -> (StreamCodec<RegistryFriendlyByteBuf, RawPacket>) (Object) entry.getValue());
+	public Optional<StreamCodec<ByteBuf, RawPacket>> findCodec(ResourceKey channel) {
+		return codecs.entrySet().stream().filter(entry -> entry.getKey().id().equals((ResourceLocation) (Object) channel)).findFirst().map(entry -> (StreamCodec<ByteBuf, RawPacket>) (Object) entry.getValue());
 	}
 
 	@Override
@@ -112,7 +141,11 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 		});
 	}
 
-	Map<CustomPacketPayload.Type<RawPacketImpl>, StreamCodec<RegistryFriendlyByteBuf, RawPacketImpl>> getCodecs() {
+	public boolean isNeedRecode(ResourceKey channel) {
+		return needRecode.contains(channel);
+	}
+
+	Map<CustomPacketPayload.Type<RawPacketImpl>, StreamCodec<ByteBuf, RawPacketImpl>> getCodecs() {
 		return codecs;
 	}
 
