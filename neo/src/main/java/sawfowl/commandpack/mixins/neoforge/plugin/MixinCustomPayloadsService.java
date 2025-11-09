@@ -96,7 +96,6 @@ public abstract class MixinCustomPayloadsService {
 	private PayloadRegistration<?> createNewHandler(PayloadRegistration existingHandler) {
 		needRecode.add((ResourceKey) (Object) existingHandler.type().id());
 		return new PayloadRegistration(existingHandler.type(), existingHandler.codec(), (payload, context) -> {
-			plugin.getLogger().warn("ПАКЕТ ПРИНЯТ 2 " + payload.type().id().toString());
 			@Nullable StreamCodec<ByteBuf, CustomPacketPayload> codec = (@Nullable StreamCodec<ByteBuf, CustomPacketPayload>) NetworkRegistry.getCodec(payload.type().id(), ConnectionProtocol.PLAY, PacketFlow.SERVERBOUND);
 			ByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), null, ConnectionType.OTHER);
 			try {
