@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.common.network.channel.SpongeChannelPayload;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -54,6 +55,7 @@ public abstract class MixinCustomPayloadsService {
 	@Shadow private boolean finished;
 	@Shadow @Final private CommandPackInstance plugin;
 	@Shadow private Set<ResourceKey> needRecode;
+	@Shadow private Map<ResourceLocation, StreamCodec<ByteBuf, RawPacketImpl>> cpCodecs;
 
 	@Overwrite
 	private void init() {
@@ -94,6 +96,7 @@ public abstract class MixinCustomPayloadsService {
 	private PayloadRegistration<?> createNewHandler(PayloadRegistration existingHandler) {
 		needRecode.add((ResourceKey) (Object) existingHandler.type().id());
 		return new PayloadRegistration(existingHandler.type(), existingHandler.codec(), (payload, context) -> {
+			plugin.getLogger().warn("ПАКЕТ ПРИНЯТ 2 " + payload.type().id().toString());
 			@Nullable StreamCodec<ByteBuf, CustomPacketPayload> codec = (@Nullable StreamCodec<ByteBuf, CustomPacketPayload>) NetworkRegistry.getCodec(payload.type().id(), ConnectionProtocol.PLAY, PacketFlow.SERVERBOUND);
 			ByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), null, ConnectionType.OTHER);
 			try {
@@ -110,6 +113,12 @@ public abstract class MixinCustomPayloadsService {
 			((IPayloadHandler)existingHandler.handler()).handle(payload, context);
 			buffer = null;
 		}, existingHandler.protocols(), existingHandler.flow(), existingHandler.version(), existingHandler.optional());
+	}
+
+	private void handle(MixinServerPlayer player, SpongeChannelPayload spongePacket) {
+		FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
+		spongePacket.consumer().accept(buffer);
+		handle(player, new RawPacketImpl((ResourceKey) (Object) spongePacket.id(), (ChannelBuf) buffer, buffer.readableBytes() > 0 ? buffer.readCharSequence(buffer.readableBytes(), StandardCharsets.UTF_8).toString() : ""));
 	}
 
 	private void handle(MixinServerPlayer player, RawPacket rawPacket) {
@@ -134,7 +143,7 @@ public abstract class MixinCustomPayloadsService {
 
 	@Shadow abstract Collection<RawPacketListener> getRawListeners(ResourceKey channel);
 
-	@Shadow abstract Map<CustomPacketPayload.Type<RawPacketImpl>, StreamCodec<ByteBuf, RawPacketImpl>> getCodecs();
+	@Shadow abstract Map<CustomPacketPayload.Type<SpongeChannelPayload>, StreamCodec<ByteBuf, SpongeChannelPayload>> getCodecs();
 
 	@Shadow abstract Collection<PacketListener<?>> getListeners(ResourceKey channel);
 

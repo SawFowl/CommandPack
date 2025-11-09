@@ -54,7 +54,22 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
 	@Override
 	public void sendPacket(RawPacket packet) {
-		if(packet instanceof RawPacketImpl impl) sendCustomPacketPayload(plugin.getPayloadsService().isNeedRecode(impl.channel()) ? recode(impl, null) : impl);
+		if(packet instanceof RawPacketImpl impl) {
+			if(plugin.getPayloadsService().isNeedRecode(impl.channel())) {
+				sendCustomPacketPayload(recode(impl, null));
+			} else {
+				plugin.getPayloadsService().findCodec(impl.channel()).ifPresent(spongeCodec -> {
+					plugin.getPayloadsService().findCpCodec(impl.channel()).ifPresent(cpCodec -> {
+						FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
+						cpCodec.encode(buffer, impl);
+						var spongePayload = spongeCodec.decode(buffer);
+						sendCustomPacketPayload(spongePayload);
+						buffer = null;
+						spongePayload = null;
+					});
+				});
+			}
+		}
 	}
 
 	@Override
@@ -96,7 +111,7 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 		@SuppressWarnings("unchecked")
 		@Nullable var codec = (@Nullable StreamCodec<ByteBuf, CustomPacketPayload>) NetworkRegistry.getCodec((ResourceLocation) (Object) impl.channel(), ConnectionProtocol.PLAY, PacketFlow.SERVERBOUND);
 		if(codec == null) return null;
-		var cpCodec = plugin.getPayloadsService().findCodec(impl.channel()).get();
+		var cpCodec = plugin.getPayloadsService().findCpCodec(impl.channel()).get();
 		ByteBuf buffer = null;
 		try {
 			buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), null, ConnectionType.OTHER);
