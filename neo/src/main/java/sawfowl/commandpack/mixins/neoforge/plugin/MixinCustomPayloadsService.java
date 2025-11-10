@@ -85,15 +85,17 @@ public abstract class MixinCustomPayloadsService {
 						}
 					}
 				);
-			} else registrations.get(ConnectionProtocol.PLAY).put(type.id(), createNewHandler(existingHandler));
+			} else registrations.get(ConnectionProtocol.PLAY).put(type.id(), createNewHandler(existingHandler));// ⤵
 			existingHandler = null;
 		});
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private PayloadRegistration<?> createNewHandler(PayloadRegistration existingHandler) {
+	private PayloadRegistration<?> createNewHandler(PayloadRegistration existingHandler) {//⬅
 		needRecode.add((ResourceKey) (Object) existingHandler.type().id());
 		return new PayloadRegistration(existingHandler.type(), existingHandler.codec(), (payload, context) -> {
+			// Since the data channel has already been registered by another mod, then in this place you need to use the codec that was previously registered in NeoForge.
+			// This avoids the ClassCastException error.
 			@Nullable StreamCodec<ByteBuf, CustomPacketPayload> codec = (@Nullable StreamCodec<ByteBuf, CustomPacketPayload>) NetworkRegistry.getCodec(payload.type().id(), ConnectionProtocol.PLAY, PacketFlow.SERVERBOUND);
 			ByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), null, ConnectionType.OTHER);
 			try {
@@ -106,7 +108,14 @@ public abstract class MixinCustomPayloadsService {
 				}
 			}
 			codec = null;
-			if(context.player() instanceof MixinServerPlayer player && buffer.hasArray()) handle(player, new RawPacketImpl((ResourceKey) (Object) payload.type().id(), (ChannelBuf) buffer, buffer.readableBytes() > 0 ? buffer.readCharSequence(buffer.readableBytes(), StandardCharsets.UTF_8).toString() : ""));
+			if(context.player() instanceof MixinServerPlayer player && buffer.hasArray())
+				handle(
+					player,
+					new RawPacketImpl((ResourceKey) (Object) payload.type().id(),
+						(ChannelBuf) buffer,
+						buffer.readableBytes() > 0 ? buffer.readCharSequence(buffer.readableBytes(), StandardCharsets.UTF_8).toString() : ""
+					)
+				);
 			((IPayloadHandler)existingHandler.handler()).handle(payload, context);
 			buffer = null;
 		}, existingHandler.protocols(), existingHandler.flow(), existingHandler.version(), existingHandler.optional());
