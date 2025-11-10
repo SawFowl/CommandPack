@@ -1,6 +1,5 @@
 package sawfowl.commandpack.apiclasses.network;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,12 +18,10 @@ import org.spongepowered.api.event.lifecycle.RegisterChannelEvent;
 import org.spongepowered.api.event.lifecycle.StartedEngineEvent;
 import org.spongepowered.api.network.channel.ChannelBuf;
 import org.spongepowered.api.network.channel.raw.RawDataChannel;
-import org.spongepowered.common.network.channel.SpongeChannelPayload;
 import org.spongepowered.plugin.PluginContainer;
 
 import io.netty.buffer.ByteBuf;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type;
@@ -178,15 +175,7 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 	}
 
 	private void registerRawCodec(CustomPacketPayload.Type<RawPacketImpl> type, ResourceKey channel) {
-		if(!codecs.containsKey(type)) codecs.put(type, StreamCodec.of(
-				(buffer, packet) -> {
-					if((Object) packet instanceof SpongeChannelPayload spongePayload) {
-						spongePayload.write((FriendlyByteBuf) buffer);
-					} else buffer.writeCharSequence(packet.getDataAsString(), StandardCharsets.UTF_8);
-				},
-				buffer -> new RawPacketImpl(channel, (ChannelBuf) buffer, buffer.readableBytes() > 0 ? buffer.readCharSequence(buffer.readableBytes(), StandardCharsets.UTF_8).toString() : "")
-			)
-		);
+		if(!codecs.containsKey(type)) codecs.put(type, RawPacketImpl.codec(channel));
 	}
 
 	public Map<ResourceKey, RawDataChannel> getSpongeChannels() {
