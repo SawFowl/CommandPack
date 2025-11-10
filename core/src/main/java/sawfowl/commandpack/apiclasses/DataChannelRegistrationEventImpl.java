@@ -36,12 +36,12 @@ public class DataChannelRegistrationEventImpl implements DataChannelRegistration
 	}
 
 	@Override
-	public void registerSerializer(ResourceKey channel, Function<String, SerializedPacket<?>> function) {
+	public <T> void registerSerializer(ResourceKey channel, Function<String, SerializedPacket<T>> function) {
 		getService().registerSerializer(channel, function);
 	}
 
 	@Override
-	public void registerBufferSerializer(ResourceKey channel, Function<ChannelBuf, SerializedPacket<?>> function) {
+	public <T> void registerBufferSerializer(ResourceKey channel, Function<ChannelBuf, SerializedPacket<T>> function) {
 		getService().registerBufferSerializer(channel, function);
 	}
 

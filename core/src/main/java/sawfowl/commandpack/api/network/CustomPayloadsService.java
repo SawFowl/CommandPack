@@ -14,9 +14,9 @@ public interface CustomPayloadsService {
 
 	void registerChannel(ResourceKey channel);
 
-	void registerSerializer(ResourceKey channel, Function<String, SerializedPacket<?>> function);
+	<T> void registerSerializer(ResourceKey channel, Function<String, SerializedPacket<T>> function);
 
-	void registerBufferSerializer(ResourceKey channel, Function<ChannelBuf, SerializedPacket<?>> function);
+	<T> void registerBufferSerializer(ResourceKey channel, Function<ChannelBuf, SerializedPacket<T>> function);
 
 	void registerRawListener(PluginContainer container, ResourceKey channel, RawPacketListener listener);
 
@@ -31,5 +31,22 @@ public interface CustomPayloadsService {
 	void unregisterAllListeners(PluginContainer container);
 
 	void unregisterListeners(PluginContainer container);
+
+	default void registerChannel(ResourceKey channel, PluginContainer container, RawPacketListener listener) {
+		registerChannel(channel);
+		registerRawListener(container, channel, listener);
+	}
+
+	default <T> void registerChannel(ResourceKey channel, PluginContainer container, Function<String, SerializedPacket<T>> serializer, PacketListener<T> listener) {
+		registerChannel(channel);
+		registerSerializer(channel, serializer);
+		registerListener(container, channel, listener);
+	}
+
+	default <T> void registerChannel(PluginContainer container, ResourceKey channel, Function<ChannelBuf, SerializedPacket<T>> serializer, PacketListener<T> listener) {
+		registerChannel(channel);
+		registerBufferSerializer(channel, serializer);
+		registerListener(container, channel, listener);
+	}
 
 }

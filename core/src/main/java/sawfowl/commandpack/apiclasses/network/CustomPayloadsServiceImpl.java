@@ -23,6 +23,7 @@ import org.spongepowered.common.network.channel.SpongeChannelPayload;
 import org.spongepowered.plugin.PluginContainer;
 
 import io.netty.buffer.ByteBuf;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -84,14 +85,16 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 		return codecs.entrySet().stream().filter(entry -> entry.getKey().id().equals((ResourceLocation) (Object) channel)).findFirst().map(entry -> (StreamCodec<ByteBuf, RawPacket>) (Object) entry.getValue());
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void registerSerializer(ResourceKey channel, Function<String, SerializedPacket<?>> function) {
-		if(!serializers.containsKey(channel)) serializers.put(channel, function);
+	public <T> void registerSerializer(ResourceKey channel, Function<String, SerializedPacket<T>> function) {
+		if(!serializers.containsKey(channel)) serializers.put(channel, (Function) function);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void registerBufferSerializer(ResourceKey channel, Function<ChannelBuf, SerializedPacket<?>> function) {
-		if(!bufferSerializers.containsKey(channel)) bufferSerializers.put(channel, function);
+	public <T> void registerBufferSerializer(ResourceKey channel, Function<ChannelBuf, SerializedPacket<T>> function) {
+		if(!bufferSerializers.containsKey(channel)) bufferSerializers.put(channel, (Function) function);
 	}
 
 	@Override
