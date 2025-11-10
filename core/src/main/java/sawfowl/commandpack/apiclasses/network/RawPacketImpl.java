@@ -27,7 +27,7 @@ public class RawPacketImpl implements CustomPacketPayload, RawPacket {
 	public static StreamCodec<ByteBuf, RawPacketImpl> codec(ResourceKey channel) {
 		if(!CODECS.containsKey(channel)) CODECS.put(channel, StreamCodec.of(
 				(buffer, packet) -> {
-					if((Object) packet instanceof SpongeChannelPayload spongePayload) {
+					if((CustomPacketPayload) packet instanceof SpongeChannelPayload spongePayload) {
 						spongePayload.write((FriendlyByteBuf) buffer);
 					} else buffer.writeCharSequence(packet.getDataAsString(), StandardCharsets.UTF_8);
 				},
@@ -37,14 +37,16 @@ public class RawPacketImpl implements CustomPacketPayload, RawPacket {
 		return CODECS.get(channel);
 	}
 
+	public static Type<RawPacketImpl> type(ResourceKey channel) {
+		if(!TYPES.containsKey(channel)) TYPES.put(channel, new Type<>((ResourceLocation) (Object) channel));
+		return TYPES.get(channel);
+	}
+
 	private Type<RawPacketImpl> type;
 	private String data;
 	private ChannelBuf buffer;
 	public RawPacketImpl(ResourceKey channel, ChannelBuf buffer, String data) {
-		if(!TYPES.containsKey(channel)) {
-			type = new Type<>((ResourceLocation) (Object) channel);
-			TYPES.put(channel, type);
-		} else type = TYPES.get(channel);
+		type = type(channel);
 		this.buffer = buffer;
 		this.data = data;
 	}
