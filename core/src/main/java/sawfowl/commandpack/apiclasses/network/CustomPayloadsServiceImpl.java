@@ -39,8 +39,7 @@ import sawfowl.commandpack.apiclasses.DataChannelRegistrationEventImpl;
 
 public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 
-	private Map<CustomPacketPayload.Type<SpongeChannelPayload>, StreamCodec<FriendlyByteBuf, SpongeChannelPayload>> codecs = new HashMap<>();
-	private Map<ResourceLocation, StreamCodec<ByteBuf, RawPacketImpl>> cpCodecs = new HashMap<>();
+	private Map<CustomPacketPayload.Type<RawPacketImpl>, StreamCodec<ByteBuf, RawPacketImpl>> codecs = new HashMap<>();
 	private Map<ResourceKey, Function<String, SerializedPacket<?>>> serializers = new HashMap<>();
 	private Map<ResourceKey, Function<ChannelBuf, SerializedPacket<?>>> bufferSerializers = new HashMap<>();
 	private Map<ResourceKey, Map<PluginContainer, RawPacketListener>> rawListeners = new HashMap<>();
@@ -49,7 +48,6 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 	private Set<ResourceKey> needRecode = new HashSet<ResourceKey>();
 	private boolean finished = false;
 	private final CommandPackInstance plugin;
-	private final int maxPacketSize = 32767;
 	public CustomPayloadsServiceImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
 		if(!plugin.isNeoForgeServer()) Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
@@ -81,13 +79,9 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 		} else registerRawCodec(new Type<>((ResourceLocation) (Object) channel), channel);
 	}
 
-	public Optional<StreamCodec<FriendlyByteBuf, SpongeChannelPayload>> findCodec(ResourceKey channel) {
-		return codecs.entrySet().stream().filter(entry -> entry.getKey().id().equals((ResourceLocation) (Object) channel)).findFirst().map(entry -> entry.getValue());
-	}
-
 	@SuppressWarnings("unchecked")
-	public Optional<StreamCodec<ByteBuf, RawPacket>> findCpCodec(ResourceKey channel) {
-		return cpCodecs.entrySet().stream().filter(entry -> entry.getKey().equals((ResourceLocation) (Object) channel)).findFirst().map(entry -> (StreamCodec<ByteBuf, RawPacket>) (Object) entry.getValue());
+	public Optional<StreamCodec<ByteBuf, RawPacket>> findCodec(ResourceKey channel) {
+		return codecs.entrySet().stream().filter(entry -> entry.getKey().id().equals((ResourceLocation) (Object) channel)).findFirst().map(entry -> (StreamCodec<ByteBuf, RawPacket>) (Object) entry.getValue());
 	}
 
 	@Override
@@ -152,7 +146,7 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 		return needRecode.contains(channel);
 	}
 
-	Map<CustomPacketPayload.Type<SpongeChannelPayload>, StreamCodec<FriendlyByteBuf, SpongeChannelPayload>> getCodecs() {
+	Map<CustomPacketPayload.Type<RawPacketImpl>, StreamCodec<ByteBuf, RawPacketImpl>> getCodecs() {
 		return codecs;
 	}
 
@@ -180,10 +174,13 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 		return listeners.containsKey(channel) ? listeners.get(channel).values() : Collections.emptyList();
 	}
 
-	private void registerRawCodec(CustomPacketPayload.Type<SpongeChannelPayload> type, ResourceKey channel) {
-		if(!codecs.containsKey(type)) codecs.put(type, SpongeChannelPayload.streamCodec(type, maxPacketSize));
-		if(!cpCodecs.containsKey(type.id())) cpCodecs.put(type.id(), StreamCodec.of(
-				(buffer, packet) -> buffer.writeCharSequence(packet.getDataAsString(), StandardCharsets.UTF_8),
+	private void registerRawCodec(CustomPacketPayload.Type<RawPacketImpl> type, ResourceKey channel) {
+		if(!codecs.containsKey(type)) codecs.put(type, StreamCodec.of(
+				(buffer, packet) -> {
+					if((Object) packet instanceof SpongeChannelPayload spongePayload) {
+						spongePayload.write((FriendlyByteBuf) buffer);
+					} else buffer.writeCharSequence(packet.getDataAsString(), StandardCharsets.UTF_8);
+				},
 				buffer -> new RawPacketImpl(channel, (ChannelBuf) buffer, buffer.readableBytes() > 0 ? buffer.readCharSequence(buffer.readableBytes(), StandardCharsets.UTF_8).toString() : "")
 			)
 		);

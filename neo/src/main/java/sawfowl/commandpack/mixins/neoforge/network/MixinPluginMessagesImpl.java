@@ -64,7 +64,7 @@ public abstract class MixinPluginMessagesImpl {
 		}
 		try {
 			FriendlyByteBuf copy = new FriendlyByteBuf(Unpooled.buffer());
-			Optional<StreamCodec<ByteBuf, RawPacket>> codec = plugin.getPayloadsService().findCpCodec((ResourceKey) (Object) packet.payload().type().id());
+			Optional<StreamCodec<ByteBuf, RawPacket>> codec = plugin.getPayloadsService().findCodec((ResourceKey) (Object) packet.payload().type().id());
 			if(codec.isPresent() && packet.payload() instanceof RawPacketImpl rawPacketImpl) {
 				RegistryFriendlyByteBuf friendlyByteBuf = new RegistryFriendlyByteBuf(copy, null, ConnectionType.OTHER);
 				codec.get().encode(friendlyByteBuf, rawPacketImpl);

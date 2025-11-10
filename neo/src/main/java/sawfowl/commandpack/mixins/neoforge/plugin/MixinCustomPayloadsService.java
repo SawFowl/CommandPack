@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.common.network.channel.SpongeChannelPayload;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -55,7 +54,6 @@ public abstract class MixinCustomPayloadsService {
 	@Shadow private boolean finished;
 	@Shadow @Final private CommandPackInstance plugin;
 	@Shadow private Set<ResourceKey> needRecode;
-	@Shadow private Map<ResourceLocation, StreamCodec<ByteBuf, RawPacketImpl>> cpCodecs;
 
 	@Overwrite
 	private void init() {
@@ -114,12 +112,6 @@ public abstract class MixinCustomPayloadsService {
 		}, existingHandler.protocols(), existingHandler.flow(), existingHandler.version(), existingHandler.optional());
 	}
 
-	private void handle(MixinServerPlayer player, SpongeChannelPayload spongePacket) {
-		FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
-		spongePacket.consumer().accept(buffer);
-		handle(player, new RawPacketImpl((ResourceKey) (Object) spongePacket.id(), (ChannelBuf) buffer, buffer.readableBytes() > 0 ? buffer.readCharSequence(buffer.readableBytes(), StandardCharsets.UTF_8).toString() : ""));
-	}
-
 	private void handle(MixinServerPlayer player, RawPacket rawPacket) {
 		getRawListeners(rawPacket.channel()).forEach(listener -> listener.read(player, rawPacket));
 		handleSerialized(player, rawPacket, containsSerializer(rawPacket.channel()), containsBufferSerializer(rawPacket.channel()));
@@ -142,7 +134,7 @@ public abstract class MixinCustomPayloadsService {
 
 	@Shadow abstract Collection<RawPacketListener> getRawListeners(ResourceKey channel);
 
-	@Shadow abstract Map<CustomPacketPayload.Type<SpongeChannelPayload>, StreamCodec<ByteBuf, SpongeChannelPayload>> getCodecs();
+	@Shadow abstract Map<CustomPacketPayload.Type<RawPacketImpl>, StreamCodec<ByteBuf, RawPacketImpl>> getCodecs();
 
 	@Shadow abstract Collection<PacketListener<?>> getListeners(ResourceKey channel);
 
