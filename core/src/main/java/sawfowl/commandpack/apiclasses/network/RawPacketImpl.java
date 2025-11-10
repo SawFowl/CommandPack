@@ -1,6 +1,8 @@
 package sawfowl.commandpack.apiclasses.network;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.ResourceKey;
@@ -19,22 +21,30 @@ import sawfowl.commandpack.api.network.packets.RawPacket;
 
 public class RawPacketImpl implements CustomPacketPayload, RawPacket {
 
+	private static final Map<ResourceKey, Type<RawPacketImpl>> TYPES = new HashMap<>();
+	private static final Map<ResourceKey, StreamCodec<ByteBuf, RawPacketImpl>> CODECS = new HashMap<>();
+
 	public static StreamCodec<ByteBuf, RawPacketImpl> codec(ResourceKey channel) {
-		return StreamCodec.of(
+		if(!CODECS.containsKey(channel)) CODECS.put(channel, StreamCodec.of(
 				(buffer, packet) -> {
 					if((Object) packet instanceof SpongeChannelPayload spongePayload) {
 						spongePayload.write((FriendlyByteBuf) buffer);
 					} else buffer.writeCharSequence(packet.getDataAsString(), StandardCharsets.UTF_8);
 				},
 				buffer -> new RawPacketImpl(channel, (ChannelBuf) buffer, buffer.readableBytes() > 0 ? buffer.readCharSequence(buffer.readableBytes(), StandardCharsets.UTF_8).toString() : "")
-			);
+			)
+		);
+		return CODECS.get(channel);
 	}
 
 	private Type<RawPacketImpl> type;
 	private String data;
 	private ChannelBuf buffer;
 	public RawPacketImpl(ResourceKey channel, ChannelBuf buffer, String data) {
-		type = new Type<>((ResourceLocation) (Object) channel);
+		if(!TYPES.containsKey(channel)) {
+			type = new Type<>((ResourceLocation) (Object) channel);
+			TYPES.put(channel, type);
+		} else type = TYPES.get(channel);
 		this.buffer = buffer;
 		this.data = data;
 	}
