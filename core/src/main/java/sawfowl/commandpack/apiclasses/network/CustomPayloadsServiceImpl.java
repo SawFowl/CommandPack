@@ -24,7 +24,6 @@ import io.netty.buffer.ByteBuf;
 
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type;
 import net.minecraft.resources.ResourceLocation;
 
 import sawfowl.commandpack.CommandPackInstance;
@@ -74,7 +73,7 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 	public void registerChannel(ResourceKey channel) {
 		if(finished) {
 			plugin.getLocales().getSystemLocale().getDebug().getFinishedRegisterNetworkData(channel);
-		} else registerRawCodec(new Type<>((ResourceLocation) (Object) channel), channel);
+		} else registerRawCodec(RawPacketImpl.type(channel), channel);
 	}
 
 	@SuppressWarnings("unchecked")
