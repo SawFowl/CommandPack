@@ -1,10 +1,16 @@
 package sawfowl.commandpack.apiclasses.network;
 
+import java.nio.charset.StandardCharsets;
+
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.network.channel.ChannelBuf;
+import org.spongepowered.common.network.channel.SpongeChannelPayload;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
@@ -13,8 +19,15 @@ import sawfowl.commandpack.api.network.packets.RawPacket;
 
 public class RawPacketImpl implements CustomPacketPayload, RawPacket {
 
-	public RawPacket.Builder builder() {
-		return new Builder();
+	public static StreamCodec<ByteBuf, RawPacketImpl> codec(ResourceKey channel) {
+		return StreamCodec.of(
+				(buffer, packet) -> {
+					if((Object) packet instanceof SpongeChannelPayload spongePayload) {
+						spongePayload.write((FriendlyByteBuf) buffer);
+					} else buffer.writeCharSequence(packet.getDataAsString(), StandardCharsets.UTF_8);
+				},
+				buffer -> new RawPacketImpl(channel, (ChannelBuf) buffer, buffer.readableBytes() > 0 ? buffer.readCharSequence(buffer.readableBytes(), StandardCharsets.UTF_8).toString() : "")
+			);
 	}
 
 	private Type<RawPacketImpl> type;
@@ -27,6 +40,10 @@ public class RawPacketImpl implements CustomPacketPayload, RawPacket {
 	}
 
 	public RawPacketImpl(){}
+
+	public RawPacket.Builder builder() {
+		return new Builder();
+	}
 
 	public String getDataAsString() {
 		return data;
