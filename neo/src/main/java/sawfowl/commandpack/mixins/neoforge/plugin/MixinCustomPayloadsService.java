@@ -85,7 +85,7 @@ public abstract class MixinCustomPayloadsService {
 						}
 					}
 				);
-			} else registrations.get(ConnectionProtocol.PLAY).put(type.id(), createNewHandler(existingHandler));// ⤵
+			} else registrations.get(ConnectionProtocol.PLAY).put(type.id(), createNewHandler(existingHandler));
 			existingHandler = null;
 		});
 	}
