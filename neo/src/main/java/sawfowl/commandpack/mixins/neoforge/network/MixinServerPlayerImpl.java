@@ -1,10 +1,13 @@
 package sawfowl.commandpack.mixins.neoforge.network;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.network.channel.raw.RawDataChannel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.math.vector.Vector3i;
@@ -47,6 +50,23 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
 	@Override
 	public void sendPacket(@SuppressWarnings("deprecation") CustomPacket packet) {
+		if(packet instanceof CustomPacketImpl custom) {
+			ResourceKey channel = ResourceKey.resolve(custom.getLocation());
+			if(getSpongeChannels().containsKey(channel)) {
+				getSpongeChannels().get(channel).play().sendTo(this, buffer -> buffer.writeString(custom.getData()));
+			} else sendPacket(new RawPacketImpl(ResourceKey.resolve(custom.getLocation()), null, custom.getData()));;
+		}
+	}
+
+	@Override
+	public void sendPacket(RawPacket packet) {
+		if(getSpongeChannels().containsKey(packet.channel())) {
+			getSpongeChannels().get(packet.channel()).play().sendTo(this, buffer -> buffer.writeBytes(packet.getDataAsString().getBytes(StandardCharsets.UTF_8)));
+		} else if(packet instanceof RawPacketImpl impl) sendCustomPacketPayload(plugin.getPayloadsService().isNeedRecode(impl.channel()) ? recode(impl, null) : impl);
+	}
+/*
+	@Override
+	public void sendPacket(@SuppressWarnings("deprecation") CustomPacket packet) {
 		if(packet instanceof CustomPacketImpl custom) { 
 			sendPacket(new RawPacketImpl(ResourceKey.resolve(custom.getLocation()), null, custom.getData()));
 		}
@@ -56,7 +76,7 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 	public void sendPacket(RawPacket packet) {
 		if(packet instanceof RawPacketImpl impl) sendCustomPacketPayload(plugin.getPayloadsService().isNeedRecode(impl.channel()) ? recode(impl, null) : impl);
 	}
-
+*/
 	@Override
 	public void sendMessage(Text message) {
 		sendMessage(message.applyPlaceholders(Component.empty(), (MixinServerPlayer) this).get());
@@ -113,6 +133,10 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 		codec = null;
 		buffer = null;
 		return payload;
+	}
+
+	private Map<ResourceKey, RawDataChannel> getSpongeChannels() {
+		return CommandPackInstance.getInstance().getPayloadsService().getSpongeChannels();
 	}
 
 }

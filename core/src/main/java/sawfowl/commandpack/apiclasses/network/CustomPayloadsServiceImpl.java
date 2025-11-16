@@ -47,7 +47,7 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 	private final CommandPackInstance plugin;
 	public CustomPayloadsServiceImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
-		if(!plugin.isNeoForgeServer()) Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
+		/*if(!plugin.isNeoForgeServer()) */Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
 		init();
 	}
 
