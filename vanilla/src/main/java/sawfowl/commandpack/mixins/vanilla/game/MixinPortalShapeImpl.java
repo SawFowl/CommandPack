@@ -14,6 +14,8 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.portal.PortalShape;
 import sawfowl.commandpack.mixins.PortalShapeAccessor;
 
+import sawfowl.commandpack.mixins.PortalShapeAccessor;
+
 @Mixin(PortalShape.class)
 public abstract class MixinPortalShapeImpl implements PortalShapeAccessor {
 
@@ -52,6 +54,17 @@ public abstract class MixinPortalShapeImpl implements PortalShapeAccessor {
 	@Override
 	public int getWidth() {
 		return width;
+	}
+
+	@Override
+	public void createPortalBlocks() {
+		createPortalBlocks((LevelAccessor) world);
+	}
+
+	@Override
+	public sawfowl.commandpack.api.mixin.game.PortalShape setWorld(ServerWorld world) {
+		this.world = world;
+		return this;
 	}
 
 	@Override

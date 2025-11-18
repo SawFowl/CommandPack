@@ -38,7 +38,7 @@ public class RTPService implements RandomTeleportService {
 			Optional<Integer> optZ = getRandomZ(currentLocation, world, options, attempts);
 			if(!optZ.isPresent()) break;
 			Vector3i newPos = Vector3i.from(optX.get(), getRandomInt(options.getMinY(), options.getMaxY()), optZ.get());
-			if(options.getProhibitedBiomes().isEmpty() || !options.getProhibitedBiomes().contains(Biomes.registry(world).valueKey(world.biome(newPos)).asString())) {
+			if(options.getProhibitedBiomes().isEmpty() || !options.getProhibitedBiomes().contains(Biomes.registry().valueKey(world.biome(newPos)).asString())) {
 				Optional<ServerLocation> optLocation = findSafe(ServerLocation.of(world, newPos), options);
 				if(optLocation.isPresent()) {
 					ServerLocation location = options.isOnlySurface() ? ServerLocation.of(world, world.highestPositionAt(optLocation.get().blockPosition())) : optLocation.get();

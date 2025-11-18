@@ -56,6 +56,17 @@ public abstract class MixinPortalShapeImpl implements PortalShapeAccessor {
 	}
 
 	@Override
+	public void createPortalBlocks() {
+		createPortalBlocks((LevelAccessor) world);
+	}
+
+	@Override
+	public sawfowl.commandpack.api.mixin.game.PortalShape setWorld(ServerWorld world) {
+		this.world = world;
+		return this;
+	}
+
+	@Override
 	public Vector3i getBottomLeft() {
 		return bl == null ? bl = Vector3i.from(bottomLeft.getX(), bottomLeft.getY(), bottomLeft.getZ()) : bl;
 	}

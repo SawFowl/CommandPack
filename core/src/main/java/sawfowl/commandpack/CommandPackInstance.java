@@ -56,7 +56,7 @@ import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
-
+import sawfowl.localeapi.ImplementAPI;
 import sawfowl.localeapi.api.Logger;
 import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.api.event.LocaleServiseEvent;
@@ -350,9 +350,21 @@ public class CommandPackInstance {
 
 	@Listener
 	private void onRegisterRegistry(final RegisterRegistryValueEvent.GameScoped event) {
+		// For some reason unknown to me, this event is called before `ConstructPluginEvent`.
+		if(configManager == null) {
+			locales = new Locales(ImplementAPI.getLocaleService());
+			rtpService = new RTPService(instance);
+			kitService = new KitServiceImpl(instance);
+			playersData = new PlayersDataImpl(instance);
+			configManager = new ConfigManager(instance);
+			configManager.loadPlayersData();
+			isForge = checkForge();
+			isNeo = checkNeo();
+			economy = new Economy(instance);
+		}
 		if(getMainConfig().getEconomy().isEnable()) economy.getEconomyServiceImpl().getCurrenciesMap().forEach((ch, currency) -> {
 			getMainConfig().getEconomy().getCurrency(ch).ifPresent(config -> {
-				event.registry(RegistryTypes.CURRENCY).register(ResourceKey.resolve(config.getKey()), currency);
+				event.registry(RegistryTypes.CURRENCY, (h, s) -> s.register(ResourceKey.resolve(config.getKey()), currency));
 			});
 		});
 	}
