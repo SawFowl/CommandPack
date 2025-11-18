@@ -13,6 +13,7 @@ import io.netty.buffer.Unpooled;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
@@ -25,21 +26,26 @@ import net.minecraftforge.network.packets.ModVersions;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
+import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.apiclasses.CPConnection;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
-
 import sawfowl.localeapi.api.Text;
 
 @Mixin(value = ServerPlayer.class, remap = false)
 public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
-	@Shadow
-	public ServerGamePacketListenerImpl connection;
+	@Shadow public ServerGamePacketListenerImpl connection;
 	private List<PlayerModInfo> mods = new ArrayList<PlayerModInfo>();
 
 	@Override
-	public void sendPacket(CustomPacket packet) {
+	public void sendPacket(@SuppressWarnings("deprecation") CustomPacket packet) {
 		if(packet instanceof CustomPacketImpl custom) connection.send(createPacket(custom));
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void sendPacket(RawPacket packet) {
+		sendPacket(CustomPacket.of(packet.channel(), packet.getDataAsString()));
 	}
 
 	@Override

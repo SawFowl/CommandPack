@@ -2,22 +2,23 @@ plugins {
 	id("org.spongepowered.gradle.vanilla") version "0.2.1-SNAPSHOT"
 }
 
-gradle.projectsEvaluated {
+/*gradle.projectsEvaluated {
 	compileJava.dependsOn(rootProject.tasks.getByName("extractSpongeVanillaMod"))
-}
+}*/
 
 minecraft {
 	version("${minecraft}")
 }
 
 dependencies {
-	implementation 'org.spongepowered:mixin:0.8.6'
+	implementation "org.spongepowered:mixin:${mixin}"
 	implementation "org.spongepowered:spongeapi:${api}"
-	//implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
-	implementation fileTree(dir: 'libs', include: '*.jar')
-	implementation fileTree(dir: rootProject.buildDir.toPath().resolve("unpacked/jars"), include: '*.jar')
+	implementation "org.spongepowered:sponge:${sponge}"
+	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
+	//implementation fileTree(dir: 'libs', include: '*.jar')
+	//implementation fileTree(dir: rootProject.buildDir.toPath().resolve("unpacked/jars"), include: '*.jar')
 }
-/*
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
 	archiveClassifier = 'javadoc'
 	from javadoc.destinationDir
@@ -25,7 +26,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 task sourcesJar(type: Jar, dependsOn: classes) {
 	archiveClassifier = 'sources'
-	from subprojects.collect { it.sourceSets.main.allSource }
+	from sourceSets.main.allSource
 	exclude('sawfowl/commandpack/apiclasses/**')
 	exclude('sawfowl/commandpack/commands/**')
 	exclude('sawfowl/commandpack/configure/**')
@@ -34,6 +35,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	exclude('sawfowl/commandpack/CommandPack.java')
 	exclude('sawfowl/commandpack/Permissions.java')
 	exclude('sawfowl/commandpack/mixins/**')
+	exclude('sawfowl/commandpack/CommandPackInstance.java')
 	exclude('META-INF/sponge_plugins.json')
 	exclude('*.json')
 }
@@ -68,7 +70,7 @@ artifacts {
 	archives sourcesJar
 	archives javadocJar
 }
-*/
+
 jar {
 	archiveBaseName = 'part'
 }

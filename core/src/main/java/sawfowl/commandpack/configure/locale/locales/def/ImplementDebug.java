@@ -1,8 +1,10 @@
 package sawfowl.commandpack.configure.locale.locales.def;
 
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
+import sawfowl.commandpack.configure.Placeholders;
 import sawfowl.commandpack.configure.locale.locales.abstractlocale.Debug;
 import sawfowl.commandpack.configure.locale.locales.def.debug.ImplementEconomy;
 import sawfowl.commandpack.configure.locale.locales.def.debug.ImplementCommands;
@@ -19,6 +21,8 @@ public class ImplementDebug implements Debug {
 	private ImplementCommands commands = new ImplementCommands();
 	@Setting("DebugPlayerData")
 	private ImplementDebugPlayerData debugPlayerData = new ImplementDebugPlayerData();
+	@Setting("FinishedRegisterNetworkData")
+	private String finishedRegisterNetworkData = "Registration of the '" + Placeholders.VALUE + "' data channel and codec is performed too late. Registration should be performed immediately after gaining access to the CommandPack API.";
 
 	@Override
 	public Economy getEconomy() {
@@ -33,6 +37,11 @@ public class ImplementDebug implements Debug {
 	@Override
 	public DebugPlayerData getDebugPlayerData() {
 		return debugPlayerData;
+	}
+
+	@Override
+	public String getFinishedRegisterNetworkData(ResourceKey channel) {
+		return finishedRegisterNetworkData.replace(Placeholders.VALUE, channel.asString());
 	}
 
 }

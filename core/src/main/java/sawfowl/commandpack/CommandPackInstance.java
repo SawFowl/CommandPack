@@ -88,6 +88,9 @@ import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.api.mixin.game.MixinServerWorld;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
+import sawfowl.commandpack.api.network.CustomPayloadsService;
+import sawfowl.commandpack.api.network.packets.RawPacket;
+import sawfowl.commandpack.api.network.packets.SerializedPacket;
 import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.api.services.PunishmentService;
 import sawfowl.commandpack.api.tps.AverageTPS;
@@ -98,6 +101,9 @@ import sawfowl.commandpack.apiclasses.KitServiceImpl;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.apiclasses.RTPService;
 import sawfowl.commandpack.apiclasses.TempPlayerDataImpl;
+import sawfowl.commandpack.apiclasses.network.CustomPayloadsServiceImpl;
+import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
+import sawfowl.commandpack.apiclasses.network.SerializedPacketBuilder;
 import sawfowl.commandpack.apiclasses.punishment.PunishmentServiceImpl;
 import sawfowl.commandpack.commands.settings.ParameterSettingsImpl;
 import sawfowl.commandpack.commands.settings.RawArgumentImpl;
@@ -164,6 +170,7 @@ public class CommandPackInstance {
 	private Set<ParameterizedCommand> registeredParameterizedCommands = new HashSet<ParameterizedCommand>();
 	private boolean isStarted = false;
 	private SpongeCommandManager manager;
+	private CustomPayloadsServiceImpl payloadsService;
 
 	public static CommandPackInstance getInstance() {
 		return instance;
@@ -211,6 +218,10 @@ public class CommandPackInstance {
 
 	public KitService getKitService() {
 		return kitService;
+	}
+
+	public CustomPayloadsServiceImpl getPayloadsService() {
+		return payloadsService;
 	}
 
 	public boolean isForgeServer() {
@@ -263,6 +274,9 @@ public class CommandPackInstance {
 		this.pluginContainer = pluginContainer;
 		configDir = configDirectory;
 		logger = Logger.createApacheLogger("CommandPack");
+		isForge = checkForge();
+		isNeo = checkNeo();
+		createAPI();
 	}
 
 	@Listener
@@ -272,12 +286,21 @@ public class CommandPackInstance {
 		kitService = new KitServiceImpl(instance);
 		playersData = new PlayersDataImpl(instance);
 		configManager = new ConfigManager(instance);
-		configManager.loadPlayersData();
-		isForge = checkForge();
-		isNeo = checkNeo();
 		economy = new Economy(instance);
-		Sponge.eventManager().registerListeners(pluginContainer, economy, MethodHandles.lookup());
-		createAPI();
+		Sponge.eventManager().registerListeners(pluginContainer, economy);
+		Sponge.eventManager().post(new CommandPack.PostAPI() {
+
+			@Override
+			public Cause cause() {
+				return Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, pluginContainer).build(), pluginContainer);
+			}
+
+			@Override
+			public CommandPack getAPI() {
+				return api;
+			}
+
+		});
 		if(getMainConfig().getMySqlConfig().isEnable()) {
 			mariaDB = new MariaDB(instance);
 			if(mariaDB.openConnection() == null) mariaDB = null;
@@ -295,28 +318,14 @@ public class CommandPackInstance {
 		generators.put("overworld", ChunkGenerator.overworld());
 		generators.put("end", ChunkGenerator.theEnd());
 		generators.put("nether", ChunkGenerator.theNether());
-		Sponge.eventManager().post(new CommandPack.PostAPI() {
-
-			@Override
-			public Cause cause() {
-				return Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, pluginContainer).build(), pluginContainer);
-			}
-
-			@Override
-			public CommandPack getAPI() {
-				return api;
-			}
-
-		});
 		createTasks();
 		serverStartedTime = System.currentTimeMillis();
-		registeredRawCommands.forEach(this::registerRaw);
-		registeredParameterizedCommands.forEach(this::registerParameterized);
-		manager = null;
-		registeredRawCommands.clear();
-		registeredParameterizedCommands.clear();
-		registeredRawCommands = null;
-		registeredParameterizedCommands = null;
+		Sponge.server().scheduler().submit(Task.builder().plugin(pluginContainer).delay(2, TimeUnit.SECONDS).execute(() -> {
+			registeredRawCommands.forEach(this::registerRaw);
+			registeredParameterizedCommands.forEach(this::registerParameterized);
+			registeredRawCommands.clear();
+			registeredParameterizedCommands.clear();
+		}).build());
 		Sponge.server().userManager().streamAll().forEach(profile -> {
 			if(!profile.name().isPresent()) {
 				Sponge.server().userManager().load(profile).thenAccept(optUser -> {
@@ -364,7 +373,7 @@ public class CommandPackInstance {
 		getCommandsConfig().registerRaw(event, instance);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@Listener
 	public void registerBuilders(RegisterBuilderEvent event) {
 		event.register(RandomTeleportService.RandomTeleportOptions.Builder.class, () -> new RandomTeleportWorldConfig().builder());
@@ -387,6 +396,8 @@ public class CommandPackInstance {
 		event.register(Warns.Builder.class, () -> new WarnsData().builder());
 		event.register(CustomPacket.Builder.class, () -> new CustomPacketImpl().builder());
 		event.register(RawArgumentsMap.Builder.class, () -> new RawArgumentsMapImpl().builder());
+		event.register(RawPacket.Builder.class, () -> new RawPacketImpl().builder());
+		event.register(SerializedPacket.Builder.class, () -> new SerializedPacketBuilder());
 	}
 
 	@Listener
@@ -451,6 +462,7 @@ public class CommandPackInstance {
 		AverageTPS averageTPS = createAverageTPS();
 		TPS tps = createTPS(averageTPS);
 		api = createAPI(tps);
+		payloadsService = new CustomPayloadsServiceImpl(instance);
 	}
 
 	private AverageTPS createAverageTPS() {
@@ -544,17 +556,19 @@ public class CommandPackInstance {
 			}
 			@Override
 			public void registerCommand(RawCommand command) throws IllegalStateException {
-				if(manager == null && isStarted) throw new IllegalStateException("Registration of commands through CommandPack is no longer available. Perform registration as soon as you receive the API.");
 				if(command.getContainer() != null && command.isEnable() && !registeredRawCommands.stream().filter(raw -> raw.command().equals(command.command())).findFirst().isPresent()) registeredRawCommands.add(command);
 			}
 			@Override
 			public void registerCommand(ParameterizedCommand command) throws IllegalStateException {
-				if(manager == null && isStarted) throw new IllegalStateException("Registration of commands through CommandPack is no longer available. Perform registration as soon as you receive the API.");
 				if(command.getContainer() != null && command.isEnable() && !registeredParameterizedCommands.stream().filter(parameterized -> parameterized.command().equals(command.command())).findFirst().isPresent()) registeredParameterizedCommands.add(command);
 			}
 			@Override
 			public ContainersCollection getContainersCollection() {
 				return colletions;
+			}
+			@Override
+			public CustomPayloadsService getCustomPayloadsService() {
+				return payloadsService;
 			}
 		};
 	}

@@ -18,10 +18,10 @@ repositories {
 		name = "Sponge"
 		url = "https://repo.spongepowered.org/repository/maven-public"
 	}
-	//maven {
-	//	name = "AspectRepo"
-	//	url 'https://maven.aspect-realms.ru/repository/maven-public/'
-	//}
+	maven {
+		name = "AspectRepo"
+		url 'https://maven.aspect-realms.ru/repository/maven-public/'
+	}
 }
 
 dependencies {
@@ -29,14 +29,14 @@ dependencies {
 	spongeVanillaMod "org.spongepowered:spongevanilla:${spongevanilla}:universal@jar"
 }
 
-task extractSpongeVanillaMod(type: Copy) {
+/*task extractSpongeVanillaMod(type: Copy) {
 	from(zipTree(configurations.spongeVanillaMod.singleFile)) {
 		include "jars/spongevanilla-mod.jar"
 	}
 	into "$buildDir/unpacked"
 	rename { "spongevanilla-mod-extracted.jar" }
 }
-
+*/
 subprojects {
 	apply {
 		plugin 'java'
@@ -64,10 +64,10 @@ subprojects {
 			name = "MixinExtras"
 			url = 'https://github.com/LlamaLad7/MixinExtras'
 		}
-		//maven {
-		//	name = "AspectRepo"
-		//	url 'https://maven.aspect-realms.ru/repository/maven-public/'
-		//}
+		maven {
+			name = "AspectRepo"
+			url 'https://maven.aspect-realms.ru/repository/maven-public/'
+		}
 	}
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'

@@ -2,8 +2,10 @@ package sawfowl.commandpack.mixins.neoforge.network;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.event.EventContext;
@@ -15,19 +17,24 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-
+import net.neoforged.neoforge.network.connection.ConnectionType;
 import net.neoforged.neoforge.network.payload.MinecraftRegisterPayload;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.events.RecievePacketEvent;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
+import sawfowl.commandpack.api.network.packets.RawPacket;
+import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class MixinPluginMessagesImpl {
@@ -57,11 +64,17 @@ public abstract class MixinPluginMessagesImpl {
 		}
 		try {
 			FriendlyByteBuf copy = new FriendlyByteBuf(Unpooled.buffer());
-			ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
+			Optional<StreamCodec<ByteBuf, RawPacket>> codec = plugin.getPayloadsService().findCodec((ResourceKey) (Object) packet.payload().type().id());
+			if(codec.isPresent() && packet.payload() instanceof RawPacketImpl rawPacketImpl) {
+				RegistryFriendlyByteBuf friendlyByteBuf = new RegistryFriendlyByteBuf(copy, null, ConnectionType.OTHER);
+				codec.get().encode(friendlyByteBuf, rawPacketImpl);
+				copy = friendlyByteBuf;
+			} else ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
 			PacketEvent event = new PacketEvent(packetId, copy);
 			if(getPlayer().isOnline()) Sponge.eventManager().post(event);
 			event = null;
 			copy = null;
+			codec = null;
 		} catch (Exception e) {
 		}
 		packetId = null;

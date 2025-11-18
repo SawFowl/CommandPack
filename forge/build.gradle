@@ -1,7 +1,7 @@
 plugins {
 	id 'java'
 	id 'eclipse'
-	id 'net.minecraftforge.gradle' version '6.0.24'
+	id 'net.minecraftforge.gradle' version '6.0.36'
 	id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
 }
 
@@ -13,11 +13,11 @@ minecraft {
 dependencies {
 	minecraft "net.minecraftforge:forge:${forge}"
 	implementation "org.spongepowered:spongeapi:${api}"
-	implementation 'org.spongepowered:mixin:0.8.5'
-	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-	//implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
+	implementation "org.spongepowered:mixin:${mixin}"
+	annotationProcessor "org.spongepowered:mixin:${mixin}:processor"
+	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
 	implementation project(':core')
-	implementation fileTree(dir: 'libs', include: '*.jar')
+	//implementation fileTree(dir: 'libs', include: '*.jar')
 }
 
 mixin {

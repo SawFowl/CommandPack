@@ -54,7 +54,7 @@ public class MixinServerPlayerGameMode {
 					(org.spongepowered.api.entity.living.player.server.ServerPlayer) player,
 					(org.spongepowered.api.block.BlockState) $$0,
 					Vector3i.from($$1.getX(), $$1.getY(), $$1.getZ()),
-					player.getDestroySpeed($$0),
+					player.getDigSpeed($$0, $$1),
 					(float) lastSentState / 10.0f,
 					value
 				)
@@ -93,7 +93,7 @@ public class MixinServerPlayerGameMode {
 					(org.spongepowered.api.entity.living.player.server.ServerPlayer) player,
 					(org.spongepowered.api.block.BlockState) blockState,
 					Vector3i.from($$0.getX(), $$0.getY(), $$0.getZ()),
-					player.getDestroySpeed(blockState),
+					player.getDigSpeed(blockState, $$0),
 					(float) lastSentState / 10.0f,
 					value
 				)

@@ -16,6 +16,7 @@ import net.kyori.adventure.builder.AbstractBuilder;
  * 
  * @author SawFowl
  */
+@Deprecated
 public interface CustomPacket extends DataSerializable {
 
 	/**

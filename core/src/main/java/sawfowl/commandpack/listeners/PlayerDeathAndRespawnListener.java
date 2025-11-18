@@ -37,6 +37,8 @@ public class PlayerDeathAndRespawnListener {
 		if(event.keepInventory()) return;
 		double keepInventory = Permissions.getKeepInventoryLimit(player);
 		double keepExp = Permissions.getKeepInventoryLimit(player);
+		if(inventories.containsKey(player.uniqueId())) inventories.remove(player.uniqueId());
+		if(exps.containsKey(player.uniqueId())) exps.remove(player.uniqueId());
 		if(player.inventory().totalQuantity() > 0) {
 			if(keepInventory >= 100) {
 				Map<Integer, ItemStack> map = new HashMap<Integer, ItemStack>();

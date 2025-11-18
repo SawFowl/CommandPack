@@ -49,6 +49,7 @@ public interface ParameterizedCommand extends PluginCommand, CommandExecutor {
 	@Override
 	default CommandResult execute(CommandContext context) throws CommandException {
 		boolean isPlayer = context.cause().first(ServerPlayer.class).isPresent();
+		if(!isPlayer && onlyPlayer()) exception(CommandPackInstance.getInstance().getLocales().getLocale(getLocale(context.cause())).getCommandExceptions().getOnlyPlayer());
 		Locale locale = getLocale(context.cause());
 		if(!isPlayer && onlyPlayer()) exception(CommandPackInstance.getInstance().getLocales().getLocale(locale).getCommandExceptions().getOnlyPlayer());
 		if(getSettingsMap() != null && !getSettingsMap().isEmpty()) for(ParameterSettings settings : getSettingsMap().values()) if(!settings.containsIn(context) && (!settings.isOptional() || (!isPlayer && !settings.isOptionalForConsole()))) exception(settings.getComponentSupplier().get(locale));
