@@ -1,5 +1,6 @@
 package sawfowl.commandpack.commands.parameterized;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +41,7 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 	private Map<UUID, Integer> levels = new HashMap<>();
 	public EnchantmentTable(CommandPackInstance plugin) {
 		super(plugin);
-		Sponge.eventManager().registerListeners(getContainer(), this);
+		Sponge.eventManager().registerListeners(getContainer(), this, MethodHandles.lookup());
 	}
 
 	@Override

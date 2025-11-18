@@ -10,11 +10,11 @@
         "network.MixinConnectionImpl",
         "plugin.MixinContainersImpl",
         "plugin.MixinModPlatformEventListenerImpl",
-		"plugin.MixinCustomPayloadsService",
+        "plugin.MixinCustomPayloadsService",
         "game.MixinEntityItemImpl",
         "game.MixinServerLevelImpl",
         "game.MixinServerPlayerGameMode",
-		"game.MinecraftServerAccessor",
+        "game.MinecraftServerAccessor",
         "game.MixinPortalShapeImpl"
     ],
     "injectors": {

@@ -1,5 +1,6 @@
 package sawfowl.commandpack.apiclasses;
 
+import java.lang.invoke.MethodHandles;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,7 +46,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	private Set<String> users = new HashSet<String>();
 	public TempPlayerDataImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
-		Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this);
+		Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this, MethodHandles.lookup());
 	}
 
 	public void registerPlayer(ServerPlayer player) {

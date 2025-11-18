@@ -13,9 +13,11 @@
         "plugin.MixinModPlatformEventListenerImpl",
         "plugin.MixinCustomPayloadsService",
         "game.MixinEntityItemImpl",
+        "game.MixinExplosionDetonateEvent",
+        "game.MixinPortalShapeImpl",
         "game.MixinServerLevelImpl",
         "game.MixinServerPlayerGameMode",
-        "game.MixinPortalShapeImpl"
+        "plugin.MixinContainersImpl"
     ],
     "injectors": {
         "defaultRequire": 1
