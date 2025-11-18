@@ -2,25 +2,39 @@ package sawfowl.commandpack.mixins.neoforge.network;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.network.channel.raw.RawDataChannel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.math.vector.Vector3i;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-
 import net.kyori.adventure.text.Component;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.neoforged.neoforge.network.connection.ConnectionType;
+import net.neoforged.neoforge.network.registration.NetworkRegistry;
 
+import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.mixin.network.CustomPacket;
 import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
 import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
+import sawfowl.commandpack.api.network.packets.RawPacket;
+import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 import sawfowl.commandpack.apiclasses.CPConnection;
 import sawfowl.commandpack.apiclasses.CustomPacketImpl;
 import sawfowl.commandpack.utils.CommandsUtil;
@@ -32,12 +46,37 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
 	@Shadow
 	public ServerGamePacketListenerImpl connection;
+	private static final CommandPackInstance plugin = CommandPackInstance.getInstance();
 
 	@Override
-	public void sendPacket(CustomPacket packet) {
-		if(packet instanceof CustomPacketImpl custom) connection.send(createPacket(custom));
+	public void sendPacket(@SuppressWarnings("deprecation") CustomPacket packet) {
+		if(packet instanceof CustomPacketImpl custom) {
+			ResourceKey channel = ResourceKey.resolve(custom.getLocation());
+			if(getSpongeChannels().containsKey(channel)) {
+				getSpongeChannels().get(channel).play().sendTo(this, buffer -> buffer.writeString(custom.getData()));
+			} else sendPacket(new RawPacketImpl(ResourceKey.resolve(custom.getLocation()), null, custom.getData()));;
+		}
 	}
 
+	@Override
+	public void sendPacket(RawPacket packet) {
+		if(getSpongeChannels().containsKey(packet.channel())) {
+			getSpongeChannels().get(packet.channel()).play().sendTo(this, buffer -> buffer.writeBytes(packet.getDataAsString().getBytes(StandardCharsets.UTF_8)));
+		} else if(packet instanceof RawPacketImpl impl) sendCustomPacketPayload(plugin.getPayloadsService().isNeedRecode(impl.channel()) ? recode(impl, null) : impl);
+	}
+/*
+	@Override
+	public void sendPacket(@SuppressWarnings("deprecation") CustomPacket packet) {
+		if(packet instanceof CustomPacketImpl custom) { 
+			sendPacket(new RawPacketImpl(ResourceKey.resolve(custom.getLocation()), null, custom.getData()));
+		}
+	}
+
+	@Override
+	public void sendPacket(RawPacket packet) {
+		if(packet instanceof RawPacketImpl impl) sendCustomPacketPayload(plugin.getPayloadsService().isNeedRecode(impl.channel()) ? recode(impl, null) : impl);
+	}
+*/
 	@Override
 	public void sendMessage(Text message) {
 		sendMessage(message.applyPlaceholders(Component.empty(), (MixinServerPlayer) this).get());
@@ -64,17 +103,40 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 		return connection.latency();
 	}
 
-	private FriendlyByteBuf createFriendlyByteBuf(CustomPacketImpl custom) {
-		return new FriendlyByteBuf(Unpooled.buffer()).writeResourceLocation(ResourceLocation.parse(custom.getLocation())).writeBytes(custom.getData().getBytes(StandardCharsets.UTF_8));
-	}
-
-	private ClientboundCustomPayloadPacket createPacket(CustomPacketImpl custom) {
-		return ClientboundCustomPayloadPacket.CONFIG_STREAM_CODEC.decode(createFriendlyByteBuf(custom));
-	}
-
 	@Override
 	public float getMiningSpeed(BlockState block, Vector3i position) {
-		return ((ServerPlayer) (Object) this).getDestroySpeed((net.minecraft.world.level.block.state.BlockState) block);
+		return ((ServerPlayer) (Object) this).getDigSpeed((net.minecraft.world.level.block.state.BlockState) block, new BlockPos(position.x(), position.y(), position.z()));
+	}
+
+	private void sendCustomPacketPayload(CustomPacketPayload payload) {
+		if(payload != null) connection.send(payload);
+	}
+
+	private CustomPacketPayload recode(RawPacketImpl impl, CustomPacketPayload payload) {
+		@SuppressWarnings("unchecked")
+		@Nullable var codec = (@Nullable StreamCodec<ByteBuf, CustomPacketPayload>) NetworkRegistry.getCodec((ResourceLocation) (Object) impl.channel(), ConnectionProtocol.PLAY, PacketFlow.SERVERBOUND);
+		if(codec == null) return null;
+		var cpCodec = plugin.getPayloadsService().findCodec(impl.channel()).get();
+		ByteBuf buffer = null;
+		try {
+			buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), null, ConnectionType.OTHER);
+			cpCodec.encode(buffer, impl);
+			payload = codec.decode(buffer);
+		} catch (Exception e) {
+			try {
+				buffer = new FriendlyByteBuf(Unpooled.buffer());
+				cpCodec.encode(buffer, impl);
+				payload = codec.decode(buffer);
+			} catch (Exception e2) {
+			}
+		}
+		codec = null;
+		buffer = null;
+		return payload;
+	}
+
+	private Map<ResourceKey, RawDataChannel> getSpongeChannels() {
+		return CommandPackInstance.getInstance().getPayloadsService().getSpongeChannels();
 	}
 
 }

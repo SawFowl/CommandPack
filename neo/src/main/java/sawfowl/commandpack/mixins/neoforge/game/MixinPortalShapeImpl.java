@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.portal.PortalShape;
+import sawfowl.commandpack.mixins.PortalShapeAccessor;
 
 import sawfowl.commandpack.mixins.PortalShapeAccessor;
 
@@ -24,10 +25,21 @@ public abstract class MixinPortalShapeImpl implements PortalShapeAccessor {
 	@Shadow @Final private int width;
 	@Shadow @Final private Direction rightDir;
 	private Vector3i bl;
-	private ServerWorld world;
+	private LevelAccessor levelAccessor;
 
 	@Shadow @Override public abstract boolean isValid();
-	@Shadow public abstract void createPortalBlocks(LevelAccessor $$0);
+	@Shadow public abstract void createPortalBlocks(LevelAccessor p_366077_);
+
+	@Override
+	public sawfowl.commandpack.api.mixin.game.PortalShape setWorld(ServerWorld world) {
+		levelAccessor = (LevelAccessor) world;
+		return this;
+	}
+
+	@Override
+	public void createPortalBlocks() {
+		if(levelAccessor != null) createPortalBlocks(levelAccessor);
+	}
 
 	@Override
 	public int totalPortalBlocks() {

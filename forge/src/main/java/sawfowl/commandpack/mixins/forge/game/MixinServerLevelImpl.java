@@ -149,7 +149,6 @@ public abstract class MixinServerLevelImpl implements MixinServerWorld {
 				if ($$1 > 0) {
 					return net.minecraft.core.Direction.UP;
 				}
-
 				return net.minecraft.core.Direction.DOWN;
 			}
 		} else if ($$1 == 0 && $$2 == 0) {

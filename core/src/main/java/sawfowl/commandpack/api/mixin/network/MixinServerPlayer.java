@@ -6,6 +6,7 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.math.vector.Vector3i;
 
+import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.localeapi.api.Text;
 
 /**
@@ -30,7 +31,13 @@ public interface MixinServerPlayer extends ServerPlayer {
 	/**
 	 * Sending a data packet to the player.
 	 */
+	@Deprecated
 	void sendPacket(CustomPacket packet);
+
+	/**
+	 * Sending a data packet to the player.
+	 */
+	void sendPacket(RawPacket packet);
 
 	/**
 	 * Additional method for sending messages to a player.<br>

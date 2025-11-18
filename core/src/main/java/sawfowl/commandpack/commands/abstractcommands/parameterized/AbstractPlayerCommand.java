@@ -12,9 +12,9 @@ public abstract class AbstractPlayerCommand extends AbstractParameterizedCommand
 	public AbstractPlayerCommand(CommandPackInstance plugin) {
 		super(plugin);
 	}
-
+/*
 	protected boolean canUse(CommandCause cause) {
-		return cause.first(ServerPlayer.class).map(player -> hasPermission(player)).isPresent();
+		return cause.first(ServerPlayer.class).filter(player -> hasPermission(player)).isPresent();
 	}
 
 	@Override
@@ -25,5 +25,5 @@ public abstract class AbstractPlayerCommand extends AbstractParameterizedCommand
 	private boolean hasPermission(ServerPlayer player) {
 		return player.hasPermission(permission());
 	}
-
+*/
 }

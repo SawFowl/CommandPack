@@ -16,6 +16,7 @@ import sawfowl.commandpack.api.data.command.Price;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
 import sawfowl.commandpack.api.mixin.game.MixinServerWorld;
+import sawfowl.commandpack.api.network.CustomPayloadsService;
 import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.api.services.PunishmentService;
 import sawfowl.commandpack.api.tps.AverageTPS;
@@ -120,6 +121,8 @@ public interface CommandPack {
 	 * Registration of commands using this method will be blocked after server loading is completed.
 	 */
 	void registerCommand(ParameterizedCommand command) throws IllegalStateException;
+
+	CustomPayloadsService getCustomPayloadsService();
 
 	/**
 	 * Event for getting the plugin API.

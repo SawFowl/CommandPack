@@ -18,7 +18,7 @@ public class EntityDamageListener {
 
 	@Listener
 	public void onDamage(AttackEntityEvent event, @First ServerPlayer player) {
-		if(plugin.getMainConfig().getPreventDamage().isGodMode() && player.get(Keys.INVULNERABLE).orElse(false) && !player.gameMode().get().equals(GameModes.CREATIVE.get()) && event.entity() instanceof ServerPlayer) event.setCancelled(true);
+		if(plugin.getMainConfig().getPreventDamage().isGodMode() && player.get(Keys.INVULNERABLE).orElse(false) && !player.gameMode().get().equals(GameModes.CREATIVE.get()) && event.entity() instanceof ServerPlayer) event.setCancelled(true);;
 		if(plugin.getMainConfig().getPreventDamage().isVanish() && player.get(Keys.VANISH_STATE).isPresent() && !player.get(Keys.VANISH_STATE).get().createsParticles() && event.entity() instanceof ServerPlayer) event.setCancelled(true);
 	}
 

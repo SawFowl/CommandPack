@@ -5,14 +5,18 @@
     "target": "@env(DEFAULT)",
     "compatibilityLevel": "JAVA_18",
     "mixins": [
+        "network.MixinServerPlayerImpl",
+        "network.MixinPluginMessagesImpl",
+        "network.MixinConnectionImpl",
+        "network.NetworkRegistryAccessor",
+        "plugin.MixinContainersImpl",
+        "plugin.MixinModPlatformEventListenerImpl",
+        "plugin.MixinCustomPayloadsService",
         "game.MixinEntityItemImpl",
         "game.MixinExplosionDetonateEvent",
         "game.MixinPortalShapeImpl",
         "game.MixinServerLevelImpl",
         "game.MixinServerPlayerGameMode",
-        "network.MixinConnectionImpl",
-        "network.MixinPluginMessagesImpl",
-        "network.MixinServerPlayerImpl",
         "plugin.MixinContainersImpl"
     ],
     "injectors": {

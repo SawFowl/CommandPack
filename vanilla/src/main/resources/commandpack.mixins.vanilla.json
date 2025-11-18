@@ -12,7 +12,8 @@
     "network.MixinAccessorServerCommonPacketListener",
     "network.MixinConnectionImpl",
     "network.MixinPluginMessagesImpl",
-    "network.MixinServerPlayerImpl"
+    "network.MixinServerPlayerImpl",
+    "plugin.MixinCustomPayloadsService"
   ],
   "injectors": {
     "defaultRequire": 1
