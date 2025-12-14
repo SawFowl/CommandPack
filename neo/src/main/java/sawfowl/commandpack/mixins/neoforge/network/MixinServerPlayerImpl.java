@@ -105,7 +105,7 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
 	@Override
 	public float getMiningSpeed(BlockState block, Vector3i position) {
-		return ((ServerPlayer) (Object) this).getDigSpeed((net.minecraft.world.level.block.state.BlockState) block, new BlockPos(position.x(), position.y(), position.z()));
+		return ((ServerPlayer) (Object) this).getDestroySpeed((net.minecraft.world.level.block.state.BlockState) block, new BlockPos(position.x(), position.y(), position.z()));
 	}
 
 	private void sendCustomPacketPayload(CustomPacketPayload payload) {

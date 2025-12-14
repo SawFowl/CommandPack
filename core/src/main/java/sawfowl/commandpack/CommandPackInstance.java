@@ -287,7 +287,7 @@ public class CommandPackInstance {
 		playersData = new PlayersDataImpl(instance);
 		configManager = new ConfigManager(instance);
 		economy = new Economy(instance);
-		Sponge.eventManager().registerListeners(pluginContainer, economy);
+		Sponge.eventManager().registerListeners(pluginContainer, economy, MethodHandles.lookup());
 		Sponge.eventManager().post(new CommandPack.PostAPI() {
 
 			@Override
@@ -349,7 +349,7 @@ public class CommandPackInstance {
 	}
 
 	@Listener
-	private void onRegisterRegistry(final RegisterRegistryValueEvent.GameScoped event) {
+	public void onRegisterRegistry(final RegisterRegistryValueEvent.GameScoped event) {
 		// For some reason unknown to me, this event is called before `ConstructPluginEvent`.
 		if(configManager == null) {
 			locales = new Locales(ImplementAPI.getLocaleService());
@@ -364,7 +364,7 @@ public class CommandPackInstance {
 		}
 		if(getMainConfig().getEconomy().isEnable()) economy.getEconomyServiceImpl().getCurrenciesMap().forEach((ch, currency) -> {
 			getMainConfig().getEconomy().getCurrency(ch).ifPresent(config -> {
-				event.registry(RegistryTypes.CURRENCY, (h, s) -> s.register(ResourceKey.resolve(config.getKey()), currency));
+				event.registry(RegistryTypes.CURRENCY).register(ResourceKey.resolve(config.getKey()), currency);
 			});
 		});
 	}
