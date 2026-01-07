@@ -1,9 +1,5 @@
 package sawfowl.commandpack.commands.abstractcommands.parameterized;
 
-import org.spongepowered.api.command.Command;
-import org.spongepowered.api.command.CommandCause;
-import org.spongepowered.api.entity.living.player.server.ServerPlayer;
-
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.commands.parameterized.ParameterizedPlayerCommand;
 

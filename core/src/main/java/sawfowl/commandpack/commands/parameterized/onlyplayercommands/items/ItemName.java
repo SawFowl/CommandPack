@@ -27,7 +27,7 @@ public class ItemName extends AbstractPlayerCommand {
 	@Override
 	public Parameterized build() {
 		return Command.builder()
-				.executionRequirements(cause -> canUse(cause))
+				.executionRequirements(cause -> cause.hasPermission(permission()))
 				.addChild(new SetName(plugin).build(), "set")
 				.addChild(new ClearName(plugin).build(), "clear")
 				.build();
