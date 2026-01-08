@@ -3,8 +3,8 @@ package sawfowl.commandpack.commands.raw.world;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCause;
@@ -15,11 +15,11 @@ import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.WorldType;
 import org.spongepowered.api.world.generation.ChunkGenerator;
 import org.spongepowered.api.world.generation.config.WorldGenerationConfig;
-import org.spongepowered.api.world.server.ServerWorld;
-import org.spongepowered.api.world.server.WorldTemplate;
+import org.spongepowered.api.world.server.WorldArchetype;
+import org.spongepowered.api.world.server.WorldArchetypeType;
+import org.spongepowered.api.world.server.storage.ServerWorldProperties.LoadOptions;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 
@@ -44,28 +44,34 @@ public class Create extends AbstractWorldCommand {
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
 		WorldType worldType = args.<WorldType>get(0).get();
 		String name = args.getString(2).get();
-		WorldTemplate.Builder builder = (WorldTemplate.builder().key(ResourceKey.sponge(TextUtils.clearDecorations(name).toLowerCase()))
-				.add(Keys.CHUNK_GENERATOR, args.<ChunkGenerator>get(1).get())
-				.add(Keys.GAME_MODE, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().gameMode())
-				.add(Keys.HARDCORE, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().hardcore())
-				.add(Keys.WORLD_DIFFICULTY, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().difficulty())
-				.add(Keys.PERFORM_SPAWN_LOGIC, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().performsSpawnLogic())
-				.add(Keys.PVP, Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().properties().pvp()).add(Keys.IS_LOAD_ON_STARTUP, true)
-				.add(Keys.WORLD_TYPE, worldType));
-		if(args.getInput().length > 3) {
-			String seed = args.getString(3).get();
-			builder = builder.add(Keys.SEED, NumberUtils.isCreatable(seed) ? NumberUtils.createLong(seed) : (long) seed.hashCode());
-		}
-		WorldTemplate template = ((AbstractBuilder<WorldTemplate>) builder).build();
-		Sponge.server().worldManager().loadWorld(template).thenRunAsync(() -> {
-			ServerWorld world = Sponge.server().worldManager().world(template.key()).get();
-			if(args.getInput().length > 3) {
-				boolean structures = args.getBoolean(4).get();
-				boolean bonusChest = args.getBoolean(5).get();
-				world.properties().offer(Keys.WORLD_GEN_CONFIG, WorldGenerationConfig.builder().from(world.properties().worldGenerationConfig()).generateStructures(structures).generateBonusChest(bonusChest).build());
-			}
-			world.setBorder(world.border().toBuilder().initialDiameter(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().border().diameter()).build());
-			audience.sendMessage(getCommands(locale).getWorld().getCreate(template.key().asString()));
+		Sponge.server().worldManager().loadWorld(
+			ResourceKey.sponge(TextUtils.clearDecorations(name).toLowerCase()),
+			LoadOptions
+				.builder()
+				.create(
+					WorldArchetype.of(
+						WorldArchetypeType
+						.builder()
+						.worldType(worldType)
+						.chunkGenerator(
+							args.<ChunkGenerator>get(1).get()
+						)
+						.build()
+					)
+				)
+			.createCallback(p -> p.offer(Keys.SEED, args.getString(3).map(s -> (long) s.hashCode()).orElse(ThreadLocalRandom.current().nextLong())))
+			.build()
+		)
+		.thenAccept(optWorld -> {
+			optWorld.ifPresent(world -> {
+				if(args.getInput().length > 3) {
+					boolean structures = args.getBoolean(4).get();
+					boolean bonusChest = args.getBoolean(5).orElse(false);
+					world.properties().offer(Keys.WORLD_GEN_CONFIG, WorldGenerationConfig.builder().from(world.properties().worldGenerationConfig()).generateStructures(structures).generateBonusChest(bonusChest).build());
+				}
+				world.setBorder(world.border().toBuilder().initialDiameter(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get().border().diameter()).build());
+				audience.sendMessage(getCommands(locale).getWorld().getCreate(world.key().asString()));
+			});
 		});
 	}
 

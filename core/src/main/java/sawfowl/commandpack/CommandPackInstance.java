@@ -362,11 +362,11 @@ public class CommandPackInstance {
 			isNeo = checkNeo();
 			economy = new Economy(instance);
 		}
-		if(getMainConfig().getEconomy().isEnable()) economy.getEconomyServiceImpl().getCurrenciesMap().forEach((ch, currency) -> {
-			getMainConfig().getEconomy().getCurrency(ch).ifPresent(config -> {
-				event.registry(RegistryTypes.CURRENCY).register(ResourceKey.resolve(config.getKey()), currency);
-			});
-		});
+		if(getMainConfig().getEconomy().isEnable()) economy.getEconomyServiceImpl().getCurrenciesMap().forEach((ch, currency) -> 
+			getMainConfig().getEconomy().getCurrency(ch).ifPresent(config -> 
+				event.registry(RegistryTypes.CURRENCY, (rh, rs) -> rs.register(ResourceKey.resolve(config.getKey()), currency))
+			)
+		);
 	}
 
 	@Listener
