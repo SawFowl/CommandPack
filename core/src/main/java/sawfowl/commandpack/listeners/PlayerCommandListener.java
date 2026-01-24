@@ -29,7 +29,7 @@ public class PlayerCommandListener {
 			map.forEach((commandName, config) -> {
 				if(config.getDelay().getSeconds() > 0 && !config.getDelay().getCancelRules().isAllowOtherCommand() && !event.command().equals(commandName) && !player.hasPermission(Permissions.IGNORE_DELAY_OTHER_COMMAND)) {
 					plugin.getPlayersData().getTempData().removeCommandTracking(commandName, player);
-					player.sendMessage(plugin.getLocales().getLocale(player.locale()).getOther().getExecuteCommand().getOtherCommand("/" + commandName));
+					player.sendMessage(plugin.getLocales().getAsReference(player.locale()).getOther().getExecuteCommand().getOtherCommand("/" + commandName));
 				}
 			});
 		});
@@ -37,7 +37,7 @@ public class PlayerCommandListener {
 
 	private void spyCommand(ExecuteCommandEvent.Post event, ServerPlayer player, boolean parallel) {
 		(parallel ? Sponge.server().onlinePlayers().parallelStream() : Sponge.server().onlinePlayers().stream()).filter(p -> !p.uniqueId().equals(player.uniqueId()) && plugin.getPlayersData().getTempData().isSpyCommand(p)).forEach(p -> {
-			p.sendMessage(plugin.getLocales().getLocale(p).getCommands().getCommandSpy().getSpy(player, "/" + event.command() + " " + event.arguments()));
+			p.sendMessage(plugin.getLocales().getAsReference(p).getCommands().getCommandSpy().getSpy(player, "/" + event.command() + " " + event.arguments()));
 		});
 	}
 }

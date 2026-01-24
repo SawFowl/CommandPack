@@ -38,7 +38,7 @@ public class Anvil extends AbstractParameterizedCommand {
 			menu.setTitle(ItemTypes.ANVIL.get().asComponent());
 			if(target.isPresent()) {
 				menu.open(target.get());
-				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getAnvil().getSuccessStaff(target.get()));
+				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getAnvil().getSuccessStaff(target.get()));
 			} else delay((ServerPlayer) src, locale, consumer -> {
 				menu.open((ServerPlayer) src);
 			});
@@ -47,7 +47,7 @@ public class Anvil extends AbstractParameterizedCommand {
 			InventoryMenu menu = ViewableInventory.builder().type(ContainerTypes.ANVIL).completeStructure().carrier(target).plugin(plugin.getPluginContainer()).build().asMenu();
 			menu.setTitle(ItemTypes.CRAFTING_TABLE.get().asComponent());
 			menu.open(target);
-			src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getAnvil().getSuccessStaff(target));
+			src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getAnvil().getSuccessStaff(target));
 		}
 	}
 

@@ -89,11 +89,11 @@ public class Tell extends AbstractRawCommand {
 		return null;
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Tell getTell(Locale locale) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Tell getTell(Locale locale) {
 		return getCommands(locale).getTell();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Tell getTell(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Tell getTell(ServerPlayer player) {
 		return getTell(player.locale());
 	}
 

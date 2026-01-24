@@ -67,11 +67,11 @@ public class TpaHereAll extends AbstractPlayerCommand {
 		public boolean access = true;
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Tpa getTpa(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getTpa();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Tpa getTpa(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getTpa();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Tpa getTpa(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Tpa getTpa(ServerPlayer player) {
 		return getTpa(player.locale());
 	}
 

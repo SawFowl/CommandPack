@@ -15,7 +15,7 @@ import sawfowl.commandpack.api.data.command.Delay;
 import sawfowl.commandpack.api.data.command.Price;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.configure.configs.commands.CommandSettings;
-import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.CommandsConfig;
+import sawfowl.commandpack.configure.locales.abstractlocale.comments.CommandsConfig;
 
 public class CommandSettingSerializer implements TypeSerializer<Settings> {
 
@@ -48,7 +48,7 @@ public class CommandSettingSerializer implements TypeSerializer<Settings> {
 	}
 
 	private CommandsConfig getCommandsConfig() {
-		return INSTANCE.getLocales().getSystemLocale().getComments().getCommandsConfig();
+		return INSTANCE.getLocales().getSystemAsReference().getComments().getCommandsConfig();
 	}
 
 }

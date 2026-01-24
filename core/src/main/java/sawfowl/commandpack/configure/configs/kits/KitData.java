@@ -198,7 +198,7 @@ public class KitData implements Kit {
 				});
 				save();
 				menu.inventory().clear();
-				carrier.sendMessage(CommandPackInstance.getInstance().getLocales().getLocale(carrier.locale()).getCommands().getKits().getSaved(getLocalizedName(carrier.locale())));
+				carrier.sendMessage(CommandPackInstance.getInstance().getLocales().getAsReference(carrier.locale()).getCommands().getKits().getSaved(getLocalizedName(carrier.locale())));
 				menu.unregisterAll();
 			}
 		});

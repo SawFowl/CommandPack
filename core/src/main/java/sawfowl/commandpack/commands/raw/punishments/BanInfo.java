@@ -94,15 +94,15 @@ public class BanInfo extends AbstractRawCommand {
 	}
 
 	private String created(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.creationDate().toEpochMilli());
 		return format.format(calendar.getTime());
 	}
 
 	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
-		if(!ban.expirationDate().isPresent()) return plugin.getLocales().getLocale(locale).getCommands().getBanInfo().getPermanent();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		if(!ban.expirationDate().isPresent()) return plugin.getLocales().getAsReference(locale).getCommands().getBanInfo().getPermanent();
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));

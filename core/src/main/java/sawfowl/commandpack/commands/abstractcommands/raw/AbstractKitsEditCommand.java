@@ -20,7 +20,7 @@ public abstract class AbstractKitsEditCommand extends AbstractPlayerCommand {
 	}
 
 	protected RawArgument<Kit> kitArgument(int cursor, boolean optional, boolean optionalForConsole) {
-		return RawArguments.createKitArgument(RawBasicArgumentData.createKit(cursor, null, null), new RawOptional(optional, optionalForConsole), locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getKitNotPresent());
+		return RawArguments.createKitArgument(RawBasicArgumentData.createKit(cursor, null, null), new RawOptional(optional, optionalForConsole), locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getKitNotPresent());
 	}
 
 }

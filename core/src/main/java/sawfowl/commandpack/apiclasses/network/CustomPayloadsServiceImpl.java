@@ -73,7 +73,7 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 	@Override
 	public void registerChannel(ResourceKey channel) {
 		if(finished) {
-			plugin.getLocales().getSystemLocale().getDebug().getFinishedRegisterNetworkData(channel);
+			plugin.getLocales().getSystemAsReference().getDebug().getFinishedRegisterNetworkData(channel);
 		} else registerRawCodec(RawPacketImpl.type(channel), channel);
 	}
 

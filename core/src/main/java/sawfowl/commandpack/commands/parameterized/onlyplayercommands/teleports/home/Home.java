@@ -74,11 +74,11 @@ public class Home extends AbstractPlayerCommand {
 		} else exception(getHome(player).getError());
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Home getHome(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getHome();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Home getHome(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getHome();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Home getHome(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Home getHome(ServerPlayer player) {
 		return getHome(player.locale());
 	}
 

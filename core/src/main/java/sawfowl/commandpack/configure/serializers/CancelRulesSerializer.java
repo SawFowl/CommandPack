@@ -11,7 +11,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.command.CancelRules;
 import sawfowl.commandpack.configure.configs.commands.CancelRulesData;
-import sawfowl.commandpack.configure.locale.locales.abstractlocale.comments.commandsconfig.DelayData;
+import sawfowl.commandpack.configure.locales.abstractlocale.comments.commandsconfig.DelayData;
 
 public class CancelRulesSerializer implements TypeSerializer<CancelRules> {
 
@@ -33,7 +33,7 @@ public class CancelRulesSerializer implements TypeSerializer<CancelRules> {
 	}
 
 	private DelayData.CancelRules getCancelRules() {
-		return INSTANCE.getLocales().getSystemLocale().getComments().getCommandsConfig().getDelayData().getCancelRules();
+		return INSTANCE.getLocales().getSystemAsReference().getComments().getCommandsConfig().getDelayData().getCancelRules();
 	}
 
 }

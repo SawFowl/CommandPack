@@ -53,7 +53,7 @@ public abstract class MixinPluginMessagesImpl {
 			if(copy.readableBytes() > 0) {
 				List<String> disAllowedMods = plugin.getMainConfig().getRestrictMods().getDisAllowedMods(copy.toString(0, copy.readableBytes(), StandardCharsets.UTF_8));
 				if(!disAllowedMods.isEmpty()) {
-					getPlayer().kick(plugin.getLocales().getLocale(getPlayer()).getOther().getIllegalMods(true, String.join(", ", disAllowedMods)));
+					getPlayer().kick(plugin.getLocales().getAsReference(getPlayer()).getOther().getIllegalMods(true, String.join(", ", disAllowedMods)));
 					copy = null;
 					disAllowedMods = null;
 					return;
@@ -99,7 +99,7 @@ public abstract class MixinPluginMessagesImpl {
 				stringData = stringData.substring(0, stringData.length() - 1);
 			}
 			if(plugin.getMainConfig().getDebugPlayerData().packets()) {
-				plugin.getLogger().info(plugin.getLocales().getSystemLocale().getDebug().getDebugPlayerData().getPackets(player.getName().getString(), packet, stringData));
+				plugin.getLogger().info(plugin.getLocales().getSystemAsReference().getDebug().getDebugPlayerData().getPackets(player.getName().getString(), packet, stringData));
 			}
 		}
 

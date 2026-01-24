@@ -25,7 +25,7 @@ public class ModInfo extends AbstractInfoCommand {
 
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
-		if(!context.one(CommandParameters.MOD).isPresent()) exception(plugin.getLocales().getLocale(locale).getCommandExceptions().getModNotPresent());
+		if(!context.one(CommandParameters.MOD).isPresent()) exception(plugin.getLocales().getAsReference(locale).getCommandExceptions().getModNotPresent());
 		if(isPlayer) {
 			delay((ServerPlayer) src, locale, consumer -> {
 				sendModInfo(src, locale, getArgument(context, CommandParameters.MOD).orElse(null));
@@ -56,7 +56,7 @@ public class ModInfo extends AbstractInfoCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return plugin.getAPI().getContainersCollection().getMods().isEmpty() ? null : Arrays.asList(ParameterSettings.of(CommandParameters.MOD, false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getModNotPresent()));
+		return plugin.getAPI().getContainersCollection().getMods().isEmpty() ? null : Arrays.asList(ParameterSettings.of(CommandParameters.MOD, false, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getModNotPresent()));
 	}
 
 }

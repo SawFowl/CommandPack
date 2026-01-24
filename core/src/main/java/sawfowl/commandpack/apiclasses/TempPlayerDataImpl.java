@@ -1,6 +1,5 @@
 package sawfowl.commandpack.apiclasses;
 
-import java.lang.invoke.MethodHandles;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,7 +45,6 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	private Set<String> users = new HashSet<String>();
 	public TempPlayerDataImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
-		Sponge.eventManager().registerListeners(plugin.getPluginContainer(), this, MethodHandles.lookup());
 	}
 
 	public void registerPlayer(ServerPlayer player) {
@@ -85,7 +83,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 
 	@Override
 	public void addCommandTracking(String command, ServerPlayer player) {
-		if(!trackingCommandDelay.containsKey(command)) plugin.getLogger().error(plugin.getLocales().getSystemLocale().getDebug().getCommands().getNotTracking(command));
+		if(!trackingCommandDelay.containsKey(command)) plugin.getLogger().error(plugin.getLocales().getSystemAsReference().getDebug().getCommands().getNotTracking(command));
 		if(!trackingCommandDelay.get(command).contains(player.uniqueId())) trackingCommandDelay.get(command).add(player.uniqueId());
 	}
 
@@ -107,7 +105,7 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 	@Override
 	public void removeCommandTracking(String command, UUID uuid) {
 		if(!trackingCommandDelay.containsKey(command)) {
-			plugin.getLogger().error(plugin.getLocales().getSystemLocale().getDebug().getCommands().getNotTracking(command));
+			plugin.getLogger().error(plugin.getLocales().getSystemAsReference().getDebug().getCommands().getNotTracking(command));
 			return;
 		}
 		trackingCommandDelay.get(command).removeIf(u -> (u.equals(uuid)));
@@ -184,11 +182,11 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 			if(isAfk(player) && Sponge.server().player(uuid).isPresent()) {
 				afk.remove(player.uniqueId());
 				if(!player.get(Keys.VANISH_STATE).isPresent() || !player.get(Keys.VANISH_STATE).get().invisible()) {
-					Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemLocale().getCommands().getAfk().getDisableBroadcast(player));
+					Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemAsReference().getCommands().getAfk().getDisableBroadcast(player));
 					Sponge.server().onlinePlayers().forEach(p -> {
-						p.sendMessage(plugin.getLocales().getLocale(p).getCommands().getAfk().getDisableBroadcast(player));
+						p.sendMessage(plugin.getLocales().getAsReference(p).getCommands().getAfk().getDisableBroadcast(player));
 					});
-				} else player.sendMessage(plugin.getLocales().getLocale(player).getCommands().getAfk().getDisableInVanish());
+				} else player.sendMessage(plugin.getLocales().getAsReference(player).getCommands().getAfk().getDisableInVanish());
 			}
 		}).build());
 	}
@@ -208,11 +206,11 @@ public class TempPlayerDataImpl implements sawfowl.commandpack.api.TempPlayerDat
 		if(isAfk(player)) return;
 		afk.add(player.uniqueId());
 		if(!player.get(Keys.VANISH_STATE).isPresent() || !player.get(Keys.VANISH_STATE).get().invisible()) {
-			Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemLocale().getCommands().getAfk().getEnableBroadcast(player));
+			Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemAsReference().getCommands().getAfk().getEnableBroadcast(player));
 			Sponge.server().onlinePlayers().forEach(p -> {
-				p.sendMessage(plugin.getLocales().getLocale(p).getCommands().getAfk().getEnableBroadcast(player));
+				p.sendMessage(plugin.getLocales().getAsReference(p).getCommands().getAfk().getEnableBroadcast(player));
 			});
-		} else player.sendMessage(plugin.getLocales().getLocale(player).getCommands().getAfk().getEnableInVanish());
+		} else player.sendMessage(plugin.getLocales().getAsReference(player).getCommands().getAfk().getEnableInVanish());
 	}
 
 	@Override

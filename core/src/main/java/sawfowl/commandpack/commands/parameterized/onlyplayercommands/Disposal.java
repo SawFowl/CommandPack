@@ -30,7 +30,7 @@ public class Disposal extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		InventoryMenu trash = ViewableInventory.builder().type(ContainerTypes.GENERIC_9X6).completeStructure().carrier(src).plugin(plugin.getPluginContainer()).build().asMenu();
-		trash.setTitle(plugin.getLocales().getLocale(locale).getCommands().getDisposal().getTitle());
+		trash.setTitle(plugin.getLocales().getAsReference(locale).getCommands().getDisposal().getTitle());
 		trash.registerClose(new CloseHandler() {
 			@Override
 			public void handle(Cause cause, Container container) {

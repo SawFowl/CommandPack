@@ -109,11 +109,11 @@ public class HideBalance extends AbstractRawCommand {
 		return null;
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.HideBalance getHideBalance(Locale locale) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.HideBalance getHideBalance(Locale locale) {
 		return getCommands(locale).getHideBalance();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.HideBalance getHideBalance(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.HideBalance getHideBalance(ServerPlayer player) {
 		return getHideBalance(player.locale());
 	}
 

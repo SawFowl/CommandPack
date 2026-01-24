@@ -116,11 +116,11 @@ public class Speed extends AbstractParameterizedCommand {
 		return player.get(Keys.CAN_FLY).orElse(false) && player.get(Keys.IS_FLYING).orElse(false);
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Speed getSpeed(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getSpeed();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Speed getSpeed(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getSpeed();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Speed getSpeed(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Speed getSpeed(ServerPlayer player) {
 		return getSpeed(player.locale());
 	}
 

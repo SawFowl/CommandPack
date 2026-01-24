@@ -118,11 +118,11 @@ public class Warp extends AbstractRawCommand {
 		return null;
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warp getWarp(Locale locale) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Warp getWarp(Locale locale) {
 		return getCommands(locale).getWarp();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warp getWarp(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Warp getWarp(ServerPlayer player) {
 		return getWarp(player.locale());
 	}
 

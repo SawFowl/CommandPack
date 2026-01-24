@@ -66,7 +66,7 @@ public class Warn extends AbstractParameterizedCommand {
 			if(reason.isPresent()) warnBuilder = warnBuilder.reason(text(reason.get()));
 			sawfowl.commandpack.api.data.punishment.Warn warn = warnBuilder.build();
 			plugin.getPunishmentService().addWarn(user, warn);
-			Sponge.systemSubject().sendMessage(getWarn().getAnnouncement(warn.isIndefinitely(), source, userName, warn.getReason().orElse(text("-")), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), warn)));
+			Sponge.systemSubject().sendMessage(getWarn().getAnnouncement(warn.isIndefinitely(), source, userName, warn.getReason().orElse(text("-")), expire(plugin.getLocales().getSystemOrDefaultLocale(), warn)));
 			if(plugin.getMainConfig().getPunishment().getAnnounce().isWarn()) {
 				if(duration.isPresent()) {
 					Sponge.server().onlinePlayers().forEach(player -> {
@@ -116,7 +116,7 @@ public class Warn extends AbstractParameterizedCommand {
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Warn warn) {
 		if(!warn.getExpiration().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(warn.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
@@ -124,7 +124,7 @@ public class Warn extends AbstractParameterizedCommand {
 
 	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
 		if(!ban.expirationDate().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
@@ -138,7 +138,7 @@ public class Warn extends AbstractParameterizedCommand {
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
 		if(!mute.getExpiration().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
@@ -146,13 +146,13 @@ public class Warn extends AbstractParameterizedCommand {
 
 	private void tryMute(User user, Warns warns, Audience src, Locale locale) {
 		Optional<sawfowl.commandpack.api.data.punishment.Warn> find = findTempWarn(warns);
-		Mute.Builder muteBuilder = Mute.builder().target(user).created(Instant.now()).source(getWarn(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale())).getAutopunish()).reason(getWarn(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale())).getBanLimit(plugin.getMainConfig().getPunishment().getWarnsBefore().getMute()));
+		Mute.Builder muteBuilder = Mute.builder().target(user).created(Instant.now()).source(getWarn(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getSystemOrDefaultLocale())).getAutopunish()).reason(getWarn(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getSystemOrDefaultLocale())).getBanLimit(plugin.getMainConfig().getPunishment().getWarnsBefore().getMute()));
 		Optional<Instant> expire = find.isPresent() ? find.get().getExpiration() : (plugin.getMainConfig().getPunishment().getWarnsBefore().getPunishTime().getBanTime() > 0 ? Optional.ofNullable(Instant.now().plusSeconds(plugin.getMainConfig().getPunishment().getWarnsBefore().getPunishTime().getBanTime())) : Optional.empty());
 		if(expire.isPresent()) muteBuilder = muteBuilder.expiration(expire.get());
-		muteBuilder = muteBuilder.reason(getWarn(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale())).getBanLimit(plugin.getMainConfig().getPunishment().getWarnsBefore().getMute()));
+		muteBuilder = muteBuilder.reason(getWarn(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getSystemOrDefaultLocale())).getBanLimit(plugin.getMainConfig().getPunishment().getWarnsBefore().getMute()));
 		Mute mute = muteBuilder.build();
 		plugin.getPunishmentService().addMute(mute);
-		Sponge.systemSubject().sendMessage(getMute().getAnnouncement(mute.isIndefinitely(), mute.getSource().orElse(text("&4Server")), mute.getName(), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), mute), mute.getReason().orElse(text("-"))));	
+		Sponge.systemSubject().sendMessage(getMute().getAnnouncement(mute.isIndefinitely(), mute.getSource().orElse(text("&4Server")), mute.getName(), expire(plugin.getLocales().getSystemOrDefaultLocale(), mute), mute.getReason().orElse(text("-"))));	
 		if(plugin.getMainConfig().getPunishment().getAnnounce().isBan()) {
 			if(mute.getExpiration().isPresent()) {
 				Sponge.server().onlinePlayers().forEach(player -> {
@@ -181,14 +181,14 @@ public class Warn extends AbstractParameterizedCommand {
 
 	private void tryBan(User user, Warns warns, Audience src, Locale locale, Component source) {
 		Optional<sawfowl.commandpack.api.data.punishment.Warn> find = findTempWarn(warns);
-		Ban.Builder banBuilder = org.spongepowered.api.service.ban.Ban.builder().type(BanTypes.PROFILE).profile(user.profile()).startDate(Instant.now()).source(getWarn(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale())).getAutopunish()).reason(getWarn(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale())).getBanLimit(plugin.getMainConfig().getPunishment().getWarnsBefore().getBan()));
+		Ban.Builder banBuilder = org.spongepowered.api.service.ban.Ban.builder().type(BanTypes.PROFILE).profile(user.profile()).startDate(Instant.now()).source(getWarn(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getSystemOrDefaultLocale())).getAutopunish()).reason(getWarn(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getSystemOrDefaultLocale())).getBanLimit(plugin.getMainConfig().getPunishment().getWarnsBefore().getBan()));
 		Optional<Instant> expire = find.isPresent() ? find.get().getExpiration() : (plugin.getMainConfig().getPunishment().getWarnsBefore().getPunishTime().getBanTime() > 0 ? Optional.ofNullable(Instant.now().plusSeconds(plugin.getMainConfig().getPunishment().getWarnsBefore().getPunishTime().getBanTime())) : Optional.empty());
 		if(expire.isPresent()) banBuilder = banBuilder.expirationDate(expire.get());
-		banBuilder = banBuilder.reason(getWarn(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale())).getBanLimit(plugin.getMainConfig().getPunishment().getWarnsBefore().getBan()));
+		banBuilder = banBuilder.reason(getWarn(user.player().map(ServerPlayer::locale).orElse(plugin.getLocales().getSystemOrDefaultLocale())).getBanLimit(plugin.getMainConfig().getPunishment().getWarnsBefore().getBan()));
 		Ban ban = banBuilder.build();
 		plugin.getPunishmentService().add(ban);
 		if(user.player().isPresent() && user.isOnline()) user.player().get().kick(getBan(user.player().get()).getDisconnect(!ban.expirationDate().isPresent(), source, ban.reason().orElse(text("-")), expire(user.player().get().locale(), ban)));
-		Sponge.systemSubject().sendMessage(getBan().getAnnouncement(!ban.expirationDate().isPresent(), source, expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), ban), (Profile) ban));	
+		Sponge.systemSubject().sendMessage(getBan().getAnnouncement(!ban.expirationDate().isPresent(), source, expire(plugin.getLocales().getSystemOrDefaultLocale(), ban), (Profile) ban));	
 		if(plugin.getMainConfig().getPunishment().getAnnounce().isBan()) {
 			if(ban.expirationDate().isPresent()) {
 				Sponge.server().onlinePlayers().forEach(player -> {
@@ -202,52 +202,52 @@ public class Warn extends AbstractParameterizedCommand {
 		} else src.sendMessage(getBan(locale).getSuccess(user));
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warn getWarn(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getWarn();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Warn getWarn(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getWarn();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warn getWarn(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Warn getWarn(ServerPlayer player) {
 		return getWarn(player.locale());
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warn getWarn() {
-		return plugin.getLocales().getSystemLocale().getCommands().getWarn();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Warn getWarn() {
+		return plugin.getLocales().getSystemAsReference().getCommands().getWarn();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Mute getMute(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getMute();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Mute getMute(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getMute();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Mute getMute(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Mute getMute(ServerPlayer player) {
 		return getMute(player.locale());
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Mute getMute() {
-		return plugin.getLocales().getSystemLocale().getCommands().getMute();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Mute getMute() {
+		return plugin.getLocales().getSystemAsReference().getCommands().getMute();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Kick getKick(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getKick();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Kick getKick(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getKick();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Kick getKick(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Kick getKick(ServerPlayer player) {
 		return getKick(player.locale());
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Kick getKick() {
-		return plugin.getLocales().getSystemLocale().getCommands().getKick();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Kick getKick() {
+		return plugin.getLocales().getSystemAsReference().getCommands().getKick();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Ban getBan(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getBan();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getBan();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Ban getBan(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan(ServerPlayer player) {
 		return getBan(player.locale());
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Ban getBan() {
-		return plugin.getLocales().getSystemLocale().getCommands().getBan();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan() {
+		return plugin.getLocales().getSystemAsReference().getCommands().getBan();
 	}
 
 

@@ -64,10 +64,10 @@ subprojects {
 			name = "MixinExtras"
 			url = 'https://github.com/LlamaLad7/MixinExtras'
 		}
-		maven {
-			name = "AspectRepo"
-			url 'https://maven.aspect-realms.ru/repository/maven-public/'
-		}
+		//maven {
+		//	name = "AspectRepo"
+		//	url 'https://maven.aspect-realms.ru/repository/maven-public/'
+		//}
 	}
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'

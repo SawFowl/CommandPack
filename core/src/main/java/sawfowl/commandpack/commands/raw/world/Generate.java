@@ -201,7 +201,7 @@ public class Generate extends AbstractWorldCommand {
 
 		void sendDebugMessage() {
 			lastSendMessage = getCurrentTime();
-			plugin.getLogger().info(plugin.getLocales().getSystemLocale().getCommands().getWorld().getGenerate().getDebug(world, getFilledPercent(), current));
+			plugin.getLogger().info(plugin.getLocales().getSystemAsReference().getCommands().getWorld().getGenerate().getDebug(world, getFilledPercent(), current));
 		}
 
 		private Vector3i nextPos(Vector3i current) {

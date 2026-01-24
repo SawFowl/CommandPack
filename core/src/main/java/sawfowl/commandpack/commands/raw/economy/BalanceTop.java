@@ -130,7 +130,7 @@ public class BalanceTop extends AbstractRawCommand {
 		return null;
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.BalanceTop getBalanceTop(Locale locale) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.BalanceTop getBalanceTop(Locale locale) {
 		return getCommands(locale).getBalanceTop();
 	}
 

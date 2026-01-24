@@ -20,8 +20,9 @@ import org.spongepowered.math.vector.Vector3i;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.ExplosionEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.listener.Priority;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.events.ModExplosionEvent;
 import sawfowl.commandpack.listeners.ModPlatformEventListener;
@@ -36,7 +37,7 @@ public class MixinModPlatformEventListenerImpl {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	@SubscribeEvent(priority = Priority.HIGHEST)
 	public void onExplosion(ExplosionEvent.Detonate event) {
 		if(event.getAffectedBlocks().isEmpty() && event.getAffectedEntities().isEmpty()) return;
 		Sponge.eventManager().post(new ModExplosionEvent() {

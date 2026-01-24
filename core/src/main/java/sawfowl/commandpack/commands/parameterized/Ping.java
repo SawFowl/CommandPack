@@ -57,8 +57,8 @@ public class Ping extends AbstractParameterizedCommand {
 		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.PING_STAFF, true), false, locale -> getExceptions(locale).getPlayerNotPresent()));
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Ping getPing(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getPing();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ping getPing(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getPing();
 	}
 
 }

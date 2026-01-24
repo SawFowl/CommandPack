@@ -61,8 +61,8 @@ public class SetHome extends AbstractPlayerCommand {
 		return "sethome";
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.SetHome getSetHome(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getSetHome();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.SetHome getSetHome(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getSetHome();
 	}
 
 }

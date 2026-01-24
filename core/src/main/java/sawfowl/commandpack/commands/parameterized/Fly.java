@@ -81,11 +81,11 @@ public class Fly extends AbstractParameterizedCommand {
 		target.sendMessage(targetMessage);
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Fly getFly(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getFly();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Fly getFly(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getFly();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Fly getFly(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Fly getFly(ServerPlayer player) {
 		return getFly(player.locale());
 	}
 

@@ -30,6 +30,7 @@ import org.spongepowered.api.event.EventContext;
 import org.spongepowered.api.event.EventContextKeys;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.lifecycle.ConstructPluginEvent;
 import org.spongepowered.api.event.lifecycle.ProvideServiceEvent;
 import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
 import org.spongepowered.api.event.lifecycle.RegisterBuilderEvent;
@@ -56,10 +57,12 @@ import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
-import sawfowl.localeapi.ImplementAPI;
+
+import sawfowl.localeapi.api.ConfigTypes;
+import sawfowl.localeapi.api.LocaleService;
+import sawfowl.localeapi.api.LocalesList;
 import sawfowl.localeapi.api.Logger;
 import sawfowl.localeapi.api.TextUtils;
-import sawfowl.localeapi.api.event.LocaleServiseEvent;
 import sawfowl.localeapi.api.placeholders.Placeholders;
 import sawfowl.commandpack.api.CommandPack;
 import sawfowl.commandpack.api.ContainersCollection;
@@ -127,7 +130,9 @@ import sawfowl.commandpack.configure.configs.player.WarpData;
 import sawfowl.commandpack.configure.configs.punishment.MuteData;
 import sawfowl.commandpack.configure.configs.punishment.WarnData;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
-import sawfowl.commandpack.configure.locale.Locales;
+import sawfowl.commandpack.configure.locales.AbstractLocale;
+import sawfowl.commandpack.configure.locales.def.ImplementPluginLocale;
+import sawfowl.commandpack.configure.locales.ru.ImplementRuPluginLocale;
 import sawfowl.commandpack.listeners.CommandLogListener;
 import sawfowl.commandpack.listeners.EntityDamageListener;
 import sawfowl.commandpack.listeners.ModPlatformEventListener;
@@ -150,7 +155,7 @@ public class CommandPackInstance {
 	private static CommandPackInstance instance;
 	private PluginContainer pluginContainer;
 	private Path configDir;
-	private Locales locales;
+	private LocalesList<AbstractLocale> locales;
 	private ConfigManager configManager;
 	private Economy economy;
 	private PlayersData playersData;
@@ -192,7 +197,7 @@ public class CommandPackInstance {
 		return configManager.getCommandsConfig().get();
 	}
 
-	public Locales getLocales() {
+	public LocalesList<AbstractLocale> getLocales() {
 		return locales;
 	}
 
@@ -276,16 +281,20 @@ public class CommandPackInstance {
 		logger = Logger.createApacheLogger("CommandPack");
 		isForge = checkForge();
 		isNeo = checkNeo();
-		createAPI();
-	}
-
-	@Listener
-	public void onLocaleInit(LocaleServiseEvent.Construct event) {
-		locales = new Locales(event.getLocaleService());
+		LocaleService localeService = LocaleService.getInstance();
+		locales = localeService.createLocales(pluginContainer, ImplementPluginLocale.class);
+		if(!locales.contains(org.spongepowered.api.util.locale.Locales.DEFAULT)) locales.createReferenceTranslation(ConfigTypes.HOCON, org.spongepowered.api.util.locale.Locales.DEFAULT, ImplementPluginLocale.class);
+		if(!locales.contains(org.spongepowered.api.util.locale.Locales.RU_RU)) locales.createReferenceTranslation(ConfigTypes.HOCON, org.spongepowered.api.util.locale.Locales.RU_RU, ImplementRuPluginLocale.class);
 		rtpService = new RTPService(instance);
 		kitService = new KitServiceImpl(instance);
 		playersData = new PlayersDataImpl(instance);
 		configManager = new ConfigManager(instance);
+		createAPI();
+	}
+
+	@Listener
+	public void onConstruct(ConstructPluginEvent event) {
+		Sponge.eventManager().registerListeners(pluginContainer, playersData.getTempData(), MethodHandles.lookup());
 		economy = new Economy(instance);
 		Sponge.eventManager().registerListeners(pluginContainer, economy, MethodHandles.lookup());
 		Sponge.eventManager().post(new CommandPack.PostAPI() {
@@ -311,7 +320,7 @@ public class CommandPackInstance {
 	public void onServerStarted(StartedEngineEvent<Server> event) {
 		isStarted = true;
 		manager = (SpongeCommandManager) Sponge.server().commandManager();
-		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getSystemLocale().getDebug().getEconomy().getNotFound());
+		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getSystemAsReference().getDebug().getEconomy().getNotFound());
 		registerListeners();
 		configManager.loadKits();
 		generators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureSets(null).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
@@ -350,9 +359,7 @@ public class CommandPackInstance {
 
 	@Listener
 	public void onRegisterRegistry(final RegisterRegistryValueEvent.GameScoped event) {
-		// For some reason unknown to me, this event is called before `ConstructPluginEvent`.
 		if(configManager == null) {
-			locales = new Locales(ImplementAPI.getLocaleService());
 			rtpService = new RTPService(instance);
 			kitService = new KitServiceImpl(instance);
 			playersData = new PlayersDataImpl(instance);
@@ -438,7 +445,7 @@ public class CommandPackInstance {
 	}
 
 	private Component timeFormat(long second, Locale locale) {
-		return TextUtils.timeFormat(second, locale, getLocales().getLocale(locale).getTime().getDay(), getLocales().getLocale(locale).getTime().getHour(), getLocales().getLocale(locale).getTime().getMinute(), getLocales().getLocale(locale).getTime().getSecond());
+		return TextUtils.timeFormat(second, locale, getLocales().getAsReference(locale).getTime().getDay(), getLocales().getAsReference(locale).getTime().getHour(), getLocales().getAsReference(locale).getTime().getMinute(), getLocales().getAsReference(locale).getTime().getSecond());
 	}
 
 	void registerRaw(RawCommand command) {
@@ -463,8 +470,8 @@ public class CommandPackInstance {
 	}
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
-		if(!mute.getExpiration().isPresent()) return getLocales().getLocale(locale).getCommands().getMuteInfo().getPermanent();
-		SimpleDateFormat format = new SimpleDateFormat(getLocales().getLocale(locale).getTime().getFormat());
+		if(!mute.getExpiration().isPresent()) return getLocales().getAsReference(locale).getCommands().getMuteInfo().getPermanent();
+		SimpleDateFormat format = new SimpleDateFormat(getLocales().getAsReference(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
 		return TextUtils.deserialize(format.format(calendar.getTime()));
@@ -613,7 +620,7 @@ public class CommandPackInstance {
 				if(getPlayersData().getTempData().getLastActivity(player) > 0) {
 					if(getPlayersData().getTempData().isAfk(player) && !player.hasPermission(Permissions.AFK_UNLIMIT)) {
 						if((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay()) - Duration.ofMillis(System.currentTimeMillis()).getSeconds() <= 0) {
-							player.kick(getLocales().getLocale(player.locale()).getCommands().getAfk().getKick());
+							player.kick(getLocales().getAsReference(player.locale()).getCommands().getAfk().getKick());
 							getPlayersData().getTempData().updateLastActivity(player);
 						}
 					} else if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - getMainConfig().getAfkConfig().getTurnOnDlay()) getPlayersData().getTempData().setAfkStatus(player);
@@ -624,9 +631,9 @@ public class CommandPackInstance {
 			Sponge.server().onlinePlayers().forEach(player -> {
 				if(getPlayersData().getTempData().isAfk(player)) {
 					if(player.hasPermission(Permissions.AFK_UNLIMIT)) {
-						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isUnlimit()) player.sendTitlePart(TitlePart.TITLE, locales.getLocale(player.locale()).getCommands().getAfk().getTitle());
+						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isUnlimit()) player.sendTitlePart(TitlePart.TITLE, locales.getAsReference(player.locale()).getCommands().getAfk().getTitle());
 					} else {
-						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isBeforeKick()) player.showTitle(Title.title(locales.getLocale(player.locale()).getCommands().getAfk().getTitle(), locales.getLocale(player.locale()).getCommands().getAfk().getSubtitle(timeFormat((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay() + 1) - Duration.ofMillis(System.currentTimeMillis()).getSeconds(), player.locale()))));
+						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isBeforeKick()) player.showTitle(Title.title(locales.getAsReference(player.locale()).getCommands().getAfk().getTitle(), locales.getAsReference(player.locale()).getCommands().getAfk().getSubtitle(timeFormat((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay() + 1) - Duration.ofMillis(System.currentTimeMillis()).getSeconds(), player.locale()))));
 					}
 				}
 			});

@@ -75,7 +75,7 @@ public class GameModeType extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.GAMEMODE_OTHER_STAFF, true), false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getPlayerNotPresent()));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.GAMEMODE_OTHER_STAFF, true), false, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getPlayerNotPresent()));
 	}
 
 	@Override
@@ -83,11 +83,11 @@ public class GameModeType extends AbstractParameterizedCommand {
 		return Settings.builder().setEnable(false).build();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.GameMode getGameMode(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getGameMode();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.GameMode getGameMode(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getGameMode();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.GameMode getGameMode(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.GameMode getGameMode(ServerPlayer player) {
 		return getGameMode(player.locale());
 	}
 

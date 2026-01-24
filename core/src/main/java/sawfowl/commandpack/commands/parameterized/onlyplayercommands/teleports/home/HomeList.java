@@ -15,7 +15,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.player.PlayerData;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Home;
+import sawfowl.commandpack.configure.locales.abstractlocale.commands.Home;
 
 public class HomeList extends AbstractPlayerCommand {
 
@@ -61,7 +61,7 @@ public class HomeList extends AbstractPlayerCommand {
 	}
 
 	private Home getHome(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getHome();
+		return plugin.getLocales().getAsReference(locale).getCommands().getHome();
 	}
 
 }

@@ -1,0 +1,55 @@
+package sawfowl.commandpack.configure.locales.ru.commands;
+
+import java.math.BigDecimal;
+
+import org.spongepowered.api.service.economy.Currency;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
+import org.spongepowered.configurate.objectmapping.meta.Setting;
+
+import net.kyori.adventure.text.Component;
+
+import sawfowl.commandpack.configure.Placeholders;
+import sawfowl.commandpack.configure.locales.abstractlocale.commands.Pay;
+import sawfowl.localeapi.api.Text;
+import sawfowl.localeapi.api.TextUtils;
+
+@ConfigSerializable
+public class ImplementPay implements Pay {
+
+	public ImplementPay() {}
+
+	@Setting("NoPermission")
+	@Comment("Вы можете использовать следующие плейсхолдеры для отображения валюты:\n" + Placeholders.CURRENCY_SYMBOL + " - Отображение символа валюты.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Отображение символа валюты с применением стиля из ее имени.\n" + Placeholders.CURRENCY_NAME + " - Отображение имени валюты.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Отображение имени валюты в множественном числе.")
+	private Component noPerm = TextUtils.deserializeLegacy("&cYou do not have permission to transfer " + Placeholders.CURRENCY_NAME + " currency.");
+	@Setting("NotEnoughMoney")
+	@Comment("Вы можете использовать следующие плейсхолдеры для отображения валюты:\n" + Placeholders.CURRENCY_SYMBOL + " - Отображение символа валюты.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Отображение символа валюты с применением стиля из ее имени.\n" + Placeholders.CURRENCY_NAME + " - Отображение имени валюты.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Отображение имени валюты в множественном числе.")
+	private Component notEnoughMoney = TextUtils.deserializeLegacy("&cYou don't have enough money in the " + Placeholders.CURRENCY_NAME + " currency.");
+	@Setting("Success")
+	@Comment("Вы можете использовать следующие плейсхолдеры для отображения валюты:\n" + Placeholders.CURRENCY_SYMBOL + " - Отображение символа валюты.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Отображение символа валюты с применением стиля из ее имени.\n" + Placeholders.CURRENCY_NAME + " - Отображение имени валюты.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Отображение имени валюты в множественном числе.")
+	private Component success = TextUtils.deserializeLegacy("&aYou have transferred &e" + Placeholders.CURRENCY_STYLED_SYMBOL + "&e" + Placeholders.MONEY + " &ato the player's account &e" + Placeholders.PLAYER + "&a.");
+	@Setting("SuccessTarget")
+	@Comment("Вы можете использовать следующие плейсхолдеры для отображения валюты:\n" + Placeholders.CURRENCY_SYMBOL + " - Отображение символа валюты.\n" + Placeholders.CURRENCY_STYLED_SYMBOL + " - Отображение символа валюты с применением стиля из ее имени.\n" + Placeholders.CURRENCY_NAME + " - Отображение имени валюты.\n" + Placeholders.CURRENCY_PLURAL_NAME + " - Отображение имени валюты в множественном числе.")
+	private Component successTarget = TextUtils.deserializeLegacy("&e" + Placeholders.PLAYER + "&a transfers &e" + Placeholders.CURRENCY_STYLED_SYMBOL + "&e" + Placeholders.MONEY + "&a to your account.");
+
+	@Override
+	public Component getNoPermission(Currency currency) {
+		return Text.of(noPerm).replace(Placeholders.CURRENCY_SYMBOL, currency.symbol()).replace(Placeholders.CURRENCY_STYLED_SYMBOL, currency.symbol().color(currency.displayName().color()).style(currency.displayName().style())).replace(Placeholders.CURRENCY_NAME, currency.displayName()).replace(Placeholders.CURRENCY_PLURAL_NAME, currency.pluralDisplayName()).get();
+	}
+
+	@Override
+	public Component getNotEnoughMoney(Currency currency) {
+		return Text.of(notEnoughMoney).replace(Placeholders.CURRENCY_SYMBOL, currency.symbol()).replace(Placeholders.CURRENCY_STYLED_SYMBOL, currency.symbol().color(currency.displayName().color()).style(currency.displayName().style())).replace(Placeholders.CURRENCY_NAME, currency.displayName()).replace(Placeholders.CURRENCY_PLURAL_NAME, currency.pluralDisplayName()).get();
+	}
+
+	@Override
+	public Component getSuccess(Currency currency, BigDecimal value, Component target) {
+		return Text.of(success).replace(Placeholders.CURRENCY_SYMBOL, currency.symbol()).replace(Placeholders.CURRENCY_STYLED_SYMBOL, currency.symbol().color(currency.displayName().color()).style(currency.displayName().style())).replace(Placeholders.CURRENCY_NAME, currency.displayName()).replace(Placeholders.CURRENCY_PLURAL_NAME, currency.pluralDisplayName()).replace(Placeholders.VALUE, value.doubleValue()).replace(Placeholders.PLAYER, target).get();
+	}
+
+	@Override
+	public Component getSuccessTarget(Component source, Currency currency, BigDecimal value) {
+		return Text.of(successTarget).replace(Placeholders.PLAYER, source).replace(Placeholders.CURRENCY_SYMBOL, currency.symbol()).replace(Placeholders.CURRENCY_STYLED_SYMBOL, currency.symbol().color(currency.displayName().color()).style(currency.displayName().style())).replace(Placeholders.CURRENCY_NAME, currency.displayName()).replace(Placeholders.CURRENCY_PLURAL_NAME, currency.pluralDisplayName()).replace(Placeholders.VALUE, value.doubleValue()).get();
+	}
+
+}

@@ -29,12 +29,13 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.command.Price;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.commands.ThrowingConsumer;
-import sawfowl.commandpack.configure.locale.locales.AbstractLocale;
+import sawfowl.commandpack.configure.locales.AbstractLocale;
 import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
 import sawfowl.commandpack.utils.tasks.DelayTimerTask;
-import sawfowl.localeapi.api.LocaleReference;
+import sawfowl.localeapi.api.LocaleService;
 import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
+import sawfowl.localeapi.api.Translation;
 
 /**
  * An auxiliary interface for creating commands.
@@ -114,7 +115,7 @@ public interface PluginCommand {
 	}
 
 	default Locale getLocale(CommandCause cause) {
-		return cause.audience() instanceof SystemSubject ? CommandPackInstance.getInstance().getLocales().getLocaleService().getSystemOrDefaultLocale() : (cause.audience() instanceof LocaleSource ? ((LocaleSource) cause.audience()).locale() : org.spongepowered.api.util.locale.Locales.DEFAULT);
+		return cause.audience() instanceof SystemSubject ? CommandPackInstance.getInstance().getLocales().getSystemOrDefaultLocale() : (cause.audience() instanceof LocaleSource ? ((LocaleSource) cause.audience()).locale() : org.spongepowered.api.util.locale.Locales.DEFAULT);
 	}
 
 	/**
@@ -123,7 +124,7 @@ public interface PluginCommand {
 	default Component getComponent(Locale locale, Object... path) {
 		Component text = getComponent(path);
 		if(text != null) return text;
-		return CommandPackInstance.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getComponent(path);
+		return LocaleService.getInstance().getLocales(getContainer()).getSimple(locale).getComponent(path);
 	}
 
 	/**
@@ -134,7 +135,7 @@ public interface PluginCommand {
 	}
 
 	default List<Component> getListTexts(Locale locale, Object... path) {
-		return CommandPackInstance.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer().metadata().id(), locale).getListStrings(path).stream().map(s -> text(s)).collect(Collectors.toList());
+		return LocaleService.getInstance().getLocales(getContainer()).getSimple(locale).getList(String.class, path).stream().map(s -> text(s)).collect(Collectors.toList());
 	}
 
 	default CommandResult success() {
@@ -248,8 +249,9 @@ public interface PluginCommand {
 			.sendTo(target);
 	}
 
-	default <T extends LocaleReference> T getPluginLocale(Class<T> localeClass, Locale locale) {
-		return CommandPackInstance.getInstance().getLocales().getLocaleService().getOrDefaultLocale(getContainer(), locale).asReference(localeClass);
+	@SuppressWarnings("unchecked")
+	default <T extends Translation> T getPluginLocale(Class<T> localeClass, Locale locale) {
+		return (T) LocaleService.getInstance().getLocales(getContainer()).getAsReference(locale);
 	}
 
 	default boolean isEnable() {
@@ -257,7 +259,7 @@ public interface PluginCommand {
 	}
 
 	private AbstractLocale getLocale(Locale locale) {
-		return CommandPackInstance.getInstance().getLocales().getLocale(locale);
+		return CommandPackInstance.getInstance().getLocales().getAsReference(locale);
 	}
 
 }

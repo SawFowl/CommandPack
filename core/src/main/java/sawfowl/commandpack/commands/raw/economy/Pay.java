@@ -117,11 +117,11 @@ public class Pay extends AbstractPlayerCommand {
 		return null;
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Pay getPay(Locale locale) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Pay getPay(Locale locale) {
 		return getCommands(locale).getPay();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Pay getPay(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Pay getPay(ServerPlayer player) {
 		return getPay(player.locale());
 	}
 

@@ -38,7 +38,7 @@ public class CraftingTable extends AbstractParameterizedCommand {
 			menu.setTitle(ItemTypes.CRAFTING_TABLE.get().asComponent());
 			if(target.isPresent()) {
 				menu.open(target.get());
-				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getCraftingTable().getSuccessStaff(target.get()));
+				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getCraftingTable().getSuccessStaff(target.get()));
 			} else delay((ServerPlayer) src, locale, consumer -> {
 				menu.open((ServerPlayer) src);
 			});
@@ -47,7 +47,7 @@ public class CraftingTable extends AbstractParameterizedCommand {
 			InventoryMenu menu = ViewableInventory.builder().type(ContainerTypes.CRAFTING).completeStructure().carrier(target).plugin(plugin.getPluginContainer()).build().asMenu();
 			menu.setTitle(ItemTypes.CRAFTING_TABLE.get().asComponent());
 			menu.open(target);
-			src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getCraftingTable().getSuccessStaff(target));
+			src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getCraftingTable().getSuccessStaff(target));
 		}
 	}
 

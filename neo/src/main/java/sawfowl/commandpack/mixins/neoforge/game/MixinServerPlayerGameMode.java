@@ -64,7 +64,7 @@ public class MixinServerPlayerGameMode {
 			delayedTickStart = gameTicks - 250;
 			lastSentState = -1;
 			if(value >= 0.9f) {
-				delayedDestroyPos = new BlockPos(0, player.serverLevel().getMaxY() + 1, 0);
+				delayedDestroyPos = new BlockPos(0, player.level().getMaxY() + 1, 0);
 				destroyPos = delayedDestroyPos;
 			}
 			return 0.0f;
@@ -103,7 +103,7 @@ public class MixinServerPlayerGameMode {
 			delayedTickStart = gameTicks - 250;
 			lastSentState = -1;
 			if(value >= 0.9f) {
-				delayedDestroyPos = new BlockPos(0, player.serverLevel().getMaxY() + 1, 0);
+				delayedDestroyPos = new BlockPos(0, player.level().getMaxY() + 1, 0);
 				destroyPos = delayedDestroyPos;
 			}
 			return 0.0f;

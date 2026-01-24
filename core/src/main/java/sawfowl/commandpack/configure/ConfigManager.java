@@ -20,6 +20,7 @@ import sawfowl.commandpack.configure.configs.miscellaneous.JoinCommands;
 import sawfowl.commandpack.configure.configs.player.PlayerData;
 import sawfowl.commandpack.configure.configs.player.WarpData;
 import sawfowl.localeapi.api.TextUtils;
+import sawfowl.localeapi.api.serializetools.ItemStackSerializerType;
 import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
 public class ConfigManager {
@@ -166,7 +167,7 @@ public class ConfigManager {
 
 	private void saveMainConfig() {
 		try {
-			mainConfigReference = SerializeOptions.createHoconConfigurationLoader(1).path(plugin.getConfigDir().resolve("Config.conf")).build().loadToReference();
+			mainConfigReference = SerializeOptions.createHoconConfigurationLoader(ItemStackSerializerType.SIMPLE).path(plugin.getConfigDir().resolve("Config.conf")).build().loadToReference();
 			mainConfig = mainConfigReference.referenceTo(MainConfig.class);
 			mainConfigReference.save();
 		} catch (ConfigurateException e) {

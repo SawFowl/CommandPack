@@ -31,7 +31,7 @@ import sawfowl.commandpack.api.commands.raw.arguments.RawArgumentsMap;
 import sawfowl.commandpack.api.commands.raw.arguments.RawBasicArgumentData;
 import sawfowl.commandpack.api.commands.raw.arguments.RawOptional;
 import sawfowl.commandpack.commands.abstractcommands.raw.AbstractRawCommand;
-import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Economy;
+import sawfowl.commandpack.configure.locales.abstractlocale.commands.Economy;
 
 public class SetBalance extends AbstractRawCommand {
 

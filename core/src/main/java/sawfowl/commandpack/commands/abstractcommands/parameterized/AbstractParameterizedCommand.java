@@ -20,7 +20,7 @@ import sawfowl.commandpack.api.commands.AbstractPluginCommand;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.commands.parameterized.ParameterizedCommand;
 import sawfowl.commandpack.api.data.command.Settings;
-import sawfowl.commandpack.configure.locale.locales.abstractlocale.CommandExceptions;
+import sawfowl.commandpack.configure.locales.abstractlocale.CommandExceptions;
 
 public abstract class AbstractParameterizedCommand extends AbstractPluginCommand<CommandPackInstance> implements ParameterizedCommand {
 
@@ -75,7 +75,7 @@ public abstract class AbstractParameterizedCommand extends AbstractPluginCommand
 	}
 
 	protected CommandExceptions getExceptions(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommandExceptions();
+		return plugin.getLocales().getAsReference(locale).getCommandExceptions();
 	}
 
 }

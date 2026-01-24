@@ -65,7 +65,7 @@ public class Mute extends AbstractParameterizedCommand {
 			if(reason.isPresent()) muteBuilder = muteBuilder.reason(text(reason.get()));
 			sawfowl.commandpack.api.data.punishment.Mute mute = muteBuilder.build();
 			plugin.getPunishmentService().addMute(mute);
-			Sponge.systemSubject().sendMessage(getMute().getAnnouncement(mute.isIndefinitely(), source, mute.getName(), expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), mute), mute.getReason().orElse(text("-"))));	
+			Sponge.systemSubject().sendMessage(getMute().getAnnouncement(mute.isIndefinitely(), source, mute.getName(), expire(plugin.getLocales().getSystemOrDefaultLocale(), mute), mute.getReason().orElse(text("-"))));	
 			if(plugin.getMainConfig().getPunishment().getAnnounce().isMute()) {
 				if(duration.isPresent()) {
 					Sponge.server().onlinePlayers().forEach(player -> {
@@ -108,22 +108,22 @@ public class Mute extends AbstractParameterizedCommand {
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
 		if(!mute.getExpiration().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Mute getMute(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getMute();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Mute getMute(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getMute();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Mute getMute(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Mute getMute(ServerPlayer player) {
 		return getMute(player.locale());
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Mute getMute() {
-		return plugin.getLocales().getSystemLocale().getCommands().getMute();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Mute getMute() {
+		return plugin.getLocales().getSystemAsReference().getCommands().getMute();
 	}
 
 }

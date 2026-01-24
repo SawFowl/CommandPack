@@ -108,11 +108,11 @@ public class Repair extends AbstractParameterizedCommand {
 		if(!itemStack.isEmpty()) itemStack.offer(Keys.ITEM_DURABILITY, itemStack.get(Keys.MAX_DURABILITY).orElse(Integer.MAX_VALUE));
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Repair getRepair(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getRepair();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Repair getRepair(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getRepair();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Repair getRepair(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Repair getRepair(ServerPlayer player) {
 		return getRepair(player.locale());
 	}
 

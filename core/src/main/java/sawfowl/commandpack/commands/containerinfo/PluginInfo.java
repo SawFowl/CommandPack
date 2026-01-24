@@ -57,7 +57,7 @@ public class PluginInfo extends AbstractInfoCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.PLUGIN, false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getPluginNotPresent()));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.PLUGIN, false, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getPluginNotPresent()));
 	}
 
 	@Override

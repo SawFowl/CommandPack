@@ -15,7 +15,7 @@ import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractPlayerCommand;
-import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Item;
+import sawfowl.commandpack.configure.locales.abstractlocale.commands.Item;
 
 public class ClearName extends AbstractPlayerCommand {
 
@@ -53,7 +53,7 @@ public class ClearName extends AbstractPlayerCommand {
 	}
 
 	private Item getItem(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getItem();
+		return plugin.getLocales().getAsReference(locale).getCommands().getItem();
 	}
 
 }

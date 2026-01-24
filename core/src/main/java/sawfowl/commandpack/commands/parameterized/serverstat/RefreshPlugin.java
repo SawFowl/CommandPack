@@ -30,11 +30,11 @@ public class RefreshPlugin extends AbstractInfoCommand {
 		if(isPlayer) {
 			delay((ServerPlayer) src, locale, consumer -> {
 				sendRefreshEvent(container);
-				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getServerStat().getRefreshPlugin());
+				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getServerStat().getRefreshPlugin());
 			});
 		} else {
 			sendRefreshEvent(container);
-			src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getServerStat().getRefreshPlugin());
+			src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getServerStat().getRefreshPlugin());
 		}
 	}
 

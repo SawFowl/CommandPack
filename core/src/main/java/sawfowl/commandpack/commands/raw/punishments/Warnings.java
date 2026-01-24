@@ -107,7 +107,7 @@ public class Warnings extends AbstractRawCommand {
 		if(warns.getWarns().isEmpty()) return;
 		List<Component> list = new ArrayList<>();
 		warns.getWarns().forEach(warn -> {
-			Component removeText = TextUtils.createCallBack(plugin.getLocales().getLocale(locale).getButtons().getRemove(), consumer -> {
+			Component removeText = TextUtils.createCallBack(plugin.getLocales().getAsReference(locale).getButtons().getRemove(), consumer -> {
 				Optional<Warns> find = plugin.getPunishmentService().getWarns(warns.getUniqueId());
 				plugin.getPunishmentService().removeWarn(warns.getUniqueId(), warn);
 				sendWarnsList(audience, locale, find.get(), remove, isPlayer);
@@ -124,12 +124,12 @@ public class Warnings extends AbstractRawCommand {
 		return null;
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warns getWarns(Locale locale) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Warns getWarns(Locale locale) {
 		return getCommands(locale).getWarns();
 	}
 
 	private Component created(Locale locale, sawfowl.commandpack.api.data.punishment.Warn warn) {
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(warn.getCreated().toEpochMilli());
 		return text(format.format(calendar.getTime()));
@@ -137,7 +137,7 @@ public class Warnings extends AbstractRawCommand {
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Warn warn) {
 		if(!warn.getExpiration().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(warn.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));

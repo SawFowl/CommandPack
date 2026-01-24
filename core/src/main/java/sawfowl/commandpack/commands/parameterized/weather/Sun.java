@@ -77,7 +77,7 @@ public class Sun extends AbstractParameterizedCommand {
 		if(duration.isPresent()) {
 			world.setWeather(WeatherTypes.CLEAR.get(), Ticks.of(duration.get() * 20));
 		} else world.setWeather(WeatherTypes.CLEAR.get(), Ticks.of(random.nextInt(10000) * 20));
-		src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getWeather().getSun(world));
+		src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getWeather().getSun(world));
 	}
 
 }

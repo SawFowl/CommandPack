@@ -35,17 +35,17 @@ public class Reply extends AbstractPlayerCommand {
 			Optional<Audience> optTarget = plugin.getPlayersData().getTempData().getReply(src);
 			if(!optTarget.isPresent()) {
 				plugin.getPlayersData().getTempData().removeReply(src);
-				exception(plugin.getLocales().getLocale(locale).getCommands().getReply().getNothing());
+				exception(plugin.getLocales().getAsReference(locale).getCommands().getReply().getNothing());
 			}
 			Audience targetAudience = optTarget.get();
 			if(targetAudience instanceof ServerPlayer) {
 				ServerPlayer target = (ServerPlayer) targetAudience;
 				if(!src.hasPermission(Permissions.REPLY_STAFF) && target.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)) exception(getExceptions(locale).getPlayerIsOffline(target.name()));
-				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getTell().getSuccess(target.get(Keys.CUSTOM_NAME).orElse(text(target.name())), message));
-				target.sendMessage(plugin.getLocales().getLocale(target).getCommands().getTell().getSuccessTarget(src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), message));
+				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getTell().getSuccess(target.get(Keys.CUSTOM_NAME).orElse(text(target.name())), message));
+				target.sendMessage(plugin.getLocales().getAsReference(target).getCommands().getTell().getSuccessTarget(src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), message));
 			} else {
-				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getTell().getSuccess(text("&4Server"), message));
-				targetAudience.sendMessage(plugin.getLocales().getSystemLocale().getCommands().getTell().getSuccessTarget(src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), message));
+				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getTell().getSuccess(text("&4Server"), message));
+				targetAudience.sendMessage(plugin.getLocales().getSystemAsReference().getCommands().getTell().getSuccessTarget(src.get(Keys.CUSTOM_NAME).orElse(text(src.name())), message));
 			}
 		});
 	}

@@ -107,7 +107,7 @@ public class Balance extends AbstractRawCommand {
 		return plugin.getMainConfig().getEconomy().isEnable();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Balance getBalance(Locale locale) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Balance getBalance(Locale locale) {
 		return getCommands(locale).getBalance();
 	}
 

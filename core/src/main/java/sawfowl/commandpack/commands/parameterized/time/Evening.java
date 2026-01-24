@@ -69,7 +69,7 @@ public class Evening extends AbstractParameterizedCommand {
 		if(world.properties().gameTime().hour() < 18) {
 			world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day(), 18, 0));
 		} else world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day() + 1, 18, 0));
-		src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getTime().getEvening(world));
+		src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getTime().getEvening(world));
 	}
 
 }

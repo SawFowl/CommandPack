@@ -31,10 +31,10 @@ public class List extends AbstractParameterizedCommand {
 			ServerPlayer player = (ServerPlayer) src;
 			delay(player, locale, consumer -> {
 				if(!player.hasPermission(Permissions.LIST_STAFF)) {
-					player.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getList().getSuccess(Sponge.server().onlinePlayers().stream().filter(p -> !p.get(Keys.VANISH_STATE).isPresent() || !p.get(Keys.VANISH_STATE).get().invisible()).map(p -> text(p.name())).collect(Collectors.toList())));
-				} else src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getList().getSuccess(Sponge.server().onlinePlayers().stream().map(p -> isVanished(p) ? plugin.getLocales().getLocale(locale).getCommands().getList().getVanished(p) : text(p.name())).collect(Collectors.toList())));
+					player.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getList().getSuccess(Sponge.server().onlinePlayers().stream().filter(p -> !p.get(Keys.VANISH_STATE).isPresent() || !p.get(Keys.VANISH_STATE).get().invisible()).map(p -> text(p.name())).collect(Collectors.toList())));
+				} else src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getList().getSuccess(Sponge.server().onlinePlayers().stream().map(p -> isVanished(p) ? plugin.getLocales().getAsReference(locale).getCommands().getList().getVanished(p) : text(p.name())).collect(Collectors.toList())));
 			});
-		} else src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getList().getSuccess(Sponge.server().onlinePlayers().stream().map(p -> isVanished(p) ? plugin.getLocales().getLocale(locale).getCommands().getList().getVanished(p) : text(p.name())).collect(Collectors.toList())));
+		} else src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getList().getSuccess(Sponge.server().onlinePlayers().stream().map(p -> isVanished(p) ? plugin.getLocales().getAsReference(locale).getCommands().getList().getVanished(p) : text(p.name())).collect(Collectors.toList())));
 	}
 
 	private boolean isVanished(ServerPlayer player) {

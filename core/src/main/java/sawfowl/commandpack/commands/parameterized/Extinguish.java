@@ -96,11 +96,11 @@ public class Extinguish extends AbstractParameterizedCommand {
 				.execute();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Extinguish getExtinguish(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getExtinguish();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Extinguish getExtinguish(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getExtinguish();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Extinguish getExtinguish(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Extinguish getExtinguish(ServerPlayer player) {
 		return getExtinguish(player.locale());
 	}
 

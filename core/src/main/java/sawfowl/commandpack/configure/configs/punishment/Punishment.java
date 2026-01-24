@@ -32,10 +32,10 @@ public class Punishment {
 	private DBSettings dbSettings = new DBSettings();
 	@Setting("DateTimeFormat")
 	@LocalisedComment(path = {"Comments", "MainConfig", "Punishment", "DateTimeFormat"}, plugin = "commandpack")
-	private String dateTimeFormat = CommandPackInstance.getInstance().getLocales().getSystemLocale().getTime().getFormat();
+	private String dateTimeFormat = CommandPackInstance.getInstance().getLocales().getSystemAsReference().getTime().getFormat();
 	@Setting("TimeZone")
 	@LocalisedComment(path = {"Comments", "MainConfig", "Punishment", "TimeZone"}, plugin = "commandpack")
-	private String timeZone = CommandPackInstance.getInstance().getLocales().getSystemLocale().getTime().getTimeZone();
+	private String timeZone = CommandPackInstance.getInstance().getLocales().getSystemAsReference().getTime().getTimeZone();
 
 	public boolean isEnable() {
 		return enable;

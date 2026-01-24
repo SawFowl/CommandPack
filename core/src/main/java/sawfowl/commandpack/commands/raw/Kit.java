@@ -423,11 +423,11 @@ public class Kit extends AbstractRawCommand {
 		return null;
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Kit getKit(Locale locale) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Kit getKit(Locale locale) {
 		return getCommands(locale).getKit();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Kit getKit(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Kit getKit(ServerPlayer player) {
 		return getKit(player.locale());
 	}
 

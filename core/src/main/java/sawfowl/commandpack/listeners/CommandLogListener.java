@@ -14,7 +14,7 @@ import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.common.SpongeGame;
 
 import sawfowl.commandpack.CommandPackInstance;
-import sawfowl.commandpack.configure.locale.locales.abstractlocale.Debug.Commands;
+import sawfowl.commandpack.configure.locales.abstractlocale.Debug.Commands;
 import sawfowl.commandpack.utils.CommandExecutorTypes;
 
 public class CommandLogListener {
@@ -23,7 +23,7 @@ public class CommandLogListener {
 	private final Locale locale;
 	public CommandLogListener(CommandPackInstance plugin) {
 		this.plugin = plugin;
-		locale = plugin.getLocales().getLocaleService().getSystemOrDefaultLocale();
+		locale = plugin.getLocales().getSystemOrDefaultLocale();
 	}
 
 	@Listener(order = Order.PRE)
@@ -56,7 +56,7 @@ public class CommandLogListener {
 	}
 
 	private Commands getCommands() {
-		return plugin.getLocales().getLocale(locale).getDebug().getCommands();
+		return plugin.getLocales().getAsReference(locale).getDebug().getCommands();
 	}
 
 	private Optional<LocatableBlock> getLocatableBlock(CommandCause cause) {

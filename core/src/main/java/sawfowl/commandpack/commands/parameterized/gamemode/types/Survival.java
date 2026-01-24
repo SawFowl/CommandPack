@@ -19,7 +19,7 @@ import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
-import sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.GameMode;
+import sawfowl.commandpack.configure.locales.abstractlocale.commands.GameMode;
 
 @Register
 public class Survival extends AbstractParameterizedCommand {
@@ -64,11 +64,11 @@ public class Survival extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.GAMEMODE_OTHER_STAFF, true), false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getPlayerNotPresent()));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.GAMEMODE_OTHER_STAFF, true), false, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getPlayerNotPresent()));
 	}
 
 	private GameMode getGameMode(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getGameMode();
+		return plugin.getLocales().getAsReference(locale).getCommands().getGameMode();
 	}
 
 	private GameMode getGameMode(ServerPlayer player) {

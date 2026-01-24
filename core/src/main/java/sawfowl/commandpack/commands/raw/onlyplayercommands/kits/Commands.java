@@ -35,7 +35,7 @@ public class Commands extends AbstractKitsEditCommand {
 			Component title = getCommands(locale).getKits().getCommandsTitle();
 			List<Component> commands = new ArrayList<>();
 			kitData.getExecuteCommands().get().forEach(command -> {
-				commands.add(TextUtils.createCallBack(plugin.getLocales().getLocale(locale).getButtons().getRemove(), () -> {
+				commands.add(TextUtils.createCallBack(plugin.getLocales().getAsReference(locale).getButtons().getRemove(), () -> {
 					if(kitData.getExecuteCommands().get().contains(command)) {
 						kitData.removeCommand(command);
 						kitData.save();

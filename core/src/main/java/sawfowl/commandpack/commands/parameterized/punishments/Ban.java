@@ -69,7 +69,7 @@ public class Ban extends AbstractParameterizedCommand {
 				org.spongepowered.api.service.ban.Ban ban = banBuilder.build();
 				plugin.getPunishmentService().add(ban);
 				if(user.player().isPresent() && user.isOnline()) user.player().get().kick(getBan(user.player().get()).getDisconnect(!ban.expirationDate().isPresent(), source, text(reason.orElse("-")), expire(user.player().get().locale(), ban)));
-				Sponge.systemSubject().sendMessage(getBan().getAnnouncement(!ban.expirationDate().isPresent(), source, expire(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale(), ban), (Profile) ban));	
+				Sponge.systemSubject().sendMessage(getBan().getAnnouncement(!ban.expirationDate().isPresent(), source, expire(plugin.getLocales().getSystemOrDefaultLocale(), ban), (Profile) ban));	
 				if(plugin.getMainConfig().getPunishment().getAnnounce().isBan()) {
 					if(ban.expirationDate().isPresent()) {
 						Sponge.server().onlinePlayers().forEach(player -> {
@@ -112,22 +112,22 @@ public class Ban extends AbstractParameterizedCommand {
 
 	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
 		if(!ban.expirationDate().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getLocale(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Ban getBan(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getBan();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getBan();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Ban getBan(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan(ServerPlayer player) {
 		return getBan(player.locale());
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Ban getBan() {
-		return plugin.getLocales().getSystemLocale().getCommands().getBan();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan() {
+		return plugin.getLocales().getSystemAsReference().getCommands().getBan();
 	}
 
 }

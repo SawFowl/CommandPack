@@ -36,10 +36,10 @@ public class Mods extends AbstractInfoCommand {
 			ServerPlayer target = getPlayer(context).get();
 			List<Component> mods = MixinServerPlayer.cast(target).getModList().stream().map(mod -> mod.asComponent()).toList();
 			if(mods.isEmpty()) {
-				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getServerStat().getModsNotFound());
+				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getServerStat().getModsNotFound());
 				return;
 			}
-			Component title = plugin.getLocales().getLocale(locale).getCommands().getServerStat().getPlayerMods(target, mods.size());
+			Component title = plugin.getLocales().getAsReference(locale).getCommands().getServerStat().getPlayerMods(target, mods.size());
 			if(isPlayer) {
 				delay((ServerPlayer) src, locale, consumer -> sendPaginationList(src, title, Component.text("=").color(NamedTextColor.DARK_AQUA), linesPerPage, mods));
 			} else src.sendMessage(title.append(Component.text(": ")).append(Component.join(JoinConfiguration.separators(Component.text(", "), Component.text(".")), mods)));

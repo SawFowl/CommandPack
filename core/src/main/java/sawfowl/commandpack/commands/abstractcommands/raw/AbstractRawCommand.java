@@ -17,8 +17,8 @@ import sawfowl.commandpack.api.commands.AbstractPluginCommand;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.data.command.Settings;
-import sawfowl.commandpack.configure.locale.locales.abstractlocale.CommandExceptions;
-import sawfowl.commandpack.configure.locale.locales.abstractlocale.Commands;
+import sawfowl.commandpack.configure.locales.abstractlocale.CommandExceptions;
+import sawfowl.commandpack.configure.locales.abstractlocale.Commands;
 
 public abstract class AbstractRawCommand extends AbstractPluginCommand<CommandPackInstance> implements RawCommand {
 
@@ -74,15 +74,15 @@ public abstract class AbstractRawCommand extends AbstractPluginCommand<CommandPa
 	}
 
 	protected Commands getCommands(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands();
+		return plugin.getLocales().getAsReference(locale).getCommands();
 	}
 
 	protected Commands getCommands() {
-		return plugin.getLocales().getSystemLocale().getCommands();
+		return plugin.getLocales().getSystemAsReference().getCommands();
 	}
 
 	protected CommandExceptions getExceptions(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommandExceptions();
+		return plugin.getLocales().getAsReference(locale).getCommandExceptions();
 	}
 
 }

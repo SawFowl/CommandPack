@@ -35,17 +35,17 @@ public class SetWarp extends AbstractPlayerCommand {
 			String name = getString(context, "Warp", src.name());
 			boolean admin = getBoolean(context, "Admin", false);
 			if(warpIsPresent(name, admin, src)) {
-				if(admin) exception(plugin.getLocales().getLocale(locale).getCommands().getSetWarp().getAllreadyExist());
+				if(admin) exception(plugin.getLocales().getAsReference(locale).getCommands().getSetWarp().getAllreadyExist());
 				plugin.getPlayersData().removeWarp(name, playerData);
 			}
 			Warp warp = Warp.of(name, Location.of(src), getBoolean(context, "Private", false));
 			if(admin) {
 				plugin.getPlayersData().addAndSaveWarp(warp, null);
-				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getSetWarp().getSuccessAdmin());
+				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getSetWarp().getSuccessAdmin());
 			} else if(src.hasPermission(Permissions.WARP_STAFF) || playerData.getTotalWarps() < Permissions.getWarpsLimit(src)) {
 				plugin.getPlayersData().addAndSaveWarp(warp, playerData);
-				src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getSetWarp().getSuccess());
-			} else exception(plugin.getLocales().getLocale(locale).getCommands().getSetWarp().getLimit(Permissions.getWarpsLimit(src)));
+				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getSetWarp().getSuccess());
+			} else exception(plugin.getLocales().getAsReference(locale).getCommands().getSetWarp().getLimit(Permissions.getWarpsLimit(src)));
 		});
 	}
 
@@ -68,9 +68,9 @@ public class SetWarp extends AbstractPlayerCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createString("Warp", false), false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getNameNotPresent()),
-			ParameterSettings.of(CommandParameters.createBoolean("Private", false), false, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getBooleanNotPresent()),
-			ParameterSettings.of(CommandParameters.createBoolean("Admin", Permissions.WARP_STAFF, true), true, locale -> plugin.getLocales().getLocale(locale).getCommandExceptions().getBooleanNotPresent())
+			ParameterSettings.of(CommandParameters.createString("Warp", false), false, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getNameNotPresent()),
+			ParameterSettings.of(CommandParameters.createBoolean("Private", false), false, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getBooleanNotPresent()),
+			ParameterSettings.of(CommandParameters.createBoolean("Admin", Permissions.WARP_STAFF, true), true, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getBooleanNotPresent())
 		);
 	}
 

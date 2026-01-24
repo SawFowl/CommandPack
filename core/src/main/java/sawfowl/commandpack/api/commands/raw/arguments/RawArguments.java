@@ -345,7 +345,7 @@ public class RawArguments {
 		return RawArgument.of(
 			Duration.class,
 			(cause, args) -> EMPTY.stream(),
-			(cause, args) -> args.length >= data.cursor() + 1 ? parseDuration(args[data.cursor()], cause.first(ServerPlayer.class).map(p -> p.locale()).orElse(plugin.getLocales().getLocaleService().getSystemOrDefaultLocale())) : Optional.ofNullable(data.def()),
+			(cause, args) -> args.length >= data.cursor() + 1 ? parseDuration(args[data.cursor()], cause.first(ServerPlayer.class).map(p -> p.locale()).orElse(plugin.getLocales().getSystemOrDefaultLocale())) : Optional.ofNullable(data.def()),
 			data.toRawArgumentData(CommandTreeNodeTypes.STRING.get().createNode()),
 			rawOptional,
 			supplier
@@ -377,7 +377,7 @@ public class RawArguments {
 		try {
 			return Optional.ofNullable(Duration.parse(s));
 		} catch (final DateTimeParseException ex) {
-			throw new CommandException(plugin.getLocales().getLocale(locale).getCommandExceptions().getDurationNotPresent());
+			throw new CommandException(plugin.getLocales().getAsReference(locale).getCommandExceptions().getDurationNotPresent());
 		}
 	}
 

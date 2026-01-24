@@ -69,7 +69,7 @@ public class Day extends AbstractParameterizedCommand {
 		if(world.properties().gameTime().hour() < 12) {
 			world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day(), 12, 0));
 		} else world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day() + 1, 12, 0));
-		src.sendMessage(plugin.getLocales().getLocale(locale).getCommands().getTime().getDay(world));
+		src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getTime().getDay(world));
 	}
 
 }

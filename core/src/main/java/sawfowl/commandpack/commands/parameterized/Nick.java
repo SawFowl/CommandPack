@@ -90,11 +90,11 @@ public class Nick extends AbstractParameterizedCommand {
 		} else src.sendMessage(getNick(locale).getClear());
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Nick getNick(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getNick();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Nick getNick(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getNick();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Nick getNick(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Nick getNick(ServerPlayer player) {
 		return getNick(player.locale());
 	}
 

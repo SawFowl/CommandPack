@@ -25,7 +25,7 @@ public class Help extends AbstractParameterizedCommand {
 
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
-		sendPaginationList(src, plugin.getLocales().getLocale(locale).getCommands().getHelp().getTitle(), Component.text("=").color(plugin.getLocales().getLocale(locale).getCommands().getHelp().getTitle().color()), 10, plugin.getLocales().getLocale(locale).getCommands().getHelp().getList());
+		sendPaginationList(src, plugin.getLocales().getAsReference(locale).getCommands().getHelp().getTitle(), Component.text("=").color(plugin.getLocales().getAsReference(locale).getCommands().getHelp().getTitle().color()), 10, plugin.getLocales().getAsReference(locale).getCommands().getHelp().getList());
 	}
 
 	@Override

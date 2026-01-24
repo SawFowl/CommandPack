@@ -117,15 +117,15 @@ public class Warps extends AbstractParameterizedCommand {
 	private List<Component> getServerWarps(ServerPlayer player) {
 		List<Component> list = new ArrayList<>();
 		plugin.getPlayersData().getAdminWarps().forEach((name, warp) -> {
-			Component delete = !player.hasPermission(Permissions.WARP_STAFF) ? Component.empty() : plugin.getLocales().getLocale(player).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(cause -> {
+			Component delete = !player.hasPermission(Permissions.WARP_STAFF) ? Component.empty() : plugin.getLocales().getAsReference(player).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(cause -> {
 				plugin.getPlayersData().removeWarp(name, null);
 				sendServerWarps(player, getServerWarps(player));
 			}));
-			Component teleport = player.hasPermission(Permissions.getWarpPermission(name)) || player.hasPermission(Permissions.WARP_STAFF) ? plugin.getLocales().getLocale(player).getButtons().getTeleportClickable().clickEvent(SpongeComponents.executeCallback( cause -> {
+			Component teleport = player.hasPermission(Permissions.getWarpPermission(name)) || player.hasPermission(Permissions.WARP_STAFF) ? plugin.getLocales().getAsReference(player).getButtons().getTeleportClickable().clickEvent(SpongeComponents.executeCallback( cause -> {
 				plugin.getPlayersData().getTempData().setPreviousLocation(player);
 				warp.moveHere(player);
 				player.sendMessage(getWarp(player).getSuccess(warp.asComponent()));
-			})) : plugin.getLocales().getLocale(player).getButtons().getTeleport();
+			})) : plugin.getLocales().getAsReference(player).getButtons().getTeleport();
 			list.add(Component.empty().append(delete).append(teleport).append(warp.asComponent()));
 		});
 		return list;
@@ -136,11 +136,11 @@ public class Warps extends AbstractParameterizedCommand {
 		plugin.getPlayersData().getPlayersData().forEach(data -> {
 			data.getWarps().forEach(warp -> {
 				if(!warp.isPrivate() || player.hasPermission(Permissions.WARP_STAFF) || plugin.getPlayersData().getOrCreatePlayerData(player).containsWarp(warp.getPlainName())) {
-					Component delete = !player.hasPermission(Permissions.WARP_STAFF) && !plugin.getPlayersData().getOrCreatePlayerData(player).containsWarp(warp.getPlainName()) ? Component.empty() : plugin.getLocales().getLocale(player).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(cause -> {
+					Component delete = !player.hasPermission(Permissions.WARP_STAFF) && !plugin.getPlayersData().getOrCreatePlayerData(player).containsWarp(warp.getPlainName()) ? Component.empty() : plugin.getLocales().getAsReference(player).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(cause -> {
 					plugin.getPlayersData().removeWarp(warp.getPlainName(), data);
 					sendPlayersWarps(player, getPlayersWarps(player));
 				}));
-				Component teleport = plugin.getLocales().getLocale(player).getButtons().getTeleportClickable().clickEvent(SpongeComponents.executeCallback( cause -> {
+				Component teleport = plugin.getLocales().getAsReference(player).getButtons().getTeleportClickable().clickEvent(SpongeComponents.executeCallback( cause -> {
 					if(data.containsWarp(warp.getName())) {
 						plugin.getPlayersData().getTempData().setPreviousLocation(player);
 						warp.moveHere(player);
@@ -154,19 +154,19 @@ public class Warps extends AbstractParameterizedCommand {
 		return list;
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warps getWarps(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getWarps();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Warps getWarps(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getWarps();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warps getWarps(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Warps getWarps(ServerPlayer player) {
 		return getWarps(player.locale());
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warp getWarp(Locale locale) {
-		return plugin.getLocales().getLocale(locale).getCommands().getWarp();
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Warp getWarp(Locale locale) {
+		return plugin.getLocales().getAsReference(locale).getCommands().getWarp();
 	}
 
-	private sawfowl.commandpack.configure.locale.locales.abstractlocale.commands.Warp getWarp(ServerPlayer player) {
+	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Warp getWarp(ServerPlayer player) {
 		return getWarp(player.locale());
 	}
 

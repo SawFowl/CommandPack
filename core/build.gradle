@@ -14,8 +14,8 @@ dependencies {
 	implementation "org.spongepowered:mixin:${mixin}"
 	implementation "org.spongepowered:spongeapi:${api}"
 	//implementation "org.spongepowered:sponge:${sponge}"
-	implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
-	//implementation fileTree(dir: 'libs', include: '*.jar')
+	//implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
+	implementation fileTree(dir: 'libs', include: '*.jar')
 	implementation fileTree(dir: rootProject.buildDir.toPath().resolve("unpacked/jars"), include: '*.jar')
 }
 
