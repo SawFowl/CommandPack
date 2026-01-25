@@ -284,8 +284,7 @@ public class CommandPackInstance {
 		logger = Logger.createApacheLogger("CommandPack");
 		isForge = checkForge();
 		isNeo = checkNeo();
-		LocaleService localeService = LocaleService.getInstance();
-		locales = localeService.createLocales(pluginContainer, ImplementPluginLocale.class);
+		locales = LocaleService.getInstance().createLocales(pluginContainer, ImplementPluginLocale.class);
 		if(!locales.contains(org.spongepowered.api.util.locale.Locales.DEFAULT)) locales.createReferenceTranslation(ConfigTypes.HOCON, org.spongepowered.api.util.locale.Locales.DEFAULT, ImplementPluginLocale.class);
 		if(!locales.contains(org.spongepowered.api.util.locale.Locales.RU_RU)) locales.createReferenceTranslation(ConfigTypes.HOCON, org.spongepowered.api.util.locale.Locales.RU_RU, ImplementRuPluginLocale.class);
 		rtpService = new RTPService(instance);
