@@ -40,7 +40,6 @@ public abstract class CommandPack {
 
 	public static final TypeSerializerCollection COMMAND_SETTINGS_SERIALIZERS = TypeSerializerCollection.defaults().childBuilder().register(Settings.class, new CommandSettingSerializer()).register(Price.class, new CommandPriceSerializer()).register(Delay.class, new DelaySerializer()).register(CancelRules.class, new CancelRulesSerializer()).build();
 
-
 	/**
 	 * Getting the API.<br>
 	 * You can use this method in your plugin's constructor if your plugin is loaded after CommandPack.
