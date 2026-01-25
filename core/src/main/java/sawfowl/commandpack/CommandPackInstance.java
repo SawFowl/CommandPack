@@ -51,7 +51,10 @@ import org.spongepowered.common.command.manager.SpongeCommandManager;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import net.kyori.adventure.builder.AbstractBuilder;
 import net.kyori.adventure.text.Component;
@@ -481,6 +484,7 @@ public class CommandPackInstance {
 		AverageTPS averageTPS = createAverageTPS();
 		TPS tps = createTPS(averageTPS);
 		api = createAPI(tps);
+		new InjectorAPI().createInjector();
 		payloadsService = new CustomPayloadsServiceImpl(instance);
 	}
 
@@ -520,7 +524,7 @@ public class CommandPackInstance {
 
 	private CommandPack createAPI(TPS tps) {
 		return new CommandPack() {
-			ContainersCollection colletions = new ContainersImpl(getInstance());
+			ContainersCollection colletions = new ContainersImpl(instance);
 			@Override
 			public PlayersData getPlayersData() {
 				return playersData;
@@ -638,6 +642,20 @@ public class CommandPackInstance {
 				}
 			});
 		}).build());
+	}
+
+	final class InjectorAPI extends AbstractModule {
+
+		Injector createInjector() {
+			return Guice.createInjector(this);
+		}
+
+		@Override
+		protected void configure() {
+			bind(CommandPack.class).toInstance(api);
+			this.requestStaticInjection(CommandPack.class);
+		}
+
 	}
 
 }

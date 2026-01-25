@@ -8,6 +8,8 @@ import org.spongepowered.api.world.generation.ChunkGenerator;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 import org.spongepowered.plugin.PluginContainer;
 
+import com.google.inject.Inject;
+
 import sawfowl.commandpack.api.commands.parameterized.ParameterizedCommand;
 import sawfowl.commandpack.api.commands.raw.RawCommand;
 import sawfowl.commandpack.api.data.command.CancelRules;
@@ -31,103 +33,116 @@ import sawfowl.commandpack.configure.serializers.DelaySerializer;
  * 
  * @author SawFowl
  */
-public interface CommandPack {
+public abstract class CommandPack {
+
+	@Inject
+	private static CommandPack INSTANCE;
 
 	public static final TypeSerializerCollection COMMAND_SETTINGS_SERIALIZERS = TypeSerializerCollection.defaults().childBuilder().register(Settings.class, new CommandSettingSerializer()).register(Price.class, new CommandPriceSerializer()).register(Delay.class, new DelaySerializer()).register(CancelRules.class, new CancelRulesSerializer()).build();
+
+
+	/**
+	 * Getting the API.<br>
+	 * You can use this method in your plugin's constructor if your plugin is loaded after CommandPack.
+	 */
+	public static CommandPack getInstance() {
+		return INSTANCE;
+	}
 
 	/**
 	 * Viewing and changing player data.
 	 */
-	PlayersData getPlayersData();
+	public abstract PlayersData getPlayersData();
 
 	/**
 	 * Interface for working with teleportation to random coordinates.
 	 */
-	RandomTeleportService getRandomTeleportService();
+	public abstract RandomTeleportService getRandomTeleportService();
 
 	/**
 	 * Whether the plugin is running on the server with LexForge.
 	 */
-	boolean isForgeServer();
+	public abstract boolean isForgeServer();
 
 	/**
 	 * Whether the plugin is running on the server with NeoForge.
 	 */
-	boolean isNeoForgeServer();
+	public abstract boolean isNeoForgeServer();
 
 	/**
 	 * Whether the plugin is running on the server with LexForge or NeoForge.
 	 */
-	boolean isModifiedServer();
+	public abstract boolean isModifiedServer();
 
 	/**
 	 * Kits API.
 	 */
-	KitService getKitService();
+	public abstract KitService getKitService();
 
 	/**
 	 * Registration of the custom chunk generator.<br>
 	 * All registered generators will be available in the command `/world create`.
 	 */
-	void registerCustomGenerator(String name, ChunkGenerator chunkGenerator);
+	public abstract void registerCustomGenerator(String name, ChunkGenerator chunkGenerator);
 
 	/**
 	 * Getting a custom chunk generator.
 	 */
-	Optional<ChunkGenerator> getCustomGenerator(String name);
+	public abstract Optional<ChunkGenerator> getCustomGenerator(String name);
 
 	/**
 	 * Get a {@link Set} of names of all registered custom chunk generators.
 	 */
-	Set<String> getAvailableGenerators();
+	public abstract Set<String> getAvailableGenerators();
 
 	/**
 	 * A system for punishing players.
 	 */
-	Optional<PunishmentService> getPunishmentService();
+	public abstract Optional<PunishmentService> getPunishmentService();
 
 	/**
 	 * Economy Service.
 	 */
-	Optional<CPEconomyService> getEconomyService();
+	public abstract Optional<CPEconomyService> getEconomyService();
 
 	/**
 	 * Getting information about server and worlds TPS.
 	 * @deprecated Use {@link MixinServerWorld}
 	 */
 	@Deprecated
-	TPS getTPS();
+	public abstract TPS getTPS();
 
 	/**
 	 * View average TPS values over time intervals of 1m, 5m, 10m.
 	 */
-	AverageTPS getAverageTPS();
+	public abstract AverageTPS getAverageTPS();
 
 	/**
 	 * Getting a collections of {@link PluginContainer} and {@link ModContainer} on the server.
 	 */
-	ContainersCollection getContainersCollection();
+	public abstract ContainersCollection getContainersCollection();
 
 	/**
 	 * Registering a command at the final stage of server loading, when all in-game data is available.<br>
 	 * The method will be available only when getting to CommandPack API.<br>
 	 * Registration of commands using this method will be blocked after server loading is completed.
 	 */
-	void registerCommand(RawCommand command) throws IllegalStateException;
+	public abstract void registerCommand(RawCommand command) throws IllegalStateException;
 
 	/**
 	 * Registering a command at the final stage of server loading, when all in-game data is available.<br>
 	 * The method will be available only when getting to CommandPack API.<br>
 	 * Registration of commands using this method will be blocked after server loading is completed.
 	 */
-	void registerCommand(ParameterizedCommand command) throws IllegalStateException;
+	public abstract void registerCommand(ParameterizedCommand command) throws IllegalStateException;
 
-	CustomPayloadsService getCustomPayloadsService();
+	public abstract CustomPayloadsService getCustomPayloadsService();
 
 	/**
 	 * Event for getting the plugin API.
 	 */
-	interface PostAPI extends Event {
+	@Deprecated
+	public interface PostAPI extends Event {
 
 		public CommandPack getAPI();
 
