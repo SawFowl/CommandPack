@@ -75,7 +75,7 @@ public abstract class AbstractParameterizedCommand extends AbstractPluginCommand
 	}
 
 	protected CommandExceptions getExceptions(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommandExceptions();
+		return plugin.getLocales().getAsReferenced(locale).getCommandExceptions();
 	}
 
 }

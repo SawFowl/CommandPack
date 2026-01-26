@@ -69,7 +69,7 @@ public class Kick extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Kick getKick(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getKick();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getKick();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Kick getKick(ServerPlayer player) {
@@ -77,7 +77,7 @@ public class Kick extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Kick getKick() {
-		return plugin.getLocales().getSystemAsReference().getCommands().getKick();
+		return plugin.getLocales().getSystemAsReferenced().getCommands().getKick();
 	}
 
 }

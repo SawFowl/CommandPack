@@ -104,7 +104,7 @@ public class Glow extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Glow getGlow(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getGlow();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getGlow();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Glow getGlow(ServerPlayer player) {

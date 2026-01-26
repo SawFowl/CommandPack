@@ -102,7 +102,7 @@ public class Flame extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Flame getFlame(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getFlame();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getFlame();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Flame getFlame(ServerPlayer player) {

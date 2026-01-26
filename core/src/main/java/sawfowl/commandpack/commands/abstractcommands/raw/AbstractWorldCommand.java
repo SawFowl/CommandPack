@@ -29,7 +29,7 @@ public abstract class AbstractWorldCommand extends AbstractRawCommand {
 	}
 
 	protected RawArgument<ServerWorld> createWorldArg() {
-		return RawArguments.createWorldArgument(RawBasicArgumentData.createWorld(null, 0, null, null), null, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getWorldNotPresent());
+		return RawArguments.createWorldArgument(RawBasicArgumentData.createWorld(null, 0, null, null), null, locale -> plugin.getLocales().getAsReferenced(locale).getCommandExceptions().getWorldNotPresent());
 	}
 
 	@Override

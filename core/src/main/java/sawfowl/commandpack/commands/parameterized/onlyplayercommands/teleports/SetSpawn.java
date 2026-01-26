@@ -28,7 +28,7 @@ public class SetSpawn extends AbstractPlayerCommand {
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		plugin.getMainConfig().setSpawnData(new SpawnData(src.serverLocation(), src.rotation(), getBoolean(context, "ForceSpawn", false), getBoolean(context, "ForceRespawn", false)));
 		plugin.getConfigManager().updateMainConfig();
-		src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getSpawn().getSet());
+		src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getSpawn().getSet());
 	}
 
 	@Override
@@ -44,8 +44,8 @@ public class SetSpawn extends AbstractPlayerCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 		return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createBoolean("ForceSpawn", true), false, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getBooleanNotPresent()),
-			ParameterSettings.of(CommandParameters.createBoolean("ForceRespawn", true), false, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getBooleanNotPresent())
+			ParameterSettings.of(CommandParameters.createBoolean("ForceSpawn", true), false, locale -> plugin.getLocales().getAsReferenced(locale).getCommandExceptions().getBooleanNotPresent()),
+			ParameterSettings.of(CommandParameters.createBoolean("ForceRespawn", true), false, locale -> plugin.getLocales().getAsReferenced(locale).getCommandExceptions().getBooleanNotPresent())
 		);
 	}
 

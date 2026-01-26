@@ -285,8 +285,8 @@ public class CommandPackInstance {
 		isForge = checkForge();
 		isNeo = checkNeo();
 		locales = LocaleService.getInstance().createLocales(pluginContainer, ImplementPluginLocale.class);
-		if(!locales.contains(org.spongepowered.api.util.locale.Locales.DEFAULT)) locales.createReferenceTranslation(ConfigTypes.HOCON, org.spongepowered.api.util.locale.Locales.DEFAULT, ImplementPluginLocale.class);
-		if(!locales.contains(org.spongepowered.api.util.locale.Locales.RU_RU)) locales.createReferenceTranslation(ConfigTypes.HOCON, org.spongepowered.api.util.locale.Locales.RU_RU, ImplementRuPluginLocale.class);
+		if(!locales.contains(org.spongepowered.api.util.locale.Locales.DEFAULT)) locales.createReferencedTranslation(ConfigTypes.HOCON, org.spongepowered.api.util.locale.Locales.DEFAULT, ImplementPluginLocale.class);
+		if(!locales.contains(org.spongepowered.api.util.locale.Locales.RU_RU)) locales.createReferencedTranslation(ConfigTypes.HOCON, org.spongepowered.api.util.locale.Locales.RU_RU, ImplementRuPluginLocale.class);
 		rtpService = new RTPService(instance);
 		kitService = new KitServiceImpl(instance);
 		playersData = new PlayersDataImpl(instance);
@@ -322,7 +322,7 @@ public class CommandPackInstance {
 	public void onServerStarted(StartedEngineEvent<Server> event) {
 		isStarted = true;
 		manager = (SpongeCommandManager) Sponge.server().commandManager();
-		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getSystemAsReference().getDebug().getEconomy().getNotFound());
+		if(!Sponge.server().serviceProvider().economyService().isPresent()) logger.warn(locales.getSystemAsReferenced().getDebug().getEconomy().getNotFound());
 		registerListeners();
 		configManager.loadKits();
 		generators.put("empty", ChunkGenerator.flat(((AbstractBuilder<FlatGeneratorConfig>) FlatGeneratorConfig.builder().structureSets(null).biome(Biomes.THE_VOID).addLayer(LayerConfig.of(0, BlockTypes.AIR.get().defaultState()))).build()));
@@ -447,7 +447,7 @@ public class CommandPackInstance {
 	}
 
 	private Component timeFormat(long second, Locale locale) {
-		return TextUtils.timeFormat(second, locale, getLocales().getAsReference(locale).getTime().getDay(), getLocales().getAsReference(locale).getTime().getHour(), getLocales().getAsReference(locale).getTime().getMinute(), getLocales().getAsReference(locale).getTime().getSecond());
+		return TextUtils.timeFormat(second, locale, getLocales().getAsReferenced(locale).getTime().getDay(), getLocales().getAsReferenced(locale).getTime().getHour(), getLocales().getAsReferenced(locale).getTime().getMinute(), getLocales().getAsReferenced(locale).getTime().getSecond());
 	}
 
 	void registerRaw(RawCommand command) {
@@ -472,8 +472,8 @@ public class CommandPackInstance {
 	}
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
-		if(!mute.getExpiration().isPresent()) return getLocales().getAsReference(locale).getCommands().getMuteInfo().getPermanent();
-		SimpleDateFormat format = new SimpleDateFormat(getLocales().getAsReference(locale).getTime().getFormat());
+		if(!mute.getExpiration().isPresent()) return getLocales().getAsReferenced(locale).getCommands().getMuteInfo().getPermanent();
+		SimpleDateFormat format = new SimpleDateFormat(getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
 		return TextUtils.deserialize(format.format(calendar.getTime()));
@@ -623,7 +623,7 @@ public class CommandPackInstance {
 				if(getPlayersData().getTempData().getLastActivity(player) > 0) {
 					if(getPlayersData().getTempData().isAfk(player) && !player.hasPermission(Permissions.AFK_UNLIMIT)) {
 						if((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay()) - Duration.ofMillis(System.currentTimeMillis()).getSeconds() <= 0) {
-							player.kick(getLocales().getAsReference(player.locale()).getCommands().getAfk().getKick());
+							player.kick(getLocales().getAsReferenced(player.locale()).getCommands().getAfk().getKick());
 							getPlayersData().getTempData().updateLastActivity(player);
 						}
 					} else if(getPlayersData().getTempData().getLastActivity(player) < Duration.ofMillis(System.currentTimeMillis()).getSeconds() - getMainConfig().getAfkConfig().getTurnOnDlay()) getPlayersData().getTempData().setAfkStatus(player);
@@ -634,9 +634,9 @@ public class CommandPackInstance {
 			Sponge.server().onlinePlayers().forEach(player -> {
 				if(getPlayersData().getTempData().isAfk(player)) {
 					if(player.hasPermission(Permissions.AFK_UNLIMIT)) {
-						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isUnlimit()) player.sendTitlePart(TitlePart.TITLE, locales.getAsReference(player.locale()).getCommands().getAfk().getTitle());
+						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isUnlimit()) player.sendTitlePart(TitlePart.TITLE, locales.getAsReferenced(player.locale()).getCommands().getAfk().getTitle());
 					} else {
-						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isBeforeKick()) player.showTitle(Title.title(locales.getAsReference(player.locale()).getCommands().getAfk().getTitle(), locales.getAsReference(player.locale()).getCommands().getAfk().getSubtitle(timeFormat((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay() + 1) - Duration.ofMillis(System.currentTimeMillis()).getSeconds(), player.locale()))));
+						if(getConfigManager().getMainConfig().getAfkConfig().getAfkTitlesConfig().isBeforeKick()) player.showTitle(Title.title(locales.getAsReferenced(player.locale()).getCommands().getAfk().getTitle(), locales.getAsReferenced(player.locale()).getCommands().getAfk().getSubtitle(timeFormat((playersData.getTempData().getLastActivity(player) + getMainConfig().getAfkConfig().getTurnOnDlay() +  getMainConfig().getAfkConfig().getKickDelay() + 1) - Duration.ofMillis(System.currentTimeMillis()).getSeconds(), player.locale()))));
 					}
 				}
 			});

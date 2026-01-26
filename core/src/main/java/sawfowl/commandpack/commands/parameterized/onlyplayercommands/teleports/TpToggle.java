@@ -26,8 +26,8 @@ public class TpToggle extends AbstractPlayerCommand {
 		delay(src, locale, consumer -> {
 			plugin.getPlayersData().getTempData().tpToggle(src);
 			if(plugin.getPlayersData().getTempData().isDisableTpRequests(src)) {
-				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getTpToggle().getDisable());
-			} else src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getTpToggle().getEnable());
+				src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getTpToggle().getDisable());
+			} else src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getTpToggle().getEnable());
 		});
 	}
 

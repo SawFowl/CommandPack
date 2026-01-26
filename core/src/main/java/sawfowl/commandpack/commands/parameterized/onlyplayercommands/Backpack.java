@@ -25,7 +25,7 @@ public class Backpack extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		plugin.getPlayersData().getOrCreatePlayerData(getPlayer(context).orElse(src)).getBackpack().asMenu(getContainer(), src, Permissions.getBackpackLimit(src), plugin.getLocales().getAsReference(locale).getOther().getBackPack(getPlayer(context).orElse(src).name())).open(src);
+		plugin.getPlayersData().getOrCreatePlayerData(getPlayer(context).orElse(src)).getBackpack().asMenu(getContainer(), src, Permissions.getBackpackLimit(src), plugin.getLocales().getAsReferenced(locale).getOther().getBackPack(getPlayer(context).orElse(src).name())).open(src);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class Backpack extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.BACKPACK_STAFF, true), true, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getPlayerNotPresent()));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.BACKPACK_STAFF, true), true, locale -> plugin.getLocales().getAsReferenced(locale).getCommandExceptions().getPlayerNotPresent()));
 	}
 
 	@Override

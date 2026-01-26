@@ -67,7 +67,7 @@ public class Night extends AbstractParameterizedCommand {
 
 	private void setTime(Audience src, Locale locale, ServerWorld world) {
 		world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day() + 1, 0, 0));
-		src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getTime().getNight(world));
+		src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getTime().getNight(world));
 	}
 
 }

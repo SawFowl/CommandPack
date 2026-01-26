@@ -77,7 +77,7 @@ public class Rain extends AbstractParameterizedCommand {
 		if(duration.isPresent()) {
 			world.setWeather(WeatherTypes.RAIN.get(), Ticks.of(duration.get() * 20));
 		} else world.setWeather(WeatherTypes.RAIN.get(), Ticks.of(random.nextInt(10000) * 20));
-		src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getWeather().getRain(world));
+		src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getWeather().getRain(world));
 	}
 
 }

@@ -96,7 +96,7 @@ public class Seen extends AbstractParameterizedCommand {
 		Component no = getSeen(locale).getNo();
 		List<Component> messages = new ArrayList<>();
 		boolean online = target.isOnline() && player.isPresent();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		if(online) {
 			if(full) {
@@ -136,14 +136,14 @@ public class Seen extends AbstractParameterizedCommand {
 			Component banned = getSeen(locale).getBan().replace(Placeholders.VALUE, optBan.isPresent() ? yes : no).get();
 			if(optBan.isPresent() && context.hasPermission(Permissions.BANINFO)) {
 				Profile ban = optBan.get();
-				banned = banned.hoverEvent(HoverEvent.showText(plugin.getLocales().getAsReference(locale).getCommands().getBanInfo().getSuccess(ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-")))));
+				banned = banned.hoverEvent(HoverEvent.showText(plugin.getLocales().getAsReferenced(locale).getCommands().getBanInfo().getSuccess(ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-")))));
 			}
 			messages.add(banned);
 			Optional<Mute> optMute = service.getMute(target.uniqueId());
 			Component muted = getSeen(locale).getMute().replace(Placeholders.VALUE, optMute.isPresent() ? yes : no).get();
 			if(optMute.isPresent() && context.hasPermission(Permissions.MUTEINFO)) {
 				Mute mute = optMute.get();
-				muted = muted.hoverEvent(plugin.getLocales().getAsReference(locale).getCommands().getMuteInfo().getSuccess(mute.getSource().orElse(text("&4Server")), created(locale, mute), expire(locale, mute), mute.getReason().orElse(text("-"))));
+				muted = muted.hoverEvent(plugin.getLocales().getAsReferenced(locale).getCommands().getMuteInfo().getSuccess(mute.getSource().orElse(text("&4Server")), created(locale, mute), expire(locale, mute), mute.getReason().orElse(text("-"))));
 			}
 			messages.add(muted);
 			Optional<Warns> optWarns = service.getWarns(target.uniqueId());
@@ -162,7 +162,7 @@ public class Seen extends AbstractParameterizedCommand {
 				Component banned = getSeen(locale).getBan().replace(Placeholders.VALUE, optBan.isPresent() ? yes : no).get();
 				if(optBan.isPresent() && context.hasPermission(Permissions.BANINFO)) {
 					Profile ban = optBan.get();
-					banned = banned.hoverEvent(HoverEvent.showText(plugin.getLocales().getAsReference(locale).getCommands().getBanInfo().getSuccess(ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-")))));
+					banned = banned.hoverEvent(HoverEvent.showText(plugin.getLocales().getAsReferenced(locale).getCommands().getBanInfo().getSuccess(ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-")))));
 				}
 				messages.add(banned);
 				sendPaginationList(audience, title, getSeen(locale).getPadding(), size, messages);
@@ -174,65 +174,65 @@ public class Seen extends AbstractParameterizedCommand {
 		if(warns.getWarns().isEmpty()) return;
 		List<Component> list = new ArrayList<>();
 		warns.getWarns().forEach(warn -> {
-			Component removeText = TextUtils.createCallBack(plugin.getLocales().getAsReference(locale).getButtons().getRemove(), cause -> {
+			Component removeText = TextUtils.createCallBack(plugin.getLocales().getAsReferenced(locale).getButtons().getRemove(), cause -> {
 				Optional<Warns> find = plugin.getPunishmentService().getWarns(warns.getUniqueId());
 				plugin.getPunishmentService().removeWarn(warns.getUniqueId(), warn);
 				sendWarnsList(audience, locale, find.get(), remove, isPlayer);
 			});
-			Component w = isPlayer ? plugin.getLocales().getAsReference(locale).getCommands().getWarns().getTimes(created(locale, warn), expire(locale, warn)) : plugin.getLocales().getAsReference(locale).getCommands().getWarns().getTimes(created(locale, warn), expire(locale, warn)).append(plugin.getLocales().getAsReference(locale).getCommands().getWarns().getReason(warn.getReason().orElse(text("&e-"))));
+			Component w = isPlayer ? plugin.getLocales().getAsReferenced(locale).getCommands().getWarns().getTimes(created(locale, warn), expire(locale, warn)) : plugin.getLocales().getAsReferenced(locale).getCommands().getWarns().getTimes(created(locale, warn), expire(locale, warn)).append(plugin.getLocales().getAsReferenced(locale).getCommands().getWarns().getReason(warn.getReason().orElse(text("&e-"))));
 			list.add(remove ? removeText.append(text("    ")).append(w) : w);
 		});
-		Component title = plugin.getLocales().getAsReference(locale).getCommands().getWarns().getTitle(warns.getName());
+		Component title = plugin.getLocales().getAsReferenced(locale).getCommands().getWarns().getTitle(warns.getName());
 		sendPaginationList(audience, title, text("=").color(title.color()), 10, list);
 	}
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Warn warn) {
 		if(!warn.getExpiration().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(warn.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
-		if(!mute.getExpiration().isPresent()) return plugin.getLocales().getAsReference(locale).getCommands().getMuteInfo().getPermanent();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		if(!mute.getExpiration().isPresent()) return plugin.getLocales().getAsReferenced(locale).getCommands().getMuteInfo().getPermanent();
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 
 	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
-		if(!ban.expirationDate().isPresent()) return plugin.getLocales().getAsReference(locale).getCommands().getBanInfo().getPermanent();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		if(!ban.expirationDate().isPresent()) return plugin.getLocales().getAsReferenced(locale).getCommands().getBanInfo().getPermanent();
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 
 	private String created(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.creationDate().toEpochMilli());
 		return format.format(calendar.getTime());
 	}
 
 	private String created(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(mute.getCreated().toEpochMilli());
 		return format.format(calendar.getTime());
 	}
 
 	private Component created(Locale locale, sawfowl.commandpack.api.data.punishment.Warn warn) {
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(warn.getCreated().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Seen getSeen(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getSeen();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getSeen();
 	}
 
 }

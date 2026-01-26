@@ -74,7 +74,7 @@ public class Add extends AbstractParameterizedCommand {
 
 	private void setTime(Audience src, Locale locale, ServerWorld world, int time) {
 		world.properties().setDayTime(world.properties().dayTime().add(Ticks.of(time)));
-		src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getTime().getAdd(world));
+		src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getTime().getAdd(world));
 	}
 
 }

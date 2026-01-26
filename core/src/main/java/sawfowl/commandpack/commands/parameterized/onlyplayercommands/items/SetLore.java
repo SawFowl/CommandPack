@@ -66,7 +66,7 @@ public class SetLore extends AbstractPlayerCommand {
 	}
 
 	private Item getItem(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getItem();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getItem();
 	}
 
 }

@@ -56,7 +56,7 @@ public class CommandLogListener {
 	}
 
 	private Commands getCommands() {
-		return plugin.getLocales().getAsReference(locale).getDebug().getCommands();
+		return plugin.getLocales().getAsReferenced(locale).getDebug().getCommands();
 	}
 
 	private Optional<LocatableBlock> getLocatableBlock(CommandCause cause) {

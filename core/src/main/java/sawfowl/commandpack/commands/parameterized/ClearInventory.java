@@ -107,7 +107,7 @@ public class ClearInventory extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.ClearInventory getClearInventory(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getClearInventory();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getClearInventory();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.ClearInventory getClearInventory(ServerPlayer player) {

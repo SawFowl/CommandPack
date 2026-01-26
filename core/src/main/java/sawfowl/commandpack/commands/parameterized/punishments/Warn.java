@@ -116,7 +116,7 @@ public class Warn extends AbstractParameterizedCommand {
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Warn warn) {
 		if(!warn.getExpiration().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(warn.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
@@ -124,7 +124,7 @@ public class Warn extends AbstractParameterizedCommand {
 
 	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
 		if(!ban.expirationDate().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
@@ -138,7 +138,7 @@ public class Warn extends AbstractParameterizedCommand {
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
 		if(!mute.getExpiration().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
@@ -203,7 +203,7 @@ public class Warn extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Warn getWarn(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getWarn();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getWarn();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Warn getWarn(ServerPlayer player) {
@@ -211,11 +211,11 @@ public class Warn extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Warn getWarn() {
-		return plugin.getLocales().getSystemAsReference().getCommands().getWarn();
+		return plugin.getLocales().getSystemAsReferenced().getCommands().getWarn();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Mute getMute(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getMute();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getMute();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Mute getMute(ServerPlayer player) {
@@ -223,11 +223,11 @@ public class Warn extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Mute getMute() {
-		return plugin.getLocales().getSystemAsReference().getCommands().getMute();
+		return plugin.getLocales().getSystemAsReferenced().getCommands().getMute();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Kick getKick(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getKick();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getKick();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Kick getKick(ServerPlayer player) {
@@ -235,11 +235,11 @@ public class Warn extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Kick getKick() {
-		return plugin.getLocales().getSystemAsReference().getCommands().getKick();
+		return plugin.getLocales().getSystemAsReferenced().getCommands().getKick();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getBan();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getBan();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan(ServerPlayer player) {
@@ -247,7 +247,7 @@ public class Warn extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan() {
-		return plugin.getLocales().getSystemAsReference().getCommands().getBan();
+		return plugin.getLocales().getSystemAsReferenced().getCommands().getBan();
 	}
 
 

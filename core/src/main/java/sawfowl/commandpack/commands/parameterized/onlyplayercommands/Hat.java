@@ -83,7 +83,7 @@ public class Hat extends AbstractPlayerCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Hat getHat(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getHat();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getHat();
 	}
 
 }

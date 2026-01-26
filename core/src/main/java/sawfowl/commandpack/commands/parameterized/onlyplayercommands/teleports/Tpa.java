@@ -29,7 +29,7 @@ public class Tpa extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		ServerPlayer target = getPlayer(context).get();
-		if(target.uniqueId().equals(src.uniqueId())) exception(plugin.getLocales().getAsReference(locale).getCommandExceptions().getTargetSelf());
+		if(target.uniqueId().equals(src.uniqueId())) exception(plugin.getLocales().getAsReferenced(locale).getCommandExceptions().getTargetSelf());
 		if(plugin.getPlayersData().getTempData().isDisableTpRequests(target)) exception(getTpa(locale).getDisabledRequest());
 		delay(src, locale, consumer -> {
 			UUID source = src.uniqueId();
@@ -54,7 +54,7 @@ public class Tpa extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(false), false, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getPlayerNotPresent()));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(false), false, locale -> plugin.getLocales().getAsReferenced(locale).getCommandExceptions().getPlayerNotPresent()));
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class Tpa extends AbstractPlayerCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Tpa getTpa(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getTpa();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getTpa();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Tpa getTpa(ServerPlayer player) {

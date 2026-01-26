@@ -29,7 +29,7 @@ public class PlayerMoveListener {
 			map.forEach((commandName, config) -> {
 				if(!config.getDelay().getCancelRules().isAllowMoving() && !player.hasPermission(Permissions.getIgnoreDelayMoving(commandName))) {
 					plugin.getPlayersData().getTempData().removeCommandTracking(commandName, player);
-					player.sendMessage(plugin.getLocales().getAsReference(player).getOther().getExecuteCommand().getMoving("/" + commandName));
+					player.sendMessage(plugin.getLocales().getAsReferenced(player).getOther().getExecuteCommand().getMoving("/" + commandName));
 				}
 			});
 		});

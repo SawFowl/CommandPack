@@ -28,7 +28,7 @@ public class Tppos extends AbstractPlayerCommand {
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		ServerLocation location = getLocation(context).get();
 		delay(src, locale, consumer -> {
-			if(!location.isValid()) exception(plugin.getLocales().getAsReference(locale).getCommands().getTpPos().getInvalidLocation());
+			if(!location.isValid()) exception(plugin.getLocales().getAsReferenced(locale).getCommands().getTpPos().getInvalidLocation());
 			plugin.getPlayersData().getTempData().setPreviousLocation(src);
 			src.setLocation(location);
 		});
@@ -41,7 +41,7 @@ public class Tppos extends AbstractPlayerCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createLocation(false), false, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getLocationNotPresent()));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createLocation(false), false, locale -> plugin.getLocales().getAsReferenced(locale).getCommandExceptions().getLocationNotPresent()));
 	}
 
 	@Override

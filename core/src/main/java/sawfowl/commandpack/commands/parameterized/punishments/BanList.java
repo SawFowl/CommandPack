@@ -49,9 +49,9 @@ public class BanList extends AbstractParameterizedCommand {
 		plugin.getPunishmentService().getAllIPBans().forEach(ban -> {
 			Component banInfo = getBanlist(locale).getElement(ban.address().getHostAddress());
 			if(isPlayer && context.hasPermission(Permissions.BANINFO)) banInfo = banInfo.hoverEvent(HoverEvent.showText(getBanlist(locale).getInfo().getIP(ban.address().getHostAddress(), ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-")))));
-			bans.add(unban ? Text.of(plugin.getLocales().getAsReference(locale).getButtons().getRemove()).createCallBack(cause -> {
+			bans.add(unban ? Text.of(plugin.getLocales().getAsReferenced(locale).getButtons().getRemove()).createCallBack(cause -> {
 				plugin.getPunishmentService().remove(ban);
-				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getUnbanIP().getSuccess(ban.address().getHostAddress()));
+				src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getUnbanIP().getSuccess(ban.address().getHostAddress()));
 			}).append(banInfo).get() : banInfo);
 		});
 		if(!isPlayer) {
@@ -84,9 +84,9 @@ public class BanList extends AbstractParameterizedCommand {
 			if(isPlayer) banInfo = banInfo.hoverEvent(
 					HoverEvent.showText(getBanlist(locale).getInfo().getPlayer(ban.profile().name().orElse(ban.profile().examinableName()), ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-"))))
 					);
-			bans.add(unban ? Text.of(plugin.getLocales().getAsReference(locale).getButtons().getRemove()).createCallBack(cause -> {
+			bans.add(unban ? Text.of(plugin.getLocales().getAsReferenced(locale).getButtons().getRemove()).createCallBack(cause -> {
 				plugin.getPunishmentService().remove(ban);
-				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getUnban().getSuccess(ban.profile()));
+				src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getUnban().getSuccess(ban.profile()));
 			}).append(banInfo).get() : banInfo);
 		});
 		if(!isPlayer) {
@@ -132,22 +132,22 @@ public class BanList extends AbstractParameterizedCommand {
 	}
 
 	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
-		if(!ban.expirationDate().isPresent()) return plugin.getLocales().getAsReference(locale).getCommands().getBanInfo().getPermanent();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		if(!ban.expirationDate().isPresent()) return plugin.getLocales().getAsReferenced(locale).getCommands().getBanInfo().getPermanent();
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 
 	private String created(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.creationDate().toEpochMilli());
 		return format.format(calendar.getTime());
 	}
 
 	private Banlist getBanlist(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getBanlist();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getBanlist();
 	}
 
 }

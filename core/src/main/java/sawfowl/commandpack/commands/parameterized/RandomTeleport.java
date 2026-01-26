@@ -222,7 +222,7 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.RandomTeleport getRandomTeleport(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getRandomTeleport();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getRandomTeleport();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.RandomTeleport getRandomTeleport(ServerPlayer player) {

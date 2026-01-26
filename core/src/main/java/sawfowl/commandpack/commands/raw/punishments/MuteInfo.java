@@ -94,15 +94,15 @@ public class MuteInfo extends AbstractRawCommand {
 	}
 
 	private String created(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(mute.getCreated().toEpochMilli());
 		return format.format(calendar.getTime());
 	}
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
-		if(!mute.getExpiration().isPresent()) return plugin.getLocales().getAsReference(locale).getCommands().getMuteInfo().getPermanent();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		if(!mute.getExpiration().isPresent()) return plugin.getLocales().getAsReferenced(locale).getCommands().getMuteInfo().getPermanent();
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));

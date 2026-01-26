@@ -68,7 +68,7 @@ public class Feed extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Feed getFeed(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getFeed();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getFeed();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Feed getFeed(ServerPlayer player) {

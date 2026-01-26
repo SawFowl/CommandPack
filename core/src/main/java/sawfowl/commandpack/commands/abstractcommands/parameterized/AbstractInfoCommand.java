@@ -147,7 +147,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	protected Component getTPS(Locale locale) {
 		return getServerStat(locale).getTPS(tPStoText(currentTPS())
 				.append(text("&f-"))
-				.append(tickToText(Sponge.server().averageTickTime()).append(plugin.getLocales().getAsReference(locale).getTime().getMilliseconds()))
+				.append(tickToText(Sponge.server().averageTickTime()).append(plugin.getLocales().getAsReferenced(locale).getTime().getMilliseconds()))
 				.append(text("&f, "))
 				.append(tPStoText(plugin.getAverageTPS1m()))
 				.append(text("&f, "))
@@ -157,7 +157,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected Component getServerTime(Locale locale) {
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(System.currentTimeMillis());
 		return getServerStat(locale).getServerTime(format.format(calendar.getTime()));
@@ -202,7 +202,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 	}
 
 	protected ServerStat getServerStat(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getServerStat();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getServerStat();
 	}
 
 	protected AboutPlugin getAboutPlugin(Locale locale) {

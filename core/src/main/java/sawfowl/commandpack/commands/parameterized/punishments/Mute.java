@@ -108,14 +108,14 @@ public class Mute extends AbstractParameterizedCommand {
 
 	private Component expire(Locale locale, sawfowl.commandpack.api.data.punishment.Mute mute) {
 		if(!mute.getExpiration().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(mute.getExpiration().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Mute getMute(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getMute();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getMute();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Mute getMute(ServerPlayer player) {
@@ -123,7 +123,7 @@ public class Mute extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Mute getMute() {
-		return plugin.getLocales().getSystemAsReference().getCommands().getMute();
+		return plugin.getLocales().getSystemAsReferenced().getCommands().getMute();
 	}
 
 }

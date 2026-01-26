@@ -32,10 +32,10 @@ public class GameMode extends AbstractParameterizedCommand {
 	public Parameterized build() {
 		return builder().reset()
 				.permission(permission())
-				.addChild(new GameModeType(plugin, GameModes.CREATIVE, locale -> plugin.getLocales().getAsReference(locale).getCommands().getGameMode().getCreative()).build(), "creative", "1")
-				.addChild(new GameModeType(plugin, GameModes.SPECTATOR, locale -> plugin.getLocales().getAsReference(locale).getCommands().getGameMode().getSpectator()).build(), "spectator", "3")
-				.addChild(new GameModeType(plugin, GameModes.SURVIVAL, locale -> plugin.getLocales().getAsReference(locale).getCommands().getGameMode().getSurvival()).build(), "survival", "0")
-				.addChild(new GameModeType(plugin, GameModes.ADVENTURE, locale -> plugin.getLocales().getAsReference(locale).getCommands().getGameMode().getAdventure()).build(), "adventure", "2")
+				.addChild(new GameModeType(plugin, GameModes.CREATIVE, locale -> plugin.getLocales().getAsReferenced(locale).getCommands().getGameMode().getCreative()).build(), "creative", "1")
+				.addChild(new GameModeType(plugin, GameModes.SPECTATOR, locale -> plugin.getLocales().getAsReferenced(locale).getCommands().getGameMode().getSpectator()).build(), "spectator", "3")
+				.addChild(new GameModeType(plugin, GameModes.SURVIVAL, locale -> plugin.getLocales().getAsReferenced(locale).getCommands().getGameMode().getSurvival()).build(), "survival", "0")
+				.addChild(new GameModeType(plugin, GameModes.ADVENTURE, locale -> plugin.getLocales().getAsReferenced(locale).getCommands().getGameMode().getAdventure()).build(), "adventure", "2")
 				.build();
 	}
 

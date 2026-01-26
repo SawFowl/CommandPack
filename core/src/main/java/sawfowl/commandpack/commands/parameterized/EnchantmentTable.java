@@ -66,7 +66,7 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 			if(target.isPresent()) {
 				levels.put(target.get().uniqueId(), level);
 				menu.open(target.get());
-				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getEnchantmentTable().getSuccessStaff(target.get()));
+				src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getEnchantmentTable().getSuccessStaff(target.get()));
 			} else {
 				delay((ServerPlayer) src, locale, consumer -> {
 					levels.put(((ServerPlayer) src).uniqueId(), finalLevel);
@@ -80,7 +80,7 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 			InventoryMenu menu = ViewableInventory.builder().type(ContainerTypes.ENCHANTMENT).completeStructure().carrier(target).plugin(plugin.getPluginContainer()).build().asMenu();
 			menu.setTitle(ItemTypes.CRAFTING_TABLE.get().asComponent());
 			menu.open(target);
-			src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getEnchantmentTable().getSuccessStaff(target));
+			src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getEnchantmentTable().getSuccessStaff(target));
 		}
 	}
 

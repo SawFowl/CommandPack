@@ -24,7 +24,7 @@ public class CommandSpy extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		plugin.getPlayersData().getTempData().switchSpyCommand(src);
-		src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getCommandSpy().getValue(plugin.getPlayersData().getTempData().isSpyCommand(src)));
+		src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getCommandSpy().getValue(plugin.getPlayersData().getTempData().isSpyCommand(src)));
 	}
 
 	@Override

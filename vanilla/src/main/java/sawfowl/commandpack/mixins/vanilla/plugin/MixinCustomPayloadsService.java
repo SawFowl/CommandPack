@@ -35,7 +35,7 @@ public abstract class MixinCustomPayloadsService {
 	@Overwrite
 	public void registerChannel(ResourceKey channel) {
 		if(finished) {
-			plugin.getLocales().getSystemAsReference().getDebug().getFinishedRegisterNetworkData(channel);
+			plugin.getLocales().getSystemAsReferenced().getDebug().getFinishedRegisterNetworkData(channel);
 		} else if(!spongeChannelsToRegister.contains(channel)) spongeChannelsToRegister.add(channel);
 	}
 

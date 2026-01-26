@@ -69,7 +69,7 @@ public class Morning extends AbstractParameterizedCommand {
 		if(world.properties().gameTime().hour() < 6) {
 			world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day(), 6, 0));
 		} else world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day() + 1, 6, 0));
-		src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getTime().getMorning(world));
+		src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getTime().getMorning(world));
 	}
 
 }

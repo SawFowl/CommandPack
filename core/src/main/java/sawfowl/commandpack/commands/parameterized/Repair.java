@@ -109,7 +109,7 @@ public class Repair extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Repair getRepair(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getRepair();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getRepair();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Repair getRepair(ServerPlayer player) {

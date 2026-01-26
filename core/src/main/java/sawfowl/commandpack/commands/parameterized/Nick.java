@@ -91,7 +91,7 @@ public class Nick extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Nick getNick(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getNick();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getNick();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Nick getNick(ServerPlayer player) {

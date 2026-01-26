@@ -117,7 +117,7 @@ public class Speed extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Speed getSpeed(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getSpeed();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getSpeed();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Speed getSpeed(ServerPlayer player) {

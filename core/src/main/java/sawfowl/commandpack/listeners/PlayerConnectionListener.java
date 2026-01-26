@@ -48,10 +48,10 @@ public class PlayerConnectionListener {
 	public void onConnect(ServerSideConnectionEvent.Join event) {
 		((TempPlayerDataImpl) plugin.getPlayersData().getTempData()).registerPlayer(event.player());
 		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(event.player());
-		if(plugin.isModifiedServer() && plugin.getMainConfig().getDebugPlayerData().mods() && !MixinServerPlayer.cast(event.player()).getModList().isEmpty()) plugin.getLogger().info(plugin.getLocales().getSystemAsReference().getDebug().getDebugPlayerData().getMods(event.player().name(), String.join(", ", MixinServerPlayer.cast(event.player()).getModList().stream().map(mod -> mod.getFullInfo()).toList())));
+		if(plugin.isModifiedServer() && plugin.getMainConfig().getDebugPlayerData().mods() && !MixinServerPlayer.cast(event.player()).getModList().isEmpty()) plugin.getLogger().info(plugin.getLocales().getSystemAsReferenced().getDebug().getDebugPlayerData().getMods(event.player().name(), String.join(", ", MixinServerPlayer.cast(event.player()).getModList().stream().map(mod -> mod.getFullInfo()).toList())));
 		if(plugin.getMainConfig().getRestrictMods().isEnable() && !event.player().hasPermission(Permissions.ALL_MODS_ACCESS)) {
 			if(!plugin.getMainConfig().getRestrictMods().isAllowedClient(MixinServerPlayer.cast(event.player()).getClientName()) && event.player().isOnline()) {
-				event.player().kick(plugin.getLocales().getAsReference(event.player()).getOther().getIllegalClient(MixinServerPlayer.cast(event.player()).getClientName()));
+				event.player().kick(plugin.getLocales().getAsReferenced(event.player()).getOther().getIllegalClient(MixinServerPlayer.cast(event.player()).getClientName()));
 				return;
 			}
 			Sponge.server().scheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).delay(Ticks.of(10)).execute(() -> {
@@ -59,7 +59,7 @@ public class PlayerConnectionListener {
 				MixinServerPlayer.cast(event.player()).getModList().forEach(mod -> {
 					if(!plugin.getMainConfig().getRestrictMods().isAllowedPlayerMod(mod.getId())) banedPlayerMods.add(mod.getId());
 				});
-				if(!banedPlayerMods.isEmpty() && event.player().isOnline()) event.player().kick(plugin.getLocales().getAsReference(event.player()).getOther().getIllegalMods(plugin.getMainConfig().getRestrictMods().isBlackList(), String.join(", ", banedPlayerMods)));
+				if(!banedPlayerMods.isEmpty() && event.player().isOnline()) event.player().kick(plugin.getLocales().getAsReferenced(event.player()).getOther().getIllegalMods(plugin.getMainConfig().getRestrictMods().isBlackList(), String.join(", ", banedPlayerMods)));
 			}).build());
 		}
 		if(plugin.getMainConfig().getEconomy().isEnable()) plugin.getEconomy().getEconomyServiceImpl().checkAccounts(event.player());
@@ -76,7 +76,7 @@ public class PlayerConnectionListener {
 		if(!event.isMessageCancelled() && plugin.getMainConfig().isChangeConnectionMessages()) {
 			event.setMessageCancelled(true);
 			if(!playerData.isVanished() || !event.player().hasPermission(Permissions.HIDE_CONNECT)) sendJoinMessage(event.player());
-			Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemAsReference().getOther().getConnectionMessages().getJoin(event.player()));
+			Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemAsReferenced().getOther().getConnectionMessages().getJoin(event.player()));
 		}
 		if(plugin.getMainConfig().getSpawnData().isPresent() && plugin.getMainConfig().getSpawnData().get().isMoveAfterJoin() && plugin.getMainConfig().getSpawnData().get().getLocation().getServerLocation().isPresent()) {
 			event.player().setLocation(plugin.getMainConfig().getSpawnData().get().getLocation().getServerLocation().get());
@@ -105,7 +105,7 @@ public class PlayerConnectionListener {
 		if(plugin.getMainConfig().isChangeConnectionMessages()) {
 			if(TextUtils.serializeLegacy(event.message()).length() > 0) event.setMessage(Component.empty());
 			if(!playerData.isVanished() || !event.player().hasPermission(Permissions.HIDE_CONNECT)) sendLeaveMessage(event.player());
-			Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemAsReference().getOther().getConnectionMessages().getLeave(event.player()));
+			Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemAsReferenced().getOther().getConnectionMessages().getLeave(event.player()));
 		}
 		playerData.save();
 	}
@@ -290,7 +290,7 @@ public class PlayerConnectionListener {
 		if(!plugin.getMainConfig().isEnableMotd()) return;
 		Sponge.server().scheduler().submit(Task.builder().delay(2, TimeUnit.SECONDS).plugin(plugin.getPluginContainer()).execute(() -> {
 			Sponge.server().player(player.uniqueId()).ifPresent(p -> {
-				p.sendMessage(plugin.getLocales().getAsReference(p).getOther().getConnectionMessages().getMotd(p));
+				p.sendMessage(plugin.getLocales().getAsReferenced(p).getOther().getConnectionMessages().getMotd(p));
 			});
 		}).build());
 	}
@@ -298,13 +298,13 @@ public class PlayerConnectionListener {
 	private void sendJoinMessage(ServerPlayer player) {
 		boolean before = player.hasPlayedBefore();
 		Sponge.server().scheduler().submit(Task.builder().delay(2, TimeUnit.SECONDS).plugin(plugin.getPluginContainer()).execute(() -> 
-			Sponge.server().onlinePlayers().forEach(p -> p.sendMessage(plugin.getLocales().getAsReference(p).getOther().getConnectionMessages().getJoin(!before, player)))
+			Sponge.server().onlinePlayers().forEach(p -> p.sendMessage(plugin.getLocales().getAsReferenced(p).getOther().getConnectionMessages().getJoin(!before, player)))
 		).build());
 	}
 
 	private void sendLeaveMessage(ServerPlayer player) {
 		Sponge.server().onlinePlayers().forEach(p -> {
-			p.sendMessage(plugin.getLocales().getAsReference(p).getOther().getConnectionMessages().getLeave(player));
+			p.sendMessage(plugin.getLocales().getAsReferenced(p).getOther().getConnectionMessages().getLeave(player));
 		});
 	}
 

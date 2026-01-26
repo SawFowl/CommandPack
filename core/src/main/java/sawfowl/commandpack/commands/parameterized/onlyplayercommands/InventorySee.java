@@ -84,7 +84,7 @@ public class InventorySee extends AbstractPlayerCommand {
 				.carrier(target)
 				.identity(UUID.randomUUID()).build());
 		if(!src.hasPermission(Permissions.INVENTORYSEE_STAFF)) menu = menu.setReadOnly(true);
-		menu.setTitle(plugin.getLocales().getAsReference(src).getCommands().getInventorySee().getTitle(target));
+		menu.setTitle(plugin.getLocales().getAsReferenced(src).getCommands().getInventorySee().getTitle(target));
 		menu.open(src);
 	}
 
@@ -98,7 +98,7 @@ public class InventorySee extends AbstractPlayerCommand {
 				.carrier(target)
 				.identity(UUID.randomUUID()).build());
 		if(!src.hasPermission(Permissions.INVENTORYSEE_STAFF)) menu = menu.setReadOnly(true);
-		menu.setTitle(plugin.getLocales().getAsReference(src).getCommands().getInventorySee().getTitle(target));
+		menu.setTitle(plugin.getLocales().getAsReferenced(src).getCommands().getInventorySee().getTitle(target));
 		menu.open(src);
 	}
 

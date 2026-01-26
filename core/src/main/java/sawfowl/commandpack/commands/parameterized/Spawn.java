@@ -37,7 +37,7 @@ public class Spawn extends AbstractParameterizedCommand {
 			ServerPlayer player = getPlayer(context).orElse(source);
 			if(!source.uniqueId().equals(player.uniqueId())) {
 				teleport(player, spawn);
-				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getSpawn().getTeleportStaff(player));
+				src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getSpawn().getTeleportStaff(player));
 			} else delay(player, locale, consumer -> {
 				teleport(player, spawn);
 			});
@@ -45,7 +45,7 @@ public class Spawn extends AbstractParameterizedCommand {
 			Optional<ServerPlayer> player = getPlayer(context);
 			if(player.isPresent()) {
 				teleport(player.get(), spawn);
-				src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getSpawn().getTeleportStaff(player.get()));
+				src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getSpawn().getTeleportStaff(player.get()));
 			} else exception(getExceptions(locale).getPlayerNotPresent());
 		}
 	}
@@ -78,7 +78,7 @@ public class Spawn extends AbstractParameterizedCommand {
 				player.setRotation(rotation.asVector3d());
 			});
 		} else tpDefault(player);
-		player.sendMessage(plugin.getLocales().getAsReference(player).getCommands().getSpawn().getTeleport());
+		player.sendMessage(plugin.getLocales().getAsReferenced(player).getCommands().getSpawn().getTeleport());
 	}
 
 	private void tpDefault(ServerPlayer player) {

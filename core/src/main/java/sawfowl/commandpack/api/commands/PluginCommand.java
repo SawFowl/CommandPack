@@ -251,7 +251,7 @@ public interface PluginCommand {
 
 	@SuppressWarnings("unchecked")
 	default <T extends Translation> T getPluginLocale(Class<T> localeClass, Locale locale) {
-		return (T) LocaleService.getInstance().getLocales(getContainer()).getAsReference(locale);
+		return (T) LocaleService.getInstance().getLocales(getContainer()).getAsReferenced(locale);
 	}
 
 	default boolean isEnable() {
@@ -259,7 +259,7 @@ public interface PluginCommand {
 	}
 
 	private AbstractLocale getLocale(Locale locale) {
-		return CommandPackInstance.getInstance().getLocales().getAsReference(locale);
+		return CommandPackInstance.getInstance().getLocales().getAsReferenced(locale);
 	}
 
 }

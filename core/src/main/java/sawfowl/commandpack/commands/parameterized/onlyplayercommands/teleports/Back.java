@@ -56,7 +56,7 @@ public class Back extends AbstractPlayerCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Back getBack(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getBack();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getBack();
 	}
 
 }

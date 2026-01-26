@@ -61,7 +61,7 @@ public class HomeList extends AbstractPlayerCommand {
 	}
 
 	private Home getHome(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getHome();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getHome();
 	}
 
 }

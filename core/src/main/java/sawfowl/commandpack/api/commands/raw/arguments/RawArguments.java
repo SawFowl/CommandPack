@@ -377,7 +377,7 @@ public class RawArguments {
 		try {
 			return Optional.ofNullable(Duration.parse(s));
 		} catch (final DateTimeParseException ex) {
-			throw new CommandException(plugin.getLocales().getAsReference(locale).getCommandExceptions().getDurationNotPresent());
+			throw new CommandException(plugin.getLocales().getAsReferenced(locale).getCommandExceptions().getDurationNotPresent());
 		}
 	}
 

@@ -83,7 +83,7 @@ public abstract class MixinPluginMessagesImpl {
 	private boolean restrinctMods(MinecraftRegisterPayload payload) {
 		List<String> disAllowedMods = plugin.getMainConfig().getRestrictMods().getDisAllowedMods(payload.newChannels().stream().map(rl -> rl.toString()).toList());
 		if(!disAllowedMods.isEmpty()) {
-			getPlayer().kick(plugin.getLocales().getAsReference(getPlayer()).getOther().getIllegalMods(true, String.join(", ", disAllowedMods)));
+			getPlayer().kick(plugin.getLocales().getAsReferenced(getPlayer()).getOther().getIllegalMods(true, String.join(", ", disAllowedMods)));
 			return true;
 		}
 		disAllowedMods = null;
@@ -113,7 +113,7 @@ public abstract class MixinPluginMessagesImpl {
 				stringData = stringData.substring(0, stringData.length() - 1);
 			}
 			if(plugin.getMainConfig().getDebugPlayerData().packets()) {
-				plugin.getLogger().info(plugin.getLocales().getSystemAsReference().getDebug().getDebugPlayerData().getPackets(player.getName().getString(), packet, stringData));
+				plugin.getLogger().info(plugin.getLocales().getSystemAsReferenced().getDebug().getDebugPlayerData().getPackets(player.getName().getString(), packet, stringData));
 			}
 		}
 

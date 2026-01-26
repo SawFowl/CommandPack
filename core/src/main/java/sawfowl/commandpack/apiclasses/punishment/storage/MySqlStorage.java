@@ -294,7 +294,7 @@ public class MySqlStorage extends SqlStorage {
 		Optional<ServerPlayer> optPlayer = Sponge.server().player(uuid);
 		if(!optPlayer.isPresent()) return;
 		ServerPlayer player = optPlayer.get();
-		kick(player, plugin.getLocales().getAsReference(player).getCommands().getBan().getDisconnect(!ban.expirationDate().isPresent(), (ban.expirationDate().isPresent() ? expire(player.locale(), ban) : text("")), ban.banSource().orElse(TextUtils.deserializeLegacy("&cServer")), ban.reason().orElse(TextUtils.deserializeLegacy("-"))));
+		kick(player, plugin.getLocales().getAsReferenced(player).getCommands().getBan().getDisconnect(!ban.expirationDate().isPresent(), (ban.expirationDate().isPresent() ? expire(player.locale(), ban) : text("")), ban.banSource().orElse(TextUtils.deserializeLegacy("&cServer")), ban.reason().orElse(TextUtils.deserializeLegacy("-"))));
 	}
 
 	public void loadBanIP(ResultSet results) throws SQLException {
@@ -316,7 +316,7 @@ public class MySqlStorage extends SqlStorage {
 		Optional<ServerPlayer> optPlayer = Sponge.server().onlinePlayers().stream().filter(player -> player.connection().address().getAddress().getHostAddress().equals(ip.getHostAddress())).findFirst();
 		if(!optPlayer.isPresent()) return;
 		ServerPlayer player = optPlayer.get();
-		kick(player, plugin.getLocales().getAsReference(player).getCommands().getBanIP().getDisconnect(!ban.expirationDate().isPresent(), (ban.expirationDate().isPresent() ? expire(player.locale(), ban) : text("")), ban.banSource().orElse(TextUtils.deserializeLegacy("&cServer")), ban.reason().orElse(TextUtils.deserializeLegacy("-"))));
+		kick(player, plugin.getLocales().getAsReferenced(player).getCommands().getBanIP().getDisconnect(!ban.expirationDate().isPresent(), (ban.expirationDate().isPresent() ? expire(player.locale(), ban) : text("")), ban.banSource().orElse(TextUtils.deserializeLegacy("&cServer")), ban.reason().orElse(TextUtils.deserializeLegacy("-"))));
 	}
 
 	private Ban.Builder loadTimes(Ban.Builder builder, ResultSet results) throws SQLException {
@@ -603,7 +603,7 @@ public class MySqlStorage extends SqlStorage {
 
 	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
 		if(!ban.expirationDate().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));

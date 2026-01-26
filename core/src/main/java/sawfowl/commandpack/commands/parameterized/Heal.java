@@ -67,7 +67,7 @@ public class Heal extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Heal getHeal(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getHeal();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getHeal();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Heal getHeal(ServerPlayer player) {

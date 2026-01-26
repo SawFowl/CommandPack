@@ -32,7 +32,7 @@ public class CommandPriceSerializer implements TypeSerializer<Price> {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.comments.commandsconfig.Price getPrice() {
-		return INSTANCE.getLocales().getSystemAsReference().getComments().getCommandsConfig().getPrice();
+		return INSTANCE.getLocales().getSystemAsReferenced().getComments().getCommandsConfig().getPrice();
 	}
 
 }

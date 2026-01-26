@@ -74,15 +74,15 @@ public abstract class AbstractRawCommand extends AbstractPluginCommand<CommandPa
 	}
 
 	protected Commands getCommands(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands();
+		return plugin.getLocales().getAsReferenced(locale).getCommands();
 	}
 
 	protected Commands getCommands() {
-		return plugin.getLocales().getSystemAsReference().getCommands();
+		return plugin.getLocales().getSystemAsReferenced().getCommands();
 	}
 
 	protected CommandExceptions getExceptions(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommandExceptions();
+		return plugin.getLocales().getAsReferenced(locale).getCommandExceptions();
 	}
 
 }

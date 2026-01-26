@@ -75,7 +75,7 @@ public class Home extends AbstractPlayerCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Home getHome(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getHome();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getHome();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Home getHome(ServerPlayer player) {

@@ -85,7 +85,7 @@ public class Vanish extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Vanish getVanish(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getVanish();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getVanish();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Vanish getVanish(ServerPlayer player) {

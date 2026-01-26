@@ -76,7 +76,7 @@ public class Thunder extends AbstractParameterizedCommand {
 		if(duration.isPresent()) {
 			world.setWeather(WeatherTypes.THUNDER.get(), Ticks.of(duration.get() * 20));
 		} else world.setWeather(WeatherTypes.THUNDER.get(), Ticks.of(random.nextInt(10000) * 20));
-		src.sendMessage(plugin.getLocales().getAsReference(locale).getCommands().getWeather().getThunder(world));
+		src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getWeather().getThunder(world));
 	}
 
 }

@@ -112,14 +112,14 @@ public class Ban extends AbstractParameterizedCommand {
 
 	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
 		if(!ban.expirationDate().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getBan();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getBan();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan(ServerPlayer player) {
@@ -127,7 +127,7 @@ public class Ban extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan() {
-		return plugin.getLocales().getSystemAsReference().getCommands().getBan();
+		return plugin.getLocales().getSystemAsReferenced().getCommands().getBan();
 	}
 
 }

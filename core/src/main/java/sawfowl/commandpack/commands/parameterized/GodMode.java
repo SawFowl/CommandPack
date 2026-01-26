@@ -84,7 +84,7 @@ public class GodMode extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.GodMode getGodMode(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getGodMode();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getGodMode();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.GodMode getGodMode(ServerPlayer player) {

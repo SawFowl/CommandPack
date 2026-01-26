@@ -99,14 +99,14 @@ public class Banip extends AbstractParameterizedCommand {
 
 	private Component expire(Locale locale, org.spongepowered.api.service.ban.Ban ban) {
 		if(!ban.expirationDate().isPresent()) return Component.empty();
-		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReference(locale).getTime().getFormat());
+		SimpleDateFormat format = new SimpleDateFormat(plugin.getLocales().getAsReferenced(locale).getTime().getFormat());
 		Calendar calendar = Calendar.getInstance(locale);
 		calendar.setTimeInMillis(ban.expirationDate().get().toEpochMilli());
 		return text(format.format(calendar.getTime()));
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getBan();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getBan();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.Ban getBan(ServerPlayer player) {
@@ -114,7 +114,7 @@ public class Banip extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.BanIP getBanIP(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getBanIP();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getBanIP();
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.BanIP getBanIP(ServerPlayer player) {
@@ -122,7 +122,7 @@ public class Banip extends AbstractParameterizedCommand {
 	}
 
 	private sawfowl.commandpack.configure.locales.abstractlocale.commands.BanIP getBanIP() {
-		return plugin.getLocales().getSystemAsReference().getCommands().getBanIP();
+		return plugin.getLocales().getSystemAsReferenced().getCommands().getBanIP();
 	}
 
 }

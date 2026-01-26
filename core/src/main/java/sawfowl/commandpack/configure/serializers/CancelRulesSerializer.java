@@ -33,7 +33,7 @@ public class CancelRulesSerializer implements TypeSerializer<CancelRules> {
 	}
 
 	private DelayData.CancelRules getCancelRules() {
-		return INSTANCE.getLocales().getSystemAsReference().getComments().getCommandsConfig().getDelayData().getCancelRules();
+		return INSTANCE.getLocales().getSystemAsReferenced().getComments().getCommandsConfig().getDelayData().getCancelRules();
 	}
 
 }

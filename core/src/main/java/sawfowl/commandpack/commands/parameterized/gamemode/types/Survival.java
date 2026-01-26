@@ -64,11 +64,11 @@ public class Survival extends AbstractParameterizedCommand {
 
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
-		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.GAMEMODE_OTHER_STAFF, true), false, locale -> plugin.getLocales().getAsReference(locale).getCommandExceptions().getPlayerNotPresent()));
+		return Arrays.asList(ParameterSettings.of(CommandParameters.createPlayer(Permissions.GAMEMODE_OTHER_STAFF, true), false, locale -> plugin.getLocales().getAsReferenced(locale).getCommandExceptions().getPlayerNotPresent()));
 	}
 
 	private GameMode getGameMode(Locale locale) {
-		return plugin.getLocales().getAsReference(locale).getCommands().getGameMode();
+		return plugin.getLocales().getAsReferenced(locale).getCommands().getGameMode();
 	}
 
 	private GameMode getGameMode(ServerPlayer player) {

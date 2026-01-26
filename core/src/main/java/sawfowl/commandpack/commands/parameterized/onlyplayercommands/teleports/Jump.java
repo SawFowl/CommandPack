@@ -51,7 +51,7 @@ public class Jump extends AbstractPlayerCommand {
 				targetLocation = block.serverLocation().add(0, 1, 0);
 			} else {
 				Optional<ServerLocation> find = Sponge.server().teleportHelper().findSafeLocation(block.serverLocation());
-				if(!find.isPresent()) exception(plugin.getLocales().getAsReference(locale).getCommands().getJump().getException());
+				if(!find.isPresent()) exception(plugin.getLocales().getAsReferenced(locale).getCommands().getJump().getException());
 				targetLocation = find.get();
 			}
 			delay(src, locale, consumer -> {

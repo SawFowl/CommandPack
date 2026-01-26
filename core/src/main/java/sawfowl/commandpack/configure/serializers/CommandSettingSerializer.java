@@ -48,7 +48,7 @@ public class CommandSettingSerializer implements TypeSerializer<Settings> {
 	}
 
 	private CommandsConfig getCommandsConfig() {
-		return INSTANCE.getLocales().getSystemAsReference().getComments().getCommandsConfig();
+		return INSTANCE.getLocales().getSystemAsReferenced().getComments().getCommandsConfig();
 	}
 
 }
