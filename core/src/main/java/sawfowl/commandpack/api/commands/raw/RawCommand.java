@@ -120,7 +120,7 @@ public interface RawCommand extends PluginCommand, Raw {
 			((RawCommand) child[0]).process(cause, cause.audience(), locale, isPlayer, arguments, ((RawCommand) child[0]).checkArguments(cause, ((RawCommand) child[0]).createResultCollection(cause, (String[]) child[1]), isPlayer, locale));
 			args = null;
 			child = null;
-		} else process(cause, cause.first(ServerPlayer.class).map(player -> (Audience) player).orElse(cause.audience()), locale, isPlayer, arguments, checkArguments(cause, createResultCollection(cause, args), isPlayer, locale));
+		} else process(cause, cause.first(ServerPlayer.class).map(player -> (Audience) player).orElse(cause.root() instanceof Audience audience ? audience : cause.audience()), locale, isPlayer, arguments, checkArguments(cause, createResultCollection(cause, args), isPlayer, locale));
 		return success();
 	}
 
