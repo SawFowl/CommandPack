@@ -239,32 +239,27 @@ public class Kit extends AbstractRawCommand {
 		KitGiveEvent.Pre eventPre = createPreEvent(cause, audience, kit, player, currentTime + kit.getCooldown(), data.getKitGivedTime(kit), (kit.isNeedPerm() && !player.hasPermission(kit.permission()) && !player.hasPermission(Permissions.KIT_STAFF)) || !allowLimit || economyCancelGive || data.getKitGivedTime(kit) + kit.getCooldown() > currentTime);
 		Sponge.eventManager().post(eventPre);
 		if(eventPre.isCancelled()) {
-			if(data.getKitGivedTime(kit) + kit.getCooldown() > currentTime) {
-				audience.sendMessage(getKit(locale).getWait(timeFormat((data.getKitGivedTime(kit) + kit.getCooldown()) - currentTime, locale)));
-				Sponge.eventManager().post(createPostEvent(audience, kit, player, false, null, currentTime + kit.getCooldown()));
-				return;
-			}
-			if(!allowLimit) {
+			if(data.getKitGivedTime(eventPre.getFinalKit()) + eventPre.getFinalKit().getCooldown() > currentTime) {
+				audience.sendMessage(getKit(locale).getWait(timeFormat((data.getKitGivedTime(eventPre.getFinalKit()) + eventPre.getFinalKit().getCooldown()) - currentTime, locale)));
+				Sponge.eventManager().post(createPostEvent(audience, kit, eventPre.getFinalKit(), player, false, null, currentTime + eventPre.getFinalKit().getCooldown()));
+			} else if(!allowLimit) {
 				audience.sendMessage(getKit(locale).getGiveLimit());
-				Sponge.eventManager().post(createPostEvent(audience, kit, player, false, null, currentTime + kit.getCooldown()));
-				return;
-			}
-			if(economyCancelGive) {
-				audience.sendMessage(getKit(locale).getNotEnoughMoney(kit.getKitPrice().get().asComponent()));
-				Sponge.eventManager().post(createPostEvent(audience, kit, player, false, null, currentTime + kit.getCooldown()));
-				return;
+				Sponge.eventManager().post(createPostEvent(audience, kit, eventPre.getFinalKit(), player, false, null, currentTime + eventPre.getFinalKit().getCooldown()));
+			} else if(economyCancelGive) {
+				audience.sendMessage(getKit(locale).getNotEnoughMoney(eventPre.getFinalKit().getKitPrice().get().asComponent()));
+				Sponge.eventManager().post(createPostEvent(audience, kit, eventPre.getFinalKit(), player, false, null, currentTime + eventPre.getFinalKit().getCooldown()));
 			}
 			return;
 		}
-		if(data.givedKits().containsKey(kit.id())) {
-			GivedKitData kitData = data.givedKits().get(kit.id());
+		if(data.givedKits().containsKey(eventPre.getFinalKit().id())) {
+			GivedKitData kitData = data.givedKits().get(eventPre.getFinalKit().id());
 			kitData.setLastGivedTime(currentTime);
 			kitData.setGivedCount(kitData.getGivedCount() + 1);
-			data.givedKits().remove(kit.id());
-			data.givedKits().put(kit.id(), kitData);
-		} else data.givedKits().put(kit.id(), new GivedKitData(currentTime, 1));
-		if(kit.getKitPrice().isPresent() && plugin.getEconomy().checkPlayerBalance((audience instanceof ServerPlayer ? (ServerPlayer) audience : player).uniqueId(), kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney())) {
-			plugin.getEconomy().removeFromPlayerBalance(audience instanceof ServerPlayer ? (ServerPlayer) audience : player, kit.getKitPrice().get().getCurrency(), kit.getKitPrice().get().getMoney());
+			data.givedKits().remove(eventPre.getFinalKit().id());
+			data.givedKits().put(eventPre.getFinalKit().id(), kitData);
+		} else data.givedKits().put(eventPre.getFinalKit().id(), new GivedKitData(currentTime, 1));
+		if(eventPre.getFinalKit().getKitPrice().isPresent() && plugin.getEconomy().checkPlayerBalance((audience instanceof ServerPlayer ? (ServerPlayer) audience : player).uniqueId(), eventPre.getFinalKit().getKitPrice().get().getCurrency(), eventPre.getFinalKit().getKitPrice().get().getMoney())) {
+			plugin.getEconomy().removeFromPlayerBalance(audience instanceof ServerPlayer ? (ServerPlayer) audience : player, eventPre.getFinalKit().getKitPrice().get().getCurrency(), eventPre.getFinalKit().getKitPrice().get().getMoney());
 		}
 		InventoryTransactionResult result = give == null ? InventoryTransactionResult.successNoTransactions() : player.inventory().primary().offer(give);
 		if(enderchest != null) player.enderChestInventory().offer(enderchest);
@@ -272,13 +267,13 @@ public class Kit extends AbstractRawCommand {
 			addToBackPack(data.getBackpack(), item);
 		});
 		if(spawn != null && !spawn.isEmpty()) spawnItems(spawn, player);
-		runCommands(player, kit);
+		runCommands(player, eventPre.getFinalKit());
 		data.save();
 		if(!equals) {
-			player.sendMessage(getKit(player).getSuccess(kit.getLocalizedName(player.locale())));
-			audience.sendMessage(getKit(locale).getSuccessStaff(player, kit.getLocalizedName(player.locale())));
-		} else player.sendMessage(getKit(player).getSuccess(kit.getLocalizedName(player.locale())));
-		Sponge.eventManager().post(createPostEvent(audience, kit, player, true, result, currentTime + kit.getCooldown()));
+			player.sendMessage(getKit(player).getSuccess(eventPre.getFinalKit().getLocalizedName(player.locale())));
+			audience.sendMessage(getKit(locale).getSuccessStaff(player, eventPre.getFinalKit().getLocalizedName(player.locale())));
+		} else player.sendMessage(getKit(player).getSuccess(eventPre.getFinalKit().getLocalizedName(player.locale())));
+		Sponge.eventManager().post(createPostEvent(audience, kit, eventPre.getFinalKit(), player, true, result, currentTime + eventPre.getFinalKit().getCooldown()));
 	}
 
 	private void runCommands(ServerPlayer player, sawfowl.commandpack.api.data.kits.Kit kit) {
@@ -325,6 +320,7 @@ public class Kit extends AbstractRawCommand {
 		return new KitGiveEvent.Pre() {
 
 			boolean cancelled = !commandCause.hasPermission(Permissions.KIT_STAFF) && cancel;
+			sawfowl.commandpack.api.data.kits.Kit replace = kit;
 
 			@Override
 			public Cause cause() {
@@ -371,10 +367,20 @@ public class Kit extends AbstractRawCommand {
 				return kit.getGiveRule();
 			}
 
+			@Override
+			public sawfowl.commandpack.api.data.kits.Kit getFinalKit() {
+				return replace;
+			}
+
+			@Override
+			public void setKit(sawfowl.commandpack.api.data.kits.Kit kit) {
+				replace = kit;
+			}
+
 		};
 	}
 
-	private KitGiveEvent.Post createPostEvent(Audience source, sawfowl.commandpack.api.data.kits.Kit kit, ServerPlayer player, boolean isGived, InventoryTransactionResult result, long nextGiveTime) {
+	private KitGiveEvent.Post createPostEvent(Audience source, sawfowl.commandpack.api.data.kits.Kit kit, sawfowl.commandpack.api.data.kits.Kit replace, ServerPlayer player, boolean isGived, InventoryTransactionResult result, long nextGiveTime) {
 		Cause cause = Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, getContainer()).add(EventContextKeys.AUDIENCE, source).add(EventContextKeys.SUBJECT, source instanceof Subject ? (Subject) source : Sponge.systemSubject()).build(), source);
 		return new KitGiveEvent.Post() {
 			
@@ -406,6 +412,11 @@ public class Kit extends AbstractRawCommand {
 			@Override
 			public long getNextAllowedAccess() {
 				return nextGiveTime;
+			}
+
+			@Override
+			public sawfowl.commandpack.api.data.kits.Kit getFinalKit() {
+				return replace;
 			}
 		};
 	}

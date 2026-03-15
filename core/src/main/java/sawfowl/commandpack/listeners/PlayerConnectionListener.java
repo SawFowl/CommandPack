@@ -120,16 +120,16 @@ public class PlayerConnectionListener {
 			Sponge.eventManager().post(eventPre);
 			if(eventPre.isCancelled()) return;
 			InventoryTransactionResult result = null;
-			if(!kit.getContent().isEmpty()) result = player.inventory().offer(kit.getContent().toArray(new ItemStack[] {}));
-			runCommands(player, kit);
-			Sponge.eventManager().post(createPostEvent(Sponge.server(), kit, player, true, result, currentTime + kit.getCooldown()));
-			if(data.givedKits().containsKey(kit.id())) {
-				GivedKitData kitData = data.givedKits().get(kit.id());
+			if(!eventPre.getFinalKit().getContent().isEmpty()) result = player.inventory().offer(eventPre.getFinalKit().getContent().toArray(new ItemStack[] {}));
+			runCommands(player, eventPre.getFinalKit());
+			Sponge.eventManager().post(createPostEvent(Sponge.server(), kit, eventPre.getFinalKit(), player, true, result, currentTime + eventPre.getFinalKit().getCooldown()));
+			if(data.givedKits().containsKey(eventPre.getFinalKit().id())) {
+				GivedKitData kitData = data.givedKits().get(eventPre.getFinalKit().id());
 				kitData.setLastGivedTime(currentTime);
 				kitData.setGivedCount(kitData.getGivedCount() + 1);
-				data.givedKits().remove(kit.id());
-				data.givedKits().put(kit.id(), kitData);
-			} else data.givedKits().put(kit.id(), new GivedKitData(currentTime, 1));
+				data.givedKits().remove(eventPre.getFinalKit().id());
+				data.givedKits().put(eventPre.getFinalKit().id(), kitData);
+			} else data.givedKits().put(eventPre.getFinalKit().id(), new GivedKitData(currentTime, 1));
 			data.save();
 			return;
 		}
@@ -139,16 +139,16 @@ public class PlayerConnectionListener {
 			Sponge.eventManager().post(eventPre);
 			if(eventPre.isCancelled()) return;
 			InventoryTransactionResult result = null;
-			if(!kit.getContent().isEmpty()) result = player.inventory().offer(kit.getContent().toArray(new ItemStack[] {}));
-			runCommands(player, kit);
-			Sponge.eventManager().post(createPostEvent(Sponge.server(), kit, player, true, result, currentTime + kit.getCooldown()));
-			if(data.givedKits().containsKey(kit.id())) {
-				GivedKitData kitData = data.givedKits().get(kit.id());
+			if(!eventPre.getFinalKit().getContent().isEmpty()) result = player.inventory().offer(eventPre.getFinalKit().getContent().toArray(new ItemStack[] {}));
+			runCommands(player, eventPre.getFinalKit());
+			Sponge.eventManager().post(createPostEvent(Sponge.server(), kit, eventPre.getFinalKit(), player, true, result, currentTime + eventPre.getFinalKit().getCooldown()));
+			if(data.givedKits().containsKey(eventPre.getFinalKit().id())) {
+				GivedKitData kitData = data.givedKits().get(eventPre.getFinalKit().id());
 				kitData.setLastGivedTime(currentTime);
 				kitData.setGivedCount(kitData.getGivedCount() + 1);
-				data.givedKits().remove(kit.id());
-				data.givedKits().put(kit.id(), kitData);
-			} else data.givedKits().put(kit.id(), new GivedKitData(currentTime, 1));
+				data.givedKits().remove(eventPre.getFinalKit().id());
+				data.givedKits().put(eventPre.getFinalKit().id(), kitData);
+			} else data.givedKits().put(eventPre.getFinalKit().id(), new GivedKitData(currentTime, 1));
 			data.save();
 			return;
 		}
@@ -171,6 +171,7 @@ public class PlayerConnectionListener {
 		return new KitGiveEvent.Pre() {
 
 			boolean cancelled = cancel;
+			sawfowl.commandpack.api.data.kits.Kit replace = kit;
 
 			@Override
 			public Cause cause() {
@@ -217,10 +218,20 @@ public class PlayerConnectionListener {
 				return kit.getGiveRule();
 			}
 
+			@Override
+			public Kit getFinalKit() {
+				return replace;
+			}
+
+			@Override
+			public void setKit(Kit kit) {
+				replace = kit;
+			}
+
 		};
 	}
 
-	private KitGiveEvent.Post createPostEvent(Audience source, sawfowl.commandpack.api.data.kits.Kit kit, ServerPlayer player, boolean isGived, InventoryTransactionResult result, long nextGiveTime) {
+	private KitGiveEvent.Post createPostEvent(Audience source, sawfowl.commandpack.api.data.kits.Kit kit, sawfowl.commandpack.api.data.kits.Kit replace, ServerPlayer player, boolean isGived, InventoryTransactionResult result, long nextGiveTime) {
 		Cause cause = Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, plugin.getPluginContainer()).add(EventContextKeys.AUDIENCE, source).add(EventContextKeys.SUBJECT, source instanceof Subject ? (Subject) source : Sponge.systemSubject()).build(), source);
 		return new KitGiveEvent.Post() {
 			
@@ -252,6 +263,11 @@ public class PlayerConnectionListener {
 			@Override
 			public long getNextAllowedAccess() {
 				return nextGiveTime;
+			}
+
+			@Override
+			public Kit getFinalKit() {
+				return replace;
 			}
 		};
 	}

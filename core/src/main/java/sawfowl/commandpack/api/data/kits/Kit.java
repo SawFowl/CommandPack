@@ -3,6 +3,10 @@ package sawfowl.commandpack.api.data.kits;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
+
+import javax.annotation.Nullable;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.persistence.DataSerializable;
@@ -40,9 +44,24 @@ public interface Kit extends DataSerializable {
 	List<Component> getLocalizedLore(Locale locale);
 
 	/**
-	 * Getting a copy of the items in the kit.
+	 * Getting a copy of the items in the kit.<br>
+	 * This collection is not modifiable.
 	 */
 	List<ItemStack> getContent();
+
+	/**
+	 * Replacing items with another one.
+	 * 
+	 * @param newItem - A new item to be placed in the kit.
+	 * @param iterations - The allowed number of replaces.
+	 * @param replaceTest - A condition for searching for an item to be replaced.
+	 */
+	void replaceItem(@Nullable ItemStack newItem, int iterations, Predicate<ItemStack> replaceTest);
+
+	/**
+	 * Replacing items in the kit.
+	 */
+	void replaceItems(UnaryOperator<ItemStack> operator);
 
 	/**
 	 * The rule for giving a kit to a player.
@@ -110,7 +129,16 @@ public interface Kit extends DataSerializable {
 	 */
 	InventoryMenu asMenu(PluginContainer container, ServerPlayer carrier, boolean readOnly);
 
+	/**
+	 * Saving the kit to disk.
+	 */
 	void save();
+
+	/**
+	 * Copying a kit.<br>
+	 * The changes made to the copy do not apply to the main set and cannot be saved to disk.
+	 */
+	Kit copy();
 
 	interface Builder extends AbstractBuilder<Kit>, org.spongepowered.api.util.Builder<Kit, Builder> {
 

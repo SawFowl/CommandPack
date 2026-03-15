@@ -1,11 +1,15 @@
 package sawfowl.commandpack.configure.configs.kits;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import org.spongepowered.api.data.Keys;
@@ -72,6 +76,7 @@ public class KitData implements Kit {
 	private List<String> executeCommands;
 	@Setting("Price")
 	private KitPriceData priceData;
+	private boolean copy = false;
 
 	@Override
 	public int contentVersion() {
@@ -99,17 +104,35 @@ public class KitData implements Kit {
 
 	@Override
 	public Component getLocalizedName(Locale locale) {
-		return localizedNames == null ? text(id) : text(localizedNames.getOrDefault(locale.toLanguageTag(), localizedNames.getOrDefault(Locales.DEFAULT.toLanguageTag(), id)));
+		return localizedNames == null ? TextUtils.deserialize(id) : TextUtils.deserialize(localizedNames.getOrDefault(locale.toLanguageTag(), localizedNames.getOrDefault(Locales.DEFAULT.toLanguageTag(), id)));
 	}
 
 	@Override
 	public List<Component> getLocalizedLore(Locale locale) {
-		return localizedLores == null || (!localizedLores.containsKey(locale.toLanguageTag()) && !localizedLores.containsKey(Locales.DEFAULT.toLanguageTag()))? new ArrayList<>() : localizedLores.getOrDefault(locale.toLanguageTag(), localizedLores.get(Locales.DEFAULT.toLanguageTag())).stream().map(s -> text(s)).collect(Collectors.toList());
+		return localizedLores == null || (!localizedLores.containsKey(locale.toLanguageTag()) && !localizedLores.containsKey(Locales.DEFAULT.toLanguageTag()))? new ArrayList<>() : localizedLores.getOrDefault(locale.toLanguageTag(), localizedLores.get(Locales.DEFAULT.toLanguageTag())).stream().map(s -> TextUtils.deserialize(s)).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<ItemStack> getContent() {
-		return new ArrayList<ItemStack>(items);
+		return Collections.unmodifiableList(items);
+	}
+
+	@Override
+	public void replaceItem(ItemStack newItem, int iterations, Predicate<ItemStack> replaceTest) {
+		if(iterations <= 0) return;
+		ListIterator<ItemStack> li = items.listIterator();
+		while(iterations > 0 && li.hasNext() && replaceTest.test(li.next())) {
+			iterations--;
+			if(newItem == null) {
+				li.remove();
+			} else li.set(newItem);
+		}
+		li = null;
+	}
+
+	@Override
+	public void replaceItems(UnaryOperator<ItemStack> operator) {
+		items.replaceAll(operator);
 	}
 
 	@Override
@@ -207,23 +230,7 @@ public class KitData implements Kit {
 
 	@Override
 	public void save() {
-		CommandPackInstance.getInstance().getConfigManager().saveKit(this);
-	}
-
-	private Component text(String string) {
-		if(isLegacyDecor(string)) {
-			return TextUtils.deserializeLegacy(string);
-		} else {
-			return TextUtils.deserialize(string);
-		}
-	}
-
-	private boolean isLegacyDecor(String string) {
-		return string.indexOf('&') != -1 && !string.endsWith("&") && isStyleChar(string.charAt(string.indexOf("&") + 1));
-	}
-
-	private boolean isStyleChar(char ch) {
-		return "0123456789abcdefklmnor".indexOf(ch) != -1;
+		if(!copy) CommandPackInstance.getInstance().getConfigManager().saveKit(this);
 	}
 
 	public void setName(Locale locale, String name) {
@@ -273,6 +280,25 @@ public class KitData implements Kit {
 
 	public void setPrice(KitPrice price) {
 		priceData = (KitPriceData) (price instanceof KitPriceData ? price : KitPrice.of(price.getCurrency(), price.getMoney()));
+	}
+
+	@Override
+	public Kit copy() {
+		KitData kit = new KitData();
+		kit.id = id;
+		kit.localizedNames = localizedNames;
+		kit.localizedLores = localizedLores;
+		kit.items = items;
+		kit.giveRule = giveRule;
+		kit.cooldown = cooldown;
+		kit.limit = limit;
+		kit.firstTime = firstTime;
+		kit.giveOnJoin = giveOnJoin;
+		kit.needPerm = needPerm;
+		kit.executeCommands = executeCommands;
+		kit.priceData = priceData;
+		kit.copy = true;
+		return kit;
 	}
 
 	public class Builder implements Kit.Builder {

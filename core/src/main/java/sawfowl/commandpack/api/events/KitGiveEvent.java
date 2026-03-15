@@ -32,6 +32,11 @@ public interface KitGiveEvent extends Event {
 	long getNextAllowedAccess();
 
 	/**
+	 * The returned kit can be a substitute.
+	 */
+	Kit getFinalKit();
+
+	/**
 	 * The event will be canceled by default if the player cannot currently get a kit.
 	 */
 	interface Pre extends KitGiveEvent, Cancellable {
@@ -50,6 +55,11 @@ public interface KitGiveEvent extends Event {
 		 * Kit giving rule.
 		 */
 		GiveRule getGiveRule();
+
+		/**
+		 * Replacement of the kit given to the player.
+		 */
+		void setKit(Kit kit);
 
 	}
 
