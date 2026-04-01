@@ -3,13 +3,10 @@ package sawfowl.commandpack.configure.configs.commands;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import sawfowl.commandpack.api.data.command.CancelRules;
 import sawfowl.commandpack.api.data.command.Delay;
 
-@ConfigSerializable
 public class DelayData implements Delay {
 
 	public DelayData() {}
@@ -22,9 +19,7 @@ public class DelayData implements Delay {
 		return new Builder();
 	}
 
-	@Setting("Seconds")
 	private long seconds = 0;
-	@Setting("CancelRulesData")
 	private CancelRulesData cancelRulesData = new CancelRulesData();
 
 	public long getSeconds() {
@@ -37,7 +32,7 @@ public class DelayData implements Delay {
 
 	@Override
 	public String toString() {
-		return "DelayData [Seconds=" + seconds + ", CancelRulesData=" + cancelRulesData + "]";
+		return "DelayData [Seconds=" + seconds + ", CancelRules=" + cancelRulesData + "]";
 	}
 
 	@Override
@@ -49,7 +44,7 @@ public class DelayData implements Delay {
 	public DataContainer toContainer() {
 		return DataContainer.createNew()
 				.set(DataQuery.of("Seconds"), seconds)
-				.set(DataQuery.of("CancelRulesData"), cancelRulesData)
+				.set(DataQuery.of("CancelRules"), cancelRulesData)
 				.set(Queries.CONTENT_VERSION, contentVersion());
 	}
 
