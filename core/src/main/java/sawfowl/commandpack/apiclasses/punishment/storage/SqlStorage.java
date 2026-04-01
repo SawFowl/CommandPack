@@ -1,21 +1,18 @@
 package sawfowl.commandpack.apiclasses.punishment.storage;
 
-import java.io.BufferedReader;
-import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
-import sawfowl.localeapi.api.serializetools.SerializeOptions;
+import sawfowl.localeapi.api.ConfigTypes;
+import sawfowl.localeapi.api.services.ConfigurationService;
 
 public abstract class SqlStorage extends AbstractPunishmentStorage {
 
@@ -42,15 +39,17 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 	}
 
 	protected Warns warnsFromString(String warnsData) {
-		StringReader source = new StringReader(warnsData);
-		HoconConfigurationLoader loader = SerializeOptions.createHoconConfigurationLoader(plugin.getMainConfig().getItemSerializer()).source(() -> new BufferedReader(source)).build();
-		try {
-			ConfigurationNode node = loader.load().node("Content");
-			return node.virtual() ? null : node.get(WarnsData.class);
-		} catch (ConfigurateException e) {
-			plugin.getLogger().error(e.getLocalizedMessage());
-			return null;
+		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(WarnsData.class).setType(ConfigTypes.HOCON).build();
+		config.loadFromRaw(warnsData);
+		if(!config.getRootNode().node("Content").virtual()) {
+			try {
+				return (Warns) config.getRootNode().node("Content").get(WarnsData.class);
+			} catch (SerializationException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
+		return config.get();
 	}
 
 	protected void openConnection() throws SQLException {

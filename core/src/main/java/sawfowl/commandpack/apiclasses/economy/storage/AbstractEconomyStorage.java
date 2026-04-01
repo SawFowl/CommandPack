@@ -17,14 +17,12 @@ import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.AccountDeletionResultType;
 import org.spongepowered.api.service.economy.account.AccountDeletionResultTypes;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
-import org.spongepowered.configurate.ConfigurationOptions;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.storages.EconomyStorage;
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
 import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
-import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
 public abstract class AbstractEconomyStorage extends Thread implements EconomyStorage {
 
@@ -33,13 +31,13 @@ public abstract class AbstractEconomyStorage extends Thread implements EconomySt
 
 	Map<UUID, UniqueAccount> uniqueAccounts = new HashMap<UUID, UniqueAccount>();
 	Map<String, Account> accounts = new HashMap<String, Account>();
-	ConfigurationOptions options;
+	//ConfigurationOptions options;
 	private Map<Currency, BigDecimal> defaultBalances;
 	private Map<Character, Currency> currenciesMap;
 	public AbstractEconomyStorage(CommandPackInstance plugin, EconomyServiceImpl economyService) {
 		this.plugin = plugin;
 		this.economyService = economyService;
-		options = SerializeOptions.selectOptions(plugin.getMainConfig().getItemSerializer());
+		//options = SerializeOptions.selectOptions(plugin.getMainConfig().getItemSerializer());
 		defaultBalances = createDefaultBalances();
 		currenciesMap = economyService.getCurrenciesMap();
 		load();

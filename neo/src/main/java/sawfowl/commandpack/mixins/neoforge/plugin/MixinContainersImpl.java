@@ -24,7 +24,7 @@ public abstract class MixinContainersImpl {
 
 	@Overwrite
 	private List<ModContainerImpl> findMods() {
-		return FMLLoader.getLoadingModList().getMods().stream().map(mod -> new ModContainerImpl(mod)).toList();
+		return FMLLoader.getCurrent().getLoadingModList().getMods().stream().map(mod -> new ModContainerImpl(mod)).toList();
 	}
 
 	private class ModContainerImpl implements ModContainer {

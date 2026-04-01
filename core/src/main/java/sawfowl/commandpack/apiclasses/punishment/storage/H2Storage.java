@@ -1,10 +1,6 @@
 package sawfowl.commandpack.apiclasses.punishment.storage;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,8 +13,7 @@ import org.spongepowered.api.service.ban.Ban;
 import org.spongepowered.api.service.ban.Ban.IP;
 import org.spongepowered.api.service.ban.Ban.Profile;
 import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.punishment.Mute;
@@ -27,7 +22,8 @@ import sawfowl.commandpack.configure.configs.punishment.BanData;
 import sawfowl.commandpack.configure.configs.punishment.MuteData;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
 import sawfowl.commandpack.utils.StorageType;
-import sawfowl.localeapi.api.serializetools.SerializeOptions;
+import sawfowl.localeapi.api.ConfigTypes;
+import sawfowl.localeapi.api.services.ConfigurationService;
 
 public class H2Storage extends SqlStorage {
 
@@ -229,74 +225,57 @@ public class H2Storage extends SqlStorage {
 	}
 
 	public Object[] insertProfileBanObjects(Profile ban) throws ConfigurateException {
-		StringWriter sink = new StringWriter();
-		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(options).sink(() -> new BufferedWriter(sink)).build();
-		ConfigurationNode node = loader.createNode();
-		node.node("Content").set(BanData.class, new BanData(ban));
-		loader.save(node);
-		return new Object[] {ban.profile().uniqueId(), sink};
+		return new Object[] {ban.profile().uniqueId(), ConfigurationService.getInstance().createVirtualReferencedConfig(new BanData(ban)).setType(ConfigTypes.HOCON).build().getRawData()};
 	}
 
 	public Object[] insertIPBanObjects(IP ban) throws ConfigurateException {
-		StringWriter sink = new StringWriter();
-		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(options).sink(() -> new BufferedWriter(sink)).build();
-		ConfigurationNode node = loader.createNode();
-		node.node("Content").set(BanData.class, new BanData(ban));
-		loader.save(node);
-		return new Object[] {ban.address().getHostAddress(), sink};
+		return new Object[] {ban.address().getHostAddress(), ConfigurationService.getInstance().createVirtualReferencedConfig(new BanData(ban)).setType(ConfigTypes.HOCON).build().getRawData()};
 	}
 
 	public Object[] insertMuteObjects(Mute mute) throws ConfigurateException {
-		StringWriter sink = new StringWriter();
-		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(options).sink(() -> new BufferedWriter(sink)).build();
-		ConfigurationNode node = loader.createNode();
-		node.node("Content").set(MuteData.class, (MuteData) (mute instanceof MuteData ? mute : Mute.builder().from(mute)));
-		loader.save(node);
-		return new Object[] {mute.getUniqueId(), sink};
+		return new Object[] {mute.getUniqueId(), ConfigurationService.getInstance().createVirtualReferencedConfig((MuteData) (mute instanceof MuteData ? mute : Mute.builder().from(mute))).setType(ConfigTypes.HOCON).build().getRawData()};
 	}
 
 	public Object[] insertWarnsObjects(Warns warns) throws ConfigurateException {
-		StringWriter sink = new StringWriter();
-		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(options).sink(() -> new BufferedWriter(sink)).build();
-		ConfigurationNode node = loader.createNode();
-		node.node("Content").set(WarnsData.class, (WarnsData) (warns instanceof WarnsData ? warns : Warns.builder().from(warns)));
-		loader.save(node);
-		return new Object[] {warns.getUniqueId(), sink};
+		return new Object[] {warns.getUniqueId(), ConfigurationService.getInstance().createVirtualReferencedConfig((WarnsData) (warns instanceof WarnsData ? warns : Warns.builder().from(warns))).setType(ConfigTypes.HOCON).build().getRawData()};
 	}
 
 	protected Ban.Profile profileFromString(String banData) {
-		StringReader source = new StringReader(banData);
-		HoconConfigurationLoader loader = SerializeOptions.createHoconConfigurationLoader(plugin.getMainConfig().getItemSerializer()).source(() -> new BufferedReader(source)).build();
-		try {
-			ConfigurationNode node = loader.load().node("Content");
-			return node.virtual() ? null : (Profile) node.get(BanData.class).getBan();
-		} catch (ConfigurateException e) {
-			plugin.getLogger().error(e.getLocalizedMessage());
-			return null;
-		}
+		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(BanData.class).setType(ConfigTypes.HOCON).build();
+		config.loadFromRaw(banData);
+		if(!config.getRootNode().node("Content").virtual()) {
+			try {
+				return (Profile) config.getRootNode().node("Content").get(BanData.class).getBan();
+			} catch (SerializationException e) {
+				e.printStackTrace();
+				return null;
+			}
+		} else return (Profile) config.get();
 	}
 
 	protected IP ipFromString(String banData) {
-		StringReader source = new StringReader(banData);
-		HoconConfigurationLoader loader = SerializeOptions.createHoconConfigurationLoader(plugin.getMainConfig().getItemSerializer()).source(() -> new BufferedReader(source)).build();
-		try {
-			ConfigurationNode node = loader.load().node("Content");
-			return node.virtual() ? null : (IP) node.get(BanData.class).getBan();
-		} catch (ConfigurateException e) {
-			plugin.getLogger().error(e.getLocalizedMessage());
-			return null;
-		}
+		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(BanData.class).setType(ConfigTypes.HOCON).build();
+		config.loadFromRaw(banData);
+		if(!config.getRootNode().node("Content").virtual()) {
+			try {
+				return (IP) config.getRootNode().node("Content").get(BanData.class).getBan();
+			} catch (SerializationException e) {
+				e.printStackTrace();
+				return null;
+			}
+		} else return (IP) config.get();
 	}
 
 	protected Mute muteFromString(String muteData) {
-		StringReader source = new StringReader(muteData);
-		HoconConfigurationLoader loader = SerializeOptions.createHoconConfigurationLoader(plugin.getMainConfig().getItemSerializer()).source(() -> new BufferedReader(source)).build();
-		try {
-			ConfigurationNode node = loader.load().node("Content");
-			return node.virtual() ? null : node.get(MuteData.class);
-		} catch (ConfigurateException e) {
-			plugin.getLogger().error(e.getLocalizedMessage());
-			return null;
-		}
+		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(MuteData.class).setType(ConfigTypes.HOCON).build();
+		config.loadFromRaw(muteData);
+		if(!config.getRootNode().node("Content").virtual()) {
+			try {
+				return config.getRootNode().node("Content").get(MuteData.class);
+			} catch (SerializationException e) {
+				e.printStackTrace();
+				return null;
+			}
+		} else return config.get();
 	}
 }

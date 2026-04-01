@@ -62,11 +62,11 @@ import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
 
 import sawfowl.localeapi.api.ConfigTypes;
-import sawfowl.localeapi.api.LocaleService;
 import sawfowl.localeapi.api.LocalesList;
 import sawfowl.localeapi.api.Logger;
 import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.api.placeholders.Placeholders;
+import sawfowl.localeapi.api.services.LocaleService;
 import sawfowl.commandpack.api.CommandPack;
 import sawfowl.commandpack.api.ContainersCollection;
 import sawfowl.commandpack.api.KitService;

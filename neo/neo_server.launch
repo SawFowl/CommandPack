@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/neo"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="4"/>
+    </listAttribute>
+    <mapAttribute key="org.eclipse.debug.core.environmentVariables">
+        <mapEntry key="MOD_CLASSES" value="main%%/home/user/Documents/GitHub/CommandPack/neo/build/resources/main:main%%/home/user/Documents/GitHub/CommandPack/neo/build/classes/java/main"/>
+    </mapAttribute>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="true"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="dev.architectury.transformer.TransformerRuntime"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="nogui"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="neo"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dfabric.dli.config=/home/user/Documents/GitHub/CommandPack/neo/.gradle/loom-cache/launch.cfg -Dfabric.dli.env=server --add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-exports jdk.naming.dns/com.sun.jndi.dns=java.naming -Dfabric.dli.main=net.neoforged.fml.startup.Server -Darchitectury.main.class=/home/user/Documents/GitHub/CommandPack/neo/.gradle/architectury/.main_class -Darchitectury.runtime.transformer=/home/user/Documents/GitHub/CommandPack/neo/.gradle/architectury/.transforms -Darchitectury.properties=/home/user/Documents/GitHub/CommandPack/neo/.gradle/architectury/.properties -Djdk.attach.allowAttachSelf=true -javaagent:/home/user/Documents/GitHub/CommandPack/.gradle/architectury/architectury-transformer-agent.jar"/>
+    <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:neo}/run"/>
+</launchConfiguration>

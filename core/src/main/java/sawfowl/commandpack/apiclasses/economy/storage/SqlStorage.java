@@ -1,16 +1,12 @@
 package sawfowl.commandpack.apiclasses.economy.storage;
 
-import java.io.BufferedReader;
-import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
@@ -18,7 +14,8 @@ import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
 import sawfowl.commandpack.configure.configs.economy.SerializedAccount;
 import sawfowl.commandpack.configure.configs.economy.SerializedUniqueAccount;
-import sawfowl.localeapi.api.serializetools.SerializeOptions;
+import sawfowl.localeapi.api.ConfigTypes;
+import sawfowl.localeapi.api.services.ConfigurationService;
 
 public abstract class SqlStorage extends AbstractEconomyStorage {
 
@@ -75,27 +72,29 @@ public abstract class SqlStorage extends AbstractEconomyStorage {
 	}
 
 	protected CPUniqueAccount uniqueAccountFromString(String string) {
-		StringReader source = new StringReader(string);
-		HoconConfigurationLoader loader = SerializeOptions.createHoconConfigurationLoader(plugin.getMainConfig().getItemSerializer()).source(() -> new BufferedReader(source)).build();
-		try {
-			ConfigurationNode node = loader.load().node("Content");
-			return node.virtual() ? null : CPUniqueAccount.deserealize(node.get(SerializedUniqueAccount.class), this);
-		} catch (ConfigurateException e) {
-			plugin.getLogger().error(e.getLocalizedMessage());
-			return null;
-		}
+		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(SerializedUniqueAccount.class).setType(ConfigTypes.HOCON).build();
+		config.loadFromRaw(string);
+		if(!config.getRootNode().node("Content").virtual()) {
+			try {
+				return CPUniqueAccount.deserealize(config.getRootNode().node("Content").get(SerializedUniqueAccount.class), this);
+			} catch (SerializationException e) {
+				e.printStackTrace();
+				return null;
+			}
+		} else return config.get() == null || config.get().getUserId() == null ? null : CPUniqueAccount.deserealize(config.get(), this);
 	}
 
 	protected CPAccount accountFromString(String string) {
-		StringReader source = new StringReader(string);
-		HoconConfigurationLoader loader = SerializeOptions.createHoconConfigurationLoader(plugin.getMainConfig().getItemSerializer()).source(() -> new BufferedReader(source)).build();
-		try {
-			ConfigurationNode node = loader.load().node("Content");
-			return node.virtual() ? null : CPAccount.deserealize(node.get(SerializedAccount.class), this);
-		} catch (ConfigurateException e) {
-			plugin.getLogger().error(e.getLocalizedMessage());
-			return null;
-		}
+		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(SerializedAccount.class).setType(ConfigTypes.HOCON).build();
+		config.loadFromRaw(string);
+		if(!config.getRootNode().node("Content").virtual()) {
+			try {
+				return CPAccount.deserealize(config.getRootNode().node("Content").get(SerializedAccount.class), this);
+			} catch (SerializationException e) {
+				e.printStackTrace();
+				return null;
+			}
+		} else return config.get() == null || config.get().getName() == null || config.get().getName().equals("n/a") ? null : CPAccount.deserealize(config.get(), this);
 	}
 
 }

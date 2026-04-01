@@ -10,13 +10,11 @@ import java.util.UUID;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.ban.Ban;
-import org.spongepowered.configurate.ConfigurationOptions;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.api.storages.PunishmentStorage;
-import sawfowl.localeapi.api.serializetools.SerializeOptions;
 
 public abstract class AbstractPunishmentStorage extends Thread implements PunishmentStorage {
 
@@ -25,10 +23,8 @@ public abstract class AbstractPunishmentStorage extends Thread implements Punish
 	Map<InetAddress, Ban.IP> bansIP = new HashMap<>();
 	Map<UUID, Mute> mutes = new HashMap<>();
 	Map<UUID, Warns> warns = new HashMap<>();
-	ConfigurationOptions options;
 	public AbstractPunishmentStorage(CommandPackInstance plugin) {
 		this.plugin = plugin;
-		options = SerializeOptions.selectOptions(plugin.getMainConfig().getItemSerializer());
 		load();
 		Sponge.asyncScheduler().submit(Task.builder().interval(Duration.ofMinutes(1)).plugin(plugin.getPluginContainer()).execute(() -> {
 			Map<UUID, Ban.Profile> bans = new HashMap<>(this.bans);

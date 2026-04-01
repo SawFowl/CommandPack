@@ -6,11 +6,6 @@ import java.util.UUID;
 
 import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
-import org.spongepowered.configurate.CommentedConfigurationNode;
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
-import org.spongepowered.configurate.reference.ConfigurationReference;
-import org.spongepowered.configurate.reference.ValueReference;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.apiclasses.economy.CPAccount;
@@ -18,6 +13,8 @@ import sawfowl.commandpack.apiclasses.economy.CPUniqueAccount;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
 import sawfowl.commandpack.configure.configs.economy.SerializedAccount;
 import sawfowl.commandpack.configure.configs.economy.SerializedUniqueAccount;
+import sawfowl.localeapi.api.ConfigTypes;
+import sawfowl.localeapi.api.services.ConfigurationService;
 
 public class FileStorage extends AbstractEconomyStorage {
 
@@ -30,28 +27,20 @@ public class FileStorage extends AbstractEconomyStorage {
 	@Override
 	public void load() {
 		checkPaths();
-		for(File file : playersPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) loadPlayer(file);
-		for(File file : otherPath.toFile().listFiles()) if(file.getName().endsWith(".conf")) loadOther(file);
+		for(File file : playersPath.toFile().listFiles()) if(isValidFile(file)) loadPlayer(file);
+		for(File file : otherPath.toFile().listFiles()) if(isValidFile(file)) loadOther(file);
 	}
 
 	private void loadPlayer(File file) {
-		try {
-			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(file.toPath()).build().loadToReference();
-			ValueReference<SerializedUniqueAccount, CommentedConfigurationNode> config = configReference.referenceTo(SerializedUniqueAccount.class);
-			uniqueAccounts.put(config.get().getUserId(), CPUniqueAccount.deserealize(config.get(), this));
-		} catch (ConfigurateException e) {
-			plugin.getLogger().error(e.getLocalizedMessage());
-		}
+		var account = loadUniqueAccountDataFromFile(file);
+		uniqueAccounts.put(account.getUserId(), CPUniqueAccount.deserealize(account, this));
+		account = null;
 	}
 
 	private void loadOther(File file) {
-		try {
-			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(file.toPath()).build().loadToReference();
-			ValueReference<SerializedAccount, CommentedConfigurationNode> config = configReference.referenceTo(SerializedAccount.class);
-			accounts.put(config.get().getName(), CPAccount.deserealize(config.get(), this));
-		} catch (Exception e) {
-			plugin.getLogger().error(e.getLocalizedMessage());
-		}
+		var account = loadAccountDataFromFile(file);
+		accounts.put(account.getName(), CPAccount.deserealize(account, this));
+		account = null;
 	}
 
 	private void checkPaths() {
@@ -82,25 +71,25 @@ public class FileStorage extends AbstractEconomyStorage {
 	@Override
 	public void saveUniqueAccount(UniqueAccount account) {
 		checkPaths();
-		try {
-			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(playersPath.resolve(account.uniqueId().toString() + ".conf")).build().loadToReference();
-			ValueReference<SerializedUniqueAccount, CommentedConfigurationNode> config = configReference.referenceTo(SerializedUniqueAccount.class);
-			config.setAndSave(new SerializedUniqueAccount(account));
-		} catch (ConfigurateException e) {
-			e.printStackTrace();
-		}
+		ConfigurationService.getInstance().createReferencedConfig(new SerializedUniqueAccount(account)).setType(ConfigTypes.HOCON).setPath(playersPath).setName(account.uniqueId().toString()).build();
 	}
 
 	@Override
 	public void saveAccount(Account account) {
 		checkPaths();
-		try {
-			ConfigurationReference<CommentedConfigurationNode> configReference = HoconConfigurationLoader.builder().defaultOptions(options).path(otherPath.resolve(account.identifier() + ".conf")).build().loadToReference();
-			ValueReference<SerializedAccount, CommentedConfigurationNode> config = configReference.referenceTo(SerializedAccount.class);
-			config.setAndSave(new SerializedAccount(account));
-		} catch (ConfigurateException e) {
-			e.printStackTrace();
-		}
+		ConfigurationService.getInstance().createReferencedConfig(new SerializedAccount(account)).setType(ConfigTypes.HOCON).setPath(otherPath).setName(account.identifier()).build();
+	}
+
+	private SerializedUniqueAccount loadUniqueAccountDataFromFile(File file) {
+		return ConfigurationService.getInstance().createReferencedConfig(SerializedUniqueAccount.class).fromFile(file).build().get();
+	}
+
+	private SerializedAccount loadAccountDataFromFile(File file) {
+		return ConfigurationService.getInstance().createReferencedConfig(SerializedAccount.class).fromFile(file).build().get();
+	}
+
+	private boolean isValidFile(File file) {
+		return ConfigTypes.isValidExtension(ConfigTypes.getExtension(file.getName()));
 	}
 
 }

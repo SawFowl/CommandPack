@@ -5,8 +5,7 @@ import java.nio.file.Path;
 
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.loader.ConfigurationLoader;
-import org.spongepowered.configurate.reference.ConfigurationReference;
+import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.reference.ValueReference;
 
 import sawfowl.commandpack.CommandPackInstance;
@@ -19,22 +18,21 @@ import sawfowl.commandpack.configure.configs.kits.KitData;
 import sawfowl.commandpack.configure.configs.miscellaneous.JoinCommands;
 import sawfowl.commandpack.configure.configs.player.PlayerData;
 import sawfowl.commandpack.configure.configs.player.WarpData;
+import sawfowl.localeapi.api.ConfigTypes;
 import sawfowl.localeapi.api.TextUtils;
+import sawfowl.localeapi.api.config.Config;
+import sawfowl.localeapi.api.config.ReferencedConfig;
 import sawfowl.localeapi.api.serializetools.ItemStackSerializerType;
-import sawfowl.localeapi.api.serializetools.SerializeOptions;
+import sawfowl.localeapi.api.services.ConfigurationService;
 
 public class ConfigManager {
 
 	private final CommandPackInstance plugin;
-	private ConfigurationReference<CommentedConfigurationNode> mainConfigReference;
-	private ValueReference<MainConfig, CommentedConfigurationNode> mainConfig;
-	private ConfigurationReference<CommentedConfigurationNode> joinCommandsConfigReference;
-	private ValueReference<JoinCommands, CommentedConfigurationNode> joinCommandsConfig;
-	private ConfigurationReference<CommentedConfigurationNode> commandsConfigReference;
-	private ValueReference<CommandsConfig, CommentedConfigurationNode> commandsConfig;
+	private ReferencedConfig<MainConfig> mainConfig;
+	private ReferencedConfig<JoinCommands> joinCommandsConfig;
+	private ReferencedConfig<CommandsConfig> commandsConfig;
+	private Config warpsConfig;
 	private final Path playerDataPath;
-	private ConfigurationLoader<CommentedConfigurationNode> warpsConfigLoader;
-	private CommentedConfigurationNode warpsNode;
 	private final Path kitsPath;
 	public ConfigManager(CommandPackInstance plugin) {
 		this.plugin = plugin;
@@ -55,40 +53,27 @@ public class ConfigManager {
 	}
 
 	public ValueReference<CommandsConfig, CommentedConfigurationNode> getCommandsConfig() {
-		return commandsConfig;
+		return commandsConfig.getValueReference();
 	}
 
 	public void reloadConfigs() {
-		try {
-			mainConfigReference.load();
-			mainConfig = mainConfigReference.referenceTo(MainConfig.class);
-			joinCommandsConfigReference.load();
-			joinCommandsConfig = joinCommandsConfigReference.referenceTo(JoinCommands.class);
-			commandsConfigReference.load();
-			commandsConfig = commandsConfigReference.referenceTo(CommandsConfig.class);
-			commandsConfig.get().updateCommandMap(commandsConfig);
-			plugin.getKitService().getKits().forEach(kit -> {
-				plugin.getKitService().removeKit(kit);
-			});
-			loadKits();
-		} catch (ConfigurateException e) {
-			plugin.getLogger().warn(e.getLocalizedMessage());
-		}
+		mainConfig.load();
+		joinCommandsConfig.load();
+		commandsConfig.load();
+		commandsConfig.get().updateCommandMap(commandsConfig.getValueReference());
+		plugin.getKitService().getKits().forEach(kit -> {
+			plugin.getKitService().removeKit(kit);
+		});
+		loadKits();
 	}
 
 	public void updateMainConfig() {
-		mainConfig.setAndSave(getMainConfig());
+		mainConfig.save(getMainConfig());
 	}
 
 	public void savePlayerData(PlayerData data) {
 		if(!playerDataPath.toFile().exists()) playerDataPath.toFile().mkdir();
-		try {
-			ConfigurationReference<CommentedConfigurationNode> configReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(playerDataPath.resolve(data.getUniqueId().toString() + ".conf")).build().loadToReference();
-			ValueReference<PlayerData, CommentedConfigurationNode> config = configReference.referenceTo(PlayerData.class);
-			config.setAndSave(data);
-		} catch (ConfigurateException e) {
-			plugin.getLogger().warn(e.getLocalizedMessage());
-		}
+		ConfigurationService.getInstance().createReferencedConfig(data).setItemStackSerializerType(getMainConfig().getItemSerializer()).setPath(playerDataPath).setName(data.getUniqueId().toString()).build();
 	}
 
 	public void loadPlayersData() {
@@ -101,20 +86,16 @@ public class ConfigManager {
 
 	public void saveAdminWarp(Warp warp) {
 		try {
-			warpsNode.node(warp.getPlainName()).set(WarpData.class, (WarpData) warp);
-			warpsConfigLoader.save(warpsNode);
+			warpsConfig.getRootNode().node(warp.getPlainName()).set(WarpData.class, (WarpData) warp);
+			warpsConfig.save();
 		} catch (ConfigurateException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
 		}
 	}
 
 	public void deleteAdminWarp(String name) {
-		if(!warpsNode.node(name).virtual()) warpsNode.removeChild(name);
-		try {
-			warpsConfigLoader.save(warpsNode);
-		} catch (ConfigurateException e) {
-			plugin.getLogger().warn(e.getLocalizedMessage());
-		}
+		if(!warpsConfig.getRootNode().node(name).virtual()) warpsConfig.getRootNode().removeChild(name);
+		warpsConfig.save();
 	}
 
 	public void deleteKit(String kit) {
@@ -124,76 +105,38 @@ public class ConfigManager {
 	public void saveKit(Kit kit) {
 		KitData data = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		if(!kitsPath.toFile().exists()) kitsPath.toFile().mkdir();
-		try {
-			ConfigurationReference<CommentedConfigurationNode> configReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(kitsPath.resolve(TextUtils.clearDecorations(data.id()) + ".conf")).build().loadToReference();
-			ValueReference<KitData, CommentedConfigurationNode> config = configReference.referenceTo(KitData.class);
-			config.setAndSave(data);
-		} catch (ConfigurateException e) {
-			plugin.getLogger().warn(e.getLocalizedMessage());
-		}
+		ConfigurationService.getInstance().createReferencedConfig(data).setItemStackSerializerType(getMainConfig().getItemSerializer()).setName(TextUtils.clearDecorations(data.id())).setType(ConfigTypes.HOCON).build();
 	}
 
 	private void loadPlayerData(File playerConfig) {
-		try {
-			ConfigurationReference<CommentedConfigurationNode> configReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(playerConfig.toPath()).build().loadToReference();
-			ValueReference<PlayerData, CommentedConfigurationNode> config = configReference.referenceTo(PlayerData.class);
-			PlayerData data = config.get().updateWarpsOwnerData();
-			((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(data);
-			((PlayersDataImpl) plugin.getPlayersData()).addWarps(data);
-		} catch (ConfigurateException e) {
-			plugin.getLogger().warn(e.getLocalizedMessage());
-		}
+		var data = ConfigurationService.getInstance().createReferencedConfig(PlayerData.class).fromFile(playerConfig).setItemStackSerializerType(getMainConfig().getItemSerializer()).build().get();
+		((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(data);
+		((PlayersDataImpl) plugin.getPlayersData()).addWarps(data);
 	}
 
 	private void loadKit(File kitConfig) {
-		try {
-			ConfigurationReference<CommentedConfigurationNode> configReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(kitConfig.toPath()).build().loadToReference();
-			ValueReference<KitData, CommentedConfigurationNode> config = configReference.referenceTo(KitData.class);
-			plugin.getKitService().addKit(config.get());
-		} catch (ConfigurateException e) {
-			plugin.getLogger().warn(e.getLocalizedMessage());
-		}
+		plugin.getKitService().addKit(ConfigurationService.getInstance().createReferencedConfig(KitData.class).setItemStackSerializerType(getMainConfig().getItemSerializer()).fromFile(kitConfig).build().get());
 	}
 
 	private void createWarpsConfig() {
-		warpsConfigLoader = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(plugin.getConfigDir().resolve("Warps.conf")).build();
+		warpsConfig = ConfigurationService.getInstance().createSimpleConfig().setItemStackSerializerType(ItemStackSerializerType.SIMPLE).setPath(plugin.getConfigDir()).setName("Warps").setType(ConfigTypes.HOCON).build();
 		try {
-			warpsNode = warpsConfigLoader.load();
-			if(!warpsNode.childrenMap().isEmpty()) for(CommentedConfigurationNode node : warpsNode.childrenMap().values()) plugin.getPlayersData().addWarp(node.get(WarpData.class), null);
+			if(!warpsConfig.getRootNode().childrenMap().isEmpty()) for(ConfigurationNode node : warpsConfig.getRootNode().childrenMap().values()) plugin.getPlayersData().addWarp(node.get(WarpData.class), null);
 		} catch (ConfigurateException e) {
 			plugin.getLogger().warn(e.getLocalizedMessage());
 		}
 	}
 
 	private void saveMainConfig() {
-		try {
-			mainConfigReference = SerializeOptions.createHoconConfigurationLoader(ItemStackSerializerType.SIMPLE).path(plugin.getConfigDir().resolve("Config.conf")).build().loadToReference();
-			mainConfig = mainConfigReference.referenceTo(MainConfig.class);
-			mainConfigReference.save();
-		} catch (ConfigurateException e) {
-			plugin.getLogger().warn(e.getLocalizedMessage());
-		}
+		mainConfig = ConfigurationService.getInstance().createReferencedConfig(MainConfig.class).setItemStackSerializerType(ItemStackSerializerType.SIMPLE).setPath(plugin.getConfigDir()).setName("Config").setType(ConfigTypes.HOCON).build();
 	}
 
 	private void saveJoinCommandsConfig() {
-		try {
-			joinCommandsConfigReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(plugin.getConfigDir().resolve("JoinCommands.conf")).build().loadToReference();
-			joinCommandsConfig = joinCommandsConfigReference.referenceTo(JoinCommands.class);
-			joinCommandsConfigReference.save();
-		} catch (ConfigurateException e) {
-			plugin.getLogger().warn(e.getLocalizedMessage());
-		}
+		joinCommandsConfig = ConfigurationService.getInstance().createReferencedConfig(JoinCommands.class).setItemStackSerializerType(getMainConfig().getItemSerializer()).setPath(plugin.getConfigDir()).setName("JoinCommands").setType(ConfigTypes.HOCON).build();
 	}
 
 	private void saveMainCommandsConfig() {
-		try {
-			commandsConfigReference = SerializeOptions.createHoconConfigurationLoader(getMainConfig().getItemSerializer()).path(plugin.getConfigDir().resolve("Commands.conf")).defaultOptions(options -> options.serializers(serializers -> serializers.registerAll(sawfowl.commandpack.api.CommandPack.COMMAND_SETTINGS_SERIALIZERS))).build().loadToReference();
-			commandsConfig = commandsConfigReference.referenceTo(CommandsConfig.class);
-			commandsConfigReference.save();
-			commandsConfig.get().updateCommandMap(commandsConfig);
-		} catch (ConfigurateException e) {
-			plugin.getLogger().warn(e.getLocalizedMessage());
-		}
+		commandsConfig = ConfigurationService.getInstance().createReferencedConfig(CommandsConfig.class).setItemStackSerializerType(getMainConfig().getItemSerializer()).setPath(plugin.getConfigDir()).setName("Commands").setType(ConfigTypes.HOCON).addSerializers(sawfowl.commandpack.api.CommandPack.COMMAND_SETTINGS_SERIALIZERS).build();
 	}
 
 }

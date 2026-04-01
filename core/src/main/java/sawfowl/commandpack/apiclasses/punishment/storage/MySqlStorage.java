@@ -1,7 +1,5 @@
 package sawfowl.commandpack.apiclasses.punishment.storage;
 
-import java.io.BufferedWriter;
-import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -26,8 +24,6 @@ import org.spongepowered.api.service.ban.Ban.IP;
 import org.spongepowered.api.service.ban.Ban.Profile;
 import org.spongepowered.api.service.ban.BanTypes;
 import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
 import net.kyori.adventure.text.Component;
 
@@ -37,7 +33,9 @@ import sawfowl.commandpack.api.data.punishment.Warns;
 import sawfowl.commandpack.configure.configs.punishment.WarnsData;
 import sawfowl.commandpack.utils.StorageType;
 import sawfowl.commandpack.utils.TimeConverter;
+import sawfowl.localeapi.api.ConfigTypes;
 import sawfowl.localeapi.api.TextUtils;
+import sawfowl.localeapi.api.services.ConfigurationService;
 
 public class MySqlStorage extends SqlStorage {
 
@@ -444,12 +442,7 @@ public class MySqlStorage extends SqlStorage {
 	}
 
 	public Object[] insertWarnsObjects(Warns warns) throws ConfigurateException {
-		StringWriter sink = new StringWriter();
-		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(options).sink(() -> new BufferedWriter(sink)).build();
-		ConfigurationNode node = loader.createNode();
-		node.node("Content").set(WarnsData.class, (WarnsData) (warns instanceof WarnsData ? warns : Warns.builder().from(warns)));
-		loader.save(node);
-		return new Object[] {warns.getUniqueId(), sink};
+		return new Object[] {warns.getUniqueId(), ConfigurationService.getInstance().createVirtualReferencedConfig((WarnsData) (warns instanceof WarnsData ? warns : Warns.builder().from(warns))).setType(ConfigTypes.HOCON).build().getRawData()};
 	}
 
 	private void sync() throws SQLException {

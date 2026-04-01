@@ -1,8 +1,6 @@
 package sawfowl.commandpack.apiclasses.economy.storage;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,14 +9,13 @@ import java.util.UUID;
 
 import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.apiclasses.economy.EconomyServiceImpl;
 import sawfowl.commandpack.configure.configs.economy.SerializedAccount;
 import sawfowl.commandpack.configure.configs.economy.SerializedUniqueAccount;
+import sawfowl.localeapi.api.ConfigTypes;
+import sawfowl.localeapi.api.services.ConfigurationService;
 
 public class H2Storage extends SqlStorage {
 
@@ -47,7 +44,7 @@ public class H2Storage extends SqlStorage {
 	public void saveUniqueAccount(UniqueAccount account) {
 		try {
 			createStatement(insertUniqueAccount, new Object[] {account.uniqueId().toString(), uniqueAccountToString(account)}).execute();
-		} catch (SQLException | ConfigurateException e) {
+		} catch (SQLException e) {
 			plugin.getLogger().warn("Error when saving UniqueAccount'" + account.uniqueId() + "'" + e.getLocalizedMessage());
 		}
 	}
@@ -56,7 +53,7 @@ public class H2Storage extends SqlStorage {
 	public void saveAccount(Account account) {
 		try {
 			createStatement(insertAccount, new Object[] {account.identifier(), accountToString(account)}).execute();
-		} catch (SQLException | ConfigurateException e) {
+		} catch (SQLException e) {
 			plugin.getLogger().warn("Error when saving Account'" + account.identifier() + "'" + e.getLocalizedMessage());
 		}
 	}
@@ -104,22 +101,12 @@ public class H2Storage extends SqlStorage {
 		while(resultSetAccounts.next()) accounts.put(resultSetAccounts.getString(identifierCollumn), accountFromString(resultSetAccounts.getString(dataCollumn)));
 	}
 
-	private String uniqueAccountToString(UniqueAccount account) throws ConfigurateException {
-		StringWriter sink = new StringWriter();
-		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(options).sink(() -> new BufferedWriter(sink)).build();
-		ConfigurationNode node = loader.createNode();
-		node.node("Content").set(SerializedUniqueAccount.class, new SerializedUniqueAccount(account));
-		loader.save(node);
-		return sink.toString();
+	private String uniqueAccountToString(UniqueAccount account) {
+		return ConfigurationService.getInstance().createVirtualReferencedConfig(new SerializedUniqueAccount(account)).setType(ConfigTypes.HOCON).build().getRawData();
 	}
 
-	private String accountToString(Account account) throws ConfigurateException {
-		StringWriter sink = new StringWriter();
-		HoconConfigurationLoader loader = HoconConfigurationLoader.builder().defaultOptions(options).sink(() -> new BufferedWriter(sink)).build();
-		ConfigurationNode node = loader.createNode();
-		node.node("Content").set(SerializedAccount.class, new SerializedAccount(account));
-		loader.save(node);
-		return sink.toString();
+	private String accountToString(Account account) {
+		return ConfigurationService.getInstance().createVirtualReferencedConfig(new SerializedAccount(account)).setType(ConfigTypes.HOCON).build().getRawData();
 	}
 
 }

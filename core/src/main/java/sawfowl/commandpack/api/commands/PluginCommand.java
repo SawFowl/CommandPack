@@ -32,10 +32,10 @@ import sawfowl.commandpack.commands.ThrowingConsumer;
 import sawfowl.commandpack.configure.locales.AbstractLocale;
 import sawfowl.commandpack.utils.tasks.CooldownTimerTask;
 import sawfowl.commandpack.utils.tasks.DelayTimerTask;
-import sawfowl.localeapi.api.LocaleService;
 import sawfowl.localeapi.api.Text;
 import sawfowl.localeapi.api.TextUtils;
 import sawfowl.localeapi.api.Translation;
+import sawfowl.localeapi.api.services.LocaleService;
 
 /**
  * An auxiliary interface for creating commands.
