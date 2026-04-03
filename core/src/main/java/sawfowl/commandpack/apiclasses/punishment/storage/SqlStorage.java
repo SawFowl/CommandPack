@@ -39,8 +39,7 @@ public abstract class SqlStorage extends AbstractPunishmentStorage {
 	}
 
 	protected Warns warnsFromString(String warnsData) {
-		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(WarnsData.class).setType(ConfigTypes.HOCON).build();
-		config.loadFromRaw(warnsData);
+		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(WarnsData.class, warnsData).setType(ConfigTypes.HOCON).build();
 		if(!config.getRootNode().node("Content").virtual()) {
 			try {
 				return (Warns) config.getRootNode().node("Content").get(WarnsData.class);

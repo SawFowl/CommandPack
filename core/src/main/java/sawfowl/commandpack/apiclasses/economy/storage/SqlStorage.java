@@ -72,8 +72,7 @@ public abstract class SqlStorage extends AbstractEconomyStorage {
 	}
 
 	protected CPUniqueAccount uniqueAccountFromString(String string) {
-		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(SerializedUniqueAccount.class).setType(ConfigTypes.HOCON).build();
-		config.loadFromRaw(string);
+		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(SerializedUniqueAccount.class, string).setType(ConfigTypes.HOCON).build();
 		if(!config.getRootNode().node("Content").virtual()) {
 			try {
 				return CPUniqueAccount.deserealize(config.getRootNode().node("Content").get(SerializedUniqueAccount.class), this);
@@ -85,8 +84,7 @@ public abstract class SqlStorage extends AbstractEconomyStorage {
 	}
 
 	protected CPAccount accountFromString(String string) {
-		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(SerializedAccount.class).setType(ConfigTypes.HOCON).build();
-		config.loadFromRaw(string);
+		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(SerializedAccount.class, string).setType(ConfigTypes.HOCON).build();
 		if(!config.getRootNode().node("Content").virtual()) {
 			try {
 				return CPAccount.deserealize(config.getRootNode().node("Content").get(SerializedAccount.class), this);

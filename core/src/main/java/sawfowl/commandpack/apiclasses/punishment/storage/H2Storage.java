@@ -241,8 +241,7 @@ public class H2Storage extends SqlStorage {
 	}
 
 	protected Ban.Profile profileFromString(String banData) {
-		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(BanData.class).setType(ConfigTypes.HOCON).build();
-		config.loadFromRaw(banData);
+		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(BanData.class, banData).setType(ConfigTypes.HOCON).build();
 		if(!config.getRootNode().node("Content").virtual()) {
 			try {
 				return (Profile) config.getRootNode().node("Content").get(BanData.class).getBan();
@@ -254,8 +253,7 @@ public class H2Storage extends SqlStorage {
 	}
 
 	protected IP ipFromString(String banData) {
-		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(BanData.class).setType(ConfigTypes.HOCON).build();
-		config.loadFromRaw(banData);
+		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(BanData.class, banData).setType(ConfigTypes.HOCON).build();
 		if(!config.getRootNode().node("Content").virtual()) {
 			try {
 				return (IP) config.getRootNode().node("Content").get(BanData.class).getBan();
@@ -267,8 +265,7 @@ public class H2Storage extends SqlStorage {
 	}
 
 	protected Mute muteFromString(String muteData) {
-		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(MuteData.class).setType(ConfigTypes.HOCON).build();
-		config.loadFromRaw(muteData);
+		var config = ConfigurationService.getInstance().createVirtualReferencedConfig(MuteData.class, muteData).setType(ConfigTypes.HOCON).build();
 		if(!config.getRootNode().node("Content").virtual()) {
 			try {
 				return config.getRootNode().node("Content").get(MuteData.class);
