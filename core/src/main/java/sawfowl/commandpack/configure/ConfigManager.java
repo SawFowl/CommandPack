@@ -137,6 +137,7 @@ public class ConfigManager {
 
 	private void saveMainCommandsConfig() {
 		commandsConfig = ConfigurationService.getInstance().createReferencedConfig(CommandsConfig.class).setItemStackSerializerType(getMainConfig().getItemSerializer()).setPath(plugin.getConfigDir()).setName("Commands").setType(ConfigTypes.HOCON).addSerializers(sawfowl.commandpack.api.CommandPack.COMMAND_SETTINGS_SERIALIZERS).build();
+		commandsConfig.get().updateCommandMap(getCommandsConfig());
 	}
 
 }

@@ -3,7 +3,6 @@ package sawfowl.commandpack.api;
 import java.util.Optional;
 import java.util.Set;
 
-import org.spongepowered.api.event.Event;
 import org.spongepowered.api.world.generation.ChunkGenerator;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 import org.spongepowered.plugin.PluginContainer;
@@ -136,15 +135,5 @@ public abstract class CommandPack {
 	public abstract void registerCommand(ParameterizedCommand command) throws IllegalStateException;
 
 	public abstract CustomPayloadsService getCustomPayloadsService();
-
-	/**
-	 * Event for getting the plugin API.
-	 */
-	@Deprecated
-	public interface PostAPI extends Event {
-
-		public CommandPack getAPI();
-
-	}
 
 }

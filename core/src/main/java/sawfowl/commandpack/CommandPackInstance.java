@@ -25,9 +25,6 @@ import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
-import org.spongepowered.api.event.Cause;
-import org.spongepowered.api.event.EventContext;
-import org.spongepowered.api.event.EventContextKeys;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.lifecycle.ConstructPluginEvent;
@@ -299,19 +296,6 @@ public class CommandPackInstance {
 		Sponge.eventManager().registerListeners(pluginContainer, playersData.getTempData(), MethodHandles.lookup());
 		economy = new Economy(instance);
 		Sponge.eventManager().registerListeners(pluginContainer, economy, MethodHandles.lookup());
-		Sponge.eventManager().post(new CommandPack.PostAPI() {
-
-			@Override
-			public Cause cause() {
-				return Cause.of(EventContext.builder().add(EventContextKeys.PLUGIN, pluginContainer).build(), pluginContainer);
-			}
-
-			@Override
-			public CommandPack getAPI() {
-				return api;
-			}
-
-		});
 		if(getMainConfig().getMySqlConfig().isEnable()) {
 			mariaDB = new MariaDB(instance);
 			if(mariaDB.openConnection() == null) mariaDB = null;
