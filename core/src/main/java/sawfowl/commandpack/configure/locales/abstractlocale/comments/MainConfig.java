@@ -40,6 +40,4 @@ public interface MainConfig {
 
 	String getPreventDamage();
 
-	String getItemSerializer();
-
 }

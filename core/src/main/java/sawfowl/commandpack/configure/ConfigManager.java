@@ -73,7 +73,7 @@ public class ConfigManager {
 
 	public void savePlayerData(PlayerData data) {
 		if(!playerDataPath.toFile().exists()) playerDataPath.toFile().mkdir();
-		ConfigurationService.getInstance().createReferencedConfig(data).setItemStackSerializerType(getMainConfig().getItemSerializer()).setPath(playerDataPath).setName(data.getUniqueId().toString()).build();
+		ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), data).setItemStackSerializerType(ItemStackSerializerType.JSON).setPath(playerDataPath).setName(data.getUniqueId().toString()).build();
 	}
 
 	public void loadPlayersData() {
@@ -105,21 +105,21 @@ public class ConfigManager {
 	public void saveKit(Kit kit) {
 		KitData data = (KitData) (kit instanceof KitData ? kit : Kit.builder().copyFrom(kit));
 		if(!kitsPath.toFile().exists()) kitsPath.toFile().mkdir();
-		ConfigurationService.getInstance().createReferencedConfig(data).setItemStackSerializerType(getMainConfig().getItemSerializer()).setName(TextUtils.clearDecorations(data.id())).setType(ConfigTypes.HOCON).build();
+		ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), data).setItemStackSerializerType(ItemStackSerializerType.JSON).setName(TextUtils.clearDecorations(data.id())).setType(ConfigTypes.HOCON).build();
 	}
 
 	private void loadPlayerData(File playerConfig) {
-		var data = ConfigurationService.getInstance().createReferencedConfig(PlayerData.class).fromFile(playerConfig).setItemStackSerializerType(getMainConfig().getItemSerializer()).build().get();
+		var data = ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), PlayerData.class).fromFile(playerConfig).setItemStackSerializerType(ItemStackSerializerType.JSON).build().get();
 		((PlayersDataImpl) plugin.getPlayersData()).addPlayerData(data);
 		((PlayersDataImpl) plugin.getPlayersData()).addWarps(data);
 	}
 
 	private void loadKit(File kitConfig) {
-		plugin.getKitService().addKit(ConfigurationService.getInstance().createReferencedConfig(KitData.class).setItemStackSerializerType(getMainConfig().getItemSerializer()).fromFile(kitConfig).build().get());
+		plugin.getKitService().addKit(ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), KitData.class).setItemStackSerializerType(ItemStackSerializerType.JSON).fromFile(kitConfig).build().get());
 	}
 
 	private void createWarpsConfig() {
-		warpsConfig = ConfigurationService.getInstance().createSimpleConfig().setItemStackSerializerType(ItemStackSerializerType.SIMPLE).setPath(plugin.getConfigDir()).setName("Warps").setType(ConfigTypes.HOCON).build();
+		warpsConfig = ConfigurationService.getInstance().createSimpleConfig(plugin.getPluginContainer()).setItemStackSerializerType(ItemStackSerializerType.SIMPLE).setPath(plugin.getConfigDir()).setName("Warps").setType(ConfigTypes.HOCON).build();
 		try {
 			if(!warpsConfig.getRootNode().childrenMap().isEmpty()) for(ConfigurationNode node : warpsConfig.getRootNode().childrenMap().values()) plugin.getPlayersData().addWarp(node.get(WarpData.class), null);
 		} catch (ConfigurateException e) {
@@ -128,15 +128,15 @@ public class ConfigManager {
 	}
 
 	private void saveMainConfig() {
-		mainConfig = ConfigurationService.getInstance().createReferencedConfig(MainConfig.class).setItemStackSerializerType(ItemStackSerializerType.SIMPLE).setPath(plugin.getConfigDir()).setName("Config").setType(ConfigTypes.HOCON).build();
+		mainConfig = ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), MainConfig.class).setItemStackSerializerType(ItemStackSerializerType.SIMPLE).setPath(plugin.getConfigDir()).setName("Config").setType(ConfigTypes.HOCON).build();
 	}
 
 	private void saveJoinCommandsConfig() {
-		joinCommandsConfig = ConfigurationService.getInstance().createReferencedConfig(JoinCommands.class).setItemStackSerializerType(getMainConfig().getItemSerializer()).setPath(plugin.getConfigDir()).setName("JoinCommands").setType(ConfigTypes.HOCON).build();
+		joinCommandsConfig = ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), JoinCommands.class).setItemStackSerializerType(ItemStackSerializerType.JSON).setPath(plugin.getConfigDir()).setName("JoinCommands").setType(ConfigTypes.HOCON).build();
 	}
 
 	private void saveMainCommandsConfig() {
-		commandsConfig = ConfigurationService.getInstance().createReferencedConfig(CommandsConfig.class).setItemStackSerializerType(getMainConfig().getItemSerializer()).setPath(plugin.getConfigDir()).setName("Commands").setType(ConfigTypes.HOCON).addSerializers(sawfowl.commandpack.api.CommandPack.COMMAND_SETTINGS_SERIALIZERS).build();
+		commandsConfig = ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), CommandsConfig.class).setItemStackSerializerType(ItemStackSerializerType.JSON).setPath(plugin.getConfigDir()).setName("Commands").setType(ConfigTypes.HOCON).addSerializers(sawfowl.commandpack.api.CommandPack.COMMAND_SETTINGS_SERIALIZERS).build();
 		commandsConfig.get().updateCommandMap(getCommandsConfig());
 	}
 

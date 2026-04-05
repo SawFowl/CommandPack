@@ -71,21 +71,21 @@ public class FileStorage extends AbstractEconomyStorage {
 	@Override
 	public void saveUniqueAccount(UniqueAccount account) {
 		checkPaths();
-		ConfigurationService.getInstance().createReferencedConfig(new SerializedUniqueAccount(account)).setType(ConfigTypes.HOCON).setPath(playersPath).setName(account.uniqueId().toString()).build();
+		ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), new SerializedUniqueAccount(account)).setType(ConfigTypes.HOCON).setPath(playersPath).setName(account.uniqueId().toString()).build();
 	}
 
 	@Override
 	public void saveAccount(Account account) {
 		checkPaths();
-		ConfigurationService.getInstance().createReferencedConfig(new SerializedAccount(account)).setType(ConfigTypes.HOCON).setPath(otherPath).setName(account.identifier()).build();
+		ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), new SerializedAccount(account)).setType(ConfigTypes.HOCON).setPath(otherPath).setName(account.identifier()).build();
 	}
 
 	private SerializedUniqueAccount loadUniqueAccountDataFromFile(File file) {
-		return ConfigurationService.getInstance().createReferencedConfig(SerializedUniqueAccount.class).fromFile(file).build().get();
+		return ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), SerializedUniqueAccount.class).fromFile(file).build().get();
 	}
 
 	private SerializedAccount loadAccountDataFromFile(File file) {
-		return ConfigurationService.getInstance().createReferencedConfig(SerializedAccount.class).fromFile(file).build().get();
+		return ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), SerializedAccount.class).fromFile(file).build().get();
 	}
 
 	private boolean isValidFile(File file) {

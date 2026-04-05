@@ -58,7 +58,7 @@ public class FileStorage extends AbstractPunishmentStorage {
 		if(bans.containsKey(ban.profile().uniqueId())) return;
 		bans.put(ban.profile().uniqueId(), ban);
 		if(!bansPath.toFile().exists()) bansPath.toFile().mkdir();
-		ConfigurationService.getInstance().createReferencedConfig(new BanData(ban)).setPath(bansPath).setType(ConfigTypes.HOCON).setName(ban.profile().uniqueId().toString()).build();
+		ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), new BanData(ban)).setPath(bansPath).setType(ConfigTypes.HOCON).setName(ban.profile().uniqueId().toString()).build();
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class FileStorage extends AbstractPunishmentStorage {
 	public void saveBan(IP ban) {
 		if(bansIP.containsKey(ban.address())) return;
 		if(!bansIPPath.toFile().exists()) bansIPPath.toFile().mkdir();
-		ConfigurationService.getInstance().createReferencedConfig(new BanData(ban)).setPath(bansIPPath).setType(ConfigTypes.HOCON).setName(ban.address().getHostAddress().toString()).build();
+		ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), new BanData(ban)).setPath(bansIPPath).setType(ConfigTypes.HOCON).setName(ban.address().getHostAddress().toString()).build();
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class FileStorage extends AbstractPunishmentStorage {
 		if(mutes.containsKey(mute.getUniqueId())) return;
 		mutes.put(mute.getUniqueId(), mute);
 		if(!mutesPath.toFile().exists()) mutesPath.toFile().mkdir();
-		ConfigurationService.getInstance().createReferencedConfig((MuteData) (mute instanceof MuteData ? mute : Mute.builder().from(mute))).setPath(mutesPath).setType(ConfigTypes.HOCON).setName(mute.getUniqueId().toString()).build();
+		ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), (MuteData) (mute instanceof MuteData ? mute : Mute.builder().from(mute))).setPath(mutesPath).setType(ConfigTypes.HOCON).setName(mute.getUniqueId().toString()).build();
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class FileStorage extends AbstractPunishmentStorage {
 		if(super.warns.containsKey(warns.getUniqueId())) super.warns.remove(warns.getUniqueId());
 		super.warns.put(warns.getUniqueId(), warns);
 		if(!warnsPath.toFile().exists()) warnsPath.toFile().mkdir();
-		ConfigurationService.getInstance().createReferencedConfig((WarnsData) (warns instanceof WarnsData ? warns : Warns.builder().from(warns))).setPath(warnsPath).setType(ConfigTypes.HOCON).setName(warns.getUniqueId().toString()).build();
+		ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), (WarnsData) (warns instanceof WarnsData ? warns : Warns.builder().from(warns))).setPath(warnsPath).setType(ConfigTypes.HOCON).setName(warns.getUniqueId().toString()).build();
 	}
 
 	@Override
@@ -126,22 +126,22 @@ public class FileStorage extends AbstractPunishmentStorage {
 	}
 
 	private void loadBanData(File file) {
-		var ban = ConfigurationService.getInstance().createReferencedConfig(BanData.class).fromFile(file).build().get();
+		var ban = ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), BanData.class).fromFile(file).build().get();
 		if(ban.getUniqueId().isPresent()) bans.put(ban.getUniqueId().get(), (Profile) ban.getBan());
 	}
 
 	private void loadBanIPData(File file) {
-		var ban = ConfigurationService.getInstance().createReferencedConfig(BanData.class).fromFile(file).build().get();
+		var ban = ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), BanData.class).fromFile(file).build().get();
 		if(ban.getInetAddress().isPresent()) bansIP.put(ban.getInetAddress().get(), (IP) ban.getBan());
 	}
 
 	private void loadMuteData(File file) {
-		var mute = ConfigurationService.getInstance().createReferencedConfig(MuteData.class).fromFile(file).build().get();
+		var mute = ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), MuteData.class).fromFile(file).build().get();
 		mutes.put(mute.getUniqueId(), mute);
 	}
 
 	private void loadWarnsData(File file) {
-		var warns = ConfigurationService.getInstance().createReferencedConfig(WarnsData.class).fromFile(file).build().get();
+		var warns = ConfigurationService.getInstance().createReferencedConfig(plugin.getPluginContainer(), WarnsData.class).fromFile(file).build().get();
 		super.warns.put(warns.getUniqueId(), warns);
 	}
 

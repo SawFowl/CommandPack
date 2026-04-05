@@ -25,7 +25,6 @@ import sawfowl.commandpack.configure.configs.miscellaneous.RestrictMods;
 import sawfowl.commandpack.configure.configs.miscellaneous.SpawnData;
 import sawfowl.commandpack.configure.configs.punishment.Punishment;
 import sawfowl.localeapi.api.LocalisedComment;
-import sawfowl.localeapi.api.serializetools.ItemStackSerializerType;
 
 @ConfigSerializable
 public class MainConfig {
@@ -71,9 +70,6 @@ public class MainConfig {
 	@Setting("PreventDamage")
 	@LocalisedComment(path = {"Comments", "MainConfig", "PreventDamage"}, plugin = "commandpack")
 	private PreventDamage preventDamage = new PreventDamage();
-	@Setting("ItemSerializer")
-	@LocalisedComment(path = {"Comments", "MainConfig", "ItemSerializer"}, plugin = "commandpack")
-	private String itemSerializer = ItemStackSerializerType.JSON.toString();
 	@Setting("IgnorePackets")
 	@LocalisedComment(path = {"Comments", "MainConfig", "IgnorePackets", "Title"}, plugin = "commandpack")
 	private IgnorePackets ignorePackets = new IgnorePackets();
@@ -152,10 +148,6 @@ public class MainConfig {
 
 	public PreventDamage getPreventDamage() {
 		return preventDamage;
-	}
-
-	public ItemStackSerializerType getItemSerializer() {
-		return ItemStackSerializerType.fromString(itemSerializer);
 	}
 
 	public IgnorePackets getIgnorePackets() {

@@ -58,8 +58,6 @@ public class ImplementMainConfig implements MainConfig {
 	private String fixTopCommand = "Instead of teleporting to the very top of the world, an attempt will be made to find a suitable location under the bedrock.";
 	@Setting("PreventDamage")
 	private String preventDamage = "Prevent damage to other players if the player has invulnerability or invisibility.\nThese settings focus on the effects the player receives from the plugin commands.";
-	@Setting("ItemSerializer")
-	private String itemSerializer = "Selecting serialization variant for items.\n1 - All components will be written in 1 line. This option is the most reliable, but significantly complicates manual editing of components in config.\n2 - Advanced recording. Easier to make manual changes to the config. If you have problems with this type of serialization, you should report errors to the LocaleAPI plugin developer.\n3 - Using Sponge serializer. Some data will be written in 1 line. If you encounter problems with this type of serialization, you should report bugs to the Sponge developers.\nOptions 1 and 2 are fully interchangeable and can load data saved by option 3. Option 3 cannot load data stored by other options.";
 
 	@Override
 	public Afk getAfk() {
@@ -134,11 +132,6 @@ public class ImplementMainConfig implements MainConfig {
 	@Override
 	public String getPreventDamage() {
 		return preventDamage;
-	}
-
-	@Override
-	public String getItemSerializer() {
-		return itemSerializer;
 	}
 
 }
