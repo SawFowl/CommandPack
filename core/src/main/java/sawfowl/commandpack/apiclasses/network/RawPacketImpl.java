@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
+
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.network.channel.ChannelBuf;
@@ -15,9 +16,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
-
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
+import net.minecraft.resources.Identifier;
+import sawfowl.commandpack.api.game.server.player.CPServerPlayer;
 import sawfowl.commandpack.api.network.packets.RawPacket;
 
 public class RawPacketImpl implements CustomPacketPayload, RawPacket {
@@ -39,7 +39,7 @@ public class RawPacketImpl implements CustomPacketPayload, RawPacket {
 	}
 
 	public static Type<RawPacketImpl> type(ResourceKey channel) {
-		if(!TYPES.containsKey(channel)) TYPES.put(channel, new Type<>((ResourceLocation) (Object) channel));
+		if(!TYPES.containsKey(channel)) TYPES.put(channel, new Type<>((Identifier) (Object) channel));
 		return TYPES.get(channel);
 	}
 
@@ -79,7 +79,7 @@ public class RawPacketImpl implements CustomPacketPayload, RawPacket {
 
 	@Override
 	public void sendTo(ServerPlayer player) {
-		MixinServerPlayer.cast(player).sendPacket(this);
+		CPServerPlayer.cast(player).sendPacket(this);
 	}
 
 	private class Builder implements RawPacket.Builder {
@@ -91,7 +91,7 @@ public class RawPacketImpl implements CustomPacketPayload, RawPacket {
 
 		@Override
 		public RawPacket create(ResourceKey channel, String data) {
-			RawPacketImpl.this.type = new Type<>((ResourceLocation) (Object) channel);
+			RawPacketImpl.this.type = new Type<>((Identifier) (Object) channel);
 			RawPacketImpl.this.data = data;
 			return RawPacketImpl.this;
 		}

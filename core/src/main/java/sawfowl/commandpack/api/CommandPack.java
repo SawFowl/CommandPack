@@ -16,7 +16,7 @@ import sawfowl.commandpack.api.data.command.Delay;
 import sawfowl.commandpack.api.data.command.Price;
 import sawfowl.commandpack.api.data.command.Settings;
 import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
-import sawfowl.commandpack.api.mixin.game.MixinServerWorld;
+import sawfowl.commandpack.api.game.server.CPServerWorld;
 import sawfowl.commandpack.api.network.CustomPayloadsService;
 import sawfowl.commandpack.api.services.CPEconomyService;
 import sawfowl.commandpack.api.services.PunishmentService;
@@ -105,7 +105,7 @@ public abstract class CommandPack {
 
 	/**
 	 * Getting information about server and worlds TPS.
-	 * @deprecated Use {@link MixinServerWorld}
+	 * @deprecated Use {@link CPServerWorld}
 	 */
 	@Deprecated
 	public abstract TPS getTPS();

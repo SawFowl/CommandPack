@@ -17,7 +17,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
+import sawfowl.commandpack.api.game.server.player.CPServerPlayer;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractInfoCommand;
 import sawfowl.commandpack.commands.containerinfo.ModInfo;
 import sawfowl.commandpack.commands.settings.CommandParameters;
@@ -34,7 +34,7 @@ public class Mods extends AbstractInfoCommand {
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(getPlayer(context).isPresent()) {
 			ServerPlayer target = getPlayer(context).get();
-			List<Component> mods = MixinServerPlayer.cast(target).getModList().stream().map(mod -> mod.asComponent()).toList();
+			List<Component> mods = CPServerPlayer.cast(target).getModList().stream().map(mod -> mod.asComponent()).toList();
 			if(mods.isEmpty()) {
 				src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getServerStat().getModsNotFound());
 				return;

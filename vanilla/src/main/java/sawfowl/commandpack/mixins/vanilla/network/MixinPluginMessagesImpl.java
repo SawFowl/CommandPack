@@ -25,7 +25,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.events.RecievePacketEvent;
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
+import sawfowl.commandpack.api.game.server.player.CPServerPlayer;
 
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class MixinPluginMessagesImpl {
@@ -34,8 +34,8 @@ public abstract class MixinPluginMessagesImpl {
 
 	@Shadow ServerPlayer player;
 
-	private MixinServerPlayer getPlayer() {
-		return (MixinServerPlayer) player;
+	private CPServerPlayer getPlayer() {
+		return (CPServerPlayer) player;
 	}
 
 	private Cause createCause() {
@@ -114,7 +114,7 @@ public abstract class MixinPluginMessagesImpl {
 		}
 
 		@Override
-		public MixinServerPlayer getMixinPlayer() {
+		public CPServerPlayer getMixinPlayer() {
 			return getPlayer();
 		}
 

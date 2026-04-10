@@ -25,7 +25,7 @@ import io.netty.buffer.ByteBuf;
 
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.network.CustomPayloadsService;
@@ -79,7 +79,7 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 
 	@SuppressWarnings("unchecked")
 	public Optional<StreamCodec<ByteBuf, RawPacket>> findCodec(ResourceKey channel) {
-		return codecs.entrySet().stream().filter(entry -> entry.getKey().id().equals((ResourceLocation) (Object) channel)).findFirst().map(entry -> (StreamCodec<ByteBuf, RawPacket>) (Object) entry.getValue());
+		return codecs.entrySet().stream().filter(entry -> entry.getKey().id().equals((Identifier) (Object) channel)).findFirst().map(entry -> (StreamCodec<ByteBuf, RawPacket>) (Object) entry.getValue());
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

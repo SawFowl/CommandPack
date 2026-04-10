@@ -1,4 +1,4 @@
-package sawfowl.commandpack.api.mixin.game;
+package sawfowl.commandpack.api.game.server;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -11,17 +11,19 @@ import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.math.vector.Vector3i;
 
+import sawfowl.commandpack.api.game.PortalShape;
+
 /**
  * This interface adds additional functionality to the world class.
  */
-public interface MixinServerWorld extends ServerWorld {
+public interface CPServerWorld extends ServerWorld {
 
-	static MixinServerWorld cast(ServerWorld world) {
-		return (MixinServerWorld) world;
+	static CPServerWorld cast(ServerWorld world) {
+		return (CPServerWorld) world;
 	}
 
-	static Optional<MixinServerWorld> findWorld(ResourceKey key) {
-		return Sponge.server().worldManager().world(key).map(world -> MixinServerWorld.cast(world));
+	static Optional<CPServerWorld> findWorld(ResourceKey key) {
+		return Sponge.server().worldManager().world(key).map(world -> CPServerWorld.cast(world));
 	}
 
 	/**
@@ -106,24 +108,24 @@ public interface MixinServerWorld extends ServerWorld {
 
 		OVERWORLD {
 			@Override
-			public Optional<MixinServerWorld> get() {
-				return Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).map(world -> MixinServerWorld.cast(world));
+			public Optional<CPServerWorld> get() {
+				return Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).map(world -> CPServerWorld.cast(world));
 			}
 		},
 		NETHER {
 			@Override
-			public Optional<MixinServerWorld> get() {
-				return Sponge.server().worldManager().world(DefaultWorldKeys.THE_NETHER).map(world -> MixinServerWorld.cast(world));
+			public Optional<CPServerWorld> get() {
+				return Sponge.server().worldManager().world(DefaultWorldKeys.THE_NETHER).map(world -> CPServerWorld.cast(world));
 			}
 		},
 		END {
 			@Override
-			public Optional<MixinServerWorld> get() {
-				return Sponge.server().worldManager().world(DefaultWorldKeys.THE_END).map(world -> MixinServerWorld.cast(world));
+			public Optional<CPServerWorld> get() {
+				return Sponge.server().worldManager().world(DefaultWorldKeys.THE_END).map(world -> CPServerWorld.cast(world));
 			}
 		};
 
-		public abstract Optional<MixinServerWorld> get();
+		public abstract Optional<CPServerWorld> get();
 
 	}
 

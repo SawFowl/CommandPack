@@ -8,7 +8,7 @@ import org.spongepowered.api.network.channel.ChannelBuf;
 import org.spongepowered.api.network.channel.raw.play.RawPlayDataHandler;
 
 import sawfowl.commandpack.CommandPackInstance;
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
+import sawfowl.commandpack.api.game.server.player.CPServerPlayer;
 import sawfowl.commandpack.api.network.listeners.PacketListener;
 import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.api.network.packets.SerializedPacket;
@@ -25,16 +25,16 @@ public class SpongeChannelHandler implements RawPlayDataHandler<ServerConnection
 
 	@Override
 	public void handlePayload(ChannelBuf data, ServerConnectionState.Game state) {
-		handle(MixinServerPlayer.cast(state.player()), new RawPacketImpl(channel, data, data.available() > 0 ? new String(data.readBytes(data.available()), StandardCharsets.UTF_8) : ""));
+		handle(CPServerPlayer.cast(state.player()), new RawPacketImpl(channel, data, data.available() > 0 ? new String(data.readBytes(data.available()), StandardCharsets.UTF_8) : ""));
 	}
 
-	private void handle(MixinServerPlayer player, RawPacket rawPacket) {
+	private void handle(CPServerPlayer player, RawPacket rawPacket) {
 		plugin.getPayloadsService().getRawListeners(rawPacket.channel()).forEach(listener -> listener.read(player, rawPacket));
 		handleSerialized(player, rawPacket, plugin.getPayloadsService().containsSerializer(rawPacket.channel()), plugin.getPayloadsService().containsBufferSerializer(rawPacket.channel()));
 	}
 
 	@SuppressWarnings("unchecked")
-	private void handleSerialized(MixinServerPlayer player, RawPacket rawPacket, boolean stringSerializer, boolean bufferSerializer) {
+	private void handleSerialized(CPServerPlayer player, RawPacket rawPacket, boolean stringSerializer, boolean bufferSerializer) {
 		if(stringSerializer || bufferSerializer) for(PacketListener<?> listener : plugin.getPayloadsService().getListeners(rawPacket.channel())) listener.read(player, serialize(rawPacket, bufferSerializer));
 	}
 

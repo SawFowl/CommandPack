@@ -1,4 +1,4 @@
-package sawfowl.commandpack.api.mixin.network;
+package sawfowl.commandpack.api.game.server.player;
 
 import java.util.List;
 
@@ -19,20 +19,14 @@ import sawfowl.localeapi.api.Text;
  * 
  * @author SawFowl
  */
-public interface MixinServerPlayer extends ServerPlayer {
+public interface CPServerPlayer extends ServerPlayer {
 
 	/**
 	 * Converting the type of the player class to get additional methods.
 	 */
-	public static MixinServerPlayer cast(ServerPlayer player) {
-		return (MixinServerPlayer) player;
+	public static CPServerPlayer cast(ServerPlayer player) {
+		return (CPServerPlayer) player;
 	}
-
-	/**
-	 * Sending a data packet to the player.
-	 */
-	@Deprecated
-	void sendPacket(CustomPacket packet);
 
 	/**
 	 * Sending a data packet to the player.

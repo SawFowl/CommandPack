@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.profile.GameProfile;
 
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
+import sawfowl.commandpack.api.game.server.player.CPServerPlayer;
 
 /**
  * This event is called when data packets are transmitted from the client to the server.
@@ -21,9 +21,9 @@ public interface RecievePacketEvent extends Event {
 
 	/**
 	 * The player from whom the data packet was received.
-	 * @return {@link MixinServerPlayer}
+	 * @return {@link CPServerPlayer}
 	 */
-	MixinServerPlayer getMixinPlayer();
+	CPServerPlayer getMixinPlayer();
 
 	/**
 	 * Getting the profile of the player from whom the data packet was received.

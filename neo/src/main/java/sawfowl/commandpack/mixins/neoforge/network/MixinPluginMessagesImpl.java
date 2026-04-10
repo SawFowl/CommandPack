@@ -32,7 +32,7 @@ import net.neoforged.neoforge.network.payload.MinecraftRegisterPayload;
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.events.RecievePacketEvent;
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
+import sawfowl.commandpack.api.game.server.player.CPServerPlayer;
 import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 
@@ -43,8 +43,8 @@ public abstract class MixinPluginMessagesImpl {
 
 	@Shadow ServerPlayer player;
 
-	private MixinServerPlayer getPlayer() {
-		return (MixinServerPlayer) player;
+	private CPServerPlayer getPlayer() {
+		return (CPServerPlayer) player;
 	}
 
 	private Cause createCause() {
@@ -128,7 +128,7 @@ public abstract class MixinPluginMessagesImpl {
 		}
 
 		@Override
-		public MixinServerPlayer getMixinPlayer() {
+		public CPServerPlayer getMixinPlayer() {
 			return getPlayer();
 		}
 

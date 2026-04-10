@@ -1,4 +1,4 @@
-package sawfowl.commandpack.api.mixin.game;
+package sawfowl.commandpack.api.game;
 
 import org.spongepowered.math.vector.Vector3i;
 

@@ -17,6 +17,6 @@ public class IgnorePackets {
 	@Setting("Whitelist")
 	private String whitelist = "If false, the list of packet IDs will be prohibitive.";
 	@Setting("Packets")
-	private String packets = "A list of packet identifiers. If Blacklist = true, then data retrieval from packets will be applied only to those packets whose identifiers are specified in this list.";
+	private String packets = "A list of packet identifiers. If Whitelist = true, then data retrieval from packets will be applied only to those packets whose identifiers are specified in this list.";
 
 }

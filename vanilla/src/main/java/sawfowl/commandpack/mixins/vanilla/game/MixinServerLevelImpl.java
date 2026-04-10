@@ -26,12 +26,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.math.vector.Vector3i;
 
-import sawfowl.commandpack.api.mixin.game.MixinServerWorld;
-import sawfowl.commandpack.api.mixin.game.PortalShape;
+import sawfowl.commandpack.api.game.PortalShape;
+import sawfowl.commandpack.api.game.server.CPServerWorld;
 import sawfowl.commandpack.mixins.PortalShapeAccessor;
 
 @Mixin(value = ServerLevel.class)
-public abstract class MixinServerLevelImpl implements MixinServerWorld {
+public abstract class MixinServerLevelImpl implements CPServerWorld {
 
 	@Shadow
 	public abstract @NonNull MinecraftServer shadow$getServer();

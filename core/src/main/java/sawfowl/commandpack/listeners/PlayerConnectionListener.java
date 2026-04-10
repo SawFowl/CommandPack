@@ -29,7 +29,7 @@ import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.kits.GiveRule;
 import sawfowl.commandpack.api.data.kits.Kit;
 import sawfowl.commandpack.api.events.KitGiveEvent;
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
+import sawfowl.commandpack.api.game.server.player.CPServerPlayer;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.apiclasses.TempPlayerDataImpl;
 import sawfowl.commandpack.configure.Placeholders;
@@ -48,15 +48,15 @@ public class PlayerConnectionListener {
 	public void onConnect(ServerSideConnectionEvent.Join event) {
 		((TempPlayerDataImpl) plugin.getPlayersData().getTempData()).registerPlayer(event.player());
 		if(plugin.getMainConfig().getAfkConfig().isEnable()) plugin.getPlayersData().getTempData().updateLastActivity(event.player());
-		if(plugin.isModifiedServer() && plugin.getMainConfig().getDebugPlayerData().mods() && !MixinServerPlayer.cast(event.player()).getModList().isEmpty()) plugin.getLogger().info(plugin.getLocales().getSystemAsReferenced().getDebug().getDebugPlayerData().getMods(event.player().name(), String.join(", ", MixinServerPlayer.cast(event.player()).getModList().stream().map(mod -> mod.getFullInfo()).toList())));
+		if(plugin.isModifiedServer() && plugin.getMainConfig().getDebugPlayerData().mods() && !CPServerPlayer.cast(event.player()).getModList().isEmpty()) plugin.getLogger().info(plugin.getLocales().getSystemAsReferenced().getDebug().getDebugPlayerData().getMods(event.player().name(), String.join(", ", CPServerPlayer.cast(event.player()).getModList().stream().map(mod -> mod.getFullInfo()).toList())));
 		if(plugin.getMainConfig().getRestrictMods().isEnable() && !event.player().hasPermission(Permissions.ALL_MODS_ACCESS)) {
-			if(!plugin.getMainConfig().getRestrictMods().isAllowedClient(MixinServerPlayer.cast(event.player()).getClientName()) && event.player().isOnline()) {
-				event.player().kick(plugin.getLocales().getAsReferenced(event.player()).getOther().getIllegalClient(MixinServerPlayer.cast(event.player()).getClientName()));
+			if(!plugin.getMainConfig().getRestrictMods().isAllowedClient(CPServerPlayer.cast(event.player()).getClientName()) && event.player().isOnline()) {
+				event.player().kick(plugin.getLocales().getAsReferenced(event.player()).getOther().getIllegalClient(CPServerPlayer.cast(event.player()).getClientName()));
 				return;
 			}
 			Sponge.server().scheduler().submit(Task.builder().plugin(plugin.getPluginContainer()).delay(Ticks.of(10)).execute(() -> {
 				List<String> banedPlayerMods = new ArrayList<>();
-				MixinServerPlayer.cast(event.player()).getModList().forEach(mod -> {
+				CPServerPlayer.cast(event.player()).getModList().forEach(mod -> {
 					if(!plugin.getMainConfig().getRestrictMods().isAllowedPlayerMod(mod.getId())) banedPlayerMods.add(mod.getId());
 				});
 				if(!banedPlayerMods.isEmpty() && event.player().isOnline()) event.player().kick(plugin.getLocales().getAsReferenced(event.player()).getOther().getIllegalMods(plugin.getMainConfig().getRestrictMods().isBlackList(), String.join(", ", banedPlayerMods)));

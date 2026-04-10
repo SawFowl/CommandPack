@@ -34,7 +34,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
-import sawfowl.commandpack.api.mixin.game.MixinServerWorld;
+import sawfowl.commandpack.api.game.server.CPServerWorld;
 import sawfowl.commandpack.configure.locales.abstractlocale.commands.ServerStat;
 import sawfowl.commandpack.configure.locales.abstractlocale.commands.serverstat.AboutMod;
 import sawfowl.commandpack.configure.locales.abstractlocale.commands.serverstat.AboutPlugin;
@@ -63,7 +63,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 
 	protected void sendWorldsInfo(Audience target, Locale locale) {
 		Component header = getServerStat(locale).getWorlds().getTitle();
-		List<Component> worldsInfo = Sponge.server().worldManager().worlds().stream().map(world -> getServerStat(locale).getWorlds().getWorldInfo(world, tPStoText(BigDecimal.valueOf(MixinServerWorld.cast(world).getTPS()).setScale(2, RoundingMode.HALF_UP).doubleValue()), tickToText(BigDecimal.valueOf(MixinServerWorld.cast(world).getTickTime()).setScale(2, RoundingMode.HALF_UP).doubleValue()))).toList();
+		List<Component> worldsInfo = Sponge.server().worldManager().worlds().stream().map(world -> getServerStat(locale).getWorlds().getWorldInfo(world, tPStoText(BigDecimal.valueOf(CPServerWorld.cast(world).getTPS()).setScale(2, RoundingMode.HALF_UP).doubleValue()), tickToText(BigDecimal.valueOf(CPServerWorld.cast(world).getTickTime()).setScale(2, RoundingMode.HALF_UP).doubleValue()))).toList();
 		sendPaginationList(target, header, Component.text("=").color(header.color()), linesPerPage, worldsInfo);
 	}
 

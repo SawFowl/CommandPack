@@ -23,40 +23,29 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+
 import net.neoforged.neoforge.network.connection.ConnectionType;
 import net.neoforged.neoforge.network.registration.NetworkRegistry;
 
 import sawfowl.commandpack.CommandPackInstance;
-import sawfowl.commandpack.api.mixin.network.CustomPacket;
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
-import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
+import sawfowl.commandpack.api.game.server.player.CPServerPlayer;
+import sawfowl.commandpack.api.game.server.player.PlayerModInfo;
 import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 import sawfowl.commandpack.apiclasses.CPConnection;
-import sawfowl.commandpack.apiclasses.CustomPacketImpl;
 import sawfowl.commandpack.utils.CommandsUtil;
 
 import sawfowl.localeapi.api.Text;
 
 @Mixin(ServerPlayer.class)
-public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
+public abstract class MixinServerPlayerImpl implements CPServerPlayer {
 
 	@Shadow
 	public ServerGamePacketListenerImpl connection;
 	private static final CommandPackInstance plugin = CommandPackInstance.getInstance();
-
-	@Override
-	public void sendPacket(@SuppressWarnings("deprecation") CustomPacket packet) {
-		if(packet instanceof CustomPacketImpl custom) {
-			ResourceKey channel = ResourceKey.resolve(custom.getLocation());
-			if(getSpongeChannels().containsKey(channel)) {
-				getSpongeChannels().get(channel).play().sendTo(this, buffer -> buffer.writeString(custom.getData()));
-			} else sendPacket(new RawPacketImpl(ResourceKey.resolve(custom.getLocation()), null, custom.getData()));;
-		}
-	}
 
 	@Override
 	public void sendPacket(RawPacket packet) {
@@ -79,7 +68,7 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 */
 	@Override
 	public void sendMessage(Text message) {
-		sendMessage(message.applyPlaceholders(Component.empty(), (MixinServerPlayer) this).get());
+		sendMessage(message.applyPlaceholders(Component.empty(), (CPServerPlayer) this).get());
 	}
 
 	@Override
@@ -114,7 +103,7 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
 	private CustomPacketPayload recode(RawPacketImpl impl, CustomPacketPayload payload) {
 		@SuppressWarnings("unchecked")
-		@Nullable var codec = (@Nullable StreamCodec<ByteBuf, CustomPacketPayload>) NetworkRegistry.getCodec((ResourceLocation) (Object) impl.channel(), ConnectionProtocol.PLAY, PacketFlow.SERVERBOUND);
+		@Nullable var codec = (@Nullable StreamCodec<ByteBuf, CustomPacketPayload>) NetworkRegistry.getCodec((Identifier) (Object) impl.channel(), ConnectionProtocol.PLAY, PacketFlow.SERVERBOUND);
 		if(codec == null) return null;
 		var cpCodec = plugin.getPayloadsService().findCodec(impl.channel()).get();
 		ByteBuf buffer = null;

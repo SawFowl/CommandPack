@@ -89,8 +89,7 @@ import sawfowl.commandpack.api.data.player.Warp;
 import sawfowl.commandpack.api.data.punishment.Mute;
 import sawfowl.commandpack.api.data.punishment.Warn;
 import sawfowl.commandpack.api.data.punishment.Warns;
-import sawfowl.commandpack.api.mixin.game.MixinServerWorld;
-import sawfowl.commandpack.api.mixin.network.CustomPacket;
+import sawfowl.commandpack.api.game.server.CPServerWorld;
 import sawfowl.commandpack.api.network.CustomPayloadsService;
 import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.api.network.packets.SerializedPacket;
@@ -99,7 +98,6 @@ import sawfowl.commandpack.api.services.PunishmentService;
 import sawfowl.commandpack.api.tps.AverageTPS;
 import sawfowl.commandpack.api.tps.TPS;
 import sawfowl.commandpack.apiclasses.ContainersImpl;
-import sawfowl.commandpack.apiclasses.CustomPacketImpl;
 import sawfowl.commandpack.apiclasses.KitServiceImpl;
 import sawfowl.commandpack.apiclasses.PlayersDataImpl;
 import sawfowl.commandpack.apiclasses.RTPService;
@@ -378,7 +376,7 @@ public class CommandPackInstance {
 		getCommandsConfig().registerRaw(event, instance);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Listener
 	public void registerBuilders(RegisterBuilderEvent event) {
 		event.register(RandomTeleportService.RandomTeleportOptions.Builder.class, () -> new RandomTeleportWorldConfig().builder());
@@ -399,7 +397,6 @@ public class CommandPackInstance {
 		event.register(Mute.Builder.class, () -> new MuteData().builder());
 		event.register(Warn.Builder.class, () -> new WarnData().builder());
 		event.register(Warns.Builder.class, () -> new WarnsData().builder());
-		event.register(CustomPacket.Builder.class, () -> new CustomPacketImpl().builder());
 		event.register(RawArgumentsMap.Builder.class, () -> new RawArgumentsMapImpl().builder());
 		event.register(RawPacket.Builder.class, () -> new RawPacketImpl().builder());
 		event.register(SerializedPacket.Builder.class, () -> new SerializedPacketBuilder());
@@ -447,8 +444,8 @@ public class CommandPackInstance {
 	}
 
 	private void registerPlaceholders() {
-		Placeholders.register(ServerWorld.class, "WorldTPS", (text, world, def) -> (text.replace("%world-tps%", BigDecimal.valueOf(MixinServerWorld.cast(world).getTPS()).setScale(2, RoundingMode.HALF_UP).doubleValue())));
-		Placeholders.register(ServerWorld.class, "WorldTicks", (text, world, def) -> (text.replace("%world-ticks%", BigDecimal.valueOf(MixinServerWorld.cast(world).getTickTime()).setScale(2, RoundingMode.HALF_UP).doubleValue())));
+		Placeholders.register(ServerWorld.class, "WorldTPS", (text, world, def) -> (text.replace("%world-tps%", BigDecimal.valueOf(CPServerWorld.cast(world).getTPS()).setScale(2, RoundingMode.HALF_UP).doubleValue())));
+		Placeholders.register(ServerWorld.class, "WorldTicks", (text, world, def) -> (text.replace("%world-ticks%", BigDecimal.valueOf(CPServerWorld.cast(world).getTickTime()).setScale(2, RoundingMode.HALF_UP).doubleValue())));
 		if(getMainConfig().getPunishment().isEnable()) {
 			Placeholders.register(ServerPlayer.class, "PlayerWarns", (text, player, def) -> (text.replace("%player-warns%", getPunishmentService().getWarns(player).map(warns -> warns.totalWarns() + "/" + warns.inAllTime()).orElse("0"))));
 			Placeholders.register(ServerPlayer.class, "PlayerMuteExpire", (text, player, def) -> (text.replace("%player-mute-expire%", getPunishmentService().getMute(player).map(mute -> expire(player.locale(), mute)).orElse(Component.empty()))));
@@ -492,11 +489,11 @@ public class CommandPackInstance {
 		return new TPS() {
 			@Override
 			public double getWorldTickTime(ServerWorld world) {
-				return MixinServerWorld.cast(world).getTickTime();
+				return CPServerWorld.cast(world).getTickTime();
 			}
 			@Override
 			public double getWorldTPS(ServerWorld world) {
-				return MixinServerWorld.cast(world).getTPS();
+				return CPServerWorld.cast(world).getTPS();
 			}
 			@Override
 			public AverageTPS getAverageTPS() {

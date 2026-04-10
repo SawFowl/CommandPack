@@ -17,6 +17,6 @@ public class IgnorePackets {
 	@Setting("Whitelist")
 	private String whitelist = "Если false, то список идентификаторов пакетов будет запрещающим.";
 	@Setting("Packets")
-	private String packets = "Список идентификаторов пакетов. Если Blacklist = true, то получение данных будет применяться только к тем пакетам, чьи идентификаторы указаны в этом списке.";
+	private String packets = "Список идентификаторов пакетов. Если Whitelist = true, то получение данных будет применяться только к тем пакетам, чьи идентификаторы указаны в этом списке.";
 
 }

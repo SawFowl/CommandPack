@@ -85,7 +85,7 @@ public abstract class MixinCustomPayloadsService {
 					type,
 					codec,
 					(payload, context) -> {
-						if (context.player() instanceof MixinServerPlayer player) {
+						if (context.player() instanceof CPServerPlayer player) {
 							// Server-side packet, let plugin handle it
 							handle(player, payload);
 							return;
@@ -115,7 +115,7 @@ public abstract class MixinCustomPayloadsService {
 				}
 			}
 			codec = null;
-			if(context.player() instanceof MixinServerPlayer player && buffer.hasArray())
+			if(context.player() instanceof CPServerPlayer player && buffer.hasArray())
 				handle(
 					player,
 					new RawPacketImpl((ResourceKey) (Object) payload.type().id(),
@@ -128,13 +128,13 @@ public abstract class MixinCustomPayloadsService {
 		}, existingHandler.protocols(), existingHandler.flow(), existingHandler.version(), existingHandler.optional());
 	}
 
-	private void handle(MixinServerPlayer player, RawPacket rawPacket) {
+	private void handle(CPServerPlayer player, RawPacket rawPacket) {
 		getRawListeners(rawPacket.channel()).forEach(listener -> listener.read(player, rawPacket));
 		handleSerialized(player, rawPacket, containsSerializer(rawPacket.channel()), containsBufferSerializer(rawPacket.channel()));
 	}
 
 	@SuppressWarnings("unchecked")
-	private void handleSerialized(MixinServerPlayer player, RawPacket rawPacket, boolean stringSerializer, boolean bufferSerializer) {
+	private void handleSerialized(CPServerPlayer player, RawPacket rawPacket, boolean stringSerializer, boolean bufferSerializer) {
 		if(stringSerializer || bufferSerializer) for(PacketListener<?> listener : getListeners(rawPacket.channel())) listener.read(player, serialize(rawPacket, bufferSerializer));
 	}
 

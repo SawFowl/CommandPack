@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.network.Channel.VersionTest;
@@ -29,7 +29,7 @@ import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkRegistry;
 
 import sawfowl.commandpack.CommandPackInstance;
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
+import sawfowl.commandpack.api.game.server.player.CPServerPlayer;
 import sawfowl.commandpack.api.network.listeners.PacketListener;
 import sawfowl.commandpack.api.network.listeners.RawPacketListener;
 import sawfowl.commandpack.api.network.packets.RawPacket;
@@ -66,14 +66,14 @@ public abstract class MixinCustomPayloadsService {
 	@Overwrite
 	private void spongeEvent(RegisterChannelEvent event) {
 		forgeChannels.forEach(channel -> {
-			var find = NetworkRegistry.findTarget((ResourceLocation) (Object) channel);
+			var find = NetworkRegistry.findTarget((Identifier) (Object) channel);
 			if(find != null) {
 				find.addListener(listener -> {
-					if(listener.getSource().getSender() instanceof MixinServerPlayer player && listener.getPayload() instanceof ChannelBuf buf) handle(player, new RawPacketImpl(channel, buf, listener.getPayload().readableBytes() > 0 ? listener.getPayload().toString(StandardCharsets.UTF_8) : ""));
+					if(listener.getSource().getSender() instanceof CPServerPlayer player && listener.getPayload() instanceof ChannelBuf buf) handle(player, new RawPacketImpl(channel, buf, listener.getPayload().readableBytes() > 0 ? listener.getPayload().toString(StandardCharsets.UTF_8) : ""));
 				});
 				find = null;
 			} else ChannelBuilder
-				.named((ResourceLocation) (Object) channel)
+				.named((Identifier) (Object) channel)
 				.connectionHandler(consumer -> ((MinecraftServerAccessor) Sponge.server()).getconnection())
 				.serverAcceptedVersions(VersionTest.exact(channelVersion))
 				.clientAcceptedVersions(VersionTest.exact(channelVersion))
@@ -82,7 +82,7 @@ public abstract class MixinCustomPayloadsService {
 				.payloadChannel()
 				.any()
 				.bidirectional()
-				.add(new Type<>((ResourceLocation) (Object) channel), createCodec(channel), (payload, context) -> handle(payload, context))
+				.add(new Type<>((Identifier) (Object) channel), createCodec(channel), (payload, context) -> handle(payload, context))
 				.build();
 			}
 		);
@@ -97,16 +97,16 @@ public abstract class MixinCustomPayloadsService {
 
 	private void handle(RawPacketImpl payload, CustomPayloadEvent.Context ctx) {
 		ctx.setPacketHandled(true);
-		handle((MixinServerPlayer) ctx.getSender(), payload);
+		handle((CPServerPlayer) ctx.getSender(), payload);
 	}
 
-	private void handle(MixinServerPlayer player, RawPacket rawPacket) {
+	private void handle(CPServerPlayer player, RawPacket rawPacket) {
 		getRawListeners(rawPacket.channel()).forEach(listener -> listener.read(player, rawPacket));
 		handleSerialized(player, rawPacket, containsSerializer(rawPacket.channel()), containsBufferSerializer(rawPacket.channel()));
 	}
 
 	@SuppressWarnings("unchecked")
-	private void handleSerialized(MixinServerPlayer player, RawPacket rawPacket, boolean stringSerializer, boolean bufferSerializer) {
+	private void handleSerialized(CPServerPlayer player, RawPacket rawPacket, boolean stringSerializer, boolean bufferSerializer) {
 		if(stringSerializer || bufferSerializer) for(PacketListener<?> listener : getListeners(rawPacket.channel())) listener.read(player, serialize(rawPacket, bufferSerializer));
 	}
 

@@ -30,7 +30,7 @@ public abstract class MixinPortalShapeImpl implements PortalShapeAccessor {
 	@Shadow public abstract void createPortalBlocks(LevelAccessor p_366077_);
 
 	@Override
-	public sawfowl.commandpack.api.mixin.game.PortalShape setWorld(ServerWorld world) {
+	public sawfowl.commandpack.api.game.PortalShape setWorld(ServerWorld world) {
 		levelAccessor = (LevelAccessor) world;
 		return this;
 	}

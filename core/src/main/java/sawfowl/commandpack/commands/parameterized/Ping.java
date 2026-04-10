@@ -15,7 +15,7 @@ import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
+import sawfowl.commandpack.api.game.server.player.CPServerPlayer;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
@@ -32,9 +32,9 @@ public class Ping extends AbstractParameterizedCommand {
 		Optional<ServerPlayer> player = getPlayer(context);
 		if(isPlayer) {
 			if(player.isPresent() && !player.get().uniqueId().equals(((ServerPlayer) src).uniqueId())) {
-				src.sendMessage(getPing(locale).getSuccessStaff(player.get(), MixinServerPlayer.cast(player.get()).getPing()));
-			} else src.sendMessage(getPing(locale).getSuccessStaff((ServerPlayer) src, MixinServerPlayer.cast((ServerPlayer) src).getPing()));
-		} else src.sendMessage(getPing(locale).getSuccessStaff(player.get(), MixinServerPlayer.cast(player.get()).getPing()));
+				src.sendMessage(getPing(locale).getSuccessStaff(player.get(), CPServerPlayer.cast(player.get()).getPing()));
+			} else src.sendMessage(getPing(locale).getSuccessStaff((ServerPlayer) src, CPServerPlayer.cast((ServerPlayer) src).getPing()));
+		} else src.sendMessage(getPing(locale).getSuccessStaff(player.get(), CPServerPlayer.cast(player.get()).getPing()));
 	}
 
 	@Override

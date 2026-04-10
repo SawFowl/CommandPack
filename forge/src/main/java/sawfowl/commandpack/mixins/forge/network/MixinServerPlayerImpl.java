@@ -3,8 +3,11 @@ package sawfowl.commandpack.mixins.forge.network;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.network.channel.raw.RawDataChannel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.math.vector.Vector3i;
@@ -17,40 +20,34 @@ import net.kyori.adventure.text.format.TextColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraftforge.network.NetworkContext;
 import net.minecraftforge.network.packets.ModVersions;
 
-import sawfowl.commandpack.api.mixin.network.CustomPacket;
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
-import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
+import sawfowl.commandpack.CommandPackInstance;
+import sawfowl.commandpack.api.game.server.player.CPServerPlayer;
+import sawfowl.commandpack.api.game.server.player.PlayerModInfo;
 import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.apiclasses.CPConnection;
-import sawfowl.commandpack.apiclasses.CustomPacketImpl;
 import sawfowl.localeapi.api.Text;
 
 @Mixin(value = ServerPlayer.class, remap = false)
-public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
+public abstract class MixinServerPlayerImpl implements CPServerPlayer {
 
 	@Shadow public ServerGamePacketListenerImpl connection;
 	private List<PlayerModInfo> mods = new ArrayList<PlayerModInfo>();
 
 	@Override
-	public void sendPacket(@SuppressWarnings("deprecation") CustomPacket packet) {
-		if(packet instanceof CustomPacketImpl custom) connection.send(createPacket(custom));
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
 	public void sendPacket(RawPacket packet) {
-		sendPacket(CustomPacket.of(packet.channel(), packet.getDataAsString()));
-	}
+		if(getSpongeChannels().containsKey(packet.channel())) {
+			getSpongeChannels().get(packet.channel()).play().sendTo(this, buffer -> buffer.writeBytes(packet.getDataAsString().getBytes(StandardCharsets.UTF_8)));
+		} else connection.send(createPacket(packet));}
 
 	@Override
 	public void sendMessage(Text message) {
-		sendMessage(message.applyPlaceholders(Component.empty(), (MixinServerPlayer) this).get());
+		sendMessage(message.applyPlaceholders(Component.empty(), (CPServerPlayer) this).get());
 	}
 
 	@Override
@@ -75,17 +72,21 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 		return connection.latency();
 	}
 
-	private FriendlyByteBuf createFriendlyByteBuf(CustomPacketImpl custom) {
-		return new FriendlyByteBuf(Unpooled.buffer()).writeResourceLocation(ResourceLocation.parse(custom.getLocation())).writeBytes(custom.getData().getBytes(StandardCharsets.UTF_8));
+	private FriendlyByteBuf createFriendlyByteBuf(RawPacket custom) {
+		return new FriendlyByteBuf(Unpooled.buffer()).writeIdentifier((Identifier) (Object) custom.channel()).writeBytes(custom.getDataAsString().getBytes(StandardCharsets.UTF_8));
 	}
 
-	private ClientboundCustomPayloadPacket createPacket(CustomPacketImpl custom) {
+	private ClientboundCustomPayloadPacket createPacket(RawPacket custom) {
 		return ClientboundCustomPayloadPacket.CONFIG_STREAM_CODEC.decode(createFriendlyByteBuf(custom));
 	}
 
 	@Override
 	public float getMiningSpeed(BlockState block, Vector3i position) {
 		return ((ServerPlayer) (Object) this).getDestroySpeed((net.minecraft.world.level.block.state.BlockState) block, new BlockPos(position.x(), position.y(), position.z()));
+	}
+
+	private Map<ResourceKey, RawDataChannel> getSpongeChannels() {
+		return CommandPackInstance.getInstance().getPayloadsService().getSpongeChannels();
 	}
 
 	private PlayerModInfo createModInfo(ModVersions.Info info, String id) {

@@ -14,37 +14,26 @@ import org.spongepowered.math.vector.Vector3i;
 import io.netty.buffer.Unpooled;
 
 import net.kyori.adventure.text.Component;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 import sawfowl.commandpack.CommandPackInstance;
-import sawfowl.commandpack.api.mixin.network.CustomPacket;
-import sawfowl.commandpack.api.mixin.network.MixinServerPlayer;
-import sawfowl.commandpack.api.mixin.network.PlayerModInfo;
+import sawfowl.commandpack.api.game.server.player.CPServerPlayer;
+import sawfowl.commandpack.api.game.server.player.PlayerModInfo;
 import sawfowl.commandpack.api.network.packets.RawPacket;
 import sawfowl.commandpack.apiclasses.CPConnection;
-import sawfowl.commandpack.apiclasses.CustomPacketImpl;
 import sawfowl.commandpack.utils.CommandsUtil;
 
 import sawfowl.localeapi.api.Text;
 
 @Mixin(ServerPlayer.class)
-public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
+public abstract class MixinServerPlayerImpl implements CPServerPlayer {
 
 	@Shadow public ServerGamePacketListenerImpl connection;
-
-	@Override
-	public void sendPacket(@SuppressWarnings("deprecation") CustomPacket packet) {
-		if(packet instanceof CustomPacketImpl custom) {
-			ResourceKey channel = ResourceKey.resolve(custom.getLocation());
-			if(getSpongeChannels().containsKey(channel)) {
-				getSpongeChannels().get(channel).play().sendTo(this, buffer -> buffer.writeString(custom.getData()));
-			} else connection.send(createPacket(custom));
-		}
-	}
 
 	@Override
 	public void sendPacket(RawPacket packet) {
@@ -55,7 +44,7 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 
 	@Override
 	public void sendMessage(Text message) {
-		sendMessage(message.applyPlaceholders(Component.empty(), (MixinServerPlayer) this).get());
+		sendMessage(message.applyPlaceholders(Component.empty(), (CPServerPlayer) this).get());
 	}
 
 	@Override
@@ -80,18 +69,10 @@ public abstract class MixinServerPlayerImpl implements MixinServerPlayer {
 	}
 
 	private FriendlyByteBuf createFriendlyByteBuf(RawPacket custom) {
-		return new FriendlyByteBuf(Unpooled.buffer()).writeResourceLocation((ResourceLocation) (Object) custom.channel()).writeBytes(custom.getDataAsString().getBytes(StandardCharsets.UTF_8));
+		return new FriendlyByteBuf(Unpooled.buffer()).writeIdentifier((Identifier) (Object) custom.channel()).writeBytes(custom.getDataAsString().getBytes(StandardCharsets.UTF_8));
 	}
 
 	private ClientboundCustomPayloadPacket createPacket(RawPacket custom) {
-		return ClientboundCustomPayloadPacket.CONFIG_STREAM_CODEC.decode(createFriendlyByteBuf(custom));
-	}
-
-	private FriendlyByteBuf createFriendlyByteBuf(CustomPacketImpl custom) {
-		return new FriendlyByteBuf(Unpooled.buffer()).writeResourceLocation(ResourceLocation.parse(custom.getLocation())).writeBytes(custom.getData().getBytes(StandardCharsets.UTF_8));
-	}
-
-	private ClientboundCustomPayloadPacket createPacket(CustomPacketImpl custom) {
 		return ClientboundCustomPayloadPacket.CONFIG_STREAM_CODEC.decode(createFriendlyByteBuf(custom));
 	}
 

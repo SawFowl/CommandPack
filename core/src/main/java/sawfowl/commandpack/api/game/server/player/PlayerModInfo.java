@@ -1,4 +1,4 @@
-package sawfowl.commandpack.api.mixin.network;
+package sawfowl.commandpack.api.game.server.player;
 
 import net.kyori.adventure.text.Component;
 
