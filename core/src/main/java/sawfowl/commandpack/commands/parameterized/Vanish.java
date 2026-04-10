@@ -35,7 +35,7 @@ public class Vanish extends AbstractParameterizedCommand {
 			if(optTarget.isPresent()) {
 				vanish(optTarget.get(), src, locale, optTarget.get().uniqueId().equals(((ServerPlayer) src).uniqueId()), context.hasPermission(Permissions.VANISH_STAFF));
 			} else {
-				delay((ServerPlayer) src, locale, consumer -> {
+				delay((ServerPlayer) src, locale, _ -> {
 					vanish((ServerPlayer) src, src, locale, true, context.hasPermission(Permissions.VANISH_STAFF));
 				});
 			}

@@ -29,7 +29,7 @@ public class ServerTime extends AbstractInfoCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
-			delay((ServerPlayer) src, locale, consumer -> {
+			delay((ServerPlayer) src, locale, _ -> {
 				src.sendMessage(getServerTime(locale).append(Component.newline()).append(getUptime(locale)));
 			});
 		} else {

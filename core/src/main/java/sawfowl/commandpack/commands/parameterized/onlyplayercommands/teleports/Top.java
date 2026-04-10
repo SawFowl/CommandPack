@@ -28,7 +28,7 @@ public class Top extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		delay(src, locale, consumer -> {
+		delay(src, locale, _ -> {
 			plugin.getPlayersData().getTempData().setPreviousLocation(src);
 			Vector3d position = src.world().highestPositionAt(src.blockPosition()).toDouble();
 			if(src.world().key().equals(DefaultWorldKeys.THE_NETHER) && plugin.getMainConfig().isFixTopCommand(src.world())) {

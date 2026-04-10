@@ -75,7 +75,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 			boolean allowRefresh = player.hasPermission(Permissions.SERVER_STAT_STAFF_INFO_PLUGINS_REFRESH);
 			for(PluginContainer container : plugin.getAPI().getContainersCollection().getPlugins()) {
 				if(allowRefresh) {
-					content.add(getServerStat(locale).getButtons().getRefreshPlugin().createCallBack(cause -> {
+					content.add(getServerStat(locale).getButtons().getRefreshPlugin().createCallBack(_ -> {
 						sendRefreshEvent(container);
 						player.sendMessage(getServerStat(locale).getRefreshPlugin());
 					}).append(player.hasPermission(Permissions.SERVER_STAT_STAFF_PLUGINS_INFO)

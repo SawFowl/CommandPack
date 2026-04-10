@@ -50,7 +50,7 @@ public class Extinguish extends AbstractParameterizedCommand {
 					return;
 				}
 			}
-			delay((ServerPlayer) src, locale, consumer -> {
+			delay((ServerPlayer) src, locale, _ -> {
 				removeFlame((Entity) src);
 				src.sendMessage(getExtinguish(locale).getSuccess());
 			});

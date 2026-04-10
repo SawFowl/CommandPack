@@ -29,7 +29,7 @@ public class SetHome extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		delay(src, locale, consumer -> {
+		delay(src, locale, _ -> {
 			PlayerData playerData = plugin.getPlayersData().getOrCreatePlayerData(src);
 			String name = getString(context, "Home", "Home");
 			if(name.equalsIgnoreCase("list")) name = "Home";

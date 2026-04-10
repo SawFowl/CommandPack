@@ -39,7 +39,7 @@ public class Anvil extends AbstractParameterizedCommand {
 			if(target.isPresent()) {
 				menu.open(target.get());
 				src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getAnvil().getSuccessStaff(target.get()));
-			} else delay((ServerPlayer) src, locale, consumer -> {
+			} else delay((ServerPlayer) src, locale, _ -> {
 				menu.open((ServerPlayer) src);
 			});
 		} else {

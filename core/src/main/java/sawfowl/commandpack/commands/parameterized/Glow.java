@@ -51,7 +51,7 @@ public class Glow extends AbstractParameterizedCommand {
 					return;
 				}
 			}
-			delay((ServerPlayer) src, locale, consumer -> {
+			delay((ServerPlayer) src, locale, _ -> {
 				if(setGlow((ServerPlayer) src)) {
 					src.sendMessage(getGlow(locale).getEnable());
 				} else src.sendMessage(getGlow(locale).getDisable());

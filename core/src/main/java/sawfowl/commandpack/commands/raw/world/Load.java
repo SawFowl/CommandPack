@@ -67,8 +67,8 @@ public class Load extends AbstractWorldCommand {
 	private RawArgument<ResourceKey> createWorldArgument() {
 		return RawArgument.of(
 			ResourceKey.class,
-			(cause, args) -> Sponge.server().worldManager().offlineWorldKeys().stream().map(w -> w.asString()),
-			(cause, args) -> args.length >= 1 ? Sponge.server().worldManager().offlineWorldKeys().stream().filter(w -> w.asString().equals(args[0])).findFirst() : Optional.empty(),
+			(_, _) -> Sponge.server().worldManager().offlineWorldKeys().stream().map(w -> w.asString()),
+			(_, args) -> args.length >= 1 ? Sponge.server().worldManager().offlineWorldKeys().stream().filter(w -> w.asString().equals(args[0])).findFirst() : Optional.empty(),
 			new RawArgumentData<>("World", CommandTreeNodeTypes.DIMENSION.get().createNode(), 0, null, null),
 			RawOptional.notOptional(),
 			locale -> getExceptions(locale).getWorldNotPresent()

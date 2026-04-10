@@ -237,7 +237,7 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * @return Arguments {@link Map}. Key {@link Integer} - argument number, Value {@link RawArgument} - raw argument.
 	 */
 	default Map<Integer, RawArgument<?>> createArgumentsMap(@Nullable Collection<RawArgument<?>> args) {
-		return args == null ? new HashMap<>() : args.stream().collect(Collectors.toUnmodifiableMap(arg -> arg.getCursor(), arg -> arg, (arg1, arg2) -> {
+		return args == null ? new HashMap<>() : args.stream().collect(Collectors.toUnmodifiableMap(arg -> arg.getCursor(), arg -> arg, (arg1, _) -> {
 			CommandPackInstance.getInstance().getLogger().warn("A duplicate command argument key was detected. The duplicate will not be added to the argument map. Command: \"" + command() + "\". Command class: \"" + getClass().getName() + "\". Argument key: \"" + arg1.getTreeKey() + "\"");
 			return arg1;
 		}));

@@ -69,7 +69,7 @@ public abstract class MixinServerLevelImpl implements CPServerWorld {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Optional<PortalShape> findPortalShape(boolean empty, int x, int y, int z, Direction direction, @Nullable Predicate<PortalShape> predicate) {
-		if(predicate == null) predicate = shape -> true;
+		if(predicate == null) predicate = _ -> true;
 		return findPortalShape(empty, new BlockPos(x, y, z), direction == null ? net.minecraft.core.Direction.NORTH : convert(direction), (Predicate<net.minecraft.world.level.portal.PortalShape>) (Object) predicate).map(s -> ((PortalShapeAccessor) s).setWorld(this));
 	}
 

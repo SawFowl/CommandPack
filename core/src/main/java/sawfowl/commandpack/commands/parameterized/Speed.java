@@ -54,7 +54,7 @@ public class Speed extends AbstractParameterizedCommand {
 					if(limit < multiplier) multiplier = limit;
 				}
 				final double mult = multiplier;
-				delay(source, locale, consumer -> {
+				delay(source, locale, _ -> {
 					setSpeed(source, mult, fly);
 					Component text = getSpeed(locale).getSetSelf((int) mult);
 					if(fly) text = text.append(getSpeed(locale).getInFly());

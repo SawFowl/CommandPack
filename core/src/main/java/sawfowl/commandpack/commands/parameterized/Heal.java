@@ -35,7 +35,7 @@ public class Heal extends AbstractParameterizedCommand {
 				target.get().offer(Keys.HEALTH, target.get().getOrElse(Keys.MAX_HEALTH, 20d));
 				src.sendMessage(getHeal(locale).getSuccessStaff(target.get()));
 				target.get().sendMessage(getHeal(target.get()).getSuccess());
-			} else delay((ServerPlayer) src, locale, consumer -> {
+			} else delay((ServerPlayer) src, locale, _ -> {
 				((ServerPlayer) src).offer(Keys.HEALTH, ((ServerPlayer) src).getOrElse(Keys.MAX_HEALTH, 20d));
 				src.sendMessage(getHeal(locale).getSuccess());
 			});

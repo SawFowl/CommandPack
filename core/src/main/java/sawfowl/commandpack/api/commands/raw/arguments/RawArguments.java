@@ -66,8 +66,8 @@ public class RawArguments {
 	public static RawArgument<String> createStringArgument(Stream<String> variants, RawBasicArgumentData<String> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			String.class,
-			(cause, args) -> variants,
-			(cause, args) -> args.length >= data.cursor() + 1 ? Optional.ofNullable(variants.filter(var -> var.equals(args[data.cursor()])).findFirst().orElse(data.def())) : Optional.ofNullable(data.def()),
+			(_, _) -> variants,
+			(_, args) -> args.length >= data.cursor() + 1 ? Optional.ofNullable(variants.filter(var -> var.equals(args[data.cursor()])).findFirst().orElse(data.def())) : Optional.ofNullable(data.def()),
 			data.toRawArgumentData(CommandTreeNodeTypes.STRING.get().createNode()),
 			rawOptional,
 			supplier
@@ -77,8 +77,8 @@ public class RawArguments {
 	public static RawArgument<String> createStringArgument(Collection<String> variants, RawBasicArgumentData<String> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			String.class,
-			(cause, args) -> variants.size() > 10000 ? variants.parallelStream() : variants.stream(),
-			(cause, args) -> args.length >= data.cursor() + 1 ? (variants.isEmpty() ? Optional.ofNullable(args[data.cursor()]) : Optional.ofNullable(variants.stream().filter(var -> var.equals(args[data.cursor()])).findFirst().orElse(data.def()))) : Optional.ofNullable(data.def()),
+			(_, _) -> variants.size() > 10000 ? variants.parallelStream() : variants.stream(),
+			(_, args) -> args.length >= data.cursor() + 1 ? (variants.isEmpty() ? Optional.ofNullable(args[data.cursor()]) : Optional.ofNullable(variants.stream().filter(var -> var.equals(args[data.cursor()])).findFirst().orElse(data.def()))) : Optional.ofNullable(data.def()),
 			data.toRawArgumentData(CommandTreeNodeTypes.STRING.get().createNode()),
 			rawOptional,
 			supplier
@@ -91,8 +91,8 @@ public class RawArguments {
 	public static RawArgument<String> createRemainingJoinedStringsArgument(RawBasicArgumentData<String> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			String.class,
-			(cause, args) -> Stream.empty(),
-			(cause, args) -> args.length >= data.cursor() + 1 ?  Optional.ofNullable(String.join(" ", Stream.of(Arrays.copyOfRange(args, data.cursor(), args.length)).filter(string -> string != null).toArray(String[]::new))) : Optional.ofNullable(data.def()),
+			(_, _) -> Stream.empty(),
+			(_, args) -> args.length >= data.cursor() + 1 ?  Optional.ofNullable(String.join(" ", Stream.of(Arrays.copyOfRange(args, data.cursor(), args.length)).filter(string -> string != null).toArray(String[]::new))) : Optional.ofNullable(data.def()),
 			data.toRawArgumentData(CommandTreeNodeTypes.STRING.get().createNode()),
 			rawOptional,
 			supplier
@@ -102,8 +102,8 @@ public class RawArguments {
 	public static RawArgument<Integer> createIntegerArgument(Collection<Integer> variants, RawBasicArgumentData<Integer> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Integer.class,
-			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
-			(cause, args) -> args.length >= data.cursor() + 1 && NumberUtils.isParsable(args[data.cursor()]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createInteger(args[data.cursor()])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createInteger(args[data.cursor()])) : Optional.ofNullable(data.def()),
+			(_, _) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
+			(_, args) -> args.length >= data.cursor() + 1 && NumberUtils.isParsable(args[data.cursor()]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createInteger(args[data.cursor()])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createInteger(args[data.cursor()])) : Optional.ofNullable(data.def()),
 			data.toRawArgumentData(CommandTreeNodeTypes.INTEGER.get().createNode()),
 			rawOptional,
 			supplier
@@ -113,8 +113,8 @@ public class RawArguments {
 	public static RawArgument<Long> createLongArgument(Collection<Long> variants, RawBasicArgumentData<Long> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Long.class,
-			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
-			(cause, args) -> args.length >= data.cursor() + 1 && NumberUtils.isParsable(args[data.cursor()]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createLong(args[data.cursor()])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createLong(args[data.cursor()])) : Optional.ofNullable(data.def()),
+			(_, _) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
+			(_, args) -> args.length >= data.cursor() + 1 && NumberUtils.isParsable(args[data.cursor()]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createLong(args[data.cursor()])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createLong(args[data.cursor()])) : Optional.ofNullable(data.def()),
 			data.toRawArgumentData(CommandTreeNodeTypes.LONG.get().createNode()),
 			rawOptional,
 			supplier
@@ -124,8 +124,8 @@ public class RawArguments {
 	public static RawArgument<Double> createDoubleArgument(Collection<Double> variants, RawBasicArgumentData<Double> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Double.class,
-			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
-			(cause, args) -> args.length >= data.cursor() + 1 && NumberUtils.isParsable(args[data.cursor()]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createDouble(args[data.cursor()])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createDouble(args[data.cursor()])) : Optional.ofNullable(data.def()),
+			(_, _) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
+			(_, args) -> args.length >= data.cursor() + 1 && NumberUtils.isParsable(args[data.cursor()]) && (variants.isEmpty() || variants.stream().filter(a -> a == NumberUtils.createDouble(args[data.cursor()])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createDouble(args[data.cursor()])) : Optional.ofNullable(data.def()),
 			data.toRawArgumentData(CommandTreeNodeTypes.DOUBLE.get().createNode()),
 			rawOptional,
 			supplier
@@ -135,8 +135,8 @@ public class RawArguments {
 	public static RawArgument<BigDecimal> createBigDecimalArgument(Collection<BigDecimal> variants, RawBasicArgumentData<BigDecimal> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			BigDecimal.class,
-			(cause, args) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
-			(cause, args) -> args.length >= data.cursor() + 1 && NumberUtils.isParsable(args[data.cursor()]) && (variants.isEmpty() || variants.stream().filter(a -> a.doubleValue() == NumberUtils.createDouble(args[data.cursor()])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createBigDecimal(args[data.cursor()])) : Optional.ofNullable(data.def()),
+			(_, _) -> (variants.size() > 10000 ? variants.parallelStream() : variants.stream()).map(String::valueOf),
+			(_, args) -> args.length >= data.cursor() + 1 && NumberUtils.isParsable(args[data.cursor()]) && (variants.isEmpty() || variants.stream().filter(a -> a.doubleValue() == NumberUtils.createDouble(args[data.cursor()])).findFirst().isPresent()) ? Optional.ofNullable(NumberUtils.createBigDecimal(args[data.cursor()])) : Optional.ofNullable(data.def()),
 			data.toRawArgumentData(CommandTreeNodeTypes.DOUBLE.get().createNode()),
 			rawOptional,
 			supplier
@@ -146,8 +146,8 @@ public class RawArguments {
 	public static RawArgument<Boolean> createBooleanArgument(RawBasicArgumentData<Boolean> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Boolean.class,
-			(cause, args) -> Stream.of("true", "false"),
-			(cause, args) -> args.length >= data.cursor() + 1 && BooleanUtils.toBooleanObject(args[data.cursor()]) != null ? Optional.ofNullable(BooleanUtils.toBooleanObject(args[data.cursor()])) : Optional.ofNullable(data.def()),
+			(_, _) -> Stream.of("true", "false"),
+			(_, args) -> args.length >= data.cursor() + 1 && BooleanUtils.toBooleanObject(args[data.cursor()]) != null ? Optional.ofNullable(BooleanUtils.toBooleanObject(args[data.cursor()])) : Optional.ofNullable(data.def()),
 			data.toRawArgumentData(CommandTreeNodeTypes.BOOL.get().createNode()),
 			rawOptional,
 			supplier
@@ -157,8 +157,8 @@ public class RawArguments {
 	public static RawArgument<ServerWorld> createWorldArgument(RawBasicArgumentData<ServerWorld> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			ServerWorld.class,
-			(cause, args) -> Sponge.server().worldManager().worlds().stream().map(w -> w.key().asString()),
-			(cause, args) -> args.length >= data.cursor() + 1 ? Optional.ofNullable(Sponge.server().worldManager().worlds().stream().filter(w -> w.key().asString().equals(args[data.cursor()])).findFirst().orElse(data.def())) : Optional.ofNullable(data.def()),
+			(_, _) -> Sponge.server().worldManager().worlds().stream().map(w -> w.key().asString()),
+			(_, args) -> args.length >= data.cursor() + 1 ? Optional.ofNullable(Sponge.server().worldManager().worlds().stream().filter(w -> w.key().asString().equals(args[data.cursor()])).findFirst().orElse(data.def())) : Optional.ofNullable(data.def()),
 			data.toRawArgumentData(CommandTreeNodeTypes.DIMENSION.get().createNode()),
 			rawOptional,
 			supplier
@@ -168,8 +168,8 @@ public class RawArguments {
 	public static RawArgument<WorldType> createWorldTypeArgument(RawBasicArgumentData<WorldType> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			WorldType.class,
-			(cause, args) -> WorldTypes.registry().streamEntries().map(w -> w.key().asString()),
-			(cause, args) -> args.length >= data.cursor() + 1 ? WorldTypes.registry().streamEntries().filter(e -> e.key().asString().equals(args[data.cursor()])).map(e -> e.value()).findFirst() : Optional.empty(),
+			(_, _) -> WorldTypes.registry().streamEntries().map(w -> w.key().asString()),
+			(_, args) -> args.length >= data.cursor() + 1 ? WorldTypes.registry().streamEntries().filter(e -> e.key().asString().equals(args[data.cursor()])).map(e -> e.value()).findFirst() : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.DIMENSION.get().createNode()),
 			rawOptional,
 			supplier
@@ -179,8 +179,8 @@ public class RawArguments {
 	public static RawArgument<ChunkGenerator> createChunkGenerator(RawBasicArgumentData<ChunkGenerator> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			ChunkGenerator.class,
-			(cause, args) -> plugin.getAPI().getAvailableGenerators().stream(),
-			(cause, args) -> args.length >= data.cursor() + 1 ? plugin.getAPI().getCustomGenerator(args[data.cursor()]) : Optional.empty(),
+			(_, _) -> plugin.getAPI().getAvailableGenerators().stream(),
+			(_, args) -> args.length >= data.cursor() + 1 ? plugin.getAPI().getCustomGenerator(args[data.cursor()]) : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.DIMENSION.get().createNode()),
 			rawOptional,
 			supplier
@@ -190,8 +190,8 @@ public class RawArguments {
 	public static RawArgument<ServerPlayer> createPlayerArgument(RawBasicArgumentData<ServerPlayer> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			ServerPlayer.class,
-			(cause, args) -> CommandPackInstance.getInstance().getPlayersData().getTempData().streamOnlinePlayers().filter(name -> Sponge.server().player(name).filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).isPresent()),
-			(cause, args) -> args.length >= data.cursor() + 1 ? Sponge.server().onlinePlayers().stream().filter(player -> player.name().equals(args[data.cursor()])).findFirst() : Optional.empty(),
+			(_, _) -> CommandPackInstance.getInstance().getPlayersData().getTempData().streamOnlinePlayers().filter(name -> Sponge.server().player(name).filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).isPresent()),
+			(_, args) -> args.length >= data.cursor() + 1 ? Sponge.server().onlinePlayers().stream().filter(player -> player.name().equals(args[data.cursor()])).findFirst() : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.GAME_PROFILE.get().createNode()),
 			rawOptional,
 			supplier
@@ -201,8 +201,8 @@ public class RawArguments {
 	public static RawArgument<GameProfile> createGameProfile(RawBasicArgumentData<GameProfile> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			GameProfile.class,
-			(cause, args) -> Sponge.server().gameProfileManager().cache().all().stream().map(profile -> profile.name().orElse(profile.examinableName())),
-			(cause, args) -> args.length >= data.cursor() + 1 ? Sponge.server().gameProfileManager().cache().findByName(args[0]) : Optional.empty(),
+			(_, _) -> Sponge.server().gameProfileManager().cache().all().stream().map(profile -> profile.name().orElse(profile.examinableName())),
+			(_, args) -> args.length >= data.cursor() + 1 ? Sponge.server().gameProfileManager().cache().findByName(args[0]) : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.GAME_PROFILE.get().createNode()),
 			rawOptional,
 			supplier
@@ -212,8 +212,8 @@ public class RawArguments {
 	public static RawArgument<CompletableFuture<Optional<User>>> createUserArgument(RawBasicArgumentData<CompletableFuture<Optional<User>>> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			USER_LOAD_CLASS,
-			(cause, args) -> CommandPackInstance.getInstance().getPlayersData().getTempData().streamOnlinePlayers().filter(name -> Sponge.server().player(name).filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).isPresent()),
-			(cause, args) -> args.length >= data.cursor() + 1 ? plugin.getPlayersData().getTempData().getUser(args[data.cursor()]) : Optional.empty(),
+			(_, _) -> CommandPackInstance.getInstance().getPlayersData().getTempData().streamOnlinePlayers().filter(name -> Sponge.server().player(name).filter(player -> !player.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)).isPresent()),
+			(_, args) -> args.length >= data.cursor() + 1 ? plugin.getPlayersData().getTempData().getUser(args[data.cursor()]) : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.GAME_PROFILE.get().createNode()),
 			rawOptional,
 			supplier
@@ -223,8 +223,8 @@ public class RawArguments {
 	public static RawArgument<UniqueAccount> createUniqueAccountArgument(RawBasicArgumentData<UniqueAccount> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			UniqueAccount.class,
-			(cause, args) -> plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(account -> account.identifier()),
-			(cause, args) -> args.length >= data.cursor() + 1 ? plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(account -> account.identifier().equals(args[data.cursor()])).findFirst() : Optional.empty(),
+			(_, _) -> plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(account -> account.identifier()),
+			(_, args) -> args.length >= data.cursor() + 1 ? plugin.getEconomy().getEconomyService().streamUniqueAccounts().filter(account -> account.identifier().equals(args[data.cursor()])).findFirst() : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.GAME_PROFILE.get().createNode()),
 			rawOptional,
 			supplier
@@ -234,8 +234,8 @@ public class RawArguments {
 	public static RawArgument<Account> createAccountArgument(RawBasicArgumentData<Account> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Account.class,
-			(cause, args) -> getAllAccounts().map(account -> account.identifier()),
-			(cause, args) -> args.length >= data.cursor() + 1 ? getAllAccounts().filter(account -> account.identifier().equals(args[data.cursor()])).findFirst() : Optional.empty(),
+			(_, _) -> getAllAccounts().map(account -> account.identifier()),
+			(_, args) -> args.length >= data.cursor() + 1 ? getAllAccounts().filter(account -> account.identifier().equals(args[data.cursor()])).findFirst() : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.GAME_PROFILE.get().createNode()),
 			rawOptional,
 			supplier
@@ -245,8 +245,8 @@ public class RawArguments {
 	public static RawArgument<Profile> createProfileArgument(RawBasicArgumentData<Profile> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Profile.class,
-			(cause, args) -> plugin.getPunishmentService().getAllProfileBans().stream().map(ban -> ban.profile().name().orElse(ban.profile().examinableName())),
-			(cause, args) -> args.length >= data.cursor() + 1 ? plugin.getPunishmentService().getAllProfileBans().stream().filter(ban -> ban.profile().name().orElse(ban.profile().examinableName()).equals(args[data.cursor()])).findFirst() : Optional.empty(),
+			(_, _) -> plugin.getPunishmentService().getAllProfileBans().stream().map(ban -> ban.profile().name().orElse(ban.profile().examinableName())),
+			(_, args) -> args.length >= data.cursor() + 1 ? plugin.getPunishmentService().getAllProfileBans().stream().filter(ban -> ban.profile().name().orElse(ban.profile().examinableName()).equals(args[data.cursor()])).findFirst() : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.GAME_PROFILE.get().createNode()),
 			rawOptional,
 			supplier
@@ -256,8 +256,8 @@ public class RawArguments {
 	public static RawArgument<Ban.IP> createBanIPArgument(RawBasicArgumentData<Ban.IP> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Ban.IP.class,
-			(cause, args) -> plugin.getPunishmentService().getAllIPBans().stream().map(i -> i.address().getHostAddress()),
-			(cause, args) -> args.length == 0 || plugin.getPunishmentService().getAllIPBans().isEmpty() ? Optional.empty() : plugin.getPunishmentService().getAllIPBans().stream().filter(i -> i.address().getHostAddress().equals(args[0])).findFirst(),
+			(_, _) -> plugin.getPunishmentService().getAllIPBans().stream().map(i -> i.address().getHostAddress()),
+			(_, args) -> args.length == 0 || plugin.getPunishmentService().getAllIPBans().isEmpty() ? Optional.empty() : plugin.getPunishmentService().getAllIPBans().stream().filter(i -> i.address().getHostAddress().equals(args[0])).findFirst(),
 			data.toRawArgumentData(CommandTreeNodeTypes.STRING.get().createNode()),
 			rawOptional,
 			supplier
@@ -267,8 +267,8 @@ public class RawArguments {
 	public static RawArgument<Mute> createMuteArgument(RawBasicArgumentData<Mute> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Mute.class,
-			(cause, args) -> plugin.getPunishmentService().getAllMutes().stream().map(mute -> mute.getName()),
-			(cause, args) -> args.length >= data.cursor() + 1 ? plugin.getPunishmentService().getAllMutes().stream().filter(m -> m.getName().equals(args[data.cursor()])).findFirst() : Optional.empty(),
+			(_, _) -> plugin.getPunishmentService().getAllMutes().stream().map(mute -> mute.getName()),
+			(_, args) -> args.length >= data.cursor() + 1 ? plugin.getPunishmentService().getAllMutes().stream().filter(m -> m.getName().equals(args[data.cursor()])).findFirst() : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.GAME_PROFILE.get().createNode()),
 			rawOptional,
 			supplier
@@ -278,8 +278,8 @@ public class RawArguments {
 	public static RawArgument<Warns> createWarnsArgument(RawBasicArgumentData<Warns> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Warns.class,
-			(cause, args) -> plugin.getPunishmentService().getAllWarns().stream().map(w -> w.getName()),
-			(cause, args) -> args.length >= data.cursor() + 1 ? plugin.getPunishmentService().getAllWarns().stream().filter(w -> w.getName().equals(args[data.cursor()])).findFirst() : Optional.empty(),
+			(_, _) -> plugin.getPunishmentService().getAllWarns().stream().map(w -> w.getName()),
+			(_, args) -> args.length >= data.cursor() + 1 ? plugin.getPunishmentService().getAllWarns().stream().filter(w -> w.getName().equals(args[data.cursor()])).findFirst() : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.GAME_PROFILE.get().createNode()),
 			rawOptional,
 			supplier
@@ -289,8 +289,8 @@ public class RawArguments {
 	public static RawArgument<EnchantmentType> createEnchantmentArgument(RawBasicArgumentData<EnchantmentType> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			EnchantmentType.class,
-			(cause, args) -> EnchantmentTypes.registry().streamEntries().map(e -> e.key().asString()),
-			(cause, args) -> args.length >= data.cursor() + 1 ? EnchantmentTypes.registry().streamEntries().filter(e -> e.key().asString().equals(args[data.cursor()])).map(e -> e.value()).findFirst() : Optional.empty(),
+			(_, _) -> EnchantmentTypes.registry().streamEntries().map(e -> e.key().asString()),
+			(_, args) -> args.length >= data.cursor() + 1 ? EnchantmentTypes.registry().streamEntries().filter(e -> e.key().asString().equals(args[data.cursor()])).map(e -> e.value()).findFirst() : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.RESOURCE_LOCATION.get().createNode()),
 			rawOptional,
 			supplier
@@ -300,8 +300,8 @@ public class RawArguments {
 	public static RawArgument<Locale> createLocaleArgument(RawBasicArgumentData<Locale> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Locale.class,
-			(cause, args) -> Stream.of(EnumLocales.values()).map(EnumLocales::getTag),
-			(cause, args) -> args.length >= data.cursor() + 1 ? Stream.of(EnumLocales.values()).filter(l -> l.getTag().equalsIgnoreCase(args[data.cursor()])).map(EnumLocales::get).findFirst() : Optional.empty(),
+			(_, _) -> Stream.of(EnumLocales.values()).map(EnumLocales::getTag),
+			(_, args) -> args.length >= data.cursor() + 1 ? Stream.of(EnumLocales.values()).filter(l -> l.getTag().equalsIgnoreCase(args[data.cursor()])).map(EnumLocales::get).findFirst() : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.STRING.get().createNode()),
 			rawOptional,
 			supplier
@@ -311,8 +311,8 @@ public class RawArguments {
 	public static RawArgument<Currency> createCurrencyArgument(RawBasicArgumentData<Currency> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Currency.class,
-			(cause, args) -> RegistryTypes.CURRENCY.get().streamEntries().map(e -> e.key().asString()),
-			(cause, args) -> args.length >= data.cursor() + 1 ? RegistryTypes.CURRENCY.get().streamEntries().filter(e -> e.key().asString().equals(args[data.cursor()])).findFirst().map(e -> e.value()) : Optional.empty(),
+			(_, _) -> RegistryTypes.CURRENCY.get().streamEntries().map(e -> e.key().asString()),
+			(_, args) -> args.length >= data.cursor() + 1 ? RegistryTypes.CURRENCY.get().streamEntries().filter(e -> e.key().asString().equals(args[data.cursor()])).findFirst().map(e -> e.value()) : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.RESOURCE_LOCATION.get().createNode()),
 			rawOptional,
 			supplier
@@ -322,8 +322,8 @@ public class RawArguments {
 	public static RawArgument<Kit> createKitArgument(RawBasicArgumentData<Kit> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Kit.class,
-			(cause, args) -> plugin.getKitService().getKits().stream().map(Kit::id),
-			(cause, args) -> args.length >= data.cursor() + 1 ? plugin.getKitService().getKit(args[data.cursor()]) : Optional.empty(),
+			(_, _) -> plugin.getKitService().getKits().stream().map(Kit::id),
+			(_, args) -> args.length >= data.cursor() + 1 ? plugin.getKitService().getKit(args[data.cursor()]) : Optional.empty(),
 			data.toRawArgumentData(CommandTreeNodeTypes.STRING.get().createNode()),
 			rawOptional,
 			supplier
@@ -344,7 +344,7 @@ public class RawArguments {
 	public static RawArgument<Duration> createDuration(RawBasicArgumentData<Duration> data, RawOptional rawOptional, ComponentSupplier supplier) {
 		return RawArgument.of(
 			Duration.class,
-			(cause, args) -> EMPTY.stream(),
+			(_, _) -> EMPTY.stream(),
 			(cause, args) -> args.length >= data.cursor() + 1 ? parseDuration(args[data.cursor()], cause.first(ServerPlayer.class).map(p -> p.locale()).orElse(plugin.getLocales().getSystemOrDefaultLocale())) : Optional.ofNullable(data.def()),
 			data.toRawArgumentData(CommandTreeNodeTypes.STRING.get().createNode()),
 			rawOptional,

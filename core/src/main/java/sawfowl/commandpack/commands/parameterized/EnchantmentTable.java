@@ -68,7 +68,7 @@ public class EnchantmentTable extends AbstractParameterizedCommand {
 				menu.open(target.get());
 				src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getEnchantmentTable().getSuccessStaff(target.get()));
 			} else {
-				delay((ServerPlayer) src, locale, consumer -> {
+				delay((ServerPlayer) src, locale, _ -> {
 					levels.put(((ServerPlayer) src).uniqueId(), finalLevel);
 					menu.open((ServerPlayer) src);
 				});

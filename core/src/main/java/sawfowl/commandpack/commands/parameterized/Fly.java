@@ -37,7 +37,7 @@ public class Fly extends AbstractParameterizedCommand {
 			} else sendStaffMessage(src, optTarget.get(), getFly(locale).getDisabeStaff(optTarget.get()), getFly(optTarget.get()).getDisabe());
 		} else {
 			if(!isPlayer) exception(getExceptions(locale).getPlayerNotPresent());
-			delay((ServerPlayer) src, locale, consumer -> {
+			delay((ServerPlayer) src, locale, _ -> {
 				if(setFly((ServerPlayer) src)) {
 					src.sendMessage(getFly(locale).getEnable());
 				} else src.sendMessage(getFly(locale).getDisabe());

@@ -36,7 +36,7 @@ public class Hat extends AbstractPlayerCommand {
 		if(handItem.type().equals(getAir())) exception(getHat(locale).getNotPresent());
 		if(plugin.getMainConfig().isBlackListHat(handItem)) exception(getHat(locale).getBlackListItem());
 		if(player.uniqueId().equals(src.uniqueId())) {
-			delay(player, locale, consumer -> {
+			delay(player, locale, _ -> {
 				player.equipment().peek(EquipmentTypes.HEAD.get()).ifPresent(headItem -> {
 					player.setItemInHand(HandTypes.MAIN_HAND.get(), headItem);
 				});
@@ -50,7 +50,7 @@ public class Hat extends AbstractPlayerCommand {
 				player.equipment().set(EquipmentTypes.HEAD.get(), handItem);
 				src.sendMessage(getHat(locale).getSuccessStaff(player));
 			} else {
-				src.sendMessage(getHat(locale).getFullInventory(player).clickEvent(SpongeComponents.executeCallback(cause -> {
+				src.sendMessage(getHat(locale).getFullInventory(player).clickEvent(SpongeComponents.executeCallback(_ -> {
 					player.equipment().set(EquipmentTypes.HEAD.get(), handItem);
 					src.sendMessage(getHat(locale).getSuccessStaff(player));
 				})));

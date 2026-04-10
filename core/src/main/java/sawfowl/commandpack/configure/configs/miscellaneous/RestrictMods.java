@@ -31,7 +31,7 @@ public class RestrictMods {
 	private List<String> mods = new ArrayList<>();
 	@Setting("Packets")
 	@LocalisedComment(path = {"Comments", "MainConfig", "RestrictMods", "Packets"}, plugin = "commandpack")
-	private Map<String, String> packets = IntStream.range(0, 1).boxed().collect(Collectors.toMap(entry -> "modid:packetid", entry -> "ModName"));
+	private Map<String, String> packets = IntStream.range(0, 1).boxed().collect(Collectors.toMap(_ -> "modid:packetid", _ -> "ModName"));
 
 	public boolean isEnable() {
 		return enable;

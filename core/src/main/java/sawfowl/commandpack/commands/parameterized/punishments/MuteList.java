@@ -49,7 +49,7 @@ public class MuteList extends AbstractParameterizedCommand {
 				if(isPlayer && context.hasPermission(Permissions.MUTEINFO)) element = element.hoverEvent(HoverEvent.showText(getMuteList(locale).getInfo(mute.getName(), mute.getSource().orElse(text("&4Server")), created(locale, mute), expire(locale, mute), mute.getReason().orElse(text("-")))));
 				mutes.add(context.hasPermission(Permissions.UNMUTE_STAFF) ? plugin.getLocales().getAsReferenced(locale).getButtons().getRemove().append(element) : element);
 			}
-			delay((ServerPlayer) src, locale, consumer -> {
+			delay((ServerPlayer) src, locale, _ -> {
 				sendPaginationList(src, title, text("=").color(title.color()), 10, mutes);
 			});
 		}

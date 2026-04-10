@@ -102,8 +102,8 @@ public class SetBalance extends AbstractRawCommand {
 		return Arrays.asList(
 				RawArgument.of(
 					String.class,
-					(cause, args) -> plugin.getEconomy().getEconomyService() == null ? Stream.empty() : plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier),
-					(cause, args) -> args.length >= 1 ? Optional.ofNullable(plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier).filter(var -> var.equals(args[0])).findFirst().orElse(args[0])) : Optional.empty(),
+					(_, _) -> plugin.getEconomy().getEconomyService() == null ? Stream.empty() : plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier),
+					(_, args) -> args.length >= 1 ? Optional.ofNullable(plugin.getEconomy().getEconomyService().streamUniqueAccounts().map(UniqueAccount::identifier).filter(var -> var.equals(args[0])).findFirst().orElse(args[0])) : Optional.empty(),
 					new RawArgumentData<>("Player", CommandTreeNodeTypes.GAME_PROFILE.get().createNode(), 0, null, null),
 					new RawOptional(true, false),
 					locale -> getExceptions(locale).getUserNotPresent()

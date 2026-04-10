@@ -32,7 +32,7 @@ public class Survival extends AbstractParameterizedCommand {
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
 			ServerPlayer player = getPlayer(context).orElse((ServerPlayer) src);
-			delay(player, locale, consumer -> {
+			delay(player, locale, _ -> {
 				player.offer(Keys.GAME_MODE, GameModes.SURVIVAL.get());
 				if(!player.uniqueId().equals(((ServerPlayer) src).uniqueId())) {
 					player.sendMessage(getGameMode(player).getSuccess(getGameMode(player).getSurvival()));

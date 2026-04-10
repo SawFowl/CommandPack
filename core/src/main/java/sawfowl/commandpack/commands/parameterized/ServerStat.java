@@ -52,7 +52,7 @@ public class ServerStat extends AbstractInfoCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
-			delay((ServerPlayer) src, locale, consumer -> {
+			delay((ServerPlayer) src, locale, _ -> {
 				sendStat(src, locale, isPlayer);
 			});
 		} else {
@@ -126,25 +126,25 @@ public class ServerStat extends AbstractInfoCommand {
 	private Component getButtons(ServerPlayer src, Locale locale) {
 		Component buttons = Component.empty();
 		if(src.hasPermission(Permissions.SERVER_STAT_STAFF_INFO_SYSTEM)) {
-			Component system = TextUtils.createCallBack(getServerStat(locale).getButtons().getSystem(), cause -> {
+			Component system = TextUtils.createCallBack(getServerStat(locale).getButtons().getSystem(), _ -> {
 				sendSystemInfo(src, locale, true);
 			});
 			buttons = buttons.append(system).append(text("&r "));
 		}
 		if(src.hasPermission(Permissions.SERVER_STAT_STAFF_INFO_WORLDS)) {
-			Component worlds = TextUtils.createCallBack(getServerStat(locale).getButtons().getWorlds(), cause -> {
+			Component worlds = TextUtils.createCallBack(getServerStat(locale).getButtons().getWorlds(), _ -> {
 				sendWorldsInfo(src, locale);
 			});
 			buttons = buttons.append(worlds).append(text("&r "));
 		}
 		if(src.hasPermission(Permissions.SERVER_STAT_STAFF_PLUGINS_LIST)) {
-			Component plugins = TextUtils.createCallBack(getServerStat(locale).getButtons().getPlugins(), cause -> {
+			Component plugins = TextUtils.createCallBack(getServerStat(locale).getButtons().getPlugins(), _ -> {
 				sendPluginsInfo(src, locale, true);
 			});
 			buttons = buttons.append(plugins);
 		}
 		if(plugin.isModifiedServer() && ((ServerPlayer) src).hasPermission(Permissions.SERVER_STAT_STAFF_MODS_LIST)) {
-			Component mods = TextUtils.createCallBack(getServerStat(locale).getButtons().getMods(), cause -> {
+			Component mods = TextUtils.createCallBack(getServerStat(locale).getButtons().getMods(), _ -> {
 				sendModsInfo(src, locale, true);
 			});
 			buttons = buttons.append(text("&r ")).append(mods);

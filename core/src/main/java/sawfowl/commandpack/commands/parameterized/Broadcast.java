@@ -29,7 +29,7 @@ public class Broadcast extends AbstractParameterizedCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
-			delay((ServerPlayer) src, locale, consumer -> {
+			delay((ServerPlayer) src, locale, _ -> {
 				Sponge.systemSubject().sendMessage(plugin.getLocales().getSystemAsReferenced().getCommands().getBroadcast().getTitle(text(getString(context, "Message").get())));
 				Sponge.server().onlinePlayers().forEach(player -> {
 					player.sendMessage(plugin.getLocales().getAsReferenced(player.locale()).getCommands().getBroadcast().getTitle(text(getString(context, "Message").get())));

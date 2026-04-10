@@ -45,7 +45,7 @@ public class BalanceTop extends AbstractRawCommand {
 		Currency currency = args.getCurrency(0).orElse(plugin.getEconomy().getEconomyServiceImpl().defaultCurrency());
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) audience;
-			delay(player, locale, condumer -> {
+			delay(player, locale, _ -> {
 				sendTop(audience, locale, currency, player.hasPermission(Permissions.BALANCE_HIDEN_VIEW), player.name());
 			});
 		} else sendTop(audience, locale, currency, true, null);

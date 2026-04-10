@@ -74,7 +74,7 @@ public abstract class MixinCustomPayloadsService {
 				find = null;
 			} else ChannelBuilder
 				.named((Identifier) (Object) channel)
-				.connectionHandler(consumer -> ((MinecraftServerAccessor) Sponge.server()).getconnection())
+				.connectionHandler(_ -> ((MinecraftServerAccessor) Sponge.server()).getconnection())
 				.serverAcceptedVersions(VersionTest.exact(channelVersion))
 				.clientAcceptedVersions(VersionTest.exact(channelVersion))
 				.networkProtocolVersion(channelVersion)

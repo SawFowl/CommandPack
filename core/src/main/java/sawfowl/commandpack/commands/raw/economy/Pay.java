@@ -43,7 +43,7 @@ public class Pay extends AbstractPlayerCommand {
 		UniqueAccount account = args.<UniqueAccount>get(0).get();
 		Optional<Currency> optCurrency = args.getCurrency(2);
 		if(account.uniqueId().equals(src.uniqueId())) exception(getExceptions(locale).getTargetSelf());
-		delay(src, locale, consumer -> {
+		delay(src, locale, _ -> {
 			if(optCurrency.isPresent()) {
 				Currency currency = optCurrency.get();
 				if(!src.hasPermission(Permissions.getCurrencyAccess(currency))) exception(getPay(locale).getNoPermission(currency));

@@ -10,8 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 import net.kyori.adventure.text.Component;
-
-import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 import net.minecraftforge.forgespi.language.IModInfo.ModVersion;
 
@@ -24,7 +23,7 @@ public abstract class MixinContainersImpl {
 
 	@Overwrite
 	private List<ModContainerImpl> findMods() {
-		return FMLLoader.getLoadingModList().getMods().stream().map(mod -> new ModContainerImpl(mod)).toList();
+		return ModList.getLoadedMods().stream().map(mod -> new ModContainerImpl((ModInfo) mod.getModInfo())).toList();
 	}
 
 	private class ModContainerImpl implements ModContainer {

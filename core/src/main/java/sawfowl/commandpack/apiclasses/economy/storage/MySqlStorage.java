@@ -78,7 +78,7 @@ public class MySqlStorage extends SqlStorage {
 				.collect(Collectors.toMap( 
 				Map.Entry::getKey, 
 				Map.Entry::getValue, 
-				(a, b) -> { throw new AssertionError(); }, 
+				(_, _) -> { throw new AssertionError(); }, 
 				LinkedHashMap<CurrencyConfig, Currency>::new 
 				));
 		uniqueAccountsTable = getSettings().getTables().getUniqueAccounts();
@@ -141,7 +141,7 @@ public class MySqlStorage extends SqlStorage {
 		List<Object> args = new ArrayList<Object>();
 		args.add(account.uniqueId());
 		args.add(account.identifier());
-		currenciesCollumns.forEach((k, v) -> {
+		currenciesCollumns.forEach((_, v) -> {
 			args.add(account.balance(v).doubleValue());
 		});
 		return args.toArray();
@@ -150,7 +150,7 @@ public class MySqlStorage extends SqlStorage {
 	private Object[] accountSqlArgs(Account account) {
 		List<Object> args = new ArrayList<Object>();
 		args.add(account.identifier());
-		currenciesCollumns.forEach((k, v) -> {
+		currenciesCollumns.forEach((_, v) -> {
 			args.add(account.balance(v).doubleValue());
 		});
 		return args.toArray();

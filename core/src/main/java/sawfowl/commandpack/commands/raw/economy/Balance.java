@@ -39,7 +39,7 @@ public class Balance extends AbstractRawCommand {
 		if(isPlayer) {
 			ServerPlayer source = (ServerPlayer) audience;
 			Optional<UniqueAccount> optTarget = args.get(0);
-			delay(source, locale, consumer -> {
+			delay(source, locale, _ -> {
 				List<Component> messages = new ArrayList<Component>();
 				if(optTarget.isPresent()) {
 					if(plugin.getEconomy().getEconomyServiceImpl().isHiden(optTarget.get()) && !source.hasPermission(Permissions.BALANCE_HIDEN_VIEW) && !source.hasPermission(Permissions.ECONOMY_STAFF)) exception(getBalance(locale).getHiden(optTarget.get().displayName()));

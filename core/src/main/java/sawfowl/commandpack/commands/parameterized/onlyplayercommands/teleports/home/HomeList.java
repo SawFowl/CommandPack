@@ -27,7 +27,7 @@ public class HomeList extends AbstractPlayerCommand {
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		PlayerData playerData = plugin.getPlayersData().getOrCreatePlayerData(src);
 		if(playerData.getHomes().size() == 0) exception(getHome(locale).getNotSet());
-		delay(src, locale, consumer -> {
+		delay(src, locale, _ -> {
 			PaginationList.builder()
 				.contents(playerData.homesListChatMenu(locale, true))
 				.linesPerPage(10)

@@ -31,7 +31,7 @@ public class Reply extends AbstractPlayerCommand {
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		Component message = text(getString(context, "Message").get());
-		delay(src, locale, consumer -> {
+		delay(src, locale, _ -> {
 			Optional<Audience> optTarget = plugin.getPlayersData().getTempData().getReply(src);
 			if(!optTarget.isPresent()) {
 				plugin.getPlayersData().getTempData().removeReply(src);

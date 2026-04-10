@@ -45,7 +45,7 @@ public class World extends AbstractWorldCommand {
 
 	@Override
 	public void process(CommandCause cause, Audience audience, Locale locale, boolean isPlayer, Mutable arguments, RawArgumentsMap args) throws CommandException {
-		getChildExecutors().forEach((k, v) -> {
+		getChildExecutors().forEach((_, v) -> {
 			if(v.canExecute(cause)) audience.sendMessage(v.usage(cause).color(NamedTextColor.GREEN));
 		});
 	}

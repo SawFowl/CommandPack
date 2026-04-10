@@ -38,7 +38,7 @@ public class Spawn extends AbstractParameterizedCommand {
 			if(!source.uniqueId().equals(player.uniqueId())) {
 				teleport(player, spawn);
 				src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getSpawn().getTeleportStaff(player));
-			} else delay(player, locale, consumer -> {
+			} else delay(player, locale, _ -> {
 				teleport(player, spawn);
 			});
 		} else {

@@ -41,11 +41,11 @@ public class Repair extends AbstractParameterizedCommand {
 					repairItems(target, select);
 					target.sendMessage(getRepair(target).getSuccessOther());
 					player.sendMessage(getRepair(locale).getSuccessStaff(target));
-				} else delay(player, locale, consumer -> {
+				} else delay(player, locale, _ -> {
 					repairItems(player, select);
 					player.sendMessage(getRepair(locale).getSuccess());
 				});
-			} else delay(player, locale, consumer -> {
+			} else delay(player, locale, _ -> {
 				repairItems(player, select);
 				player.sendMessage(getRepair(locale).getSuccess());
 			});

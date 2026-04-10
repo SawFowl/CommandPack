@@ -37,7 +37,7 @@ public class Nick extends AbstractParameterizedCommand {
 					clearName(src, locale, optTarget.get(), optTarget.get().uniqueId().equals(((ServerPlayer) src).uniqueId()));
 				} else setName(src, locale, optTarget.get(), text(nick), optTarget.get().uniqueId().equals(((ServerPlayer) src).uniqueId()));
 			} else {
-				delay((ServerPlayer) src, locale, consumer -> {
+				delay((ServerPlayer) src, locale, _ -> {
 					if(nick.equals("clear")) {
 						clearName(src, locale, (ServerPlayer) src, true);
 					} else setName(src, locale, (ServerPlayer) src, text(nick), true);

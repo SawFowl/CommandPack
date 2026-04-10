@@ -46,14 +46,14 @@ public class Teleport extends AbstractWorldCommand {
 					player.get().sendMessage(getWorld(player.get().locale()).getTeleport(location.worldKey().asString()));
 					audience.sendMessage(getWorld(locale).getTeleportStaff(player.get(), location.worldKey().asString()));
 				} else {
-					delay(((ServerPlayer) audience), locale, consumer -> {
+					delay(((ServerPlayer) audience), locale, _ -> {
 						plugin.getPlayersData().getTempData().setPreviousLocation(((ServerPlayer) audience));
 						((ServerPlayer) audience).setLocation(location);
 						audience.sendMessage(getWorld(locale).getTeleport(location.worldKey().asString()));
 					});
 				}
 			} else {
-				delay(((ServerPlayer) audience), locale, consumer -> {
+				delay(((ServerPlayer) audience), locale, _ -> {
 					plugin.getPlayersData().getTempData().setPreviousLocation(((ServerPlayer) audience));
 					((ServerPlayer) audience).setLocation(location);
 					audience.sendMessage(getWorld(locale).getTeleport(location.worldKey().asString()));

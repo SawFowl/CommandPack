@@ -39,7 +39,7 @@ public class MuteInfo extends AbstractRawCommand {
 		Mute mute = args.<Mute>get(0).get();
 		Component title = getCommands(locale).getMuteInfo().getTitle(mute.getName());
 		if(isPlayer) {
-			delay((ServerPlayer) audience, locale, consumer -> {
+			delay((ServerPlayer) audience, locale, _ -> {
 				sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getCommands(locale).getMuteInfo().getSuccess(mute.getSource().orElse(text("&4Server")), created(locale, mute), expire(locale, mute), mute.getReason().orElse(text("-")))));
 			});
 		} else sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getCommands(locale).getMuteInfo().getSuccess(mute.getSource().orElse(text("&4Server")), created(locale, mute), expire(locale, mute), mute.getReason().orElse(text("-")))));

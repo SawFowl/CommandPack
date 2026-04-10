@@ -36,7 +36,7 @@ public class InventorySee extends AbstractPlayerCommand {
 		if(!getUser(context).isPresent()) exception(getExceptions(locale).getPlayerNotPresent());
 		if(Sponge.server().player(getUser(context).get()).isPresent()) {
 			if(src.uniqueId().equals(Sponge.server().player(getUser(context).get()).get().uniqueId())) exception(getExceptions(locale).getTargetSelf());
-			delay(src, locale, consumer -> {
+			delay(src, locale, _ -> {
 				open(src, Sponge.server().player(getUser(context).get()).get());
 			});
 			return;
@@ -44,7 +44,7 @@ public class InventorySee extends AbstractPlayerCommand {
 		Sponge.server().userManager().load(getUser(context).get()).thenAccept(optUser -> {
 			if(optUser.isPresent()) {
 				try {
-					delay(src, locale, consumer -> {
+					delay(src, locale, _ -> {
 						open(src, optUser.get());
 					});
 				} catch (CommandException e) {

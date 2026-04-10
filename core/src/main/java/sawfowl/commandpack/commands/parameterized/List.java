@@ -29,7 +29,7 @@ public class List extends AbstractParameterizedCommand {
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) src;
-			delay(player, locale, consumer -> {
+			delay(player, locale, _ -> {
 				if(!player.hasPermission(Permissions.LIST_STAFF)) {
 					player.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getList().getSuccess(Sponge.server().onlinePlayers().stream().filter(p -> !p.get(Keys.VANISH_STATE).isPresent() || !p.get(Keys.VANISH_STATE).get().invisible()).map(p -> text(p.name())).collect(Collectors.toList())));
 				} else src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getList().getSuccess(Sponge.server().onlinePlayers().stream().map(p -> isVanished(p) ? plugin.getLocales().getAsReferenced(locale).getCommands().getList().getVanished(p) : text(p.name())).collect(Collectors.toList())));

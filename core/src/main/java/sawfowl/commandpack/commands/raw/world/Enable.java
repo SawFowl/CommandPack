@@ -66,8 +66,8 @@ public class Enable extends AbstractWorldCommand {
 	private RawArgument<ServerWorld> createWorldArgument() {
 		return RawArgument.of(
 			ServerWorld.class,
-			(cause, args) -> Sponge.server().worldManager().worlds().stream().filter(w -> !w.key().asString().equals(DefaultWorldKeys.DEFAULT.asString())).map(w -> w.key().asString()),
-			(cause, args) -> args.length >= 1 ? Sponge.server().worldManager().worlds().stream().filter(w -> !w.key().asString().equals(DefaultWorldKeys.DEFAULT.asString()) && w.key().asString().equals(args[0])).findFirst() : Optional.empty(),
+			(_, _) -> Sponge.server().worldManager().worlds().stream().filter(w -> !w.key().asString().equals(DefaultWorldKeys.DEFAULT.asString())).map(w -> w.key().asString()),
+			(_, args) -> args.length >= 1 ? Sponge.server().worldManager().worlds().stream().filter(w -> !w.key().asString().equals(DefaultWorldKeys.DEFAULT.asString()) && w.key().asString().equals(args[0])).findFirst() : Optional.empty(),
 			new RawArgumentData<>("World", CommandTreeNodeTypes.DIMENSION.get().createNode(), 0, null, null),
 			RawOptional.notOptional(),
 			locale -> getExceptions(locale).getWorldNotPresent()

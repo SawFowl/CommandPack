@@ -52,7 +52,7 @@ public class Warnings extends AbstractRawCommand {
 			audience.sendMessage(getWarns(locale).getAllTimeTarget(optWarns.get().getName(), optWarns.get().inAllTime()));
 			sendWarnsList(audience, locale, optWarns.get(), cause.hasPermission(Permissions.WARNS_STAFF), isPlayer);
 		} else {
-			delay((ServerPlayer) audience, locale, consumer -> {
+			delay((ServerPlayer) audience, locale, _ -> {
 				if(plugin.getPunishmentService().getWarns((ServerPlayer) audience).isPresent()) {
 					sendWarnsList(audience, locale, plugin.getPunishmentService().getWarns((ServerPlayer) audience).get(), cause.hasPermission(Permissions.WARNS_STAFF), isPlayer);
 				} else audience.sendMessage(getWarns(locale).getAllTime(0));
@@ -107,7 +107,7 @@ public class Warnings extends AbstractRawCommand {
 		if(warns.getWarns().isEmpty()) return;
 		List<Component> list = new ArrayList<>();
 		warns.getWarns().forEach(warn -> {
-			Component removeText = TextUtils.createCallBack(plugin.getLocales().getAsReferenced(locale).getButtons().getRemove(), consumer -> {
+			Component removeText = TextUtils.createCallBack(plugin.getLocales().getAsReferenced(locale).getButtons().getRemove(), _ -> {
 				Optional<Warns> find = plugin.getPunishmentService().getWarns(warns.getUniqueId());
 				plugin.getPunishmentService().removeWarn(warns.getUniqueId(), warn);
 				sendWarnsList(audience, locale, find.get(), remove, isPlayer);

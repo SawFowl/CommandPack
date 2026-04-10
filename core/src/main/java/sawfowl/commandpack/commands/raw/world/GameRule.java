@@ -137,8 +137,8 @@ public class GameRule extends AbstractWorldCommand {
 	private RawArgument<String> createValueArg() {
 		return RawArgument.of(
 			String.class,
-			(cause, args) -> args.length >= 2 && gamerules.containsKey(args[1]) && isBooleanType(gamerules.get(args[1])) ? Stream.of("true", "false") : RawArguments.EMPTY.stream(),
-			(cause, args) -> args.length > 2 && gamerules.containsKey(args[1]) ? Optional.ofNullable(args[2]) : Optional.empty(),
+			(_, args) -> args.length >= 2 && gamerules.containsKey(args[1]) && isBooleanType(gamerules.get(args[1])) ? Stream.of("true", "false") : RawArguments.EMPTY.stream(),
+			(_, args) -> args.length > 2 && gamerules.containsKey(args[1]) ? Optional.ofNullable(args[2]) : Optional.empty(),
 			new RawArgumentData<>("Value", CommandTreeNodeTypes.BOOL.get().createNode(), 2, null, null),
 			RawOptional.notOptional(),
 			locale -> getExceptions(locale).getBooleanNotPresent()

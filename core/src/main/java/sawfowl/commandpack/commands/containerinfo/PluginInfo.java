@@ -28,7 +28,7 @@ public class PluginInfo extends AbstractInfoCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
-			delay((ServerPlayer) src, locale, consumer -> {
+			delay((ServerPlayer) src, locale, _ -> {
 				sendPluginInfo(src, locale, getArgument(context, CommandParameters.PLUGIN).get().metadata());
 			});
 		} else {

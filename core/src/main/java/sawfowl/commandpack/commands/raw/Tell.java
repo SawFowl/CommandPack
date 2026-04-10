@@ -39,7 +39,7 @@ public class Tell extends AbstractRawCommand {
 			if(!cause.hasPermission(Permissions.TELL_STAFF) && target.get(Keys.VANISH_STATE).map(state -> state.invisible()).orElse(false)) exception(getExceptions(locale).getPlayerNotPresent());
 			ServerPlayer player = (ServerPlayer) audience;
 			if(target.uniqueId().equals(player.uniqueId())) exception(getExceptions(locale).getTargetSelf());
-			delay(player, locale, consumer -> {
+			delay(player, locale, _ -> {
 				player.sendMessage(getTell(locale).getSuccess(target.get(Keys.DISPLAY_NAME).orElse(text(target.name())), message));
 				target.sendMessage(getTell(target).getSuccessTarget(player.get(Keys.DISPLAY_NAME).orElse(text(player.name())), message));
 				plugin.getPlayersData().getTempData().addReply(target, player);

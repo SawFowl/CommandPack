@@ -36,7 +36,7 @@ public class GodMode extends AbstractParameterizedCommand {
 					sendStaffMessage(src, optTarget.get(), getGodMode(locale).getEnableStaff(optTarget.get()), getGodMode(optTarget.get()).getEnable());
 				} else sendStaffMessage(src, optTarget.get(), getGodMode(locale).getDisabeStaff(optTarget.get()), getGodMode(optTarget.get()).getDisabe());
 			} else {
-				delay((ServerPlayer) src, locale, consumer -> {
+				delay((ServerPlayer) src, locale, _ -> {
 					if(setGodMode((ServerPlayer) src)) {
 						src.sendMessage(getGodMode(locale).getEnable());
 					} else src.sendMessage(getGodMode(locale).getDisabe());

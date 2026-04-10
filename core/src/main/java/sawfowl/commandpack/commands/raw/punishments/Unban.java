@@ -74,7 +74,7 @@ public class Unban extends AbstractRawCommand {
 
 	@Override
 	public List<RawArgument<?>> arguments() {
-		return Arrays.asList(RawArguments.createProfileArgument(RawBasicArgumentData.createProfile(0, null, null), RawOptional.notOptional(), locale -> getCommands().getBanInfo().getNotPresent()));
+		return Arrays.asList(RawArguments.createProfileArgument(RawBasicArgumentData.createProfile(0, null, null), RawOptional.notOptional(), _ -> getCommands().getBanInfo().getNotPresent()));
 	}
 
 	@Override

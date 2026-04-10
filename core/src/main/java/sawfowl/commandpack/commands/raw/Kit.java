@@ -70,7 +70,7 @@ public class Kit extends AbstractRawCommand {
 			ServerPlayer target = args.getPlayer(1).orElse(src);
 			sawfowl.commandpack.configure.configs.player.PlayerData data = (sawfowl.commandpack.configure.configs.player.PlayerData) plugin.getPlayersData().getOrCreatePlayerData(target);
 			if(target.uniqueId().equals(src.uniqueId())) {
-				delay(target, locale, consumer -> {
+				delay(target, locale, _ -> {
 					prepare(cause, audience, locale, src, data, kit, true, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), false);
 				});
 			} else prepare(cause, audience, locale, target, data, kit, false, Duration.ofMillis(System.currentTimeMillis()).getSeconds(), true);
@@ -113,7 +113,7 @@ public class Kit extends AbstractRawCommand {
 			Component title = getKit(locale).getTitle();
 			plugin.getKitService().getKits().forEach(kit -> {
 				Component access = !kit.isNeedPerm() || (player.hasPermission(kit.permission()) || player.hasPermission(Permissions.KIT_STAFF)) ? text(" &7[&a+&7] ") : text(" &7[&c-&7] ");
-				kits.add(TextUtils.createCallBack(getKit(locale).getView(), c -> {
+				kits.add(TextUtils.createCallBack(getKit(locale).getView(), _ -> {
 							kit.asMenu(getContainer(), player, true).open(player);
 						}
 					)
@@ -172,7 +172,7 @@ public class Kit extends AbstractRawCommand {
 				giveKit(cause, audience, locale, player, data, kit, equals, currentTime, items, null, null, null);
 				break;
 			case MESSAGE_IF_INVENTORY_FULL:
-				player.sendMessage(TextUtils.createCallBack(getKit(player).getInventoryFull(), c -> {
+				player.sendMessage(TextUtils.createCallBack(getKit(player).getInventoryFull(), _ -> {
 					List<ItemStack> toGive = new ArrayList<>();
 					List<ItemStack> toSpawn = new ArrayList<>();
 					int emptySlots = player.inventory().primary().freeCapacity();

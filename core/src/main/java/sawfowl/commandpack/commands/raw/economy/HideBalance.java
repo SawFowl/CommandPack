@@ -46,7 +46,7 @@ public class HideBalance extends AbstractRawCommand {
 					player.sendMessage(getHideBalance(player).getResult(plugin.getEconomy().getEconomyServiceImpl().isHiden(((ServerPlayer) audience).uniqueId())));
 				});
 			} else {
-				delay((ServerPlayer) audience, locale, consumer -> {
+				delay((ServerPlayer) audience, locale, _ -> {
 					plugin.getEconomy().getEconomyServiceImpl().hide(((ServerPlayer) audience).uniqueId());
 					audience.sendMessage(getHideBalance(locale).getResult(plugin.getEconomy().getEconomyServiceImpl().isHiden(((ServerPlayer) audience).uniqueId())));
 				});

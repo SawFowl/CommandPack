@@ -26,11 +26,11 @@ public class TpaHereAll extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		delay(src, locale, consumer -> {
+		delay(src, locale, _ -> {
 			UUID source = src.uniqueId();
 			Sponge.server().onlinePlayers().forEach(target -> {
 				TpaAccess access = new TpaAccess();
-				if(!target.uniqueId().equals(src.uniqueId())) target.sendMessage(getTpa(target).getRequestHere(src).clickEvent(SpongeComponents.executeCallback(cause -> {
+				if(!target.uniqueId().equals(src.uniqueId())) target.sendMessage(getTpa(target).getRequestHere(src).clickEvent(SpongeComponents.executeCallback(_ -> {
 					if(!access.access) return;
 					if(Sponge.server().player(source).isPresent()) {
 						plugin.getPlayersData().getTempData().setPreviousLocation(target);

@@ -27,7 +27,7 @@ public class TeleportHere extends AbstractPlayerCommand {
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
 		ServerPlayer target = getPlayer(context).get();
 		if(target.uniqueId().equals(src.uniqueId())) exception(plugin.getLocales().getAsReferenced(locale).getCommandExceptions().getTargetSelf());
-		delay(target, locale, consumer -> {
+		delay(target, locale, _ -> {
 			plugin.getPlayersData().getTempData().setPreviousLocation(target);
 			target.setLocation(src.serverLocation());
 		});

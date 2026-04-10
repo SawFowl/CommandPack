@@ -41,10 +41,10 @@ public class Mods extends AbstractInfoCommand {
 			}
 			Component title = plugin.getLocales().getAsReferenced(locale).getCommands().getServerStat().getPlayerMods(target, mods.size());
 			if(isPlayer) {
-				delay((ServerPlayer) src, locale, consumer -> sendPaginationList(src, title, Component.text("=").color(NamedTextColor.DARK_AQUA), linesPerPage, mods));
+				delay((ServerPlayer) src, locale, _ -> sendPaginationList(src, title, Component.text("=").color(NamedTextColor.DARK_AQUA), linesPerPage, mods));
 			} else src.sendMessage(title.append(Component.text(": ")).append(Component.join(JoinConfiguration.separators(Component.text(", "), Component.text(".")), mods)));
 		} else if(isPlayer) {
-			delay((ServerPlayer) src, locale, consumer -> sendModsInfo(src, locale, isPlayer));
+			delay((ServerPlayer) src, locale, _ -> sendModsInfo(src, locale, isPlayer));
 		} else sendModsInfo(src, locale, isPlayer);
 	}
 

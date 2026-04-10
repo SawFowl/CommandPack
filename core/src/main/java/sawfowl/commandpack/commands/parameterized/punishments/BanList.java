@@ -49,7 +49,7 @@ public class BanList extends AbstractParameterizedCommand {
 		plugin.getPunishmentService().getAllIPBans().forEach(ban -> {
 			Component banInfo = getBanlist(locale).getElement(ban.address().getHostAddress());
 			if(isPlayer && context.hasPermission(Permissions.BANINFO)) banInfo = banInfo.hoverEvent(HoverEvent.showText(getBanlist(locale).getInfo().getIP(ban.address().getHostAddress(), ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-")))));
-			bans.add(unban ? Text.of(plugin.getLocales().getAsReferenced(locale).getButtons().getRemove()).createCallBack(cause -> {
+			bans.add(unban ? Text.of(plugin.getLocales().getAsReferenced(locale).getButtons().getRemove()).createCallBack(_ -> {
 				plugin.getPunishmentService().remove(ban);
 				src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getUnbanIP().getSuccess(ban.address().getHostAddress()));
 			}).append(banInfo).get() : banInfo);
@@ -62,14 +62,14 @@ public class BanList extends AbstractParameterizedCommand {
 				i++;
 			}
 		} else {
-			Component title = getBanlist(locale).getTitle().replace(new String[] {"%profile%", "%ip%"}, new Component[] {Text.of(getBanlist(locale).getProfile()).createCallBack(cause -> {
+			Component title = getBanlist(locale).getTitle().replace(new String[] {"%profile%", "%ip%"}, new Component[] {Text.of(getBanlist(locale).getProfile()).createCallBack(_ -> {
 				try {
 					sendProfileBans(context, src, locale, isPlayer);
 				} catch (CommandException e) {
 					src.sendMessage(e.componentMessage());
 				}
 			}).get(), getBanlist(locale).getIP()}).get();
-			delay((ServerPlayer) src, locale, consumer -> {
+			delay((ServerPlayer) src, locale, _ -> {
 				sendPaginationList(src, title, text("=").color(title.color()), 10, bans);
 			});
 		}
@@ -84,7 +84,7 @@ public class BanList extends AbstractParameterizedCommand {
 			if(isPlayer) banInfo = banInfo.hoverEvent(
 					HoverEvent.showText(getBanlist(locale).getInfo().getPlayer(ban.profile().name().orElse(ban.profile().examinableName()), ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-"))))
 					);
-			bans.add(unban ? Text.of(plugin.getLocales().getAsReferenced(locale).getButtons().getRemove()).createCallBack(cause -> {
+			bans.add(unban ? Text.of(plugin.getLocales().getAsReferenced(locale).getButtons().getRemove()).createCallBack(_ -> {
 				plugin.getPunishmentService().remove(ban);
 				src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getUnban().getSuccess(ban.profile()));
 			}).append(banInfo).get() : banInfo);
@@ -97,7 +97,7 @@ public class BanList extends AbstractParameterizedCommand {
 				i++;
 			}
 		} else {
-			Component title = getBanlist(locale).getTitle().replace(new String[] {"%profile%", "%ip%"}, getBanlist(locale).getProfile(), Text.of(getBanlist(locale).getIP()).createCallBack(cause -> {
+			Component title = getBanlist(locale).getTitle().replace(new String[] {"%profile%", "%ip%"}, getBanlist(locale).getProfile(), Text.of(getBanlist(locale).getIP()).createCallBack(_ -> {
 				try {
 					sendIpBans(context, src, locale, isPlayer);
 				} catch (CommandException e) {

@@ -29,7 +29,7 @@ public class Back extends AbstractPlayerCommand {
 		Optional<ServerLocation> location = plugin.getPlayersData().getTempData().getPreviousLocation(src);
 		if(!location.isPresent()) exception(getBack(locale).getNotFound());
 		if(location.get().world() == null || !Sponge.server().worldManager().worldExists(location.get().worldKey()) || !location.get().world().isLoaded()) exception(getBack(locale).getNotLoadedWorld());
-		delay(src, locale, consumer -> {
+		delay(src, locale, _ -> {
 			plugin.getPlayersData().getTempData().setPreviousLocation(src);
 			src.setLocation(location.get());
 		});

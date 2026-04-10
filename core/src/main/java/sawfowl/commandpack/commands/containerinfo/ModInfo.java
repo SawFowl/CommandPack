@@ -27,7 +27,7 @@ public class ModInfo extends AbstractInfoCommand {
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(!context.one(CommandParameters.MOD).isPresent()) exception(plugin.getLocales().getAsReferenced(locale).getCommandExceptions().getModNotPresent());
 		if(isPlayer) {
-			delay((ServerPlayer) src, locale, consumer -> {
+			delay((ServerPlayer) src, locale, _ -> {
 				sendModInfo(src, locale, getArgument(context, CommandParameters.MOD).orElse(null));
 			});
 		} else {

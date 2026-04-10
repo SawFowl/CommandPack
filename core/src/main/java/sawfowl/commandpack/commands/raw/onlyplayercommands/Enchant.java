@@ -46,7 +46,7 @@ public class Enchant extends AbstractPlayerCommand {
 		ItemStack stack = src.itemInHand(HandTypes.MAIN_HAND);
 		List<Enchantment> enchantments = new ArrayList<>(stack.get(Keys.APPLIED_ENCHANTMENTS).orElse(new ArrayList<>()));
 		enchantments.add(Enchantment.builder().type(enchant).level(level).build());
-		delay(src, locale, consumer -> {
+		delay(src, locale, _ -> {
 			stack.offer(Keys.APPLIED_ENCHANTMENTS, enchantments);
 			src.setItemInHand(HandTypes.MAIN_HAND, stack);
 			src.sendMessage(getCommands(locale).getEnchant().getSuccess());

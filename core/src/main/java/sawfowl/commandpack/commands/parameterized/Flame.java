@@ -56,7 +56,7 @@ public class Flame extends AbstractParameterizedCommand {
 					return;
 				}
 			}
-			delay((ServerPlayer) src, locale, consumer -> {
+			delay((ServerPlayer) src, locale, _ -> {
 				if(damage) {
 					((ServerPlayer) src).offer(Keys.FIRE_TICKS, randomTicks());
 				} else ((ServerPlayer) src).offer(Keys.IS_AFLAME, true);

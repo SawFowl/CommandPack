@@ -51,14 +51,14 @@ public class Warp extends AbstractRawCommand {
 						player.sendMessage(getWarp(locale).getSuccessStaff(optTarget.get(), optWarp.get().asComponent()));
 						optTarget.get().sendMessage(getWarp(optTarget.get()).getSuccessOther(optWarp.get().asComponent()));
 					} else {
-						delay(player, locale, consumer -> {
+						delay(player, locale, _ -> {
 							teleport(optWarp.get(), player);
 							player.sendMessage(getWarp(locale).getSuccess(optWarp.get().asComponent()));
 						});
 					}
 				}
 			} else {
-				delay(player, locale, consumer -> {
+				delay(player, locale, _ -> {
 					if(optWarp.isPresent()) {
 						teleport(optWarp.get(), player);
 						player.sendMessage(getWarp(locale).getSuccess(optWarp.get().asComponent()));

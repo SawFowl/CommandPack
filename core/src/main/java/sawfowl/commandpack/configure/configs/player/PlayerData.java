@@ -56,14 +56,14 @@ import sawfowl.localeapi.api.TextUtils;
 public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerData {
 
 	public PlayerData() {
-		backpackData.setSaveConsumer(consumer -> {
+		backpackData.setSaveConsumer(_ -> {
 			save();
 		});
 	}
 	public PlayerData(ServerPlayer player) {
 		this.name = player.name();
 		this.uuid = player.uniqueId();
-		backpackData.setSaveConsumer(consumer -> {
+		backpackData.setSaveConsumer(_ -> {
 			save();
 		});
 	}
@@ -189,7 +189,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	}
 	@Override
 	public Backpack getBackpack() {
-		if(!backpackData.canSave()) backpackData.setSaveConsumer(consumer -> {
+		if(!backpackData.canSave()) backpackData.setSaveConsumer(_ -> {
 			save();
 		});
 		return backpackData;
@@ -199,7 +199,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	public void setBackpack(Backpack backpack) {
 		this.backpackData = backpack instanceof BackpackData ? (BackpackData) backpack : (BackpackData) Backpack.builder().copyFrom(backpack).build();
 		save();
-		backpackData.setSaveConsumer(consumer -> {
+		backpackData.setSaveConsumer(_ -> {
 			save();
 		});
 	}
@@ -209,7 +209,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 		LocalesList<AbstractLocale> locales = geLocales();
 		List<Component> list = new ArrayList<>();
 		homes.forEach(home -> {
-			Component remove = allowRemove ? locales.getAsReferenced(locale).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(cause -> {
+			Component remove = allowRemove ? locales.getAsReferenced(locale).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(_ -> {
 				removeHome(home.getName());
 				if(!homes.stream().filter(HomeData::isDefault).findFirst().isPresent()) {
 					if(!homes.isEmpty()) homes.iterator().next().setDefault();
@@ -231,7 +231,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 		LocalesList<AbstractLocale> locales = geLocales();
 		List<Component> list = new ArrayList<>();
 		warps.forEach(warp -> {
-			Component remove = allowRemove.test(warp) ? locales.getAsReferenced(locale).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(cause -> {
+			Component remove = allowRemove.test(warp) ? locales.getAsReferenced(locale).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(_ -> {
 				removeWarp(warp.getName());
 				save();
 			})) : Component.empty();

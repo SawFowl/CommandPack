@@ -43,7 +43,7 @@ public class Warps extends AbstractParameterizedCommand {
 			return;
 		}
 		ServerPlayer player = (ServerPlayer) src;
-		delay(player, locale, consumer -> {
+		delay(player, locale, _ -> {
 			player.sendMessage(getWarps(locale).getWait());
 			List<Component> serverWarps = getServerWarps(player);
 			List<Component> playersWarps = getPlayersWarps(player);
@@ -80,7 +80,7 @@ public class Warps extends AbstractParameterizedCommand {
 	}
 
 	private void sendServerWarps(ServerPlayer player, List<Component> warps) {
-		Component header = getWarps(player).getHeader(getWarps(player).getServer(), getWarps(player).getPlayer().clickEvent(SpongeComponents.executeCallback(cause -> {
+		Component header = getWarps(player).getHeader(getWarps(player).getServer(), getWarps(player).getPlayer().clickEvent(SpongeComponents.executeCallback(_ -> {
 			Sponge.asyncScheduler().executor(plugin.getPluginContainer()).execute(() -> {
 				player.sendMessage(getWarps(player).getWait());
 				List<Component> playersWarps = getPlayersWarps(player);
@@ -93,7 +93,7 @@ public class Warps extends AbstractParameterizedCommand {
 	}
 
 	private void sendPlayersWarps(ServerPlayer player, List<Component> warps) {
-		Component header = getWarps(player).getHeader(getWarps(player).getServer().clickEvent(SpongeComponents.executeCallback(cause -> {
+		Component header = getWarps(player).getHeader(getWarps(player).getServer().clickEvent(SpongeComponents.executeCallback(_ -> {
 			Sponge.asyncScheduler().executor(plugin.getPluginContainer()).execute(() -> {
 				player.sendMessage(getWarps(player).getWait());
 				List<Component> serverWarps = getServerWarps(player);
@@ -117,11 +117,11 @@ public class Warps extends AbstractParameterizedCommand {
 	private List<Component> getServerWarps(ServerPlayer player) {
 		List<Component> list = new ArrayList<>();
 		plugin.getPlayersData().getAdminWarps().forEach((name, warp) -> {
-			Component delete = !player.hasPermission(Permissions.WARP_STAFF) ? Component.empty() : plugin.getLocales().getAsReferenced(player).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(cause -> {
+			Component delete = !player.hasPermission(Permissions.WARP_STAFF) ? Component.empty() : plugin.getLocales().getAsReferenced(player).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(_ -> {
 				plugin.getPlayersData().removeWarp(name, null);
 				sendServerWarps(player, getServerWarps(player));
 			}));
-			Component teleport = player.hasPermission(Permissions.getWarpPermission(name)) || player.hasPermission(Permissions.WARP_STAFF) ? plugin.getLocales().getAsReferenced(player).getButtons().getTeleportClickable().clickEvent(SpongeComponents.executeCallback( cause -> {
+			Component teleport = player.hasPermission(Permissions.getWarpPermission(name)) || player.hasPermission(Permissions.WARP_STAFF) ? plugin.getLocales().getAsReferenced(player).getButtons().getTeleportClickable().clickEvent(SpongeComponents.executeCallback( _ -> {
 				plugin.getPlayersData().getTempData().setPreviousLocation(player);
 				warp.moveHere(player);
 				player.sendMessage(getWarp(player).getSuccess(warp.asComponent()));
@@ -136,11 +136,11 @@ public class Warps extends AbstractParameterizedCommand {
 		plugin.getPlayersData().getPlayersData().forEach(data -> {
 			data.getWarps().forEach(warp -> {
 				if(!warp.isPrivate() || player.hasPermission(Permissions.WARP_STAFF) || plugin.getPlayersData().getOrCreatePlayerData(player).containsWarp(warp.getPlainName())) {
-					Component delete = !player.hasPermission(Permissions.WARP_STAFF) && !plugin.getPlayersData().getOrCreatePlayerData(player).containsWarp(warp.getPlainName()) ? Component.empty() : plugin.getLocales().getAsReferenced(player).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(cause -> {
+					Component delete = !player.hasPermission(Permissions.WARP_STAFF) && !plugin.getPlayersData().getOrCreatePlayerData(player).containsWarp(warp.getPlainName()) ? Component.empty() : plugin.getLocales().getAsReferenced(player).getButtons().getRemove().clickEvent(SpongeComponents.executeCallback(_ -> {
 					plugin.getPlayersData().removeWarp(warp.getPlainName(), data);
 					sendPlayersWarps(player, getPlayersWarps(player));
 				}));
-				Component teleport = plugin.getLocales().getAsReferenced(player).getButtons().getTeleportClickable().clickEvent(SpongeComponents.executeCallback( cause -> {
+				Component teleport = plugin.getLocales().getAsReferenced(player).getButtons().getTeleportClickable().clickEvent(SpongeComponents.executeCallback( _ -> {
 					if(data.containsWarp(warp.getName())) {
 						plugin.getPlayersData().getTempData().setPreviousLocation(player);
 						warp.moveHere(player);

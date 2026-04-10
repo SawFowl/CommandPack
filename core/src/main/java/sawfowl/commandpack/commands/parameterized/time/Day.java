@@ -32,7 +32,7 @@ public class Day extends AbstractParameterizedCommand {
 	@Override
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
-			delay((ServerPlayer) src, locale, consumer -> {
+			delay((ServerPlayer) src, locale, _ -> {
 				setTime(src, locale, getArgument(context, ServerWorld.class, "World").orElse(((ServerPlayer) src).world()));
 			});
 		} else setTime(src, locale, getArgument(context, ServerWorld.class, "World").orElse(Sponge.server().worldManager().world(DefaultWorldKeys.DEFAULT).get()));

@@ -39,7 +39,7 @@ public class BanInfo extends AbstractRawCommand {
 		Profile ban = args.<Profile>get(0).get();
 		Component title = getCommands(locale).getBanInfo().getTitle(ban.profile().name().orElse(ban.profile().examinableName()));
 		if(isPlayer) {
-			delay((ServerPlayer) audience, locale, consumer -> {
+			delay((ServerPlayer) audience, locale, _ -> {
 				sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getCommands(locale).getBanInfo().getSuccess(ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-")))));
 			});
 		} else sendPaginationList(audience, title, text("=").color(title.color()), 10, Arrays.asList(getCommands(locale).getBanInfo().getSuccess(ban.banSource().orElse(text("&4Server")), created(locale, ban), expire(locale, ban), ban.reason().orElse(text("-")))));

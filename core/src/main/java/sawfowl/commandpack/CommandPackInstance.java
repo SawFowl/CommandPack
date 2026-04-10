@@ -323,7 +323,7 @@ public class CommandPackInstance {
 			if(!profile.name().isPresent()) {
 				Sponge.server().userManager().load(profile).thenAccept(optUser -> {
 					optUser.ifPresent(user -> ((TempPlayerDataImpl) playersData.getTempData()).registerUser(user.name()));
-				}).thenAccept(v -> {
+				}).thenAccept(_ -> {
 					Sponge.server().userManager().removeFromCache(profile.uuid());
 				});
 			} else ((TempPlayerDataImpl) playersData.getTempData()).registerUser(profile.name().get());
@@ -355,7 +355,7 @@ public class CommandPackInstance {
 		}
 		if(getMainConfig().getEconomy().isEnable()) economy.getEconomyServiceImpl().getCurrenciesMap().forEach((ch, currency) -> 
 			getMainConfig().getEconomy().getCurrency(ch).ifPresent(config -> 
-				event.registry(RegistryTypes.CURRENCY, (rh, rs) -> rs.register(ResourceKey.resolve(config.getKey()), currency))
+				event.registry(RegistryTypes.CURRENCY, (_, rs) -> rs.register(ResourceKey.resolve(config.getKey()), currency))
 			)
 		);
 	}
@@ -444,11 +444,11 @@ public class CommandPackInstance {
 	}
 
 	private void registerPlaceholders() {
-		Placeholders.register(ServerWorld.class, "WorldTPS", (text, world, def) -> (text.replace("%world-tps%", BigDecimal.valueOf(CPServerWorld.cast(world).getTPS()).setScale(2, RoundingMode.HALF_UP).doubleValue())));
-		Placeholders.register(ServerWorld.class, "WorldTicks", (text, world, def) -> (text.replace("%world-ticks%", BigDecimal.valueOf(CPServerWorld.cast(world).getTickTime()).setScale(2, RoundingMode.HALF_UP).doubleValue())));
+		Placeholders.register(ServerWorld.class, "WorldTPS", (text, world, _) -> (text.replace("%world-tps%", BigDecimal.valueOf(CPServerWorld.cast(world).getTPS()).setScale(2, RoundingMode.HALF_UP).doubleValue())));
+		Placeholders.register(ServerWorld.class, "WorldTicks", (text, world, _) -> (text.replace("%world-ticks%", BigDecimal.valueOf(CPServerWorld.cast(world).getTickTime()).setScale(2, RoundingMode.HALF_UP).doubleValue())));
 		if(getMainConfig().getPunishment().isEnable()) {
-			Placeholders.register(ServerPlayer.class, "PlayerWarns", (text, player, def) -> (text.replace("%player-warns%", getPunishmentService().getWarns(player).map(warns -> warns.totalWarns() + "/" + warns.inAllTime()).orElse("0"))));
-			Placeholders.register(ServerPlayer.class, "PlayerMuteExpire", (text, player, def) -> (text.replace("%player-mute-expire%", getPunishmentService().getMute(player).map(mute -> expire(player.locale(), mute)).orElse(Component.empty()))));
+			Placeholders.register(ServerPlayer.class, "PlayerWarns", (text, player, _) -> (text.replace("%player-warns%", getPunishmentService().getWarns(player).map(warns -> warns.totalWarns() + "/" + warns.inAllTime()).orElse("0"))));
+			Placeholders.register(ServerPlayer.class, "PlayerMuteExpire", (text, player, _) -> (text.replace("%player-mute-expire%", getPunishmentService().getMute(player).map(mute -> expire(player.locale(), mute)).orElse(Component.empty()))));
 		}
 	}
 

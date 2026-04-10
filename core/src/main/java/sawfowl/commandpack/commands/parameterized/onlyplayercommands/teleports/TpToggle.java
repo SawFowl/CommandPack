@@ -23,7 +23,7 @@ public class TpToggle extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		delay(src, locale, consumer -> {
+		delay(src, locale, _ -> {
 			plugin.getPlayersData().getTempData().tpToggle(src);
 			if(plugin.getPlayersData().getTempData().isDisableTpRequests(src)) {
 				src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getTpToggle().getDisable());

@@ -1,28 +1,26 @@
 plugins {
 	id 'java'
 	id 'eclipse'
-	id 'net.minecraftforge.gradle' version '6.0.46'
-	id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
+	id 'net.minecraftforge.gradle' version '[7.0.13,8.0)'
 }
 
 minecraft {
-	mappings channel: 'official', version: "${minecraft}"
-	reobf = false
+	accessTransformer = true
+}
+
+repositories {
+	minecraft.mavenizer(it)
+	maven fg.forgeMaven
+	maven fg.minecraftLibsMaven
 }
 
 dependencies {
-	minecraft "net.minecraftforge:forge:${forge}"
+	implementation minecraft.dependency('net.minecraftforge:forge:26.1-62.0.1')
+	annotationProcessor 'net.minecraftforge:eventbus-validator:7.0.1'
 	implementation "org.spongepowered:spongeapi:${api}"
 	implementation "org.spongepowered:mixin:${mixin}"
-	annotationProcessor "org.spongepowered:mixin:${mixin}:processor"
-	//implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
 	implementation project(':core')
 	implementation fileTree(dir: 'libs', include: '*.jar')
-}
-
-mixin {
-	add sourceSets.main, "commandpack.refmap.json"
-	defaultObfuscationEnv "searge"
 }
 
 jar {

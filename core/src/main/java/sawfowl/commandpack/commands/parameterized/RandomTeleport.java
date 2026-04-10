@@ -66,7 +66,7 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 						}
 					} else {
 						try {
-							delay(player, locale, consumer -> {
+							delay(player, locale, _ -> {
 								teleport(player, optional.get());
 							});
 						} catch (CommandException e) {
@@ -96,7 +96,7 @@ public class RandomTeleport extends AbstractParameterizedCommand {
 					}
 					if(isCommandBlock(context.cause()) || isCommandBlockMinecart(context.cause())) {
 						try {
-							delay(player, locale, consumer -> {
+							delay(player, locale, _ -> {
 								teleport(player, optional.get());
 								player.sendMessage(getRandomTeleport(player).getSuccess(optional.get()));
 							});

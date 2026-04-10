@@ -30,7 +30,7 @@ public class SetWarp extends AbstractPlayerCommand {
 
 	@Override
 	public void execute(CommandContext context, ServerPlayer src, Locale locale) throws CommandException {
-		delay(src, locale, consumer -> {
+		delay(src, locale, _ -> {
 			PlayerData playerData = plugin.getPlayersData().getOrCreatePlayerData(src);
 			String name = getString(context, "Warp", src.name());
 			boolean admin = getBoolean(context, "Admin", false);

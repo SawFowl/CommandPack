@@ -50,7 +50,7 @@ public class Seen extends AbstractParameterizedCommand {
 	public void execute(CommandContext context, Audience src, Locale locale, boolean isPlayer) throws CommandException {
 		if(isPlayer) {
 			ServerPlayer player = (ServerPlayer) src;
-			delay(player, locale, consumer -> {
+			delay(player, locale, _ -> {
 				Sponge.server().userManager().load(getUser(context).orElse(player.name())).thenAccept(user -> {
 					Sponge.server().scheduler().executor(getContainer()).execute(() -> {
 						sendInfo(context, src, locale, user.orElse(player.user()), player.hasPermission(Permissions.SEEN_STAFF) || (user.isPresent() && user.get().uniqueId().equals(player.uniqueId())), 10, isPlayer);
@@ -150,7 +150,7 @@ public class Seen extends AbstractParameterizedCommand {
 			Text warnsText = getSeen(locale).getWarns().replace(Placeholders.VALUE, optWarns.map(w -> w.totalWarns() + "/" + w.inAllTime()).orElse("0/0"));
 			if(optWarns.isPresent() && context.hasPermission(Permissions.WARNS_OTHER)) {
 				Warns warns = optWarns.get();
-				warnsText = warnsText.createCallBack(cause -> {
+				warnsText = warnsText.createCallBack(_ -> {
 					sendWarnsList(audience, locale, warns, context.hasPermission(Permissions.WARNS_STAFF), isPlayer);
 				});
 			}
@@ -174,7 +174,7 @@ public class Seen extends AbstractParameterizedCommand {
 		if(warns.getWarns().isEmpty()) return;
 		List<Component> list = new ArrayList<>();
 		warns.getWarns().forEach(warn -> {
-			Component removeText = TextUtils.createCallBack(plugin.getLocales().getAsReferenced(locale).getButtons().getRemove(), cause -> {
+			Component removeText = TextUtils.createCallBack(plugin.getLocales().getAsReferenced(locale).getButtons().getRemove(), _ -> {
 				Optional<Warns> find = plugin.getPunishmentService().getWarns(warns.getUniqueId());
 				plugin.getPunishmentService().removeWarn(warns.getUniqueId(), warn);
 				sendWarnsList(audience, locale, find.get(), remove, isPlayer);

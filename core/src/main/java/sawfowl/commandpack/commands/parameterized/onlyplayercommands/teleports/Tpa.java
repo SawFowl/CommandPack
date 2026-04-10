@@ -31,10 +31,10 @@ public class Tpa extends AbstractPlayerCommand {
 		ServerPlayer target = getPlayer(context).get();
 		if(target.uniqueId().equals(src.uniqueId())) exception(plugin.getLocales().getAsReferenced(locale).getCommandExceptions().getTargetSelf());
 		if(plugin.getPlayersData().getTempData().isDisableTpRequests(target)) exception(getTpa(locale).getDisabledRequest());
-		delay(src, locale, consumer -> {
+		delay(src, locale, _ -> {
 			UUID source = src.uniqueId();
 			TpaAccess access = new TpaAccess();
-			target.sendMessage(getTpa(target).getRequest(src).clickEvent(SpongeComponents.executeCallback(cause -> {
+			target.sendMessage(getTpa(target).getRequest(src).clickEvent(SpongeComponents.executeCallback(_ -> {
 				if(!access.access) return;
 				if(Sponge.server().player(source).isPresent()) {
 					plugin.getPlayersData().getTempData().setPreviousLocation(src);
