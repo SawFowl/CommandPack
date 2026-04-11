@@ -18,9 +18,9 @@ import sawfowl.commandpack.mixins.PortalShapeAccessor;
 @Mixin(PortalShape.class)
 public abstract class MixinPortalShapeImpl implements PortalShapeAccessor {
 
-	@Shadow private int numPortalBlocks;
-	@Shadow private BlockPos bottomLeft;
-	@Shadow private int height;
+    @Shadow @Final private int numPortalBlocks;
+	@Shadow @Final private BlockPos bottomLeft;
+	@Shadow @Final private int height;
 	@Shadow @Final private int width;
 	@Shadow @Final private Direction rightDir;
 	private Vector3i bl;

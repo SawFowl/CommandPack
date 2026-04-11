@@ -35,7 +35,6 @@ public class MixinServerPlayerGameMode {
 
 	@ModifyVariable(
 		method = "incrementDestroyProgress",
-		ordinal = 0,
 		slice = @Slice(
 			from = @At(
 				value = "INVOKE",
@@ -45,7 +44,8 @@ public class MixinServerPlayerGameMode {
 		at = @At(
 			value = "STORE",
 			ordinal = 0
-		)
+		),
+		name = "destroyProgress"
 	)
 	private float commandpack$modifyDestroyProgress(float value, BlockState $$0, BlockPos $$1, int $$2) {
 		if(Sponge.eventManager().post(
