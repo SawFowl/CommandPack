@@ -1,28 +1,47 @@
 plugins {
-	id 'java'
-	id 'eclipse'
-	id 'idea'
-	id 'com.diffplug.eclipse.apt' version '3.42.2'
-	id 'net.neoforged.moddev' version '2.0.141'
+	id 'dev.architectury.loom-no-remap' version '1.14-SNAPSHOT'
+	id 'architectury-plugin' version '3.5-SNAPSHOT'
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
+	id 'maven-publish'
 }
 
-neoForge {
-	version = neoforge_version
+architectury {
+	platformSetupLoomIde()
+	neoForge()
 }
 
-idea {
-	module {
-		downloadJavadoc = true
-		downloadSources = true
+loom {
+	silentMojangMappingsLicense()
+}
+
+configurations {
+	common {
+		canBeResolved = true
+		canBeConsumed = false
+	}
+	compileClasspath.extendsFrom common
+	runtimeClasspath.extendsFrom common
+	developmentNeoForge.extendsFrom common
+}
+
+repositories {
+	maven {
+		name = "NeoForge"
+		url = "https://maven.neoforged.net/releases"
 	}
 }
 
 dependencies {
 	implementation project(':core')
+	neoForge "net.neoforged:neoforge:$rootProject.neoforge_version"
+	minecraft "com.mojang:minecraft:$rootProject.minecraft_version"
+	//mappings loom.officialMojangMappings()
+	//common(project(path: ":core", configuration: "namedElements")) { transitive false }
+	//implementation "net.neoforged:neoforge:${neoforge}"
+	//implementation "net.neoforged.fancymodloader:loader:${fancymodloader}"
 	implementation "org.spongepowered:spongeapi:${api}"
 	implementation "org.spongepowered:mixin:${mixin}"
-	//annotationProcessor "org.spongepowered:mixin:${mixin}:processor"
-	
+	//implementation "com.github.SawFowl:LocaleAPI:${localeapi}"
 	implementation fileTree(dir: 'libs', include: '*.jar')
 }
 
