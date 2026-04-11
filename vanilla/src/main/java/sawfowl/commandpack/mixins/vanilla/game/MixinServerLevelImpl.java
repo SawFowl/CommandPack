@@ -33,10 +33,8 @@ import sawfowl.commandpack.mixins.PortalShapeAccessor;
 @Mixin(value = ServerLevel.class)
 public abstract class MixinServerLevelImpl implements CPServerWorld {
 
-	@Shadow
-	public abstract @NonNull MinecraftServer shadow$getServer();
-	@Shadow
-	public abstract PortalForcer getPortalForcer();
+	@Shadow public abstract @NonNull MinecraftServer shadow$getServer();
+	@Shadow public abstract PortalForcer getPortalForcer();
 	abstract long[] bridge$recentTickTimes();
 	private TickRateManager ticksManager = new TickRateManager();
 

@@ -32,7 +32,7 @@ public abstract class MixinPluginMessagesImpl {
 
 	private static final CommandPackInstance plugin = CommandPackInstance.getInstance();
 
-	@Shadow ServerPlayer player;
+	@Shadow public ServerPlayer player;
 
 	private CPServerPlayer getPlayer() {
 		return (CPServerPlayer) player;
