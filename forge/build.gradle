@@ -1,6 +1,7 @@
 plugins {
 	id 'java'
 	id 'eclipse'
+	id 'com.diffplug.eclipse.apt' version '3.42.2'
 	id 'net.minecraftforge.gradle' version '[7.0.13,8.0)'
 }
 
