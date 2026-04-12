@@ -12,10 +12,7 @@ import org.spongepowered.api.event.lifecycle.RegisterChannelEvent;
 import org.spongepowered.api.network.ServerConnectionState;
 import org.spongepowered.api.network.channel.ChannelBuf;
 import org.spongepowered.api.network.channel.raw.RawDataChannel;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.api.network.listeners.PacketListener;
@@ -30,18 +27,26 @@ public abstract class MixinCustomPayloadsService {
 	@Shadow @Final private CommandPackInstance plugin;
 	@Shadow private boolean finished;
 	@Shadow private Map<ResourceKey, RawDataChannel> spongeChannels;
-	private Set<ResourceKey> spongeChannelsToRegister = new HashSet<>();
+	@Unique private Set<ResourceKey> commandPack$spongeChannelsToRegister = new HashSet<>();
 
+	/**
+	 * @author SawFowl
+	 * @reason This is an internal method of the plugin.
+	 */
 	@Overwrite
 	public void registerChannel(ResourceKey channel) {
 		if(finished) {
 			plugin.getLocales().getSystemAsReferenced().getDebug().getFinishedRegisterNetworkData(channel);
-		} else if(!spongeChannelsToRegister.contains(channel)) spongeChannelsToRegister.add(channel);
+		} else commandPack$spongeChannelsToRegister.add(channel);
 	}
 
+	/**
+	 * @author SawFowl
+	 * @reason This is an internal method of the plugin.
+	 */
 	@Overwrite
 	private void spongeEvent(RegisterChannelEvent event) {
-		spongeChannelsToRegister.forEach(id -> {
+		commandPack$spongeChannelsToRegister.forEach(id -> {
 			var existChannel = Sponge.channelManager().get(id).filter(channel -> channel instanceof RawDataChannel);
 			if(existChannel.isPresent()) {
 				if(existChannel.get() instanceof RawDataChannel raw) {

@@ -12,9 +12,7 @@ import org.spongepowered.api.event.EventContext;
 import org.spongepowered.api.event.EventContextKeys;
 import org.spongepowered.api.world.explosion.Explosion;
 import org.spongepowered.api.world.server.ServerWorld;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.math.vector.Vector3d;
 import org.spongepowered.math.vector.Vector3i;
 
@@ -30,18 +28,23 @@ import sawfowl.commandpack.listeners.ModPlatformEventListener;
 @Mixin(value = ModPlatformEventListener.class, remap = false)
 public class MixinModPlatformEventListenerImpl {
 
-	@Shadow CommandPackInstance plugin;
+	@Shadow @Final CommandPackInstance plugin;
 
+	/**
+	 * @author SawFowl
+	 * @reason This is an internal method of the plugin.
+	 */
 	@Overwrite
 	void register() {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
+	@Unique
 	@SubscribeEvent(priority = Priority.HIGHEST)
-	public void onExplosion(ExplosionEvent.Detonate event) {
+	public void commandPack$onExplosion(ExplosionEvent.Detonate event) {
 		if(event.getAffectedBlocks().isEmpty() && event.getAffectedEntities().isEmpty()) return;
 		Sponge.eventManager().post(new ModExplosionEvent() {
-			private Cause cause = createCause(getIndirectSourceEntity(), getDirectSourceEntity());
+			private final Cause cause = commandPack$createCause(getIndirectSourceEntity(), getDirectSourceEntity());
 
 			@Override
 			public void setCancelled(boolean cancel) {
@@ -123,7 +126,8 @@ public class MixinModPlatformEventListenerImpl {
 		});
 	}
 
-	private Cause createCause(Living living, Entity entity) {
+	@Unique
+	private Cause commandPack$createCause(Living living, Entity entity) {
 		if(living != null && entity != null) return Cause.builder().append(living).append(entity).build(EventContext.builder().add(EventContextKeys.IGNITER, living).add(EventContextKeys.CREATOR, entity.uniqueId()).build());
 		if(living != null) return Cause.builder().append(living).build(EventContext.builder().add(EventContextKeys.IGNITER, living).build());
 		if(entity != null) return Cause.builder().append(entity).build(EventContext.builder().add(EventContextKeys.CREATOR, entity.uniqueId()).build());

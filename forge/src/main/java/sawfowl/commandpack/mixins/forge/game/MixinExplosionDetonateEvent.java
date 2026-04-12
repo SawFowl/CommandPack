@@ -15,9 +15,8 @@ import org.spongepowered.api.event.Cause;
 import org.spongepowered.api.event.EventContext;
 import org.spongepowered.api.event.EventContextKeys;
 import org.spongepowered.api.world.server.ServerWorld;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -33,25 +32,25 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * Need tests
+ */
 @Mixin(value = ExplosionEvent.Detonate.class, remap = false)
 public class MixinExplosionDetonateEvent {
 
-	@Shadow @Final private List<BlockPos> blocks;
-	@Shadow @Final private List<Entity> entityList;
-
-	private List<org.spongepowered.api.entity.Entity> entities;
-	private List<Vector3i> vectors;
-	boolean cancelled = false;
+	@Unique private List<org.spongepowered.api.entity.Entity> commandPack$entities;
+	@Unique private List<Vector3i> commandPack$vectors;
+	@Unique boolean commandPack$cancelled = false;
 
 	@SuppressWarnings("unchecked")
 	@Inject(method = "<init>", at = @At("RETURN"))
-	private void commandPack$InitDetonate(Level level, Explosion explosion, List<BlockPos> blocks, List<Entity> entityList, CallbackInfo callback) {
-		vectors = blocks.stream().map(pos -> Vector3i.from(pos.getX(), pos.getY(), pos.getZ())).collect(Collectors.toList());
-		entities = new ArrayList<org.spongepowered.api.entity.Entity>((List<org.spongepowered.api.entity.Entity>) (Object) entityList);
+	private void commandPack$InitDetonate(Level getLevel, Explosion getExplosion, List<BlockPos> getAffectedBlocks,  List<Entity> getAffectedEntities, CallbackInfo callback) {
+		commandPack$vectors = getAffectedBlocks.stream().map(pos -> Vector3i.from(pos.getX(), pos.getY(), pos.getZ())).collect(Collectors.toList());
+		commandPack$entities = new ArrayList<org.spongepowered.api.entity.Entity>((List<org.spongepowered.api.entity.Entity>) (Object) getAffectedEntities);
 		try {
-			if(Sponge.eventManager().post(createSpongeEvent(level, explosion))) {
-				vectors.clear();
-				entities.clear();
+			if(Sponge.eventManager().post(createSpongeEvent(getLevel, getExplosion))) {
+				commandPack$vectors.clear();
+				commandPack$entities.clear();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -60,13 +59,13 @@ public class MixinExplosionDetonateEvent {
 
 	@Inject(method = "getAffectedBlocks", at = @At("HEAD"))
 	public void commandpack$getAffectedBlocks(CallbackInfoReturnable<List<BlockPos>> cir) {
-		if(vectors.size() != blocks.size()) cir.setReturnValue(vectors.isEmpty() ? new ArrayList<>() : vectors.stream().map(v -> new BlockPos(v.x(), v.y(), v.z())).collect(Collectors.toList()));
+		cir.setReturnValue(commandPack$vectors.isEmpty() ? new ArrayList<>() : commandPack$vectors.stream().map(v -> new BlockPos(v.x(), v.y(), v.z())).collect(Collectors.toList()));
 	}
 
 	@SuppressWarnings("unchecked")
 	@Inject(method = "getAffectedEntities", at = @At("HEAD"))
 	public void commandpack$getAffectedEntities(CallbackInfoReturnable<List<Entity>> cir) {
-		if(entities.size() != entityList.size()) cir.setReturnValue((List<Entity>) (Object) entities);
+		cir.setReturnValue((List<Entity>) (Object) commandPack$entities);
 	}
 
 	private ModExplosionEvent createSpongeEvent(Level level, Explosion explosion) {
@@ -92,32 +91,32 @@ public class MixinExplosionDetonateEvent {
 
 			@Override
 			public List<Vector3i> getBlockPositionsAffected() {
-				return vectors;
+				return commandPack$vectors;
 			}
 
 			@Override
 			public void removeBlock(Vector3i vector3i) {
-				vectors.remove(vector3i);
+				commandPack$vectors.remove(vector3i);
 			}
 
 			@Override
 			public void removeBlocks(Collection<Vector3i> vectors3i) {
-				vectors.removeAll(vectors3i);
+				commandPack$vectors.removeAll(vectors3i);
 			}
 
 			@Override
 			public void removeBlockIf(Predicate<Vector3i> filter) {
-				vectors.removeIf(filter);
+				commandPack$vectors.removeIf(filter);
 			}
 
 			@Override
 			public List<org.spongepowered.api.entity.Entity> getEntitiesAffected() {
-				return entities;
+				return commandPack$entities;
 			}
 
 			@Override
 			public void removeEntityIf(Predicate<org.spongepowered.api.entity.Entity> filter) {
-				entities.removeIf(filter);
+				commandPack$entities.removeIf(filter);
 			}
 
 			@Override
@@ -137,12 +136,12 @@ public class MixinExplosionDetonateEvent {
 
 			@Override
 			public boolean isCancelled() {
-				return cancelled;
+				return commandPack$cancelled;
 			}
 
 			@Override
 			public void setCancelled(boolean cancel) {
-				cancelled = cancel;
+				commandPack$cancelled = cancel;
 			}
 
 			@Override

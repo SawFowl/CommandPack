@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
@@ -37,7 +38,7 @@ import sawfowl.commandpack.apiclasses.DataChannelRegistrationEventImpl;
 
 public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 
-	private Map<CustomPacketPayload.Type<RawPacketImpl>, StreamCodec<ByteBuf, RawPacketImpl>> codecs = new HashMap<>();
+	private Map<CustomPacketPayload.Type<@NotNull RawPacketImpl>, StreamCodec<@NotNull ByteBuf, @NotNull RawPacketImpl>> codecs = new HashMap<>();
 	private Map<ResourceKey, Function<String, SerializedPacket<?>>> serializers = new HashMap<>();
 	private Map<ResourceKey, Function<ChannelBuf, SerializedPacket<?>>> bufferSerializers = new HashMap<>();
 	private Map<ResourceKey, Map<PluginContainer, RawPacketListener>> rawListeners = new HashMap<>();
@@ -78,7 +79,7 @@ public class CustomPayloadsServiceImpl implements CustomPayloadsService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Optional<StreamCodec<ByteBuf, RawPacket>> findCodec(ResourceKey channel) {
+	public Optional<StreamCodec<@NotNull ByteBuf, @NotNull RawPacket>> findCodec(ResourceKey channel) {
 		return codecs.entrySet().stream().filter(entry -> entry.getKey().id().equals((Identifier) (Object) channel)).findFirst().map(entry -> (StreamCodec<ByteBuf, RawPacket>) (Object) entry.getValue());
 	}
 

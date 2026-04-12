@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
@@ -22,12 +23,16 @@ import sawfowl.localeapi.api.TextUtils;
 @Mixin(value = ContainersImpl.class, remap = false)
 public abstract class MixinContainersImpl {
 
+	/**
+	 * @author SawFowl
+	 * @reason This is an internal method of the plugin.
+	 */
 	@Overwrite
 	private List<ModContainerImpl> findMods() {
 		return FMLLoader.getCurrent().getLoadingModList().getMods().stream().map(mod -> new ModContainerImpl(mod)).toList();
 	}
 
-	private class ModContainerImpl implements ModContainer {
+	private static class ModContainerImpl implements ModContainer {
 
 		private final String name;
 		private final String id;
@@ -51,13 +56,17 @@ public abstract class MixinContainersImpl {
 				dependencies = TextUtils.deserializeLegacy("&e-");
 				return;
 			}
+			this.dependencies = TextUtils.deserializeLegacy(getDependencies(mod));
+		}
+
+		private static @NotNull String getDependencies(ModInfo mod) {
 			String dependencies = "";
 			int size = mod.getDependencies().size();
 			for(ModVersion dependency : mod.getDependencies()) {
 				dependencies = dependencies + (size > 1 ? "&e" + dependency.getModId() + (dependency.getVersionRange().getRecommendedVersion() == null ? "&f, " : " (" + dependency.getVersionRange().getRecommendedVersion().getMajorVersion() + "." + dependency.getVersionRange().getRecommendedVersion().getMinorVersion() + "." + dependency.getVersionRange().getRecommendedVersion().getIncrementalVersion() + ")" + "&f, ") : "&e" + dependency.getModId() + (dependency.getVersionRange().getRecommendedVersion() == null ? "&f." : " (" + dependency.getVersionRange().getRecommendedVersion().getMajorVersion() + "." + dependency.getVersionRange().getRecommendedVersion().getMinorVersion() + "." + dependency.getVersionRange().getRecommendedVersion().getIncrementalVersion() + ")" + "&f."));
 				size--;
 			}
-			this.dependencies = TextUtils.deserializeLegacy(dependencies);
+			return dependencies;
 		}
 
 		@Override

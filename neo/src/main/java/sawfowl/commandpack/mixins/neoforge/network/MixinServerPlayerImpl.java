@@ -4,12 +4,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.network.channel.raw.RawDataChannel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.math.vector.Vector3i;
 
 import io.netty.buffer.ByteBuf;
@@ -51,21 +53,9 @@ public abstract class MixinServerPlayerImpl implements CPServerPlayer {
 	public void sendPacket(RawPacket packet) {
 		if(getSpongeChannels().containsKey(packet.channel())) {
 			getSpongeChannels().get(packet.channel()).play().sendTo(this, buffer -> buffer.writeBytes(packet.getDataAsString().getBytes(StandardCharsets.UTF_8)));
-		} else if(packet instanceof RawPacketImpl impl) sendCustomPacketPayload(plugin.getPayloadsService().isNeedRecode(impl.channel()) ? recode(impl, null) : impl);
-	}
-/*
-	@Override
-	public void sendPacket(@SuppressWarnings("deprecation") CustomPacket packet) {
-		if(packet instanceof CustomPacketImpl custom) { 
-			sendPacket(new RawPacketImpl(ResourceKey.resolve(custom.getLocation()), null, custom.getData()));
-		}
+		} else if(packet instanceof RawPacketImpl impl) commandPack$sendCustomPacketPayload(plugin.getPayloadsService().isNeedRecode(impl.channel()) ? commandPack$recode(impl, null) : impl);
 	}
 
-	@Override
-	public void sendPacket(RawPacket packet) {
-		if(packet instanceof RawPacketImpl impl) sendCustomPacketPayload(plugin.getPayloadsService().isNeedRecode(impl.channel()) ? recode(impl, null) : impl);
-	}
-*/
 	@Override
 	public void sendMessage(Text message) {
 		sendMessage(message.applyPlaceholders(Component.empty(), (CPServerPlayer) this).get());
@@ -97,13 +87,15 @@ public abstract class MixinServerPlayerImpl implements CPServerPlayer {
 		return ((ServerPlayer) (Object) this).getDestroySpeed((net.minecraft.world.level.block.state.BlockState) block, new BlockPos(position.x(), position.y(), position.z()));
 	}
 
-	private void sendCustomPacketPayload(CustomPacketPayload payload) {
+	@Unique
+	private void commandPack$sendCustomPacketPayload(CustomPacketPayload payload) {
 		if(payload != null) connection.send(payload);
 	}
 
-	private CustomPacketPayload recode(RawPacketImpl impl, CustomPacketPayload payload) {
+	@Unique
+	private CustomPacketPayload commandPack$recode(RawPacketImpl impl, CustomPacketPayload payload) {
 		@SuppressWarnings("unchecked")
-		@Nullable var codec = (@Nullable StreamCodec<ByteBuf, CustomPacketPayload>) NetworkRegistry.getCodec((Identifier) (Object) impl.channel(), ConnectionProtocol.PLAY, PacketFlow.SERVERBOUND);
+		@Nullable var codec = (@Nullable StreamCodec<@NotNull ByteBuf, @NotNull CustomPacketPayload>) NetworkRegistry.getCodec((Identifier) (Object) impl.channel(), ConnectionProtocol.PLAY, PacketFlow.SERVERBOUND);
 		if(codec == null) return null;
 		var cpCodec = plugin.getPayloadsService().findCodec(impl.channel()).get();
 		ByteBuf buffer = null;

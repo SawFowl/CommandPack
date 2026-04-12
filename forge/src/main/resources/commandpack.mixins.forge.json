@@ -1,23 +1,23 @@
 {
-    "required": true,
-    "minVersion": "0.8.5",
-    "package": "sawfowl.commandpack.mixins.forge",
-    "target": "@env(DEFAULT)",
-    "compatibilityLevel": "JAVA_18",
-    "mixins": [
-        "network.MixinServerPlayerImpl",
-        "network.MixinPluginMessagesImpl",
-        "network.MixinConnectionImpl",
-        "plugin.MixinContainersImpl",
-        "plugin.MixinModPlatformEventListenerImpl",
-        "plugin.MixinCustomPayloadsService",
-        "game.MixinEntityItemImpl",
-        "game.MixinServerLevelImpl",
-        "game.MixinServerPlayerGameMode",
-        "game.MinecraftServerAccessor",
-        "game.MixinPortalShapeImpl"
-    ],
-    "injectors": {
-        "defaultRequire": 1
-    }
+	"required": true,
+	"minVersion": "0.8.5",
+	"package": "sawfowl.commandpack.mixins.forge",
+	"target": "@env(DEFAULT)",
+	"compatibilityLevel": "JAVA_18",
+	"mixins": [
+		"game.MinecraftServerAccessor",
+		"game.MixinEntityItemImpl",
+		"game.MixinPortalShapeImpl",
+		"game.MixinServerLevelImpl",
+		"game.MixinServerPlayerGameMode",
+		"network.MixinConnectionImpl",
+		"network.MixinPluginMessagesImpl",
+		"network.MixinServerPlayerImpl",
+		"plugin.MixinContainersImpl",
+		"plugin.MixinCustomPayloadsService",
+		"plugin.MixinModPlatformEventListenerImpl"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
 }

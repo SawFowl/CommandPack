@@ -6,6 +6,7 @@ import org.spongepowered.api.world.server.ServerWorld;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.math.vector.Vector3i;
 
 import net.minecraft.core.BlockPos;
@@ -23,21 +24,21 @@ public abstract class MixinPortalShapeImpl implements PortalShapeAccessor {
 	@Shadow @Final private int height;
 	@Shadow @Final private int width;
 	@Shadow @Final private Direction rightDir;
-	private Vector3i bl;
-	private LevelAccessor levelAccessor;
+	@Unique private Vector3i commandPack$bl;
+	@Unique private LevelAccessor commandPack$levelAccessor;
 
 	@Shadow @Override public abstract boolean isValid();
 	@Shadow public abstract void createPortalBlocks(LevelAccessor p_366077_);
 
 	@Override
 	public sawfowl.commandpack.api.game.PortalShape setWorld(ServerWorld world) {
-		levelAccessor = (LevelAccessor) world;
+		commandPack$levelAccessor = (LevelAccessor) world;
 		return this;
 	}
 
 	@Override
 	public void createPortalBlocks() {
-		if(levelAccessor != null) createPortalBlocks(levelAccessor);
+		if(commandPack$levelAccessor != null) createPortalBlocks(commandPack$levelAccessor);
 	}
 
 	@Override
@@ -57,7 +58,7 @@ public abstract class MixinPortalShapeImpl implements PortalShapeAccessor {
 
 	@Override
 	public Vector3i getBottomLeft() {
-		return bl == null ? bl = Vector3i.from(bottomLeft.getX(), bottomLeft.getY(), bottomLeft.getZ()) : bl;
+		return commandPack$bl == null ? commandPack$bl = Vector3i.from(bottomLeft.getX(), bottomLeft.getY(), bottomLeft.getZ()) : commandPack$bl;
 	}
 
 	@Override

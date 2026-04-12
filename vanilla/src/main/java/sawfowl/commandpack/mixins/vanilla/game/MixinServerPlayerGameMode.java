@@ -35,7 +35,6 @@ public class MixinServerPlayerGameMode {
 
 	@ModifyVariable(
 		method = "incrementDestroyProgress",
-		ordinal = 0,
 		slice = @Slice(
 			from = @At(
 				value = "INVOKE",
@@ -45,31 +44,31 @@ public class MixinServerPlayerGameMode {
 		at = @At(
 			value = "STORE",
 			ordinal = 0
-		)
+		),
+		name = "destroyProgress"
 	)
-	private float commandpack$modifyDestroyProgress(float value, BlockState $$0, BlockPos $$1, int $$2) {
+	private float commandpack$modifyDestroyProgress(float destroyProgress, BlockState blockState, BlockPos delayedDestroyPos, int destroyStartTick) {
 		if(Sponge.eventManager().post(
 				BlockDestroyEventImpl.createEvent(
 					(ServerWorld) level,
 					(org.spongepowered.api.entity.living.player.server.ServerPlayer) player,
-					(org.spongepowered.api.block.BlockState) $$0,
-					Vector3i.from($$1.getX(), $$1.getY(), $$1.getZ()),
-					player.getDestroySpeed($$0),
-					(float) lastSentState / 10.0f,
-					value
+					(org.spongepowered.api.block.BlockState) blockState,
+					Vector3i.from(delayedDestroyPos.getX(), delayedDestroyPos.getY(), delayedDestroyPos.getZ()),
+					player.getDestroySpeed(blockState),
+					(float) lastSentState / 10.0f, destroyProgress
 				)
 			)
 		) {
 			hasDelayedDestroy = true;
 			delayedTickStart = gameTicks - 250;
 			lastSentState = -1;
-			if(value >= 0.9f) {
-				delayedDestroyPos = new BlockPos(0, player.level().getMaxY() + 1, 0);
-				destroyPos = delayedDestroyPos;
+			if(destroyProgress >= 0.9f) {
+				this.delayedDestroyPos = new BlockPos(0, player.level().getMaxY() + 1, 0);
+				destroyPos = this.delayedDestroyPos;
 			}
 			return 0.0f;
 		}
-		return value;
+		return destroyProgress;
 	}
 
 	@ModifyVariable(
@@ -85,31 +84,30 @@ public class MixinServerPlayerGameMode {
 			ordinal = 0
 		)
 	)
-	private float commandpack$handleBlockBreakAction(float value, BlockPos $$0) {
-		BlockState blockState = level.getBlockState($$0);
+	private float commandpack$handleBlockBreakAction(float destroyProgress, BlockPos pos) {
+		BlockState blockState = level.getBlockState(pos);
 		if(!blockState.isAir() && Sponge.eventManager().post(
 				BlockDestroyEventImpl.createEvent(
 					(ServerWorld) level,
 					(org.spongepowered.api.entity.living.player.server.ServerPlayer) player,
 					(org.spongepowered.api.block.BlockState) blockState,
-					Vector3i.from($$0.getX(), $$0.getY(), $$0.getZ()),
+					Vector3i.from(pos.getX(), pos.getY(), pos.getZ()),
 					player.getDestroySpeed(blockState),
-					(float) lastSentState / 10.0f,
-					value
+					(float) lastSentState / 10.0f, destroyProgress
 				)
 			)
 		) {
 			hasDelayedDestroy = true;
 			delayedTickStart = gameTicks - 250;
 			lastSentState = -1;
-			if(value >= 0.9f) {
+			if(destroyProgress >= 0.9f) {
 				delayedDestroyPos = new BlockPos(0, player.level().getMaxY() + 1, 0);
 				destroyPos = delayedDestroyPos;
 			}
 			return 0.0f;
 		}
 		blockState = null;
-		return value;
+		return destroyProgress;
 	}
 
 }

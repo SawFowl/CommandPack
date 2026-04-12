@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Cause;
@@ -13,6 +14,7 @@ import org.spongepowered.api.event.EventContextKeys;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -39,39 +41,42 @@ import sawfowl.commandpack.apiclasses.network.RawPacketImpl;
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class MixinPluginMessagesImpl {
 
-	private static final CommandPackInstance plugin = CommandPackInstance.getInstance();
+	@Unique
+	private static final CommandPackInstance commandPack$plugin = CommandPackInstance.getInstance();
 
-	@Shadow ServerPlayer player;
+	@Shadow public ServerPlayer player;
 
-	private CPServerPlayer getPlayer() {
+	@Unique
+	private CPServerPlayer commandPack$getPlayer() {
 		return (CPServerPlayer) player;
 	}
 
-	private Cause createCause() {
-		return Cause.of(EventContext.builder().add(EventContextKeys.PLAYER, getPlayer()).add(EventContextKeys.PLUGIN, plugin.getPluginContainer()).build(), plugin.getPluginContainer());
+	@Unique
+	private Cause commandPack$createCause() {
+		return Cause.of(EventContext.builder().add(EventContextKeys.PLAYER, commandPack$getPlayer()).add(EventContextKeys.PLUGIN, commandPack$plugin.getPluginContainer()).build(), commandPack$plugin.getPluginContainer());
 	}
 
 	@Inject(method = "handleCustomPayload", at = @At("HEAD"))
 	public void commandpack$onPluginMessage(ServerboundCustomPayloadPacket packet, CallbackInfo ci) {
 		String packetId = packet.payload().type().id().toString();
-		if(plugin.getMainConfig().getRestrictMods().isEnable() && !getPlayer().hasPermission(Permissions.ALL_MODS_ACCESS) && packet.payload() instanceof MinecraftRegisterPayload minecraftRegisterPayload && restrinctMods(minecraftRegisterPayload)) return;
-		if(plugin.getMainConfig().getIgnorePackets().isEnable()) {
-			if(plugin.getMainConfig().getIgnorePackets().isDebug()) plugin.getLogger().info(packetId);
-			if(!plugin.getMainConfig().getIgnorePackets().canEncode(packetId)) {
+		if(commandPack$plugin.getMainConfig().getRestrictMods().isEnable() && !commandPack$getPlayer().hasPermission(Permissions.ALL_MODS_ACCESS) && packet.payload() instanceof MinecraftRegisterPayload minecraftRegisterPayload && commandPack$restrinctMods(minecraftRegisterPayload)) return;
+		if(commandPack$plugin.getMainConfig().getIgnorePackets().isEnable()) {
+			if(commandPack$plugin.getMainConfig().getIgnorePackets().isDebug()) commandPack$plugin.getLogger().info(packetId);
+			if(!commandPack$plugin.getMainConfig().getIgnorePackets().canEncode(packetId)) {
 				packetId = null;
 				return;
 			}
 		}
 		try {
 			FriendlyByteBuf copy = new FriendlyByteBuf(Unpooled.buffer());
-			Optional<StreamCodec<ByteBuf, RawPacket>> codec = plugin.getPayloadsService().findCodec((ResourceKey) (Object) packet.payload().type().id());
+			Optional<StreamCodec<@NotNull ByteBuf, @NotNull RawPacket>> codec = commandPack$plugin.getPayloadsService().findCodec((ResourceKey) (Object) packet.payload().type().id());
 			if(codec.isPresent() && packet.payload() instanceof RawPacketImpl rawPacketImpl) {
 				RegistryFriendlyByteBuf friendlyByteBuf = new RegistryFriendlyByteBuf(copy, null, ConnectionType.OTHER);
 				codec.get().encode(friendlyByteBuf, rawPacketImpl);
 				copy = friendlyByteBuf;
 			} else ServerboundCustomPayloadPacket.STREAM_CODEC.encode(copy, packet);
 			PacketEvent event = new PacketEvent(packetId, copy);
-			if(getPlayer().isOnline()) Sponge.eventManager().post(event);
+			if(commandPack$getPlayer().isOnline()) Sponge.eventManager().post(event);
 			event = null;
 			copy = null;
 			codec = null;
@@ -80,10 +85,11 @@ public abstract class MixinPluginMessagesImpl {
 		packetId = null;
 	}
 
-	private boolean restrinctMods(MinecraftRegisterPayload payload) {
-		List<String> disAllowedMods = plugin.getMainConfig().getRestrictMods().getDisAllowedMods(payload.newChannels().stream().map(rl -> rl.toString()).toList());
+	@Unique
+	private boolean commandPack$restrinctMods(MinecraftRegisterPayload payload) {
+		List<String> disAllowedMods = commandPack$plugin.getMainConfig().getRestrictMods().getDisAllowedMods(payload.newChannels().stream().map(rl -> rl.toString()).toList());
 		if(!disAllowedMods.isEmpty()) {
-			getPlayer().kick(plugin.getLocales().getAsReferenced(getPlayer()).getOther().getIllegalMods(true, String.join(", ", disAllowedMods)));
+			commandPack$getPlayer().kick(commandPack$plugin.getLocales().getAsReferenced(commandPack$getPlayer()).getOther().getIllegalMods(true, String.join(", ", disAllowedMods)));
 			return true;
 		}
 		disAllowedMods = null;
@@ -100,7 +106,7 @@ public abstract class MixinPluginMessagesImpl {
 		boolean isReadable;
 
 		PacketEvent(String packet, FriendlyByteBuf buffer) {
-			cause = createCause();
+			cause = commandPack$createCause();
 			packetName = packet;
 			readableBytes = buffer.readableBytes();
 			isReadable = buffer.isReadable();
@@ -112,8 +118,8 @@ public abstract class MixinPluginMessagesImpl {
 			while(stringData.length() > 0 && stringData.charAt(stringData.length() - 1) == ' ') {
 				stringData = stringData.substring(0, stringData.length() - 1);
 			}
-			if(plugin.getMainConfig().getDebugPlayerData().packets()) {
-				plugin.getLogger().info(plugin.getLocales().getSystemAsReferenced().getDebug().getDebugPlayerData().getPackets(player.getName().getString(), packet, stringData));
+			if(commandPack$plugin.getMainConfig().getDebugPlayerData().packets()) {
+				commandPack$plugin.getLogger().info(commandPack$plugin.getLocales().getSystemAsReferenced().getDebug().getDebugPlayerData().getPackets(player.getName().getString(), packet, stringData));
 			}
 		}
 
@@ -129,12 +135,12 @@ public abstract class MixinPluginMessagesImpl {
 
 		@Override
 		public CPServerPlayer getMixinPlayer() {
-			return getPlayer();
+			return commandPack$getPlayer();
 		}
 
 		@Override
 		public GameProfile getPlayerProfile() {
-			return getPlayer().profile();
+			return commandPack$getPlayer().profile();
 		}
 
 		@Override

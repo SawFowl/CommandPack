@@ -8,15 +8,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.lifecycle.RegisterChannelEvent;
 import org.spongepowered.api.network.channel.ChannelBuf;
 import org.spongepowered.api.network.channel.raw.RawDataChannel;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -45,73 +43,78 @@ public abstract class MixinCustomPayloadsService {
 	@Shadow @Final private CommandPackInstance plugin;
 	@Shadow private boolean finished;
 	@Shadow private Map<ResourceKey, RawDataChannel> spongeChannels = new HashMap<>();
-	private Set<ResourceKey> forgeChannels = new HashSet<>();
-	private int channelVersion = 766; // NetworkInitialization.getVersion();
+	@Unique private Set<ResourceKey> commandPack$forgeChannels = new HashSet<>();
+	@Unique private int commandPack$channelVersion = 766; // NetworkInitialization.getVersion();
 
 	/**
-	 * @author
-	 * @reason
+	 * @author SawFowl
+	 * @reason This is an internal method of the plugin.
 	 */
 	@Overwrite
 	public void registerChannel(ResourceKey channel) {
 		if(finished) {
 			plugin.getLocales().getSystemAsReferenced().getDebug().getFinishedRegisterNetworkData(channel);
-		} else if(!forgeChannels.contains(channel)) forgeChannels.add(channel);
+		} else commandPack$forgeChannels.add(channel);
 	}
 
 	/**
-	 * @author
-	 * @reason
+	 * @author SawFowl
+	 * @reason This is an internal method of the plugin.
 	 */
 	@Overwrite
 	private void spongeEvent(RegisterChannelEvent event) {
-		forgeChannels.forEach(channel -> {
+		commandPack$forgeChannels.forEach(channel -> {
 			var find = NetworkRegistry.findTarget((Identifier) (Object) channel);
 			if(find != null) {
 				find.addListener(listener -> {
-					if(listener.getSource().getSender() instanceof CPServerPlayer player && listener.getPayload() instanceof ChannelBuf buf) handle(player, new RawPacketImpl(channel, buf, listener.getPayload().readableBytes() > 0 ? listener.getPayload().toString(StandardCharsets.UTF_8) : ""));
+					if(listener.getSource().getSender() instanceof CPServerPlayer player && listener.getPayload() instanceof ChannelBuf buf) commandPack$handle(player, new RawPacketImpl(channel, buf, listener.getPayload().readableBytes() > 0 ? listener.getPayload().toString(StandardCharsets.UTF_8) : ""));
 				});
 				find = null;
 			} else ChannelBuilder
 				.named((Identifier) (Object) channel)
 				.connectionHandler(_ -> ((MinecraftServerAccessor) Sponge.server()).getconnection())
-				.serverAcceptedVersions(VersionTest.exact(channelVersion))
-				.clientAcceptedVersions(VersionTest.exact(channelVersion))
-				.networkProtocolVersion(channelVersion)
+				.serverAcceptedVersions(VersionTest.exact(commandPack$channelVersion))
+				.clientAcceptedVersions(VersionTest.exact(commandPack$channelVersion))
+				.networkProtocolVersion(commandPack$channelVersion)
 				.optional()
 				.payloadChannel()
 				.any()
 				.bidirectional()
-				.add(new Type<>((Identifier) (Object) channel), createCodec(channel), (payload, context) -> handle(payload, context))
+				.add(new Type<>((Identifier) (Object) channel), commandPack$createCodec(channel), (payload, context) -> commandPack$handle(payload, context))
 				.build();
 			}
 		);
 	}
 
-	private StreamCodec<FriendlyByteBuf, RawPacketImpl> createCodec(ResourceKey channel) {
+	@Unique
+	private StreamCodec<@NotNull FriendlyByteBuf, @NotNull RawPacketImpl> commandPack$createCodec(ResourceKey channel) {
 		return StreamCodec.of(
 			(buffer, packet) -> buffer.writeCharSequence(packet.getDataAsString(), StandardCharsets.UTF_8),
 			buffer -> new RawPacketImpl(channel, (ChannelBuf) buffer, buffer.readableBytes() > 0 ? buffer.readCharSequence(buffer.readableBytes(), StandardCharsets.UTF_8).toString() : "")
 		);
 	}
 
-	private void handle(RawPacketImpl payload, CustomPayloadEvent.Context ctx) {
+	@Unique
+	private void commandPack$handle(RawPacketImpl payload, CustomPayloadEvent.Context ctx) {
 		ctx.setPacketHandled(true);
-		handle((CPServerPlayer) ctx.getSender(), payload);
+		commandPack$handle((CPServerPlayer) ctx.getSender(), payload);
 	}
 
-	private void handle(CPServerPlayer player, RawPacket rawPacket) {
+	@Unique
+	private void commandPack$handle(CPServerPlayer player, RawPacket rawPacket) {
 		getRawListeners(rawPacket.channel()).forEach(listener -> listener.read(player, rawPacket));
-		handleSerialized(player, rawPacket, containsSerializer(rawPacket.channel()), containsBufferSerializer(rawPacket.channel()));
+		commandPack$handleSerialized(player, rawPacket, containsSerializer(rawPacket.channel()), containsBufferSerializer(rawPacket.channel()));
 	}
 
+	@Unique
 	@SuppressWarnings("unchecked")
-	private void handleSerialized(CPServerPlayer player, RawPacket rawPacket, boolean stringSerializer, boolean bufferSerializer) {
-		if(stringSerializer || bufferSerializer) for(PacketListener<?> listener : getListeners(rawPacket.channel())) listener.read(player, serialize(rawPacket, bufferSerializer));
+	private void commandPack$handleSerialized(CPServerPlayer player, RawPacket rawPacket, boolean stringSerializer, boolean bufferSerializer) {
+		if(stringSerializer || bufferSerializer) for(PacketListener<?> listener : getListeners(rawPacket.channel())) listener.read(player, commandPack$serialize(rawPacket, bufferSerializer));
 	}
 
+	@Unique
 	@SuppressWarnings("rawtypes")
-	private SerializedPacket serialize(RawPacket packet, boolean bufferSerializer) {
+	private SerializedPacket commandPack$serialize(RawPacket packet, boolean bufferSerializer) {
 		return ((SerializedPacketImpl) (bufferSerializer 
 			?
 			SerializedPacket.ofBuffer(packet.channel(), getBufferSerializer(packet.channel()))

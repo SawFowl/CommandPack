@@ -24,9 +24,11 @@ public class MixinConnectionImpl implements CPConnection {
 		return clientName;
 	}
 
-	@Inject(method = "channelRead0", at = @At("HEAD"))
+	@Inject(method = "channelRead0*", at = @At("HEAD"))
 	public void commandpack$onRead(ChannelHandlerContext context, Packet<?> packet, CallbackInfo ci) {
-		if(clientName == null && packet instanceof ServerboundCustomPayloadPacket p && p.payload() instanceof BrandPayload b) clientName = b.brand();
+		if(clientName == null && packet instanceof ServerboundCustomPayloadPacket(
+				net.minecraft.network.protocol.common.custom.CustomPacketPayload payload
+		) && payload instanceof BrandPayload(String brand)) clientName = brand;
 	}
 
 }

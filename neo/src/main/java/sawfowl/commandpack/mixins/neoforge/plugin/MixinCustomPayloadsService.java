@@ -6,16 +6,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.lifecycle.RegisterChannelEvent;
 import org.spongepowered.api.network.ServerConnectionState;
 import org.spongepowered.api.network.channel.ChannelBuf;
 import org.spongepowered.api.network.channel.raw.RawDataChannel;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -36,7 +34,7 @@ public abstract class MixinCustomPayloadsService {
 	@Shadow @Final private CommandPackInstance plugin;
 	@Shadow private Set<ResourceKey> needRecode;
 	@Shadow private Map<ResourceKey, RawDataChannel> spongeChannels;
-	private Set<ResourceKey> spongeChannelsToRegister = new HashSet<>();
+	@Unique private Set<ResourceKey> commandPack$spongeChannelsToRegister = new HashSet<>();
 
 	/*@Overwrite
 	private void init() {
@@ -44,16 +42,24 @@ public abstract class MixinCustomPayloadsService {
 		modContainer.getEventBus().register(this);
 	}*/
 
+	/**
+	 * @author SawFowl
+	 * @reason This is an internal method of the plugin.
+	 */
 	@Overwrite
 	public void registerChannel(ResourceKey channel) {
 		if(finished) {
 			plugin.getLocales().getSystemAsReferenced().getDebug().getFinishedRegisterNetworkData(channel);
-		} else if(!spongeChannelsToRegister.contains(channel)) spongeChannelsToRegister.add(channel);
+		} else commandPack$spongeChannelsToRegister.add(channel);
 	}
 
+	/**
+	 * @author SawFowl
+	 * @reason This is an internal method of the plugin.
+	 */
 	@Overwrite
 	private void spongeEvent(RegisterChannelEvent event) {
-		spongeChannelsToRegister.forEach(id -> {
+		commandPack$spongeChannelsToRegister.forEach(id -> {
 			var existChannel = Sponge.channelManager().get(id).filter(channel -> channel instanceof RawDataChannel);
 			if(existChannel.isPresent()) {
 				if(existChannel.get() instanceof RawDataChannel raw) {
@@ -150,7 +156,7 @@ public abstract class MixinCustomPayloadsService {
 */
 	@Shadow abstract Collection<RawPacketListener> getRawListeners(ResourceKey channel);
 
-	@Shadow abstract Map<CustomPacketPayload.Type<RawPacketImpl>, StreamCodec<ByteBuf, RawPacketImpl>> getCodecs();
+	@Shadow abstract Map<CustomPacketPayload.Type<@NotNull RawPacketImpl>, StreamCodec<@NotNull ByteBuf, @NotNull RawPacketImpl>> getCodecs();
 
 	@Shadow abstract Collection<PacketListener<?>> getListeners(ResourceKey channel);
 

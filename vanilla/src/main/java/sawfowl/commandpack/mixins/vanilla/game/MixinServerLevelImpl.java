@@ -21,6 +21,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.TickRateManager;
 import net.minecraft.world.level.portal.PortalForcer;
 
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -36,15 +37,17 @@ public abstract class MixinServerLevelImpl implements CPServerWorld {
 	@Shadow public abstract @NonNull MinecraftServer shadow$getServer();
 	@Shadow public abstract PortalForcer getPortalForcer();
 	abstract long[] bridge$recentTickTimes();
-	private TickRateManager ticksManager = new TickRateManager();
+	@Unique private TickRateManager commandPack$ticksManager = new TickRateManager();
 
+	@Override
 	public boolean isFreezeTicks() {
-		return ticksManager.isFrozen();
+		return commandPack$ticksManager.isFrozen();
 	}
 
+	@Override
 	public void setFreezeTicks(boolean enable) {
-		ticksManager.setFrozen(enable);
-		updateStateToClients(ClientboundTickingStatePacket.from(ticksManager));
+		commandPack$ticksManager.setFrozen(enable);
+		commandPack$updateStateToClients(ClientboundTickingStatePacket.from(commandPack$ticksManager));
 	}
 
 	@Override
@@ -60,15 +63,16 @@ public abstract class MixinServerLevelImpl implements CPServerWorld {
 		return Math.min(1000.0 / getTickTime(), 20.0);
 	}
 
+	@Unique
 	public TickRateManager getTicksManager() {
-		return ticksManager;
+		return commandPack$ticksManager;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Optional<PortalShape> findPortalShape(boolean empty, int x, int y, int z, Direction direction, @Nullable Predicate<PortalShape> predicate) {
 		if(predicate == null) predicate = _ -> true;
-		return findPortalShape(empty, new BlockPos(x, y, z), direction == null ? net.minecraft.core.Direction.NORTH : convert(direction), (Predicate<net.minecraft.world.level.portal.PortalShape>) (Object) predicate).map(s -> ((PortalShapeAccessor) s).setWorld(this));
+		return findPortalShape(empty, new BlockPos(x, y, z), direction == null ? net.minecraft.core.Direction.NORTH : commandPack$convert(direction), (Predicate<net.minecraft.world.level.portal.PortalShape>) (Object) predicate).map(s -> ((PortalShapeAccessor) s).setWorld(this));
 	}
 
 	@Override
@@ -77,39 +81,42 @@ public abstract class MixinServerLevelImpl implements CPServerWorld {
 	}
 
 	private Optional<BlockPos> findClosestPortalPosition(BlockPos blockPos, boolean isNether) {
-		return getPortalForcer().findClosestPortalPosition(blockPos, isNether, asVanilla().getWorldBorder());
+		return getPortalForcer().findClosestPortalPosition(blockPos, isNether, commandPack$asVanilla().getWorldBorder());
 	}
 
 	private Optional<net.minecraft.world.level.portal.PortalShape> findPortalShape(boolean empty, BlockPos blockPos, net.minecraft.core.Direction direction, Predicate<net.minecraft.world.level.portal.PortalShape> predicate) {
-		if(empty) return net.minecraft.world.level.portal.PortalShape.findEmptyPortalShape(asVanilla(), blockPos, direction.getAxis()).filter(predicate);
-		return net.minecraft.world.level.portal.PortalShape.findPortalShape(asVanilla(), blockPos, predicate, direction.getAxis());
+		if(empty) return net.minecraft.world.level.portal.PortalShape.findEmptyPortalShape(commandPack$asVanilla(), blockPos, direction.getAxis()).filter(predicate);
+		return net.minecraft.world.level.portal.PortalShape.findPortalShape(commandPack$asVanilla(), blockPos, predicate, direction.getAxis());
 	}
 
-	private ServerLevel asVanilla() {
+	@Unique
+	private ServerLevel commandPack$asVanilla() {
 		return (ServerLevel) (Object) this;
 	}
 
+	@Unique
 	@SuppressWarnings("unchecked")
-	private void updateStateToClients(ClientboundTickingStatePacket packet) {
+	private void commandPack$updateStateToClients(ClientboundTickingStatePacket packet) {
 		((Collection<ServerPlayer>) (Object) players()).forEach(player -> {
 			player.connection.send(packet);
 		});
 	}
 
 	@Inject(method = "addPlayer", at = @At("HEAD"))
-	private void onAddPlayer(ServerPlayer $$0, CallbackInfo info) {
-		$$0.connection.send(ClientboundTickingStatePacket.from(ticksManager));
+	private void onAddPlayer(ServerPlayer player, CallbackInfo info) {
+		player.connection.send(ClientboundTickingStatePacket.from(commandPack$ticksManager));
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-	public void onTick(BooleanSupplier $$0, CallbackInfo info) {
+	public void onTick(BooleanSupplier haveTime, CallbackInfo info) {
 		if(isFreezeTicks()) {
 			bridge$recentTickTimes()[this.shadow$getServer().getTickCount() % 100] = 0;
 			info.cancel();
 		}
 	}
 
-	private net.minecraft.core.Direction convert(Direction direction) {
+	@Unique
+	private net.minecraft.core.Direction commandPack$convert(Direction direction) {
 		switch (direction) {
 		case UP: {
 			return net.minecraft.core.Direction.UP;
@@ -130,11 +137,12 @@ public abstract class MixinServerLevelImpl implements CPServerWorld {
 			return net.minecraft.core.Direction.SOUTH;
 		}
 		default:
-			return fromDelta(direction.asBlockOffset().x(), direction.asBlockOffset().y(), direction.asBlockOffset().z());
+			return commandPack$fromDelta(direction.asBlockOffset().x(), direction.asBlockOffset().y(), direction.asBlockOffset().z());
 		}
 	}
 
-	private net.minecraft.core.Direction fromDelta(int $$0, int $$1, int $$2) {
+	@Unique
+	private net.minecraft.core.Direction commandPack$fromDelta(int $$0, int $$1, int $$2) {
 		if ($$0 == 0) {
 			if ($$1 == 0) {
 				if ($$2 > 0) {
@@ -156,7 +164,7 @@ public abstract class MixinServerLevelImpl implements CPServerWorld {
 			}
 			return net.minecraft.core.Direction.WEST;
 		}
-		return net.minecraft.core.Direction.getRandom(asVanilla().getRandom());
+		return net.minecraft.core.Direction.getRandom(commandPack$asVanilla().getRandom());
 	}
 
 }

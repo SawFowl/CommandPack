@@ -9,6 +9,7 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.network.channel.raw.RawDataChannel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.math.vector.Vector3i;
 
 import io.netty.buffer.Unpooled;
@@ -37,8 +38,8 @@ public abstract class MixinServerPlayerImpl implements CPServerPlayer {
 
 	@Override
 	public void sendPacket(RawPacket packet) {
-		if(getSpongeChannels().containsKey(packet.channel())) {
-			getSpongeChannels().get(packet.channel()).play().sendTo(this, buffer -> buffer.writeBytes(packet.getDataAsString().getBytes(StandardCharsets.UTF_8)));
+		if(commandPack$getSpongeChannels().containsKey(packet.channel())) {
+			commandPack$getSpongeChannels().get(packet.channel()).play().sendTo(this, buffer -> buffer.writeBytes(packet.getDataAsString().getBytes(StandardCharsets.UTF_8)));
 		} else connection.send(createPacket(packet));
 	}
 
@@ -68,12 +69,13 @@ public abstract class MixinServerPlayerImpl implements CPServerPlayer {
 		return connection.latency();
 	}
 
-	private FriendlyByteBuf createFriendlyByteBuf(RawPacket custom) {
+	@Unique
+	private FriendlyByteBuf commandPack$createFriendlyByteBuf(RawPacket custom) {
 		return new FriendlyByteBuf(Unpooled.buffer()).writeIdentifier((Identifier) (Object) custom.channel()).writeBytes(custom.getDataAsString().getBytes(StandardCharsets.UTF_8));
 	}
 
 	private ClientboundCustomPayloadPacket createPacket(RawPacket custom) {
-		return ClientboundCustomPayloadPacket.CONFIG_STREAM_CODEC.decode(createFriendlyByteBuf(custom));
+		return ClientboundCustomPayloadPacket.CONFIG_STREAM_CODEC.decode(commandPack$createFriendlyByteBuf(custom));
 	}
 
 	@Override
@@ -81,7 +83,8 @@ public abstract class MixinServerPlayerImpl implements CPServerPlayer {
 		return ((ServerPlayer) (Object) this).getDestroySpeed((net.minecraft.world.level.block.state.BlockState) block);
 	}
 
-	private Map<ResourceKey, RawDataChannel> getSpongeChannels() {
+	@Unique
+	private Map<ResourceKey, RawDataChannel> commandPack$getSpongeChannels() {
 		return CommandPackInstance.getInstance().getPayloadsService().getSpongeChannels();
 	}
 

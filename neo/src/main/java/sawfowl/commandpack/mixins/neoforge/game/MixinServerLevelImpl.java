@@ -21,6 +21,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.TickRateManager;
 import net.minecraft.world.level.portal.PortalForcer;
 
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -36,15 +37,15 @@ public abstract class MixinServerLevelImpl implements CPServerWorld {
 	@Shadow public abstract @NonNull MinecraftServer shadow$getServer();
 	@Shadow public abstract PortalForcer getPortalForcer();
 	abstract long[] bridge$recentTickTimes();
-	private TickRateManager ticksManager = new TickRateManager();
+	@Unique private TickRateManager commandPack$ticksManager = new TickRateManager();
 
 	public boolean isFreezeTicks() {
-		return ticksManager.isFrozen();
+		return commandPack$ticksManager.isFrozen();
 	}
 
 	public void setFreezeTicks(boolean enable) {
-		ticksManager.setFrozen(enable);
-		updateStateToClients(ClientboundTickingStatePacket.from(ticksManager));
+		commandPack$ticksManager.setFrozen(enable);
+		updateStateToClients(ClientboundTickingStatePacket.from(commandPack$ticksManager));
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public abstract class MixinServerLevelImpl implements CPServerWorld {
 	}
 
 	public TickRateManager getTicksManager() {
-		return ticksManager;
+		return commandPack$ticksManager;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -98,7 +99,7 @@ public abstract class MixinServerLevelImpl implements CPServerWorld {
 
 	@Inject(method = "addPlayer", at = @At("HEAD"))
 	private void onAddPlayer(ServerPlayer $$0, CallbackInfo info) {
-		$$0.connection.send(ClientboundTickingStatePacket.from(ticksManager));
+		$$0.connection.send(ClientboundTickingStatePacket.from(commandPack$ticksManager));
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
