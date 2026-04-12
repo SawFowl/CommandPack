@@ -13,7 +13,7 @@ sponge {
 	license("GPL-3.0")
 	plugin(rootProject.name.toLowerCase()) {
 		displayName(rootProject.name)
-		version("${major}.${minor}.${patch}-API${api}")
+		version("${major}.${minor}.${patch}-API${api}-MC${minecraft_version}")
 		entrypoint("${rootProject.group}.CommandPackInstance")
 		description("The Essentials plugin analog.")
 		links {
