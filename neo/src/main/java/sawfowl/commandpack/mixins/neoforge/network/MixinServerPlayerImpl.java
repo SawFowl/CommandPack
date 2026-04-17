@@ -3,12 +3,15 @@ package sawfowl.commandpack.mixins.neoforge.network;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.ResourceKey;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.network.channel.raw.RawDataChannel;
+import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -45,8 +48,8 @@ import sawfowl.localeapi.api.Text;
 @Mixin(ServerPlayer.class)
 public abstract class MixinServerPlayerImpl implements CPServerPlayer {
 
-	@Shadow
-	public ServerGamePacketListenerImpl connection;
+	@Shadow public ServerGamePacketListenerImpl connection;
+	@Shadow private ServerPlayer.@Nullable RespawnConfig respawnConfig;
 	private static final CommandPackInstance plugin = CommandPackInstance.getInstance();
 
 	@Override
@@ -85,6 +88,20 @@ public abstract class MixinServerPlayerImpl implements CPServerPlayer {
 	@Override
 	public float getMiningSpeed(BlockState block, Vector3i position) {
 		return ((ServerPlayer) (Object) this).getDestroySpeed((net.minecraft.world.level.block.state.BlockState) block, new BlockPos(position.x(), position.y(), position.z()));
+	}
+
+	@Override
+	public boolean hasRespawnLocation() {
+		return respawnConfig != null;
+	}
+
+	@Override
+	public Optional<ServerLocation> getRespawnLocation() {
+		return respawnConfig == null ? Optional.empty() : Sponge.server().worldManager().world((ResourceKey) (Object) respawnConfig.respawnData().dimension().registry()).map(world -> world.location(getRespawnPos()));
+	}
+
+	private Vector3i getRespawnPos() {
+		return Vector3i.from(respawnConfig.respawnData().pos().getZ(), respawnConfig.respawnData().pos().getY(), respawnConfig.respawnData().pos().getZ());
 	}
 
 	@Unique

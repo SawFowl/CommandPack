@@ -1,9 +1,11 @@
 package sawfowl.commandpack.api.game.server.player;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.math.vector.Vector3i;
 
 import sawfowl.commandpack.api.network.packets.RawPacket;
@@ -67,5 +69,9 @@ public interface CPServerPlayer extends ServerPlayer {
 	 * @param position - Not used in Vanilla and NeoForge.
 	 */
 	float getMiningSpeed(BlockState block, Vector3i position);
+
+	boolean hasRespawnLocation();
+
+	Optional<ServerLocation> getRespawnLocation();
 
 }
