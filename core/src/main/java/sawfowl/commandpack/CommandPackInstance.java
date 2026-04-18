@@ -319,25 +319,29 @@ public class CommandPackInstance {
 			registeredRawCommands.clear();
 			registeredParameterizedCommands.clear();
 		}).build());
-		Sponge.server().userManager().streamAll().forEach(profile -> {
-			if(!profile.name().isPresent()) {
-				Sponge.server().userManager().load(profile).thenAccept(optUser -> {
-					optUser.ifPresent(user -> ((TempPlayerDataImpl) playersData.getTempData()).registerUser(user.name()));
-				}).thenAccept(_ -> {
-					Sponge.server().userManager().removeFromCache(profile.uuid());
-				});
-			} else ((TempPlayerDataImpl) playersData.getTempData()).registerUser(profile.name().get());
-		});
 		registerPlaceholders();
+		try {
+			Sponge.server().userManager().streamAll().forEach(profile -> {
+				if(!profile.name().isPresent()) {
+					Sponge.server().userManager().load(profile).thenAccept(optUser -> {
+						optUser.ifPresent(user -> ((TempPlayerDataImpl) playersData.getTempData()).registerUser(user.name()));
+					}).thenAccept(_ -> {
+						Sponge.server().userManager().removeFromCache(profile.uuid());
+					});
+				} else ((TempPlayerDataImpl) playersData.getTempData()).registerUser(profile.name().get());
+			});
+		} catch (Exception e) {
+			// ignore sponge error - ClassCastException
+		}
 	}
 
 	@Listener
-	public void onProvideBanService(ProvideServiceEvent<BanService> event) {
+	public void onProvideBanService(ProvideServiceEvent.EngineScoped<BanService, Server> event) {
 		if(getMainConfig().getPunishment().isEnable()) event.suggest(() -> punishmentService = new PunishmentServiceImpl(instance));
 	}
 
 	@Listener
-	public void onProvideEconomyService(ProvideServiceEvent<EconomyService> event) {
+	public void onProvideEconomyService(ProvideServiceEvent.EngineScoped<EconomyService, Server> event) {
 		if(getMainConfig().getEconomy().isEnable()) economy.createEconomy(event);
 	}
 
