@@ -8,8 +8,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
+import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
-import org.spongepowered.api.util.Ticks;
 import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.server.ServerWorld;
 
@@ -19,6 +19,7 @@ import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
 import sawfowl.commandpack.api.data.command.Settings;
+import sawfowl.commandpack.api.game.server.CPServerWorld;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 
@@ -52,7 +53,7 @@ public class Add extends AbstractParameterizedCommand {
 	@Override
 	public List<ParameterSettings> getParameterSettings() {
 	return Arrays.asList(
-			ParameterSettings.of(CommandParameters.createInteger("Value", false), false, false, locale -> getExceptions(locale).getValueNotPresent()),
+			ParameterSettings.of(Parameter.rangedInteger(1, 24000).key("Value").build(), false, false, locale -> getExceptions(locale).getValueNotPresent()),
 			ParameterSettings.of(CommandParameters.createWorld(Permissions.TIME_STAFF, true), false, locale -> getExceptions(locale).getWorldNotPresent())
 		);
 	}
@@ -72,8 +73,9 @@ public class Add extends AbstractParameterizedCommand {
 		return Settings.builder().setEnable(false).build();
 	}
 
-	private void setTime(Audience src, Locale locale, ServerWorld world, int time) {
-		world.properties().setDayTime(world.properties().dayTime().add(Ticks.of(time)));
+	private void setTime(Audience src, Locale locale, ServerWorld world, int time) throws CommandException {
+		CPServerWorld.cast(world).getWorldTime().add(time);
+		//world.properties().setDayTime(world.properties().dayTime().add(Ticks.of(time)));
 		src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getTime().getAdd(world));
 	}
 

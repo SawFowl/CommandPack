@@ -10,6 +10,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.Nullable;
 
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -20,6 +21,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.TickRateManager;
 import net.minecraft.world.level.portal.PortalForcer;
+import net.minecraft.world.level.storage.ServerLevelData;
 
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,8 +38,16 @@ public abstract class MixinServerLevelImpl implements CPServerWorld {
 
 	@Shadow public abstract @NonNull MinecraftServer shadow$getServer();
 	@Shadow public abstract PortalForcer getPortalForcer();
+	@Shadow @Final private ServerLevelData serverLevelData;
+	@Shadow @Final private MinecraftServer server;
 	abstract long[] bridge$recentTickTimes();
 	@Unique private TickRateManager commandPack$ticksManager = new TickRateManager();
+	@Unique private WorldTime worldTime = createWorldTime();
+
+	@Override
+	public WorldTime getWorldTime() {
+		return worldTime;
+	}
 
 	public boolean isFreezeTicks() {
 		return commandPack$ticksManager.isFrozen();
@@ -158,6 +168,34 @@ public abstract class MixinServerLevelImpl implements CPServerWorld {
 			return net.minecraft.core.Direction.WEST;
 		}
 		return net.minecraft.core.Direction.getRandom(asVanilla().getRandom());
+	}
+
+	private ServerLevel asNMS() {
+		return cast(this);
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T> T cast(Object object) {
+		return (T) object;
+	}
+
+	private WorldTime createWorldTime() {
+		return new WorldTime() {
+
+			@Override
+			public long asTicks() {
+				return asNMS().dimensionType().defaultClock().map(holder -> server.clockManager().getTotalTicks(holder)).orElse(serverLevelData.getGameTime());
+			}
+
+			@Override
+			public void set(long ticks) {
+				if(ticks < 0) throw new IllegalArgumentException("The value cannot be less than 0.");
+				if(asNMS().dimensionType().defaultClock().isPresent()) {
+					server.clockManager().setTotalTicks(asNMS().dimensionType().defaultClock().get(), ticks);
+				} else serverLevelData.setGameTime(ticks);
+			}
+
+		};
 	}
 
 }

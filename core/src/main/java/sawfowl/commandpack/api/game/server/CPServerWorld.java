@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.jetbrains.annotations.Nullable;
+
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.util.Direction;
@@ -25,6 +26,12 @@ public interface CPServerWorld extends ServerWorld {
 	static Optional<CPServerWorld> findWorld(ResourceKey key) {
 		return Sponge.server().worldManager().world(key).map(world -> CPServerWorld.cast(world));
 	}
+
+	/**
+	 * An interface for changing the time in the game world.<br>
+	 * It is recommended to use it only if the time change via SpongeAPI does not work or does not work correctly.
+	 */
+	WorldTime getWorldTime();
 
 	/**
 	 * If true, all processes in the world will be stopped until the freeze is turned off.<br>
@@ -126,6 +133,60 @@ public interface CPServerWorld extends ServerWorld {
 		};
 
 		public abstract Optional<CPServerWorld> get();
+
+	}
+
+	interface WorldTime {
+
+		long asTicks();
+
+		void set(long ticks);
+
+		default void add(long ticks) {
+			set(asTicks() + ticks);
+		}
+
+		default void setMorning() {
+			set((currentDay() + 1) * 24000);
+		}
+
+		default void setDay() {
+			if(currentDayTicks() < 6000) {
+				set(currentDay() * 24000 + 6000);
+			} else set(((currentDay() + 1) * 24000) + 6000);
+		}
+
+		default void setEvening() {
+			if(currentDayTicks() < 12000) {
+				set(currentDay() * 24000 + 12000);
+			} else set(((currentDay() + 1) * 24000) + 12000);
+		}
+
+		default void setNight() {
+			if(currentDayTicks() < 18000) {
+				set(((currentDay() + 1) * 24000) - 6000);
+			} else set(((currentDay() + 1) * 24000) + 18000);
+		}
+
+		default long currentDayTicks() {
+			return asTicks() % 24000;
+		}
+
+		default long hour() {
+			return currentDayTicks() / 1000;
+		}
+
+		default long minutesOfCurrentDay() {
+			return currentDayTicks() * 60 / 1000;
+		}
+
+		default long minutesOfCurrentHour() {
+			return (currentDayTicks() % 1000) * 60 / 1000;
+		}
+
+		default long currentDay() {
+			return asTicks() / 24000;
+		}
 
 	}
 

@@ -117,7 +117,7 @@ public class CommandsConfig {
 	private Settings rain = new CommandSettings().builder().setCooldown(120).build();
 	@Setting("Thunder")
 	private Settings thunder = new CommandSettings().builder().setCooldown(120).setAliases("storm").build();
-	@Setting("ServerTime")
+	@Setting("Time")
 	private Settings time = new CommandSettings().builder().setCooldown(120).build();
 	@Setting("Morning")
 	private Settings morning = new CommandSettings().builder().setCooldown(120).build();

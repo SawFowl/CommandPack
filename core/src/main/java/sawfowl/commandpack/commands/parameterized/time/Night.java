@@ -9,7 +9,6 @@ import org.spongepowered.api.command.Command.Parameterized;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
-import org.spongepowered.api.util.MinecraftDayTime;
 import org.spongepowered.api.world.DefaultWorldKeys;
 import org.spongepowered.api.world.server.ServerWorld;
 
@@ -18,6 +17,7 @@ import net.kyori.adventure.audience.Audience;
 import sawfowl.commandpack.CommandPackInstance;
 import sawfowl.commandpack.Permissions;
 import sawfowl.commandpack.api.commands.parameterized.ParameterSettings;
+import sawfowl.commandpack.api.game.server.CPServerWorld;
 import sawfowl.commandpack.commands.abstractcommands.parameterized.AbstractParameterizedCommand;
 import sawfowl.commandpack.commands.settings.CommandParameters;
 import sawfowl.commandpack.commands.settings.Register;
@@ -66,7 +66,8 @@ public class Night extends AbstractParameterizedCommand {
 	}
 
 	private void setTime(Audience src, Locale locale, ServerWorld world) {
-		world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day() + 1, 0, 0));
+		CPServerWorld.cast(world).getWorldTime().setNight();
+		//world.properties().setDayTime(MinecraftDayTime.of(world.properties().gameTime().day() + 1, 0, 0));
 		src.sendMessage(plugin.getLocales().getAsReferenced(locale).getCommands().getTime().getNight(world));
 	}
 
