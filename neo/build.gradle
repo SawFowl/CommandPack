@@ -54,5 +54,5 @@ processResources {
 }
 
 jar {
-	archiveBaseName = 'part'
+	archiveFileName = 'part.jar'
 }
