@@ -73,7 +73,6 @@ public class MixinServerPlayerGameMode {
 			remap = false
 	)
 	private float commandpack$handleBlockBreakAction(float f, BlockPos pos) {
-		System.out.println(f + " " + pos.toString());
 		BlockState blockState = level.getBlockState(pos);
 		if(!blockState.isAir() && Sponge.eventManager().post(
 				BlockDestroyEventImpl.createEvent(
