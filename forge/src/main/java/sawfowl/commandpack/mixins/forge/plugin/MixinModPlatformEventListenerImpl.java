@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.math.vector.Vector3d;
 import org.spongepowered.math.vector.Vector3i;
 
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.listener.Priority;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
@@ -36,7 +35,7 @@ public class MixinModPlatformEventListenerImpl {
 	 */
 	@Overwrite
 	void register() {
-		MinecraftForge.EVENT_BUS.register(this);
+		ExplosionEvent.Detonate.BUS.addListener(this::commandPack$onExplosion);
 	}
 
 	@Unique

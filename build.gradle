@@ -42,6 +42,7 @@ subprojects {
 		plugin 'java'
 	}
 	java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+	version = rootProject.version
 	repositories {
 		mavenCentral()
 		maven {

@@ -17,7 +17,7 @@ sponge {
 		entrypoint("${rootProject.group}.CommandPackInstance")
 		description("The Essentials plugin analog.")
 		links {
-			homepage("https://discord.gg/7xnZGSYJH9")
+			homepage("https://ore.spongepowered.org/Semenkovsky_Ivan/CommandPack")
 			source("https://github.com/SawFowl/CommandPack")
 			issues("https://discord.gg/7xnZGSYJH9")
 		}
