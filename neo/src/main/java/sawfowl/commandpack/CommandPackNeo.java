@@ -23,8 +23,10 @@ public class CommandPackNeo {
 			var loader = HoconConfigurationLoader.builder().file(spongeConfig).build();
 			try {
 				var node = loader.load();
-				var spongeConfigDir = node.node("general", "plugin-config-dir").getString();
-				configDir = serverPath.resolve(spongeConfigDir.replace("${CONFIG_DIR}", "config").replace("/", File.separator));
+				if(!node.node("general", "plugin-config-dir").virtual()) {
+					var spongeConfigDir = node.node("general", "plugin-config-dir").getString();
+					configDir = serverPath.resolve(spongeConfigDir.replace("${CONFIG_DIR}", "config").replace("/", File.separator) + File.separator + "commandpack");
+				} else configDir = serverPath.resolve("config" + File.separator + "commandpack");
 			} catch (ConfigurateException e) {
 				configDir = serverPath.resolve("config" + File.separator + "commandpack");
 				e.printStackTrace();
