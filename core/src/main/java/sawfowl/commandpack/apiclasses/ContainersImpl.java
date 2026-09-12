@@ -16,14 +16,11 @@ import sawfowl.commandpack.api.data.miscellaneous.ModContainer;
 public class ContainersImpl implements ContainersCollection {
 
 	private CommandPackInstance plugin;
-	private final Collection<PluginContainer> plugins;;
-	private final Collection<ModContainer> allMods;
-	private final Collection<ModContainer> mods;
+	private Collection<PluginContainer> plugins;;
+	private Collection<ModContainer> allMods;
+	private Collection<ModContainer> mods;
 	public ContainersImpl(CommandPackInstance plugin) {
 		this.plugin = plugin;
-		allMods = findMods();
-		mods = allMods.stream().filter(mod -> !mod.getLoaders().stream().filter(loader -> loader.equalsIgnoreCase("java_plain")).findFirst().isPresent()).toList();
-		plugins = findPlugins();
 	}
 
 	@Override
@@ -43,6 +40,13 @@ public class ContainersImpl implements ContainersCollection {
 			allMods.stream().filter(mod -> mod.getModId().equals(container.metadata().id())).findFirst()
 			:
 			Optional.empty();
+	}
+
+	public void collect() {
+		if(allMods != null && mods != null && plugins != null) return;
+		allMods = findMods();
+		mods = allMods.stream().filter(mod -> mod.getModId().equals("spongeneo") || !mod.getModLoaderName().equals("sponge")).toList();
+		plugins = findPlugins();
 	}
 
 	private List<ModContainer> findMods() {

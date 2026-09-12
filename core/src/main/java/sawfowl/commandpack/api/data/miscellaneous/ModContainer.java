@@ -31,4 +31,6 @@ public interface ModContainer {
 
 	Path getPath();
 
+	String getModLoaderName();
+
 }

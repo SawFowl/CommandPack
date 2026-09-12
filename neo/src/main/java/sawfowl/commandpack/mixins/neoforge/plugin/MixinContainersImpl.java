@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
@@ -43,6 +44,7 @@ public abstract class MixinContainersImpl {
 		private final List<String> loaders;
 		private final Component dependencies;
 		private final Path path;
+		private String modLoader;
 		public ModContainerImpl(ModInfo mod) {
 			name = mod.getDisplayName();
 			id = mod.getModId();
@@ -52,6 +54,7 @@ public abstract class MixinContainersImpl {
 			version = mod.getVersion().getMajorVersion() + "." + mod.getVersion().getMinorVersion() + "." + mod.getVersion().getIncrementalVersion() + (mod.getVersion().getBuildNumber() == 0 ? "" : "-" + mod.getVersion().getBuildNumber());
 			loaders = mod.getOwningFile().getFile().getLoaders().stream().map(loader -> loader.name()).toList();
 			path = mod.getOwningFile().getFile().getFilePath();
+			modLoader = mod.getLoader().name();
 			if(mod.getDependencies().isEmpty()) {
 				dependencies = TextUtils.deserializeLegacy("&e-");
 				return;
@@ -124,6 +127,11 @@ public abstract class MixinContainersImpl {
 			if (this == obj) return true;
 			if (obj == null || getClass() != obj.getClass()) return false;
 			return Objects.equals(getModId(), ((ModContainerImpl) obj).getModId());
+		}
+
+		@Override
+		public String getModLoaderName() {
+			return modLoader;
 		}
 
 	}

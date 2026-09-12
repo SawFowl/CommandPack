@@ -482,7 +482,7 @@ public class PlayerData implements sawfowl.commandpack.api.data.player.PlayerDat
 	}
 
 	private LocalesList<AbstractLocale> geLocales() {
-		return ((CommandPackInstance) Sponge.pluginManager().plugin("commandpack").get().instance()).getLocales();
+		return (CommandPackInstance.getInstance()).getLocales();
 	}
 
 }

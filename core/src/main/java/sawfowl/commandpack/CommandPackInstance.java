@@ -291,6 +291,7 @@ public class CommandPackInstance {
 
 	@Listener
 	public void onConstruct(ConstructPluginEvent event) {
+		((ContainersImpl) api.getContainersCollection()).collect();
 		Sponge.eventManager().registerListeners(pluginContainer, playersData.getTempData(), MethodHandles.lookup());
 		economy = new Economy(instance);
 		Sponge.eventManager().registerListeners(pluginContainer, economy, MethodHandles.lookup());
