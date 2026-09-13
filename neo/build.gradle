@@ -41,5 +41,5 @@ dependencies {
 }
 
 jar {
-	archiveFileName = 'part.jar'
+	archiveFileName.set("part.jar")
 }
