@@ -45,7 +45,7 @@ public class ContainersImpl implements ContainersCollection {
 	public void collect() {
 		if(allMods != null && mods != null && plugins != null) return;
 		allMods = findMods();
-		mods = allMods.stream().filter(mod -> mod.getModId().equals("spongeneo") || !mod.getModLoaderName().equals("sponge")).toList();
+		mods = allMods.stream().filter(mod -> mod.getModId().equals("spongeneo") || mod.getModId().equals("spongeforge") || !mod.getModLoaderName().equals("sponge")).toList();
 		plugins = findPlugins();
 	}
 
