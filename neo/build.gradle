@@ -40,6 +40,18 @@ dependencies {
 	implementation fileTree(dir: 'libs', include: '*.jar')
 }
 
+processResources {
+	filesMatching('META-INF/neoforge.mods.toml') {
+		expand(
+			version: project.version,
+			minecraft_version: rootProject.minecraft_version,
+			neoforge_version: rootProject.neoforge_version,
+			api: rootProject.api,
+			localeapi: rootProject.localeapi
+		)
+	}
+}
+
 jar {
 	archiveFileName.set("part.jar")
 }

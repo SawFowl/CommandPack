@@ -184,7 +184,7 @@ public abstract class MixinServerLevelImpl implements CPServerWorld {
 
 			@Override
 			public long asTicks() {
-				return asNMS().dimensionType().defaultClock().map(holder -> server.clockManager().getTotalTicks(holder)).orElse(serverLevelData.getGameTime());
+				return asNMS().dimensionType().defaultClock().map(holder -> server.clockManager().getInstance(holder).totalTicks()).orElse(serverLevelData.getGameTime());
 			}
 
 			@Override

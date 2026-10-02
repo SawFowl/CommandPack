@@ -20,15 +20,14 @@ import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.Command.Raw;
 import org.spongepowered.api.command.exception.CommandException;
-import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.command.parameter.ArgumentReader.Mutable;
-import org.spongepowered.api.command.registrar.tree.CommandCompletionProvider;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNodeTypes;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Argument;
 import org.spongepowered.api.command.registrar.tree.CommandTreeNode.Basic;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
+import org.spongepowered.api.registry.RegistryHolder;
 import org.spongepowered.common.command.registrar.tree.builder.AbstractCommandTreeNode;
 
 import net.kyori.adventure.audience.Audience;
@@ -77,18 +76,18 @@ public interface RawCommand extends PluginCommand, Raw {
 		return getCommandSettings() == null || getCommandSettings().isAutoComplete().orElse(true);
 	}
 
+	@Override
+	default CommandTreeNode.Root commandTree(RegistryHolder registryHolder) {
+		return commandTree();
+	}
+
 	default CommandTreeNode.Root commandTree() {
 		CommandTreeNode.Root root = containsChild() ?
 			CommandTreeNode.root().executable().child("subcommand", CommandTreeNode.literal().customCompletions()) :
 			CommandTreeNode.root().customCompletions();
 		if(!containsChild() && !containsArgs()) return root.executable();
 		if(containsChild()) {
-			root.completions(new CommandCompletionProvider() {
-				@Override
-				public List<CommandCompletion> complete(CommandContext context, String currentInput) {
-					return completeArgs(context.cause(), Stream.of(currentInput.split(" ")).filter(string -> (!string.equals(""))).toArray(String[]::new), currentInput);
-				}
-			});
+			root.completions((context, currentInput) -> completeArgs(context.cause(), Stream.of(currentInput.split(" ")).filter(string -> (!string.equals(""))).toArray(String[]::new), currentInput));
 			Map<String, Basic> finishedChilds = new HashMap<>();
 			for(Entry<String, RawCommand> entry : getChildExecutors().entrySet()) {
 				if(!finishedChilds.containsKey(entry.getValue().command())) {
@@ -155,7 +154,7 @@ public interface RawCommand extends PluginCommand, Raw {
 				return new ArrayList<CommandCompletion>() {
 					private static final long serialVersionUID = 1L;
 					{
-						addAll(getChildExecutors().keySet().stream().filter(command -> (args.length == 0 || ((command.equals(args[0]) || command.startsWith(args[0])) && getChildExecutors().get(command).canExecute(cause)))).map(CommandCompletion::of).collect(Collectors.toList()));
+						addAll(getChildExecutors().keySet().stream().filter(command -> getChildExecutors().get(command).permission() != null && cause.hasPermission(getChildExecutors().get(command).permission()) && (args.length == 0 || command.startsWith(args[0]))).map(CommandCompletion::of).collect(Collectors.toList()));
 						addAll(completeArgs(cause, args, currentInput));
 					}
 				};
@@ -176,7 +175,8 @@ public interface RawCommand extends PluginCommand, Raw {
 	 * Auto-complete command arguments.
 	 */
 	default List<CommandCompletion> completeArgs(CommandCause cause, String[] args, String currentInput) {
-		if(!enableAutoComplete() || getArguments() == null || getArguments().size() < args.length || (!getArguments().isEmpty() && !getArguments().get(args.length > 0 ? args.length - 1 : 0).hasPermission(cause)) || (getArguments().containsKey(args.length > 0 ? args.length : 0) && !getArguments().get(args.length > 0 ? args.length : 0).checkRequiredOtherArguments(cause, getArguments(), args))) return CommandsUtil.getEmptyList();
+		if(!enableAutoComplete() || getArguments() == null || getArguments().isEmpty() || !getArguments().containsKey(args.length > 0 ? args.length - 1 : 0)) return CommandsUtil.getEmptyList();
+		if(!getArguments().get(args.length > 0 ? args.length - 1 : 0).hasPermission(cause) || (currentInput.endsWith(" ") && !getArguments().get(args.length > 0 ? args.length - 1 : 0).checkRequiredOtherArguments(cause, getArguments(), args))) return CommandsUtil.getEmptyList();
 		if(currentInput.endsWith(" ") || args.length == 0) {
 			if(getArguments().containsKey(args.length)) return getArguments().get(args.length).getVariants(cause, args).map(CommandCompletion::of).collect(Collectors.toList());
 			return CommandsUtil.getEmptyList();

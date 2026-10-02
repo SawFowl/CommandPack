@@ -3,8 +3,6 @@ package sawfowl.commandpack.commands.abstractcommands.parameterized;
 import java.lang.management.ManagementFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -182,7 +180,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 		info.add(getAboutPlugin(locale).getId(metadata.id()));
 		info.add(getAboutPlugin(locale).getName(metadata.name().orElse("-")));
 		info.add(getAboutPlugin(locale).getVersion(metadata.version().getMajorVersion() + "." + metadata.version().getMinorVersion() + "." + metadata.version().getIncrementalVersion() + (metadata.version().getBuildNumber() == 0 ? "" : "-" + metadata.version().getBuildNumber())));
-		info.add(getAboutPlugin(locale).getEntrypoint(String.join(", ", metadata.entrypoints().main())));
+		info.add(getAboutPlugin(locale).getEntrypoint(String.join(", ", metadata.entrypoint())));
 		info.add(getAboutPlugin(locale).getDescription(metadata.description().orElse("-")));
 		info.add(getAboutPlugin(locale).getDependencies(getDependencies(metadata)));
 		info.add(getAboutPlugin(locale).getContributors(getContributors(metadata)));
@@ -199,7 +197,7 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 		info.add(getAboutMod(locale).getVersion(container.getVersion()));
 		info.add(getAboutMod(locale).getDescription(container.getDescription()));
 		info.add(getAboutMod(locale).getDependencies(container.getDependencies()));
-		info.add(getAboutMod(locale).getLinks(createLinkText(container.getIssueURL()), createLinkTextURL(container.getUpdateURL())));
+		info.add(getAboutMod(locale).getLinks(createLinkText(container.getIssueURL()), createLinkText(container.getUpdateURL())));
 		sendPaginationList(audience, header, Component.text("=").color(header.color()), linesPerPage, info);
 	}
 
@@ -237,17 +235,8 @@ public abstract class AbstractInfoCommand extends AbstractParameterizedCommand {
 		return TextUtils.deserializeLegacy(dependencies);
 	}
 
-	private Component createLinkText(Optional<URI> optional) {
-		try {
-			return optional.isPresent() ? TextUtils.deserializeLegacy("&e" + optional.get().toString()).clickEvent(ClickEvent.openUrl(optional.get().toURL())) : TextUtils.deserializeLegacy("&e-");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	private Component createLinkTextURL(Optional<URL> optional) {
-		return optional.isPresent() ? TextUtils.deserializeLegacy("&e" + optional.get().toString()).clickEvent(ClickEvent.openUrl(optional.get())) : TextUtils.deserializeLegacy("&e-");
+	private Component createLinkText(Optional<URL> optional) {
+		return createLinkText(optional.orElse(null));
 	}
 
 	private Component createLinkText(URL url) {

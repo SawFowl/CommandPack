@@ -17,6 +17,7 @@ import org.spongepowered.api.data.persistence.DataQuery;
 import org.spongepowered.api.data.persistence.Queries;
 
 import net.kyori.adventure.text.Component;
+
 import sawfowl.commandpack.api.commands.raw.arguments.RawArgument;
 import sawfowl.commandpack.api.commands.raw.arguments.RawCompleterSupplier;
 import sawfowl.commandpack.api.commands.raw.arguments.RawResultSupplier;
@@ -96,7 +97,7 @@ public class RawArgumentImpl<T> implements RawArgument<T> {
 
 	@Override
 	public boolean hasPermission(CommandCause cause) {
-		return cause == null || getPermision().map(p -> cause.hasPermission(p)).orElse(true);
+		return cause == null || permission == null || cause.hasPermission(permission);
 	}
 
 	@Override
